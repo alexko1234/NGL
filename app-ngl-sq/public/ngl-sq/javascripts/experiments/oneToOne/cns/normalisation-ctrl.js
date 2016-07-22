@@ -201,7 +201,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			},
 			otherButtons: {
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-                template: '<button class="btn btn-default" ng-click="computeLineAndColumn()" data-toggle="tooltip" ng-disabled="!isEditMode()"><i class="fa fa-magic"></i> </button>'
+                template: '<button class="btn btn-default" ng-click="computeLineAndColumn()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i> </button>'
     			
             }
 			
