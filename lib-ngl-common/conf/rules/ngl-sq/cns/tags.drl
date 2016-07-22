@@ -37,22 +37,7 @@ rule "Generate TagInfo from Experiment"
 			Set<String> tags = new TreeSet<String>();
 			//extract content info
 			for(InputContainerUsed cu:cuinputs){
-				fromTransformationTypeCodes.addAll(cu.fromTransformationTypeCodes);
-				if(null != cu.contents){
-					for(Content content : cu.contents){
-						projectCodes.add(content.projectCode);
-						sampleCodes.add(content.sampleCode);
-						
-						/*
-						if(content.properties.containsKey("libProcessTypeCode")){
-							libProcessTypeCodes.add((String)content.properties.get("libProcessTypeCode").value);
-						}
-						if(content.properties.containsKey("tag")){
-							tags.add((String)content.properties.get("tag").value);
-						}
-						*/
-					}
-				}
+				fromTransformationTypeCodes.addAll(cu.fromTransformationTypeCodes);				
 			}
 			
 			if(!OneToVoidContainer.class.isAssignableFrom(atm.getClass())){				
@@ -71,9 +56,15 @@ rule "Generate TagInfo from Experiment"
 							support = supports.get(cu.locationOnContainerSupport.code);
 						}
 						//add content info to each support
-						support.projectCodes.addAll(projectCodes);
-						support.sampleCodes.addAll(sampleCodes);
 						support.fromTransformationTypeCodes.addAll(fromTransformationTypeCodes);
+						
+						if(null != cu.contents){
+							for(Content content : cu.contents){
+								support.projectCodes.add(content.projectCode);
+								support.sampleCodes.add(content.sampleCode);
+							}
+						}
+						
 						/*
 						if(!support.properties.containsKey("libProcessTypeCodes")){
 							support.properties.put("libProcessTypeCodes", new PropertyListValue(new ArrayList<String>(libProcessTypeCodes)));						
@@ -109,9 +100,14 @@ rule "Generate TagInfo from Experiment"
 							support = supports.get(cu.locationOnContainerSupport.code);
 						}
 						//add content info to each support
-						support.projectCodes.addAll(projectCodes);
-						support.sampleCodes.addAll(sampleCodes);
-						support.fromTransformationTypeCodes.addAll(fromTransformationTypeCodes);					
+						support.fromTransformationTypeCodes.addAll(fromTransformationTypeCodes);
+						
+						if(null != cu.contents){
+							for(Content content : cu.contents){
+								support.projectCodes.add(content.projectCode);
+								support.sampleCodes.add(content.sampleCode);
+							}
+						}					
 					}
 					
 				}
