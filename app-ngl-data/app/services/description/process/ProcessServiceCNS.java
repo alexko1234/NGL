@@ -1,7 +1,5 @@
 package services.description.process;
 
-import static services.description.DescriptionFactory.newPropertiesDefinition;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -9,13 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
-import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
@@ -23,9 +17,13 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
+import services.description.declaration.cns.Bionano;
+import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
 import services.description.declaration.cns.MetaTProcess;
+import services.description.declaration.cns.Nanopore;
+import services.description.declaration.cns.Opgen;
+import services.description.declaration.cns.RunIllumina;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -68,54 +66,11 @@ public class ProcessServiceCNS extends AbstractProcessService {
 
 		l.addAll(new MetaBarCoding().getProcessType());
 		l.addAll(new MetaTProcess().getProcessType());
-		
-		//Bionano
-		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
-				getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-				Arrays.asList(getPET("ext-to-bionano-chip-process",-1),getPET("irys-nlrs-prep",-1),getPET("irys-chip-preparation",0),getPET("bionano-depot",1)),
-				getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-chip-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-				Arrays.asList(getPET("ext-to-bionano-run",-1), getPET("irys-chip-preparation",-1), getPET("bionano-depot",0)), 
-				getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-							
-		
-	
-		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , 
-				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),getPET("nanopore-fragmentation",0),getPET("nanopore-library",1),getPET("nanopore-depot",2)), 
-				getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-process-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		
-		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeLibrary() , 
-				Arrays.asList(getPET("ext-to-nanopore-process-library-no-frg",-1),getPET("nanopore-fragmentation",-1), getPET("nanopore-library",0),getPET("nanopore-depot",1)),
-				getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-				
-		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),null , 
-				Arrays.asList(getPET("ext-to-nanopore-run",-1), getPET("nanopore-library",-1), getPET("nanopore-depot",0)),
-				getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		
-		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNS() , 
-				Arrays.asList(getPET("ext-to-illumina-run",-1),getPET("solution-stock",-1), getPET("prepa-flowcell",0),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1)), 
-				getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-illumina-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		
-		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , 
-				Arrays.asList(getPET("ext-to-opgen-run",-1), getPET("opgen-depot",0)), 
-				getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("ext-to-opgen-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		
-		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton)", "dna-rna-extraction-process", ProcessCategory.find.findByCode("sample-prep"), null,
-				Arrays.asList(getPET("ext-to-dna-rna-extraction-process",-1),getPET("dna-rna-extraction",0)), 
-				getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (corail)", "grinding-and-dna-rna-extraction", ProcessCategory.find.findByCode("sample-prep"), null,
-				Arrays.asList(getPET("ext-to-grinding-and-dna-rna-extraction",-1),getPET("grinding",0),getPET("dna-rna-extraction",1)), 
-				getExperimentTypes("grinding").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.addAll(new Bionano().getProcessType());
+		l.addAll(new Nanopore().getProcessType());
+		l.addAll(new RunIllumina().getProcessType());
+		l.addAll(new Opgen().getProcessType());
+		l.addAll(new ExtractionDNARNA().getProcessType());
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 		
@@ -132,12 +87,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		return propertyDefinitions;
 	}*/
 
-	
-
-	private List<PropertyDefinition> getPropertyDefinitionsBionano() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -210,27 +159,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	}
 	
 	
-	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process),Integer.class,true, DescriptionFactory.newValues("8","20")
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",2));
-		
-		return propertyDefinitions;
-	}
 	
-	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeLibrary() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
-		
-		return propertyDefinitions;
-	}
-
-	private static List<Value> getLibProcessTypeCodeValues(){
-        List<Value> values = new ArrayList<Value>();
-         values.add(DescriptionFactory.newValue("ONT","ONT - Nanopore"));
-         return values;
-	}
-
 	
 }

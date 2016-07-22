@@ -1,5 +1,6 @@
 package services.description.declaration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.typesafe.config.ConfigFactory;
@@ -20,16 +21,27 @@ public abstract class AbstractDeclaration {
 	protected abstract List<ExperimentType> getExperimentTypeUAT();
 
 	public List<ExperimentType> getExperimentType(){
-
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		
+		if(getExperimentTypePROD()!=null){
+			l.addAll(getExperimentTypePROD());
+		}
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
-			return getExperimentTypeDEV();
+			if(getExperimentTypeDEV()!=null){
+				l.addAll(getExperimentTypeDEV());
+			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
-			return getExperimentTypeUAT();
+			if(getExperimentTypeUAT()!=null){
+				l.addAll(getExperimentTypeUAT());
+			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			return getExperimentTypePROD();
+			
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
+		
+		return l;
 	}
 
 
@@ -38,16 +50,26 @@ public abstract class AbstractDeclaration {
 	protected abstract List<ProcessType> getProcessTypeUAT();
 
 	public List<ProcessType> getProcessType(){
+		List<ProcessType> l = new ArrayList<ProcessType>();
 
+		if(getProcessTypePROD()!=null){
+			l.addAll(getProcessTypePROD());
+		}
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
-			return getProcessTypeDEV();
+			if(getProcessTypeDEV()!=null){
+				l.addAll(getProcessTypeDEV());
+			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
-			return getProcessTypeUAT();
+			if(getProcessTypeUAT()!=null){
+				l.addAll(getProcessTypeUAT());
+			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			return getProcessTypePROD();
+			
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
+		
+		return l;
 	}
 	
 	
@@ -57,15 +79,17 @@ public abstract class AbstractDeclaration {
 
 	public void getExperimentTypeNode(){
 
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			getExperimentTypeNodeDEV();
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
 			 getExperimentTypeNodeUAT();
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			 getExperimentTypeNodePROD();
+			 
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
+		getExperimentTypeNodePROD();
 	}
 	
 	
