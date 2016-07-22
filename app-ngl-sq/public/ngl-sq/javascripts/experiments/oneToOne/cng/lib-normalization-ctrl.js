@@ -359,7 +359,8 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		.error(function(data, status, headers, config) {
 			$scope.messages.clazz = "alert alert-danger";
 			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.showDetails = false;
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
 			$scope.messages.open();				
 		});
 	};
