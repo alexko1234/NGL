@@ -292,7 +292,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			l.add(newExperimentType("Normalisation","normalisation",null,10400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
-					getInstrumentUsedTypes("biomek-fx"),"OneToOne", 
+					getInstrumentUsedTypes("biomek-fx", "hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 		}
