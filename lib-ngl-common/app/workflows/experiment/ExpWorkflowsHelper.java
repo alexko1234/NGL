@@ -920,7 +920,7 @@ public class ExpWorkflowsHelper {
 					sample.life=getLifeSample(exp, atm);
 
 					//Duplicate content avec sample
-					newContents.add(cloneContentWithNewSample(sample,c));
+					newContents.add(cloneContentWithNewSample(sample,c, sampleIn));
 					samples.add(sample);
 				}
 				
@@ -933,7 +933,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private Content cloneContentWithNewSample(Sample sample,Content c) {
+	private Content cloneContentWithNewSample(Sample sample,Content c, Sample sampleIn) {
 		Content content=new Content();
 		
 		content.sampleCode=sample.code;
@@ -943,6 +943,10 @@ public class ExpWorkflowsHelper {
 		
 		content.percentage=c.percentage;
 		content.properties=c.properties;
+		//Add the fromSampleTypeCode in properties to keep the link with parent type
+		PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sampleIn.typeCode);
+		content.properties.put("fromSampleTypeCode", fromSampleTypeCode);
+		
 		content.referenceCollab=c.referenceCollab;
 		
 		return content;
