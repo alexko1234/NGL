@@ -271,6 +271,16 @@ public class OutputHelper {
 		return (asciiValue-64)+(columnValue-1)*8;
 	}
 	
+	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en ligne 
+		// A1=1, A2=2
+	public static int getNumberPositionInPlateByLine(String line,String column){
+		int asciiValue=(int) line.toCharArray()[0];
+		int columnValue=Integer.parseInt(column);
+		
+		return (asciiValue-64)*12-12+columnValue;
+	}
+	
+	
 	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en colonne 
 	// 1=A1, 2=B1...9=A2
 	// FDS a tester !!

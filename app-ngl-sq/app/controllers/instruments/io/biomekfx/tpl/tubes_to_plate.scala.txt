@@ -1,0 +1,8 @@
+@(lines: List[controllers.instruments.io.biomekfx.PlateSampleSheetLine])
+
+@import controllers.instruments.io.utils._;
+
+Support code entree;Support code sortie;Source-ADN;Swell-ADN;Source-Tp;Swell-Tp;Destination;Dwell;Volume ADN;Volume tampon
+@for((line) <- lines.sorted){
+	@line.inputSupportCode;@line.outputSupportCode;@line.sourceADN;@line.swellADN;@line.sourceTP;@line.swellTP;@line.destination;@line.dwell;@line.inputVolume;@line.bufferVolume\u000D\u000A	
+}
