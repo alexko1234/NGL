@@ -119,7 +119,7 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("Amplif_ptr_Sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
 			lp.add(newProtocol("Amplif_ptr_Sox_144-4newProtocol","Amplif ptr Sox 144-4newProtocol","path2","1","production",InstanceFactory.setExperimentTypeCodes("sizing")));
 			
-			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation")));
+			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation","tubes-to-plate","plate-to-tubes")));
 			
 			
 		}

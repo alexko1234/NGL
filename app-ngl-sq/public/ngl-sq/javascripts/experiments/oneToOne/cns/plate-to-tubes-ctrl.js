@@ -1,4 +1,4 @@
-angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
+angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
                                                        function($scope, $http,$parse,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
@@ -201,9 +201,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			},
 			otherButtons: {
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-                template: '<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'
-                		 +'<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
-        			
+                template: '<button class="btn btn-default" ng-click="computeLineAndColumn()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i> </button>'
+    			
             }
 			
 	};
@@ -374,36 +373,14 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	}
 	
 	
-	/**
-	 * Compute A1, B1, C1, etc.
-	 */
-	$scope.computeColumnModeMode = function(){
+	$scope.computeLineAndColumn = function(){
 		var wells = $scope.atmService.data.displayResult;
 		var nbCol = 12;
 		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 		var x = 0;
 		for(var i = 0; i < nbCol ; i++){
 			for(var j = 0; j < nbLine.length; j++){
-				if(x < wells.length && x < 96){
-					wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
-					wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
-				}
-				x++;
-			}
-		}		
-	};
-	
-	/**
-	 * Compute A1, A2, A3, etc.
-	 */
-	$scope.computeLineModeMode = function(){
-		var wells = $scope.atmService.data.displayResult;
-		var nbCol = 12;
-		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-		var x = 0;
-		for(var j = 0; j < nbLine.length; j++){
-			for(var i = 0; i < nbCol ; i++){
-				if(x < wells.length && x < 96){
+				if(x < wells.length){
 					wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
 					wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
 				}
@@ -557,15 +534,21 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			var filename = filepath.split(/\/|\\/);
 			filename = filename[filename.length-1];
 			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+				$scope.messages.showDetails = false;
+				$scope.messages.open();	
+				
 				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
 				saveAs(blob, filename);
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
 			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
+			$scope.messages.showDetails = true;
+			$scope.messages.open();				
 		});
 	};
 
