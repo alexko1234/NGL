@@ -66,33 +66,26 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	public void saveExperimentTypes(
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
+
 		l.addAll(new Opgen().getExperimentType());
-		
 		l.addAll(new RunIllumina().getExperimentType());
-		
 		l.addAll(new Nanopore().getExperimentType());
-		
 		l.addAll(new Bionano().getExperimentType());
-		
 		l.addAll(new QualityControl().getExperimentType());
-		
 		l.addAll(new ExtractionDNARNA().getExperimentType());
-		
 		l.addAll(new Purif().getExperimentType());
+		l.addAll(new Transfert().getExperimentType());
+		l.addAll(new MetaBarCoding().getExperimentType());
+		l.addAll(new MetaTProcess().getExperimentType());
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){
-			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			
-			
+		
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			
 			/*
 			l.add(newExperimentType("Ext to Banque","ext-to-library",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			*/
-			
-			/*
+		
 			l.add(newExperimentType("Ampure Non Ampli","ampure-na",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()),
 					null, getInstrumentUsedTypes("hand"),"OneToOne", 
@@ -101,11 +94,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			l.add(newExperimentType("Ampure Ampli","ampure-a",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-*/
-			
-			
-	/*		
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 			
 			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
@@ -118,10 +107,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
 			
-					}
-		l.addAll(new Transfert().getExperimentType());
-		l.addAll(new MetaBarCoding().getExperimentType());
-		l.addAll(new MetaTProcess().getExperimentType());
+		}
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
@@ -129,9 +115,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
-		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
-		//newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();
-		
 		new Opgen().getExperimentTypeNode();
 		new MetaBarCoding().getExperimentTypeNode();
 		new MetaTProcess().getExperimentTypeNode();
@@ -139,8 +122,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		new Nanopore().getExperimentTypeNode();
 		new Bionano().getExperimentTypeNode();		
 		new ExtractionDNARNA().getExperimentTypeNode();
-			/*
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		
+		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
+		//newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();
+				
+		/*if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
 				newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
 				newExperimentTypeNode("ext-to-qPCR-norm-fc-depot-illumina", getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), false, false, null, null, null).save();
@@ -170,16 +156,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		return propertyDefinitions;
 	}
 	
-	
-	
-	
-	private static List<Value> getPhixConcentrationCodeValues(){
-        List<Value> values = new ArrayList<Value>();
-        values.add(DescriptionFactory.newValue("0.1","100"));
-        values.add(DescriptionFactory.newValue("0.2","200"));
-        values.add(DescriptionFactory.newValue("0.3","300"));
-        return values;
-	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

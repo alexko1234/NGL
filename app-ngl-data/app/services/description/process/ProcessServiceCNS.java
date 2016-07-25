@@ -54,13 +54,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
 					Arrays.asList(getPET("fragmentation",-1),getPET("librairie-indexing",0),getPET("amplification",1)), 
 					getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("ext-to-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
-			l.add(DescriptionFactory.newProcessType("qPCR-norm, FC, dépôt Illumina", "qpcr-norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
-					Arrays.asList(getPET("ext-to-qpcr-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
-					getExperimentTypes("qpcr-quantification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("Norm, FC, dépôt Illumina", "norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
-					Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
-					getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		}
 
@@ -79,67 +72,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	}
 	
 
-	/*private static List<PropertyDefinition> getPropertyDefinitionsOpgenDepot() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type MapCard","mapcardType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD"), "single"));
-		return propertyDefinitions;
-	}*/
-
-
-	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
-		//TO do multi value
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadType(), "single",200));		
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadLenght(), "single",300));
-		
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
-						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
-		return propertyDefinitions;
-	}
-
-	private static List<Value> getSequencingType(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("Hiseq 2000/2500N", "Hiseq 2000 / 2500 N"));
-		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
-		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
-		values.add(DescriptionFactory.newValue("Hiseq 4000", "Hiseq 4000"));
-		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
-		return values;	
-	}
-	
-
-	private static List<Value> getReadType(){
-			List<Value> values = new ArrayList<Value>();
-			values.add(DescriptionFactory.newValue("SR", "SR"));
-			values.add(DescriptionFactory.newValue("PE", "PE"));
-			values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
-			return values;
-	}
-		
-	private static List<Value> getReadLenght(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("50","50"));
-		values.add(DescriptionFactory.newValue("100","100"));
-		values.add(DescriptionFactory.newValue("150","150"));
-		values.add(DescriptionFactory.newValue("250","250"));
-		values.add(DescriptionFactory.newValue("300","300"));
-		values.add(DescriptionFactory.newValue("500","500"));
-		values.add(DescriptionFactory.newValue("600","600"));
-		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
-		return values;
-	}
-
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
@@ -153,10 +85,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		return propertyDefinitions;
 	}
 	
-	public static List<PropertyDefinition> getPropertyDefinitionsQPCRQuantification() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions =getPropertyDefinitionsIlluminaDepotCNS();			
-		return propertyDefinitions;
-	}
+	
 	
 	
 	

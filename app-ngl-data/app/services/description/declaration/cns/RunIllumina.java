@@ -34,7 +34,7 @@ public class RunIllumina extends AbstractDeclaration {
 		l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+
 		l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -91,8 +91,15 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProcessType> l=new ArrayList<ProcessType>();
+		l.add(DescriptionFactory.newProcessType("qPCR-norm, FC, dépôt Illumina", "qpcr-norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
+				Arrays.asList(getPET("ext-to-qpcr-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
+				getExperimentTypes("qpcr-quantification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(DescriptionFactory.newProcessType("Norm, FC, dépôt Illumina", "norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
+				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
+				getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
+		return l;
 	}
 
 	@Override
@@ -115,7 +122,7 @@ public class RunIllumina extends AbstractDeclaration {
 	protected void getExperimentTypeNodeDEV() {
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-qpcr-norm-fc-depot-illumina", getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
-		
+
 		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","pcr-amplification-and-purification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
 
 	}
@@ -123,7 +130,7 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected void getExperimentTypeNodePROD() {
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
-//		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+		//		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false, false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),	null,null,null).save();
@@ -261,7 +268,7 @@ public class RunIllumina extends AbstractDeclaration {
 		return propertyDefinitions;
 
 	}
-	
+
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
@@ -275,7 +282,7 @@ public class RunIllumina extends AbstractDeclaration {
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadLenght(), "single",300));
-		
+
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
 						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
@@ -291,16 +298,16 @@ public class RunIllumina extends AbstractDeclaration {
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;	
 	}
-	
+
 
 	private static List<Value> getReadType(){
-			List<Value> values = new ArrayList<Value>();
-			values.add(DescriptionFactory.newValue("SR", "SR"));
-			values.add(DescriptionFactory.newValue("PE", "PE"));
-			values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
-			return values;
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("SR", "SR"));
+		values.add(DescriptionFactory.newValue("PE", "PE"));
+		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
+		return values;
 	}
-		
+
 	private static List<Value> getReadLenght(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("50","50"));
@@ -313,12 +320,18 @@ public class RunIllumina extends AbstractDeclaration {
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;
 	}
-	
+
 	private static List<Value> getPhixConcentrationCodeValues(){
-        List<Value> values = new ArrayList<Value>();
-        values.add(DescriptionFactory.newValue("0.1","100"));
-        values.add(DescriptionFactory.newValue("0.2","200"));
-        values.add(DescriptionFactory.newValue("0.3","300"));
-        return values;
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("0.1","100"));
+		values.add(DescriptionFactory.newValue("0.2","200"));
+		values.add(DescriptionFactory.newValue("0.3","300"));
+		return values;
+	}
+
+
+	public static List<PropertyDefinition> getPropertyDefinitionsQPCRQuantification() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions =getPropertyDefinitionsIlluminaDepotCNS();			
+		return propertyDefinitions;
 	}
 }
