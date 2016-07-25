@@ -96,10 +96,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 			
-			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-					getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+			
 			
 			l.add(newExperimentType("Librairie indexée","librairie-indexing",null,400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
@@ -116,8 +113,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		new Opgen().getExperimentTypeNode();
-		new MetaBarCoding().getExperimentTypeNode();
 		new MetaTProcess().getExperimentTypeNode();
+		new MetaBarCoding().getExperimentTypeNode();
 		new RunIllumina().getExperimentTypeNode();
 		new Nanopore().getExperimentTypeNode();
 		new Bionano().getExperimentTypeNode();		
@@ -133,8 +130,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, null, null, null).save();
 				
 				//REM : experimentTypes list confirmées par Julie
-				newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), 
-						getExperimentTypes("ampure-na"),  getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
 				
 				newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
 						getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
@@ -149,12 +144,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	
 	
-	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
-		return propertyDefinitions;
-	}
 	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {

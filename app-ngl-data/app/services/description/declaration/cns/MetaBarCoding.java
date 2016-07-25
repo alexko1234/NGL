@@ -116,10 +116,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),null).save();
 
-		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("tag-pcr")
+		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("tag-pcr","fragmentation")
 				,null,getExperimentTypes("fluo-quantification"),null).save();
 
-		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library")
+		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library","rna-illumina-indexed-library")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),null).save();
 
 		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("pcr-amplification-and-purification")
@@ -218,41 +218,47 @@ public class MetaBarCoding extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyMetaBarCodingWithoutSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessType(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessTypeMetaTA(), 
 				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.addAll(getPropertyMetaB());
+		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		return propertyDefinitions;
+	}
+
+	private List<PropertyDefinition> getPropertyMetaBarCodingSizing() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessTypeMetaTB(), 
+				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.addAll(getPropertyMetaB());
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("500-650"), 
+				null,null,null,"single", 17, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("650-800"), 
+				null,null,null,"single", 18, true, null, null));
+		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getPropertyMetaB(){
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Primers", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("fuhrman primer","V9 primer"), 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("16S_V4V5","18S_V9"), 
 				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("400","170"), 
 				null,null,null,"single", 16, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Type séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 19, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Type de lectures", "readType", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 20, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Longueur de lectures", "readLength", LevelService.getLevels(Level.CODE.Process), Double.class, true, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb")
-				,"single", 21, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane", LevelService.getLevels(Level.CODE.Process), Double.class, true, null, null, 
-				null,null,null,"single", 22, true, null, null));
 		return propertyDefinitions;
-	}
 
-	
-	private List<PropertyDefinition> getPropertyMetaBarCodingSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.addAll(getPropertyMetaBarCodingWithoutSizing());
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("500-650"), 
-				null,null,null,"single", 17, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("650-800"), 
-				null,null,null,"single", 18, true, null, null));
+	}
 		
-		return propertyDefinitions;
-	}
-
-	private List<Value> getBanqueProcessType() {
+	private List<Value> getBanqueProcessTypeMetaTB() {
 		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("TB", "Targeted DNAseq avec sizing"));
+		values.add(DescriptionFactory.newValue("TB", "TB - Targeted DNAseq avec sizing"));
+		return values;
+	}
+	
+	private List<Value> getBanqueProcessTypeMetaTA(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("TA", "TA - Targeted DNAseq"));
 		return values;
 	}
 	

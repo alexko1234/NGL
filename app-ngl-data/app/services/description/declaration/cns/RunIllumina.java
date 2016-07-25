@@ -269,7 +269,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	}
 
-	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
+	public static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//TO do multi value
