@@ -7,7 +7,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3,
@@ -41,15 +41,15 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 					*/			 
 					 {
 			        	 "header" : Messages("containers.table.concentration"),
-			 			 "property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
+			 			 "property": "inputContainer.concentration.value",
 			 			 "order":true,
 						 "edit":false,
 						 "hide":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "position":5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         /*
+			        
 					 {
 			        	 "header":Messages("containers.table.concentration.unit"),
 			        	 "property":"inputContainer.concentration.unit",
@@ -60,7 +60,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "position":5.1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         */
+			        
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
 			        	 "property":"inputContainer.volume.value",
@@ -201,9 +201,9 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			},
 			otherButtons: {
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-                template: '<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'
-                		 +'<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
-        			
+                template:  '<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
+    					  +'<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'
+                		
             }
 			
 	};
@@ -348,7 +348,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			"choiceInList":true,
 			"possibleValues":[{"name":'1',"code":"1"},{"name":'2',"code":"2"},{"name":'3',"code":"3"},{"name":'4',"code":"4"},
 			                  {"name":'5',"code":"5"},{"name":'6',"code":"6"},{"name":'7',"code":"7"},{"name":'8',"code":"8"},
-			                  {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"13"}], 
+			                  {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"12"}], 
 			"order" : true,
 			"hide" : true,
 			"type" : "number",
@@ -447,15 +447,16 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
+		var computeMode = $parse("experimentProperties.computeMode.value")($scope.experiment);
 		
 		if(col.property === 'outputContainerUsed.concentration.value'){
 			computeInputVolume(value.data);
 			computeFinalVolume(value.data);
 			computeBufferVolume(value.data);
-		}else if(col.property === 'outputContainerUsed.volume.value'){
+		}else if(col.property === 'outputContainerUsed.volume.value'  && computeMode == 'fixeCfVf'){
 			computeInputVolume(value.data);
 			computeBufferVolume(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
+		}else if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'  && computeMode == 'fixeCfVi'){
 			computeFinalVolume(value.data);
 			computeBufferVolume(value.data);
 		}
@@ -568,13 +569,16 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			$scope.messages.showDetails = true;							
 		});
 	};
-
-	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isNewState();} ,
-		isShow:function(){return !$scope.isNewState();},
-		click:generateSampleSheet,
-		label:Messages("experiments.sampleSheet")
-	}]);
+	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
+		|| $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
+		
+		$scope.setAdditionnalButtons([{
+			isDisabled : function(){return $scope.isNewState();} ,
+			isShow:function(){return !$scope.isNewState();},
+			click:generateSampleSheet,
+			label:Messages("experiments.sampleSheet")
+		}]);
+	}
 	
 	
 }]);

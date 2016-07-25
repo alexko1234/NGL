@@ -1,9 +1,9 @@
 package services.description.declaration.cns;
 
-import static services.description.DescriptionFactory.newExperimentType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.description.Level;
@@ -121,7 +121,9 @@ public class Transfert extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, true, null,null));
 		
-	
+		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
+				Arrays.asList(newValue("fixeCfVi", "Cf et Vi fixe"), newValue("fixeCfVf", "Cf et Vf fixe")), "single", 21, true, null,null));
+		
 		return propertyDefinitions;
 	}
 	

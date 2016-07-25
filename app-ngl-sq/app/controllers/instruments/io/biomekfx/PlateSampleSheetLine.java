@@ -5,8 +5,8 @@ import controllers.instruments.io.tecanevo100.SampleSheetPoolLine;
 
 public class PlateSampleSheetLine  implements Comparable<PlateSampleSheetLine>{
 
-	public String inputSupportCode;
-	public String outputSupportCode;
+	public String inputContainerCode;
+	public String outputContainerCode;
 	
 	public String sourceADN;
 	public Integer swellADN;

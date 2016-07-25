@@ -58,8 +58,8 @@ public class Output extends AbstractOutput {
 		
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
 		
-		pssl.inputSupportCode = icu.locationOnContainerSupport.code;
-		pssl.outputSupportCode = ocu.locationOnContainerSupport.code;
+		pssl.inputContainerCode = icu.code;
+		pssl.outputContainerCode = ocu.code;
 		
 		pssl.inputVolume = (Double)icu.experimentProperties.get("inputVolume").value;
 		pssl.bufferVolume = (Double)icu.experimentProperties.get("bufferVolume").value;
