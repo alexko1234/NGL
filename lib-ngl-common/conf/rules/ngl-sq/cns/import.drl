@@ -11,6 +11,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import validation.ContextValidation;
 import play.data.validation.ValidationError;
 import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.experiment.instance.OneToManyContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
