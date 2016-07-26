@@ -81,7 +81,7 @@
 							"order":true,
 							"hide":true,
 							"position":8,
-							"type":"text"
+							"type":"number"
 						},
 						{
 							"header":Messages("containers.table.sampleCodes"),
