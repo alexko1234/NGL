@@ -2724,19 +2724,19 @@ directive("udtCell", function(){
 	    										   +'</label>';
 									break;
 	    						case "multiselect":
-	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></select>';
+	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></select>';
 		    						break;
 	    						case "bt-select":
-	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
+	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
 	    							break;
 								case "bt-select-filter":
-	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" filter="true" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
+	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" filter="true" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
 	    							break;
 	    						case "bt-select-multiple":
-	    							editElement = '<div class="form-control" '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
+	    							editElement = '<div class="form-control" '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'></div>';
 	    							break;
 	    						default:
-	    							editElement = '<select udt-html-filter="{{col.type}}" class="form-control" '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'>'
+	    							editElement = '<select udt-html-filter="{{col.type}}" class="form-control" '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+userDirectives+'>'
 	    										  + '<option></option>'
 	    										  + '</select>';
 		    						break;
