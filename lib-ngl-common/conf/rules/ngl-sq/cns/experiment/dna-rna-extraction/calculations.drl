@@ -22,19 +22,19 @@ rule "Set good project code for DNA"
 			$outputContainerUsed.experimentProperties.put("projectCode",outputProjectCode);
 		}
 		
-		if("BUA".equals($inputProjectCode) && !"BUB".equals(outputProjectCode.value)){
+		if("BUA".equals($inputProjectCode)){
 			outputProjectCode.value = "BUB";
-		}else if("BUE".equals($inputProjectCode) && !"BUF".equals(outputProjectCode.value)){
+		}else if("BUE".equals($inputProjectCode)){
 			outputProjectCode.value = "BUF";
-		}else if("BUI".equals($inputProjectCode) && !"BUK".equals(outputProjectCode.value)){
+		}else if("BUI".equals($inputProjectCode)){
 			outputProjectCode.value = "BUK";
-		}else if("BUN".equals($inputProjectCode) && !"BUP".equals(outputProjectCode.value)){
+		}else if("BUN".equals($inputProjectCode)){
 			outputProjectCode.value = "BUP";
-		}else if("BUS".equals($inputProjectCode) && !"BUT".equals(outputProjectCode.value)){
+		}else if("BUS".equals($inputProjectCode)){
 			outputProjectCode.value = "BUT";
-		}else if("BUX".equals($inputProjectCode) && !"BUY".equals(outputProjectCode.value)){
+		}else if("BUX".equals($inputProjectCode)){
 			outputProjectCode.value = "BUY";
-		}else if("BWB".equals($inputProjectCode) && !"BWC".equals(outputProjectCode.value)){
+		}else if("BWB".equals($inputProjectCode)){
 			outputProjectCode.value = "BWC";
 		}else{
 			outputProjectCode.value = null;
@@ -64,19 +64,19 @@ rule "Set good project code for RNA"
 			$outputContainerUsed.experimentProperties.put("projectCode",outputProjectCode);
 		}
 		
-		if("BUA".equals($inputProjectCode) && !"BUC".equals(outputProjectCode.value)){
+		if("BUA".equals($inputProjectCode)){
 			outputProjectCode.value = "BUC";
-		}else if("BUE".equals($inputProjectCode) && !"BUG".equals(outputProjectCode.value)){
+		}else if("BUE".equals($inputProjectCode)){
 			outputProjectCode.value = "BUG";
-		}else if("BUI".equals($inputProjectCode) && !"BUL".equals(outputProjectCode.value)){
+		}else if("BUI".equals($inputProjectCode)){
 			outputProjectCode.value = "BUL";
-		}else if("BUN".equals($inputProjectCode) && !"BUQ".equals(outputProjectCode.value)){
+		}else if("BUN".equals($inputProjectCode)){
 			outputProjectCode.value = "BUQ";
-		}else if("BUS".equals($inputProjectCode) && !"BUU".equals(outputProjectCode.value)){
+		}else if("BUS".equals($inputProjectCode)){
 			outputProjectCode.value = "BUU";
-		}else if("BUX".equals($inputProjectCode) && !"BUZ".equals(outputProjectCode.value)){
+		}else if("BUX".equals($inputProjectCode)){
 			outputProjectCode.value = "BUZ";
-		}else if("BWB".equals($inputProjectCode) && !"BWD".equals(outputProjectCode.value)){
+		}else if("BWB".equals($inputProjectCode)){
 			outputProjectCode.value = "BWD";
 		}else{
 			outputProjectCode.value = null;

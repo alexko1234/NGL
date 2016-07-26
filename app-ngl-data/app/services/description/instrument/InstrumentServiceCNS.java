@@ -545,7 +545,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getQuBitFluoroskanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS"), 
+		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS","RNA HS"), 
 				"single", 10, true, null,null));
 		return l;
 	}
