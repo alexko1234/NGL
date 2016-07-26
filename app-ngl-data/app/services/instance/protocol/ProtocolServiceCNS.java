@@ -122,6 +122,9 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation","tubes-to-plate","plate-to-tubes")));
 			
 			
+		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
+			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation","tubes-to-plate","plate-to-tubes")));
+			
 		}
 		
 		for(Protocol protocole:lp){

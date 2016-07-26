@@ -24,25 +24,7 @@ public class Transfert extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-
-		l.add(newExperimentType("Normalisation","normalisation",null,10400,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
-				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		
-		return l;
+		return null;
 	}
 
 	@Override
@@ -65,13 +47,27 @@ public class Transfert extends AbstractDeclaration {
 			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
 			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newExperimentType("Normalisation","normalisation",null,10400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
+				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		return l;
 	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

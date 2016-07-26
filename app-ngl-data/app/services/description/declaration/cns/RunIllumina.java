@@ -130,7 +130,7 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected void getExperimentTypeNodePROD() {
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
-		//		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false, false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),	null,null,null).save();
