@@ -178,9 +178,11 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 	}
 	
-	var generateSampleSheet = function(){
-		console.log ("generateSampleSheet");
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+    //FDS ajout param ftype + {'fdrType':ftype}  OK
+	var generateSampleSheet = function(ftype){
+		console.log ("generateSampleSheet type="+ftype);
+		
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url, {'fdrType':ftype})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
 			var filepath = header.split("filename=")[1];
@@ -206,14 +208,21 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		});
 	};
 
-
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
+		//FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
 		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isNewState();} ,
 			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheet,
-			label:Messages("experiments.sampleSheet")
-		}]);
+			//click:generateSampleSheet,
+			click: function(){return generateSampleSheet("samples")},
+			label: Messages("experiments.sampleSheet")+ " / échantillons"
+		},{
+			isDisabled : function(){return $scope.isNewState();} ,
+			isShow:function(){return !$scope.isNewState();},
+			//click:generateSampleSheet,
+			click: function(){return generateSampleSheet("buffer")},
+			label:Messages("experiments.sampleSheet")+ " / tampon"
+		}]);	
 	}
 	
 	//Only 96-well-plate is authorized

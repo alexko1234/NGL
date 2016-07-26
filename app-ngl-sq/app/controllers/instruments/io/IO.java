@@ -78,9 +78,13 @@ public class IO extends TPLCommonController {
 		Experiment experiment = getExperiment(experimentCode);
 		if(null == experiment)return badRequest("experiment not exist");
 		
-		DynamicForm filledForm = form();
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		// GA/FDS 22/07/2016 ajout .bindFromRequest() + context....putAll pour recuperer un parametre de la query string...
+		DynamicForm filledForm = form().bindFromRequest(); 
+        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+        contextValidation.getContextObjects().putAll(filledForm.data());
+
 		AbstractOutput output = getOutputInstance(experiment, contextValidation);
+		
 		if(!contextValidation.hasErrors()){
 			try{
 				File file = output.generateFile(experiment, contextValidation);
