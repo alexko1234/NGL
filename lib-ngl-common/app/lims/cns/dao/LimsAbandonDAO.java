@@ -530,7 +530,7 @@ public class LimsAbandonDAO {
 		 
 		 for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods)
 		 {
-			 int laneNum=Integer.valueOf(atomicTransfertMethods.line);
+			 int laneNum=Integer.valueOf(atomicTransfertMethods.outputContainerUseds.get(0).locationOnContainerSupport.line);
 			 for(InputContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds){
 				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 				 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();

@@ -179,6 +179,14 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			}
 			
 			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+			
+			if(!"N".equals(stateCode)){
+				ValidationHelper.required(contextValidation, locationOnContainerSupport.line, "line");
+				ValidationHelper.required(contextValidation, locationOnContainerSupport.column, "column");
+			}
+			
+			
+			
 			if(("N".equals(stateCode) && null != locationOnContainerSupport.code) || "IP".equals(stateCode)){
 				if(ValidationHelper.required(contextValidation, locationOnContainerSupport.code, "code")){
 					if(validateUniqueInstanceCode(contextValidation, locationOnContainerSupport.code, ContainerSupport.class, CONTAINER_SUPPORT_COLL_NAME)){
@@ -189,6 +197,9 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			}else if("F".equals(stateCode)){
 				validateRequiredInstanceCode(locationOnContainerSupport.code, "code",  ContainerSupport.class, CONTAINER_SUPPORT_COLL_NAME,contextValidation);					
 			}
+			
+			
+			
 			
 			contextValidation.removeKeyFromRootKeyName("locationOnContainerSupport");
 		

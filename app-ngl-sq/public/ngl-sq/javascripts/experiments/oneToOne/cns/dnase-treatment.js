@@ -141,8 +141,7 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

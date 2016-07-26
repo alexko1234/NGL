@@ -121,8 +121,8 @@ public class Transfert extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
-				Arrays.asList(newValue("fixeCfVi", "Cf et Vi fixe"), newValue("fixeCfVf", "Cf et Vf fixe")), "single", 21, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Mode calcul", "computeMode", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+				Arrays.asList(newValue("fixeCfVi", "Volume à engager fixe"), newValue("fixeCfVf", "Volume final fixe")), "single", 21, true, null,null));
 		
 		return propertyDefinitions;
 	}

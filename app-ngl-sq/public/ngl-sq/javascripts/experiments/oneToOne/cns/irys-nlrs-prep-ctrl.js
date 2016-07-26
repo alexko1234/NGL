@@ -119,8 +119,7 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

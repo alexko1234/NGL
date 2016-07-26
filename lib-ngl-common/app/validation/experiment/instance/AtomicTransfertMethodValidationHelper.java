@@ -68,5 +68,14 @@ public class AtomicTransfertMethodValidationHelper extends CommonValidationHelpe
 		}
 	}
 
+	public static void validationLineAndColumn(
+			ContextValidation contextValidation, String line, String column) {
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		if(!"N".equals(stateCode)){
+			ValidationHelper.required(contextValidation, line, "line");
+			ValidationHelper.required(contextValidation, column, "column");			
+		}
+	}
+
 	
 }

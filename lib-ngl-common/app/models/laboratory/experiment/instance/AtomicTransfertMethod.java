@@ -44,8 +44,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		long t0 = System.currentTimeMillis();
-		ValidationHelper.required(contextValidation, line, "line");
-		ValidationHelper.required(contextValidation, column, "column");
+		AtomicTransfertMethodValidationHelper.validationLineAndColumn(contextValidation,line,column);
 		long t1 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateInputContainers(contextValidation, inputContainerUseds);
 		long t2 = System.currentTimeMillis();

@@ -166,8 +166,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

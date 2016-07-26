@@ -142,8 +142,7 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

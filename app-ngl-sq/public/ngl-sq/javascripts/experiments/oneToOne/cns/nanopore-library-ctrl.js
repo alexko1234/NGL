@@ -132,8 +132,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

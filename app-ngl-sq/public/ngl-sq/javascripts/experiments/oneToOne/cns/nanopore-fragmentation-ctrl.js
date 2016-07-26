@@ -139,8 +139,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

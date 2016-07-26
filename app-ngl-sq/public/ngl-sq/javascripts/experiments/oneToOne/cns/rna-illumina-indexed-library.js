@@ -131,8 +131,7 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

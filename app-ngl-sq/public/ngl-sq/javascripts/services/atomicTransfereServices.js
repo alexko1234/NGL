@@ -417,11 +417,11 @@ angular.module('atomicTransfereServices', [])
 						}else if(!$that.$outputIsVoid && result[0].output){
 							outputContainers = result[0].output;
 						}
-						
-						if(atms[0].inputContainerUseds[0].categoryCode === 'well'){
+						/*
+						if(atms[0].outputContainerUseds[0].categoryCode === 'well'){
 							atms = $filter('orderBy')(atms, ['column*1', 'line']);
 						}
-						
+						*/
 						var l=0, atomicIndex=0;
 						for(var i=0; i< atms.length;i++){
 							
@@ -473,6 +473,12 @@ angular.module('atomicTransfereServices', [])
 								}
 							}
 							atomicIndex++;
+						}
+						
+						if(allData[0].inputContainer.categoryCode === 'well'){
+							allData = $filter('orderBy')(allData, ['inputContainer.support.column*1', 'inputContainer.locationOnSupportContainer.line']);
+						}else{
+							allData = $filter('orderBy')(allData,'inputContainer.support.code');
 						}
 						
 						$that.data.setData(allData, allData.length);
@@ -529,7 +535,9 @@ angular.module('atomicTransfereServices', [])
 								});
 								
 								if(allData[0].inputContainer.categoryCode === 'well'){
-									allData = $filter('orderBy')(allData, ['atomicTransfertMethod.column*1', 'atomicTransfertMethod.line']);
+									allData = $filter('orderBy')(allData, ['inputContainer.support.column*1', 'inputContainer.support.line']);
+								}else{
+									allData = $filter('orderBy')(allData,'inputContainer.support.code');
 								}
 								$that.data.setData(allData, allData.length);											
 						});

@@ -161,8 +161,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'inputContainer.support.code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -447,7 +446,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
-		var computeMode = $parse("experimentProperties.computeMode.value")($scope.experiment);
+		var computeMode = $parse("data.inputContainerUsed.experimentProperties.computeMode.value")(value);
 		
 		if(col.property === 'outputContainerUsed.concentration.value'){
 			computeInputVolume(value.data);

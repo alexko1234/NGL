@@ -115,8 +115,7 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'inputContainer.support.code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

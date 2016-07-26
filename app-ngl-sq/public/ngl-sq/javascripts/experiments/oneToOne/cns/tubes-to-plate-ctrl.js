@@ -18,7 +18,7 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3,
