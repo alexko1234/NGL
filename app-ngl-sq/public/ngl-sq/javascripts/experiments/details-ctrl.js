@@ -197,6 +197,20 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		mainService.stopEditMode();
 		finishEditMode=false;
 		saveInProgress = false;
+		
+		if(mainService.isHomePage('search') 
+				&& tabService.isBackupTabs() ){
+			$scope.restoreBackupTabs();
+			$scope.activeTab(1);
+			$scope.setDatatable(undefined);	
+			
+			var form = {};
+			form.typeCode = $scope.experimentType.code;
+			form.experimentCategoryCode = $scope.experimentType.category.code;
+			
+			mainService.setForm(form);								
+		}
+		
 		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
 	}
 	

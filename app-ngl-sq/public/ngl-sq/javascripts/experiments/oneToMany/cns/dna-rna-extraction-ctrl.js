@@ -281,8 +281,8 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 				active:true 
 			},			
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -353,13 +353,13 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		console.log("call event refresh on tube-to-tubes");
 		
 		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
 		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
@@ -417,8 +417,11 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 		if(property.code=="projectCode"){
 			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.projects")+'" bt-options="project.code as project.code+\' (\'+project.name+\')\' for project in lists.getProjects()" ></div>';
+			column.edit=$scope.isWorkflowModeAvailable('IP');	
+		
 		}else if(property.code=="sampleTypeCode"){
 			column.filter="getArray:'sampleTypeCode' | unique | codes:\"type\"";
+			column.edit=$scope.isWorkflowModeAvailable('IP');
 		}
 		return column;
 	};
