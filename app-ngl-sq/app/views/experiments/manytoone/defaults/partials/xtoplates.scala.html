@@ -95,16 +95,17 @@
 			<thead>
 				<tr>
 					<th>
-						Code support entrée	
+						@Messages("experiments.src_dest.inputContainerSupportCode")
 					</th>
 					<th>
-						Source
+						@Messages("experiments.src_dest.source")
 					</th>											
 				</tr>
-				</thead>				
-				<tr ng-model="container" ng-repeat="container in getInputContainerSupports() | orderBy track by $index" >
+				</thead>	
+				<!--  containerSupport et pas container -->			
+				<tr ng-model="containerSupport" ng-repeat="containerSupport in getInputContainerSupports() | orderBy track by $index" >
 					<td>
-						{{container}}
+						{{containerSupport}}
 					</td>
 					<td>
 						{{$index+1}}
@@ -117,26 +118,31 @@
 			<thead>
 				<tr>
 					<th>
-						Code support sortie	
+						@Messages("experiments.src_dest.outputContainerSupportCode")
 					</th>
 					<th>
-						Destination
+						@Messages("experiments.src_dest.dest")
 					</th>
+					<!-- pas necessaire pour 1 seule paque de sortie..
 					<th>
-						Label Travail( CNS ONLY ?? )
-					</th>											
+						@Messages("experiments.src_dest.label")
+					</th>	
+					 -->										
 				</tr>
-				</thead>				
-				<tr ng-model="container" ng-repeat="container in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >
+				</thead>	
+				<!--  <tr ng-model="container" ng-repeat="container    in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >	-->			
+				<tr ng-model="containerSupport" ng-repeat="containerSupport in getDistinctOutputContainerSupports()  | orderBy track by $index" >
 					<td>
-						{{container.locationOnContainerSupport.code}}
+						{{containerSupport.code}}
 					</td>
 					<td>
 						{{$index+1}}
 					</td>
+					<!-- pas necessaire pour 1 seule paque de sortie..
 					<td>
 						{{container.experimentProperties.workName.value}}
-					</td>									
+					</td>		
+					-->							
 				</tr>				
 			</table>
 		</div>	

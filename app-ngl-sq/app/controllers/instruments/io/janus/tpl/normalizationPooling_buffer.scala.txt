@@ -2,19 +2,20 @@
 
 @import controllers.instruments.io.utils._;
 
-@***** FDS: declaration de variables avec le mot cle 'var' et toutes sur une seule ligne *****@
-@import java.lang.String; var source_code=""; var buffer_vol="";
-@import java.math.BigInteger; var source_pos=0;
+@*** FDS: declaration de variables avec le mot cle 'var' et toutes sur une seule ligne ***@
+@import java.lang.String; var buffer_vol="";
+@import java.math.BigInteger; var dest_pos=0;
 
-@*******************TEST************************************@
-Destination rack;Destinantion Position;Vol tampon
+@*** NOTES
+Destination rack: harcoded=Poolplate
+***@
+Destination rack;Destination Position;Vol tampon
 @for((a,index) <- experiment.atomicTransfertMethods.sortWith(_.line<_.line).sortWith(_.column.toInt<_.column.toInt).zipWithIndex){
-		@for(c <- a.inputContainerUseds){
+		@for(c <- a.outputContainerUseds){
 			
-			 @{source_code=c.locationOnContainerSupport.code }	
-			 @{source_pos=OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line, c.locationOnContainerSupport.column)}
+			 @{dest_pos=OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line, c.locationOnContainerSupport.column)}
 			 @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.toString() }
 			 
-			 @(source_code);@(source_pos);@(buffer_vol);\u000D\u000A
+			 Poolplate;@(dest_pos);@(buffer_vol);\u000D\u000A
 		}	
 } 

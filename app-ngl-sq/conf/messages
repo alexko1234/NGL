@@ -361,13 +361,18 @@ experiment.comments = Commentaires
 experiments.inputs = Container(s) en entrée(s)
 experiments.outputs = Container(s) en sortie(s)
 
-experiments.outputContainerSupportCode= Code support de sortie
-experiments.outputContainerSupportStorageCode= Stockage support de sortie
+experiments.outputContainerSupportCode= Code support en sortie
+experiments.outputContainerSupportStorageCode= Stockage support en sortie
 experiments.instrumentFile = Fichier de l''instrument
 experiments.startColumnTagPlate = Colonne de début de la plaque d''index
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.src_dest.sheet = Source / Destination
+experiments.src_dest.source = Source
+experiments.src_dest.dest = Destination
+experiments.src_dest.outputContainerSupportCode = Code support en sortie
+experiments.src_dest.inputContainerSupportCode = Code support en entrée
+experiments.src_dest.label= Label Travail
 experiments.flowcell.design = Composition flowcell
 experiments.iryschip.design = Composition Irys Chip
 experiments.tube.design = Composition Tube

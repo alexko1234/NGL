@@ -93,16 +93,17 @@
 			<thead>
 				<tr>
 					<th>
-						Code support entrée	
+						@Messages("experiments.src_dest.inputContainerSupportCode")
 					</th>
 					<th>
-						Source
+						@Messages("experiments.src_dest.source")
 					</th>											
 				</tr>
-				</thead>				
-				<tr ng-model="container" ng-repeat="container in getInputContainerSupports() | orderBy track by $index" >
+				</thead>	
+				<!--  containerSupport et pas container -->				
+				<tr ng-model="containerSupport" ng-repeat="containerSupport in getInputContainerSupports() | orderBy track by $index" >
 					<td>
-						{{container}}
+						{{containerSupport}}
 					</td>
 					<td>
 						{{$index+1}}
@@ -115,17 +116,18 @@
 			<thead>
 				<tr>
 					<th>
-						Code support sortie	
+						@Messages("experiments.src_dest.outputContainerSupportCode")
 					</th>
 					<th>
-						Destination
+						@Messages("experiments.src_dest.dest")
 					</th>
 					<th>
-						Label Travail
+						@Messages("experiments.src_dest.label")
 					</th>											
 				</tr>
-				</thead>				
-				<tr ng-model="container" ng-repeat="container in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >
+				</thead>					
+				<!--  <tr ng-model="containerSupport" ng-repeat="containerSupport in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" > -->
+				<tr ng-model="container" ng-repeat="container in getOutputContainers() | orderBy: 'experimentProperties.workName.value' track by $index" >
 					<td>
 						{{container.locationOnContainerSupport.code}}
 					</td>

@@ -22,15 +22,20 @@ public class Output extends AbstractOutput {
 	@Override
 	 public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String content=null;
-		if ("pool".equals)(experiment.typeCode)){
+		String fdrType=null;
+		// a inverser...pool<->normalization-and-pooling !!!!!
+		
+		if ("normalization-and-pool".equals(experiment.typeCode)){
 			content = OutputHelper.format(pool_PlatesToPlate.render(experiment).body());	
-		} else if ("normalization-and-pooling ".equals(experiment.typeCode)){
+		} else if ("pool".equals(experiment.typeCode)){
 			//recuperer la valeur de la key "fdrType"dans contextValidation
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	
-				content = OutputHelper.format(pool_PlatesToPlate_samples.render(experiment).body());
+				fdrType="samples";
+				content = OutputHelper.format(normalizationPooling_samples.render(experiment).body());
 			} else if ("buffer".equals(ftype)) {
-				content = OutputHelper.format(pool_PlatesToPlate_buffer.render(experiment).body());
+				fdrType="buffer";
+				content = OutputHelper.format(normalizationPooling_buffer.render(experiment).body());
 			}else {
 				throw new RuntimeException("Janus sampleSheet type not managed : "+experiment.typeCode + "/" +ftype);
 			}
@@ -38,18 +43,24 @@ public class Output extends AbstractOutput {
 			content = OutputHelper.format(normalization.render(experiment).body());	
 		}else {
 			// a venir...
-			// rna-prep; 
-			// pcr-purif; 
+			//    rna-prep; 
+			//    pcr-purif; 
 			throw new RuntimeException("Janus sampleSheet type not managed for experiment : "+experiment.typeCode);
 		}
 		
-		File file = new File(getFileName(experiment)+".csv", content);
+		File file = new File(getFileName(experiment,fdrType )+".csv", content);
 		return file;
 	}
 	
-	private String getFileName(Experiment experiment) {
+	// 27/07/2016 ajouter le type de feuille de route dans le nom du fichier s'il y a un type
+	private String getFileName(Experiment experiment,String fdrType) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd");
-		return experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code+"_"+sdf.format(new Date());
+		
+		String fileName=experiment.typeCode.toUpperCase()+"_"+experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code;
+		if ( null != fdrType ){ fileName +="_"+fdrType;}
+		fileName +="_"+sdf.format(new Date());
+		    		   
+		return fileName;      
 	}
 
 }
