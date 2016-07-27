@@ -286,7 +286,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			"order" : true,
 			"edit" : false,
 			"hide" : true,
-			"type" : "text",
+			"type" : "number",
 			"position" : 1.2,
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")

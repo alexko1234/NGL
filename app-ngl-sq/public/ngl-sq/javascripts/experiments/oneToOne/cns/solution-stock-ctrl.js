@@ -309,7 +309,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	       	 "order":true,
 	       	 "edit":false,
 			  "hide":true,
-	       	 "type":"text",
+	       	 "type":"number",
 	       	 "position":1.2,
 	       	 "extraHeaders":{0:Messages("experiments.inputs")}
 	        });

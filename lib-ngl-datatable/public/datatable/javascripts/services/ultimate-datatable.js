@@ -2260,10 +2260,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         }
                                         
                                         if((column.type === "string" || column.type === "text") && colValue){
-                                        	if(Array.isArray(colValue) && colValue.length === 1 
+                                        	if(Array.isArray(colValue) && colValue.length === 1  && colValue[0].search
                                         			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue[0]+'"';
-                                        	}else if(!Array.isArray(colValue) 
+                                        	}else if(!Array.isArray(colValue) && colValue.search
                                         			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue+'"';
                                         	}                                        	
