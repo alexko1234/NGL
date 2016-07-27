@@ -75,6 +75,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	
 	$scope.searchService = containersSearchService;
 	$scope.searchService.init($routeParams, datatableConfig)
+	
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}	
 }]);
 
 
