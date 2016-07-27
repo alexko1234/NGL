@@ -30,7 +30,6 @@ public class ContainersSearchForm extends ListForm{
 	public Set<String> supportCodes;
 	public String supportCodeRegex;
 	public String supportStorageCodeRegex;
-	public boolean isPool=false;
 	public String containerSupportCategory;
 	public Set<String> containerSupportCategories;
 	public Set<String> fromTransformationTypeCodes;
@@ -48,6 +47,8 @@ public class ContainersSearchForm extends ListForm{
 	public Map<String, List<String>> processProperties = new HashMap<String, List<String>>();
 	
 	public Map<String, List<String>> contentsProperties = new HashMap<String, List<String>>();
+	
+	public Map<String, Boolean> existingFields;
 	
 	@Override
 	public String toString() {

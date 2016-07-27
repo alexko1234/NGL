@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -12,6 +13,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -110,6 +112,20 @@ public class NGLControllerHelper {
 		List<Query> queries = new ArrayList<Query>();
 		for(String key : treatmentProperties.keySet()){
 			queries.addAll(generateQueriesForProperties(treatmentProperties.get(key), level, prefixPropertyPath+"."+key));			
+		}
+		return queries;
+	}
+
+	public static Collection<? extends Query> generateQueriesForExistingProperties(Map<String, Boolean> existingFields) {
+		List<Query> queries = new ArrayList<Query>();
+		if (MapUtils.isNotEmpty(existingFields)) { //all
+			for(String field : existingFields.keySet()){
+				if(Boolean.FALSE.equals(existingFields.get(field))){
+					queries.add(DBQuery.notExists(field));
+				}else if(Boolean.TRUE.equals(existingFields.get(field))){
+					queries.add(DBQuery.exists(field));
+				}
+			}		
 		}
 		return queries;
 	}

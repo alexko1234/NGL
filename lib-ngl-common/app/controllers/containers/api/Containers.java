@@ -219,10 +219,6 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.regex("treeOfLife.paths", Pattern.compile(containersSearch.treeOfLifePathRegex)));
 		}
 		
-		if(BooleanUtils.isTrue(containersSearch.isPool)){
-			queryElts.add(DBQuery.exists("contents.1"));
-		}
-
 		if(CollectionUtils.isNotEmpty(containersSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", containersSearch.stateCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.stateCode)){
@@ -408,6 +404,9 @@ public class Containers extends CommonController {
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.properties,Level.CODE.Container, "properties"));
 
+		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(containersSearch.existingFields));
+		
+		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}		
