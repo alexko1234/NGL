@@ -23,12 +23,7 @@ import services.description.declaration.AbstractDeclaration;
 public class Transfert extends AbstractDeclaration {
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Aliquot","aliquoting",null,10100,
@@ -47,6 +42,34 @@ public class Transfert extends AbstractDeclaration {
 			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
 			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		return l;
+	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		return null;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+
+		/*l.add(newExperimentType("Aliquot","aliquoting",null,10100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
+				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		l.add(newExperimentType("Pool générique","pool",null,10300,
+			ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
+			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		*/
 		l.add(newExperimentType("Normalisation","normalisation",null,10400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
 				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
@@ -72,6 +95,12 @@ public class Transfert extends AbstractDeclaration {
 	}
 
 	@Override
+	protected void getExperimentTypeNodeCommon() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		// TODO Auto-generated method stub
 		return null;
@@ -89,6 +118,12 @@ public class Transfert extends AbstractDeclaration {
 		return null;
 	}
 
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
 		// TODO Auto-generated method stub
@@ -153,5 +188,9 @@ public class Transfert extends AbstractDeclaration {
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",14,true));	*/	
 		
 		return propertyDefinitions;
-	}	
+	}
+
+	
+
+		
 }

@@ -30,6 +30,12 @@ public class MetaTProcess extends AbstractDeclaration {
 
 
 	@Override
+	protected List<ExperimentType> getExperimentTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
@@ -86,7 +92,7 @@ public class MetaTProcess extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), null,
+		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTRNA(),
 				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
 						, getPET("rna-illumina-indexed-library",0)
 						, getPET("pcr-amplification-and-purification",1)
@@ -94,9 +100,9 @@ public class MetaTProcess extends AbstractDeclaration {
 						, getPET("prepa-flowcell",3)
 						, getPET("prepa-fc-ordered",3)
 						, getPET("illumina-depot",4)), 
-				getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("MetaT cDNA frg", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), null,
+		l.add(DescriptionFactory.newProcessType("MetaT cDNA frg", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTcDNA(),
 				Arrays.asList(getPET("ext-to-cDNA-frg-transcriptomic-process",-1)
 						, getPET("cdna-synthesis",0)
 						, getPET("fragmentation",1)
@@ -106,7 +112,7 @@ public class MetaTProcess extends AbstractDeclaration {
 						, getPET("prepa-flowcell",5)
 						, getPET("prepa-fc-ordered",5)
 						, getPET("illumina-depot",6)), 
-				getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("ext-to-cDNA-frg-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				getExperimentTypes("cdna-synthesis").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-cDNA-frg-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
 	}
 
@@ -123,11 +129,23 @@ public class MetaTProcess extends AbstractDeclaration {
 	}
 
 	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void getExperimentTypeNodeCommon() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	protected void getExperimentTypeNodeDEV() {
 		//Metatranscriptome
 		
 		newExperimentTypeNode("ext-to-cDNA-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cDNA-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false,AbstractExperimentService.getExperimentTypeNodes("ext-to-cDNA-frg-transcriptomic-process"),null,null,null).save();
+		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false,AbstractExperimentService.getExperimentTypeNodes("dna-rna-extraction","ext-to-cDNA-frg-transcriptomic-process"),null,null,null).save();
 		
 		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
@@ -135,7 +153,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,  getExperimentTypes("chip-migration")).save();
 		
 		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,AbstractExperimentService.getExperimentTypeNodes("ext-to-rna-lib-transcriptomic-process","fragmentation"),null,null,null).save();
+		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,AbstractExperimentService.getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),null,null,null).save();
 	}
 
 	@Override
@@ -160,17 +178,20 @@ public class MetaTProcess extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 13, true, null,null));
+				null, null,null,null,"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 13, true, null,null));
-
-		propertyDefinitions.add(newPropertiesDefinition("Volume", "volume", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
-				null, null, null, null,"single", 15, true, null,null));
+				MetaBarCoding.getTagCategoriesIllumina(), null,null,null,"single", 15, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
 
+		propertyDefinitions.add(newPropertiesDefinition("Type synthèse cDNA", "cDNAsynthesisType", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+				DescriptionFactory.newValues("random","oligoDT"), null, null, null,"single", 1, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "protocolBqRNA", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+				null, null, null, null,"single", 1, false, null,null));
+		
 		return propertyDefinitions;
 	}
 
@@ -193,19 +214,78 @@ public class MetaTProcess extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
-		
+
+		propertyDefinitions.add(newPropertiesDefinition("Type synthèse cDNA", "cDNAsynthesisType", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+				DescriptionFactory.newValues("random","oligoDT"), null, null, null,"single", 1, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "protocolBqRNA", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+				null, null, null, null,"single", 1, false, null,null));
+
 		return propertyDefinitions;
 	}
 
 	
 	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
-				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume à prélever", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false,null, "1"));
 
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Quantitée réellement engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,"1"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume à prélever (réel)", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,"1"));
+
+		propertyDefinitions.add(newPropertiesDefinition("Quantité à engager","requiredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",14, true,null,"1"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
+				,null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",25, false,null,"1"));
+		
 		return propertyDefinitions;
 	}
 	
+	
+	private List<PropertyDefinition> getPropertiesMetaTcDNA() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessTypeMetaRA(), 
+				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Objectif Déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("pas de déplétion","déplétion prok","déplétion polyA"), 
+				null,null,null,"single", 14, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("Smarter V4","Ovation RNAseq system v2"), 
+				null,null,null,"single", 15, true, null, null));
+
+		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		return propertyDefinitions;
+	}
+
+
+	
+
+
+	private List<PropertyDefinition> getPropertiesMetaTRNA() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessTypeMetaRB(), 
+				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Objectif Déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("pas de déplétion","déplétion prok","déplétion polyA"), 
+				null,null,null,"single", 14, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("TruSeq Stranded poly A","TruSeq Stranded Proc","Smarter Stranded"), 
+				null,null,null,"single", 15, true, null, null));
+
+		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		return propertyDefinitions;
+	}
+
+	private List<Value> getBanqueProcessTypeMetaRA() {
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("RA", "RA - RNAseq"));
+		return values;
+	}
+	
+	private List<Value> getBanqueProcessTypeMetaRB() {
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("RB", "RB - RNAseq stranded"));
+		return values;
+	}
+
 }

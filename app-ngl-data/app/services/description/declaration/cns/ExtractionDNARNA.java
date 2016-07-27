@@ -14,6 +14,7 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
+import play.Logger;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
@@ -22,7 +23,7 @@ import services.description.declaration.AbstractDeclaration;
 public class ExtractionDNARNA extends AbstractDeclaration{
 
 	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to Extraction ADN / ARN (corail)","ext-to-grinding-and-dna-rna-extraction",null,-1,
@@ -46,6 +47,11 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 	}
 
 	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		return null;
+	}
+
+	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		// TODO Auto-generated method stub
 		return null;
@@ -58,6 +64,20 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 	}
 
 	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		List<ProcessType> l=new ArrayList<ProcessType>();
+
+		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton)", "dna-rna-extraction-process", ProcessCategory.find.findByCode("sample-prep"), null,
+				Arrays.asList(getPET("ext-to-dna-rna-extraction-process",-1),getPET("dna-rna-extraction",0)), 
+				getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (corail)", "grinding-and-dna-rna-extraction", ProcessCategory.find.findByCode("sample-prep"), null,
+				Arrays.asList(getPET("ext-to-grinding-and-dna-rna-extraction",-1),getPET("grinding",0),getPET("dna-rna-extraction",1)), 
+				getExperimentTypes("grinding").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return l;	
+	}
+	
+	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		// TODO Auto-generated method stub
 		return null;
@@ -65,22 +85,23 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
-				
-		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton)", "dna-rna-extraction-process", ProcessCategory.find.findByCode("sample-prep"), null,
-				Arrays.asList(getPET("ext-to-dna-rna-extraction-process",-1),getPET("dna-rna-extraction",0)), 
-				getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (corail)", "grinding-and-dna-rna-extraction", ProcessCategory.find.findByCode("sample-prep"), null,
-				Arrays.asList(getPET("ext-to-grinding-and-dna-rna-extraction",-1),getPET("grinding",0),getPET("dna-rna-extraction",1)), 
-				getExperimentTypes("grinding").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		return l;
+		return null;
 	}
 
 	@Override
 	protected List<ProcessType> getProcessTypeUAT() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void getExperimentTypeNodeCommon() {
+		//Sample Preparation 
+		newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,null).save();
+		newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
+
 	}
 
 	@Override
@@ -91,11 +112,6 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		//Sample Preparation 
-		newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,null).save();
-		newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
 
 	}
 
@@ -118,5 +134,9 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 
 		return propertyDefinitions;
 	}
+
+	
+
+
 
 }

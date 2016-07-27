@@ -48,18 +48,6 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         {
-			        	"header":Messages("containers.table.tags"),
-			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'| unique",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":4,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-								 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainer.concentration.value",

@@ -25,6 +25,37 @@ import services.description.declaration.AbstractDeclaration;
 public class QualityControl extends AbstractDeclaration {
 
 	@Override
+	protected List<ExperimentType> getExperimentTypeCommon() {
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		
+		l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
+				getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		l.add(newExperimentType("Migration sur gel","gel-migration", null,20200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(), 
+				getInstrumentUsedTypes("hand"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		l.add(newExperimentType("Migration sur puce","chip-migration", null,20300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+				getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
+				getInstrumentUsedTypes("thermocycler"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+	
+		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
+				getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return l;
+	}
+	
+	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		// TODO Auto-generated method stub
 		return null;
@@ -32,33 +63,7 @@ public class QualityControl extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-				List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
-				l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
-						getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-				
-				l.add(newExperimentType("Migration sur gel","gel-migration", null,20200,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(), 
-						getInstrumentUsedTypes("hand"),"OneToVoid", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-				
-				l.add(newExperimentType("Migration sur puce","chip-migration", null,20300,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-						getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-				
-				l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
-						getInstrumentUsedTypes("thermocycler"),"OneToVoid", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-				l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20500,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-						getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-				return l;
+				return null;
 	}
 
 	@Override
@@ -67,6 +72,12 @@ public class QualityControl extends AbstractDeclaration {
 		return null;
 	}
 
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		// TODO Auto-generated method stub
@@ -85,6 +96,12 @@ public class QualityControl extends AbstractDeclaration {
 		return null;
 	}
 
+	@Override
+	protected void getExperimentTypeNodeCommon() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
 		// TODO Auto-generated method stub
@@ -189,4 +206,8 @@ public class QualityControl extends AbstractDeclaration {
 		
 		return propertyDefinitions;
 	}
+
+
+
+	
 }

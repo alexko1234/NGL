@@ -3,8 +3,8 @@ package services.description.declaration;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.typesafe.config.ConfigFactory;
-
+import play.Logger;
+import play.Logger.ALogger;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
@@ -14,19 +14,24 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
-public abstract class AbstractDeclaration {
+import com.typesafe.config.ConfigFactory;
 
+public abstract class AbstractDeclaration {
+	
+	protected abstract List<ExperimentType> getExperimentTypeCommon();
 	protected abstract List<ExperimentType> getExperimentTypeDEV();
 	protected abstract List<ExperimentType> getExperimentTypePROD();
 	protected abstract List<ExperimentType> getExperimentTypeUAT();
 
+
 	public List<ExperimentType> getExperimentType(){
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		if(getExperimentTypePROD()!=null){
-			l.addAll(getExperimentTypePROD());
+		Logger.debug(this.getClass().getSimpleName()+" getExperimentType");
+
+		if(getExperimentTypeCommon()!=null){
+			l.addAll(getExperimentTypeCommon());
 		}
-		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			if(getExperimentTypeDEV()!=null){
 				l.addAll(getExperimentTypeDEV());
@@ -36,7 +41,7 @@ public abstract class AbstractDeclaration {
 				l.addAll(getExperimentTypeUAT());
 			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			
+				l.addAll(getExperimentTypePROD());
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
@@ -44,16 +49,18 @@ public abstract class AbstractDeclaration {
 		return l;
 	}
 
-
+	protected abstract List<ProcessType> getProcessTypeCommon();
 	protected abstract List<ProcessType> getProcessTypeDEV();
 	protected abstract List<ProcessType> getProcessTypePROD();
 	protected abstract List<ProcessType> getProcessTypeUAT();
 
 	public List<ProcessType> getProcessType(){
 		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		Logger.debug(this.getClass().getSimpleName()+" getProcessType");
 
-		if(getProcessTypePROD()!=null){
-			l.addAll(getProcessTypePROD());
+		if(getProcessTypeCommon()!=null){
+			l.addAll(getProcessTypeCommon());
 		}
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			if(getProcessTypeDEV()!=null){
@@ -64,7 +71,7 @@ public abstract class AbstractDeclaration {
 				l.addAll(getProcessTypeUAT());
 			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			
+			 l.addAll(getProcessTypePROD());
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
@@ -72,24 +79,24 @@ public abstract class AbstractDeclaration {
 		return l;
 	}
 	
-	
+	protected abstract void getExperimentTypeNodeCommon();
 	protected abstract void getExperimentTypeNodeDEV();
 	protected abstract void getExperimentTypeNodePROD();
 	protected abstract void getExperimentTypeNodeUAT();
 
 	public void getExperimentTypeNode(){
 
-		
+		Logger.debug(this.getClass().getSimpleName()+" getExperimentTypeNode");
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			getExperimentTypeNodeDEV();
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
 			 getExperimentTypeNodeUAT();
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			 
+			getExperimentTypeNodePROD();
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
-		getExperimentTypeNodePROD();
+		getExperimentTypeNodeCommon();
 	}
 	
 	

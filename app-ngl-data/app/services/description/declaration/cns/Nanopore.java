@@ -34,13 +34,7 @@ import services.description.declaration.AbstractDeclaration;
 public class Nanopore extends AbstractDeclaration{
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to Frg, Lib ONT, Dépôt","ext-to-nanopore-process-library",null, -1,
@@ -72,6 +66,18 @@ public class Nanopore extends AbstractDeclaration{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
 		return l;
+
+	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		return null;
 	}
 
 	@Override
@@ -81,13 +87,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 
 	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypePROD() {
+	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
 		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , 
 				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),getPET("nanopore-fragmentation",0),getPET("nanopore-library",1),getPET("nanopore-depot",2)), 
@@ -106,10 +106,35 @@ public class Nanopore extends AbstractDeclaration{
 		return l;
 	}
 
+	
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypePROD() {
+		return null;
+	}
+
 	@Override
 	protected List<ProcessType> getProcessTypeUAT() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	protected void getExperimentTypeNodeCommon() {
+		//Nanopore
+		newExperimentTypeNode("ext-to-nanopore-run", getExperimentTypes("ext-to-nanopore-run").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-nanopore-process-library", getExperimentTypes("ext-to-nanopore-process-library").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-nanopore-process-library-no-frg", getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,null,getExperimentTypes("aliquoting")).save();
+
+		newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,getExperimentTypes("pool-tube")).save();
+		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false, false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,null).save();
+		
 	}
 
 	@Override
@@ -119,15 +144,7 @@ public class Nanopore extends AbstractDeclaration{
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		//Nanopore
-		newExperimentTypeNode("ext-to-nanopore-run", getExperimentTypes("ext-to-nanopore-run").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-nanopore-process-library", getExperimentTypes("ext-to-nanopore-process-library").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-nanopore-process-library-no-frg", getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,null,getExperimentTypes("aliquoting")).save();
-
-		newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,getExperimentTypes("pool-tube")).save();
-		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false, false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,null).save();
-
+	
 	}
 
 	@Override
@@ -273,5 +290,8 @@ public class Nanopore extends AbstractDeclaration{
          values.add(DescriptionFactory.newValue("ONT","ONT - Nanopore"));
          return values;
 	}
+
+	
+	
 
 }

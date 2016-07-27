@@ -28,21 +28,7 @@ import services.description.declaration.AbstractDeclaration;
 public class RunIllumina extends AbstractDeclaration {
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-
-		l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		return l;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to Run Illumina","ext-to-illumina-run",null,-1,
@@ -82,6 +68,25 @@ public class RunIllumina extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
 	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+
+		l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return l;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		return null;
+	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
@@ -89,6 +94,16 @@ public class RunIllumina extends AbstractDeclaration {
 		return null;
 	}
 
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		List<ProcessType> l=new ArrayList<ProcessType>();
+
+		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNS() , 
+				Arrays.asList(getPET("ext-to-illumina-run",-1),getPET("solution-stock",-1), getPET("prepa-flowcell",0),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1)), 
+				getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-illumina-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return l;
+	}
+	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
@@ -104,12 +119,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
-
-		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNS() , 
-				Arrays.asList(getPET("ext-to-illumina-run",-1),getPET("solution-stock",-1), getPET("prepa-flowcell",0),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1)), 
-				getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-illumina-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		return l;
+		return null;
 	}
 
 	@Override
@@ -118,6 +128,16 @@ public class RunIllumina extends AbstractDeclaration {
 		return null;
 	}
 
+	@Override
+	protected void getExperimentTypeNodeCommon() {
+		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
+		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
+		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false, false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),	null,null,null).save();
+
+		
+	}
+	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
@@ -129,12 +149,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
-		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
-		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
-		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false, false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),	null,null,null).save();
-
 	}
 
 	@Override
@@ -334,4 +349,5 @@ public class RunIllumina extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions =getPropertyDefinitionsIlluminaDepotCNS();			
 		return propertyDefinitions;
 	}
+
 }

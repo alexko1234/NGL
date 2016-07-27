@@ -44,19 +44,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	"header":Messages("containers.table.tags"),
-			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":4,
-			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-								 
+			         },		 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainer.concentration.value",

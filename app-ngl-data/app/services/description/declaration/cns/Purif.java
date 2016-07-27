@@ -15,13 +15,7 @@ import services.description.declaration.AbstractDeclaration;
 public class Purif extends AbstractDeclaration {
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		//purif
@@ -31,6 +25,17 @@ public class Purif extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
 	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		return null;
+	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
@@ -38,6 +43,13 @@ public class Purif extends AbstractDeclaration {
 		return null;
 	}
 
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		// TODO Auto-generated method stub
@@ -57,6 +69,12 @@ public class Purif extends AbstractDeclaration {
 	}
 
 	@Override
+	protected void getExperimentTypeNodeCommon() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	protected void getExperimentTypeNodeDEV() {
 		// TODO Auto-generated method stub
 		
@@ -73,5 +91,6 @@ public class Purif extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

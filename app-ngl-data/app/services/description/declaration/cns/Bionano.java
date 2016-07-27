@@ -29,13 +29,7 @@ import services.description.declaration.AbstractDeclaration;
 public class Bionano extends AbstractDeclaration{
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		//Bionano
@@ -69,6 +63,17 @@ public class Bionano extends AbstractDeclaration{
 
 		return l;
 	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		return null;
+	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
@@ -76,14 +81,9 @@ public class Bionano extends AbstractDeclaration{
 		return null;
 	}
 
+	
 	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypePROD() {
+	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
 
 		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
@@ -100,6 +100,17 @@ public class Bionano extends AbstractDeclaration{
 
 		return l;
 	}
+	
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypePROD() {
+		return null;
+	}
 
 	@Override
 	protected List<ProcessType> getProcessTypeUAT() {
@@ -107,14 +118,9 @@ public class Bionano extends AbstractDeclaration{
 		return null;
 	}
 
+	
 	@Override
-	protected void getExperimentTypeNodeDEV() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void getExperimentTypeNodePROD() {
+	protected void getExperimentTypeNodeCommon() {
 		//Bionano
 		newExperimentTypeNode("ext-to-bionano-nlrs-process", getExperimentTypes("ext-to-bionano-nlrs-process").get(0), false, false, null, null, null).save();	
 		newExperimentTypeNode("ext-to-bionano-chip-process", getExperimentTypes("ext-to-bionano-chip-process").get(0), false, false, null, null, null).save();	
@@ -123,8 +129,18 @@ public class Bionano extends AbstractDeclaration{
 		newExperimentTypeNode("irys-nlrs-prep",getExperimentTypes("irys-nlrs-prep").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-nlrs-process"),null,null).save();
 		newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-chip-process","irys-nlrs-prep"),null,null).save();
 		newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-run","irys-chip-preparation"),null,null).save();
+	
+	}
+	
+	@Override
+	protected void getExperimentTypeNodeDEV() {
+		// TODO Auto-generated method stub
 
+	}
 
+	@Override
+	protected void getExperimentTypeNodePROD() {
+	
 	}
 
 	@Override
@@ -220,6 +236,10 @@ public class Bionano extends AbstractDeclaration{
 
 		return propertyDefinitions;
 	}
+
+	
+
+	
 
 
 }

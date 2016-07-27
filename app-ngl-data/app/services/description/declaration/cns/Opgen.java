@@ -24,13 +24,7 @@ import services.description.declaration.AbstractDeclaration;
 public class Opgen extends AbstractDeclaration {
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		//Depot Opgen
 		l.add(newExperimentType("Ext to Run Opgen","ext-to-opgen-run",null, -1,
@@ -43,11 +37,32 @@ public class Opgen extends AbstractDeclaration {
 
 		return l;
 	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		return null;
+	}
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		List<ProcessType> l=new ArrayList<ProcessType>();
+
+		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , 
+				Arrays.asList(getPET("ext-to-opgen-run",-1), getPET("opgen-depot",0)), 
+				getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("ext-to-opgen-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				return l;
 	}
 
 	@Override
@@ -58,12 +73,7 @@ public class Opgen extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
-
-		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , 
-				Arrays.asList(getPET("ext-to-opgen-run",-1), getPET("opgen-depot",0)), 
-				getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("ext-to-opgen-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-				return l;
+		return null;
 	}
 
 	@Override
@@ -72,6 +82,14 @@ public class Opgen extends AbstractDeclaration {
 		return null;
 	}
 
+
+	@Override
+	protected void getExperimentTypeNodeCommon() {
+		newExperimentTypeNode("ext-to-opgen-run", getExperimentTypes("ext-to-opgen-run").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-run"),null,null,null).save();
+		
+	}
+	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
 		// TODO Auto-generated method stub
@@ -80,9 +98,7 @@ public class Opgen extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		newExperimentTypeNode("ext-to-opgen-run", getExperimentTypes("ext-to-opgen-run").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-run"),null,null,null).save();
-
+	
 	}
 
 	@Override
@@ -102,5 +118,8 @@ public class Opgen extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
 		return propertyDefinitions;
 	}
+
+	
+
 
 }

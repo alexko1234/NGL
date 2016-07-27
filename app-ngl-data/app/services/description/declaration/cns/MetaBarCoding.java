@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.mongojack.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -19,20 +16,28 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.parameter.index.IlluminaIndex;
-import models.laboratory.parameter.index.NanoporeIndex;
-import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.InstanceConstants;
+
+import org.mongojack.DBQuery;
+
+import play.Logger;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
-import services.description.experiment.AbstractExperimentService;
+import fr.cea.ig.MongoDBDAO;
 
 public class MetaBarCoding extends AbstractDeclaration {
 
+	@Override
+	protected List<ExperimentType> getExperimentTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	@Override
 	public List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
@@ -81,6 +86,12 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
@@ -109,11 +120,17 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 	@Override
+	protected void getExperimentTypeNodeCommon() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
 	public void getExperimentTypeNodeDEV() {
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
 
-		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
+		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),null).save();
 
 		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("tag-pcr","fragmentation")
@@ -199,11 +216,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Nb de PCR", "nbPCR", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null, 
 				null,  null, null, null,"single", 15, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, "N", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", null, 
 				"single", 17, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "IP", 
+		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, null ,null ,null ,"single", 20, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, null, null, null,"single", 25, false, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("DNA polymerase", "dnaPolymerase", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
@@ -262,7 +279,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return values;
 	}
 	
-	private static List<Value> getTagIllumina() {
+	public static List<Value> getTagIllumina() {
 		List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
 		List<Value> values = new ArrayList<Value>();
 		indexes.forEach(index -> {
@@ -272,11 +289,12 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return values;
 	}
 
-	private static List<Value> getTagCategoriesIllumina(){
+	public static List<Value> getTagCategoriesIllumina(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		return values;	
 	}
+
 }
