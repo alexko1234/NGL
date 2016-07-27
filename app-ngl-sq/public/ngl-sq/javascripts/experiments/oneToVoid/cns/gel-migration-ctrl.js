@@ -20,7 +20,7 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 		});			
 	};
 	
-	$scope.$watch("gel",function(imgNew, imgOld){
+	$scope.$watch("gel1",function(imgNew, imgOld){
 		if(imgNew){			
 			
 			angular.forEach($scope.atmService.data.displayResult, function(dr){
@@ -28,7 +28,19 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 			}, imgNew);
 			
 		}
-		angular.element('#importFile')[0].value = null;
+		angular.element('#importFile1')[0].value = null;
+		
+	});
+	
+	$scope.$watch("gel2",function(imgNew, imgOld){
+		if(imgNew){			
+			
+			angular.forEach($scope.atmService.data.displayResult, function(dr){
+				$parse('inputContainerUsed.experimentProperties.electrophoresisGelPhoto2').assign(dr.data, this);
+			}, imgNew);
+			
+		}
+		angular.element('#importFile2')[0].value = null;
 		
 	});
 	

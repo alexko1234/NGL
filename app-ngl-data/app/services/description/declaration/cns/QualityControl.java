@@ -140,11 +140,14 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Photo de gel", "electrophoresisGelPhoto", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
+		propertyDefinitions.add(newPropertiesDefinition("Photo de gel 30 min.", "electrophoresisGelPhoto", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
 				"img", 13, true, null, null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Photo de gel 60 min.", "electrophoresisGelPhoto2", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+				"img", 14, true, null, null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 14, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
 		
 		return propertyDefinitions;
 	}
