@@ -1,7 +1,7 @@
 package services.description.declaration.cns;
 
 import static services.description.DescriptionFactory.newExperimentType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.*;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -38,10 +38,17 @@ public class QualityControl extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 		
-		l.add(newExperimentType("Migration sur puce","chip-migration", null,20300,
+		l.add(newExperimentType("Migration sur puce (eval ARN)","chip-migration-rna-evaluation", null,20300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigrationARNEvaluation(), 
+				getInstrumentUsedTypes("agilent-2100-bioanalyzer"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		
+		l.add(newExperimentType("Migration sur puce (hors eval ARN)","chip-migration", null,20350,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 				getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
 		
 		l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
@@ -173,6 +180,35 @@ public class QualityControl extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
+	
+	public static List<PropertyDefinition> getPropertyDefinitionsChipMigrationARNEvaluation() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		// A supprimer une fois le type de support category sera géré
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),
+				"single", 11, true, null, "0"));		
+	
+		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
+				"img", 14, true, null, null));
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("RIN", "rin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
+				"single", 15, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Couleur éval.", "rnaEvaluation", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+				newValues("vert","jaune","orange","rouge"), "single", 16, true, null, null));
+		
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
+		
+		
+		return propertyDefinitions;
+	}
+	
+	
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
@@ -181,16 +217,19 @@ public class QualityControl extends AbstractDeclaration {
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),
 				"single", 11, true, null, "0"));		
 		
-		
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "measuredSize", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 13, true, null, null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Taille 2", "measuredSize2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 14, true, null, null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
-				"img", 14, true, null, null));
+				"img", 15, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 16, true, null,null));
 		
 		
 		return propertyDefinitions;

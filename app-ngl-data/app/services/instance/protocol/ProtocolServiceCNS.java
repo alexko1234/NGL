@@ -56,7 +56,7 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("map005","MAP005","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
-		lp.add(newProtocol("map005-on-beads"," MAP005 sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
+		lp.add(newProtocol("map005-on-beads","MAP005 sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("map006-low-input","MAP006 low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		
 		lp.add(newProtocol("map005-depot","MAP005_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
@@ -95,15 +95,18 @@ public class ProtocolServiceCNS {
 
 		lp.add(newProtocol("fluo-dosage","dosage_fluo","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification")));
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
-		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration","control-pcr-and-gel")));
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
 
+		
+		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes")));
+		
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));			
+						
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
 					
 			lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("solution-stock")));
-			lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
 			
 			lp.add(newProtocol("truseq_stranded_poly_A","TruSeq Stranded poly A","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
 			lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded Proc","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
@@ -119,14 +122,13 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("Amplif_ptr_Sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
 			lp.add(newProtocol("Amplif_ptr_Sox_144-4newProtocol","Amplif ptr Sox 144-4newProtocol","path2","1","production",InstanceFactory.setExperimentTypeCodes("sizing")));
 			
-			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation","tubes-to-plate","plate-to-tubes")));
-			
 			lp.add(newProtocol("Smarter_V4","Smarter V4","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
         	lp.add(newProtocol("Ovation_RNAseq_system_v2","Ovation RNAseq system v2","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
         	
-		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
-			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation","tubes-to-plate","plate-to-tubes")));
+        	lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-rna-evaluation")));
 			
+		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
+			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));
 		}
 		
 		for(Protocol protocole:lp){

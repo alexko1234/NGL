@@ -42,34 +42,6 @@ public class Transfert extends AbstractDeclaration {
 			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
 			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		return l;
-	}
-	
-	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-
-		/*l.add(newExperimentType("Aliquot","aliquoting",null,10100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
-				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		
-		l.add(newExperimentType("Pool générique","pool",null,10300,
-			ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
-			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		*/
 		l.add(newExperimentType("Normalisation","normalisation",null,10400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
 				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
@@ -85,7 +57,18 @@ public class Transfert extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
+		return l;
+	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		return null;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypePROD() {
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+
 		return l;
 	}
 

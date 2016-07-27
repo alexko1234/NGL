@@ -1,0 +1,72 @@
+@()
+
+<div ng-controller="OneToVoidQCCtrl" class="col-md-12 col-lg-12">	
+	<div ng-controller="OneToVoidChipMigrationCNSCtrl">
+	
+	<ul class="nav nav-tabs margin-bottom-5" role="tablist">
+  	<li class="active"><a href="" role="tab" data-target="#table"" data-toggle="tab" >Tableau</a></li>
+  	<li ng-if="experiment.instrument.inContainerSupportCategoryCode !== 'tube'"><a href="" role="tab"  data-target="#profils" data-toggle="tab" >Profils pour plaque</a></li>  
+	</ul>
+	
+	
+<div class="tab-content"  >
+	<div class="tab-pane active" id="table">	
+	<div class="row">
+		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>
+	</div>
+	
+	</div>
+	
+	<div class="tab-pane" id="profils">	
+	<div class="row margin-bottom-7" ng-show="button.isShow()">
+	<div class="col-md-5 col-lg-5">
+	<form class="form-horizontal">
+  	<div class="form-group">
+   		<label  class="col-md-3 col-lg-3 control-label">Profils : </label>
+		<div class="input-group col-md-9 col-lg-9" >
+		<input id="importFile" type="file" class="form-control" base64-img="profils" multiple=true/>		
+		</div>
+	</div>
+	</form>
+	</div>
+	</div>
+	
+	
+	<table class="table table-bordered table-condensed datatable" ng-if="experiment.instrument.inContainerSupportCategoryCode !== 'tube'">
+				
+	<thead>
+	     <tr>
+	         <th></th>
+	         <th ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]">{{i}}</th>
+	     </tr>
+	</thead>
+	<tbody>
+	    <tr ng-repeat="line in ['A','B','C','D','E','F','G','H']">
+	        <td><strong>{{line}}</strong></td>
+	        
+	        <td ng-repeat="column in [1,2,3,4,5,6,7,8,9,10,11,12] track by $index">
+	        
+	        <div  ng-click="setImage(getProfil(line,column).value,getProfil(line,column).fullname,getProfil(line,column).width,getProfil(line,column).height)"  
+	        	 ng-show="getProfil(line,column) !== undefined" > 
+	        	<div data-target="#modalImage" role="button" data-toggle="modal" >
+	        		<a href="#">
+	        		<img ng-src="data:image/{{getProfil(line,column).extension}};base64,{{getProfil(line,column).value}}"width="{{getProfil(line,column).width*0.15}}" height="{{getProfil(line,column).height*0.15}}"  class="center-block"/>
+	        		</a>
+	        		</div>
+	        	</div>
+	                		        	    						    					
+	        </td>          
+	    </tr>
+	  
+	<tbody>				 
+</table>
+	
+	
+	
+	</div>
+	
+	
+</div>
+
+</div>
+</div>
