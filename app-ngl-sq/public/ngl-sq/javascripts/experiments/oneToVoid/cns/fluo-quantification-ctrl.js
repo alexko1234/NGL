@@ -77,4 +77,43 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.concentration1.value'){
+			computeQuantity1(value.data);
+		}else if(col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
+			computeQuantity1(value.data);
+		}
+		
+	}
+	
+	var computeQuantity1 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.quantity1.value");
+		var quantity1 = getter(udtData);
+		
+		var compute = {
+				inputVol1 : $parse("inputContainerUsed.experimentProperties.volume1.value")(udtData),
+				inputConc1 : $parse("inputContainerUsed.experimentProperties.concentration1.value")(udtData),
+				isReady:function(){
+					return (this.inputVol1 && this.inputConc1);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputVol1 * inputConc1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				quantity1 = Math.round(result*10)/10;				
+			}else{
+				quantity1 = undefined;
+			}	
+			getter.assign(udtData, quantity1);
+		}else{
+			console.log("not ready to computeQuantity1");
+		}
+		
+	}
+	
 }]);

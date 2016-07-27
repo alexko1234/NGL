@@ -131,6 +131,19 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"position" : 20,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
+		
+		
+		columns.push({
+        	 "header":Messages("containers.table.storageCode"),
+        	 "property":"inputContainerUsed.locationOnContainerSupport.storageCode",
+        	 "order":true,
+			 "edit":true,
+			 "hide":true,
+        	 "type":"text",
+        	 "position":600,
+        	 "extraHeaders":{0:Messages("experiments.inputs")}
+		});
+		
 		if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') > -1) {
 			columns.push({
 				"header" : Messages("containers.table.supportCode"),

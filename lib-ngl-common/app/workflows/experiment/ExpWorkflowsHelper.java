@@ -849,7 +849,9 @@ public class ExpWorkflowsHelper {
 
 			c.traceInformation.modifyDate = new Date();
 			c.traceInformation.modifyUser = validation.getUser();
-
+			
+			if(null != icu.locationOnContainerSupport.storageCode)c.support.storageCode = icu.locationOnContainerSupport.storageCode;
+			
 			if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
 
 			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
