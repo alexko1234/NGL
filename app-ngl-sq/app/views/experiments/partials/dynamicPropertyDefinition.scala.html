@@ -44,7 +44,7 @@
 						</div>						
 						<div ng-switch-default class="col-md-6 col-lg-6" ng-switch on="propertyDef.choiceInList">
 						
-							<div ng-switch-when="false" ng-switch on="mainService.isEditMode()">
+							<div ng-switch-when="false" ng-switch on="mainService.isEditMode() && propertyDef.editable">
 								<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.@{name}[propertyDef.code].value" />
 								<input 	ng-switch-when="true" class="form-control" type="text" title='{{propertyDef.name}}'  class="input-small"
 										ng-model="experiment.@{name}[propertyDef.code].value"									
