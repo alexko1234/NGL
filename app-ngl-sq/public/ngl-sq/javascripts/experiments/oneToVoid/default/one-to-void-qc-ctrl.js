@@ -132,7 +132,16 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		
-		
+		columns.push({
+			"header" : Messages("containers.table.valuationqc.comment"),
+			"property" : "inputContainerUsed.valuation.comment",
+			"order" : false,
+			"edit" : true,
+			"hide" : true,
+			"type" : "text",			
+			"position" : 21,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
 		columns.push({
         	 "header":Messages("containers.table.storageCode"),
         	 "property":"inputContainerUsed.locationOnContainerSupport.storageCode",

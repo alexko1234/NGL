@@ -8,6 +8,7 @@
 					<th>@Messages("containers.resultsqc.results")</th>
 					<th>@Messages("containers.resultsqc.valuation")</th>
 					<th>@Messages("containers.resultsqc.date")</th>
+					<th>@Messages("containers.resultsqc.valuationComment")</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -40,6 +41,7 @@
 					</td>
 					<td ng-bind="qc.valuation.valid|codes:'valuation'" />
 					<td ng-bind="qc.date|date:'@Messages("date.format")'" />
+					<td ng-bind="qc.valuation.comment" />
 				</tr>							
 			</tbody>
 		</table>

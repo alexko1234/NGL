@@ -156,11 +156,7 @@ public class QualityControl extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("Photo de gel 60 min.", "electrophoresisGelPhoto2", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 14, true, null, null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Commentaire éval.", "gelComment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null, 				
-				"single", 15, true, null, null));
-		
-		
+	
 		propertyDefinitions.add(newPropertiesDefinition("% bas poids moléculaire", "lowMolecularWeightPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
 				"single", 16, true, null, null));
 		

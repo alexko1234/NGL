@@ -169,7 +169,7 @@ containers.resultsqc.type = Type QC
 containers.resultsqc.results = Résultats
 containers.resultsqc.valuation = Validation container
 containers.resultsqc.date = Date
-
+containers.resultsqc.valuationComment = Commentaire
 
 containers.treeTabs.code = Code
 containers.treeTabs.creationDate = Créé le
@@ -181,7 +181,7 @@ containers.table.irysprep.concentration=Concentration Moyenne
 containers.table.nlrsConcentration= Concentration arrondie (ng/µl)
 containers.table.valuation.valid = Valide
 containers.table.valuationqc.valid = Valide ? (QC courant)
-
+containers.table.valuationqc.comment = Commentaire éval.
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
 containers.placeholder.user = Container créé par

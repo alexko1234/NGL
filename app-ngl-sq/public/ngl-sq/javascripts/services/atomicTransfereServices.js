@@ -100,7 +100,7 @@ angular.module('atomicTransfereServices', [])
     			},
 				//Common for all but try to replace slowly
 				convertContainerToInputContainerUsed : function(container){
-					return {
+					var input = {
 						code:container.code,
 						categoryCode:container.categoryCode, 
 						contents:container.contents, //used in rules							
@@ -123,6 +123,10 @@ angular.module('atomicTransfereServices', [])
 						valuation : {valid:'UNSET'}
 						//not valuation to have the default value
 					};
+					
+					input.locationOnContainerSupport.storageCode = undefined;
+					
+					return input;
 					/*
 					 return {"state":container.state
 						}; 
