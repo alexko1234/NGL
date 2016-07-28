@@ -129,6 +129,9 @@ public class QualityControl extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometrique() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -137,6 +140,7 @@ public class QualityControl extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 14, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single", 15, true, null,null));
+		
 		return propertyDefinitions;
 		
 	}
@@ -153,8 +157,13 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Photo de gel 60 min.", "electrophoresisGelPhoto2", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 14, true, null, null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("% bas poids moléculaire", "lowMolecularWeightPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
+				"img", 15, true, null, null));
+		
+		
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
+				"single", 16, true, null,null));
 		
 		return propertyDefinitions;
 	}
@@ -202,7 +211,7 @@ public class QualityControl extends AbstractDeclaration {
 		
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 17, true, null,null));
 		
 		
 		return propertyDefinitions;

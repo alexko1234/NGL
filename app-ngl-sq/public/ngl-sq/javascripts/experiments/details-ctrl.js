@@ -454,7 +454,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists = lists;
 		$scope.mainService = mainService;
 		$scope.valuationService= valuationService();
-		
+		$scope.dispatchConfiguration = {/*orderBy*/};
 		if(angular.isUndefined($scope.getHomePage())){
 			mainService.setHomePage('search');
 			tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
@@ -1497,7 +1497,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 						
-						if(outputContainers[0] && outputContainers[0].container.categoryCode === 'well'){
+						if($scope.dispatchConfiguration.orderBy){
+							outputContainers = $filter("orderBy")(outputContainers,$scope.dispatchConfiguration.orderBy);
+						}else if(outputContainers[0] && outputContainers[0].container.categoryCode === 'well'){
 							outputContainers = $filter("orderBy")(outputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
 							outputContainers = $filter("orderBy")(outputContainers,'container.code');
@@ -1544,7 +1546,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 						
-						if(inputContainers[0] && inputContainers[0].container.categoryCode === 'well'){
+						if($scope.dispatchConfiguration.orderBy){
+							outputContainers = $filter("orderBy")(inputContainers,$scope.dispatchConfiguration.orderBy);
+						}else if(inputContainers[0] && inputContainers[0].container.categoryCode === 'well'){
 							inputContainers = $filter("orderBy")(inputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
 							inputContainers = $filter("orderBy")(inputContainers,'container.code');
