@@ -417,9 +417,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
+		//TEST FDS: nom des programes
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("programme 1_normalisation"), "single", null, false ,null, null));
-		//"program-normalisation","programme 1_normalisation"
+				// newValues("programme 1_normalisation"), "single", null, false ,null, null));
+				newValues("programme 1_normalisation",
+						  "pooling custom (mode colonne)",
+						  "pooling 3-plex (mode colonne)",
+						  "pooling 4-plex (mode colonne)"), "single", null, false ,null, null));
 		return l;
 	}
 	

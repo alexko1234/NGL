@@ -45,8 +45,8 @@
 			<th>
 				@Messages("containers.table.concentration.shortlabel")
 			</th>									
-			<th><!-- FDS !!! problem graphique input trop petit -->
-				@Messages("containers.table.percentageInsidePool")&nbsp;&nbsp;.
+			<th><!-- FDS !!! problem graphique input trop petit pour la valeu contenue -->
+				@Messages("containers.table.percentageInsidePool")&nbsp;&nbsp;&nbsp;&nbsp;.
 			</th>
 			<th ng-repeat="property in inputContainerProperties track by $index">
 				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>

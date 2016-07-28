@@ -11,7 +11,7 @@ import validation.ContextValidation;
 import controllers.instruments.io.janus.tpl.txt.normalization; 
 import controllers.instruments.io.janus.tpl.txt.normalizationPooling_samples; 
 import controllers.instruments.io.janus.tpl.txt.normalizationPooling_buffer; 
-import controllers.instruments.io.janus.tpl.txt.pool_PlatesToPlate;
+//import controllers.instruments.io.janus.tpl.txt.pool_PlatesToPlate;
 
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
@@ -23,11 +23,8 @@ public class Output extends AbstractOutput {
 	 public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String content=null;
 		String fdrType=null;
-		// a inverser...pool<->normalization-and-pooling !!!!!
-		
+
 		if ("normalization-and-pool".equals(experiment.typeCode)){
-			content = OutputHelper.format(pool_PlatesToPlate.render(experiment).body());	
-		} else if ("pool".equals(experiment.typeCode)){
 			//recuperer la valeur de la key "fdrType"dans contextValidation
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	
@@ -39,6 +36,10 @@ public class Output extends AbstractOutput {
 			}else {
 				throw new RuntimeException("Janus sampleSheet type not managed : "+experiment.typeCode + "/" +ftype);
 			}
+			
+		// NON pas de FDR
+		//} else if ("pool".equals(experiment.typeCode)){
+		//	content = OutputHelper.format(pool_PlatesToPlate.render(experiment).body());	
 		} else if ("lib-normalization".equals(experiment.typeCode)){
 			content = OutputHelper.format(normalization.render(experiment).body());	
 		}else {

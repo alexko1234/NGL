@@ -19,6 +19,28 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		return column;
 	};
 	
+	/* FDS TEST 
+	$scope.$on('updateInstrumentProperty', function(e, pName) {
+		console.log("call event updateInstrumentProperty "+pName);
+		
+		if($scope.isCreationMode() && pName === 'program'){
+			console.log("update program "+$scope.experiment.instrumentProperties[pName].value);
+			var program = $scope.experiment.instrumentProperties[pName].value
+			
+			if ( program === 'pooling custom (mode colonne)'){
+				//laisser comme maintenant...
+			} else if ( program === 'pooling 3-plex (mode colonne)'){
+				// pooling automatique...3 puits par 3 puits
+				// TODO mais quoi ??
+			} else if ( program === 'pooling 4-plex (mode colonne)'){	
+				// pooling automatique...4 puits par 4 puits
+				// TODO mais quoi ??
+			} else if ( program === 'programme 1_normalisation' ) {
+				// ???????
+			}
+		}
+	});
+	*/
 	
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
@@ -177,8 +199,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 	}
 	
-    //FDS ajout param ftype + {'fdrType':ftype}  OK
-	// POUR TEST CE N"EST PAS ICI QU"IL FAUT FAIRE CA...
+    //FDS ajout param ftype + {'fdrType':ftype} 
 	var generateSampleSheet = function(ftype){
 		console.log ("generateSampleSheet type="+ftype);
 		
@@ -210,9 +231,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 
 
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
-		// POUR TEST,  CE N"EST PAS ICI QU"IL FAUT FAIRE CA...
-		
-		// FDS il ne faut les boutons generateSampleSheet que si l'instrument n'est pas la main...sinon genere une Bad Request...
+		// FDS pas de boutons generateSampleSheet pour la main
 		if (  $scope.experiment.instrument.categoryCode !== "hand") {
 		  // FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
 		  $scope.setAdditionnalButtons([{
@@ -220,7 +239,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			  isShow:function(){return !$scope.isNewState();},
 			  //click:generateSampleSheet,
 			  click: function(){return generateSampleSheet("samples")},
-			  label: Messages("experiments.sampleSheet")+ " / échantillons"+ ">"+ $scope.experiment.instrument.categoryCode
+			  label: Messages("experiments.sampleSheet")+ " / échantillons"
 		  },{
 			  isDisabled : function(){return $scope.isNewState();} ,
 			  isShow:function(){return !$scope.isNewState();},
