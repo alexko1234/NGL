@@ -27,7 +27,7 @@ public class Tools {
 		
 		List<String> listReadSet = new ArrayList<String>();
 		if (inputStream==null) {
-			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
+			return listReadSet;
 		}
 		try {
 			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));

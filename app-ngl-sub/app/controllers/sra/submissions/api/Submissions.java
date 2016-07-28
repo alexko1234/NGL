@@ -300,22 +300,20 @@ public class Submissions extends DocumentController<Submission>{
 			List<String> readSetCodes;
 			InputStream inputStreamUserFileReadSet = Tools.decodeBase64(submissionsCreationForm.base64UserFileReadSet);
 			Logger.debug("Read base64UserFileReadSet : "+inputStreamUserFileReadSet);
-			if (inputStreamUserFileReadSet == null) {
+			Tools tools = new Tools();
+			// Recuperer readSetCodes à partir du fichier utilisateur :		
+			readSetCodes = tools.loadReadSet(inputStreamUserFileReadSet);	
+			
+			if (readSetCodes.isEmpty()) {
 				// Recuperer readSetCodes à partir de la selection de readset des utilisateurs			
 				readSetCodes = submissionsCreationForm.readSetCodes; 
 				// remplir la liste readSetCodes
 				// à partir de la selection de readset des utilisateurs
-
-			} else {			
-				Tools tools = new Tools();
-				// Recuperer readSetCodes à partir du fichier utilisateur :		
-				readSetCodes = tools.loadReadSet(inputStreamUserFileReadSet);		
 			}
 			
 			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
 			//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
 
-		
 			SubmissionServices submissionServices = new SubmissionServices();
 				
 			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);

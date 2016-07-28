@@ -63,17 +63,29 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 				$scope.messages.open();
 				$scope.codeSubmission=data;
 				$scope.createService.search();
-				$scope.createService.resetForm();
+				$scope.createService.userFileExperiments=null;
+				$scope.createService.userFileSamples=null;
+				$scope.createService.userFileCloneToAc=null;
+				$scope.createService.userFileReadSet=null;
+				
 			}).error(function(data){
 				//$scope.messages.setDetails({"error":{"code":"value","code2":"value2"}});
 				$scope.messages.setDetails(data);
 				$scope.messages.setError("save");
 				//$scope.messages.clear();
+				$scope.createService.userFileExperiments=null;
+				$scope.createService.userFileSamples=null;
+				$scope.createService.userFileCloneToAc=null;
+				$scope.createService.userFileReadSet=null;
 			});
 	};
 	
 	$scope.reset = function(){
-		$scope.createService.resetForm();
+		$scope.createService.resetForm(); // on initialise à null toutes les variables recuperees dans create-ctrl.js dans code : ng-model="createService.form.xxx
+		$scope.createService.userFileExperiments=null;
+		$scope.createService.userFileSamples=null;
+		$scope.createService.userFileCloneToAc=null;
+		$scope.createService.userFileReadSet=null;
 		//$scope.messages.clear();
 	};
 		
