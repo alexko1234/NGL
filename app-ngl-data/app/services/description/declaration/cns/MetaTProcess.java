@@ -94,6 +94,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		
 		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTRNA(),
 				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
+						,getPET("dna-rna-extraction",-1)
 						, getPET("rna-illumina-indexed-library",0)
 						, getPET("pcr-amplification-and-purification",1)
 						, getPET("solution-stock",2)
@@ -104,6 +105,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		
 		l.add(DescriptionFactory.newProcessType("MetaT cDNA frg", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTcDNA(),
 				Arrays.asList(getPET("ext-to-cDNA-frg-transcriptomic-process",-1)
+						,getPET("dna-rna-extraction",-1)
 						, getPET("cdna-synthesis",0)
 						, getPET("fragmentation",1)
 						, getPET("dna-illumina-indexed-library",2)

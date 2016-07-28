@@ -20,6 +20,7 @@ import services.description.common.LevelService;
 import services.description.declaration.cns.Bionano;
 import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
+import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
 import services.description.declaration.cns.Nanopore;
 import services.description.declaration.cns.Opgen;
@@ -59,6 +60,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 
 		l.addAll(new MetaBarCoding().getProcessType());
 		l.addAll(new MetaTProcess().getProcessType());
+		l.addAll(new MetaGenomique().getProcessType());
 		l.addAll(new Bionano().getProcessType());
 		l.addAll(new Nanopore().getProcessType());
 		l.addAll(new RunIllumina().getProcessType());

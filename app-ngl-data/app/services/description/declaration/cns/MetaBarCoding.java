@@ -65,7 +65,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				getInstrumentUsedTypes("thermocycler","thermocycler-and-biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Sizing sur gel","sizing","SIZ",830,
+		l.add(newExperimentType("Sizing","sizing","SIZ",830,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
 				getInstrumentUsedTypes("hand"),"OneToMany", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -96,11 +96,28 @@ public class MetaBarCoding extends AbstractDeclaration {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), getPropertyMetaBarCodingSizing(),
-				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1),getPET("tag-pcr",0),getPET("dna-illumina-indexed-library",1),getPET("pcr-amplification-and-purification",2),getPET("sizing",3),getPET("solution-stock",4),getPET("prepa-flowcell",5),getPET("prepa-fc-ordered",5),getPET("illumina-depot",6)), 
+				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1)
+						,getPET("dna-rna-extraction",-1)
+						,getPET("tag-pcr",0)
+						,getPET("dna-illumina-indexed-library",1)
+						,getPET("pcr-amplification-and-purification",2)
+						,getPET("sizing",3)
+						,getPET("solution-stock",4)
+						,getPET("prepa-flowcell",5)
+						,getPET("prepa-fc-ordered",5)
+						,getPET("illumina-depot",6)), 
 				getExperimentTypes("tag-pcr").get(0), getExperimentTypes("sizing").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("MetaBarcoding (sans sizing)", "tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), getPropertyMetaBarCodingWithoutSizing(),
-				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1),getPET("tag-pcr",0),getPET("dna-illumina-indexed-library",1),getPET("pcr-amplification-and-purification",2),getPET("solution-stock",3),getPET("prepa-flowcell",4),getPET("prepa-fc-ordered",4),getPET("illumina-depot",5)), 
+				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1)
+						,getPET("dna-rna-extraction",-1)
+						,getPET("tag-pcr",0)
+						,getPET("dna-illumina-indexed-library",1)
+						,getPET("pcr-amplification-and-purification",2)
+						,getPET("solution-stock",3)
+						,getPET("prepa-flowcell",4)
+						,getPET("prepa-fc-ordered",4)
+						,getPET("illumina-depot",5)), 
 				getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return l;
@@ -181,7 +198,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.newValues("taq Q5","taq Kapa"), null, null, null,"single", 1, false, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Ratio billes", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
-				null, null, null, null,"single", 1, false, null, null));
+				null, null, null, null,"single", 1, true, null, null));
 
 
 		return propertyDefinitions;

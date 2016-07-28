@@ -27,6 +27,7 @@ import services.description.common.MeasureService;
 import services.description.declaration.cns.Bionano;
 import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
+import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
 import services.description.declaration.cns.Nanopore;
 import services.description.declaration.cns.Opgen;
@@ -77,6 +78,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new Transfert().getExperimentType());
 		l.addAll(new MetaBarCoding().getExperimentType());
 		l.addAll(new MetaTProcess().getExperimentType());
+		l.addAll(new MetaGenomique().getExperimentType());
 		
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
@@ -119,8 +121,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		new ExtractionDNARNA().getExperimentTypeNode();
 		new MetaTProcess().getExperimentTypeNode();
 		new MetaBarCoding().getExperimentTypeNode();
+		new MetaGenomique().getExperimentTypeNode();
 		new RunIllumina().getExperimentTypeNode();
-		
+
 		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
 		//newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();
 				
