@@ -72,12 +72,14 @@
 						this.lists.refresh.sraConfigurations({projCode:this.form.projCode});
 					}
 				},
+				
 				refreshReadSets : function(){
 					if(this.form.projCode!==null && this.form.projCode !== undefined){
 						// appel de refresh.ReadSets dans lists de common.js
 						this.lists.refresh.readSets({projectCode:this.form.projCode, submissionStateCode:"NONE"});
 					}
 				},
+				
 				// fonction qui recupere objet configuration dont le code est saisi par utilisateur et qui en fonction
 				// de config.strategy_internal_study determine si la variable internal_studies est à true ou false.
 				displayStudies : function(){

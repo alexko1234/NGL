@@ -112,7 +112,34 @@
 			</li>
 		</ul>
 	</div>
-
+	
+	<div class="panel-heading">
+		<h3>@Messages("documentation.userFileReadSet")</h3>
+	</div>
+	<div class="panel-body">
+		<ul>
+		<li><h4>utilité du fichier :</h4>
+		Il permet d'indiquer une liste predefinie de ReadSetCode à soumettre.
+		<li><h4>Format du fichier :</h4>
+		En colonnes délimitées par le caractère '|'. La premiere ligne du fichier permet de definir la legende (type-information de chaque colonne) tandis que les lignes suivantes du fichier correspondent aux valeurs. <br>
+		Les lignes commencant par le caractère '#' sont ignorées (commentaires).<br> 
+		La legende doit obligatoirement comporter le champs "readSetCode".<br>
+		<li><h4>Type d'informations pouvant apparaitre dans le fichier :</h4>
+		<ul>
+			<li><strong>readSetCode</strong> :        Code du readSet.
+		</ul>		
+		<li><h4>Exemple de fichier :</h4>
+        #--------------------------------------------- <br>
+        experiment_alias	|	nominal_length         <br>  
+        #--------------------------------------------- <br>
+        AWP_AOSF_1_D0HW7ACXX.IND12	|	297 <br>
+        AWP_AOSF_4_D0HW7ACXX.IND12	|	297 <br>
+        AWP_AOSA_7_D0HW7ACXX	|	2852 <br>
+        AWP_AOSA_8_D0HW7ACXX	|	3292 <br>
+		
+		
+	</div>	
+	
 	<div class="panel-heading">
 		<h3>@Messages("documentation.userFileExperiments")</h3>
 	</div>

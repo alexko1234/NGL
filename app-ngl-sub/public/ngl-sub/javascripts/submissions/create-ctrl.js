@@ -49,6 +49,11 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 		if ($scope.createService.userFileSamples !==null && $scope.createService.userFileSamples !== undefined) {
 			$scope.createService.form.base64UserFileSamples=$scope.createService.userFileSamples.value;
 		} 
+		
+		$scope.createService.form.base64UserFileReadSet="";
+		if ($scope.createService.userFileReadSet !==null && $scope.createService.userFileReadSet !== undefined) {
+			$scope.createService.form.base64UserFileReadSet=$scope.createService.userFileReadSet.value;
+		} 		
 		mainService.setForm($scope.createService.form);
 		//$scope.createService.search();
 			$http.post(jsRoutes.controllers.sra.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {
@@ -56,9 +61,9 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 				$scope.messages.clazz="alert alert-success";
 				$scope.messages.text=Messages('submissions.msg.save.success')+" : "+data;
 				$scope.messages.open();
-				
 				$scope.codeSubmission=data;
 				$scope.createService.search();
+				$scope.createService.resetForm();
 			}).error(function(data){
 				//$scope.messages.setDetails({"error":{"code":"value","code2":"value2"}});
 				$scope.messages.setDetails(data);

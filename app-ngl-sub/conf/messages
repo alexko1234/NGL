@@ -78,6 +78,7 @@ submissions.msg.details=Détail de la soumission
 submissions.msg.consultation=Recherche des soumission
 submissions.code=Code
 submissions.state=Etat
+userFileReadSet=userFileReadSet :
 userFileExperiments=userFileExperiments :
 userFileCloneToAc= * userFileCloneToAc :
 
@@ -135,6 +136,7 @@ documentation.intern.title=Configuration
 documentation.mandatory=Information obligatoire
 documentation.optionnal=Information facultative
 documentation.possible.values=Valeurs possibles
+documentation.userFileReadSet=Fichier userFileReadSet
 documentation.userFileExperiments=Fichier userFileExperiments
 documentation.userFileCloneToAc=Fichier userFileCloneToAc
 

@@ -8,7 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,8 +21,55 @@ import models.sra.submit.util.SraException;
 
 
 public class Tools {
+	
 
-
+	public List<String> loadReadSet(InputStream inputStream) throws SraException {
+		
+		List<String> listReadSet = new ArrayList<String>();
+		if (inputStream==null) {
+			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
+		}
+		try {
+			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
+			String ligne = "";
+			String pattern_string = "^\\s*\"*([^\"]+)\\s*\"*";
+			Pattern p = Pattern.compile(pattern_string);
+			String pattern_string_c = "([^#]*)#";
+			Pattern p_c = Pattern.compile(pattern_string_c);
+			boolean legend = false;	
+			while ((ligne = input_buffer.readLine()) != null) {					
+				if (this.clean(ligne).equalsIgnoreCase("readSetCode")) {
+					legend = true;
+					continue;
+				}
+				// ignorer ce qui suit le signe de commentaire
+				Matcher m_c = p_c.matcher(ligne);
+				if (!m_c.find()) {
+				} else {
+					ligne = m_c.group(1);
+				}
+				// ignorer lignes sans caracteres visibles
+				if (ligne.matches("^\\s*$")){
+					continue;
+				}
+				Matcher m = p.matcher(ligne);
+				// Appel de find obligatoire pour pouvoir récupérer $1
+				if (!m.find()) {
+					throw new SraException("Probleme de format avec la ligne : '" + ligne +"'");
+				}
+				String readSetCode = m.group(1); //readSetCode
+				//log.debug("readSetCode = "+ readSetCode);
+				if (! listReadSet.contains(readSetCode)){
+					listReadSet.add(readSetCode);
+				}
+			} 
+			//log.debug("legend="+legend);
+		} catch (IOException e) {
+			throw new SraException("Probleme lors du chargement du fichier ", e);
+		}
+		return listReadSet;
+	}
+	
 	public Map<String, String> loadLotSeqName(File fileSelectLotSeqName) throws SraException {
 		Map<String, String> mapLotSeqName = new HashMap<String, String>();
 		if (fileSelectLotSeqName.exists()) {

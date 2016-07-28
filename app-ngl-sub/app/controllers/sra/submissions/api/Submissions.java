@@ -261,7 +261,9 @@ public class Submissions extends DocumentController<Submission>{
 			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileClonesToAc)){
 				submissionsCreationForm.base64UserFileClonesToAc="";
 			}
-		
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileReadSet)){
+				submissionsCreationForm.base64UserFileReadSet="";
+			}
 			Logger.debug("Read base64UserFileExperiments");
 			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
 			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
@@ -294,8 +296,22 @@ public class Submissions extends DocumentController<Submission>{
 			  System.out.println("       sample_ac : '" + entry.getValue().getSampleAc()+  "'");
 			}
 			*/
-			List<String> readSetCodes = submissionsCreationForm.readSetCodes;
-		
+			
+			List<String> readSetCodes;
+			InputStream inputStreamUserFileReadSet = Tools.decodeBase64(submissionsCreationForm.base64UserFileReadSet);
+			Logger.debug("Read base64UserFileReadSet : "+inputStreamUserFileReadSet);
+			if (inputStreamUserFileReadSet == null) {
+				// Recuperer readSetCodes à partir de la selection de readset des utilisateurs			
+				readSetCodes = submissionsCreationForm.readSetCodes; 
+				// remplir la liste readSetCodes
+				// à partir de la selection de readset des utilisateurs
+
+			} else {			
+				Tools tools = new Tools();
+				// Recuperer readSetCodes à partir du fichier utilisateur :		
+				readSetCodes = tools.loadReadSet(inputStreamUserFileReadSet);		
+			}
+			
 			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
 			//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
 
