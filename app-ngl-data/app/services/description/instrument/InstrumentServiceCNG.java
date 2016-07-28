@@ -65,11 +65,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
 		
-		//FDS 02/02/2016 la main peut manipuler des plaques ??
+		// 27/07/2016 la main peut traiter deas plaques en entree ET en sortie
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
 				getInstruments(
 						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		

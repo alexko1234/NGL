@@ -212,8 +212,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/**********************************************************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
-				// pourquoi j'ai ce code NGL-1025  dans cette branche ?????
-				
 				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :5 nouveaux exp type
 				// voidprocess
 				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-sequencing",null,-1,
@@ -254,8 +252,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				
 				// FDS 17/06/2016 NGL-1029: experience de transfert "pool : 4 plaques vers tubes ou plaques" (NOTE: pas de Node pour experience type transfert )
 				l.add(newExperimentType("Pool de plaques","pool",null,200,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPool(),
-						getInstrumentUsedTypes("janus", "hand"),"ManyToOne", 
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
+						getPropertyDefinitionPool(),
+						getInstrumentUsedTypes("janus","hand"),
+						"ManyToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 			}

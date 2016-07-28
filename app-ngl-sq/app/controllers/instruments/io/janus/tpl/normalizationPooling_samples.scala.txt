@@ -18,10 +18,8 @@ Source rack;Source position;Destination rack;Destination position;Volume éch à
 			
 			 @{source_code=c.locationOnContainerSupport.code}	
 			 @{source_pos=OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line, c.locationOnContainerSupport.column)}
-			 
 			 @{dest_pos=OutputHelper.getNumberPositionInPlateByColumn(a.outputContainerUseds.get(0).locationOnContainerSupport.line, a.outputContainerUseds.get(0).locationOnContainerSupport.column)}
 			 @{sample_vol=c.experimentProperties.get("inputVolume").value.toString()}
-			 
 			 
 			 @(source_code);@(source_pos);Poolplate;@(dest_pos);@(sample_vol)\u000D\u000A
 		}	

@@ -20,7 +20,6 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	};
 	
 	
-	//GA 27/06/2016 : SI c'est appele, celui du parent était faux, je l'ai enlevé
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -179,6 +178,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	}
 	
     //FDS ajout param ftype + {'fdrType':ftype}  OK
+	// POUR TEST CE N"EST PAS ICI QU"IL FAUT FAIRE CA...
 	var generateSampleSheet = function(ftype){
 		console.log ("generateSampleSheet type="+ftype);
 		
@@ -208,27 +208,33 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		});
 	};
 
+
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
-		//FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
-		$scope.setAdditionnalButtons([{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			//click:generateSampleSheet,
-			click: function(){return generateSampleSheet("samples")},
-			label: Messages("experiments.sampleSheet")+ " / échantillons"
-		},{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			//click:generateSampleSheet,
-			click: function(){return generateSampleSheet("buffer")},
-			label:Messages("experiments.sampleSheet")+ " / tampon"
-		}]);	
+		// POUR TEST,  CE N"EST PAS ICI QU"IL FAUT FAIRE CA...
+		
+		// FDS il ne faut les boutons generateSampleSheet que si l'instrument n'est pas la main...sinon genere une Bad Request...
+		if (  $scope.experiment.instrument.categoryCode !== "hand") {
+		  // FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
+		  $scope.setAdditionnalButtons([{
+			  isDisabled : function(){return $scope.isNewState();} ,
+			  isShow:function(){return !$scope.isNewState();},
+			  //click:generateSampleSheet,
+			  click: function(){return generateSampleSheet("samples")},
+			  label: Messages("experiments.sampleSheet")+ " / échantillons"+ ">"+ $scope.experiment.instrument.categoryCode
+		  },{
+			  isDisabled : function(){return $scope.isNewState();} ,
+			  isShow:function(){return !$scope.isNewState();},
+			  //click:generateSampleSheet,
+			  click: function(){return generateSampleSheet("buffer")},
+			  label:Messages("experiments.sampleSheet")+ " / tampon"
+		  }]);	
+		}
 	}
 	
-	//Only 96-well-plate is authorized
+	//Only 96-well-plate is authorized=> force in cas of hand is used
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 			$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
-		});
+	});
 	
 	//FDS 23/06/2016 surcharger newAtomicTransfertMethod pour mettre line et column a null
 	$scope.atmService.newAtomicTransfertMethod = function(){
