@@ -15,7 +15,7 @@
 					<td ng-bind="qc.typeCode|codes:'type'" />
 					<td>
 						<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'" class="row">
-							<div ng-switch-when="true">
+							<div class="col-md-12 col-lg-12" ng-switch-when="true">
 								 <div ng-click="setImage(value.value,value.fullname,value.width,value.height)"  
      								 			ng-show="value !== undefined" > 
 								<div data-target="#modalImage" role="button" data-toggle="modal" >
