@@ -178,7 +178,7 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 	
 	var copyProtocolInProperties = function(){
 		if($scope.experiment.protocolCode!=null){
-			if($scope.experiment.experimentProperties===undefined || $scope.experiment.experimentProperties!==null){
+			if($scope.experiment.experimentProperties===undefined || $scope.experiment.experimentProperties===null){
 				$scope.experiment.experimentProperties={};
 			}
 			$scope.experiment.experimentProperties["protocolBqRNA"]={"_type":"single","value":$scope.experiment.protocolCode};
