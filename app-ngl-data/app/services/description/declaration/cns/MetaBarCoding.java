@@ -50,7 +50,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Tags-PCR + purif","tag-pcr","TAG",800,
+		l.add(newExperimentType("Tags-PCR","tag-pcr","TAG",800,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsTagPCR(),
 				getInstrumentUsedTypes("thermocycler"),"OneToOne", getSampleTypes("amplicon"),true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -62,7 +62,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 		l.add(newExperimentType("Amplification/PCR + purif","pcr-amplification-and-purification","PCR",820,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsAmpliPurif(),
-				getInstrumentUsedTypes("thermocycler","biomek-fx-and-cDNA-thermocycler"),"OneToOne", null,true,
+				getInstrumentUsedTypes("thermocycler","thermocycler-and-biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Sizing sur gel","sizing","SIZ",830,
@@ -190,11 +190,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 	private static List<PropertyDefinition> getPropertyDefinitionsBqDNAIlluminaIndexedLibrary() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
-				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,null));
-
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
 				getTagIllumina(), null,null,null,"single", 14, true, null,null));

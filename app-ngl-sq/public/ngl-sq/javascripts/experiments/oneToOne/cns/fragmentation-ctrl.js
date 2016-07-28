@@ -268,12 +268,14 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 	
 	var calculVolumeFromValue=function(value){
 		console.log("call calculVolumeFromValue");
-		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
-			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){				
-				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/value.inputContainerUsed.concentration.value;
-				requiredVolume = Math.round(requiredVolume*10)/10
+		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null){
 				
-				var bufferVolume = value.outputContainerUsed.volume.value-requiredVolume;
+				if(value.inputContainerUsed.quantity!=null && value.inputContainerUsed.quantity.value !=null && value.inputContainerUsed.concentration.value != null && value.inputContainerUsed.concentration !=null ) {
+				var requiredVolume=value.inputContainerUsed.quantity.value/value.inputContainerUsed.concentration.value;
+				requiredVolume = Math.round(requiredVolume*10)/10
+				}
+				
+				var bufferVolume = value.outputContainerUsed.volume.value-value.inputContainerUsed.experimentProperties["inputVolume"].value;
 				bufferVolume = Math.round(bufferVolume*10)/10
 				
 				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
@@ -282,20 +284,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
 				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,"unit":value.outputContainerUsed.volume.unit};
 				
-			}else if(value.inputContainerUsed.concentration.unit==="ng/ul") {
-				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*1000000/(660*value.inputContainerUsed.size.value));
-				requiredVolume = Math.round(requiredVolume*10)/10
-				
-				var bufferVolume = value.outputContainerUsed.volume.value-requiredVolume;
-				bufferVolume = Math.round(bufferVolume*10)/10
-				
-				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
-					value.inputContainerUsed.experimentProperties={};
-				}				
-				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,
-						 "unit":value.outputContainerUsed.volume.unit};
-			}
+			
 	    }
 	}
 		

@@ -105,7 +105,17 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }			        
+			         },
+			         {
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":600,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         }
 			         ],
 			compact:true,
 			pagination:{
