@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
@@ -456,7 +457,7 @@ public class ExpWorkflowsHelper {
 		support.traceInformation  = new TraceInformation(validation.getUser());
 		support.categoryCode = getSupportCategoryCode(containers, validation);
 		support.storageCode = getSupportStorageCode(containers, validation);
-		support.storages = getStorages(support, validation);
+		support.storages = getNewStorages(support, validation);
 		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.fromTransformationTypeCodes = containers.stream().map(c -> c.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
@@ -468,7 +469,7 @@ public class ExpWorkflowsHelper {
 		return support;
 	}
 
-	private static List<StorageHistory> getStorages(ContainerSupport support, ContextValidation validation) {
+	private static List<StorageHistory> getNewStorages(ContainerSupport support, ContextValidation validation) {
 		List<StorageHistory> storages = null;
 		if(null != support.storageCode){
 			storages = new ArrayList<StorageHistory>();
@@ -478,6 +479,17 @@ public class ExpWorkflowsHelper {
 		}
 		return storages;
 		
+	}
+	
+	private static List<StorageHistory> updateStorages(ContainerSupport support, ContextValidation validation) {
+		if(null != support.storageCode){
+			if(support.storages == null){
+				support.storages= new ArrayList<StorageHistory>();
+			}
+			StorageHistory sh = getStorageHistory(support.storageCode, support.storages.size(),validation.getUser());
+			support.storages.add(sh);			
+		}	
+		return support.storages;
 	}
 
 	private static StorageHistory getStorageHistory(String storageCode, Integer index, String user) {
@@ -830,11 +842,11 @@ public class ExpWorkflowsHelper {
 	 * @param validation
 	 */
 	public void updateInputContainers(Experiment exp, ContextValidation validation) {
-		exp.atomicTransfertMethods
+		Map<String, List<Container>> containersBySupportCode = exp.atomicTransfertMethods
 		.parallelStream()
 		.map(atm -> atm.inputContainerUseds)
 		.flatMap(List::stream)
-		.forEach(icu ->{
+		.map(icu -> {
 			Container c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,icu.code);
 
 			if(null != icu.concentration)c.concentration = icu.concentration;
@@ -850,16 +862,44 @@ public class ExpWorkflowsHelper {
 			c.traceInformation.modifyDate = new Date();
 			c.traceInformation.modifyUser = validation.getUser();
 			
-			if(null != icu.locationOnContainerSupport.storageCode)c.support.storageCode = icu.locationOnContainerSupport.storageCode;
+			if(null != icu.locationOnContainerSupport.storageCode){
+				c.support.storageCode = icu.locationOnContainerSupport.storageCode;				
+			}
 			
 			if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
 
 			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
 
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,c);
+			
+			return c;
 
+		}).collect(Collectors.groupingBy(c -> c.support.code));
+
+		//update support storage if needed
+		containersBySupportCode.entrySet().forEach(entry -> {
+			ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,entry.getKey());
+			List<Container> containers = entry.getValue();
+			
+			String oldStorageCode = support.storageCode;
+			String newStorageCode =  getSupportStorageCode(containers, validation);
+			if(newStorageCode != null && !newStorageCode.equals(oldStorageCode)){
+				support.storageCode = newStorageCode;
+				support.storages = updateStorages(support, validation);
+				
+				support.traceInformation.modifyDate = new Date();
+				support.traceInformation.modifyUser = validation.getUser();
+				
+				MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, support);				
+			}
+			//update containers
+			containers
+				.parallelStream()
+				.forEach(container -> {
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,container);
+				});
+			
 		});
-
+		
 	}
 
 	//If experimentType have flag newSample at true  

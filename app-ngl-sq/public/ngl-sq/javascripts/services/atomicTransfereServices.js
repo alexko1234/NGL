@@ -100,7 +100,7 @@ angular.module('atomicTransfereServices', [])
     			},
 				//Common for all but try to replace slowly
 				convertContainerToInputContainerUsed : function(container){
-					return {
+					var input = {
 						code:container.code,
 						categoryCode:container.categoryCode, 
 						contents:container.contents, //used in rules							
@@ -123,16 +123,24 @@ angular.module('atomicTransfereServices', [])
 						valuation : {valid:'UNSET'}
 						//not valuation to have the default value
 					};
+					
+					input.locationOnContainerSupport.storageCode = undefined;
+					
+					return input;
 					/*
 					 return {"state":container.state
 						}; 
 					 
 					 */
 				},
-				updateContainerUsedFromContainer : function(containerUsed, container){
+				updateInputContainerUsedFromContainer : function(containerUsed, container){
 					containerUsed.categoryCode = container.categoryCode; 
 					containerUsed.contents = container.contents;
+					//GA for storage we keep the experiment information to change it. used in QC.
+					var storageCode = containerUsed.locationOnContainerSupport.storageCode;
 					containerUsed.locationOnContainerSupport = container.support;
+					containerUsed.locationOnContainerSupport.storageCode = storageCode;
+					
 					containerUsed.volume = container.volume;
 					containerUsed.concentration = container.concentration;
 					containerUsed.quantity = container.quantity;
@@ -448,7 +456,7 @@ angular.module('atomicTransfereServices', [])
 							              
 							              //allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
 							              allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
-							              allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
+							              allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
 							              
 							              //allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
 							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
@@ -464,7 +472,7 @@ angular.module('atomicTransfereServices', [])
 									allData[l].atomicTransfertMethod = atm;							              
 									//allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
 									allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
-									allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
+									allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
 									allData[l].inputContainer = inputContainer;	
 									l++;
 									if($that.customExperimentToView !== undefined){
@@ -791,7 +799,7 @@ angular.module('atomicTransfereServices', [])
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
-								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);
+								atm.inputContainerUseds[j] = $commonATM.updateInputContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);
 							}
 						}
 						
@@ -896,7 +904,7 @@ angular.module('atomicTransfereServices', [])
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
-								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);								
+								atm.inputContainerUseds[j] = $commonATM.updateInputContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);								
 							}
 							if(!$service.data.atmViewOpen[i]){
 								$service.data.atmViewOpen[i] = false;

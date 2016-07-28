@@ -65,11 +65,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
 		
-		//FDS 02/02/2016 la main peut manipuler des plaques ??
+		// 27/07/2016 la main peut traiter deas plaques en entree ET en sortie
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
 				getInstruments(
 						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		
@@ -417,9 +417,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
+		//TEST FDS: nom des programes
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("programme 1_normalisation"), "single", null, false ,null, null));
-		//"program-normalisation","programme 1_normalisation"
+				// newValues("programme 1_normalisation"), "single", null, false ,null, null));
+				newValues("programme 1_normalisation",
+						  "pooling custom (mode colonne)",
+						  "pooling 3-plex (mode colonne)",
+						  "pooling 4-plex (mode colonne)"), "single", null, false ,null, null));
 		return l;
 	}
 	

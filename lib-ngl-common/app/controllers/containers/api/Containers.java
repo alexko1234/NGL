@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
@@ -47,6 +48,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
@@ -54,13 +56,14 @@ import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
 public class Containers extends CommonController {
-
-	final static Form<Container> containersForm = form(Container.class);
-	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final static Form<Container> containerForm = form(Container.class);
+	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
-	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
 	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation", "state", "support","concentration");
-    // GA 31/07/2015 suppression des parametres "lenght"
+	final static List<String> authorizedUpdateFields = Arrays.asList("valuation");
+	
+	// GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
 	final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
 	@Permission(value={"reading"})
@@ -123,11 +126,75 @@ public class Containers extends CommonController {
 				
 	}
 
+	
+	@Permission(value={"writing"})
+	public static Result update(String code){
+		Container container = findContainer(code);
+		if(container == null){
+			return badRequest("Container with code "+code+" not exist");
+		}
+		
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+		Form<Container> filledForm = getFilledForm(containerForm, Container.class);
+		Container input = filledForm.get();
+
+		if(queryFieldsForm.fields == null){
+			if (code.equals(input.code)) {
+				if(null != input.traceInformation){
+					input.traceInformation.setTraceInformation(getCurrentUser());
+				}else{
+					Logger.error("traceInformation is null !!");
+				}
+				
+				if(!input.state.code.equals(input.state.code)){
+					return badRequest("You cannot change the state code. Please used the state url ! ");
+				}
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ctxVal.setUpdateMode();
+				input.validate(ctxVal);
+				if (!ctxVal.hasErrors()) {
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
+					return ok(Json.toJson(input));
+				}else {
+					return badRequest(filledForm.errorsAsJson());
+				}
+				
+			}else{
+				return badRequest("run code are not the same");
+			}	
+		}else{
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal.setUpdateMode();
+			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
+			if(!filledForm.hasErrors()){
+				TraceInformation ti = container.traceInformation;
+				ti.setTraceInformation(getCurrentUser());
+				
+				if(queryFieldsForm.fields.contains("valuation")){
+					input.valuation.user = getCurrentUser();
+					input.valuation.date = new Date();
+				}
+				
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+						DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Container.class).set("traceInformation", ti));
+				
+				return ok(Json.toJson(findContainer(code)));
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}		
+		}		
+		
+	}
+	
+	
+	
 	@Permission(value={"writing"})
 	public static Result updateState(String code){
 		Container container = findContainer(code);
 		if(container == null){
-			return badRequest();
+			return badRequest("Container with code "+code+" not exist");
 		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();

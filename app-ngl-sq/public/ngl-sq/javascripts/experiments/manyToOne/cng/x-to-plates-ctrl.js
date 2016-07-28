@@ -19,8 +19,29 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		return column;
 	};
 	
+	/* FDS TEST 
+	$scope.$on('updateInstrumentProperty', function(e, pName) {
+		console.log("call event updateInstrumentProperty "+pName);
+		
+		if($scope.isCreationMode() && pName === 'program'){
+			console.log("update program "+$scope.experiment.instrumentProperties[pName].value);
+			var program = $scope.experiment.instrumentProperties[pName].value
+			
+			if ( program === 'pooling custom (mode colonne)'){
+				//laisser comme maintenant...
+			} else if ( program === 'pooling 3-plex (mode colonne)'){
+				// pooling automatique...3 puits par 3 puits
+				// TODO mais quoi ??
+			} else if ( program === 'pooling 4-plex (mode colonne)'){	
+				// pooling automatique...4 puits par 4 puits
+				// TODO mais quoi ??
+			} else if ( program === 'programme 1_normalisation' ) {
+				// ???????
+			}
+		}
+	});
+	*/
 	
-	//GA 27/06/2016 : SI c'est appele, celui du parent était faux, je l'ai enlevé
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -178,9 +199,11 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 	}
 	
-	var generateSampleSheet = function(){
-		console.log ("generateSampleSheet");
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+    //FDS ajout param ftype + {'fdrType':ftype} 
+	var generateSampleSheet = function(ftype){
+		console.log ("generateSampleSheet type="+ftype);
+		
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url, {'fdrType':ftype})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
 			var filepath = header.split("filename=")[1];
@@ -208,18 +231,29 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 
 
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
-		$scope.setAdditionnalButtons([{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheet,
-			label:Messages("experiments.sampleSheet")
-		}]);
+		// FDS pas de boutons generateSampleSheet pour la main
+		if (  $scope.experiment.instrument.categoryCode !== "hand") {
+		  // FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
+		  $scope.setAdditionnalButtons([{
+			  isDisabled : function(){return $scope.isNewState();} ,
+			  isShow:function(){return !$scope.isNewState();},
+			  //click:generateSampleSheet,
+			  click: function(){return generateSampleSheet("samples")},
+			  label: Messages("experiments.sampleSheet")+ " / échantillons"
+		  },{
+			  isDisabled : function(){return $scope.isNewState();} ,
+			  isShow:function(){return !$scope.isNewState();},
+			  //click:generateSampleSheet,
+			  click: function(){return generateSampleSheet("buffer")},
+			  label:Messages("experiments.sampleSheet")+ " / tampon"
+		  }]);	
+		}
 	}
 	
-	//Only 96-well-plate is authorized
+	//Only 96-well-plate is authorized=> force in cas of hand is used
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 			$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
-		});
+	});
 	
 	//FDS 23/06/2016 surcharger newAtomicTransfertMethod pour mettre line et column a null
 	$scope.atmService.newAtomicTransfertMethod = function(){

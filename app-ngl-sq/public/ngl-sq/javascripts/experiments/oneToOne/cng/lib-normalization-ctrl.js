@@ -340,6 +340,8 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	}
 	
 	var generateSampleSheet = function(){
+		console.log ("generateSampleSheet");
+		
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
@@ -367,9 +369,9 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')},
-		click:generateSampleSheet,
-		label:Messages("experiments.sampleSheet")
+		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')}, // FDS pourquoi ce forcage ???
+		click: generateSampleSheet,
+		label:Messages("experiments.sampleSheet") 
 	}]);
 	
 }]);
