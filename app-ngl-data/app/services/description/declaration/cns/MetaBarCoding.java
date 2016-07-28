@@ -178,7 +178,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Taille théorique", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Taille théorique", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
 				DescriptionFactory.newValues("500-650","650-800"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
 
 		return propertyDefinitions;
