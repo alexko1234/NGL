@@ -48,7 +48,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"header":Messages("containerSupports.table.sampleCodes"),
 			"property":"sampleCodes",
 			"position":5,
-			"order":false,
+			"order":true,
 			"hide":true,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",

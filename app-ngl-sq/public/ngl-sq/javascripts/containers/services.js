@@ -72,7 +72,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
-			"order":false,
+			"order":true,
 			"hide":true,
 			"position":8,
 			"type":"text",

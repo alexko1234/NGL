@@ -1547,7 +1547,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						}
 						
 						if($scope.dispatchConfiguration.orderBy){
-							outputContainers = $filter("orderBy")(inputContainers,$scope.dispatchConfiguration.orderBy);
+							inputContainers = $filter("orderBy")(inputContainers,$scope.dispatchConfiguration.orderBy);
 						}else if(inputContainers[0] && inputContainers[0].container.categoryCode === 'well'){
 							inputContainers = $filter("orderBy")(inputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
