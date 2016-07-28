@@ -1,7 +1,7 @@
 @()
 <div class="row">
-	<div class="col-md-4 col-lg-4">
-		<table class="table table-condensed table-hover table-bordered table-striped datatable">
+	<div class="col-md-6 col-lg-6">
+		<table class="table table-condensed table-hover table-bordered table-striped form-horizontal">
 			<thead>
 				<tr>
 					<th>@Messages("containers.resultsqc.type")</th>
@@ -14,7 +14,7 @@
 				<tr ng-repeat="qc in container.qualityControlResults">
 					<td ng-bind="qc.typeCode|codes:'type'" />
 					<td>
-						<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'">
+						<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'" class="row">
 							<div ng-switch-when="true">
 								 <div ng-click="setImage(value.value,value.fullname,value.width,value.height)"  
      								 			ng-show="value !== undefined" > 
@@ -25,11 +25,16 @@
 								</div>
 								</div>
 							</div>
-							<div ng-switch-when="false" >
-								<label class="col-md-6 col-lg-6 control-label" ng-bind="value.value|number:2" />
-								<div class="col-md-6 col-lg-6">
-									<p ng-if="value.unit !== null" ng-bind="value.unit" />
+							<div ng-switch-when="false" ng-switch on="angular.isString(value.value)">
+								<label class="col-md-6 col-lg-6 control-label">{{key|codes:'property_definition'}}</label>
+								<div ng-switch-when="false" class="col-md-6 col-lg-6">
+									<p class="form-control-static" ng-if="value.unit !== null">{{value.value|number:2}} {{value.unit}}</p>
+									<p class="form-control-static" ng-if="value.unit === null">{{value.value|number:2}}</p>										
 								</div>
+								<div ng-switch-when="true" class="col-md-6 col-lg-6">
+									<p class="form-control-static" ng-if="value.unit !== null">{{value.value}} {{value.unit}}</p>
+									<p class="form-control-static" ng-if="value.unit === null">{{value.value}}</p>										
+								</div>								
 							</div>
 						</div>
 					</td>

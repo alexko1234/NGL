@@ -3,6 +3,8 @@
 angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$filter','$window', 'mainService', 'tabService', 'lists', 'messages', 
                                           function($scope,$http,$q,$routeParams,$filter,$window,mainService,tabService,lists,messages){
 	
+	$scope.angular = angular;
+	
 	$scope.getTabClass = function(value){
 		if(value === mainService.get('containerActiveTab')){
 			return 'active';
