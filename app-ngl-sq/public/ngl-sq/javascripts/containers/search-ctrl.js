@@ -34,21 +34,14 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			}
 		},
 		edit:{
-			//active:Permissions.check("writing")?true:false,
-			active:false,
+			active:Permissions.check("writing")?true:false,
 			columnMode:true
 		},
 		save:{
-			//active:Permissions.check("writing")?true:false,
-			//url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
-			active:false,
-			batch:true,
+			active:Permissions.check("writing")?true:false,
+			url:function(value){return jsRoutes.controllers.containers.api.Containers.update(value.code).url+"?fields=valuation";},
 			method:'put',
-			callback: function(reason, error){
-				
-				console.log("callback reason=" + reason);
-				console.log("callback error=" + error);
-			}
+			mode:'remote'
 		}
 	};
 
