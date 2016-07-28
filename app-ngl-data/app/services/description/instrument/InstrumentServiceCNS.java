@@ -59,7 +59,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Système de broyage", "sample-prep-system"));
 		l.add(newInstrumentCategory("Robot pipetage + Thermocycleur", "liquid-handling-robot-and-thermocycler"));
 		l.add(newInstrumentCategory("Thermocycleur + Robot pipetage", "thermocycler-and-liquid-handling-robot"));
-		
+		l.add(newInstrumentCategory("Robot pipetage + Covaris", "liquid-handling-robot-and-covaris"));
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -265,13 +265,45 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Biomek FX + Thermocycleur_cDNA", "biomek-fx-and-cDNA-thermocycler", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  getBiomekProperties(),getInstrumentBiomek() 
 				,getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Thermocycleur + Biomek FX", "biomek-fx-and-cDNA-thermocycler", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  getBiomekProperties(),getInstrumentBiomekFx() 
+		l.add(newInstrumentUsedType("Thermocycleur + Biomek FX", "thermocycler-and-biomek-fx", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  getBiomekProperties(),getInstrumentBiomekFx() 
 				,getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
+		
+		l.add(newInstrumentUsedType("Biomek FX + Covaris E220", "biomek-fx-and covaris-e220", InstrumentCategory.find.findByCode("liquid-handling-robot-and-covaris"),  getBiomekCovarisProperties(),getInstrumentBiomekCovaris() 
+				,getContainerSupportCategories(new String[]{"96-well-plate","tube"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 
+
+	private List<Instrument> getInstrumentBiomekCovaris() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("walle-and-covaris1","WALL E / Covaris1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris2","WALL E / Covaris2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris3","WALL E / Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris4","WALL E / Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		instruments.add(createInstrument("r2d2-and-covaris1","R2D2 / Covaris1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("r2d2-and-covaris2","R2D2 / Covaris2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("r2d2-and-covaris3","R2D2 / Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("r2d2-and-covaris4","R2D2 / Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		instruments.add(createInstrument("nono-and-covaris1","NONO / Covaris1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("nono-and-covaris2","NONO / Covaris2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("nono-and-covaris3","NONO / Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("nono-and-covaris4","NONO / Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		return instruments;
+	}
+
+	private List<PropertyDefinition> getBiomekCovarisProperties() {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Programme Biomek", "programmeBiomek", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
+				"single", 10, true, null,null));
+		l.add(newPropertiesDefinition("Programme Covaris", "programmeCovaris", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
+				"single", 10, true, null,null));
+		return l;		
+	}
 
 	private List<PropertyDefinition> getBiomekProperties() {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
@@ -293,8 +325,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private List<Instrument> getInstrumentBiomekFx() {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("maya-and-thermo-xxx","MAYA / Thermo_XXX", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+		instruments.add(createInstrument("thermoS1-and-maya","ThermoS1 / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("thermoS2-and-maya","ThermoS2 / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("thermoS3-and-maya","ThermoS3 / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
