@@ -1451,9 +1451,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 			}
 			
-			var initDisplayValues = function(fromTransformationTypeCodes){
+			var initDisplayValues = function(fromTransformationTypeCodes, processTypeCodes){
 				
-				var fromTransformationTypeCode = fromTransformationTypeCodes[0];				
+				var fromTransformationTypeCode = fromTransformationTypeCodes[0];			
+				var processTypeCode = processTypeCodes[0];
 				if(undefined === dispatchValuesForExperimentType[fromTransformationTypeCode]){	
 					dispatchValuesForExperimentType[fromTransformationTypeCode] = [];
 					$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,{params:{previousExperimentTypeCode:fromTransformationTypeCode}})

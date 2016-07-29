@@ -260,5 +260,12 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
 	}
 
-
+	public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{
+		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
+				" inner join previous_nodes as p on p.fk_node = n.id "+
+				" inner join experiment_type_node as np on np.id = p.fk_previous_node "+
+				" inner join  common_info_type as cp on cp.id = np.fk_experiment_type "+
+				" where cp.code=?";
+		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
+	}
 }
