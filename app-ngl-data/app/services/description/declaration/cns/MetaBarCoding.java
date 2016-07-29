@@ -172,7 +172,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	
 	
-	private static List<PropertyDefinition> getPropertyDefinitionsSizing() {
+	private List<PropertyDefinition> getPropertyDefinitionsSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
@@ -184,7 +184,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
-	private static List<PropertyDefinition> getPropertyDefinitionsAmpliPurif() {
+	private List<PropertyDefinition> getPropertyDefinitionsAmpliPurif() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
@@ -204,7 +204,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
-	private static List<PropertyDefinition> getPropertyDefinitionsBqDNAIlluminaIndexedLibrary() {
+	private List<PropertyDefinition> getPropertyDefinitionsBqDNAIlluminaIndexedLibrary() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
@@ -223,7 +223,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 
-	private static List<PropertyDefinition> getPropertyDefinitionsTagPCR() {
+	private List<PropertyDefinition> getPropertyDefinitionsTagPCR() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
@@ -274,7 +274,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyMetaB(){
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Primers", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("fuhrman primer","V9 primer"), 
+		propertyDefinitions.add(newPropertiesDefinition("Primers", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("Fuhrman primer","V9 primer"), 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("16S_V4V5","18S_V9"), 
 				null,null,null,"single", 15, true, null, null));
@@ -296,23 +296,6 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return values;
 	}
 	
-	protected static List<Value> getTagIllumina() {
-		
-		List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
-		List<Value> values = new ArrayList<Value>();
-		indexes.forEach(index -> {
-			values.add(DescriptionFactory.newValue(index.code, index.name));	
-		});
-		
-		return values;
-	}
 	
-	public static List<Value> getTagCategoriesIllumina(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
-		values.add(DescriptionFactory.newValue("MID", "MID"));
-		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
-		return values;	
-	}
 
 }

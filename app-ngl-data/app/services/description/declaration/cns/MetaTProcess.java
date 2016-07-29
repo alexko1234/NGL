@@ -170,7 +170,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	}
 	
-	private static List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaIndexedLibrary() {
+	private List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaIndexedLibrary() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
@@ -180,10 +180,10 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				MetaBarCoding.getTagIllumina(), null,null,null,"single", 14, true, null,null));
+				getTagIllumina(), null,null,null,"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				MetaBarCoding.getTagCategoriesIllumina(), null,null,null,"single", 15, true, null,null));
+				getTagCategoriesIllumina(), null,null,null,"single", 15, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
@@ -197,7 +197,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
-	private static List<Value> getStrandOrientation(){
+	private List<Value> getStrandOrientation(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("forward", "forward"));		
 		values.add(DescriptionFactory.newValue("reverse", "reverse"));		

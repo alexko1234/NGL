@@ -3,18 +3,26 @@ package services.description.declaration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import play.Logger.ALogger;
+import services.description.DescriptionFactory;
+import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.parameter.index.IlluminaIndex;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.sample.description.SampleType;
+import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
 import com.typesafe.config.ConfigFactory;
+
+import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractDeclaration {
 	
@@ -128,4 +136,23 @@ public abstract class AbstractDeclaration {
 		return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
 	}
 
+	
+	protected List<Value> getTagIllumina() {
+		
+		List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
+		List<Value> values = new ArrayList<Value>();
+		indexes.forEach(index -> {
+			values.add(DescriptionFactory.newValue(index.code, index.code));	
+		});
+		
+		return values;
+	}
+	
+	public List<Value> getTagCategoriesIllumina(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
+		values.add(DescriptionFactory.newValue("MID", "MID"));
+		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
+		return values;	
+	}
 }
