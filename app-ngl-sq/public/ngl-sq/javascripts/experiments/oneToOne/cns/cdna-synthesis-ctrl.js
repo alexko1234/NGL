@@ -181,7 +181,7 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 			if($scope.experiment.experimentProperties===undefined || $scope.experiment.experimentProperties===null){
 				$scope.experiment.experimentProperties={};
 			}
-			$scope.experiment.experimentProperties["protocolBqRNA"]={"_type":"single","value":$scope.experiment.protocolCode};
+			$scope.experiment.experimentProperties["rnaLibProtocol"]={"_type":"single","value":$scope.experiment.protocolCode};
 		}
 	}
 	

@@ -169,6 +169,7 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
+		copyProtocolInProperties();
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
@@ -204,7 +205,14 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 	});
 	
 	
-	
+	var copyProtocolInProperties = function(){
+		if($scope.experiment.protocolCode!=null){
+			if($scope.experiment.experimentProperties===undefined || $scope.experiment.experimentProperties===null){
+				$scope.experiment.experimentProperties={};
+			}
+			$scope.experiment.experimentProperties["rnaLibProtocol"]={"_type":"single","value":$scope.experiment.protocolCode};
+		}
+	}
 	
 	//Init		
 
