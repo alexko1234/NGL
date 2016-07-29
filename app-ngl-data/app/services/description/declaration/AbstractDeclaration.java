@@ -41,7 +41,9 @@ public abstract class AbstractDeclaration {
 				l.addAll(getExperimentTypeUAT());
 			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
+			if(getExperimentTypePROD()!=null){
 				l.addAll(getExperimentTypePROD());
+			}
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
@@ -71,7 +73,9 @@ public abstract class AbstractDeclaration {
 				l.addAll(getProcessTypeUAT());
 			}
 		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			 l.addAll(getProcessTypePROD());
+			if(getProcessTypePROD()!=null){
+				l.addAll(getProcessTypePROD());
+			} 		
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}

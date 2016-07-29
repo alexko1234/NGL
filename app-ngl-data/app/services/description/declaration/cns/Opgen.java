@@ -62,7 +62,7 @@ public class Opgen extends AbstractDeclaration {
 		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , 
 				Arrays.asList(getPET("ext-to-opgen-run",-1), getPET("opgen-depot",0)), 
 				getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("ext-to-opgen-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-				return l;
+		return l;
 	}
 
 	@Override
