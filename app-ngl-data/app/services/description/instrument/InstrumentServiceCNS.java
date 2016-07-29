@@ -213,12 +213,25 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("Covaris E220", "covaris-e220", InstrumentCategory.find.findByCode("covaris"), null, 
+				getInstruments(
+						createInstrument("covarisE220_1", "CovarisE220_1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) , 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Covaris E220 extérieur", "covaris-e220-ext", InstrumentCategory.find.findByCode("covaris"), null, 
+				getInstruments(
+						createInstrument("covarisE220CNG", "CovarisE220_CNG", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) , 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("covaris3", "Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
 						createInstrument("covaris4", "Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		l.add(newInstrumentUsedType("LabChip_GX", "labchip-gx", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(

@@ -58,14 +58,14 @@ public class MetaTProcess extends AbstractDeclaration {
 		
 		l.add(newExperimentType("Fragmentation","fragmentation",null,200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-				getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
+				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and covaris-e220"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
 		l.add(newExperimentType("Ext to MetaT bq RNA","ext-to-rna-lib-transcriptomic-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Bq RNA Illumina indexée","rna-illumina-indexed-library","LIB",800,
+		l.add(newExperimentType("Banque RNA","rna-illumina-indexed-library","LIB",800,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsRNAIlluminaIndexedLibrary(),
 				AbstractExperimentService.getInstrumentUsedTypes("biomek-fx-and-cDNA-thermocycler","hand"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -191,7 +191,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Type synthèse cDNA", "cDNAsynthesisType", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				DescriptionFactory.newValues("random","oligoDT"), null, null, null,"single", 1, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "protocolBqRNA", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "rnaLibProtocol", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				null, null, null, null,"single", 1, false, null,null));
 		
 		return propertyDefinitions;
@@ -220,7 +220,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Type synthèse cDNA", "cDNAsynthesisType", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				DescriptionFactory.newValues("random","oligoDT"), null, null, null,"single", 1, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "protocolBqRNA", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "rnaLibProtocol", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				null, null, null, null,"single", 1, false, null,null));
 
 		return propertyDefinitions;
@@ -232,17 +232,18 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume à prélever", "requiredVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false,null, "1"));
 
-		propertyDefinitions.add(newPropertiesDefinition("Quantitée réellement engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
-				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,"1"));
-
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,"1"));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, false, null,"1"));
 
 		propertyDefinitions.add(newPropertiesDefinition("Quantité à engager","requiredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",14, true,null,"1"));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Quantitée réellement engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, false,null,"1"));
+
+
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
-				,null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",25, false,null,"1"));
+				,null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",18, false,null,"1"));
 		
 		return propertyDefinitions;
 	}
