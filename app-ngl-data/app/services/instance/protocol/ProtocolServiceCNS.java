@@ -99,7 +99,8 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
 
 		
-		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes")));
+		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
+				InstanceFactory.setExperimentTypeCodes("chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes")));
 		
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){

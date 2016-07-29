@@ -6,9 +6,9 @@
 				<tr>
 					<th>@Messages("containers.resultsqc.type")</th>
 					<th>@Messages("containers.resultsqc.results")</th>
-					<th>@Messages("containers.resultsqc.valuation")</th>
-					<th>@Messages("containers.resultsqc.date")</th>
 					<th>@Messages("containers.resultsqc.valuationComment")</th>
+					<th>@Messages("containers.resultsqc.valuation")</th>
+					<th>@Messages("containers.resultsqc.date")</th>					
 				</tr>
 			</thead>
 			<tbody>
@@ -39,9 +39,9 @@
 							</div>
 						</div>
 					</td>
-					<td ng-bind="qc.valuation.valid|codes:'valuation'" />
-					<td ng-bind="qc.date|date:'@Messages("date.format")'" />
 					<td ng-bind="qc.valuation.comment" />
+					<td ng-bind="qc.valuation.valid|codes:'valuation'" />
+					<td ng-bind="qc.date|date:'@Messages("date.format")'" />					
 				</tr>							
 			</tbody>
 		</table>
