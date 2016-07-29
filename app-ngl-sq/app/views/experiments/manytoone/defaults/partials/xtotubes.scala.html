@@ -127,7 +127,7 @@
 				</tr>
 				</thead>					
 				<!--  <tr ng-model="containerSupport" ng-repeat="containerSupport in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" > -->
-				<tr ng-model="container" ng-repeat="container in getOutputContainers() | orderBy: 'experimentProperties.workName.value' track by $index" >
+				<tr ng-model="container" ng-repeat="container in getOutputContainers() | orderBy:'locationOnContainerSupport.code' track by $index" >
 					<td>
 						{{container.locationOnContainerSupport.code}}
 					</td>
