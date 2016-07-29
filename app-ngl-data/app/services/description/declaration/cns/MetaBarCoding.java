@@ -296,16 +296,17 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return values;
 	}
 	
-	public static List<Value> getTagIllumina() {
+	protected static List<Value> getTagIllumina() {
+		
 		List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
 		List<Value> values = new ArrayList<Value>();
 		indexes.forEach(index -> {
-			values.add(DescriptionFactory.newValue(index.code, index.code));	
+			values.add(DescriptionFactory.newValue(index.code, index.name));	
 		});
-
+		
 		return values;
 	}
-
+	
 	public static List<Value> getTagCategoriesIllumina(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));

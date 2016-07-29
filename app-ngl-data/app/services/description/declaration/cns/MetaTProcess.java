@@ -180,7 +180,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 14, true, null,null));
+				MetaBarCoding.getTagIllumina(), null,null,null,"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
 				MetaBarCoding.getTagCategoriesIllumina(), null,null,null,"single", 15, true, null,null));

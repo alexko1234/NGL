@@ -225,15 +225,6 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 	}
 	
 	
-	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
-		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
-		if(property.code==="tag"){
-			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("containers.table.tags")+'" bt-options="tag.code as tag.code for tag in lists.getTags()"></div>';
-			//column.editDirectives =' udt-change="console.log(value)" ';
-		}
-		return column;
-	};
-	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;

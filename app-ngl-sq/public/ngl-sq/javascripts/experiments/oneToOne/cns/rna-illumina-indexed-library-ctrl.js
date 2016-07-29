@@ -235,15 +235,7 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			concentration : "nM"
 	}
 	
-	
-	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
-		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
-		if(property.code==="tag"){
-			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.tag")+'" bt-options="tag.code as tag.code for tag in lists.getTags()" ></div>';
-		}
-		return column;
-	};
-	
+
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
