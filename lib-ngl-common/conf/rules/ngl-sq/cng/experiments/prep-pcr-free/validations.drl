@@ -54,7 +54,7 @@ rule "tag and tagCategory match"
     	$contextValidation:ContextValidation() 
     	eval(!$tagInfos.getTagCategory().value.equals($tagInfos.getIndex().categoryCode))   	
     then
-    	//Logger.debug("!!!"+$tagInfos.getTagCategory().value +"!="+ $tagInfos.getIndex().categoryCode+"!!!");
-    	$contextValidation.addErrors("prep-pcr-free","error.validationexp.tagcategory.notvalid", $tagInfos.getTag().value, $tagInfos.getContainerCode());
+    	Logger.debug("!!!"+$tagInfos.getTagCategory().value +"!="+ $tagInfos.getIndex().categoryCode+"!!!");
+    	$contextValidation.addErrors("prep-pcr-free","error.validationexp.tagcategory.notvalid", $tagInfos.getTagCategory().value, $tagInfos.getContainerCode());
 end
 */

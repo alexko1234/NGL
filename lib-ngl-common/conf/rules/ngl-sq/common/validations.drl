@@ -111,7 +111,7 @@ rule "validate tag exist"
     	Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free" || $typeCode=="dna-illumina-indexed-library" || $typeCode=="rna-illumina-indexed-library")
     	$contextValidation:ContextValidation($errors : errors)
     	$atomicTransfert: AtomicTransfertMethod($outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
-		$outputContainerUsed:OutputContainerUsed($tag:experimentProperties.get("tag"), $tag != null) from $outputContainerUseds		
+		$outputContainerUsed:OutputContainerUsed($experimentProperties:experimentProperties, $experimentProperties!=null, $tag:experimentProperties.get("tag"), $tag != null) from $outputContainerUseds		
     then
     	Logger.debug("validate tag :"+$tag.value);
     	
@@ -132,12 +132,14 @@ rule "valid tag and tagCategory match"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode)
-    	$tagInfos:TagInfos()
     	$atomicTransfert: AtomicTransfertMethod($outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
 	   	$contextValidation:ContextValidation() 
-	   	$outputContainerUsed: OutputContainerUsed($tagCategory:experimentProperties.get("tagCategory"), $tagCategory != null) from $outputContainerUseds
+	   	$outputContainerUsed: OutputContainerUsed($experimentProperties:experimentProperties, $experimentProperties!=null, $tagCategory:experimentProperties.get("tagCategory"), $tagCategory != null) from $outputContainerUseds
+	   	$tagInfos:TagInfos($outputContainerUsed.code == containerCode)    	
 	   	eval(!$tagCategory.value.equals($tagInfos.getIndex().categoryCode))	  	
     then
+    	Logger.debug("!!!"+$tagCategory.value +"!="+ $tagInfos.getIndex().categoryCode+"!!!");
+    
     	$contextValidation.addErrors($typeCode,"error.validationexp.tagcategory.notvalid", $tagInfos.getTag().value, $tagInfos.getContainerCode());
 end
 
