@@ -27,7 +27,7 @@
 								</div>
 							</div>
 							<div ng-switch-when="false" ng-switch on="angular.isString(value.value)">
-								<label class="col-md-6 col-lg-6 control-label">{{key|codes:'property_definition'}}</label>
+								<label class="col-md-6 col-lg-6 control-label">{{key|codes:'property_definition'}} : </label>
 								<div ng-switch-when="false" class="col-md-6 col-lg-6">
 									<p class="form-control-static" ng-if="value.unit !== null">{{value.value|number:2}} {{value.unit}}</p>
 									<p class="form-control-static" ng-if="value.unit === null">{{value.value|number:2}}</p>										
