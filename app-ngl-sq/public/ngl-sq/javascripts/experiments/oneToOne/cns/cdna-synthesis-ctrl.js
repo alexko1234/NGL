@@ -136,7 +136,9 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 						by:'inputContainer.code'
 					},
 					remove:{
-						active:false,
+						active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+						showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
+						mode:'local'
 					},
 					save:{
 						active:true,

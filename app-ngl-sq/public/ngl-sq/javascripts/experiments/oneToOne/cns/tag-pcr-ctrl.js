@@ -146,7 +146,9 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 						by:'inputContainer.code'
 					},
 					remove:{
-						active:false,
+						active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+						showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
+						mode:'local'
 					},
 					save:{
 						active:true,

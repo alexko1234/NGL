@@ -156,7 +156,9 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 						by:'inputContainer.code'
 					},
 					remove:{
-						active:false,
+						active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+						showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
+						mode:'local'
 					},
 					save:{
 						active:true,
