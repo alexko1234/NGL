@@ -1,5 +1,5 @@
-angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                    function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter', 'atmToSingleDatatable',
+                                                    function($scope, $parse, $http, $filter, atmToSingleDatatable){
                                                     
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
@@ -201,6 +201,40 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 	});
 	
 	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
+			computeTagCategory(value.data);			
+		}
+		
+	}
+	
+	var computeTagCategory = function(udtData){
+		var getter = $parse("outputContainerUsed.experimentProperties.tagCategory.value");
+		var tagCategory = getter(udtData);
+		
+		var compute = {
+				tagValue : $parse("outputContainerUsed.experimentProperties.tag.value")(udtData),
+				tag : $filter("filter")($scope.tags,{code:$parse("outputContainerUsed.experimentProperties.tag.value")(udtData)},true),
+				isReady:function(){
+					return (this.tagValue && this.tag && this.tag.length === 1);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.tag[0].categoryCode;
+			console.log("result = "+result);
+			if(result){
+				tagCategory = result;				
+			}else{
+				tagCategory = undefined;
+			}	
+			getter.assign(udtData, tagCategory);
+		}else if(compute.tagValue){
+			getter.assign(udtData, undefined);
+		}
+		
+	}
 	
 	
 	//Init		
@@ -224,8 +258,26 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			concentration : "nM"
 	}
 	
+	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
+		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
+		if(property.code=="tag"){
+			column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.code for v in tags | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        											
+		}
+		return column;
+	};
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
+	
+	
 	$scope.atmService = atmService;
+	
+	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
+	.success(function(data, status, headers, config) {
+			$scope.tags = data;		
+	})
+	
+	
+	
+	
 }]);
