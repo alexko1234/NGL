@@ -148,6 +148,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 		
 		//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
+		// ??? renommer  frg-and-prep-lib ???
 		l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,800,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyDefinitionsPrepPcrFree(), 
@@ -209,7 +210,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 //					
 
 			
-			/**********************************************************************************/
+			/************************************ DEV / UAT ONLY **********************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
 				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :5 nouveaux exp type
@@ -229,17 +230,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 				//transformation
-				l.add(newExperimentType("Prep RNA","rna-prep",null,1100,
+				l.add(newExperimentType("Prep. Librairie (sans frg)","lib-prep",null,1100,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						null, 
 						getInstrumentUsedTypes("janus"),
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("PCR+purification","pcr-purif",null,1150,
+				l.add(newExperimentType("PCR+purification","pcr-and-purif",null,1150,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						null, 
-						getInstrumentUsedTypes("janus"),
+						getInstrumentUsedTypes("mastercycler-epg-and-zephyr"),
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
@@ -353,7 +354,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 		
-					
+		/************************************ DEV / UAT ONLY **********************************************/			
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 5 nouveau nodes
@@ -373,7 +374,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null
 					).save();	
 			
-			newExperimentTypeNode("rna-prep",getExperimentTypes("rna-prep").get(0),
+			newExperimentTypeNode("lib-prep",getExperimentTypes("lib-prep").get(0),
 					false,false,false,
 					getExperimentTypeNodes("ext-to-rna-sequencing"),
 					null,
@@ -381,9 +382,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null
 					).save();
 
-			newExperimentTypeNode("pcr-purif",getExperimentTypes("pcr-purif").get(0),
+			newExperimentTypeNode("pcr-and-purif",getExperimentTypes("pcr-and-purif").get(0),
 					true,false,false,
-					getExperimentTypeNodes("rna-prep"),
+					getExperimentTypeNodes("lib-prep",      "ext-to-rna-sequencing"), ///ext-to-rna-sequencing POUR TESTS!!!!!!!!!!!
 					getExperimentTypes("labchip-migration-profile"), 
 					null, 
 					null
@@ -391,12 +392,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			
 			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-purif"),
+					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purif"),
 					null,
 					null,
 					null
 					).save();
-			
 		}
 	}
 

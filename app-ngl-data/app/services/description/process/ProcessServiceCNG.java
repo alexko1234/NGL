@@ -107,8 +107,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			// processus long type "library"
 			l.add(DescriptionFactory.newProcessType("RNA Sequencing", "rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
-					Arrays.asList(getPET("ext-to-rna-sequencing",-1),getPET("rna-prep",0),getPET("pcr-purif",1),getPET("normalization-and-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-					getExperimentTypes("rna-prep").get(0),              //first experiment type
+					Arrays.asList(getPET("ext-to-rna-sequencing",-1),getPET("lib-prep",0),getPET("pcr-and-purif",1),getPET("normalization-and-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					getExperimentTypes("lib-prep").get(0),              //first experiment type
 					getExperimentTypes("illumina-depot").get(0),        //last  experiment type
 					getExperimentTypes("ext-to-rna-sequencing").get(0), //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

@@ -41,6 +41,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// FDS 22/03/2016 JIRA NGL-982 (couple d'instruments...)
 		l.add(newInstrumentCategory("Robot pipetage + cBot","liquid-handling-robot-and-cBot"));
 		
+		// FDS 29/07/2016 JIRA NGL-1027 (couple d'instruments...)
+		l.add(newInstrumentCategory("Thermocycleur + Robot pipetage","thermocycler-and-liquid-handling-robot"));
+		
 		l.add(newInstrumentCategory("Quantification par fluorométrie","fluorometer"));
 		l.add(newInstrumentCategory("Appareil de qPCR","qPCR-system"));
 		l.add(newInstrumentCategory("Electrophorèse sur puce","chip-electrophoresis"));
@@ -146,6 +149,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		/** thermocyclers **/
+		// FDS a renommer pour etre coherent avec thermocyclers-and-liquid-handling-robot ????????????????????????/
 		l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
 				getInstruments(
 						createInstrument("thermo1", "Thermo1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
@@ -219,8 +223,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
-		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot (plaque input/ plaque output) **/
-		l.add(newInstrumentUsedType("Janus / cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
+		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot  **/
+		l.add(newInstrumentUsedType("Janus + cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
 				getInstruments(
 						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -229,8 +233,27 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		/** FDS ajout 29/07/2016 JIRA NGL-1027 pseudo instrument Masterycler EP-Gradient + Zephyr **/
+		l.add(newInstrumentUsedType("Mastercycler EP-Gradient + Zephyr", "mastercycler-epg-and-zephyr", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerEPGAndZephyrProperties(), 
+				getInstruments(
+						createInstrument("mastercycler1-and-zephyr", "Mastercycler 1 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler2-and-zephyr", "Mastercycler 2 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler3-and-zephyr", "Mastercycler 3 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler4-and-zephyr", "Mastercycler 4 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		/** FDS prevision.... pseudo instrument Masterycler Nexus SX1 + Zephyr **/
+		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1 + Zephyr", "mastercycler-nsx1-epg-and-zephyr", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerNSX1AndZephyrProperties(), 
+				getInstruments(
+						createInstrument("mastercycler5-and-zephyr", "Mastercycler 5 (Nexus SX1) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler6-and-zephyr", "Mastercycler 6 (Nexus SX1) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
+	
 
 	/*** get properties methods ***/
 	
@@ -344,8 +367,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getHiseqXProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Position","position"
-		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
+		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
@@ -365,7 +387,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-
+	// FDS a renommer "Nbre de Cycles / pcrCycleNumber
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
@@ -394,7 +416,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
 	private static List<PropertyDefinition> getSicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		// essai ajout default value...	
 		l.add(newPropertiesDefinition("Programme Siclone NGSX", "programSicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
 				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate"), null, "single"));
 		return l;
@@ -417,7 +438,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		//TEST FDS: nom des programes
+		//TEST FDS: nom des programes ???????????
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				// newValues("programme 1_normalisation"), "single", null, false ,null, null));
 				newValues("programme 1_normalisation",
@@ -455,6 +476,34 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		return l;
 	}
+	
+	//-------------------voir s'il faut ne garder qu'une seule méthode et non pas 2 .....
+	
+	// FDS 29/07/2016 JIRA NGL-1027 ajout propriétés pseudo instrument Masterycler EP-Gradient + Zephyr 
+	private static List<PropertyDefinition> getMastercyclerEPGAndZephyrProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		//Mastercycler
+		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
+				null, null, null , null, "single", null, true ,"14", null));
+
+		//Zephyr
+		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
+				null, null, null , null, "single", null, true ,"0.8", null));
+		return l;
+	}
+	
+	// FDS 29/07/2016 JIRA NGL-1027 ajout propriétés pseudo instrument Masterycler NSX1 + Zephyr 
+	private static List<PropertyDefinition> getMastercyclerNSX1AndZephyrProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		//Mastercycler
+		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
+				null, null, null , null, "single", null, true ,"14", null));
+		//Zephyr
+		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
+				null, null, null , null, "single", null, true ,"0.8", null));
+		return l;
+	}
+	
 	
 	/*** get lists methods ***/
 	// FDS 20/07/2016 JIRA SUPSQCNG-392 : ajout short names
