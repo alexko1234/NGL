@@ -26,7 +26,7 @@ public class ProcessCategoryDAO extends AbstractDAODefault<ProcessCategory>{
 	{
 		try {
 			String sql = getSqlCommon();
-			Logger.debug(sql);
+			//Logger.debug(sql);
 			BeanPropertyRowMapper<ProcessCategory> mapper = new BeanPropertyRowMapper<ProcessCategory>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper);
 		} catch (DataAccessException e) {

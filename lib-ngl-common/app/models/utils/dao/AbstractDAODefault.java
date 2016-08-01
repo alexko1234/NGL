@@ -7,6 +7,7 @@ import java.util.List;
 import models.utils.ListObject;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -87,7 +88,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 	{
 		try {
 			String sql = getSqlCommon()+" ORDER by t.code";
-			Logger.debug(sql);
+			//Logger.debug(sql);
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper);
 		} catch (DataAccessException e) {
@@ -123,6 +124,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		
 		T o = getObjectInCache(code);
 		if(null != o){
+			//Logger.debug("find in cache "+entityClass.getCanonicalName() + " : "+code);
 			return o;
 		}else{
 			try {
@@ -131,8 +133,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 				o = this.jdbcTemplate.queryForObject(sql, mapper, code);
 				setObjectInCache(o, code);
 				return o;
-			} catch (DataAccessException e) {
-				Logger.warn(e.getMessage());
+			} catch (IncorrectResultSizeDataAccessException e) {
+				//Logger.warn(e.getMessage());
 				return null;
 			}
 		}

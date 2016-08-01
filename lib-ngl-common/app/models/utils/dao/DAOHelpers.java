@@ -62,7 +62,7 @@ public class DAOHelpers {
 	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
 		List<T> l = new ArrayList<T>();
 		for(String code : codes){
-			Logger.debug("Load "+type.getName() + " : "+code);
+			//Logger.debug("Load "+type.getName() + " : "+code);
 			l.add(finder.findByCode(code));
 		}
 		return l;

@@ -35,7 +35,7 @@ public abstract class AbstractDeclaration {
 	public List<ExperimentType> getExperimentType(){
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		Logger.debug(this.getClass().getSimpleName()+" getExperimentType");
+		//Logger.debug(this.getClass().getSimpleName()+" getExperimentType");
 
 		if(getExperimentTypeCommon()!=null){
 			l.addAll(getExperimentTypeCommon());
@@ -67,7 +67,7 @@ public abstract class AbstractDeclaration {
 	public List<ProcessType> getProcessType(){
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		Logger.debug(this.getClass().getSimpleName()+" getProcessType");
+		//Logger.debug(this.getClass().getSimpleName()+" getProcessType");
 
 		if(getProcessTypeCommon()!=null){
 			l.addAll(getProcessTypeCommon());
@@ -98,7 +98,7 @@ public abstract class AbstractDeclaration {
 
 	public void getExperimentTypeNode(){
 
-		Logger.debug(this.getClass().getSimpleName()+" getExperimentTypeNode");
+		//Logger.debug(this.getClass().getSimpleName()+" getExperimentTypeNode");
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			getExperimentTypeNodeDEV();
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
