@@ -209,6 +209,7 @@ runs.ngsrg_nanopore.poreActivityTimePercentAvg = % durée d''activité des pores
 runs.ngsrg_nanopore.poreSpeedDistribMin = Vitesse de séquençage des pores (MIN)
 runs.ngsrg_nanopore.poreSpeedDistribMax = Vitesse de séquençage des pores (MAX)
 runs.ngsrg_nanopore.poreSpeedDistribAvg = Vitesse de séquençage des pores
+runs.ngsrg_nanopore.sequencingTime = Durée de séquençage (h)
 
 runs.ngsrg_nanopore.poreQualityAvg = Score Qualité
 runs.ngsrg_nanopore.nbBases1DForward = Nb bases 1D forward
