@@ -236,7 +236,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", null, 
 				"single", 17, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
-				null, null ,null ,null ,"single", 20, true, null,null));
+				null, null ,null ,null ,"single", 20, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, null, null, null,"single", 25, false, null,null));
 
