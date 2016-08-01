@@ -80,7 +80,7 @@ angular.module('atomicTransfereServices', [])
     				
     				if(column.choiceInList){
     					if(propertyDefinition.possibleValues.length > 100){
-    						column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" />';        					
+    						column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
     					}
     					column.possibleValues = propertyDefinition.possibleValues; 
     					column.filter = "codes:'value."+propertyDefinition.code+"'";    					
