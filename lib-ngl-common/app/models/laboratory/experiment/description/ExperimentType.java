@@ -89,7 +89,11 @@ public class ExperimentType extends CommonInfoType{
 		public List<ExperimentType> findByPreviousExperimentTypeCode(String previousExperimentTypeCode) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByPreviousExperimentTypeCode(previousExperimentTypeCode);
 		}
-
+		
+		public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findByPreviousExperimentTypeCodeInProcessTypeContext(previousExperimentTypeCode, processTypeCode);
+		}
+		
 	}
 	
 }

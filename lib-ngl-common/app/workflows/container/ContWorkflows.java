@@ -1,38 +1,29 @@
 package workflows.container;
 
-import static validation.common.instance.CommonValidationHelper.*;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE;
+import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
-import fr.cea.ig.MongoDBDAO;
-import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.Valuation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.InstanceConstants;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import fr.cea.ig.MongoDBDAO;
 @Service
 public class ContWorkflows extends Workflows<Container> {
 
@@ -56,8 +47,8 @@ public class ContWorkflows extends Workflows<Container> {
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation,
 			Container container) {
-		
-		if("IS".equals(container.state.code) || "UA".equals(container.state.code)){
+		//purg when pass to IS, UA or IW-P
+		if("IS".equals(container.state.code) || "UA".equals(container.state.code) || "IW-P".equals(container.state.code)){
 			//TODO GA improve the extraction of fromTransformationTypeCodes
 			 
 			 boolean unsetFromExperimentTypeCodes = false;

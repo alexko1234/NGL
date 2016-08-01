@@ -97,7 +97,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 						!nextStateCode.startsWith("A") && !nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("IW-D".equals(currentStateCode) && 
-						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A")){
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A") && !nextStateCode.startsWith("IW-P")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("IS".equals(currentStateCode) && 
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P")){
@@ -106,7 +106,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 						!nextStateCode.equals("IW-P") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("N".equals(currentStateCode) && 
-						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A")){
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A") && !nextStateCode.startsWith("IW-P")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("IW-E".equals(currentStateCode) || "IU".equals(currentStateCode)){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
