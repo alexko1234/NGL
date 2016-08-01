@@ -251,7 +251,7 @@ public class MetaTProcess extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertiesMetaTcDNA() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessTypeMetaRA(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaRA(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif Déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("pas de déplétion","déplétion prok","déplétion polyA"), 
 				null,null,null,"single", 14, true, null, null));
@@ -268,7 +268,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertiesMetaTRNA() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, getBanqueProcessTypeMetaRB(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaRB(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif Déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("pas de déplétion","déplétion prok","déplétion polyA"), 
 				null,null,null,"single", 14, true, null, null));
