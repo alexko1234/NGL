@@ -106,7 +106,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 						,getPET("prepa-flowcell",5)
 						,getPET("prepa-fc-ordered",5)
 						,getPET("illumina-depot",6)), 
-				getExperimentTypes("tag-pcr").get(0), getExperimentTypes("sizing").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("MetaBarcoding (sans sizing)", "tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), getPropertyMetaBarCodingWithoutSizing(),
 				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1)
@@ -214,10 +214,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				getTagIllumina(), null,null,null,"single", 14, true, null,null));
+				null, null,null,null,"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				getTagCategoriesIllumina(), null,null,null,"single", 15, true, null,null));
+				getTagCategoriesIllumina(), null,null,null,"single", 15, false, null,null));
 
 		return propertyDefinitions;
 	}
