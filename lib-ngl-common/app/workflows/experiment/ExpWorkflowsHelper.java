@@ -283,10 +283,8 @@ public class ExpWorkflowsHelper {
 		if(atm.outputContainerUseds != null){
 			atm.updateOutputCodeIfNeeded(outputCsc, supportCode);
 			if(!justContainerCode){
-				List<Content> contents = getContents(exp, atm);
-
 				atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
-					ocu.contents = contents;
+					ocu.contents = getContents(exp, atm, ocu);
 					if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
 					if(ocu.concentration != null &&ocu.concentration.value == null)ocu.concentration=null;
 					if(ocu.quantity != null &&ocu.quantity.value == null)ocu.quantity=null;			
@@ -294,7 +292,6 @@ public class ExpWorkflowsHelper {
 			}
 		}		
 	}
-
 
 	private Set<String> getFromExperimentTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentTypeCodes = new HashSet<String>(0);
@@ -319,10 +316,11 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private List<Content> getContents(Experiment exp, AtomicTransfertMethod atm) {
-		List<Content> contents =  atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> ContainerHelper.calculPercentageContent(icu.contents, icu.percentage)).flatMap(List::stream).collect(Collectors.toList());
+	private List<Content> getContents(Experiment exp, AtomicTransfertMethod atm, OutputContainerUsed ocu) {
+		List<Content> contents =  atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> ContainerHelper.calculPercentageContent(icu.contents, icu.percentage)).flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
 		contents = ContainerHelper.fusionContents(contents);
-		Map<String, PropertyValue> newContentProperties = getPropertiesForALevel(exp, atm, CODE.Content);
+		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevel(exp, atm, CODE.Content);
+		newContentProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Content));
 		contents.forEach((Content c) ->{
 			c.properties.putAll(newContentProperties);
 		});
@@ -368,7 +366,7 @@ public class ExpWorkflowsHelper {
 			List<Container> containers = entry.getValue();
 			ContainerSupport support = createContainerSupport(entry.getKey(), containers, validation);
 			//TODO GA extract only properties from exp and inst not from atm => must be improve
-			support.properties = getPropertiesForALevel(exp, CODE.ContainerSupport); 
+			support.properties = getCommonPropertiesForALevel(exp, null, CODE.ContainerSupport); 
 			support.validate(supportsValidation);
 
 			if(!supportsValidation.hasErrors()){
@@ -523,7 +521,7 @@ public class ExpWorkflowsHelper {
 	private List<Container> createOutputContainers(Experiment exp, AtomicTransfertMethod atm, ContextValidation validation) {
 		Set<String> fromTransformationTypeCodes = getFromExperimentTypeCodes(exp, atm);
 		Set<String> fromTransformationCodes = getFromExperimentCodes(exp, atm);
-		Map<String, PropertyValue> containerProperties = getPropertiesForALevel(exp, atm, CODE.Container);
+		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevel(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
 		Set<String> processTypeCodes =new HashSet<String>();
@@ -545,7 +543,9 @@ public class ExpWorkflowsHelper {
 			c.categoryCode = ocu.categoryCode;
 			c.contents = ocu.contents;
 			c.support = ocu.locationOnContainerSupport;
-			c.properties = containerProperties;
+			Map<String, PropertyValue> outputContainerProperties = getOutputPropertiesForALevel(exp, ocu, CODE.Container);
+			outputContainerProperties.putAll(containerProperties);
+			c.properties = outputContainerProperties;
 			c.concentration = ocu.concentration;
 			c.quantity = ocu.quantity;
 			c.volume = ocu.volume;
@@ -574,7 +574,9 @@ public class ExpWorkflowsHelper {
 				c.categoryCode = ocu.categoryCode;
 				c.contents = ocu.contents;
 				c.support = ocu.locationOnContainerSupport;
-				c.properties = containerProperties;
+				Map<String, PropertyValue> outputContainerProperties = getOutputPropertiesForALevel(exp, ocu, CODE.Container);
+				outputContainerProperties.putAll(containerProperties);
+				c.properties = outputContainerProperties;
 				c.concentration = ocu.concentration;
 				c.quantity = ocu.quantity;
 				c.volume = ocu.volume;
@@ -686,11 +688,40 @@ public class ExpWorkflowsHelper {
 		return propertyDefs.stream().filter(pd -> pd.levels.contains(l)).map(pd -> pd.code).collect(Collectors.toSet());
 	}
 
-	private Map<String, PropertyValue> getPropertiesForALevel(Experiment exp, CODE code) {
-		return getPropertiesForALevel(exp, null, code);
-	}
+	private Map<String, PropertyValue> getOutputPropertiesForALevel(Experiment exp, OutputContainerUsed ocu, Level.CODE level) {
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 
-	private Map<String, PropertyValue> getPropertiesForALevel(Experiment exp, AtomicTransfertMethod atm, Level.CODE level) {
+		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
+
+		if(null != ocu && ocu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(ocu.experimentProperties.entrySet().stream()
+						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
+		}
+
+		//extract instrument content properties
+		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level);
+
+		if(null != ocu && ocu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0){			
+			propertiesForALevel.putAll(ocu.instrumentProperties.entrySet().stream()
+						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));								
+		}
+		
+		return propertiesForALevel;
+	}
+	
+	/**
+	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
+	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
+	 * @param exp
+	 * @param atm
+	 * @param level
+	 * @return
+	 */
+	private Map<String, PropertyValue> getCommonPropertiesForALevel(Experiment exp, AtomicTransfertMethod atm, Level.CODE level) {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
@@ -712,14 +743,7 @@ public class ExpWorkflowsHelper {
 					.flatMap(Set::stream)
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))					
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
-			if(null != atm.outputContainerUseds){
-				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
-						.filter((OutputContainerUsed ocu) -> ocu.experimentProperties != null)
-						.map((OutputContainerUsed ocu) -> ocu.experimentProperties.entrySet())
-						.flatMap(Set::stream)
-						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
-						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
-			}			
+					
 		}
 
 		//extract instrument content properties
@@ -739,14 +763,7 @@ public class ExpWorkflowsHelper {
 					.flatMap(Set::stream)
 					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
-			if(null != atm.outputContainerUseds){
-				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
-						.filter((OutputContainerUsed ocu) -> ocu.instrumentProperties != null)
-						.map((OutputContainerUsed ocu) -> ocu.instrumentProperties.entrySet())
-						.flatMap(Set::stream)
-						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
-						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
-			}					
+							
 		}
 		/* Do not extract property from process because the risk to have the same property on several process is very big
 		 * To put process property in container used rules*/

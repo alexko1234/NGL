@@ -99,7 +99,7 @@ public class ContainerHelper {
 		//extract values with only one content
 		Map<String, Content> contentsByKeyWithOneValues = contentsByKey.entrySet().stream()
 				.filter((Map.Entry<String, List<Content>> e) -> e.getValue().size() == 1)
-				.collect(Collectors.toMap((Map.Entry<String, List<Content>> e) -> e.getKey(), (Map.Entry<String, List<Content>> e) -> e.getValue().get(0)));
+				.collect(Collectors.toMap((Map.Entry<String, List<Content>> e) -> e.getKey(), (Map.Entry<String, List<Content>> e) -> cloneContent(e.getValue().get(0))));
 		
 		//extract values with several contents and fusion the contents
 		Map<String, Content> contentsByKeyWithSeveralValues = contentsByKey.entrySet().stream()
@@ -112,6 +112,21 @@ public class ContainerHelper {
 		return new ArrayList(contentsByKeyWithOneValues.values());
 	}
 
+	private static Content cloneContent(Content content) {
+		Content finalContent = new Content();
+		
+		finalContent.projectCode = content.projectCode;
+		finalContent.sampleCode = content.sampleCode;
+		finalContent.sampleCategoryCode = content.sampleCategoryCode;
+		finalContent.sampleTypeCode = content.sampleTypeCode;
+		finalContent.referenceCollab = content.referenceCollab;
+		finalContent.percentage = content.percentage;
+		finalContent.properties.putAll(content.properties);
+		
+		return finalContent;
+	}
+	
+	
 	private static Content fusionSameContents(List<Content> contents) {
 		Content finalContent = new Content();
 		
