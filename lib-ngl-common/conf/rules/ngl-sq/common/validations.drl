@@ -31,26 +31,6 @@ rule "Input not null for all Experiment"
     end
     
 
-rule "Set RunStartDate to Illumina Depot, Opgen Depot, Nanopore Depot if not exist"
-@nglSQ (calculations )
-	dialect "java"
-	salience 500
-	no-loop
-when
-	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" || $typeCode=="bionano-depot" , $state: state, $state.code=="N", 
-					$experimentProperties: experimentProperties, (null == $experimentProperties || (null != $experimentProperties && null == $experimentProperties.get("runStartDate"))), traceInformation!=null, $creationDate: traceInformation.creationDate)	
-then	
-	Logger.info("Regle RunStartDate propertie OK");
-	if($experimentProperties==null){
-		$experiment.experimentProperties=new HashMap<String,PropertyValue>();
-	}
-	PropertySingleValue value = new PropertySingleValue($creationDate);
-	$experiment.experimentProperties.put("runStartDate", value);
-	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
-	Logger.info("Date reel de dépot = " + $experiment.experimentProperties.get("runStartDate"));
-	update ($experiment);
-
-end
 
 
 rule "init inputsupport"
@@ -116,18 +96,51 @@ rule "input all container from support"
 	end
 
 
-rule "Atomictransfert methods empty"
+declare TagInfos
+	tag : PropertyValue
+	index : Index
+	containerCode : String
+end
+
+rule "validate tag exist"
 	@nglSQ( validations )
 	dialect "java"
 	salience 1000
 	no-loop
     when
-    	$experiment:Experiment($atomics:atomicTransfertMethods)
+    	Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free" || $typeCode=="dna-illumina-indexed-library" || $typeCode=="rna-illumina-indexed-library")
     	$contextValidation:ContextValidation($errors : errors)
-    	eval($atomics.size()==0)
+    	$atomicTransfert: AtomicTransfertMethod($outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
+		$outputContainerUsed:OutputContainerUsed($tag:experimentProperties.get("tag"), $tag != null) from $outputContainerUseds		
     then
-    	$contextValidation.addErrors("atomicTransfertMethods",	"error.validationexp.emptycontainer");
+    	Logger.debug("validate tag :"+$tag.value);
+    	
+    	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("code", $tag.value));
+    	if(index == null){
+    		$contextValidation.addErrors("tag","error.validationexp.tagNotExist", $tag.value, $outputContainerUsed.code);
+    	}else{
+    		TagInfos tagInfos=new TagInfos($tag, index, $outputContainerUsed.code);
+			insert(tagInfos);
+    	}
+    	
     end
+
+rule "valid tag and tagCategory match"
+    @nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode)
+    	$tagInfos:TagInfos()
+    	$atomicTransfert: AtomicTransfertMethod($outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
+	   	$contextValidation:ContextValidation() 
+	   	$outputContainerUsed: OutputContainerUsed($tagCategory:experimentProperties.get("tagCategory"), $tagCategory != null) from $outputContainerUseds
+	   	eval(!$tagCategory.value.equals($tagInfos.getIndex().categoryCode))	  	
+    then
+    	$contextValidation.addErrors($typeCode,"error.validationexp.tagcategory.notvalid", $tagInfos.getTag().value, $tagInfos.getContainerCode());
+end
+
 
 
 

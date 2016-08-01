@@ -1,11 +1,6 @@
 package rules
 
-declare TagInfos
-	tag : PropertySingleValue
-	tagCategory : PropertySingleValue
-	index : IlluminaIndex
-	containerCode : String
-end
+
 
 // 14/03/2016 verification du volume de sortie des containers prep-pcr-free
 // NOTE: il faut passer par drools pour les verification sur les attributs
@@ -27,7 +22,7 @@ rule "Volume not null in prep-pcr-free outputContainer"
    		$contextValidation.addErrors("prep-pcr-free","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
 end
 
-
+/*
 rule "init tag and tagCategory match"
     @nglSQ( validations )
 	dialect "java"
@@ -62,3 +57,4 @@ rule "tag and tagCategory match"
     	//Logger.debug("!!!"+$tagInfos.getTagCategory().value +"!="+ $tagInfos.getIndex().categoryCode+"!!!");
     	$contextValidation.addErrors("prep-pcr-free","error.validationexp.tagcategory.notvalid", $tagInfos.getTag().value, $tagInfos.getContainerCode());
 end
+*/
