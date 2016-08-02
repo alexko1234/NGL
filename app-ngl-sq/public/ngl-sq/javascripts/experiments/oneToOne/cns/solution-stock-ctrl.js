@@ -5,7 +5,17 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	// NGL-1055: mettre getArray et codes '' dans filter et pas dans render
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
-			columns:[			  			
+			columns:[		
+					{
+						"header":Messages("containers.table.projectCodes"),
+							"property": "inputContainer.projectCodes",
+							"order":false,
+							"hide":true,
+							"type":"text",
+							"position":2,
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+						 "extraHeaders":{0:Messages("experiments.inputs")}
+					 },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
@@ -126,6 +136,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         /*
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -136,6 +147,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "position":400,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         */
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -200,7 +212,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				start:false
 			},
 			extraHeaders:{
-				number:2,
+				number:1,
 				dynamic:true,
 			}
 	};
@@ -241,7 +253,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		$scope.atmService.data.setEdit();
 	});
 	
-	
+	//WARNING Old systme to compute better used  updatePropertyFromUDT function see normalization
 	var calculVolumeFromValue=function(value){
 		console.log("call calculVolumeFromValue");
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
@@ -283,58 +295,130 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	
 	//Init	
 	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
-		datatableConfig.columns.push( {
-       	 "header":Messages("containers.table.supportCode"),
-       	 "property":"inputContainer.support.code",
-       	 "order":true,
-       	 "edit":false,
-		  "hide":true,
-       	 "type":"text",
-       	 "position":1,
-       	 "extraHeaders":{0:Messages("experiments.inputs")}
-        });
-		datatableConfig.columns.push( {
-	       	 "header":Messages("containers.table.support.line"),
-	       	 "property":"inputContainer.support.line",
-	       	 "order":true,
-	       	 "edit":false,
-			  "hide":true,
-	       	 "type":"text",
-	       	 "position":1.1,
-	       	 "extraHeaders":{0:Messages("experiments.inputs")}
-	        });
-		datatableConfig.columns.push( {
-	       	 "header":Messages("containers.table.support.column"),
-	       	 "property":"inputContainer.support.column*1",
-	       	 "order":true,
-	       	 "edit":false,
-			  "hide":true,
-	       	 "type":"number",
-	       	 "position":1.2,
-	       	 "extraHeaders":{0:Messages("experiments.inputs")}
-	        });
-	
-	}else {			
-			datatableConfig.columns.push( {
-					        	 "header":Messages("containers.table.code"),
-					        	 "property":"inputContainer.code",
-					        	 "order":true,
-								 "edit":false,
-								 "hide":true,
-					        	 "type":"text",
-					        	 "position":1,
-					        	 "extraHeaders":{0:Messages("experiments.inputs")}
-					         });
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.supportCode"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.line"),
+			"property" : "inputContainer.support.line",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1.1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.column"),
+			"property" : "inputContainer.support.column*1",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "number",
+			"position" : 1.2,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
 	}
 	
+	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
+		datatableConfig.columns.push({
+			// barcode plaque sortie == support Container used code... faut Used
+			"header" : Messages("containers.table.support.name"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.code",
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		datatableConfig.columns.push({
+			// Ligne
+			"header" : Messages("containers.table.support.line"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.line",
+			"edit" : false,
+			"order" : true,
+			"hide" : true,
+			"type" : "text",
+			"position" : 401,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		datatableConfig.columns.push({// colonne
+			"header" : Messages("containers.table.support.column"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			"edit" : false,
+			"order" : true,
+			"hide" : true,
+			"type" : "number",
+			"position" : 402,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "outputContainerUsed.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+	}
+
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod =  function(line, column){
+	atmService.newAtomicTransfertMethod = function(line, column){
+		var getLine = function(line){
+			if($scope.experiment.instrument.outContainerSupportCategoryCode === 'tube'){
+				return "1";
+			}else{
+				return line;
+			}
+			
+		}
+		var getColumn=getLine;
+				
+		
 		return {
 			class:"OneToOne",
-			line:line, 
-			column:column, 				
+			line:getLine(line), 
+			column:getColumn(column), 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
@@ -347,8 +431,12 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	$scope.atmService = atmService;
-	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+		$scope.messages.clear();
+		$scope.atmService = atmService;
+	}else{
+		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
+	}
 
 	var generateSampleSheet = function(){
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})

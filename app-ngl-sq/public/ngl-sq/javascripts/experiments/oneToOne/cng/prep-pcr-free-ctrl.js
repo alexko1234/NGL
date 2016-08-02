@@ -233,7 +233,6 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.updatePropertyUnit($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	

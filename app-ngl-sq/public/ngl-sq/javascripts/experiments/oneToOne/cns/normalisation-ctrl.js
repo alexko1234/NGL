@@ -230,7 +230,6 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.updatePropertyUnit($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});

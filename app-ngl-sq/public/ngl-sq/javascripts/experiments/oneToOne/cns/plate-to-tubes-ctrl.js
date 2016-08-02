@@ -267,7 +267,6 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.updatePropertyUnit($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	

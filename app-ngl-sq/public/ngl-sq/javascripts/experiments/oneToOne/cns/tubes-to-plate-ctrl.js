@@ -287,7 +287,6 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.updatePropertyUnit($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});

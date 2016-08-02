@@ -289,7 +289,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	$scope.$on('save', function(e, callbackFunction) {
 		console.log("call event save on x-to-tubes");		
 		$scope.atmService.viewToExperiment($scope.experiment, false);
-		$scope.updatePropertyUnit($scope.experiment); 
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
