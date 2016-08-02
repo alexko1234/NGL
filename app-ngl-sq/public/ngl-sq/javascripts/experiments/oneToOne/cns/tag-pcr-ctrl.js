@@ -23,7 +23,6 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					 			"order":false,
 					 			"hide":true,
 					 			"type":"text",
-					 			 "mergeCells" : true,
 					 			"position":2,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -34,7 +33,6 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					 			"order":false,
 					 			"hide":true,
 					 			"type":"text",
-					 			 "mergeCells" : true,
 					 			"position":3,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
@@ -46,8 +44,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 								 "edit":false,
 								 "hide":true,
 					        	 "type":"text",
-					        	 "mergeCells" : true,
-					 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+					        	"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 					        	 "position":4,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },
@@ -100,7 +97,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 								 "edit":true,
 								 "hide":true,
 								 "type":"number",
-					        	 "position":16,
+					        	 "position":51,
 					        	 "extraHeaders":{0:Messages("experiments.outputs")}
 					         },
 					         /*
@@ -145,8 +142,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					},
 					order:{
 						mode:'local', //or 
-						active:true,
-						by:'inputContainer.code'
+						active:true
 					},
 					remove:{
 						active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -162,9 +158,6 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					},
 					hide:{
 						active:true
-					},
-					mergeCells:{
-						active:true 
 					},			
 					edit:{
 						active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
