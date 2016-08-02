@@ -300,10 +300,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 			// Ligne
 			"header" : Messages("containers.table.support.line"),
 			"property" : "outputContainerUsed.locationOnContainerSupport.line",
-			"edit" : true,
-			"choiceInList":true,
-			"possibleValues":[{"name":'A',"code":"A"},{"name":'B',"code":"B"},{"name":'C',"code":"C"},{"name":'D',"code":"D"},
-			                  {"name":'E',"code":"E"},{"name":'F',"code":"F"},{"name":'G',"code":"G"},{"name":'H',"code":"H"}],
+			"edit" : false,
 			"order" : true,
 			"hide" : true,
 			"type" : "text",
@@ -317,11 +314,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
 			// forcer a numerique.=> type:number, property: *1
 			"property" : "outputContainerUsed.locationOnContainerSupport.column",
-			"edit" : true,
-			"choiceInList":true,
-			"possibleValues":[{"name":'1',"code":"1"},{"name":'2',"code":"2"},{"name":'3',"code":"3"},{"name":'4',"code":"4"},
-			                  {"name":'5',"code":"5"},{"name":'6',"code":"6"},{"name":'7',"code":"7"},{"name":'8',"code":"8"},
-			                  {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"12"}], 
+			"edit" : false,
 			"order" : true,
 			"hide" : true,
 			"type" : "number",

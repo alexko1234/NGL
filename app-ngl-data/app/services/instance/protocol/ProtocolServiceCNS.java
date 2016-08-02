@@ -126,7 +126,7 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("Smarter_V4","Smarter V4","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
         	lp.add(newProtocol("Ovation_RNAseq_system_v2","Ovation RNAseq system v2","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
         	
-        	lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-rna-evaluation")));
+        	lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-rna-evaluation","plates-to-plate")));
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));

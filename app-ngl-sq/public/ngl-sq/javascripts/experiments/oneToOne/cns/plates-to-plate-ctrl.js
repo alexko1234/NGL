@@ -1,10 +1,10 @@
-angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
+angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
                                                        function($scope, $http,$parse,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
-					{
-						"header" : Messages("containers.table.code"),
+			 		{
+						"header" : Messages("containers.table.supportCode"),
 						"property" : "inputContainer.support.code",
 						"order" : true,
 						"edit" : false,
@@ -15,10 +15,34 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 							0 : Messages("experiments.inputs")
 						}
 					},
+					{
+						"header" : Messages("containers.table.support.line"),
+						"property" : "inputContainer.support.line",
+						"order" : true,
+						"edit" : false,
+						"hide" : true,
+						"type" : "text",
+						"position" : 1.1,
+						"extraHeaders" : {
+							0 : Messages("experiments.inputs")
+						}
+					},
+					{
+						"header" : Messages("containers.table.support.column"),
+						"property" : "inputContainer.support.column*1",
+						"order" : true,
+						"edit" : false,
+						"hide" : true,
+						"type" : "number",
+						"position" : 1.2,
+						"extraHeaders" : {
+							0 : Messages("experiments.inputs")
+						}
+					},
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":true,
+			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3,
@@ -100,7 +124,7 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+			         },	
 			         {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -195,7 +219,7 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 			 			"extraHeaders" : {
 			 				0 : Messages("experiments.outputs")
 			 			}
-			 		},
+			 		},	         
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -226,8 +250,7 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'inputContainer.support.code'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -273,7 +296,6 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
             }
 			
 	};
-
 	var updateATM = function(experiment){
 		if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
 			experiment.atomicTransfertMethods.forEach(function(atm){
@@ -320,7 +342,6 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
-
 	
 	$scope.copyVolumeInToOut = function(){
 		var data = $scope.atmService.data.displayResult;		
@@ -328,7 +349,6 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
 		})		
 	};
-	
 	/**
 	 * Compute A1, B1, C1, etc.
 	 */
@@ -371,25 +391,14 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
 	
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	// defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod =  function(line, column){
-		var getLine = function(line){
-			if($scope.experiment.instrument.outContainerSupportCategoryCode 
-					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
-				return line;
-			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
-				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
-				return undefined;
-			}
-			
-		}
-		var getColumn=getLine;
-		
 		return {
 			class:"OneToOne",
-			line:getLine(line), 
-			column:getColumn(column), 				
+			line:undefined, 
+			column:undefined, 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
@@ -402,17 +411,14 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 	atmService.defaultOutputValue = {
 			concentration : {copyInputContainer:true},
 			quantity : {copyInputContainer:true}
-	};	
+	};
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode === "tube"){
+	if($scope.experiment.instrument.inContainerSupportCategoryCode === "96-well-plate"){
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
-		$scope.messages.setError(Messages('experiments.input.error.only-tubes'));					
+		$scope.messages.setError(Messages('experiments.input.error.only-plates'));					
 	}
-	
-	
 	
 }]);
