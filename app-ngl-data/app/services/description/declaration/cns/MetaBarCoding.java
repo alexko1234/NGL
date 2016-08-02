@@ -57,7 +57,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 		l.add(newExperimentType("Bq DNA Illumina indexée","dna-illumina-indexed-library","LIB",810,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsBqDNAIlluminaIndexedLibrary(),
-				getInstrumentUsedTypes("hand"),"OneToOne", null,true,
+				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Amplification/PCR + purif","pcr-amplification-and-purification","PCR",820,
