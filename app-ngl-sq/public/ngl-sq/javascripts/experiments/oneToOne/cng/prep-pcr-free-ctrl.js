@@ -110,11 +110,11 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			        	 "position":16,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         //--->  colonnes specifiques instrument s'inserent ici  (inputUsed ??)     
+			         //--->  colonnes specifiques experience s'inserent ici  (inputUsed ??)     
 			         
 			         //------------------------- OUTPUT containers section --------------------------
 			         
-			         //--->  colonnes specifiques instrument s'inserent ici  (outputUsed ??)
+			         //--->  colonnes specifiques experience s'inserent ici  (outputUsed ??)
 			         
 		            /* ne pas aficher les containercodes  sauf pour DEBUG
 			         {

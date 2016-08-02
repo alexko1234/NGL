@@ -230,16 +230,16 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 				//transformation
-				l.add(newExperimentType("Prep. Librairie (sans frg)","lib-prep",null,1100,
+				l.add(newExperimentType("Prep. Librairie (sans frg)","lib-prep",null,1100, // avant="rna-sequencing"
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						null, 
 						getInstrumentUsedTypes("janus"),
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("PCR+purification","pcr-and-purif",null,1150,
+				l.add(newExperimentType("PCR+purification","pcr-and-purification",null,1150,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-						null, 
+						getPropertyDefinitionsPcrAndPurification(),
 						getInstrumentUsedTypes("mastercycler-epg-and-zephyr"),
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -382,7 +382,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null
 					).save();
 
-			newExperimentTypeNode("pcr-and-purif",getExperimentTypes("pcr-and-purif").get(0),
+			newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 					true,false,false,
 					getExperimentTypeNodes("lib-prep",      "ext-to-rna-sequencing"), ///ext-to-rna-sequencing POUR TESTS!!!!!!!!!!!
 					getExperimentTypes("labchip-migration-profile"), 
@@ -392,7 +392,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			
 			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purif"),
+					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification"),
 					null,
 					null,
 					null
@@ -590,17 +590,34 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	// FDS ajout17/06/2016 -- JIRA NGL-1029: experiment pool en plaque
+	// FDS ajout 17/06/2016 -- JIRA NGL-1029: experiment pool en plaque
 	private static List<PropertyDefinition> getPropertyDefinitionPool() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		//InputContainer
 		
+		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
 		
 		//OuputContainer 
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 25, true, null,null));
+		
+		return propertyDefinitions;
+	}
+	
+	// FDS ajout 01/08/2016 -- JIRA NGL-1027: experiment PCR + purification en plaque	
+	private static List<PropertyDefinition> getPropertyDefinitionsPcrAndPurification() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
+		// volume engagé editable et obligatoire, qté pas editable calculée en fonction volume engagé et pas sauvegardée
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Qté engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single", 25, false, null,null));
+		
+		//OuputContainer 
 		
 		return propertyDefinitions;
 	}

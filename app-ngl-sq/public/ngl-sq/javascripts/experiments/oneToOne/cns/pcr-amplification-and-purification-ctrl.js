@@ -1,4 +1,4 @@
-angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
                                                     
 	var datatableConfig = {
@@ -34,6 +34,7 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
+				     // render avec "|" !!
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
@@ -41,10 +42,11 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         // restait un render avec "|" ???
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
@@ -159,7 +161,7 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
-				columnMode:true
+				columnMode:true  /* ??*/
 			},
 			messages:{
 				active:false
