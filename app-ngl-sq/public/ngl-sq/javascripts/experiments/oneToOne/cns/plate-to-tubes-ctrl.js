@@ -329,7 +329,8 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 	};
 	atmService.defaultOutputValue = {
 			concentration : {copyInputContainer:true},
-			quantity : {copyInputContainer:true}
+			quantity : {copyInputContainer:true},
+			size : {copyInputContainer:true}
 	};
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

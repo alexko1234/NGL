@@ -409,7 +409,8 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 	};
 	atmService.defaultOutputValue = {
 			concentration : {copyInputContainer:true},
-			quantity : {copyInputContainer:true}
+			quantity : {copyInputContainer:true},
+			size : {copyInputContainer:true}
 	};
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

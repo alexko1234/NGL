@@ -253,6 +253,7 @@ angular.module('atomicTransfereServices', [])
 						volume:{unit:this.getUnit($parse('volume')(inputContainer), defaultOutputUnit.volume), value:this.getValue($parse('volume')(inputContainer), defaultOutputValue.volume)}, 
 						concentration:{unit:this.getUnit($parse('concentration')(inputContainer), defaultOutputUnit.concentration), value:this.getValue($parse('concentration')(inputContainer), defaultOutputValue.concentration)}, 
 						quantity:{unit:this.getUnit($parse('quantity')(inputContainer), defaultOutputUnit.quantity), value:this.getValue($parse('quantity')(inputContainer), defaultOutputValue.quantity)},
+						size:{unit:this.getUnit($parse('size')(inputContainer), defaultOutputUnit.size), value:this.getValue($parse('size')(inputContainer), defaultOutputValue.size)},
 						instrumentProperties:undefined,
 					    experimentProperties:undefined
 					};
@@ -356,7 +357,7 @@ angular.module('atomicTransfereServices', [])
 				},
 				*/
 				/* function to override in controler, used in addNewAtomicTransfertMethodsInDatatable function  */
-				updateAtm : function(atm){
+				updateNewAtmBeforePushInUDT : function(atm){
 					
 				},
 				addColumnToDatatable:function(columns, newColumn){
@@ -550,7 +551,7 @@ angular.module('atomicTransfereServices', [])
 										line.outputContainerUsed = $commonATM.newOutputContainerUsed($that.defaultOutputUnit,$that.defaultOutputValue,line.atomicTransfertMethod.line,
 												line.atomicTransfertMethod.column,line.inputContainer);
 										line.outputContainer = undefined;
-										$that.updateAtm(line);
+										$that.updateNewAtmBeforePushInUDT(line);
 									}
 									allData.push(line);
 								});

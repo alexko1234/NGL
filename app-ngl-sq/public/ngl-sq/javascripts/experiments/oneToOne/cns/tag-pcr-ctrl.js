@@ -375,7 +375,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	};
 	
 	
-	atmService.updateAtm=function(atm){
+	atmService.updateNewAtmBeforePushInUDT=function(atm){
 		var value = $scope.experimentType.sampleTypes[0].code;
 		var setter = $parse("outputContainerUsed.experimentProperties.sampleTypeCode.value").assign;
 		setter(atm, value);
