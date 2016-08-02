@@ -29,9 +29,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	$scope.getContentInfos = function(container){
 		var sampleCodeAndTags = [];
 		angular.forEach(container.contents, function(content){
-			if(content.properties.tag != undefined && content.sampleCode != undefined){
-				sampleCodeAndTags.push(content.projectCode+" / "+content.sampleCode+" / "+content.properties.tag.value);
+			var value = content.projectCode+" / "+content.sampleCode;
+			if(content.properties && content.properties.tag){
+				value = value +" / "+content.properties.tag.value;
 			}
+			sampleCodeAndTags.push(value);
 		});
 		return sampleCodeAndTags;
 	};
