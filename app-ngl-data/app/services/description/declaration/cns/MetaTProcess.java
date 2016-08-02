@@ -48,14 +48,6 @@ public class MetaTProcess extends AbstractDeclaration {
 				AbstractExperimentService.getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Ext to Metagenomic","ext-to-metagenomic-process",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(newExperimentType("Ext to Metagenomic with sizing","ext-to-metagenomic-process-with-sizing",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
 		l.add(newExperimentType("Fragmentation","fragmentation",null,200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
 				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and covaris-e220"),"OneToOne", 

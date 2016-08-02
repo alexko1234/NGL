@@ -77,8 +77,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new Purif().getExperimentType());
 		l.addAll(new Transfert().getExperimentType());
 		l.addAll(new MetaBarCoding().getExperimentType());
-		l.addAll(new MetaTProcess().getExperimentType());
 		l.addAll(new MetaGenomique().getExperimentType());
+		l.addAll(new MetaTProcess().getExperimentType());
+		
 		
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){

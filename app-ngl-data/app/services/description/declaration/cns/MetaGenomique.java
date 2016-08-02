@@ -39,6 +39,8 @@ public class MetaGenomique extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		
+		
 		return l;
 	}
 
