@@ -1340,7 +1340,7 @@ angular.module('atomicTransfereServices', [])
 						atm.inputContainerUseds.push($commonATM.convertContainerToInputContainerUsed(data.inputContainer));
 						
 						for(var j = 0; j < data.outputNumber ; j++){
-							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,his.defaultOutputValue,atm.line,atm.column));
+							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,this.defaultOutputValue,atm.line,atm.column));
 						}
 						this.data.atm.push(atm);
 					}
