@@ -121,6 +121,7 @@ containers.table.concentration.shortlabel = Conc.
 containers.table.concentration.unit = Unité Concentration
 containers.table.volume = Volume
 containers.table.quantity = Quantité
+containers.table.quantity.unit = Unité Quantité
 containers.table.inputVolume  = Volume engagé
 containers.table.finalvolume = Volume final
 containers.table.createUser = Container créé par
@@ -396,7 +397,9 @@ experiments.button.purif=Purification
 experiments.button.transfert=Transfert
 experiments.button.transformation=Transformation
 experiments.button.qualitycontrol=Controle qualité
-
+experiments.button.plate.computeLineMode = Calcul position plaque en mode ligne
+experiments.button.plate.computeColumnMode = Calcul position plaque en mode colonne
+experiments.button.plate.copyVolume = Copy volume container en entrée vers container en sortie
 experiments.chooseNextExperimentCategory=Tous les containers de sortie poursuivent vers la même expérience
 experiments.chooseOputContainerState=L''expérience suivante est différente selon les containers de sortie
 
