@@ -75,19 +75,19 @@
 var getColumns = function(){
 		var columns = [];
 			columns.push({property:"code",
-			        	header: "study.code",
+			        	header: Messages("study.code"),
 			        	type :"text",		    	  	
 			        	order:true
 			        	});		
 			 columns.push({property:"projectCode",
-			        	header: "study.projectCode",
+			        	header: Messages("study.projectCode"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
 			        	});	
 			columns.push({property:"accession",
-			        	header: "study.accession",
+			        	header: Messages("study.accession"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
@@ -101,27 +101,27 @@ var getColumns = function(){
 			        	choiceInList:false  
 			        	});	*/
 			 columns.push({property:"state.code",
-			        	header: "study.state.code",
+			        	header: Messages("study.state.code"),
 			        	"filter":"codes:'state'",
 			        	type :"text",		    	  	
 			        	order:true
 			        	});	
 			 columns.push({property:"centerName",
-			        	header: "study.centerName",
+			        	header: Messages("study.centerName"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
 			        	});	
 			  columns.push({property:"centerProjectName",
-			        	header: "study.centerProjectName",
+			        	header: Messages("study.centerProjectName"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
 			        	});			        			        			        
 			  columns.push({property:"title",
-						header: "study.title",
+						header: Messages("study.title"),
 						type :"String",
 			        	hide:true,
 			        	edit:true,
@@ -130,7 +130,7 @@ var getColumns = function(){
 				    	});	
 				    
 			  columns.push({property:"studyAbstract",
-						header: "study.studyAbstract",
+						header: Messages("study.studyAbstract"),
 						type :"String",
 			        	hide:true,
 			        	edit:true,
@@ -138,7 +138,7 @@ var getColumns = function(){
 				    	choiceInList:false
 				    	});	
 			   columns.push({property:"description",
-						header: "study.description",
+						header: Messages("study.description"),
 						type :"String",
 			        	hide:true,
 			        	edit:true,
@@ -147,7 +147,7 @@ var getColumns = function(){
 				    	});	
 			      
 				columns.push({property:"existingStudyType",
-						header: "study.existingStudyType",
+						header: Messages("study.existingStudyType"),
 						type :"String",
 						hide:true,
 						edit:true,

@@ -6,12 +6,12 @@
 		var getColumns = function(){
 			var columns = [];
 			columns.push({	property:"code",
-				    	  	header: "submissions.code",
+				    	  	header: Messages("submissions.code"),
 				    	  	type :"text",		    	  	
 				    	  	order:true});
 			columns.push({	property:"state.code",
 							"filter":"codes:'state'",
-							header: "submissions.state",
+							header: Messages("submissions.state"),
 							type :"text",
 							order:true});	
 			return columns;
@@ -144,12 +144,12 @@
 	var getColumns = function(){
 		var columns = [];
 		columns.push({	property:"code",
-			    	  	header: "submissions.code",
+			    	  	header: Messages("submissions.code"),
 			    	  	type :"text",		    	  	
 			    	  	order:true});
 		columns.push({	property:"state.code",
 						"filter":"codes:'state'",
-						header: "submissions.state",
+						header: Messages("submissions.state"),
 						type :"text",
 						order:true});	
 		return columns;
@@ -229,12 +229,12 @@
 	var getColumns = function(){
 		var columns = [];
 		columns.push({	property:"code",
-			    	  	header: "submissions.code",
+			    	  	header: Messages("submissions.code"),
 			    	  	type :"text",		    	  	
 			    	  	order:true});
 		columns.push({	property:"state.code",
 						"filter":"codes:'state'",
-						header: "submissions.state",
+						header: Messages("submissions.state"),
 						type :"text",
 						order:true});	
 		return columns;

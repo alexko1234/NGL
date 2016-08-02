@@ -91,19 +91,19 @@
 var getColumns = function(){
 		var columns = [];
 		columns.push({property:"code",
-			        	header: "configuration.code",
+			        	header: Messages("configuration.code"),
 			        	type :"text",		    	  	
 			        	order:true
 			        });	
 		columns.push({property:"projectCode",
-			        	header: "configuration.projectCode",
+			        	header: Messages("configuration.projectCode"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
 			        });	
 		columns.push({property:"strategySample",
-						header: "configuration.strategySample",
+						header: Messages("configuration.strategySample"),
 						type :"String",
 						hide:true,
 						edit:true,
@@ -113,7 +113,7 @@ var getColumns = function(){
 						possibleValues:'consultationService.sraVariables.strategySample',
 					});	
 		columns.push({property:"strategyStudy",
-						header: "configuration.strategyStudy",
+						header: Messages("configuration.strategyStudy"),
 						type :"String",
 						hide:true,
 						edit:true,
@@ -123,7 +123,7 @@ var getColumns = function(){
 						possibleValues:'consultationService.sraVariables.strategyStudy',
 					});	
 		columns.push({property:"librarySelection",
-						header: "configuration.librarySelection",
+						header: Messages("configuration.librarySelection"),
 						type :"String",
 			        	hide:true,
 			        	edit:true,
@@ -133,7 +133,7 @@ var getColumns = function(){
 				    	possibleValues:'consultationService.sraVariables.librarySelection',
 				    });	
 		columns.push({property:"libraryStrategy",
-						header: "configuration.libraryStrategy",
+						header: Messages("configuration.libraryStrategy"),
 						type :"String",
 						hide:true,
 						edit:true,
@@ -143,7 +143,7 @@ var getColumns = function(){
 						possibleValues:'consultationService.sraVariables.libraryStrategy',
 				    });	
 		columns.push({property:"librarySource",
-						header: "configuration.librarySource",
+						header: Messages("configuration.librarySource"),
 						type :"String",
 						hide:true,
 						edit:true,
@@ -153,13 +153,13 @@ var getColumns = function(){
 						possibleValues:'consultationService.sraVariables.librarySource',
 					});	
 		columns.push({property:"libraryConstructionProtocol",
-						 header: "configuration.libraryConstructionProtocol",
+						 header: Messages("configuration.libraryConstructionProtocol"),
 						 type :"String",		    	  	
 						 hide:true,
 						 edit:true,
 					});	
 		columns.push({property:"state.code",
-			        	  header: "configuration.state.code",
+			        	  header: Messages("configuration.state.code"),
 			        	  "filter":"codes:'state'",
 			        	  type :"text",		    	  	
 			        	  order:false,

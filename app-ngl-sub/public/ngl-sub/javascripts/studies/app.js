@@ -1,5 +1,5 @@
 "use strict";
-angular.module('home', ['ngRoute', 'commonsServices', 'datatableServices','ui.bootstrap', 'ngl-sub.StudiesServices'], 
+angular.module('home', ['ngRoute', 'commonsServices', 'ultimateDataTableServices','ui.bootstrap', 'ngl-sub.StudiesServices'], 
 	function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/sra/studies/create/home', {

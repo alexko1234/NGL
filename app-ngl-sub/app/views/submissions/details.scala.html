@@ -39,19 +39,19 @@
 			<!--Afficher boutons de check uniquement si submission.state.code='N' => ng-if="submission.state.code=='N'"
 			Variable submission declarée dans scope de details.ctrl.js-->
 				<div class="checkbox" ng-hide="submission.state.code!='N'"><label><input type="checkbox" ng-model="sampleCheck"/>Validate Sample</label></div>
-				<div datatable="sampleDT"></div>
+				<div ultimate-datatable="sampleDT"></div>
 			</div>
 			<div class="tab-pane" id="experiment">
 				<div class="checkbox" ng-hide="submission.state.code!='N'"><label><input type="checkbox" ng-model="experimentCheck"/>Validate Experiment</label></div>
-				<div datatable="experimentDT"></div>
+				<div ultimate-datatable="experimentDT"></div>
 			</div>
 			<div class="tab-pane" id="run">
 				<div class="checkbox" ng-hide="submission.state.code!='N'"><label><input type="checkbox" ng-model="runCheck"/>Validate Run</label></div>
-				<div datatable="runDT"></div>
+				<div ultimate-datatable="runDT"></div>
 			</div>
 			<div class="tab-pane" id="rawData">
 				<div class="checkbox" ng-hide="submission.state.code!='N'"><label><input type="checkbox" ng-model="rawDataCheck"/>Validate Raw Data</label></div>
-				<div datatable="rawDataDT"></div>
+				<div ultimate-datatable="rawDataDT"></div>
 			</div>
 		</div>
 	</div>
