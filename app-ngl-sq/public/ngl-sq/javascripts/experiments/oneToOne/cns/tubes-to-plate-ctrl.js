@@ -410,7 +410,7 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
-		$scope.messages.setError(Messages('experiment.input.error.only-tubes'));					
+		$scope.messages.setError(Messages('experiments.input.error.only-tubes'));					
 	}
 	
 	

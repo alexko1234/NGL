@@ -338,7 +338,7 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
-		$scope.messages.setError(Messages('experiment.input.error.only-plates'));					
+		$scope.messages.setError(Messages('experiments.input.error.only-plates'));					
 	}
 	
 }]);

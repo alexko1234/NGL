@@ -3,7 +3,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
-					
+					{
+						"header":Messages("containers.table.projectCodes"),
+							"property": "inputContainer.projectCodes",
+							"order":false,
+							"hide":true,
+							"type":"text",
+							 "mergeCells" : true,
+							"position":2,
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+						 "extraHeaders":{0:Messages("experiments.inputs")}
+					 },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",

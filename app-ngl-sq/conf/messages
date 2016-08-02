@@ -445,9 +445,9 @@ experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience Créée par
 experiments.table.status = Statut
 
-experiment.input.error.only-tubes = Seulement des tubes peuvent entrer dans cette expérience
-experiment.input.error.only-plates = Seulement des plaques peuvent entrer dans cette expérience
-
+experiments.input.error.only-tubes = Seulement des tubes peuvent entrer dans cette expérience
+experiments.input.error.only-plates = Seulement des plaques peuvent entrer dans cette expérience
+experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les même
 experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 
 
