@@ -118,7 +118,7 @@ public class ValuationCriterias extends CommonController {
 	public static Result update(String code) {
 		ValuationCriteria objectFromDB = getByCode(code);
 		if(objectFromDB == null) {
-			return badRequest("ReportingConfiguration with code "+objectFromDB+" does not exist");
+			return badRequest("ValuationCriteria with code "+objectFromDB+" does not exist");
 		}
 		Form<ValuationCriteria> filledForm = getFilledForm(valuationCriteriaForm, ValuationCriteria.class);
 		ValuationCriteria objectInput = filledForm.get();
@@ -147,7 +147,7 @@ public class ValuationCriterias extends CommonController {
 	public static Result delete(String code) {
 		ValuationCriteria objectFromDB =  getByCode(code);
 		if(objectFromDB == null) {
-			return badRequest("ReportingConfiguration with code "+objectFromDB+" does not exist");
+			return badRequest("ValuationCriteria with code "+objectFromDB+" does not exist");
 		}
 		MongoDBDAO.deleteByCode(InstanceConstants.VALUATION_CRITERIA_COLL_NAME,  ValuationCriteria.class, objectFromDB.code);
 		return ok();
