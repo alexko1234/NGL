@@ -289,7 +289,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("16S_V4V5","18S_V9"), 
 				null,null,null,"single", 15, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("400","170"), 
+		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, DescriptionFactory.newValues("400","170"), 
 				null,null,null,"single", 16, true, null, null));
 		return propertyDefinitions;
 
