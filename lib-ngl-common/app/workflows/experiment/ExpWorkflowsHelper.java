@@ -367,7 +367,7 @@ public class ExpWorkflowsHelper {
 			List<Container> containers = entry.getValue();
 			ContainerSupport support = createContainerSupport(entry.getKey(), containers, validation);
 			//TODO GA extract only properties from exp and inst not from atm => must be improve
-			support.properties = getCommonPropertiesForALevelWithICU(exp, null, CODE.ContainerSupport); 
+			support.properties = getCommonPropertiesForALevelWithATM(exp, null, CODE.ContainerSupport); 
 			support.validate(supportsValidation);
 
 			if(!supportsValidation.hasErrors()){
