@@ -353,8 +353,7 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µL",
-			concentration : "ng/µl"
+			volume : "µL"
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

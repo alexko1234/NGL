@@ -286,8 +286,9 @@ public class ExpWorkflowsHelper {
 				atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 					ocu.contents = getContents(exp, atm, ocu);
 					if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
-					if(ocu.concentration != null &&ocu.concentration.value == null)ocu.concentration=null;
-					if(ocu.quantity != null &&ocu.quantity.value == null)ocu.quantity=null;			
+					if(ocu.concentration != null && ocu.concentration.value == null)ocu.concentration=null;
+					if(ocu.quantity != null && ocu.quantity.value == null)ocu.quantity=null;
+					if(ocu.size != null && ocu.size.value == null)ocu.size=null;
 				});
 			}
 		}		
@@ -549,6 +550,7 @@ public class ExpWorkflowsHelper {
 			c.concentration = ocu.concentration;
 			c.quantity = ocu.quantity;
 			c.volume = ocu.volume;
+			c.size = ocu.size;
 			c.projectCodes = getProjectsFromContents(c.contents);
 			c.sampleCodes = getSamplesFromContents(c.contents);
 			c.fromTransformationTypeCodes = fromTransformationTypeCodes;
@@ -580,6 +582,7 @@ public class ExpWorkflowsHelper {
 				c.concentration = ocu.concentration;
 				c.quantity = ocu.quantity;
 				c.volume = ocu.volume;
+				c.size = ocu.size;
 				c.projectCodes = getProjectsFromContents(c.contents);
 				c.sampleCodes = getSamplesFromContents(c.contents);
 				c.fromTransformationTypeCodes = fromTransformationTypeCodes;

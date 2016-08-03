@@ -414,9 +414,19 @@ public class Containers extends CommonController {
 					List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
 					Logger.debug("NB Previous exp : "+previousExpType.size());
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
-					subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));
+					
+					if(CollectionUtils.isEmpty(containersSearch.fromTransformationTypeCodes)){
+						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));
+					}else{
+						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes));
+					}
+					
+					
 				}
-				queryElts.add(DBQuery.or(subQueryElts.toArray(new DBQuery.Query[0])));
+				if(subQueryElts.size() > 0){
+					queryElts.add(DBQuery.or(subQueryElts.toArray(new DBQuery.Query[0])));
+				}
+				
 			}else{
 				//if not processType we not return any container
 				queryElts.add(DBQuery.notExists("code"));
