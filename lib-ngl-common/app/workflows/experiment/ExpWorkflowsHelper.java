@@ -1009,6 +1009,13 @@ public class ExpWorkflowsHelper {
 		PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sampleIn.typeCode);
 		content.properties.put("fromSampleTypeCode", fromSampleTypeCode);
 		
+		PropertySingleValue fromSampleCode = new PropertySingleValue(c.sampleCode);
+		content.properties.put("fromSampleCode", fromSampleCode);
+		
+		PropertySingleValue fromProjectCode = new PropertySingleValue(c.projectCode);
+		content.properties.put("fromProjectCode", fromProjectCode);
+		
+		
 		content.referenceCollab=c.referenceCollab;
 		
 		return content;
