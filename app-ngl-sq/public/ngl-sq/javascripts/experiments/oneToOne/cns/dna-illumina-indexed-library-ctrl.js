@@ -3,7 +3,8 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
                                                     
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
-			columns:[			  
+			columns:[	
+			         /*
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -14,6 +15,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         */
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -56,7 +58,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "edit":false,
@@ -86,6 +88,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         /*
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -96,6 +99,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":400,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         */
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -159,7 +163,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 				start:false
 			},
 			extraHeaders:{
-				number:2,
+				number:1,
 				dynamic:true,
 			}
 	};
@@ -238,14 +242,134 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 	
 	
 	//Init		
+	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.supportCode"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.line"),
+			"property" : "inputContainer.support.line",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1.1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.column"),
+			"property" : "inputContainer.support.column*1",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "number",
+			"position" : 1.2,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+	}
+	
+	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
+		datatableConfig.columns.push({
+			// barcode plaque sortie == support Container used code... faut Used
+			"header" : Messages("containers.table.support.name"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.code",
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		datatableConfig.columns.push({
+			// Ligne
+			"header" : Messages("containers.table.support.line"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.line",
+			"edit" : false,
+			"order" : true,
+			"hide" : true,
+			"type" : "text",
+			"position" : 401,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		datatableConfig.columns.push({// colonne
+			"header" : Messages("containers.table.support.column"),
+			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
+			// forcer a numerique.=> type:number, property: *1
+			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			"edit" : false,
+			"order" : true,
+			"hide" : true,
+			"type" : "number",
+			"position" : 402,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "outputContainerUsed.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+	}
+	
+	
 
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(){
+	atmService.newAtomicTransfertMethod = function(line, column){
+		var getLine = function(line){
+			if($scope.experiment.instrument.outContainerSupportCategoryCode === 'tube'){
+				return "1";
+			}else{
+				return line;
+			}
+			
+		}
+		var getColumn=getLine;
+				
+		
 		return {
 			class:"OneToOne",
-			line:"1", 
-			column:"1", 				
+			line:getLine(line), 
+			column:getColumn(column), 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
@@ -268,9 +392,12 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	
-	
-	$scope.atmService = atmService;
+	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+		$scope.messages.clear();
+		$scope.atmService = atmService;
+	}else{
+		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
+	}
 	
 	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
 	.success(function(data, status, headers, config) {

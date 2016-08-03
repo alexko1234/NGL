@@ -34,12 +34,6 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
@@ -57,7 +51,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 		l.add(newExperimentType("Bq DNA Illumina indexée","dna-illumina-indexed-library","LIB",810,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsBqDNAIlluminaIndexedLibrary(),
-				getInstrumentUsedTypes("hand"),"OneToOne", null,true,
+				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Amplification/PCR + purif","pcr-amplification-and-purification","PCR",820,
@@ -71,6 +65,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		return l;
+	}
+	
+	@Override
+	public List<ExperimentType> getExperimentTypeDEV() {
+		return null;
 	}
 
 	@Override
@@ -87,12 +86,6 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), getPropertyMetaBarCodingSizing(),
@@ -121,6 +114,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 				getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return l;
+	}
+	
+	@Override
+	public List<ProcessType> getProcessTypeDEV() {
+		return null;
 	}
 
 
@@ -162,7 +160,20 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	public void getExperimentTypeNodePROD() {
-		// TODO Auto-generated method stub
+		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
+
+		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
+				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+
+		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("tag-pcr")
+				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+
+		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library")
+				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+
+		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("pcr-amplification-and-purification")
+				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 	}
 
 	@Override
@@ -189,7 +200,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Nb de PCR", "nbPCR", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null, 
 				null,  null, null, null,"single", 15, true, null,null));

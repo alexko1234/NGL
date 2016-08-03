@@ -1,4 +1,4 @@
-angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
+angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
                                                        function($scope, $http,$parse,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
@@ -176,17 +176,50 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
-			 			"header" : Messages("containers.table.code"),
-			 			"property" : "outputContainerUsed.code",
-			 			"order" : true,
-			 			"edit" : false,
+			 			// barcode plaque sortie == support Container used code... faut Used
+			 			"header" : Messages("containers.table.support.name"),
+			 			"property" : "outputContainerUsed.locationOnContainerSupport.code",
 			 			"hide" : true,
 			 			"type" : "text",
 			 			"position" : 400,
 			 			"extraHeaders" : {
 			 				0 : Messages("experiments.outputs")
 			 			}
-			 		},			         
+			 		},
+			 		{
+			 			// Ligne
+			 			"header" : Messages("containers.table.support.line"),
+			 			"property" : "outputContainerUsed.locationOnContainerSupport.line",
+			 			"edit" : true,
+			 			"choiceInList":true,
+			 			"possibleValues":[{"name":'A',"code":"A"},{"name":'B',"code":"B"},{"name":'C',"code":"C"},{"name":'D',"code":"D"},
+			 			                  {"name":'E',"code":"E"},{"name":'F',"code":"F"},{"name":'G',"code":"G"},{"name":'H',"code":"H"}],
+			 			"order" : true,
+			 			"hide" : true,
+			 			"type" : "text",
+			 			"position" : 401,
+			 			"extraHeaders" : {
+			 				0 : Messages("experiments.outputs")
+			 			}
+			 		},
+			 		{// colonne
+			 			"header" : Messages("containers.table.support.column"),
+			 			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
+			 			// forcer a numerique.=> type:number, property: *1
+			 			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			 			"edit" : true,
+			 			"choiceInList":true,
+			 			"possibleValues":[{"name":'1',"code":"1"},{"name":'2',"code":"2"},{"name":'3',"code":"3"},{"name":'4',"code":"4"},
+			 			                  {"name":'5',"code":"5"},{"name":'6',"code":"6"},{"name":'7',"code":"7"},{"name":'8',"code":"8"},
+			 			                  {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"13"}], 
+			 			"order" : true,
+			 			"hide" : true,
+			 			"type" : "number",
+			 			"position" : 402,
+			 			"extraHeaders" : {
+			 				0 : Messages("experiments.outputs")
+			 			}
+			 		},	         
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -235,8 +268,8 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -257,23 +290,33 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 			otherButtons: {
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
                 template: 
-                	'<button class="btn btn-default" ng-click="copyVolumeInToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolume")+'"  ng-disabled="!isEditMode()"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
+                	'<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
+                	+'<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolume")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
             }
 			
 	};
-
+	var updateATM = function(experiment){
+		if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
+			experiment.atomicTransfertMethods.forEach(function(atm){
+				atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
+				atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column;
+			});
+		}		
+	};
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
@@ -305,19 +348,56 @@ angular.module('home').controller('CNSPlateToTubesCtrl',['$scope' ,'$http','$par
 			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
 		})		
 	};
+	/**
+	 * Compute A1, B1, C1, etc.
+	 */
+	$scope.computeColumnModeMode = function(){
+		var wells = $scope.atmService.data.displayResult;
+		var nbCol = 12;
+		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+		var x = 0;
+		for(var i = 0; i < nbCol ; i++){
+			for(var j = 0; j < nbLine.length; j++){
+				if(x < wells.length && x < 96){
+					wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
+					wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
+				}
+				x++;
+			}
+		}		
+	};
+	
+	/**
+	 * Compute A1, A2, A3, etc.
+	 */
+	$scope.computeLineModeMode = function(){
+		var wells = $scope.atmService.data.displayResult;
+		var nbCol = 12;
+		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+		var x = 0;
+		for(var j = 0; j < nbLine.length; j++){
+			for(var i = 0; i < nbCol ; i++){
+				if(x < wells.length && x < 96){
+					wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
+					wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
+				}
+				x++;
+			}
+		}		
+	};
 	
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
-		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
+	
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	// defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod =  function(line, column){
-		
 		return {
 			class:"OneToOne",
-			line:"1", 
-			column:"1", 				
+			line:undefined, 
+			column:undefined, 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};

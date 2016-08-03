@@ -225,7 +225,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.$on('childSaved', function(e, callbackFunction) {
 		console.log('call event childSaved on main');
-		
+		updatePropertyUnit($scope.experiment);
 		if(creationMode){
 			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
 				.success(function(data, status, headers, config) {
@@ -349,20 +349,22 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}				
 	};
 	
-	$scope.updatePropertyUnit = function(experiment){
+	var updatePropertyUnit = function(experiment){
 		$scope.experimentType.propertiesDefinitions.forEach(function(propertyDef){
 			if(propertyDef.saveMeasureValue){
 				experiment.atomicTransfertMethods.forEach(function(atm){
 					if(atm.inputContainerUseds){
 						atm.inputContainerUseds.forEach(function(icu){
-							if(icu.experimentProperties && icu.experimentProperties[propertyDef.code]){
+							if(icu.experimentProperties && icu.experimentProperties[propertyDef.code]
+								&& (icu.experimentProperties[propertyDef.code].unit === null || icu.experimentProperties[propertyDef.code].unit === undefined)){
 								icu.experimentProperties[propertyDef.code].unit = propertyDef.saveMeasureValue.code;
 							}
 						});
 					}
 					if(atm.outputContainerUseds){
 						atm.outputContainerUseds.forEach(function(ocu){
-							if(ocu.experimentProperties && ocu.experimentProperties[propertyDef.code]){
+							if(ocu.experimentProperties && ocu.experimentProperties[propertyDef.code]
+							&& (ocu.experimentProperties[propertyDef.code].unit === null || ocu.experimentProperties[propertyDef.code].unit === undefined)){
 								ocu.experimentProperties[propertyDef.code].unit = propertyDef.saveMeasureValue.code;
 							}
 						});

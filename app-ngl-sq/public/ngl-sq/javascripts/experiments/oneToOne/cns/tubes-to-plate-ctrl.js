@@ -37,7 +37,59 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         {
+			        	 "header" : Messages("containers.table.concentration"),
+			 			 "property": "inputContainer.concentration.value",
+			 			 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 			        
+					 {
+			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "property":"inputContainer.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":5.1,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			        
+			         {
+			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "property":"inputContainer.volume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":6,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         {
+			        	 "header" : Messages("containers.table.quantity"),
+			 			 "property": "inputContainer.quantity.value",
+			 			 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":6.1,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			        
+					 {
+			        	 "header":Messages("containers.table.quantity.unit"),
+			        	 "property":"inputContainer.quantity.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":6.2,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -48,6 +100,56 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.concentration"),
+			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":50,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.concentration.unit") ,
+			        	 "property":"outputContainerUsed.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":51,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":52,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.quantity"),
+			        	 "property":"outputContainerUsed.quantity.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":53,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.quantity.unit") ,
+			        	 "property":"outputContainerUsed.quantity.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":54,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
 			 			// barcode plaque sortie == support Container used code... faut Used
@@ -165,8 +267,9 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 			otherButtons: {
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
                 template: 
-                	'<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
-                	+'<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'                	
+                	'<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
+                	+'<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolume")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
             }
 			
 	};
@@ -178,13 +281,12 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 				atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column;
 			});
 		}		
-	}
+	};
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.updatePropertyUnit($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
@@ -219,6 +321,12 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 	});
 
 	
+	$scope.copyVolumeInToOut = function(){
+		var data = $scope.atmService.data.displayResult;		
+		data.forEach(function(value){
+			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
+		})		
+	};
 	
 	/**
 	 * Compute A1, B1, C1, etc.
@@ -262,7 +370,6 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
 	
-	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	// defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod =  function(line, column){
@@ -290,7 +397,11 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL"
-	}
+	};
+	atmService.defaultOutputValue = {
+			concentration : {copyInputContainer:true},
+			size : {copyInputContainer:true}
+	};	
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
@@ -298,7 +409,7 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
-		$scope.messages.setError(Messages('experiment.input.error.only-tubes'));					
+		$scope.messages.setError(Messages('experiments.input.error.only-tubes'));					
 	}
 	
 	

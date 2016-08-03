@@ -240,7 +240,7 @@ angular.module('atomicTransfereServices', [])
 				 * Create a new OutputContainerUsed. By default unit is the same as inputContainer for volume, concentration, quantity
 				 * In second time, we need to find the default concentration because several concentration are available for one container
 				 */
-				newOutputContainerUsed : function(defaultOutputUnit, atmLine, atmColumn, inputContainer){
+				newOutputContainerUsed : function(defaultOutputUnit, defaultOutputValue, atmLine, atmColumn, inputContainer){
 					return {
 						code:undefined,
 						categoryCode:this.getContainerCategoryCode(), 
@@ -250,9 +250,10 @@ angular.module('atomicTransfereServices', [])
 							column:atmColumn
 						},
 						contents:undefined, //populate by the server
-						volume:{unit:this.getUnit($parse('volume')(inputContainer), defaultOutputUnit.volume)}, 
-						concentration:{unit:this.getUnit($parse('concentration')(inputContainer), defaultOutputUnit.concentration)}, 
-						quantity:{unit:this.getUnit($parse('quantity')(inputContainer), defaultOutputUnit.quantity)},
+						volume:{unit:this.getUnit($parse('volume')(inputContainer), defaultOutputUnit.volume), value:this.getValue($parse('volume')(inputContainer), defaultOutputValue.volume)}, 
+						concentration:{unit:this.getUnit($parse('concentration')(inputContainer), defaultOutputUnit.concentration), value:this.getValue($parse('concentration')(inputContainer), defaultOutputValue.concentration)}, 
+						quantity:{unit:this.getUnit($parse('quantity')(inputContainer), defaultOutputUnit.quantity), value:this.getValue($parse('quantity')(inputContainer), defaultOutputValue.quantity)},
+						size:{unit:this.getUnit($parse('size')(inputContainer), defaultOutputUnit.size), value:this.getValue($parse('size')(inputContainer), defaultOutputValue.size)},
 						instrumentProperties:undefined,
 					    experimentProperties:undefined
 					};
@@ -300,8 +301,20 @@ angular.module('atomicTransfereServices', [])
 				 */
 				getUnit: function(object, defaultValue){
 					var unit = $parse("unit")(object);
-					if(undefined === unit || null === unit || (undefined === defaultValue && null === defaultValue && unit !== defaultValue))unit = defaultValue
+					if(undefined === unit || null === unit || (undefined !== defaultValue && null !== defaultValue && unit !== defaultValue))unit = defaultValue
 					return unit;
+				},
+				/**
+				 * We take the same unit as inputContainer when create the output container
+				 */
+				getValue: function(object, defaultValue){
+					value = undefined;
+					if(angular.isFunction(defaultValue)){
+						value = defaultValue(value);
+					}else if($parse("copyInputContainer")(defaultValue)){
+						value = $parse("value")(object);
+					}
+					return value;
 				}
 		};
 		return common;
@@ -326,6 +339,7 @@ angular.module('atomicTransfereServices', [])
 				data:$datatable,
 				isAddNew:true, //used to add or not new input container in datatable
 				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				defaultOutputValue:{volume:undefined, concentration:undefined, quantity:undefined},
 				newAtomicTransfertMethod : function(line, column){
 					throw 'newAtomicTransfertMethod not defined in atmToSingleDatatable client';
 				},
@@ -343,7 +357,7 @@ angular.module('atomicTransfereServices', [])
 				},
 				*/
 				/* function to override in controler, used in addNewAtomicTransfertMethodsInDatatable function  */
-				updateAtm : function(atm){
+				updateNewAtmBeforePushInUDT : function(atm){
 					
 				},
 				addColumnToDatatable:function(columns, newColumn){
@@ -534,10 +548,10 @@ angular.module('atomicTransfereServices', [])
 									line.inputContainer = container;
 									line.inputContainerUsed = $commonATM.convertContainerToInputContainerUsed(line.inputContainer);
 									if(!$that.$outputIsVoid){
-										line.outputContainerUsed = $commonATM.newOutputContainerUsed($that.defaultOutputUnit,line.atomicTransfertMethod.line,
+										line.outputContainerUsed = $commonATM.newOutputContainerUsed($that.defaultOutputUnit,$that.defaultOutputValue,line.atomicTransfertMethod.line,
 												line.atomicTransfertMethod.column,line.inputContainer);
 										line.outputContainer = undefined;
-										$that.updateAtm(line);
+										$that.updateNewAtmBeforePushInUDT(line);
 									}
 									allData.push(line);
 								});
@@ -709,6 +723,7 @@ angular.module('atomicTransfereServices', [])
 				$commonATM : $commonATM,
 				$atmToSingleDatatable:$atmToSingleDatatable,
 				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				defaultOutputValue:{volume:undefined, concentration:undefined, quantity:undefined},
 				data : {
 					$atmToSingleDatatable : $atmToSingleDatatable,
 					inputContainers:[],
@@ -830,7 +845,7 @@ angular.module('atomicTransfereServices', [])
 					
 					for(var i = this.data.atm.length; i < $nbATM; i++){
 						var atm = this.newAtomicTransfertMethod(i+1); //TODO GA Not work for plate to plate
-						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit, atm.line, atm.column));
+						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit, this.defaultOutputValue, atm.line, atm.column));
 						atm.viewIndex=i+1;
 						this.data.atm.push(atm);
 					}
@@ -952,7 +967,7 @@ angular.module('atomicTransfereServices', [])
 				
 				addNewAtomicTransfertMethod : function($service, i){
 					var atm = $service.newAtomicTransfertMethod(i+1);
-					atm.outputContainerUseds.push($commonATM.newOutputContainerUsed($service.defaultOutputUnit, atm.line, atm.column));
+					atm.outputContainerUseds.push($commonATM.newOutputContainerUsed($service.defaultOutputUnit, $service.defaultOutputValue, atm.line, atm.column));
 					atm.viewIndex=$service.data.atm.length+1;
 					$service.data.atm.push(atm);
 				}
@@ -1237,6 +1252,7 @@ angular.module('atomicTransfereServices', [])
 				$commonATM : $commonATM, //used in js parent
 				$atmToSingleDatatable:$atmToSingleDatatable,  //used in js parent
 				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				defaultOutputValue:{volume:undefined, concentration:undefined, quantity:undefined},
 				inputContainerSupportCategoryCode:undefined,
 				outputContainerSupportCategoryCode:undefined,
 				data : $view,
@@ -1301,6 +1317,7 @@ angular.module('atomicTransfereServices', [])
 				$commonATM : $commonATM,
 				$atmToSingleDatatable:$atmToSingleDatatable,
 				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				defaultOutputValue:{volume:undefined, concentration:undefined, quantity:undefined},
 				data : {
 					$atmToSingleDatatable : $atmToSingleDatatable,
 					datatableParam : $datatable,
@@ -1324,7 +1341,7 @@ angular.module('atomicTransfereServices', [])
 						atm.inputContainerUseds.push($commonATM.convertContainerToInputContainerUsed(data.inputContainer));
 						
 						for(var j = 0; j < data.outputNumber ; j++){
-							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,atm.line,atm.column));
+							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,this.defaultOutputValue,atm.line,atm.column));
 						}
 						this.data.atm.push(atm);
 					}

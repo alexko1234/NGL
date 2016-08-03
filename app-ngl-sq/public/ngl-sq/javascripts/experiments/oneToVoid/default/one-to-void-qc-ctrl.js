@@ -279,7 +279,6 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			console.log("call event save on one-to-void");
 			$scope.atmService.data.save();			
 			$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
-			$scope.updatePropertyUnit($scope.experiment);
 			$scope.copyPropertiesToInputContainer($scope.experiment); //override from child
 			$scope.$emit('childSaved', callbackFunction);
 		});
