@@ -400,7 +400,6 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 	};
 	atmService.defaultOutputValue = {
 			concentration : {copyInputContainer:true},
-			quantity : {copyInputContainer:true},
 			size : {copyInputContainer:true}
 	};	
 	

@@ -60,7 +60,7 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 			         },
 								 
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
 			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
@@ -354,7 +354,7 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "nM"
+			concentration : "ng/µl"
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

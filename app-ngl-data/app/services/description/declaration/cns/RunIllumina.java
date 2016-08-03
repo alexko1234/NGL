@@ -149,7 +149,9 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+		//newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("sizing","pcr-amplification-and-purification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
+
 	}
 
 	@Override
