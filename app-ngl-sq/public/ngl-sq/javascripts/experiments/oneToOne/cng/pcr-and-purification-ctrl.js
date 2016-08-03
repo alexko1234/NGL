@@ -3,7 +3,7 @@
 
 angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
-	// ajout variables
+	// variables pour extraheaders
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
@@ -130,6 +130,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
+			        	 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'",
+			        	 "tdClass":"valuationService.valuationCriteriaClass(value.data, experiment.status.criteriaCode, col.property)",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -205,7 +207,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 				active:false
 			},
 			order:{
-				mode:'local', //or 
+				mode:'local',
 				active:true
 			},
 			remove:{
@@ -283,7 +285,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 		$scope.atmService.data.setEdit();
 	});
 	
-	// FDS for save callback
+	// for save callback
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
 		var dataMain = datatable.getData();
@@ -310,10 +312,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 	}
 	
 	//Init
-
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	// FDS ajout variables pour ligne et colonne 
 	atmService.newAtomicTransfertMethod = function(l,c){
 		return {
 			class:"OneToOne",
@@ -335,7 +335,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 	
 	$scope.atmService = atmService;
 	
-	// recuper les 2 valeurs ????
+	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
@@ -346,5 +346,43 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
+	
+	// Calculs 
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
+			computeQuantity(value.data);
+		}
+	}
+
+	//inputQuantity=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	var computeQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),		
+				isReady:function(){
+					return (this.inputConc && this.inputConc);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				inputQuantity = undefined;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+		}else{
+			console.log("Missing values to exec computeQuantity");
+		}
+	}
+	
 	
 }]);

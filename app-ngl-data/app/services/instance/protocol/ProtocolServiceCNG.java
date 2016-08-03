@@ -62,22 +62,23 @@ public class ProtocolServiceCNG {
 	public static void saveProtocols(ContextValidation ctx){		
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
-		// protocoles communs a plusieurs Experiment Types
-		lp.add(newProtocol("sop-1","SOP 1","?","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib")));
-		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization","aliquoting","pool")));
+		//-------Experiences de transformation
+		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
-		//lp.add(newProtocol("1a-sop-ill-pcrfree-080915","1A_SOP_ILL_PCRfree_080915", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
+		// meme protocole pour une exp de transformation et controle qualité ???????????
 		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
 		lp.add(newProtocol("1a-sop-ill-pcrfree-dap-plate","1A_SOP_ILL_PCRfree_DAPplate", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
 		
-		// protocoles specifiques
-		lp.add(newProtocol("3a-kapa-qPCR-240715","3A_KAPA_qPCR_240715", "?","1","production",InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
-		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
-		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
-		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
+		// protocoles communs a plusieurs Experiment Types.....=> en attente....
+		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib")));
+		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization", "aliquoting","pool", "pcr-and-purification")));
+
 		
-		
+		//-------Experiences de Control Qualité
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", InstanceFactory.setExperimentTypeCodes("miseq-qc")));
+		lp.add(newProtocol("3a-kapa-qPCR-240715","3A_KAPA_qPCR_240715", "?","1","production",InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
