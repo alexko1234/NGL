@@ -60,7 +60,7 @@ angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope
 			         },
 								 
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,

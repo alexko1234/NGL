@@ -48,7 +48,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		 
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
