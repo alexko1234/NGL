@@ -20,12 +20,25 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				
 				if(measuredSize){
 					inputContainerUsed.size = measuredSize;
+					
+					
+					if(experiment.typeCode === "chip-migration" && 
+							(inputContainerUsed.fromTransformationTypeCodes.indexOf("pcr-amplification-and-purification") > -1
+									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("sizing")  > -1)){
+						var experimentProperties = $parse("experimentProperties")(inputContainerUsed);
+						
+						experimentProperties.insertSize = {value:inputContainerUsed.size.value, unit:inputContainerUsed.size.unit};
+						experimentProperties.insertSize.value = inputContainerUsed.size.value - 121;
+						experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;										
+					}
 				}
 			
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
 					inputContainerUsed.volume = volume1;
 				}
+				
+				
 				
 			}
 			

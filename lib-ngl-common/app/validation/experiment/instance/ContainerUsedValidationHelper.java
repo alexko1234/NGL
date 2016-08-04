@@ -138,6 +138,22 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		
 	}
 
+	
+	public static void validateSize(PropertyValue size, ContextValidation contextValidation) {
+		if(size!=null && size.value!=null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
+			PropertyDefinition pd = new PropertyDefinition();			
+			pd.code = "size";
+			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			size.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");
+		}
+	}
+
+	
 	public static void validateOutputContainerCode(String code,	ContextValidation contextValidation) {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		if(("N".equals(stateCode) && null != code) || "IP".equals(stateCode)){

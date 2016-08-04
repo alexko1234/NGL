@@ -30,9 +30,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 		var sampleCodeAndTags = [];
 		angular.forEach(container.contents, function(content){
 			var value = content.projectCode+" / "+content.sampleCode;
+			
+			if(content.properties && content.properties.libProcessTypeCode){
+				value = value +" / "+content.properties.libProcessTypeCode.value;
+			}
+			
 			if(content.properties && content.properties.tag){
 				value = value +" / "+content.properties.tag.value;
 			}
+			
 			sampleCodeAndTags.push(value);
 		});
 		return sampleCodeAndTags;

@@ -255,7 +255,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "ng/µL",
+			concentration : "ng/µl",
 			quantity : "ng"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

@@ -140,7 +140,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		var getter = $parse("experimentProperties.inputVolume");
 		var inputVolume = getter(inputContainerUsed);
 		if(null === inputVolume  || undefined === inputVolume){
-			inputVolume = {value : undefined, unit : 'µl'};
+			inputVolume = {value : undefined, unit : 'µL'};
 		}
 		
 		//compute only if empty
@@ -186,7 +186,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		var outputVolume  = $parse("outputContainerUseds[0].volume")(atm);
 		
 		if(outputVolume && outputVolume.value && inputVolumeTotal){
-			var bufferVolume = {value : undefined, unit : 'µl'};
+			var bufferVolume = {value : undefined, unit : 'µL'};
 			var result = outputVolume.value - inputVolumeTotal;
 			
 			if(angular.isNumber(result) && !isNaN(result)){

@@ -1,8 +1,12 @@
 package services.instance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.parameter.printer.BBP11;
 import models.laboratory.parameter.printer.BarcodePosition;
 import models.laboratory.protocol.instance.Protocol;
@@ -10,6 +14,16 @@ import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
 
 public class InstanceFactory {
+	
+	
+	public static Map<String,PropertyValue> newPSV(String key, Object value){
+		PropertySingleValue psv = new PropertySingleValue();
+		psv.value = value;
+		
+		Map<String,PropertyValue> map = new HashMap<String,PropertyValue>(1);
+		map.put(key, psv);
+		return map;
+	}
 	
 	
 	/**
@@ -23,6 +37,11 @@ public class InstanceFactory {
 	 */
 	public static Protocol newProtocol( String code,String name,
 			String path, String version, String cat, List<String> exp) {
+		return newProtocol(code, name, path, version, cat, exp, null);
+	}
+	
+	public static Protocol newProtocol( String code,String name,
+			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties) {
 		Protocol p = new Protocol();
 		p.code = code.toLowerCase().replace("\\s+", "-");
 		p.name = name;
@@ -30,9 +49,9 @@ public class InstanceFactory {
 		p.version = version;
 		p.categoryCode = cat;
 		p.experimentTypeCodes = exp;
+		p.properties = properties;
 		return p;
 	}
-	
 	
 	public static BBP11 newBBP11(String name, String location, String ipAdress, Integer port, String defaultSpeed, String defaultDensity, String defaultBarcodePositionId, boolean inverseList, List<BarcodePosition> barcodePositions){
 		BBP11 bbp11 = new BBP11();

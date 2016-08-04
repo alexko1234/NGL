@@ -34,6 +34,10 @@ public class OutputContainerUsed extends AbstractContainerUsed{
 		long t4 = System.currentTimeMillis();
 		ContainerUsedValidationHelper.validateVolume(volume, contextValidation);
 		
+		long t4_1 = System.currentTimeMillis();
+		ContainerUsedValidationHelper.validateSize(size, contextValidation);
+		
+		
 		long t5 = System.currentTimeMillis();
 		ContainerUsedValidationHelper.validateConcentration(concentration, contextValidation);
 		

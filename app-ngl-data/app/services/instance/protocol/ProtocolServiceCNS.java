@@ -1,15 +1,20 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.newProtocol;
+import static services.instance.InstanceFactory.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mongojack.DBQuery;
 
+import com.google.common.collect.Maps;
 import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -123,14 +128,33 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 			lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 			
-			
-			lp.add(newProtocol("truseq_stranded_poly_A","TruSeq Stranded poly A","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
-			lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded Proc","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
-			lp.add(newProtocol("smarter_stranded","Smarter Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
-			
-			lp.add(newProtocol("Smarter_V4","Smarter V4","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-        	lp.add(newProtocol("Ovation_RNAseq_system_v2","Ovation RNAseq system v2","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
+			lp.add(newProtocol("smarter_v4","Smarter V4","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
+					concatMap(newPSV("rnaLibProtocol","Smarter V4"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
         	
+			lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
+					concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","random + oligodT"))));
+        	
+			
+			lp.add(newProtocol("truseq_stranded_poly_a","TruSeq Stranded poly A","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
+					concatMap(newPSV("rnaLibProtocol","TruSeq Stranded poly A"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+			
+			lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded Proc","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
+					concatMap(newPSV("rnaLibProtocol","TruSeq Stranded Proc"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+			
+			lp.add(newProtocol("smarter_stranded","Smarter Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
+					concatMap(newPSV("rnaLibProtocol","Smarter Stranded"),newPSV("strandOrientation","forward"),newPSV("cDNAsynthesisType","random"))));
+			/*
+			lp.add(newProtocol("indac","Indac","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
+					concatMap(newPSV("rnaLibProtocol","indac"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","?"))));
+			*/
+			
+			lp.add(newProtocol("bacteria-rrna-depletion","Déplétion bactérienne","path2","1","production",InstanceFactory.setExperimentTypeCodes("rrna-depletion"), 
+					newPSV("depletionMethod","bactérienne")));
+			
+			lp.add(newProtocol("plant-rrna-depletion","Déplétion plante","path2","1","production",InstanceFactory.setExperimentTypeCodes("rrna-depletion"), 
+					newPSV("depletionMethod","plante")));
+			
+			
         	lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-rna-evaluation")));
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
@@ -141,6 +165,22 @@ public class ProtocolServiceCNS {
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
 			Logger.debug(" Protocole "+protocole.code);
 		}
+	}
+
+/*
+protocole	Smarter V4	Ovation RNAseq system v2	TruSeq Stranded poly A	TruSeq Stranded Proc	Smarter Stranded	Indac
+rnaLibProtocol	smarterV4	ovationRNAseqSystemV2	truseqStrandedPolyA	truseqStrandedProk	smarterStranded	indac
+strandOrientation	?	?	reverse	reverse	forward	reverse
+cDNAsynthesisType	?	?	?	?	?	?
+ */
+	@SafeVarargs
+	private static Map<String, PropertyValue> concatMap(
+			Map<String, PropertyValue>...map) {
+		Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
+		for(int i = 0 ; i < map.length; i++){
+			mapFinal.putAll(map[i]);
+		}
+		return mapFinal;
 	}
 	
 	

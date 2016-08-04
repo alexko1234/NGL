@@ -258,7 +258,7 @@ public class LimsCNGDAO {
 					 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
 					 volume = d2.doubleValue();
 				}
-				container.volume = new PropertySingleValue(volume,"µl");
+				container.volume = new PropertySingleValue(volume,"µL");
 			}
 		}
 		

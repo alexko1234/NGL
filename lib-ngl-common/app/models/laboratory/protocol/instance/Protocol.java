@@ -2,7 +2,9 @@ package models.laboratory.protocol.instance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -19,6 +21,7 @@ public class Protocol extends DBObject implements IValidation{
 	public String version;	
 	public String categoryCode;
 	public List<String> experimentTypeCodes;
+	public Map<String, PropertyValue> properties;
 	
 	public Protocol() {		
 		super();

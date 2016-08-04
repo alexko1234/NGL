@@ -44,22 +44,22 @@ public class MetaBarCoding extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Tags-PCR","tag-pcr","TAG",800,
+		l.add(newExperimentType("Tags-PCR","tag-pcr","TAG",750,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsTagPCR(),
 				getInstrumentUsedTypes("thermocycler"),"OneToOne", getSampleTypes("amplicon"),true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Bq DNA Illumina indexée","dna-illumina-indexed-library","LIB",810,
+		l.add(newExperimentType("Bq DNA Illumina indexée","dna-illumina-indexed-library","LIB",850,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsBqDNAIlluminaIndexedLibrary(),
 				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Amplification/PCR + purif","pcr-amplification-and-purification","PCR",820,
+		l.add(newExperimentType("Amplification/PCR + purif","pcr-amplification-and-purification","PCR",900,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsAmpliPurif(),
 				getInstrumentUsedTypes("thermocycler","thermocycler-and-biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Sizing","sizing","SIZ",830,
+		l.add(newExperimentType("Sizing","sizing","SIZ",950,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
 				getInstrumentUsedTypes("hand"),"OneToMany", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -289,7 +289,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("16S_V4V5","18S_V9"), 
 				null,null,null,"single", 15, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("400","170"), 
+		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, DescriptionFactory.newValues("400","170"), 
 				null,null,null,"single", 16, true, null, null));
 		return propertyDefinitions;
 

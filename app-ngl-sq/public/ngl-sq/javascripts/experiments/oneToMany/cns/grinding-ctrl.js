@@ -226,8 +226,8 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 				active:true 
 			},			
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -305,7 +305,8 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
 		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);

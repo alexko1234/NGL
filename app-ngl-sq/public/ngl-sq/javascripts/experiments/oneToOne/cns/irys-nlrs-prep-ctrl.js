@@ -208,7 +208,8 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			concentration : "ng/µL"
+			volume : "µL",
+			concentration : "ng/µl"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	

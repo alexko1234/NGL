@@ -140,24 +140,24 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		*/
-		l.add(newExperimentType("Ext to Test One To One","ext-to-test-one-to-one",null,
+		l.add(newExperimentType("Ext to Test One To One","ext-to-test-one-to-one",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
-		l.add(newExperimentType("Test One To One","test-one-to-one",null,
+		l.add(newExperimentType("Test One To One","test-one-to-one",null,2,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyTestOneToOne(), getInstrumentUsedTypes("one-to-one"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
-		l.add(newExperimentType("Test One To One 2","test-one-to-one-2",null,
+		l.add(newExperimentType("Test One To One 2","test-one-to-one-2",null,3,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyTestOneToOne(), getInstrumentUsedTypes("one-to-one"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
 		
-		l.add(newExperimentType("Aliquot","aliquoting",null,
+		l.add(newExperimentType("Aliquot","aliquoting",null,4,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
@@ -241,7 +241,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10, false));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",10, false));
 		
 		return propertyDefinitions;
 	}
@@ -274,7 +274,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",9));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume final","measuredVolume",LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",10));
 		*/
 		return propertyDefinitions;
 
@@ -314,7 +314,7 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",10));
 		propertyDefinitions.add(newPropertiesDefinition("Qté engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",11));
 //		propertyDefinitions.add(newPropertiesDefinition("Taille", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, true, null

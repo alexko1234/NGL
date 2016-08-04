@@ -62,7 +62,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			         },
 								 
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
@@ -162,8 +162,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true  /* ??*/
 			},
@@ -192,7 +192,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
@@ -355,8 +356,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µL",
-			concentration : "ng/µl"
+			volume : "µL"
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

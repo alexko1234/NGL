@@ -1,12 +1,11 @@
-angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter','atmToSingleDatatable',
-                                                    function($scope, $parse, $http, $filter, atmToSingleDatatable){
+angular.module('home').controller('rRNADepletionCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+                                                    function($scope, $parse, atmToSingleDatatable){
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
-	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render                                                  
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
-			columns:[	
-			         /*
+			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -17,7 +16,6 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         */
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -36,28 +34,18 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			            "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
-			        	 "filter": "unique| codes:'type'",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-					 {
-			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.concentration.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -67,7 +55,27 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
+			        	 "position":5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+					 {
+			        	 "header":Messages("containers.table.concentration")+" (ng/µL)",
+			        	 "property": "inputContainer.concentration.value",
+			     		 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
 			        	 "position":6,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.quantity")+" (ng)",
+			        	 "property": "inputContainer.quantity.value",
+			     		 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":6.5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -81,6 +89,16 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
+			         /*{
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":50,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },*/
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -91,7 +109,6 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         /*
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -102,7 +119,6 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "position":400,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         */
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -207,199 +223,36 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
-		
-	$scope.updatePropertyFromUDT = function(value, col){
-		console.log("update from property : "+col.property);
-		
-		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
-			computeTagCategory(value.data);			
-		}
-		
-	}
 	
-	var computeTagCategory = function(udtData){
-		var getter = $parse("outputContainerUsed.experimentProperties.tagCategory.value");
-		var tagCategory = getter(udtData);
-		
-		var compute = {
-				tagValue : $parse("outputContainerUsed.experimentProperties.tag.value")(udtData),
-				tag : $filter("filter")($scope.tags,{code:$parse("outputContainerUsed.experimentProperties.tag.value")(udtData)},true),
-				isReady:function(){
-					return (this.tagValue && this.tag && this.tag.length === 1);
-				}
-			};
-		if(compute.isReady()){
-			var result = compute.tag[0].categoryCode;
-			console.log("result = "+result);
-			if(result){
-				tagCategory = result;				
-			}else{
-				tagCategory = undefined;
-			}	
-			getter.assign(udtData, tagCategory);
-		}else if(compute.tagValue){
-			getter.assign(udtData, undefined);
-		}
-		
-	}
-	
-	
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
 	//Init		
-	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.supportCode"),
-			"property" : "inputContainer.support.code",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 1,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.support.line"),
-			"property" : "inputContainer.support.line",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 1.1,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.support.column"),
-			"property" : "inputContainer.support.column*1",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "number",
-			"position" : 1.2,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
 
-	} else {
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.code"),
-			"property" : "inputContainer.support.code",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 1,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
-	}
-	
-	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
-		datatableConfig.columns.push({
-			// barcode plaque sortie == support Container used code... faut Used
-			"header" : Messages("containers.table.support.name"),
-			"property" : "outputContainerUsed.locationOnContainerSupport.code",
-			"hide" : true,
-			"type" : "text",
-			"position" : 400,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-		datatableConfig.columns.push({
-			// Ligne
-			"header" : Messages("containers.table.support.line"),
-			"property" : "outputContainerUsed.locationOnContainerSupport.line",
-			"edit" : false,
-			"order" : true,
-			"hide" : true,
-			"type" : "text",
-			"position" : 401,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-		datatableConfig.columns.push({// colonne
-			"header" : Messages("containers.table.support.column"),
-			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
-			// forcer a numerique.=> type:number, property: *1
-			"property" : "outputContainerUsed.locationOnContainerSupport.column",
-			"edit" : false,
-			"order" : true,
-			"hide" : true,
-			"type" : "number",
-			"position" : 402,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-
-	} else {
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.code"),
-			"property" : "outputContainerUsed.code",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 400,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-	}
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(line, column){
-		var getLine = function(line){
-			if($scope.experiment.instrument.outContainerSupportCategoryCode === 'tube'){
-				return "1";
-			}else{
-				return line;
-			}
-			
-		}
-		var getColumn=getLine;
-				
-		
+	atmService.newAtomicTransfertMethod = function(){
 		return {
 			class:"OneToOne",
-			line:getLine(line), 
-			column:getColumn(column), 				
+			line:"1", 
+			column:"1", 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
 	};
-
+	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL"
 	}
-	
-	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
-		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
-		if(property.code=="tag"){
-			column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.code for v in tags | filter:$viewValue | limitTo:20" typeahead-min-length=1 udt-change="updatePropertyFromUDT(value,col)"/>';        											
-		}
-		return column;
-	};
-
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+	$scope.atmService = atmService;
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode === "tube"){
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
-		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
+		$scope.messages.setError(Messages('experiments.input.error.only-tubes'));					
 	}
-	
-	
-	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
-	.success(function(data, status, headers, config) {
-			$scope.tags = data;		
-	})
 }]);

@@ -80,7 +80,7 @@ public class RunServiceCNS extends AbstractRunService {
 				getLibProcessTypeCodeValues(), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Category d'index","tagCategory",LevelService.getLevels(Level.CODE.Content), String.class, false, getTagCategories(), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% par piste","percentPerLane",LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength",LevelService.getLevels(Level.CODE.Content), Integer.class, false, "single"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength",LevelService.getLevels(Level.CODE.Content), Integer.class, false, "single"));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Objectif taille insert","insertSizeGoal",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Orientation brin synthétisé","strandOrientation",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
@@ -88,7 +88,9 @@ public class RunServiceCNS extends AbstractRunService {
 		//GA 21/07/2015 ajouter la propriété sampleAliquoteCode au readset, niveau content n'est pas idéal mais résoud le pb actuel (JIRA 672)
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Code aliquot","sampleAliquoteCode",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Issue du sample type", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Issu de l'echantillon", "fromSampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Issu du projet ", "fromProjectCode", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		
 		return propertyDefinitions;
 	}

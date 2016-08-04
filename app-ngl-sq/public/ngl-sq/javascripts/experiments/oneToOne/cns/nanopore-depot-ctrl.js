@@ -357,7 +357,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "ng/µL",
+			concentration : "ng/µl",
 			quantity : "ng"
 	}
 	

@@ -11,6 +11,8 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
+
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
@@ -37,6 +39,7 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.tree.SampleLife;
@@ -50,6 +53,8 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 import play.Logger;
 import play.Play;
@@ -286,8 +291,9 @@ public class ExpWorkflowsHelper {
 				atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 					ocu.contents = getContents(exp, atm, ocu);
 					if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
-					if(ocu.concentration != null &&ocu.concentration.value == null)ocu.concentration=null;
-					if(ocu.quantity != null &&ocu.quantity.value == null)ocu.quantity=null;			
+					if(ocu.concentration != null && ocu.concentration.value == null)ocu.concentration=null;
+					if(ocu.quantity != null && ocu.quantity.value == null)ocu.quantity=null;
+					if(ocu.size != null && ocu.size.value == null)ocu.size=null;
 				});
 			}
 		}		
@@ -319,7 +325,7 @@ public class ExpWorkflowsHelper {
 	private List<Content> getContents(Experiment exp, AtomicTransfertMethod atm, OutputContainerUsed ocu) {
 		List<Content> contents =  atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> ContainerHelper.calculPercentageContent(icu.contents, icu.percentage)).flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
 		contents = ContainerHelper.fusionContents(contents);
-		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevel(exp, atm, CODE.Content);
+		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithATM(exp, atm, CODE.Content);
 		newContentProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Content));
 		contents.forEach((Content c) ->{
 			c.properties.putAll(newContentProperties);
@@ -366,7 +372,7 @@ public class ExpWorkflowsHelper {
 			List<Container> containers = entry.getValue();
 			ContainerSupport support = createContainerSupport(entry.getKey(), containers, validation);
 			//TODO GA extract only properties from exp and inst not from atm => must be improve
-			support.properties = getCommonPropertiesForALevel(exp, null, CODE.ContainerSupport); 
+			support.properties = getCommonPropertiesForALevelWithATM(exp, null, CODE.ContainerSupport); 
 			support.validate(supportsValidation);
 
 			if(!supportsValidation.hasErrors()){
@@ -521,7 +527,7 @@ public class ExpWorkflowsHelper {
 	private List<Container> createOutputContainers(Experiment exp, AtomicTransfertMethod atm, ContextValidation validation) {
 		Set<String> fromTransformationTypeCodes = getFromExperimentTypeCodes(exp, atm);
 		Set<String> fromTransformationCodes = getFromExperimentCodes(exp, atm);
-		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevel(exp, atm, CODE.Container);
+		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevelWithATM(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
 		Set<String> processTypeCodes =new HashSet<String>();
@@ -549,6 +555,7 @@ public class ExpWorkflowsHelper {
 			c.concentration = ocu.concentration;
 			c.quantity = ocu.quantity;
 			c.volume = ocu.volume;
+			c.size = ocu.size;
 			c.projectCodes = getProjectsFromContents(c.contents);
 			c.sampleCodes = getSamplesFromContents(c.contents);
 			c.fromTransformationTypeCodes = fromTransformationTypeCodes;
@@ -580,6 +587,7 @@ public class ExpWorkflowsHelper {
 				c.concentration = ocu.concentration;
 				c.quantity = ocu.quantity;
 				c.volume = ocu.volume;
+				c.size = ocu.size;
 				c.projectCodes = getProjectsFromContents(c.contents);
 				c.sampleCodes = getSamplesFromContents(c.contents);
 				c.fromTransformationTypeCodes = fromTransformationTypeCodes;
@@ -713,6 +721,10 @@ public class ExpWorkflowsHelper {
 		return propertiesForALevel;
 	}
 	
+	private Map<String, PropertyValue> getCommonPropertiesForALevel(Experiment exp, Level.CODE level) {
+		return null;
+	}
+	
 	/**
 	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
 	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
@@ -721,7 +733,76 @@ public class ExpWorkflowsHelper {
 	 * @param level
 	 * @return
 	 */
-	private Map<String, PropertyValue> getCommonPropertiesForALevel(Experiment exp, AtomicTransfertMethod atm, Level.CODE level) {
+	private Map<String, PropertyValue> getCommonPropertiesForALevelWithICU(Experiment exp, InputContainerUsed icu, Level.CODE level) {
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
+
+		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
+
+		//extract experiment content properties
+		if(null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(exp.experimentProperties.entrySet()
+					.stream()
+					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		}
+		
+		//extract protocol
+		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
+		//TODO Need to define protocol properties in description but in waiting we just copy all
+		if(Level.CODE.Content.equals(level) && null != protocol && null != protocol.properties && protocol.properties.size() > 0){
+			propertiesForALevel.putAll(protocol.properties);
+		}
+
+		if(null != icu.experimentProperties && icu.experimentProperties.size() > 0){
+			propertiesForALevel.putAll(icu.experimentProperties.entrySet().stream()
+					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))					
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
+					
+		}
+
+		//extract instrument content properties
+		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level);
+
+		if(null != exp.instrumentProperties && instrumentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(exp.instrumentProperties.entrySet()
+					.stream()
+					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		}
+		if(null != icu.instrumentProperties && icu.instrumentProperties.size() > 0){
+			propertiesForALevel.putAll(icu.instrumentProperties.entrySet().stream()
+					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
+							
+		}
+		/* Do not extract property from process because the risk to have the same property on several process is very big
+		 * To put process property in container used rules*/
+		if(null != icu){
+			//extract process content properties for only the inputContainer of the process
+			List<String> processesPropertyDefinitionCodes = getProcessesPropertyDefinitionCodes(icu, level);					
+			if(processesPropertyDefinitionCodes.size() >0){
+				propertiesForALevel.putAll(getProcessesProperties(icu)
+						.stream()
+						.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()))
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
+			}
+		}
+
+		return propertiesForALevel;
+	}
+	
+	
+	/**
+	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
+	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
+	 * @param exp
+	 * @param atm
+	 * @param level
+	 * @return
+	 */
+	private Map<String, PropertyValue> getCommonPropertiesForALevelWithATM(Experiment exp, AtomicTransfertMethod atm, Level.CODE level) {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
@@ -735,6 +816,13 @@ public class ExpWorkflowsHelper {
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
 
+		//extract protocol
+		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
+		//TODO Need to define protocol properties in description but in waiting we just copy all
+		if(Level.CODE.Content.equals(level) && null != protocol && null != protocol.properties && protocol.properties.size() > 0){
+			propertiesForALevel.putAll(protocol.properties);
+		}
+		
 
 		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
@@ -887,6 +975,10 @@ public class ExpWorkflowsHelper {
 
 			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
 
+			Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
+			c.contents.forEach(content -> {
+				content.properties.putAll(newContentProperties);
+			});
 			
 			return c;
 
@@ -1005,6 +1097,13 @@ public class ExpWorkflowsHelper {
 		//Add the fromSampleTypeCode in properties to keep the link with parent type
 		PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sampleIn.typeCode);
 		content.properties.put("fromSampleTypeCode", fromSampleTypeCode);
+		
+		PropertySingleValue fromSampleCode = new PropertySingleValue(c.sampleCode);
+		content.properties.put("fromSampleCode", fromSampleCode);
+		
+		PropertySingleValue fromProjectCode = new PropertySingleValue(c.projectCode);
+		content.properties.put("fromProjectCode", fromProjectCode);
+		
 		
 		content.referenceCollab=c.referenceCollab;
 		
