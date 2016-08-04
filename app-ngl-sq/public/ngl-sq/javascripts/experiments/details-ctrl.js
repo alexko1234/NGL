@@ -79,8 +79,22 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			$scope.messages.setSuccess("save");
 		}
 		
+		if(args.newExperiment){
+			var creationMode = false;
+			var saveInProgress = false;
+			var additionnalButtons = [];
+			$routeParams.code="new";
+			$routeParams.typeCode=args.newExperimentTypeCode;
+			
+			tabService.resetTabs();			
+			tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
+			tabService.activeTab(1);
+			init();
+		}else{
+			updateData();
+		}
 		
-		updateData();
+		
 		angular.element('#finalDispatchModal').modal('hide');
 	});
 	
