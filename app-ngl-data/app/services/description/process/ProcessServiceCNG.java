@@ -38,8 +38,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		
+		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			// 09/03/2016 N'existent pas au CNG
+			// 09/03/2016 N'existent pas encore au CNG...
 			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 		}
@@ -49,8 +50,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
-		// Modif GA=> ListExperimentType doit etre ordonnee=> Arrays.asList( )
-		//            par convention les experimentTypes externes aux processus doivent avoir l'indice (-1) dans la methode getPET
+		// par convention les experimentTypes externes aux processus doivent avoir l'indice (-1) dans la methode getPET
 		// TODO: il faudra renommer les 'ext' en donnant le nom du processus ex: ext-to-denat-dil-lib---> ext-to-illumina-run
 		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimentType" des containers qui viendraient 
 		//       d'un collaborateur exterieur ex : ext-denat-dil-lib
@@ -101,6 +101,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
+		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 			// FDS ajout 31/05/2016 JIRA NGL-1025 2 processus pour RNASeq
@@ -108,14 +109,14 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			l.add(DescriptionFactory.newProcessType("RNA Sequencing", "rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1),getPET("library-prep",0),getPET("pcr-and-purification",1),getPET("normalization-and-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-					getExperimentTypes("library-prep").get(0),              //first experiment type
-					getExperimentTypes("illumina-depot").get(0),        //last  experiment type
-					getExperimentTypes("ext-to-rna-sequencing").get(0), //void  experiment type
+					getExperimentTypes("library-prep").get(0),             //first experiment type
+					getExperimentTypes("illumina-depot").get(0),           //last  experiment type
+					getExperimentTypes("ext-to-rna-sequencing").get(0),    //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// processus court type "normalization"    pas de proprietes ????????????????????
+			// processus court type "normalization"    
 			l.add(DescriptionFactory.newProcessType("RNA norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
-					null,
+					null,   /// pas de proprietes ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1),getPET("normalization-and-pooling",0), getPET("prepa-fc-ordered",1), getPET("illumina-depot",2) ), //ordered list of experiment type in process type
 					getExperimentTypes("normalization-and-pooling").get(0),          //first experiment type
 					getExperimentTypes("illumina-depot").get(0),                     //last  experiment type

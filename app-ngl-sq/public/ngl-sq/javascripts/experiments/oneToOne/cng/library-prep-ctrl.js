@@ -1,5 +1,6 @@
 // FDS 04/8/2016 -- JIRA NGL-1026 :library-prep experiment ( idem a frg-and-library-prep mais sans la fragmentation )
-angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
+//difference avec PrepPcrFreeCtrl est sur la/les plaques index...
+angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 
 	
@@ -373,12 +374,14 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
-	 //actuellement 1 seule definie
-	$scope.plates = [ {name:"DAP TruSeq DNA HT", tagCategory:"DUAL-INDEX"} ];
+	//actuellement 1 seule definie
+	
+	$scope.plates = [ {name:"RAP TruSeq RNA HT", tagCategory:"DUAL-INDEX"} ];
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
 	// pour l'instant une seule plaque => faire un simple tableau
 	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
+	// NB: ce sont les memes index et dans la meme disposition que pour la "DAP TruSeq RNA HT", faut il tout dupliquer ???
 	var tagPlateCode=[];
 	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
 	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");

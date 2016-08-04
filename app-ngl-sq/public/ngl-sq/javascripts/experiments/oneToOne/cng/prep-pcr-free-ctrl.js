@@ -1,4 +1,5 @@
 // FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
+// 04/08/2016 A RENOMMER frg-and-library-prep ??????? VOIR AVEC julie
 angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 
