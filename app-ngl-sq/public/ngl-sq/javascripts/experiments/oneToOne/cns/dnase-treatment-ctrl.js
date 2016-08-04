@@ -159,8 +159,8 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -189,7 +189,8 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
@@ -215,6 +216,9 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 		$scope.atmService.data.setEdit();
 	});
 	
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
 	//Init		
 
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
@@ -231,10 +235,16 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µL",
-			concentration : "nM"
+			volume : "µL"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode === "tube"){
+		$scope.messages.clear();
+		$scope.atmService = atmService;
+	}else{
+		$scope.messages.setError(Messages('experiments.input.error.only-tubes'));					
+	}
 }]);

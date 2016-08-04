@@ -140,24 +140,24 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		*/
-		l.add(newExperimentType("Ext to Test One To One","ext-to-test-one-to-one",null,
+		l.add(newExperimentType("Ext to Test One To One","ext-to-test-one-to-one",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
-		l.add(newExperimentType("Test One To One","test-one-to-one",null,
+		l.add(newExperimentType("Test One To One","test-one-to-one",null,2,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyTestOneToOne(), getInstrumentUsedTypes("one-to-one"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
-		l.add(newExperimentType("Test One To One 2","test-one-to-one-2",null,
+		l.add(newExperimentType("Test One To One 2","test-one-to-one-2",null,3,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyTestOneToOne(), getInstrumentUsedTypes("one-to-one"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
 		
-		l.add(newExperimentType("Aliquot","aliquoting",null,
+		l.add(newExperimentType("Aliquot","aliquoting",null,4,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
