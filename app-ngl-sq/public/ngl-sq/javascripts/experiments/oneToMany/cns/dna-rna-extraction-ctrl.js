@@ -149,7 +149,6 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			 			"order": false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"mergeCells" : true,
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			 			"extraHeaders":{0:Messages("experiments.inputs")}
@@ -160,7 +159,6 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"mergeCells" : true,
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0:Messages("experiments.inputs")}
@@ -173,8 +171,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "mergeCells" : true,
-			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },

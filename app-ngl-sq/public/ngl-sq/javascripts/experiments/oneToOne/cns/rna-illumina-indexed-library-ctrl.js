@@ -1,5 +1,5 @@
-angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                    function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter','atmToSingleDatatable',
+                                                    function($scope, $parse, $http, $filter, atmToSingleDatatable){
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render                                                  
@@ -169,7 +169,6 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
-		copyProtocolInProperties();
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
@@ -203,16 +202,42 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
-	
-	
-	var copyProtocolInProperties = function(){
-		if($scope.experiment.protocolCode!=null){
-			if($scope.experiment.experimentProperties===undefined || $scope.experiment.experimentProperties===null){
-				$scope.experiment.experimentProperties={};
-			}
-			$scope.experiment.experimentProperties["rnaLibProtocol"]={"_type":"single","value":$scope.experiment.protocolCode};
+		
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
+			computeTagCategory(value.data);			
 		}
+		
 	}
+	
+	var computeTagCategory = function(udtData){
+		var getter = $parse("outputContainerUsed.experimentProperties.tagCategory.value");
+		var tagCategory = getter(udtData);
+		
+		var compute = {
+				tagValue : $parse("outputContainerUsed.experimentProperties.tag.value")(udtData),
+				tag : $filter("filter")($scope.tags,{code:$parse("outputContainerUsed.experimentProperties.tag.value")(udtData)},true),
+				isReady:function(){
+					return (this.tagValue && this.tag && this.tag.length === 1);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.tag[0].categoryCode;
+			console.log("result = "+result);
+			if(result){
+				tagCategory = result;				
+			}else{
+				tagCategory = undefined;
+			}	
+			getter.assign(udtData, tagCategory);
+		}else if(compute.tagValue){
+			getter.assign(udtData, undefined);
+		}
+		
+	}
+	
 	
 	//Init		
 
@@ -227,16 +252,27 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			outputContainerUseds:new Array(0)
 		};
 	};
-	
 
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "nM"
+			concentration : "ng/µl"
 	}
 	
+	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
+		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
+		if(property.code=="tag"){
+			column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.code for v in tags | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        											
+		}
+		return column;
+	};
 
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
+	.success(function(data, status, headers, config) {
+			$scope.tags = data;		
+	})
 }]);

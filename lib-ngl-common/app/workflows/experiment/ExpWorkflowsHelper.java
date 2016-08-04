@@ -11,6 +11,8 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 
+
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
@@ -37,6 +39,7 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.tree.SampleLife;
@@ -50,6 +53,8 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 import play.Logger;
 import play.Play;
@@ -741,7 +746,13 @@ public class ExpWorkflowsHelper {
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
-
+		
+		//extract protocol
+		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
+		//TODO Need to define protocol properties in description but in waiting we just copy all
+		if(Level.CODE.Content.equals(level) && null != protocol && null != protocol.properties && protocol.properties.size() > 0){
+			propertiesForALevel.putAll(protocol.properties);
+		}
 
 		if(null != icu.experimentProperties && icu.experimentProperties.size() > 0){
 			propertiesForALevel.putAll(icu.experimentProperties.entrySet().stream()
@@ -805,6 +816,13 @@ public class ExpWorkflowsHelper {
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
 
+		//extract protocol
+		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
+		//TODO Need to define protocol properties in description but in waiting we just copy all
+		if(Level.CODE.Content.equals(level) && null != protocol && null != protocol.properties && protocol.properties.size() > 0){
+			propertiesForALevel.putAll(protocol.properties);
+		}
+		
 
 		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()

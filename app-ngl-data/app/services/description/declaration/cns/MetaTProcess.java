@@ -172,11 +172,13 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				getTagIllumina(), null,null,null,"single", 14, true, null,null));
+				null, null,null,null,"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				getTagCategoriesIllumina(), null,null,null,"single", 15, true, null,null));
+				getTagCategoriesIllumina(), null,null,null,"single", 15, false, null,null));
 
+		
+		/*
 		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
 
@@ -185,7 +187,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "rnaLibProtocol", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				null, null, null, null,"single", 1, false, null,null));
-		
+		*/
 		return propertyDefinitions;
 	}
 
@@ -205,7 +207,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
-		
+		/*
 		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
 
@@ -214,7 +216,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "rnaLibProtocol", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				null, null, null, null,"single", 1, false, null,null));
-
+	*/
 		return propertyDefinitions;
 	}
 

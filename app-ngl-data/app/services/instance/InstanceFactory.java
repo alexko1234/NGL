@@ -1,10 +1,12 @@
 package services.instance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.parameter.printer.BBP11;
 import models.laboratory.parameter.printer.BarcodePosition;
 import models.laboratory.protocol.instance.Protocol;
@@ -12,6 +14,16 @@ import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
 
 public class InstanceFactory {
+	
+	
+	public static Map<String,PropertyValue> newPSV(String key, Object value){
+		PropertySingleValue psv = new PropertySingleValue();
+		psv.value = value;
+		
+		Map<String,PropertyValue> map = new HashMap<String,PropertyValue>(1);
+		map.put(key, psv);
+		return map;
+	}
 	
 	
 	/**
