@@ -170,7 +170,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("save");
 				$scope.messages.setDetails(data);				
-				saveInProgress = false;	
+				saveInProgress = false;
+				if(mainService.isEditMode()){
+					$scope.$broadcast('activeEditMode');
+				}
 			});
 		});
 	};
@@ -199,6 +202,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					$scope.messages.setError("save");
 					$scope.messages.setDetails(data);				
 					saveInProgress = false;	
+					if(mainService.isEditMode()){
+						$scope.$broadcast('activeEditMode');
+					}
 				});			
 			});
 		}else{
