@@ -2,7 +2,9 @@ package services.instance;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.parameter.printer.BBP11;
 import models.laboratory.parameter.printer.BarcodePosition;
 import models.laboratory.protocol.instance.Protocol;
@@ -23,6 +25,11 @@ public class InstanceFactory {
 	 */
 	public static Protocol newProtocol( String code,String name,
 			String path, String version, String cat, List<String> exp) {
+		return newProtocol(code, name, path, version, cat, exp, null);
+	}
+	
+	public static Protocol newProtocol( String code,String name,
+			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties) {
 		Protocol p = new Protocol();
 		p.code = code.toLowerCase().replace("\\s+", "-");
 		p.name = name;
@@ -30,9 +37,9 @@ public class InstanceFactory {
 		p.version = version;
 		p.categoryCode = cat;
 		p.experimentTypeCodes = exp;
+		p.properties = properties;
 		return p;
 	}
-	
 	
 	public static BBP11 newBBP11(String name, String location, String ipAdress, Integer port, String defaultSpeed, String defaultDensity, String defaultBarcodePositionId, boolean inverseList, List<BarcodePosition> barcodePositions){
 		BBP11 bbp11 = new BBP11();
