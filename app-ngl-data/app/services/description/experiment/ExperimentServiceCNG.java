@@ -230,7 +230,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 				//transformation
-				l.add(newExperimentType("Prep. Librairie (sans frg)","lib-prep",null,1100, // avant="rna-sequencing"
+				l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,1100, // avant="rna-sequencing"
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						null, 
 						getInstrumentUsedTypes("janus"),
@@ -300,6 +300,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			
 		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
 		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
+		// ATTENTION PROJET DE RENOMMAGE de "prep-pcr-free"....
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),
@@ -374,7 +375,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null
 					).save();	
 			
-			newExperimentTypeNode("lib-prep",getExperimentTypes("lib-prep").get(0),
+		
+			newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
 					false,false,false,
 					getExperimentTypeNodes("ext-to-rna-sequencing"),
 					null,
@@ -384,7 +386,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 			newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 					true,false,false,
-					getExperimentTypeNodes("lib-prep",      "ext-to-rna-sequencing"), ///ext-to-rna-sequencing POUR TESTS!!!!!!!!!!!
+					getExperimentTypeNodes("library-prep"), 
 					getExperimentTypes("labchip-migration-profile"), 
 					null, 
 					null
