@@ -149,10 +149,10 @@ public class ProtocolServiceCNS {
 			*/
 			
 			lp.add(newProtocol("bacteria-rrna-depletion","Déplétion bactérienne","path2","1","production",InstanceFactory.setExperimentTypeCodes("rrna-depletion"), 
-					newPSV("depletionMethod","prok")));
+					newPSV("depletionMethod","bactérienne")));
 			
 			lp.add(newProtocol("plant-rrna-depletion","Déplétion plante","path2","1","production",InstanceFactory.setExperimentTypeCodes("rrna-depletion"), 
-					newPSV("depletionMethod","euk")));
+					newPSV("depletionMethod","plante")));
 			
 			
         	lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-rna-evaluation")));
