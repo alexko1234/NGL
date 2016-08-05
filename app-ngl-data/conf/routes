@@ -63,6 +63,8 @@ GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTy
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()		
 GET		/cns/update-lane-content 				controllers.migration.cns.MigrationContentPropertiesContainer.migration()
+GET		/cns/migration-process-properties		controllers.migration.cns.MigrationProcessusProperties.migration(processTypeCode: java.lang.String, keyProperty: java.lang.String)
+
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
 GET		/cng/migration-libprocess				controllers.migration.cng.AddLibProcessTypeCode.migration()
