@@ -1,5 +1,5 @@
-angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
-                                                       function($scope, $http,$parse,atmToSingleDatatable) {
+angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable',
+                                                       function($scope, $http,$parse,$filter,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
@@ -419,6 +419,29 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 			}
 		}		
 	};
+	/**
+	 * Info on plate design
+	 */
+	$scope.getCellPlateData = function(line, column){
+		var well = $filter('filter')($scope.atmService.data.displayResult,{data:{outputContainerUsed:{locationOnContainerSupport:{line:line,column:column}}}});
+		if(well && well[0]){
+			var sampleCodeAndTags = [];
+			angular.forEach(well[0].data.inputContainer.contents, function(content){
+				var value = content.projectCode+" / "+content.sampleCode;
+				
+				if(content.properties && content.properties.libProcessTypeCode){
+					value = value +" / "+content.properties.libProcessTypeCode.value;
+				}
+				
+				if(content.properties && content.properties.tag){
+					value = value +" / "+content.properties.tag.value;
+				}
+				
+				sampleCodeAndTags.push(value);
+			});
+			return sampleCodeAndTags;			
+		}
+	}
 	
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";

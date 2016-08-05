@@ -380,6 +380,9 @@ experiments.tube.design = Composition Tube
 experiments.96-wells-plate.design = Composition Plaque 96
 experiments.tubes.design = Tubes Paramétrage
 experiments.tubes.display = Tubes Composition
+experiments.udt.design = Vue tableau
+experiments.plate.design = Vue plaque
+
 experiments.flowcell.roadMap = Feuille de route
 experiment.reagents = Reactifs
 experiments.addNewReagentLine = Ajouter un réactif
