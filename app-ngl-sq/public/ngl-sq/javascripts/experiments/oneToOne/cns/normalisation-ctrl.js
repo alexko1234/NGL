@@ -6,7 +6,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 					{
 						"header":Messages("containers.table.projectCodes"),
 							"property": "inputContainer.projectCodes",
-							"order":false,
+							"order":true,
 							"hide":true,
 							"type":"text",
 							 "mergeCells" : true,

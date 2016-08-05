@@ -8,18 +8,18 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			columns:[		
 					{
 						"header":Messages("containers.table.projectCodes"),
-							"property": "inputContainer.projectCodes",
-							"order":false,
-							"hide":true,
-							"type":"text",
-							"position":2,
-							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+						"property": "inputContainer.projectCodes",
+						"order":true,
+						"hide":true,
+						"type":"text",
+						"position":2,
+						"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 						 "extraHeaders":{0:Messages("experiments.inputs")}
 					 },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3,

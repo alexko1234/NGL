@@ -8,7 +8,7 @@ angular.module('home').controller('rRNADepletionCtrl',['$scope', '$parse', 'atmT
 			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
+			        	 "property":"inputContainer.support.code",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -19,7 +19,7 @@ angular.module('home').controller('rRNADepletionCtrl',['$scope', '$parse', 'atmT
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":2,
@@ -29,7 +29,7 @@ angular.module('home').controller('rRNADepletionCtrl',['$scope', '$parse', 'atmT
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3,

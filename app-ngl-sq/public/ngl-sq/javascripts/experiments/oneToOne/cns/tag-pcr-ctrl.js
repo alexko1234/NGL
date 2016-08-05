@@ -20,7 +20,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					         {
 					        	"header":Messages("containers.table.projectCodes"),
 					 			"property": "inputContainer.projectCodes",
-					 			"order":false,
+					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
 					 			"position":2,
@@ -30,7 +30,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 						     {
 					        	"header":Messages("containers.table.sampleCodes"),
 					 			"property": "inputContainer.sampleCodes",
-					 			"order":false,
+					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
 					 			"position":3,

@@ -15,6 +15,16 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 							0 : Messages("experiments.inputs")
 						}
 					},
+					{
+			        	"header":Messages("containers.table.projectCodes"),
+			 			"property": "inputContainer.projectCodes",
+			 			"order":true,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":2,
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",

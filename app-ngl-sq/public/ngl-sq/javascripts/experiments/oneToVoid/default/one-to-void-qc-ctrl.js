@@ -212,7 +212,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			});*/
 			columns.push({
 				"header" : Messages("containers.table.code"),
-				"property" : "inputContainer.code",
+				"property" : "inputContainer.support.code",
 				"order" : true,
 				"edit" : false,
 				"hide" : true,

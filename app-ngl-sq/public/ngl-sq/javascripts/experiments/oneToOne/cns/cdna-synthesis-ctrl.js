@@ -20,7 +20,7 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 					         {
 					        	"header":Messages("containers.table.projectCodes"),
 					 			"property": "inputContainer.projectCodes",
-					 			"order":false,
+					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
 					 			 "mergeCells" : true,
@@ -31,10 +31,10 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 						     {
 					        	"header":Messages("containers.table.sampleCodes"),
 					 			"property": "inputContainer.sampleCodes",
-					 			"order":false,
+					 			"order":true,
 					 			"hide":true,
 					 			"type":"text",
-					 			 "mergeCells" : true,
+					 			"mergeCells" : true,
 					 			"position":3,
 					 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}

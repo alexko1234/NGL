@@ -8,7 +8,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
+			        	 "property":"inputContainer.support.code",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -80,7 +80,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
+			        	 "property":"inputContainer.support.code",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -92,7 +92,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"mergeCells" : true,
@@ -103,7 +103,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"mergeCells" : true,

@@ -8,7 +8,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			columns:[   					
 					 {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
+			        	 "property":"inputContainer.support.code",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -51,7 +51,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":5,
