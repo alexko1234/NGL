@@ -259,6 +259,11 @@ public class ExpWorkflowsHelper {
 		return removeContainersCodes;
 	}
 
+	public void updateOutputContainerCode(Experiment exp) {
+		ContainerSupportCategory outputCsc = ContainerSupportCategory.find.findByCode(exp.instrument.outContainerSupportCategoryCode);
+		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> atm.updateOutputCodeIfNeeded(outputCsc, null));
+	}
+	
 	/**
 	 * Update OutputContainerUsed :
 	 * 		- generate ContainerSupportCode and ContainerCode if needed
@@ -1128,6 +1133,9 @@ public class ExpWorkflowsHelper {
 		sample.referenceCollab=sampleIn.referenceCollab;
 		return sample;
 	}
+
+
+	
 
 
 }

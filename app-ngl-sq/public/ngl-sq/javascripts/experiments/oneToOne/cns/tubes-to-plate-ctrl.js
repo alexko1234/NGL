@@ -275,12 +275,55 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 				dynamic:true,
 			},
 			otherButtons: {
-                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-                template: 
-                	'<button class="btn btn-default" ng-click="computeColumnModeMode()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i> </button>'
-                	+'<button class="btn btn-default" ng-click="computeLineModeMode()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i> </button>'
+                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+                complex:true,
+                template:''
+                	+'<div class="btn-group">'
+                	+'<button class="btn btn-default" ng-click="computeColumnModeMode(7)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i></button>'
+                	+'<div class="btn-group" role="group">'
+                	+'<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
+                	+'  <span class="caret"></span>'
+                	+'</button>'
+                	+' <ul class="dropdown-menu">'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(0)" >A</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(1)" >B</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(2)" >C</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(3)" >D</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(4)" >E</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(5)" >F</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(6)" >G</a></li>'
+                	+'  <li><a href="#" ng-click="computeColumnModeMode(7)" >H</a></li>'
+                	+'</ul>'
+                	+'</div>'
+                	+'</div>'
+                	
+                	+'<div class="btn-group" style="margin-left:5px">'
+                	+'<button class="btn btn-default" ng-click="computeLineModeMode(11)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i></button>'
+                	+'<div class="btn-group" role="group">'
+                	+'<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
+                	+'  <span class="caret"></span>'
+                	+'</button>'
+                	+' <ul class="dropdown-menu">'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(0)" >1</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(1)" >2</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(2)" >3</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(3)" >4</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(4)" >5</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(5)" >6</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(6)" >7</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(7)" >8</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(8)" >9</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(9)" >10</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(10)" >11</a></li>'
+                	+'  <li><a href="#" ng-click="computeLineModeMode(11)" >12</a></li>'
+                	+'</ul>'
+                	+'</div>'
+                	+'</div>'
+                	
+                	+'<div class="btn-group" style="margin-left:5px">'
                 	+'<button class="btn btn-default" ng-click="copyVolumeInToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolume")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
-            }
+                	+'</div>'
+			}
 			
 	};
 
@@ -342,13 +385,13 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 	/**
 	 * Compute A1, B1, C1, etc.
 	 */
-	$scope.computeColumnModeMode = function(){
+	$scope.computeColumnModeMode = function(maxLine){
 		var wells = $scope.atmService.data.displayResult;
 		var nbCol = 12;
 		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 		var x = 0;
 		for(var i = 0; i < nbCol ; i++){
-			for(var j = 0; j < nbLine.length; j++){
+			for(var j = 0; j < nbLine.length && j <= maxLine; j++){
 				if(x < wells.length && x < 96){
 					wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
 					wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
@@ -361,13 +404,13 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 	/**
 	 * Compute A1, A2, A3, etc.
 	 */
-	$scope.computeLineModeMode = function(){
+	$scope.computeLineModeMode = function(maxColumn){
 		var wells = $scope.atmService.data.displayResult;
 		var nbCol = 12;
 		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 		var x = 0;
 		for(var j = 0; j < nbLine.length; j++){
-			for(var i = 0; i < nbCol ; i++){
+			for(var i = 0; i < nbCol && i <= maxColumn; i++){
 				if(x < wells.length && x < 96){
 					wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
 					wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					

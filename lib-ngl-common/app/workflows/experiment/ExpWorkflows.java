@@ -38,6 +38,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			}			 						
 		}else if("IP".equals(exp.state.code)){
 			expWorkflowsHelper.updateXCodes(exp); //TODO GA 22/01/2016 hack for old experiment without contents, remove in 03/2016
+			expWorkflowsHelper.updateOutputContainerCode(exp);
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 		}
 		expWorkflowsHelper.updateStatus(exp, validation);
