@@ -153,8 +153,8 @@ public class Workflows {
 							readSet.bioinformaticValuation.valid = TBoolean.FALSE;
 							readSet.bioinformaticValuation.date = new Date();
 							readSet.bioinformaticValuation.user = contextValidation.getUser();
-							if(null == readSet.bioinformaticValuation.resolutionCodes)readSet.bioinformaticValuation.resolutionCodes = new HashSet<String>(1);
-							readSet.bioinformaticValuation.resolutionCodes.add("Run-abandonLane");
+							//if(null == readSet.bioinformaticValuation.resolutionCodes)readSet.bioinformaticValuation.resolutionCodes = new HashSet<String>(1);
+							//readSet.bioinformaticValuation.resolutionCodes.add("Run-abandonLane");
 
 							readSet.traceInformation.modifyDate = new Date();
 							readSet.traceInformation.modifyUser = contextValidation.getUser();
