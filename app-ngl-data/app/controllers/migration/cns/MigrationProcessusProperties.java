@@ -61,27 +61,30 @@ public class MigrationProcessusProperties extends CommonController{
 		Logger.debug("Update "+processes.size()+" processes");
 		for(Process p : processes){
 			//Get property value to add
-			Logger.debug("Update container for process "+p.code);
 			PropertyValue property = p.properties.get(keyProperty);
+			Logger.debug("Update container for process "+p.code+" with property "+property);
 			
 			for(String containerCode : p.outputContainerSupportCodes){
 				//Get container
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerCode);
-				container.contents.stream().filter(c->c.sampleCode.equals(p.sampleCode) && c.projectCode.equals(p.projectCode)).map(c->c.properties.put(keyProperty, property));
-
+				container.contents.stream().filter(c->c.sampleCode.equals(p.sampleCode) && c.projectCode.equals(p.projectCode)).forEach(c->{
+					c.properties.put(keyProperty, property);
+				});
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
 
 				//get readSet and update
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", containerCode)).toList();
 				int sizeAllReadSets = readSets.size();
-				readSets.stream().filter(readset->readset.sampleCode.equals(p.sampleCode) && readset.projectCode.equals(p.projectCode)).map(readset->readset.sampleOnContainer.properties.put(keyProperty, property));
+				readSets.stream().filter(readset->readset.sampleCode.equals(p.sampleCode) && readset.projectCode.equals(p.projectCode)).forEach(r->{
+					r.sampleOnContainer.properties.put(keyProperty, property);
+				});
+				
 				int sizeUpdateReadSets = readSets.size();
 				
 				if(sizeAllReadSets!=sizeUpdateReadSets){
 					Logger.warn("Check ReadSet for container "+containerCode);
 				}
 				for(ReadSet readSet : readSets){
-					//Logger.debug("Update readset "+readSet.code);
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
 				}
 			}
