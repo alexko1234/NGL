@@ -254,16 +254,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 				
 				//-- transfert  (NOTE: pas de Node pour experiences type transfert )
-				// FDS 17/06/2016 NGL-1029: "pool : 4 plaques vers tubes ou plaques" 
-				l.add(newExperimentType("Pool de plaques","pool",null,200,
+				// FDS 17/06/2016 NGL-1029: "pool : plaques vers plaque(s)" 
+				l.add(newExperimentType("Pool plaques -> plaque","pool",null,200,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
 						getPropertyDefinitionPool(),
 						getInstrumentUsedTypes("janus","hand"),
 						"ManyToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				//--Quality Control
-				
+				//--Quality Control	
 			}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -634,20 +633,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 03/08/2016 -- JIRA NGL-1026: experiment library prepaartion sans fragmentation ( duplication a partir de pcr-free .. et suppression de la fragmentation
+	//FDS ajout 03/08/2016 -- JIRA NGL-1026: experiment library prepartion sans fragmentation ( duplication a partir de pcr-free .. et suppression de la fragmentation
 	private List<PropertyDefinition> getPropertyDefinitionsLibraryPrep() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		// valeur par defaut pour volume et qté engagées ?? voir spec
+		// valeur par defaut pour volume et qté engagées ?? Pas pour l'instant...
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22, true, "55", null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22, true, null, null));
 		
+		// comment peut-il y avoir une qté par défaut??? depend du volume et de la concentration !!!
 		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23, true,"1100", null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23, true, null, null));
 	
 		//OuputContainer
-		// ces proprietes de containerOut doivent etre propagees au content
+		// ces propriétés de containerOut doivent etre propagees au content
 		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
