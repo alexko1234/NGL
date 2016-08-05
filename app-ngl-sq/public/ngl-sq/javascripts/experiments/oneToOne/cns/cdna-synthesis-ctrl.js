@@ -62,8 +62,8 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },
 					         {
-					        	 "header":Messages("containers.table.quantity") + " (ng/µL)",
-					        	 "property":"inputContainer.quantity.value",
+					        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
+					        	 "property":"inputContainer.concentration.value",
 					        	 "order":true,
 								 "edit":false,
 								 "hide":true,
