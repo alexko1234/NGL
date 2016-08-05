@@ -402,6 +402,9 @@ experiments.button.transformation=Transformation
 experiments.button.qualitycontrol=Controle qualité
 experiments.button.plate.computeLineMode = Calcul position plaque en mode ligne
 experiments.button.plate.computeColumnMode = Calcul position plaque en mode colonne
+experiments.button.plate.computeLineMode.advanced = Choix de la colonne max.
+experiments.button.plate.computeColumnMode.advanced = Choix de la ligne max.
+
 experiments.button.plate.copyVolume = Copy volume container en entrée vers container en sortie
 experiments.chooseNextExperimentCategory=Tous les containers de sortie poursuivent vers la même expérience
 experiments.chooseOputContainerState=L''expérience suivante est différente selon les containers de sortie

@@ -1,8 +1,8 @@
-<ul class="nav nav-tabs margin-bottom-5" role="tablist">
+	<ul class="nav nav-tabs margin-bottom-5" role="tablist" ng-if="experiment.instrument.outContainerSupportCategoryCode!=='tube'">
 	  <li class="active"><a href="" role="tab" data-target="#udt" data-toggle="tab">@Messages("experiments.udt.design")</a></li>
 	  <li><a href="" role="tab"  data-target="#plate" data-toggle="tab" ng-click="computePlateCells()">@Messages("experiments.plate.design")</a></li>  
 	</ul>
-	<div class="tab-content">
+	<div class="tab-content" ng-if="experiment.instrument.outContainerSupportCategoryCode!=='tube'">
 		<div class="tab-pane active" id="udt">
 		<div class="row">
 			<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>
@@ -30,4 +30,7 @@
 			</div>
 		</div>
 		</div>
+	</div>
+	<div class="row" ng-if="experiment.instrument.outContainerSupportCategoryCode==='tube'">
+	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data" ></div>
 	</div>
