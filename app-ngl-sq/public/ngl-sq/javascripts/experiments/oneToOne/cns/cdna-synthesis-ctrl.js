@@ -61,8 +61,8 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 					        	 "position":6,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },
-					         /*{
-					        	 "header":Messages("containers.table.quantity") + " (ng)",
+					         {
+					        	 "header":Messages("containers.table.quantity") + " (ng/µL)",
 					        	 "property":"inputContainer.quantity.value",
 					        	 "order":true,
 								 "edit":false,
@@ -70,7 +70,7 @@ angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmT
 					        	 "type":"number",
 					        	 "position":7,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
-					         },*/
+					         },
 					         {
 					        	 "header":Messages("containers.table.state.code"),
 					        	 "property":"inputContainer.state.code",
