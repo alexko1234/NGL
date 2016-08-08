@@ -1,4 +1,4 @@
-angular.module('home').controller('PcrAmplificationAndPurificationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
                                                     
 	var datatableConfig = {

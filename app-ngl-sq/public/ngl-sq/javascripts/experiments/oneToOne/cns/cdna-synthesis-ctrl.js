@@ -1,4 +1,4 @@
-angular.module('home').controller('CdnaSynthesisCtrl',['$scope', '$parse', 'atmToSingleDatatable','lists','mainService',
+angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmToSingleDatatable','lists','mainService',
                                                     function($scope, $parse, atmToSingleDatatable,lists,mainService){
                                                     
 	var datatableConfig = {

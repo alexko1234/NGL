@@ -1,4 +1,4 @@
-angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('DNAseTreatmentCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience

@@ -1,4 +1,4 @@
-angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter','atmToSingleDatatable',
+angular.module('home').controller('RNAIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter','atmToSingleDatatable',
                                                     function($scope, $parse, $http, $filter, atmToSingleDatatable){
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience

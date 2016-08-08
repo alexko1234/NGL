@@ -1,4 +1,4 @@
-angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter', 'atmToSingleDatatable',
+angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$parse', '$http', '$filter', 'atmToSingleDatatable',
                                                     function($scope, $parse, $http, $filter, atmToSingleDatatable){
                                                     
 	var datatableConfig = {
