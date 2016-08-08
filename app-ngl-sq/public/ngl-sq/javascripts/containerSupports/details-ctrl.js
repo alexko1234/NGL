@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$filter', '$routeParams', 'datatable', 'mainService', 'tabService',
-                                                  function($scope,$http,$q,$filter,$routeParams,datatable,mainService,tabService){
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http','$window', '$q', '$filter', '$routeParams', 'datatable', 'mainService', 'tabService',
+                                                  function($scope,$http,$window,$q,$filter,$routeParams,datatable,mainService,tabService){
 
 
 	/*
@@ -24,6 +24,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	$scope.setActiveView = function(value){
 		mainService.put('containerSupportActiveView', value);
 	};
+	
+	$scope.goToContainer = function(x, y){
+		if(angular.isDefined($scope.containers)){
+			for(var i=0; i<$scope.containers.length; i++){
+				if($scope.containers[i].support.column === (x+'') && $scope.containers[i].support.line===(y+'')){
+					$window.open(jsRoutes.controllers.containers.tpl.Containers.get($scope.containers[i].code).url, 'containers');
+				}
+			}
+		}
+	};
+	
 	
 	//To display sample and tag in one cell
 	$scope.getContentInfos = function(container){
@@ -259,7 +270,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 							"hide":false,
 							"position":5.4,
 							"type":"text",
-							"filter":"getArray:'properties.libProcessTypeCode.value' | unique",
+							"filter":"getArray:'properties.libProcessTypeCode.value'|codes:'value'|unique",
 							"groupMethod":"collect"
 						},
 						{

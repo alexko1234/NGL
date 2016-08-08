@@ -23,16 +23,14 @@
 		<tr ng-if="nbLine" ng-repeat="y in nbLine" class="total">
 			<td><strong>{{y}}</strong></td>
 			<td class="plates" ng-repeat="x in nbCol" class="browser">
-			
 				<div class="{{getClass(x, y)}}">
-					<div ng-if="data">
+					<div ng-if="data" ng-click="goToContainer(x,y)">
 					<small>
 						<div list-resize='getContentInfos(data)' list-resize-min-size='4' vertical></div>
 						<div list-resize='data.fromTransformationTypeCodes|unique|codes:"type"' list-resize-min-size='3' horizontal></div>			
 					</small>
 					</div>
 				</div>
-
 			</td>
 		</tr>
 	</tbody>

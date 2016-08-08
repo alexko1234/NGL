@@ -59,7 +59,8 @@ public class ContainerSupports extends CommonController{
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
   	    		controllers.commons.api.routes.javascript.Users.list(),
-  	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list()
+  	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+  	    		controllers.containers.tpl.routes.javascript.Containers.get()
   	      )	  	      
   	    );
   	}
