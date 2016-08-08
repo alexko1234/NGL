@@ -1,6 +1,6 @@
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist" ng-if="experiment.instrument.outContainerSupportCategoryCode!=='tube'">
 	  <li class="active"><a href="" role="tab" data-target="#udt" data-toggle="tab">@Messages("experiments.udt.design")</a></li>
-	  <li><a href="" role="tab"  data-target="#plate" data-toggle="tab" ng-click="computePlateCells()">@Messages("experiments.plate.design")</a></li>  
+	  <li><a href="" role="tab"  data-target="#plate" data-toggle="tab" ng-click="plateUtils.computePlateCells(atmService)">@Messages("experiments.plate.design")</a></li>  
 	</ul>
 	<div class="tab-content" ng-if="experiment.instrument.outContainerSupportCategoryCode!=='tube'">
 		<div class="tab-pane active" id="udt">
@@ -22,7 +22,7 @@
 			            <tr ng-repeat="y in ['A','B','C','D','E','F','G','H']" class="total">
 			                <td><strong>{{y}}</strong></td>
 			                <td class="plates" ng-repeat="x in [1,2,3,4,5,6,7,8,9,10,11,12]" class="browser">
-			                	    <div ng-bind="getCellPlateData(y, x)"/>    						    					
+			                	    <div ng-bind="plateUtils.getCellPlateData(y, x)"/>    						    					
 			                 </td>          
 			            </tr>			          
 			        <tbody>			    

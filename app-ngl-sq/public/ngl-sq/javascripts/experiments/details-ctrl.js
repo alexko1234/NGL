@@ -369,6 +369,131 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}				
 	};
 	
+	$scope.plateUtils = {
+			/**
+			 * Compute A1, B1, C1, etc.
+			 */
+			computeColumnMode : function(atmService, maxLine){
+				var wells = atmService.data.displayResult;
+				var nbCol = 12;
+				var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+				var x = 0;
+				for(var i = 0; i < nbCol ; i++){
+					for(var j = 0; j < nbLine.length && j <= maxLine; j++){
+						if(x < wells.length && x < 96){
+							wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
+							wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
+						}
+						x++;
+					}
+				}		
+			},
+			
+			/**
+			 * Compute A1, A2, A3, etc.
+			 */
+			computeLineMode : function(atmService, maxColumn){
+				var wells = atmService.data.displayResult;
+				var nbCol = 12;
+				var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+				var x = 0;
+				for(var j = 0; j < nbLine.length; j++){
+					for(var i = 0; i < nbCol && i <= maxColumn; i++){
+						if(x < wells.length && x < 96){
+							wells[x].data.outputContainerUsed.locationOnContainerSupport.line = nbLine[j]+'';
+							wells[x].data.outputContainerUsed.locationOnContainerSupport.column = i+1;					
+						}
+						x++;
+					}
+				}		
+			},
+			
+			plateCells : undefined,
+			computePlateCells : function(atmService){
+				var plateCells = [];
+				var wells = atmService.data.displayResult;
+				angular.forEach(wells, function(well){
+					var line = well.data.outputContainerUsed.locationOnContainerSupport.line;
+					var column = well.data.outputContainerUsed.locationOnContainerSupport.column;
+					if(line && column){
+						if(plateCells[line] == undefined){
+							plateCells[line] = [];
+						}
+						var sampleCodeAndTags = [];
+						angular.forEach(well.data.inputContainer.contents, function(content){
+							var value = content.projectCode+" / "+content.sampleCode;
+							
+							if(content.properties && content.properties.libProcessTypeCode){
+								value = value +" / "+content.properties.libProcessTypeCode.value;
+							}
+							
+							if(content.properties && content.properties.tag){
+								value = value +" / "+content.properties.tag.value;
+							}
+							
+							sampleCodeAndTags.push(value);
+						});
+						plateCells[line][column] = sampleCodeAndTags;
+						
+					}						
+				})	
+				this.plateCells = plateCells;
+			},
+			
+			/**
+			 * Info on plate design
+			 */
+			getCellPlateData : function(line, column){
+				if(this.plateCells && this.plateCells[line] && this.plateCells[line][column]){
+					return this.plateCells[line][column];
+				}
+			},
+			templates : {
+				buttonLineMode : ''
+					+'<div class="btn-group" style="margin-left:5px" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'">'
+	            	+'<button class="btn btn-default" ng-click="plateUtils.computeLineMode(atmService, 11)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i></button>'
+	            	+'<div class="btn-group" role="group">'
+	            	+'<button type="button" title="'+Messages("experiments.button.plate.computeLineMode.advanced")+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
+	            	+'  <span class="caret"></span>'
+	            	+'</button>'
+	            	+' <ul class="dropdown-menu">'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 0)" >1</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 1)" >2</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 2)" >3</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 3)" >4</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 4)" >5</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 5)" >6</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 6)" >7</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 7)" >8</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 8)" >9</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 9)" >10</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 10)" >11</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 11)" >12</a></li>'
+	            	+'</ul>'
+	            	+'</div>'
+	            	+'</div>',
+				buttonColumnMode : ''
+					+'<div class="btn-group" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'">'
+	            	+'<button class="btn btn-default" ng-click="plateUtils.computeColumnMode(atmService, 7)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i></button>'
+	            	+'<div class="btn-group" role="group">'
+	            	+'<button type="button"  title="'+Messages("experiments.button.plate.computeColumnMode.advanced")+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
+	            	+'  <span class="caret"></span>'
+	            	+'</button>'
+	            	+' <ul class="dropdown-menu">'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 0)" >A</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 1)" >B</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 2)" >C</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 3)" >D</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 4)" >E</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 5)" >F</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 6)" >G</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 7)" >H</a></li>'
+	            	+'</ul>'
+	            	+'</div>'
+	            	+'</div>'
+			}
+	};
+	
 	var updatePropertyUnit = function(experiment){
 		$scope.experimentType.propertiesDefinitions.forEach(function(propertyDef){
 			if(propertyDef.saveMeasureValue){
