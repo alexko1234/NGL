@@ -53,17 +53,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 				if($scope.containers[i].support.column === (x+'') && $scope.containers[i].support.line===(y+'')){
 		        	 $scope.data = $scope.containers[i];		        	 
 		        	 if($scope.data.valuation.valid === "FALSE"){
-		        		 return "alert alert-danger hidden-print";
+		        		 return "alert alert-danger";
 		        	 }else if($scope.data.valuation.valid === "TRUE"){
-		        		 return "alert alert-success hidden-print";
+		        		 return "alert alert-success";
 		        	 }else{
-		        		 return "alert alert-default hidden-print";
+		        		 return "alert alert-default";
 		        	 }					
 				}
 			}
 		}
 		$scope.data = undefined;
-		return "hidden-print";
+		return "";
      }
 
 	/*
