@@ -60,7 +60,7 @@ public class ResolutionService {
 			createIlluminaPrepFCDepotResolutionCNG(ctx);
 			createPrepPcrFreeResolutionCNG(ctx);
 			createQCMiseqResolutionCNG(ctx);
-			createExperimentResolution(ctx);
+			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
 			createProcessResolution(ctx);
 		}
 		else if ( inst.equals("CNS") ){			
@@ -75,10 +75,10 @@ public class ResolutionService {
 			createDepotBionanoResolutionCNS(ctx);
 			createSamplePrepResolutionCNS(ctx);
 			createGelMigrationResolutionCNS(ctx);
-			// FDS 15/01: No illumina Depot Resolutions ???
-			createExperimentResolution(ctx); 
+			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
 			createProcessResolution(ctx);
-		}else if ( inst.equals("TEST") ){		
+		}
+		else if ( inst.equals("TEST") ){		
 			resolutionCategories = createResolutionCategoriesCNS();
 			createExperimentResolution(ctx); 
 			createProcessResolution(ctx);
@@ -548,7 +548,6 @@ public class ResolutionService {
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 
-	// FDS pas de distingo CNS/CNG ??
 	public static void createExperimentResolution(ContextValidation ctx) {	
 		List<Resolution> l = getDefaultResolutionCNS();
 				
@@ -578,7 +577,7 @@ public class ResolutionService {
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
-	// FDS 16/01 il faudrait une resolutionCategorie autre que "Default" ???
+
 	public static void createOpgenDepotResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
@@ -766,7 +765,7 @@ public class ResolutionService {
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<String>();
-		al.add("prep-pcr-free"); /// mettre quoi ici ?????
+		al.add("prep-pcr-free"); 
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
@@ -786,14 +785,13 @@ public class ResolutionService {
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<String>();
-		al.add("miseq-qc"); /// mettre quoi ici ?????
+		al.add("miseq-qc"); 
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
-		
 	}
-
+	
 	
 	public static void createProcessResolution(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
