@@ -3,17 +3,19 @@ package services.description.instrument;
 import static services.description.DescriptionFactory.newInstrumentCategory;
 import static services.description.DescriptionFactory.newInstrumentUsedType;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newValues;
+import static services.description.DescriptionFactory.*;
 
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -122,7 +124,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("Biomek FX", "biomek-fx", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
-						createInstrument("walle", "WALLE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
+						createInstrument("walle", "WALL-E", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
 						createInstrument("r2d2", "R2D2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("nono", "NONO", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) ,
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"96-well-plate"}), 
@@ -196,11 +198,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		
 		l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
-				getInstruments(
-						createInstrument("thermoS1", "ThermoS1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
-						createInstrument("thermoS2", "ThermoS2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
-						createInstrument("thermoS3", "ThermoS3",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) 
-						), 
+				getThermocyclerInstruments(),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -235,7 +233,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("LabChip_GX", "labchip-gx", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(
-						createInstrument("labChip_GX1", "LabChip_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) ,
+						createInstrument("labChip_GX1", "LabChip_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("labChip_GX2", "LabChip_GX2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) ,
 				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -275,10 +274,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Fast Prep", "fast-prep", InstrumentCategory.find.findByCode("sample-prep-system"),  getFastPrepProperties(),getInstrumentFastPrep() 
 				,getContainerSupportCategories(new String[]{"tube","bottle","bag"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newInstrumentUsedType("Biomek FX + Thermocycleur_cDNA", "biomek-fx-and-cDNA-thermocycler", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  getBiomekProperties(),getInstrumentBiomek() 
-				,getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Thermocycleur + Biomek FX", "thermocycler-and-biomek-fx", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  getBiomekProperties(),getInstrumentBiomekFx() 
+		l.add(newInstrumentUsedType("Thermocycleur + Biomek FX", "thermocycler-and-biomek-fx", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  
+				getThermoBiomekProperties(),	getInstrumentBiomekFx() 
 				,getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Biomek FX + Covaris E220", "biomek-fx-and covaris-e220", InstrumentCategory.find.findByCode("liquid-handling-robot-and-covaris"),  getBiomekCovarisProperties(),getInstrumentBiomekCovaris() 
@@ -289,12 +287,26 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 
 
+	private List<Instrument> getThermocyclerInstruments() {
+		List<Instrument> instruments = new ArrayList<Instrument>();
+		for(int i = 1; i <= 39; i++){
+			if(i < 10){
+				instruments.add(createInstrument("thermo0"+i, "Thermo_0"+i, null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 				
+			}else{
+				instruments.add(createInstrument("thermo"+i, "Thermo_"+i, null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+				
+			}
+			
+		}
+		return instruments;
+	}
+
 	private List<Instrument> getInstrumentBiomekCovaris() {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("walle-and-covaris1","WALL E / Covaris1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("walle-and-covaris2","WALL E / Covaris2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("walle-and-covaris3","WALL E / Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("walle-and-covaris4","WALL E / Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris1","WALL-E / Covaris1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris2","WALL-E / Covaris2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris3","WALL-E / Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-covaris4","WALL-E / Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		instruments.add(createInstrument("r2d2-and-covaris1","R2D2 / Covaris1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("r2d2-and-covaris2","R2D2 / Covaris2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -318,29 +330,28 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return l;		
 	}
 
-	private List<PropertyDefinition> getBiomekProperties() {
+	private List<PropertyDefinition> getThermoBiomekProperties() {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
 				"single", 10, true, null,null));
+		
+		//Thermo 1 -> 39 Thermo_01
+		l.add(newPropertiesDefinition("Thermocycleur", "thermocycler", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, getThermoclyclerPropertyValues(), 
+				"single", 10, true, null,null));
+		
 		return l;
 	}
-
-	private List<Instrument> getInstrumentBiomek() {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("walle-and-thermo-a05a","WALL E / Thermo_A05A", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("walle-and-thermo-b02","WALL E / Thermo_B02", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("r2d2-and-thermo-a05a","R2D2 / Thermo_A05A", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("r2d2-and-thermo-b02","R2D2 /  Thermo_B02", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		return instruments;
+	
+	private List<Value> getThermoclyclerPropertyValues() {
+		List<Value> values = getThermocyclerInstruments().stream().map(i -> newValue(i.code, i.name)).collect(Collectors.toList());
+		return values;
 	}
 
-	
 	private List<Instrument> getInstrumentBiomekFx() {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("thermoS1-and-maya","ThermoS1 / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("thermoS2-and-maya","ThermoS2 / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("thermoS3-and-maya","ThermoS3 / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("thermoX-and-maya","Thermo_X / MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("thermoX-and-r2d2","Thermo_X / R2D2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("thermoX-and-walle","Thermo_X / WALL-E", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
