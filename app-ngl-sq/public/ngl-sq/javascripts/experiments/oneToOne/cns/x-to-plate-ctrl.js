@@ -1,40 +1,16 @@
-angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
-                                                       function($scope, $http,$parse,atmToSingleDatatable) {
+angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable',
+                                                       function($scope, $http,$parse,$filter,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
-			 		{
-						"header" : Messages("containers.table.supportCode"),
-						"property" : "inputContainer.support.code",
+					{
+						"header" : Messages("containers.table.code"),
+						"property" : "inputContainer.code",
 						"order" : true,
 						"edit" : false,
 						"hide" : true,
 						"type" : "text",
 						"position" : 1,
-						"extraHeaders" : {
-							0 : Messages("experiments.inputs")
-						}
-					},
-					{
-						"header" : Messages("containers.table.support.line"),
-						"property" : "inputContainer.support.line",
-						"order" : true,
-						"edit" : false,
-						"hide" : true,
-						"type" : "text",
-						"position" : 1.1,
-						"extraHeaders" : {
-							0 : Messages("experiments.inputs")
-						}
-					},
-					{
-						"header" : Messages("containers.table.support.column"),
-						"property" : "inputContainer.support.column*1",
-						"order" : true,
-						"edit" : false,
-						"hide" : true,
-						"type" : "number",
-						"position" : 1.2,
 						"extraHeaders" : {
 							0 : Messages("experiments.inputs")
 						}
@@ -134,7 +110,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },	
+			         },
 			         {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -229,7 +205,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 			 			"extraHeaders" : {
 			 				0 : Messages("experiments.outputs")
 			 			}
-			 		},	         
+			 		},
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -260,7 +236,8 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:'inputContainer.support.code'
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -309,6 +286,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 			}
 			
 	};
+
 	var updateATM = function(experiment){
 		if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
 			experiment.atomicTransfertMethods.forEach(function(atm){
@@ -355,6 +333,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+
 	
 	$scope.copyVolumeInToOut = function(){
 		var data = $scope.atmService.data.displayResult;		
@@ -367,10 +346,10 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
 	
-	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	// defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod =  function(line, column){
+		
 		return {
 			class:"OneToOne",
 			line:undefined, 
@@ -387,14 +366,11 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 	atmService.defaultOutputValue = {
 			concentration : {copyInputContainer:true},
 			size : {copyInputContainer:true}
-	};
+	};	
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	if($scope.experiment.instrument.inContainerSupportCategoryCode === "96-well-plate"){
-		$scope.messages.clear();
-		$scope.atmService = atmService;
-	}else{
-		$scope.messages.setError(Messages('experiments.input.error.only-plates'));					
-	}
+	$scope.atmService = atmService;
+	
+	
 	
 }]);

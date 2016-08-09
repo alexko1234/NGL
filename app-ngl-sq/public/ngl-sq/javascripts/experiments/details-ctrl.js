@@ -1308,7 +1308,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				if(value.data.status === 'FALSE' && (dispatchCode === 5 || dispatchCode === 6)){
 					return true;
 				}else if(value.data.status === 'TRUE' && (dispatchCode !== 5 && dispatchCode !== 6
-						|| (dispatchCode === 6 && !nextExperimentsForExperimentType[value.data.container.fromTransformationTypeCodes[0]]))){
+						|| (dispatchCode === 6 && dvet.indexOf(4) === -1 ))){ //To avoid to have finish and stop together
 					return true;
 				}else{
 					return false;

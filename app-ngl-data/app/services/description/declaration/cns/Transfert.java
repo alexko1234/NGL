@@ -62,6 +62,11 @@ public class Transfert extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		return l;
 	}
