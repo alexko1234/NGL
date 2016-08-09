@@ -304,7 +304,7 @@ public class ExpWorkflowsHelper {
 		}		
 	}
 
-	private Set<String> getFromExperimentTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
+	private Set<String> getFromTransformationTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentTypeCodes = new HashSet<String>(0);
 		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
 			_fromExperimentTypeCodes.add(exp.typeCode);
@@ -314,7 +314,7 @@ public class ExpWorkflowsHelper {
 		return _fromExperimentTypeCodes;
 	}
 
-	private Set<String> getFromExperimentCodes(Experiment exp, AtomicTransfertMethod atm) {
+	private Set<String> getFromTransformationCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentCodes = new HashSet<String>(0);
 		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
 			_fromExperimentCodes.add(exp.code);
@@ -326,6 +326,20 @@ public class ExpWorkflowsHelper {
 		return _fromExperimentCodes;
 	}
 
+	private String getFromPurificationTypeCode(Experiment exp) {
+		if(ExperimentCategory.CODE.purification.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+			return exp.typeCode;
+		}
+		return null;
+	}
+	
+	private String getFromPurificationCode(Experiment exp) {
+		if(ExperimentCategory.CODE.purification.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+			return exp.code;
+		}
+		return null;
+	}
+	
 
 	private List<Content> getContents(Experiment exp, AtomicTransfertMethod atm, OutputContainerUsed ocu) {
 		List<Content> contents =  atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> ContainerHelper.calculPercentageContent(icu.contents, icu.percentage)).flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
@@ -530,8 +544,12 @@ public class ExpWorkflowsHelper {
 	}
 
 	private List<Container> createOutputContainers(Experiment exp, AtomicTransfertMethod atm, ContextValidation validation) {
-		Set<String> fromTransformationTypeCodes = getFromExperimentTypeCodes(exp, atm);
-		Set<String> fromTransformationCodes = getFromExperimentCodes(exp, atm);
+		Set<String> fromTransformationTypeCodes = getFromTransformationTypeCodes(exp, atm);
+		Set<String> fromTransformationCodes = getFromTransformationCodes(exp, atm);
+		
+		String fromPurificationTypeCode = getFromPurificationTypeCode(exp);
+		String fromPurificationCode = getFromPurificationCode(exp);
+		
 		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevelWithATM(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
@@ -564,7 +582,9 @@ public class ExpWorkflowsHelper {
 			c.projectCodes = getProjectsFromContents(c.contents);
 			c.sampleCodes = getSamplesFromContents(c.contents);
 			c.fromTransformationTypeCodes = fromTransformationTypeCodes;
-			c.fromTransformationCodes = fromTransformationCodes;			
+			c.fromTransformationCodes = fromTransformationCodes;
+			c.fromPurificationCode = fromPurificationCode;
+			c.fromPurificationTypeCode = fromPurificationTypeCode;
 			c.processTypeCodes = processTypeCodes;
 			c.processCodes = inputProcessCodes;
 			c.state = state;
@@ -580,7 +600,6 @@ public class ExpWorkflowsHelper {
 			outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 				Set<String> newInputProcessCodes = duplicateProcesses(inputProcessCodes);
 				((Set<String>)validation.getObject(NEW_PROCESS_CODES)).addAll(newInputProcessCodes);
-				//allNewInputProcessCodes.addAll(newInputProcessCodes);
 				Container c = new Container();
 				c.code = ocu.code;
 				c.categoryCode = ocu.categoryCode;
@@ -597,14 +616,15 @@ public class ExpWorkflowsHelper {
 				c.sampleCodes = getSamplesFromContents(c.contents);
 				c.fromTransformationTypeCodes = fromTransformationTypeCodes;
 				c.fromTransformationCodes = fromTransformationCodes;
+				c.fromPurificationCode = fromPurificationCode;
+				c.fromPurificationTypeCode = fromPurificationTypeCode;
 				c.processTypeCodes = processTypeCodes;
 				c.processCodes = newInputProcessCodes;
 				c.state = state;
 				c.traceInformation = traceInformation;
 				c.treeOfLife=tree;
 				newContainers.add(c);
-			});
-			//validation.putObject(NEW_PROCESS_CODES, allNewInputProcessCodes);
+			});			
 		}
 
 		return newContainers;

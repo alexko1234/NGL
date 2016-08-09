@@ -1,21 +1,26 @@
 package models.laboratory.container.instance;
 
+import static validation.common.instance.CommonValidationHelper.FIELD_IMPORT_TYPE_CODE;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.validateCode;
+import static validation.common.instance.CommonValidationHelper.validateExperimentTypeCodes;
+import static validation.common.instance.CommonValidationHelper.validateId;
+import static validation.common.instance.CommonValidationHelper.validateProjectCodes;
+import static validation.common.instance.CommonValidationHelper.validateSampleCodes;
+import static validation.common.instance.CommonValidationHelper.validateTraceInformation;
+import static validation.container.instance.ContainerValidationHelper.validateContainerCategoryCode;
+import static validation.container.instance.ContainerValidationHelper.validateContainerSupport;
+import static validation.container.instance.ContainerValidationHelper.validateContents;
+import static validation.container.instance.ContainerValidationHelper.validateImportType;
+import static validation.container.instance.ContainerValidationHelper.validateInputProcessCodes;
+import static validation.container.instance.ContainerValidationHelper.validateState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.mongojack.DBQuery;
-import org.mongojack.MongoCollection;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -23,11 +28,16 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.tree.TreeOfLifeNode;
-import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+
+import org.mongojack.MongoCollection;
+
 import validation.ContextValidation;
 import validation.IValidation;
-import static validation.container.instance.ContainerValidationHelper.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import fr.cea.ig.DBObject;
 
 
 
@@ -84,6 +94,9 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes;
 
+	public String fromPurificationTypeCode;
+	public String fromPurificationCode; 
+	
 	
 	//tree of life
 	public TreeOfLifeNode treeOfLife;
