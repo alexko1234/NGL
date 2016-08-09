@@ -73,7 +73,7 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib")));
 		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization", "aliquoting","pool", "pcr-and-purification")));
+				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization", "aliquoting","pool", "pcr-and-purification","library-prep")));
 
 		
 		//-------Experiences de Control Qualité

@@ -68,7 +68,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			 			"type":"text",
 			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	"extraHeaders":{0:inputExtraHeaders}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),

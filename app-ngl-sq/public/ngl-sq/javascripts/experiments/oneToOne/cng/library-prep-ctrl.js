@@ -1,16 +1,14 @@
-// FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
-// 04/08/2016 A RENOMMER frg-and-library-prep ??????? VOIR AVEC julie
-angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
+// FDS 04/8/2016 -- JIRA NGL-1026 :library-prep experiment ( idem a frg-and-library-prep mais sans la fragmentation )
+// difference avec PrepPcrFreeCtrl est sur la/les plaques index...
+angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
-
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
-	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
-			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
+
 			"columns":[
 			         //--------------------- INPUT containers section -----------------------
 			         
@@ -309,10 +307,83 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL"
-	}
+	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	// Calculs 
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+
+		// si l'utilisateur défini le volume a engager => calculer la quantité
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
+			computeQuantity(value.data);
+		}
+		
+		// 05/08/2016 essai d'ajouter le calcul inverse...===> PB LES 2 MODIFICATIONS SE MARCHENT SUR LES PIEDS !!
+		//
+		// si l'utilisateur défini la quantité a engager => calculer le volume
+		//if(col.property === 'inputContainerUsed.experimentProperties.inputQuantityLib.value'){
+		//	computeVolume(value.data);
+		//}
+	}
+
+	// -1- inputQuantityLib=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
+	var computeQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
+				isReady:function(){
+					return (this.inputConc && this.inputVolume);
+				}
+		};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				inputQuantity = undefined;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+		}else{
+			console.log("Missing values to calculate Quantity");
+		}
+	}
+	
+	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainer.concentration.value
+	var computeVolume = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputQuantity : $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value")(udtData),		
+				isReady:function(){
+					return (this.inputConc && this.inputQuantity);
+				}
+		};
+		
+		if(compute.isReady()){
+			var result = $parse("inputQuantity / inputConc")(compute);
+			console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputVolume = Math.round(result*10)/10;				
+			}else{
+				inputVolume = undefined;
+			}	
+			getter.assign(udtData, inputVolume);
+			
+		}else{
+			console.log("Missing values to calculate Volume");
+		}
+	}
 	
 	
 	var importData = function(){
@@ -375,12 +446,14 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
-	 //actuellement 1 seule definie
-	$scope.plates = [ {name:"DAP TruSeq DNA HT", tagCategory:"DUAL-INDEX"} ];
+	//actuellement 1 seule definie
+	
+	$scope.plates = [ {name:"RAP TruSeq RNA HT", tagCategory:"DUAL-INDEX"} ];
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
 	// pour l'instant une seule plaque => faire un simple tableau
 	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
+	// NB: ce sont les memes index et dans la meme disposition que pour la "DAP TruSeq RNA HT", faut il tout dupliquer ???
 	var tagPlateCode=[];
 	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
 	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
@@ -448,6 +521,4 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			},	
 		select:setTags,
 	};
-	
-	
 }]);

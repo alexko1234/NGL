@@ -198,9 +198,16 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		//FDS ajout 04/08/2016 JIRA NGL-1026: Sciclone NGSX seul
+		l.add(newInstrumentUsedType("Sciclone NGSX", "sciclone-ngsx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(), 
+				getInstruments(
+						createInstrument("ngs1", "NGS-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+		
 		
 		/** FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/ plaque output) **/
-		l.add(newInstrumentUsedType("Covaris E210 + Sciclone NGSX", "covaris-e210-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSProperties(), 
+		l.add(newInstrumentUsedType("Covaris E210 + Sciclone NGSX", "covaris-e210-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
 						createInstrument("covaris1-and-ngs1", "Covaris1 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("covaris1-and-ngs2", "Covaris1 / NGS-2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
@@ -208,7 +215,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
-		l.add(newInstrumentUsedType("Covaris LE210 + Sciclone NGSX", "covaris-le220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSProperties(), 
+		l.add(newInstrumentUsedType("Covaris LE210 + Sciclone NGSX", "covaris-le220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
 						createInstrument("covaris2-and-ngs1", "Covaris2 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("covaris2-and-ngs2", "Covaris2 / NGS-2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
@@ -216,7 +223,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 
-		l.add(newInstrumentUsedType("Covaris E220 + Sciclone NGSX", "covaris-e220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSProperties(), 
+		l.add(newInstrumentUsedType("Covaris E220 + Sciclone NGSX", "covaris-e220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
 						createInstrument("covaris3-and-ngs1", "Covaris3 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("covaris3-and-ngs2", "Covaris3 / NGS-2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
@@ -413,21 +420,34 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 
 	
-	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
-	private static List<PropertyDefinition> getSicloneNGSXProperties() throws DAOException {
+	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894...
+	private static List<PropertyDefinition> getScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme Siclone NGSX", "programSicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
+		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
 				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate"), null, "single"));
+		
+		return l;
+	}
+	
+	// 05/08/2016 Il faut une methode distincte pour ajouter la propriété "robotRunCode", et ne pas la mettre directement dans getScicloneNGSXProperties
+	// sinon il y a un doublon pour l'instrument fictif CovarisAndScicloneNGSX
+	private static List<PropertyDefinition> getScicloneNGSXAloneProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		l.addAll(getScicloneNGSXProperties());
+		
+		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
+				null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}
 	
 	//FDS 29/01/2016 (instrument fictif composé de 2 instruments) -- JIRA NGL-894
 	//    ses propriétés sont la somme des propriétés de chacun (Attention au noms de propriété communs...)
-	private static List<PropertyDefinition> getCovarisAndScicloneNGSProperties() throws DAOException {
+	private static List<PropertyDefinition> getCovarisAndScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.addAll(getCovarisProperties());
-		l.addAll(getSicloneNGSXProperties());
+		l.addAll(getScicloneNGSXProperties());
 		
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 				null, null, null, null, "single", null, true ,null, null));
@@ -438,13 +458,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		//TEST FDS: nom des programes ???????????
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+		//05/08/2016: demande de Julie=> le Janus est utilisé dans certaines experiences ou on ne veut pas tracer le programme
+		// => rendre cette propriété non obligatoire !
+		// il faut ici lister tous les programmes dans lequel peut etre utilisé le janus qui sert dans plusieurs experiences...
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
 				// newValues("programme 1_normalisation"), "single", null, false ,null, null));
-				newValues("programme 1_normalisation",
-						  "pooling custom (mode colonne)",
-						  "pooling 3-plex (mode colonne)",
-						  "pooling 4-plex (mode colonne)"), "single", null, false ,null, null));
+				newValues("programme 1_normalisation",    // normalization
+						  "---"),                         // ajouté pour éviter qu'en pooling "programme 1_normalisation" soit selectionné par defaut
+						  "single", null, false ,null, null));
 		return l;
 	}
 	
@@ -452,7 +473,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	 private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				 newValues("Clusterstripprepworklist"), "single", null, false ,null, null));
 		
@@ -477,7 +497,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	//-------------------voir s'il faut ne garder qu'une seule méthode et non pas 2 .....
+	//-------------------voir s'il faut ne garder qu'une seule méthode et non pas 2 pour les groupes de Masteryclers.....
 	
 	// FDS 29/07/2016 JIRA NGL-1027 ajout propriétés pseudo instrument Masterycler EP-Gradient + Zephyr 
 	private static List<PropertyDefinition> getMastercyclerEPGAndZephyrProperties() throws DAOException {
