@@ -18,11 +18,14 @@
 				<div class="form-control-static" list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' />
 
 			}
+			@columnLabelValue(Messages("containers.table.fromPurificationTypeCode"), Html(" ng-if='container.fromPurificationTypeCode'")){
+				<p class="form-control-static" ng-bind="container.fromPurificationTypeCode|unique|codes:'type'" />
+			}
 			@columnLabelValue(Messages("containers.table.support.categoryCode")){
 				<p class="form-control-static" ng-bind="container.support.categoryCode|codes:'container_support_cat'" />
 			}
 			@columnLabelValue(Messages("containers.table.supportCode")){
-				<p class="form-control-static" ng-bind="container.support.code" />
+				<a href="#" ng-click="goToSupport()" ><p class="form-control-static" ng-bind="container.support.code"/></a>
 			}
 			@columnLabelValue(Messages("containers.table.projectCodes")){
 				<div class="form-control-static" list-resize='container.projectCodes' list-resize-min-size='3' horizontal />

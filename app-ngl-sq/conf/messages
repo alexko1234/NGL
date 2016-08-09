@@ -112,6 +112,7 @@ containers.table.sampleCode = Echantillon
 containers.table.sampleCodes.length = Nb d''échantillons
 containers.table.contents.length = Nb de contents
 containers.table.fromTransformationTypeCodes = Issu du type d''expérience
+containers.table.fromPurificationTypeCode = Issu de la purification
 containers.table.state.code = Etat container
 containers.table.support.name = Support container
 containers.table.stateCode = Etat
@@ -159,6 +160,7 @@ containers.table.comments = Commentaires
 containers.table.contents = Contents
 containers.table.percents = Pourcentage
 containers.table.referenceCollab = Réf. collab
+container.from = issu de
 
 containers.supportView.results = Résultat(s)
 
