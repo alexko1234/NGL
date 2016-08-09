@@ -15,7 +15,8 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },	{
+			         },	
+			         {
 			        	 "header":Messages("containers.table.supportCategoryCode"),
 			        	 "property":"inputContainer.support.categoryCode",
 			        	 "filter":"codes:'container_support_cat'",
@@ -34,7 +35,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":3,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -46,7 +47,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			 			"type":"text",
 			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			            "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -56,7 +57,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			 			"type":"text",
 			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 			         {
 				 		"header":Messages("containers.table.libProcessType"),
@@ -78,7 +79,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 				 		"type":"text",
 				 		"position":7,
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				         "extraHeaders":{0:Messages("experiments.inputs")}
+				        "extraHeaders":{0:Messages("experiments.inputs")}
 				     },		
 				     {
 			        	 "header":Messages("containers.table.volume") + " (µL)",

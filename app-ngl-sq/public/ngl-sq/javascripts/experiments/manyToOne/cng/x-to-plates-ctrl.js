@@ -19,7 +19,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		return column;
 	};
 	
-	/* FDS TEST 
+	/* TEST comportement different en fonction du programme choisi ??
 	$scope.$on('updateInstrumentProperty', function(e, pName) {
 		console.log("call event updateInstrumentProperty "+pName);
 		
@@ -41,6 +41,9 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 	});
 	*/
+	
+
+
 	
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
@@ -273,5 +276,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	//variables tampon
     $scope.lastSupportCode=null;
     $scope.lastStorageCode=null;
+
+	//TEST...VERIFIER UNE SEULE PLAQUE EN ENTREE POUR  "normalization-and-pooling" !!!
+	// marche pas !!!
+    if (($scope.experiment.typeCode == "normalization-and-pooling") && $scope.isNewState()) ;{
+        $scope.messages.clear();
+        $scope.messages.setError( "DEBUG: NORMALIZATION-AND-POOLING / STATE=NEW /NB="+  $scope.atmService.data.inputContainerSupports.length );
+    }
 	
 }]);

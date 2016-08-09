@@ -3,7 +3,7 @@
 <table class="table" >
 <thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
-			<th colspan="{{14 + inputContainerProperties.length}}"> <!-- FDS passer de 11 a 14 ( ajout aliquot+ container supprt + ligne + colonne) -->
+			<th colspan="{{11 + inputContainerProperties.length}}">
 				@Messages("experiments.inputs")
 			</th>
 			
@@ -21,45 +21,49 @@
 			<th>
 				@Messages("containers.table.code")
 			</th>
+			<!-- FDS allègement demandé
 			<th>
 				@Messages("containers.table.supportCategoryCode")
 			</th>
 			<th>
 				@Messages("containers.table.fromTransformationTypeCodes")
-			</th>						
+			</th>
+			-->						
 			<th>
 				@Messages("containers.table.project_sample")
 			</th>						
 			<th>
 				@Messages("containers.table.tags")
 			</th>
-			<th><!-- FDS ajout aliquot OK-->
+			<th>
 				@Messages("containers.table.codeAliquot")
 			</th>
+			<!-- FDS allègement demandé
 			<th>
 				@Messages("containers.table.state.code")
 			</th>
+			-->
 			<th>
 				@Messages("containers.table.volume") (µL)
 			</th>
 			<th>
 				@Messages("containers.table.concentration.shortlabel")
 			</th>									
-			<th><!-- FDS !!! problem graphique input trop petit pour la valeu contenue -->
-				@Messages("containers.table.percentageInsidePool")&nbsp;&nbsp;&nbsp;&nbsp;.
+			<th><!-- FDS : OK apres allegement -->
+				@Messages("containers.table.percentageInsidePool")
 			</th>
 			<th ng-repeat="property in inputContainerProperties track by $index">
 				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
 			</th>
            
-			<th><!-- FDS ajout supportCode repete pour l'instant permet d'etre plus flexible pour la suite... -->
+			<th><!-- FDS ajout supportCode (répété pour l'instant permet d'etre plus flexible pour la suite: sortie en plusieurs plaques )... -->
 				@Messages("containers.table.supportCode")
 			</th>			
-			<th><!-- FDS !!! problem graphique avec select -->
+			<th><!-- FDS !!! problem graphique avec select &nbsp;&nbsp;&nbsp;&nbsp;. -->
 				@Messages("containers.table.support.line")&nbsp;&nbsp;&nbsp;&nbsp;.
 			</th>
-			<th><!-- FDS !!! problem graphique avec select -->
-				@Messages("containers.table.support.column")&nbsp;&nbsp;.
+			<th><!-- FDS OK apres allegement -->
+				@Messages("containers.table.support.column")
 			</th>
 			<th>
 				@Messages("containers.table.concentration")
@@ -77,7 +81,7 @@
 				@Messages("containers.table.storageCode")
 			</th>		
 		</tr>
-		<tr ng-if="atmService.data.isAllATMViewClose" colspan="14"><!-- FDS passer de 11 a 14-->
+		<tr ng-if="atmService.data.isAllATMViewClose" colspan="11">
 			<th>
 			</th>
 			<th>
@@ -114,7 +118,7 @@
 				<i class="fa fa-eye"></i>
 			</button>			
 		</td>	
-		<td colspan="14" > <!-- FDS passer de 11 a 14-->
+		<td colspan="11" >
 			<span ng-repeat="inputContainerUsed in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 				ng-model="inputContainerUsed" draggable drag="dragInProgress">
 				{{inputContainerUsed.code}} / {{inputContainerUsed.percentage}}%;<br/>
@@ -141,12 +145,14 @@
 				<td>
 					{{inputContainerUsed.code}}
 				</td>
+				<!-- FDS allegement
 				<td>
 					{{inputContainerUsed.locationOnContainerSupport.categoryCode | codes:'container_support_cat'}}
 				</td>
 				<td>
 					<div list-resize='inputContainerUsed.fromTransformationTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
 				</td>
+				 -->
 				<td>
 					<div list-resize="inputContainerUsed.contents | collect:'projectCode+&quot; / &quot;+sampleCode'" list-resize-min-size="5" vertical>																					
 				</td>						
@@ -156,9 +162,11 @@
 				<td><!-- FDS AJOUT OK-->
 					<div list-resize='inputContainerUsed.contents | getArray:"properties.sampleAliquoteCode.value"| unique' list-resize-min-size='5' below vertical>
 				</td>
+				<!-- FDS allègement demandé
 				<td>
 					{{inputContainerUsed.state.code | codes:'state'}}
 				</td>
+				 -->
 				<td>
 					{{inputContainerUsed.volume.value}}
 				</td>
@@ -213,8 +221,7 @@
 								ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].locationOnContainerSupport.line')"	
 								ng-options="line for line in lines">
 										 <option value="nM">nM</option> 
-							        	<option value="ng/µl">ng/µl</option>	
-											     	 							     	 
+							        	 <option value="ng/µl">ng/µl</option>				     	 							     	 
 							</select>														
 						</div>
 					</div>						
@@ -252,8 +259,7 @@
 								ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].concentration.unit')">
 							      <option value="nM">nM</option> 
 							      <option value="ng/µl">ng/µl</option>	
-							</select>
-															
+							</select>										
 						</div>
 					</div>						
 				</td>
