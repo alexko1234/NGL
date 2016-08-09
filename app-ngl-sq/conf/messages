@@ -192,13 +192,6 @@ containers.select.categoryCode =  Catégorie container
 containers.select.categorySupportCode =  Catégorie support
 containers.select.fromTransformationTypeCodes= Issu du type d''exp.
 
-#containers.dispatch.value.0 = Recommencer
-#containers.dispatch.value.1 = Arrêt Processus
-#containers.dispatch.value.2 = Exp. Suivante
-#containers.dispatch.value.3 = Exp. QC
-#containers.dispatch.value.4 = Exp. Purification
-#containers.dispatch.value.5 = Exp. Transfert
-#containers.dispatch.value.6 = Terminer
 
 containers.dispatch.value.0 = Exp. Suivante
 containers.dispatch.value.1 = Exp. Transfert

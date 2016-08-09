@@ -1296,7 +1296,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			if(value.data.status === 'FALSE' && (value.data.dispatch !== 5 && value.data.dispatch !== 6)){
 				value.data.dispatch = undefined;
-			}else if(value.data.status === 'TRUE' && (value.data.dispatch === 5 || value.data.dispatch === 6)){
+			}else if(value.data.status === 'TRUE' && (value.data.dispatch === 5)){
 				value.data.dispatch = undefined;
 			}else if(value.data.status === 'UNSET'){
 				value.data.dispatch = undefined;
@@ -1307,7 +1307,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			if(dvet && dvet.indexOf(dispatchCode) !== -1){
 				if(value.data.status === 'FALSE' && (dispatchCode === 5 || dispatchCode === 6)){
 					return true;
-				}else if(value.data.status === 'TRUE' && dispatchCode !== 5 && dispatchCode !== 6){
+				}else if(value.data.status === 'TRUE' && (dispatchCode !== 5 && dispatchCode !== 6
+						|| (dispatchCode === 6 && !nextExperimentsForExperimentType[value.data.container.fromTransformationTypeCodes[0]]))){
 					return true;
 				}else{
 					return false;
@@ -1398,18 +1399,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				if($scope.experiment.categoryCode === 'qualitycontrol'){
 					if(data[i].dispatch === 0){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-TM"));
-						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TM"));						
+												
 					}else if(data[i].dispatch === 1){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-TF"));
-						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TF"));
 						
 					}else if(data[i].dispatch === 2){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-QC"));
-						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode],  "A-QC"));
 						
 					}else if(data[i].dispatch === 3){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode],  "A-PF"));
-						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-PF"));
 						
 					}else if(data[i].dispatch === 4){
 						
@@ -1418,28 +1416,38 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						}else{
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						}
-						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
+						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+					}else if(data[i].dispatch === 6){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}
 				}else{
 				
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
-					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
-					if(data[i].dispatch === 4){
+					if(data[i].dispatch === 4 || data[i].dispatch === 6){
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}				
 				}
 				
 			}else if(data[i].status === 'FALSE'){
-				if(data[i].dispatch === 5){
-					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], getInputStateForRetry()));
-					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], getInputStateForRetry()));
-					
-				}else if(data[i].dispatch === 6){		
-					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
-					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
-					
-					processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+				if($scope.experiment.categoryCode === 'qualitycontrol'){
+					if(data[i].dispatch === 5){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], getInputStateForRetry()));
+						
+					}else if(data[i].dispatch === 6){		
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "UA"));
+						
+						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+					}
+				}else{
+					if(data[i].dispatch === 5){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], getInputStateForRetry()));
+						
+					}else if(data[i].dispatch === 6){		
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
+						
+						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+					}
 				}
 			}
 									
@@ -1500,6 +1508,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}else{
 						outputStateCode = "IS";
 					}
+					processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+				}else if(data[i].dispatch === 6){
+					outputStateCode = "IS";
 					processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 				}
 				
