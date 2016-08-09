@@ -7,5 +7,7 @@
 	
 </h1>
 <h5>
-<div list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' horizontal></div>
+<span list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' horizontal></span>
+<span ng-if="container.fromPurificationTypeCode">@Messages("container.from") </span>
+<span ng-if="container.fromPurificationTypeCode" ng-bind="container.fromPurificationTypeCode|codes:'type'"></span>
 </h5>

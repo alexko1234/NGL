@@ -13,6 +13,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	$scope.setActiveTab = function(value){
 		mainService.put('containerActiveTab', value)
 	};
+	
+	$scope.goToSupport = function(){
+		$window.open(jsRoutes.controllers.containers.tpl.ContainerSupports.get($scope.container.support.code).url, 'supports');			
+	};
 	/* move to a directive */
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
