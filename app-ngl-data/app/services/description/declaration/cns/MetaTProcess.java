@@ -31,12 +31,6 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to MetaT cDNA frg","ext-to-cdna-frg-transcriptomic-process",null,-1,
@@ -66,6 +60,11 @@ public class MetaTProcess extends AbstractDeclaration {
 		
 		return l;
 	}
+	
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		return null;
+	}
 
 
 	@Override
@@ -82,6 +81,23 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
+		return null;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypePROD() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypeUAT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTRNA(),
@@ -111,24 +127,6 @@ public class MetaTProcess extends AbstractDeclaration {
 	}
 
 	@Override
-	protected List<ProcessType> getProcessTypePROD() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeUAT() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	protected void getExperimentTypeNodeCommon() {
 		// TODO Auto-generated method stub
 		
@@ -136,27 +134,23 @@ public class MetaTProcess extends AbstractDeclaration {
 	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		//Metatranscriptome
 		
+	}
+
+	@Override
+	protected void getExperimentTypeNodePROD() {
 		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
-		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
 		
-		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","ext-to-metagenomic-process","ext-to-metagenomic-process-with-sizing"),	
+		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis"),	
 				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
 				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	}
-
-	@Override
-	protected void getExperimentTypeNodePROD() {
-		// TODO Auto-generated method stub
-
+	
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package services.description.declaration.cns;
 
 import static services.description.DescriptionFactory.newExperimentType;
+import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.declaration.AbstractDeclaration;
+import services.description.experiment.AbstractExperimentService;
 import models.laboratory.common.description.Value;
 
 public class MetaGenomique extends AbstractDeclaration {
@@ -138,7 +140,9 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		// TODO Auto-generated method stub
+		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
+		
 		
 	}
 
