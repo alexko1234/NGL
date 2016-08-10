@@ -12,8 +12,12 @@ public class From {
 	
 	public String containerCode;
 	public String supportCode;
+	
+	@Deprecated
 	public Set<String> fromTransformationTypeCodes;
+	@Deprecated
 	public Set<String> fromTransformationCodes;
+	
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes;
 

@@ -20,7 +20,6 @@ import fr.cea.ig.MongoDBDAO;
 @Service
 public class ExpWorkflows extends Workflows<Experiment>{
 	
-	//public static ExpWorkflows instance = new ExpWorkflows();
 	@Autowired
 	ExpWorkflowsHelper expWorkflowsHelper;
 	
@@ -53,27 +52,26 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateXCodes(exp); 	
 		} else if("IP".equals(nextState.code)){
 			expWorkflowsHelper.updateATMs(exp, false);	
-			expWorkflowsHelper.updateContentsWithNewSamples(exp,validation);
+			
+			expWorkflowsHelper.createNewSampleCodesIfNeeded(exp, validation);
+			expWorkflowsHelper.createNewSamplesIfNeeded(exp, validation);
+			expWorkflowsHelper.updateContentsIfNeeded(exp, validation);
+			
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 		}else if("F".equals(nextState.code)){
 			long t0 = System.currentTimeMillis();
 			expWorkflowsHelper.updateATMs(exp, false);
 			long t1 = System.currentTimeMillis();
-			expWorkflowsHelper.updateContentsWithNewSamples(exp,validation);
+			
+			expWorkflowsHelper.createNewSampleCodesIfNeeded(exp, validation);
+			expWorkflowsHelper.createNewSamplesIfNeeded(exp, validation);
+			expWorkflowsHelper.updateContentsIfNeeded(exp, validation);
+			
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 			long t2 = System.currentTimeMillis();
 			expWorkflowsHelper.createOutputContainerSupports(exp, validation);
 			long t3 = System.currentTimeMillis();
-			/*
-			Logger.debug("applyPreStateRules \n "
-					+"1 = "+(t1-t0)+" ms\n"
-					+"2 = "+(t2-t1)+" ms\n"
-					+"3 = "+(t3-t2)+" ms\n"
-					
-					
-					);
-					
-			*/
+		
 		}
 	}
 	
@@ -103,16 +101,20 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	}
 	
 	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState){
+		ContextValidation errorValidation = new ContextValidation(validation.getUser());
+		errorValidation.setContextObjects(validation.getContextObjects());
+		
 		if("N".equals(nextState.code)){
 			
 		} else if("IP".equals(nextState.code)){			
-			
+			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
 		}else if("F".equals(nextState.code)){
-			expWorkflowsHelper.deleteOutputContainerSupports(exp, validation);
+			expWorkflowsHelper.deleteOutputContainerSupports(exp, errorValidation);
+			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
 		}
 		
-		if(validation.hasErrors()){
-			Logger.error("Problem on ExpWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
+		if(errorValidation.hasErrors()){
+			Logger.error("Problem on ExpWorkflow.applyErrorPostStateRules : "+errorValidation.errors.toString());
 		}
 	}
 	

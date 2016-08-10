@@ -121,7 +121,7 @@ public class CodeHelper {
 		Project project =MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 		String newCode=nextCode(project.lastSampleCode);			
 		MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", project.code),DBUpdate.set("lastSampleCode",newCode));
-		return projectCode+"_"+newCode;
+		return projectCode+"_"+newCode; //TODO !!! Genoscope rules !!!!
 	}
 	
 	

@@ -420,7 +420,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							plateCells[line] = [];
 						}
 						var sampleCodeAndTags = [];
-						angular.forEach(well.data.inputContainer.contents, function(content){
+						angular.forEach(well.data.outputContainerUsed.contents, function(content){
 							var value = content.projectCode+" / "+content.sampleCode;
 							
 							if(content.properties && content.properties.libProcessTypeCode){

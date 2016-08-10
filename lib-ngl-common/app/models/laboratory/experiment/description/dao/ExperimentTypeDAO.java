@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 
 
@@ -259,7 +259,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" inner join  common_info_type as cp on cp.id = np.fk_experiment_type "+
 				" where cp.code=?";
 		
-		Logger.debug(sql);
+		//Logger.debug(sql);
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
 	}
 
