@@ -63,7 +63,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		if(newValues){			
 			var _profilsMap = {};
 			angular.forEach(newValues, function(img){
-				var pos = img.fullname.match(/_([A-F]\d+)\./)[1];
+				var pos = img.fullname.match(/_([A-H]\d+)\./)[1];
 				this[pos] = img;			
 			}, _profilsMap);
 			
