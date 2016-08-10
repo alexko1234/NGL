@@ -55,7 +55,6 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			
 			expWorkflowsHelper.createNewSampleCodesIfNeeded(exp, validation);
 			expWorkflowsHelper.createNewSamplesIfNeeded(exp, validation);
-			expWorkflowsHelper.updateContentsIfNeeded(exp, validation);
 			
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 		}else if("F".equals(nextState.code)){
@@ -65,7 +64,6 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			
 			expWorkflowsHelper.createNewSampleCodesIfNeeded(exp, validation);
 			expWorkflowsHelper.createNewSamplesIfNeeded(exp, validation);
-			expWorkflowsHelper.updateContentsIfNeeded(exp, validation);
 			
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 			long t2 = System.currentTimeMillis();

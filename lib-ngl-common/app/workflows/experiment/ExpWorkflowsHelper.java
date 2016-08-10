@@ -1051,7 +1051,7 @@ public class ExpWorkflowsHelper {
 					}
 					
 				})
-				.forEach(ocu -> {
+				.map(ocu -> {
 					Map<String,PropertyValue> experimentProperties = ocu.experimentProperties;
 					
 					if(experimentProperties.containsKey("sampleTypeCode") 
@@ -1064,21 +1064,14 @@ public class ExpWorkflowsHelper {
 						
 						
 					}
-				});
+					return ocu;
+				})
+				.forEach(ocu -> updateContents(ocu));
+			
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));			
 		}
 	};
 	
-	public void updateContentsIfNeeded(Experiment exp, ContextValidation validation){
-		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
-		if(experimentType.newSample){	
-			exp.atomicTransfertMethods
-			.parallelStream()
-			.map(atm -> atm.outputContainerUseds)
-			.flatMap(List::stream)
-			.forEach(ocu -> updateContents(ocu));			
-		}
-	}
 	
 	public void createNewSamplesIfNeeded(Experiment exp, ContextValidation validation){
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
