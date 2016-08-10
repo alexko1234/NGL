@@ -9,12 +9,12 @@ import org.mongojack.DBUpdate;
 import models.administration.authorisation.Permission;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
-
 import models.laboratory.valuation.instance.ValuationCriteria;
-
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import jsmessages.JsMessages;
@@ -81,6 +81,16 @@ public class Main extends CommonController {
 			sb.append("\"").append("valuation_criteria").append(".").append(vc.code)
 			.append("\":\"").append(vc.name).append("\",");
 		}
+		
+		List<ResolutionConfiguration> resolutionConfigs = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList();
+		resolutionConfigs
+			.stream()
+			.map(rc -> rc.resolutions)
+			.flatMap(List::stream)
+			.forEach(r ->{
+				sb.append("\"").append("resolution").append(".").append(r.code)
+				.append("\":\"").append(r.name).append("\",");
+			});
 		
 		if("CNS".equalsIgnoreCase(Play.application().configuration().getString("institute"))){
 			patchTara(sb);

@@ -1261,11 +1261,12 @@ angular.module('commonsServices', []).
     	}]).filter('codes', function(){
     		return function(input, key){
     			if(angular.isArray(input) && input.length > 0){
+    				var output = [];
     				for(var i=0;i<input.length;i++){
-    					input[i] = Messages(Codes(key+"."+input[i]));
+    					output[i] = Messages(Codes(key+"."+input[i]));
     				}
     			
-    				return input;
+    				return output;
     			}else if(angular.isDefined(input) && null !== input && input !== "" && !angular.isObject(input)){ 
     				return Messages(Codes(key+"."+input));    				
     			}
