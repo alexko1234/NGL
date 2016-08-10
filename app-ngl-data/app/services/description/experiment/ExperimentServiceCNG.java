@@ -181,6 +181,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getInstrumentUsedTypes("MISEQ-QC-MODE"),
 				"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque(s)" 
+		l.add(newExperimentType("Pool plaques -> plaque","pool",null,200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
+				getPropertyDefinitionPool(),
+				getInstrumentUsedTypes("janus","hand"),
+				"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			/*
 			l.add(newExperimentType("Migration sur puce","chip-migration",
@@ -254,13 +262,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 				
 				//-- transfert  (NOTE: pas de Node pour experiences type transfert )
-				// FDS 17/06/2016 NGL-1029: "pool : plaques vers plaque(s)" 
-				l.add(newExperimentType("Pool plaques -> plaque","pool",null,200,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
-						getPropertyDefinitionPool(),
-						getInstrumentUsedTypes("janus","hand"),
-						"ManyToOne", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
 				
 				//--Quality Control	
 			}
