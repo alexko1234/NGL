@@ -91,7 +91,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						          .selector('node')
 						            .css({
 						              'shape': 'data(faveShape)',
-						              'width': '75',
+						              'width': '90',
 						              'label': 'data(label)',
 						              'text-valign': 'center',
 						              //'text-outline-width': 2,
@@ -169,7 +169,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			if(currentNode.indexFromCurrent < 0){
 				faveColor = '#F5A45D'
 			}else if(currentNode.indexFromCurrent > 0){
-				faveColor = '#86B342';
+				//faveColor = '#86B342';
+				faveColor = '#F5A45D'
 			}
 			
 			currentContainer.faveColor = faveColor;
@@ -207,7 +208,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				if(this.indexFromCurrent < 0){
 					faveColor = '#F5A45D'
 				}else if(this.indexFromCurrent > 0){
-					faveColor = '#86B342';
+					//faveColor = '#86B342';
+					faveColor = '#F5A45D'
 				}
 				edge.faveColor=faveColor;
 				graphElements.push({"data":edge,"group":"edges"})	
@@ -234,7 +236,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		if(codes.parentContainerCodes.length > 0){ // Case no paths
 			promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
 		}
-		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:currentContainer.code}}));
+		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
 		
 		
 		$q.all(promises).then(function(results){
