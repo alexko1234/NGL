@@ -53,7 +53,10 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 					propertyFieldConfig.value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation, action);
 				if(null != propertyFieldConfig.unit)
 					propertyFieldConfig.unit.populateField(psv.getClass().getField("unit"), psv, rowMap, contextValidation, action);
-				properties.put(pName, psv);				
+				
+				if(null != psv.value){
+					properties.put(pName, psv);
+				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}			

@@ -145,7 +145,7 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate")));
+				InstanceFactory.setExperimentTypeCodes("chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate")));
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
@@ -157,7 +157,7 @@ public class ProtocolServiceCNS {
 			//fin mise en prod
 			
 			
-        	lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("x-to-plate")));
+        	//lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes()));
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));

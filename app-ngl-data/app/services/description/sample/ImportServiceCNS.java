@@ -104,10 +104,10 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, null, 
 				getTaraPacificStationValues(), "single", 1, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilterCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilterCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificFilterValues(), "single", 2, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Environnement", "taraEnvironment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Environnement", "taraEnvironment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificEnvironmentValues(), "single", 3, true, null, null));
 		
 		
