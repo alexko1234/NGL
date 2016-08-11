@@ -100,7 +100,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		/** transfert, ordered by display order **/
 		//FDS essai: le display order est distinct entre transfert et transformation puisque ce sont 2 select differents
 		//           repartir d'un petit chiffre...(100 au lieu de 10100)????
-		l.add(newExperimentType("Aliquot","aliquoting",null, 100,
+		l.add(newExperimentType("Aliquot","aliquoting",null, 10300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), 
 				getInstrumentUsedTypes("hand"),
@@ -183,13 +183,34 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque(s)" 
-		l.add(newExperimentType("Pool plaques -> plaque","pool",null,200,
+		l.add(newExperimentType("Pool plaques -> plaque","pool",null,10400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
 				getPropertyDefinitionPool(),
 				getInstrumentUsedTypes("janus","hand"),
 				"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
+		l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10700,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		
 			/*
 			l.add(newExperimentType("Migration sur puce","chip-migration",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
