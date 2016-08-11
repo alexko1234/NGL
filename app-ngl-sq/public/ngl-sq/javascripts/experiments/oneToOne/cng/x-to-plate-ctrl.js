@@ -4,13 +4,37 @@ angular.module('home').controller('CNGXToPlateCtrl',['$scope' ,'$http','$parse',
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
 					{
-						"header" : Messages("containers.table.code"),
-						"property" : "inputContainer.code",
+						"header" : Messages("containers.table.supportCode"),
+						"property" : "inputContainer.support.code",
 						"order" : true,
 						"edit" : false,
 						"hide" : true,
 						"type" : "text",
 						"position" : 1,
+						"extraHeaders" : {
+							0 : Messages("experiments.inputs")
+						}
+					},
+					{
+						"header" : Messages("containers.table.support.line"),
+						"property" : "inputContainer.support.line",
+						"order" : true,
+						"edit" : false,
+						"hide" : true,
+						"type" : "text",
+						"position" : 1.1,
+						"extraHeaders" : {
+							0 : Messages("experiments.inputs")
+						}
+					},
+					{
+						"header" : Messages("containers.table.support.column"),
+						"property" : "inputContainer.support.column*1",
+						"order" : true,
+						"edit" : false,
+						"hide" : true,
+						"type" : "number",
+						"position" : 1.2,
 						"extraHeaders" : {
 							0 : Messages("experiments.inputs")
 						}
