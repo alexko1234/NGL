@@ -103,17 +103,64 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, null, 
 				getTaraPacificStationValues(), "single", 1, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilterCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+				getTaraPacificFilterValues(), "single", 2, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Environnement", "taraEnvironment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+				getTaraPacificEnvironmentValues(), "single", 3, true, null, null));
+		
+		
 		return propertyDefinitions;
 	}
 	
+	private static List<Value> getTaraPacificEnvironmentValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("AW", "Ambient Water"));
+		values.add(DescriptionFactory.newValue("IW", "Interstitial Water"));
+		values.add(DescriptionFactory.newValue("OA", "Ocean Atmosphere"));
+		return values;	
+	}
+	
+	
+	
+	private static List<Value> getTaraPacificFilterValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("S<02", "< 0,2 µm"));
+		values.add(DescriptionFactory.newValue("S023", "0,2-3 µm"));
+		values.add(DescriptionFactory.newValue("S320", "3-20 µm"));
+		values.add(DescriptionFactory.newValue("S20", "20-200 µm"));
+		values.add(DescriptionFactory.newValue("S300", "> 300µm"));
+		values.add(DescriptionFactory.newValue("ASEQ", "ASEQ"));
+		return values;	
+	}
+
 	private static List<Value> getTaraPacificStationValues(){
 		List<Value> values = new ArrayList<Value>();
+		//Miami first reception end june
 		values.add(DescriptionFactory.newValue("20004", "OA-004"));
 		values.add(DescriptionFactory.newValue("20005", "OA-005"));
 		values.add(DescriptionFactory.newValue("20009", "OA-009"));
 		values.add(DescriptionFactory.newValue("20010", "OA-010"));
 		values.add(DescriptionFactory.newValue("20018", "OA-018"));
 		values.add(DescriptionFactory.newValue("20023", "OA-023"));
+		//Panama second recption first august
+		values.add(DescriptionFactory.newValue("102001", "I2S1"));
+		values.add(DescriptionFactory.newValue("102001001", "I2S1C1"));
+		values.add(DescriptionFactory.newValue("102001011", "I2S1C11"));
+		values.add(DescriptionFactory.newValue("102001012", "I2S1C12"));
+		values.add(DescriptionFactory.newValue("102001002", "I2S1C2"));
+		values.add(DescriptionFactory.newValue("102001029", "I2S1C29"));
+		values.add(DescriptionFactory.newValue("102001030", "I2S1C30"));
+		values.add(DescriptionFactory.newValue("102001031", "I2S1C31"));
+		values.add(DescriptionFactory.newValue("102001032", "I2S1C32"));
+		values.add(DescriptionFactory.newValue("102003", "I2S3"));
+		values.add(DescriptionFactory.newValue("102003001", "I2S3C1"));
+		values.add(DescriptionFactory.newValue("102003010", "I2S3C10"));
+		values.add(DescriptionFactory.newValue("102003101", "I2S3F1"));
+		values.add(DescriptionFactory.newValue("102003102", "I2S3F2"));
+		
+		
 		return values;	
 	}
 	

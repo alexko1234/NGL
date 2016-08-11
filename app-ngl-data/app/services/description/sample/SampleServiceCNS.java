@@ -12,12 +12,14 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.Constants;
+import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 
@@ -105,9 +107,25 @@ public class SampleServiceCNS extends AbstractSampleService {
 		l.add(newSampleType("Aérosol", "aerosol", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("Vesiclome", "vesiclome", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("Corail", "coral", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
-		l.add(newSampleType("Poisson", "fish", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newSampleType("Poisson", "fish", SampleCategory.find.findByCode("environmental-samples"),getFishPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
+	}
+	
+	private List<PropertyDefinition> getFishPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Partie de l'anatomie", "fishAnatomy", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
+				getFishAnatomyValues(), "single", 2, true, null, null));
+		propertyDefinitions.addAll(getEnvironmentalPropertyDefinitions());
+		return propertyDefinitions;
+	}
+	
+	private static List<Value> getFishAnatomyValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("MUC", "mucus"));
+		values.add(DescriptionFactory.newValue("GILLS", "gills"));
+		values.add(DescriptionFactory.newValue("GT", "Gut tractus"));
+		return values;	
 	}
 	
 	private List<PropertyDefinition> getEnvironmentalPropertyDefinitions() {

@@ -1569,9 +1569,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						var containers = result.config.data
 						var errors = []; var isErrors = false;
 						
-						data.forEach(function(value){
+						data.forEach(function(value, key){
 							if(value.status !== 200){
-								errors[containers[value.index].data.code] = value.data.code;
+								errors[result.config.data[key].data.code] = value.data.code;
 								isErrors = true;
 							}
 						})
@@ -1581,9 +1581,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 								.then(function(result){
 									var data = result.data;
 									
-									data.forEach(function(value){
+									data.forEach(function(value, key){
 										if(value.status !== 200){
-											errors[containers[value.index].data.code] = value.data.code;
+											errors[result.config.data[key].data.code] = value.data.code;
 											isErrors = true;
 										}
 									})
