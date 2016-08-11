@@ -238,11 +238,14 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		});
 	};
 
-
+    // boutons generateSampleSheet seulement si autre type de containerSuppor que tubes
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
 		// FDS pas de boutons generateSampleSheet pour la main
-		if (  $scope.experiment.instrument.categoryCode !== "hand") {
-		  // FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
+		// FDS pas de boutons generateSampleSheet pour l'experience "pool"
+		//console.log ("container="+ $scope.atmService.inputContainerSupportCategoryCode );
+		//console.log ("instrument="+ $scope.experiment.instrument.categoryCode + " / experiment="+$scope.experiment.typeCode);	
+		if (( $scope.experiment.instrument.categoryCode !== "hand") && ($scope.experiment.typeCode !== "pool"))  {
+		  // FDS ajout 2eme bouton + param a la fonction generateSampleSheet...
 		  $scope.setAdditionnalButtons([{
 			  isDisabled : function(){return $scope.isNewState();} ,
 			  isShow:function(){return !$scope.isNewState();},

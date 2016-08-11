@@ -55,6 +55,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimentType" des containers qui viendraient 
 		//       d'un collaborateur exterieur ex : ext-denat-dil-lib
 		
+		// Attention l'ordre de déclaration sera l'ordre de présentation dans les menus !!
+		
 		// JIRA 781 renommer le Processus long 
 		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
@@ -121,6 +123,15 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("normalization-and-pooling").get(0),          //first experiment type
 					getExperimentTypes("illumina-depot").get(0),                     //last  experiment type
 					getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),  //void  experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO
+			l.add(DescriptionFactory.newProcessType("X5_WG NANO", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
+					getPropertyDefinitionsX5WgNanoDNAseq(), 
+					Arrays.asList(getPET("ext-to-x5-wg-nano",-1),getPET("prep-pcr-free",0), getPET("pcr-and-purification",1), getPET("lib-normalization",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					getExperimentTypes("prep-pcr-free").get(0),      //first experiment type
+					getExperimentTypes("illumina-depot").get(0),     //last  experiment type
+					getExperimentTypes("ext-to-x5-wg-nano").get(0),  //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 		}
@@ -193,7 +204,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 
 	//FDS ajout 28/01/2016 -- JIRA NGL-894: nouveau processus pour X5
-	//FDS 31/05/2016 renommer getLibProcessTypeCodeValues pour les distinguer de celles des processus RNA
+	//FDS 10/08/2016 renommer  en getX5WgPcrFreeLibProcessTypeCodeValues 
 	private static List<PropertyDefinition> getPropertyDefinitionsX5WgPcrFree() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
@@ -201,23 +212,23 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
-						, getDNALibProcessTypeCodeValues(), "single" ,100, null, null, null));
+						, getX5WgPcrFreeLibProcessTypeCodeValues(), "single" ,100, null, null, null));
 		
 		return propertyDefinitions;
 	}
 
-	//FDS 31/05/2016 renommer getLibProcessTypeCodeValues pour les distinguer de celles des processus RNA
-	private static List<Value> getDNALibProcessTypeCodeValues(){
+	//FDS 10/08/2016 renommer en getX5WgPcrFreeLibProcessTypeCodeValues
+	//               suppression de la valeur DD qui appartient au processus NANO)
+	private static List<Value> getX5WgPcrFreeLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
         // dans RunServiceCNG le nom reprend le code...
-         values.add(DescriptionFactory.newValue("DA","DA - DNAseq"));
-         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO-DNASeq"));
+        values.add(DescriptionFactory.newValue("DA","DA - DNAseq"));
          
-         return values;
+        return values;
 	}
 	
-	//FDS ajout 31/05/2016 pour NGL-1025: processus RNASeq
+	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq
 	private static List<PropertyDefinition> getPropertyDefinitionsRNAseq() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
@@ -233,11 +244,31 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         List<Value> values = new ArrayList<Value>();
         
         // dans RunServiceCNG le nom reprend le code...
-        /// ????? question a Julie==>  et les autres codes  RA, RB, RC ???????
-         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
-         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
-         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing
+        values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
+        values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
+        values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing
          
-         return values;
+        return values;
+	}
+	
+	//FDS ajout 10/08/2016 pour JIRA NGL-1047: processus X5_WG NANO
+	private static List<PropertyDefinition> getPropertyDefinitionsX5WgNanoDNAseq() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+	
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
+						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
+						, getX5WgNanoLibProcessTypeCodeValues(), "single" ,100, null, null, null));
+		
+		return propertyDefinitions;
+	}
+	
+	private static List<Value> getX5WgNanoLibProcessTypeCodeValues(){
+        List<Value> values = new ArrayList<Value>();
+        
+        // dans RunServiceCNG le nom reprend le code...
+        values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));   
+         
+        return values;
 	}
 }

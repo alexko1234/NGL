@@ -69,6 +69,9 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
 		lp.add(newProtocol("1a-sop-ill-pcrfree-dap-plate","1A_SOP_ILL_PCRfree_DAPplate", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
 		
+		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
+		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","pcr-and-purification","lib-normalization","prepa-fc-ordered","illumina-depot" )));
+		
 		// protocoles communs a plusieurs Experiment Types.....=> en attente....
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib")));
