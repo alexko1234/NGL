@@ -241,7 +241,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
 		// FDS pas de boutons generateSampleSheet pour la main
-		if (  $scope.experiment.instrument.categoryCode !== "hand") {
+		// FDS pas de boutons generateSampleSheet pour l'experience "pool"
+		if ( ( $scope.experiment.instrument.categoryCode !== "hand")||($scope.experiment.typeCode !== "pool")  {
 		  // FDS ajout 2eme bouton + param a la fonction generateSampleSheet....
 		  $scope.setAdditionnalButtons([{
 			  isDisabled : function(){return $scope.isNewState();} ,

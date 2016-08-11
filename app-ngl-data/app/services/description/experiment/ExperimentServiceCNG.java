@@ -245,6 +245,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
 				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :5 nouveaux exp type
+				//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO : 1 nouvelle experiment type void (toutes les autres existent déjà)
+				
 				//-- voidprocess
 				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-sequencing",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -259,6 +261,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						null ,
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+				l.add(newExperimentType("Ext to X5_WG NANO","ext-to-x5-wg-nano",null,-1,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+						null, 
+						null ,
+						"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
 				
 				//--transformation
 				l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,1100,
@@ -282,7 +292,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						"ManyToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 				
-				//-- transfert  (NOTE: pas de Node pour experiences type transfert )
+				//-- transfert  (NOTE: pas de Node a creer pour experiences type transfert )
 				
 				
 				//--Quality Control	
@@ -426,6 +436,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null,
 					null
 					).save();
+			
+			// FDS 10/08/2016 JIRA NGL-147: experience de type void ( toutes les autres existent deja)
+			newExperimentTypeNode("ext-to-x5-wg-nano",getExperimentTypes("ext-to-x5-wg-nano").get(0),
+					false,false,false,
+					null,
+					null,
+					null,
+					null
+					).save();
 		}
 	}
 
@@ -524,14 +543,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	
+	// FDS JIRA NGL-1030 Ajouter la propriété size et rendre les 2 de niveau Content et obligatoire
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
-		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+		//InputContainer ( pas d'outputContainer sur une experience QC )
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
 				"single", 11, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 12, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 13, false, null, null));

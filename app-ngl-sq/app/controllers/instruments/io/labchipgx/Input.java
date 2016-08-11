@@ -22,10 +22,11 @@ import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
-   /* Description du fichier a traiter: TXT CSV généré parlabchipGX (NGL-979:25/04/2016 ne plus gerer la taille)
-	*Well Label,Region[200-2000] Conc. (ng/ul)
-	*A01,3.7401558465
-	*A02...
+   /* Description du fichier a traiter: TXT CSV généré par labchipGX
+    * 10/08/2016 NGL-1030 la taille est de nouveau obligatoire !!
+	*Well Label,Region[200-2000] Conc. (ng/ul),Region[200-2000] Size at Maximum [BP]
+	*A01,3.7401558465,540.3455
+	*A02,...
 	*   attention les valeurs [200-2000]  sont variables ne pas les prendre en compte pour la verification
 	*   d'un entete correct
 	*/
@@ -33,7 +34,7 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
-		// hashMap  pour stocker les concentrations du fichier (NGL-979:25/04/2016 ne plus gerer la taille)
+		// hashMap  pour stocker les concentrations et size du fichier 
 		Map<String,LabChipData> dataMap = new HashMap<String,LabChipData>(0);
 		
 		InputStream is = new ByteArrayInputStream(pfv.value);
@@ -47,15 +48,25 @@ public class Input extends AbstractInput {
 			String[] fields = InputHelper.parseCSVLine (line);
 			
 			// verifier la premiere ligne d'entete
-			if ((n == 0) && ( ! line.matches("Well Label(.*)") ) ){
-				contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Well Label");
-				return experiment;
+			if (n == 0) {
+				if ( ! line.matches("Well Label(.*)") ) {
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Well Label");
+					return experiment;
+				}
+				else if ( ! line.matches("(.*)Conc.(.*)") ) {
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "*Conc*");
+					return experiment;
+				}
+				else if ( ! line.matches("(.*)Size(.*)") ) {
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "*Size*");
+					return experiment;
+				}
 			}
+			
 			// commencer le traitement en sautant la 1ere ligne d'entete
 			if (n > 0 ) {
-				// description d'une ligne de donnees: (NGL-979:25/04/2016 ne plus gerer la taille)
-				//A01,3.7401558465,551.4705882353,comment ( comments est optionnel)
-				if ( fields.length  != 2 ) {
+				// description d'une ligne de donnees: A01,3.7401558465,551.4705882353,comment (comments est optionnel)
+				if (( fields.length  < 3 )||( fields.length  > 4 )) {
 					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.linefields.unexpected",n );
 					n++;
 					continue;
@@ -67,13 +78,14 @@ public class Input extends AbstractInput {
 					n++;
 					continue;
 				} else {
-				  // position deja sur 3 caracteres pour le LabChipGX!!!
+				  // inutile car position deja sur 3 caracteres pour le LabChipGX!!!
 				  //String pos0384=InputHelper.add02pos(pos384);
 				
 				  // Attention en CSV les decimaux sont sous forme xxxx,yy si le fichier vient d'un machine avec LOCALE=FR...
-				  //Logger.info ("conc="+fields[1]+" size="+fields[2]);
-				  double concentration=Double.parseDouble(fields[1].replace(",","."));
-				  LabChipData data=new LabChipData(concentration);
+				  Logger.info ("conc="+fields[1]+" size="+fields[2]);
+				  double conc=Double.parseDouble(fields[1].replace(",","."));
+				  double sz=Double.parseDouble(fields[2].replace(",","."));
+				  LabChipData data=new LabChipData(conc,sz);
 				
 				  dataMap.put(pos384, data);
 				}
@@ -119,20 +131,26 @@ public class Input extends AbstractInput {
 						concentration1.value = dataMap.get(icupos0).concentration;
 						concentration1.unit = "ng/µl";
 					}
-										
+					// 10/08/2016 retour de la taille !!!!
+					PropertySingleValue size1 = getPSV(icu, "size1");
+					if(dataMap.containsKey(icupos0)){
+						size1.value = dataMap.get(icupos0).size;
+						size1.unit = "pb";
+					}					
 				});
 		}
 		
 		return experiment;
 	}
 	
-	/*NGL-979:25/04/2016: ne plus stocker la taille */
+	// NGL-1030: 10/08/2016: retour de la taille !!!!
 	public class LabChipData {
 		private double concentration;
+		private double size;
 		
-		public LabChipData ( double conc) {
+		public LabChipData ( double conc, double sz) {
 			concentration=conc;
-			
+			size=sz;
 		}
 	}
 
