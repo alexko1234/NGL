@@ -413,14 +413,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				var plateCells = [];
 				var wells = atmService.data.displayResult;
 				angular.forEach(wells, function(well){
-					var line = well.data.outputContainerUsed.locationOnContainerSupport.line;
-					var column = well.data.outputContainerUsed.locationOnContainerSupport.column;
+					var containerUsed = undefined;
+					if($scope.experimentType.atomicTransfertMethod === 'OneToVoid'){
+						containerUsed = well.data.inputContainerUsed;
+					}else{
+						containerUsed = well.data.outputContainerUsed;
+					}
+					
+					var line = containerUsed.locationOnContainerSupport.line;
+					var column = containerUsed.locationOnContainerSupport.column;
 					if(line && column){
 						if(plateCells[line] == undefined){
 							plateCells[line] = [];
 						}
 						var sampleCodeAndTags = [];
-						angular.forEach(well.data.outputContainerUsed.contents, function(content){
+						angular.forEach(containerUsed.contents, function(content){
 							var value = content.projectCode+" / "+content.sampleCode;
 							
 							if(content.properties && content.properties.libProcessTypeCode){
@@ -439,7 +446,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				})	
 				this.plateCells = plateCells;
 			},
-			
+			isPlate:function(){
+				if($scope.experimentType.atomicTransfertMethod === 'OneToVoid'){
+					return ($scope.experiment.instrument.inContainerSupportCategoryCode === '96-well-plate');	
+				}else{
+					return ($scope.experiment.instrument.outContainerSupportCategoryCode === '96-well-plate');
+				}
+				
+								
+			},
 			/**
 			 * Info on plate design
 			 */
@@ -450,7 +465,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			},
 			templates : {
 				buttonLineMode : ''
-					+'<div class="btn-group" style="margin-left:5px" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'">'
+					+'<div class="btn-group" style="margin-left:5px" ng-if="plateUtils.isPlate()">'
 	            	+'<button class="btn btn-default" ng-click="plateUtils.computeLineMode(atmService, 11)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i></button>'
 	            	+'<div class="btn-group" role="group">'
 	            	+'<button type="button" title="'+Messages("experiments.button.plate.computeLineMode.advanced")+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
@@ -473,7 +488,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	            	+'</div>'
 	            	+'</div>',
 				buttonColumnMode : ''
-					+'<div class="btn-group" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'">'
+					+'<div class="btn-group" ng-if="plateUtils.isPlate()">'
 	            	+'<button class="btn btn-default" ng-click="plateUtils.computeColumnMode(atmService, 7)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i></button>'
 	            	+'<div class="btn-group" role="group">'
 	            	+'<button type="button"  title="'+Messages("experiments.button.plate.computeColumnMode.advanced")+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
