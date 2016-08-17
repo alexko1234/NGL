@@ -57,9 +57,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	 */
 	public  void saveExperimentCategories(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<ExperimentCategory> l = new ArrayList<ExperimentCategory>();
-		for (ExperimentCategory.CODE code : ExperimentCategory.CODE.values()) {
-			l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, code.name(), code.name()));
-		}
+		
+		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Purification", ExperimentCategory.CODE.purification.name()));
+		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Control qualité", ExperimentCategory.CODE.qualitycontrol.name()));
+		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Transfert", ExperimentCategory.CODE.transfert.name()));
+		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Transformation", ExperimentCategory.CODE.transformation.name()));
+		l.add(DescriptionFactory.newSimpleCategory(ExperimentCategory.class, "Void process", ExperimentCategory.CODE.voidprocess.name()));
+		
 		DAOHelpers.saveModels(ExperimentCategory.class, l, errors);
 	}
 

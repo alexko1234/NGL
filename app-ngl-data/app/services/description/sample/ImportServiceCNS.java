@@ -145,20 +145,20 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("20018", "OA-018"));
 		values.add(DescriptionFactory.newValue("20023", "OA-023"));
 		//Panama second recption first august
-		values.add(DescriptionFactory.newValue("102001", "I2S1"));
-		values.add(DescriptionFactory.newValue("102001001", "I2S1C1"));
-		values.add(DescriptionFactory.newValue("102001011", "I2S1C11"));
-		values.add(DescriptionFactory.newValue("102001012", "I2S1C12"));
-		values.add(DescriptionFactory.newValue("102001002", "I2S1C2"));
-		values.add(DescriptionFactory.newValue("102001029", "I2S1C29"));
-		values.add(DescriptionFactory.newValue("102001030", "I2S1C30"));
-		values.add(DescriptionFactory.newValue("102001031", "I2S1C31"));
-		values.add(DescriptionFactory.newValue("102001032", "I2S1C32"));
-		values.add(DescriptionFactory.newValue("102003", "I2S3"));
-		values.add(DescriptionFactory.newValue("102003001", "I2S3C1"));
-		values.add(DescriptionFactory.newValue("102003010", "I2S3C10"));
-		values.add(DescriptionFactory.newValue("102003101", "I2S3F1"));
-		values.add(DescriptionFactory.newValue("102003102", "I2S3F2"));
+		values.add(DescriptionFactory.newValue("102001", "I02S01"));
+		values.add(DescriptionFactory.newValue("102001001", "I02S01C01"));
+		values.add(DescriptionFactory.newValue("102001011", "I02S01C11"));
+		values.add(DescriptionFactory.newValue("102001012", "I02S01C12"));
+		values.add(DescriptionFactory.newValue("102001002", "I02S01C02"));
+		values.add(DescriptionFactory.newValue("102001029", "I02S01C29"));
+		values.add(DescriptionFactory.newValue("102001030", "I02S01C30"));
+		values.add(DescriptionFactory.newValue("102001031", "I02S01C31"));
+		values.add(DescriptionFactory.newValue("102001032", "I02S01C32"));
+		values.add(DescriptionFactory.newValue("102003", "I02S03"));
+		values.add(DescriptionFactory.newValue("102003001", "I02S03C01"));
+		values.add(DescriptionFactory.newValue("102003010", "I02S03C10"));
+		values.add(DescriptionFactory.newValue("102003101", "I02S03F01"));
+		values.add(DescriptionFactory.newValue("102003102", "I02S03F02"));
 		
 		
 		return values;	

@@ -298,6 +298,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 			}
 			
 		}
+		instruments.add(createInstrument("thermoX", "Thermo_X", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 		return instruments;
 	}
 

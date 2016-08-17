@@ -1259,16 +1259,31 @@ angular.module('commonsServices', []).
     	    	return data;
     	    };
     	}]).filter('codes', function(){
-    		return function(input, key){
+    		return function(input, key, replaceIfNotFound){
+    			
+    			if(null === replaceIfNotFound || undefined === replaceIfNotFound){
+    				replaceIfNotFound = true;
+    			}
+    			
     			if(angular.isArray(input) && input.length > 0){
     				var output = [];
     				for(var i=0;i<input.length;i++){
-    					output[i] = Messages(Codes(key+"."+input[i]));
+    					var tmp = Messages(Codes(key+"."+input[i]));
+    					if(tmp === key+"."+input[i] && replaceIfNotFound){
+    						output[i] = tmp;
+    					}else{
+    						output[i] = input[i];
+    					}
+    					
     				}
     			
     				return output;
     			}else if(angular.isDefined(input) && null !== input && input !== "" && !angular.isObject(input)){ 
-    				return Messages(Codes(key+"."+input));    				
+    				var tmp = Messages(Codes(key+"."+input))
+    				if(tmp === key+"."+input && !replaceIfNotFound){
+    					tmp = input;
+					}
+    				return tmp;    				
     			}
     			return undefined;
     		}
