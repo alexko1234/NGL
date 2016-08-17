@@ -117,4 +117,41 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		
 	}
 	
+	
+	var importData = function(){
+		$scope.messages.clear();
+		
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		.success(function(data, status, headers, config) {
+			$scope.messages.clazz="alert alert-success";
+			$scope.messages.text=Messages('experiments.msg.import.success');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();	
+			//only atm because we cannot override directly experiment on scope.parent
+			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+			$scope.$emit('refresh');
+			
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.open();	
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+		});
+	};
+	
+	$scope.button = {
+		isShow:function(){
+			return ("fluoroskan" === $scope.experiment.instrument.typeCode && $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			},
+		isFileSet:function(){
+			return ($scope.file === undefined)?"disabled":"";
+		},
+		click:importData,		
+	};
+	
 }]);
