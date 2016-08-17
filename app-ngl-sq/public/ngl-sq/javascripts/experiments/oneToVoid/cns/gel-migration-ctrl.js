@@ -59,7 +59,7 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 	columns.push({
 		"header" : Messages("containers.table.sampleTypes"),
 		"property" : "inputContainer.contents",
-		"filter" : "getArray:'sampleTypeCode' | unique",
+		"filter" : "getArray:'sampleTypeCode' | unique | codes:'type'",
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
