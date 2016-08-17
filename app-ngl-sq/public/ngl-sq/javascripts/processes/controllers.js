@@ -59,7 +59,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			 		{
 						"header":Messages("containers.table.sampleCodes"),
 						"property":"sampleCodes",
-						"order":false,
+						"order":true,
 						"hide":true,
 						"type":"text",
 						"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",

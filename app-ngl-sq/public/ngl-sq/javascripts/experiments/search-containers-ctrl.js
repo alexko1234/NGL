@@ -53,7 +53,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		{
 			"header":Messages("containers.table.projectCodes"),
 			"property":"projectCodes",
-			"order":false,
+			"order":true,
 			"hide":true,
 			"position":6,					
 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
@@ -72,7 +72,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		{
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
-			"order":false,
+			"order":true,
 			"hide":true,
 			"hide":true,
 			"position":8,
