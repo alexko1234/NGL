@@ -44,7 +44,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 		l.add(newExperimentType("Fragmentation","fragmentation","FRG",780,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and covaris-e220"),"OneToOne", 
+				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and-covaris-e220"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
 		l.add(newExperimentType("Ext to MetaT bq RNA","ext-to-rna-lib-transcriptomic-process",null,-1,

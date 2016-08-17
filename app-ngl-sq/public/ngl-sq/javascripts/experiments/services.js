@@ -261,6 +261,7 @@
 				},
 				changeExperimentType : function(){											
 					lists.refresh.instruments({"experimentTypes":this.form.typeCode}, "instruments-search-list");
+					this.form.instruments = undefined;
 				},
 				
 				changeProcessCategory : function(){

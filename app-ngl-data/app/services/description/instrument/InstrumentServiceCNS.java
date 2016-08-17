@@ -279,7 +279,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getThermoBiomekProperties(),	getInstrumentBiomekFx() 
 				,getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Biomek FX + Covaris E220", "biomek-fx-and covaris-e220", InstrumentCategory.find.findByCode("liquid-handling-robot-and-covaris"),  getBiomekCovarisProperties(),getInstrumentBiomekCovaris() 
+		l.add(newInstrumentUsedType("Biomek FX + Covaris E220", "biomek-fx-and-covaris-e220", InstrumentCategory.find.findByCode("liquid-handling-robot-and-covaris"),  getBiomekCovarisProperties(),getInstrumentBiomekCovaris() 
 				,getContainerSupportCategories(new String[]{"96-well-plate","tube"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);

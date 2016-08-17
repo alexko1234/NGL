@@ -8,6 +8,7 @@ import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.laboratory.instrument.instance.InstrumentUsed;
+import models.utils.DescriptionHelper;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.DynamicForm;
@@ -71,7 +72,9 @@ public class IO extends TPLCommonController {
 
 
 	private String getClassName(Experiment experiment, String type) {
-		return "controllers.instruments.io."+experiment.instrument.typeCode.toLowerCase().replace("-", "")+"."+type;
+		String institute = DescriptionHelper.getInstitute().get(0).toLowerCase();
+		
+		return "controllers.instruments.io."+institute+"."+experiment.instrument.typeCode.toLowerCase().replace("-", "")+"."+type;
 	}
 	
 	public Result generateFile(String experimentCode){
