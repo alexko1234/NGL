@@ -137,14 +137,51 @@ public class ImportServiceCNS extends AbstractImportService {
 
 	private static List<Value> getTaraPacificStationValues(){
 		List<Value> values = new ArrayList<Value>();
-		//Miami first reception end june
-		values.add(DescriptionFactory.newValue("20004", "OA-004"));
-		values.add(DescriptionFactory.newValue("20005", "OA-005"));
-		values.add(DescriptionFactory.newValue("20009", "OA-009"));
-		values.add(DescriptionFactory.newValue("20010", "OA-010"));
-		values.add(DescriptionFactory.newValue("20018", "OA-018"));
-		values.add(DescriptionFactory.newValue("20023", "OA-023"));
+		//Miami first reception end june 
+		//toutes les OA-001 à 027
+		
+		for(int i = 1; i <= 27; i++){
+			if(i < 10){
+				values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
+			}else{
+				values.add(DescriptionFactory.newValue("200"+i, "OA-0"+i));
+			}
+			
+		}
+		
 		//Panama second recption first august
+		//toutes les stations des îles 01 à 20, pour les sites 01 à 03, pour les colonies 01 à 40
+		//version 6 et version 9 I01S01 et I01S01C01 à I01S01C40
+		
+		values.add(DescriptionFactory.newValue("100000000", "I00S00C00"));	
+		for(int i = 1; i <= 20; i++){
+			String ile = (i < 10)?"0"+i:""+i;
+			for(int j = 1; j <= 3; j++){
+				String site = "0"+j;
+				values.add(DescriptionFactory.newValue("1"+ile+"0"+site, "I"+ile+"S"+site));
+				for(int k = 1; k <= 40; k++){
+					String colonnie = (k < 10)?"0"+k:""+k;
+					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"0"+colonnie, "I"+ile+"S"+site+"C"+colonnie));					
+				}
+			}
+		}
+		
+		//toutes les stations des îles 01 à 20, pour les sites 01 à 03, pour les fish 01 à 10
+		//version 9
+		//I01S01F01 à I01S01F10
+		values.add(DescriptionFactory.newValue("100000100", "I00S00F00"));	
+		for(int i = 1; i <= 20; i++){
+			String ile = (i < 10)?"0"+i:""+i;
+			for(int j = 1; j <= 3; j++){
+				String site = "0"+j;
+				for(int k = 1; k <= 10; k++){
+					String fish = (k < 10)?"0"+k:""+k;
+					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"1"+fish, "I"+ile+"S"+site+"F"+fish));					
+				}
+			}
+		}
+		
+		/*
 		values.add(DescriptionFactory.newValue("102001", "I02S01"));
 		values.add(DescriptionFactory.newValue("102001001", "I02S01C01"));
 		values.add(DescriptionFactory.newValue("102001011", "I02S01C11"));
@@ -159,7 +196,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("102003010", "I02S03C10"));
 		values.add(DescriptionFactory.newValue("102003101", "I02S03F01"));
 		values.add(DescriptionFactory.newValue("102003102", "I02S03F02"));
-		
+		*/
 		
 		return values;	
 	}
