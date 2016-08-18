@@ -75,7 +75,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			}, _profilsMap);
 		
 		}
-		angular.element('#importFile')[0].value = null;
+		angular.element('#importProfils')[0].value = null;
 		
 	})
 	$scope.$watch("instrumentType", function(newValue, OldValue){
@@ -147,5 +147,42 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		isShow:function(){
 			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
 			}	
+	};
+	
+	
+	var importData = function(){
+		$scope.messages.clear();
+		
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		.success(function(data, status, headers, config) {
+			$scope.messages.clazz="alert alert-success";
+			$scope.messages.text=Messages('experiments.msg.import.success');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();	
+			//only atm because we cannot override directly experiment on scope.parent
+			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+			$scope.$emit('refresh');
+			
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.open();	
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+		});
+	};
+	
+	$scope.importButton = {
+		isShow:function(){
+			return ("labchip-gx" === $scope.experiment.instrument.typeCode && $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			},
+		isFileSet:function(){
+			return ($scope.file === undefined)?"disabled":"";
+		},
+		click:importData,		
 	};
 }]);

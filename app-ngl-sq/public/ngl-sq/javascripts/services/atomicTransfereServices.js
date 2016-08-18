@@ -493,7 +493,7 @@ angular.module('atomicTransfereServices', [])
 							atomicIndex++;
 						}
 						
-						if(allData[0].inputContainer.categoryCode === 'well'){
+						if(allData[0] && allData[0].inputContainer.categoryCode === 'well'){
 							allData = $filter('orderBy')(allData, ['inputContainer.support.column*1', 'inputContainer.support.line']);
 						}else{
 							allData = $filter('orderBy')(allData,'inputContainer.support.code');

@@ -1,135 +1,8 @@
-angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'atmToGenerateMany','lists','mainService',
-                                                               function($scope, $parse, atmToGenerateMany,lists,mainService) {
+angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$filter', 'atmToSingleDatatable','lists','mainService',
+                                                               function($scope, $parse, $filter, atmToSingleDatatable,lists,mainService) {
 	
-	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
-	var datatableConfigTubeParam = {
-		// peut etre exporté CSV ??
-         name: $scope.experiment.typeCode+'_PARAM'.toUpperCase(),
-         columns:[   
-         		 {
-                 	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },	
-			         /*
-			         {
-			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":2,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-				     },
-				     {
-			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":3,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-				     },
-				     {
-			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
-			        	 "property":"inputContainer.fromTransformationTypeCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
-			        	 "position":4,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":6,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":7,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         */
-			         {
-			        	 "header":Messages("containers.table.outputNumber"),
-			        	 "property":"experimentType.sampleTypeCodes",
-			        	 "order":false,
-						 "edit":true,
-						 "hide":false,
-			        	 "type":"text",						
-			        	 "position":8,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         }
-			         
-			         ],
-			compact:true,
-			showTotalNumberRecords:false,
-			pagination:{
-				active:false
-			},		
-			search:{
-				active:false
-			},
-			order:{
-				mode:'local', //or 
-				active:true,
-				by:'inputContainer.code'
-			},
-			remove:{
-				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				mode:'local'
-			},
-			save:{
-				active:true,
-				withoutEdit: true,
-				keepEdit:true,
-				changeClass : false,
-				mode:'local',
-				showButton:false
-			},			
-			select:{
-				active:true
-			},
-			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				byDefault:($scope.isCreationMode()),
-				columnMode:true
-			},
-			cancel : {
-				active:true
-			},
-			extraHeaders:{
-				number:1,
-				dynamic:true,
-			}
 
-	};	
-	
-	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
-	// NGL-1055: mettre getArray et codes '' dans filter et pas dans render
-	var datatableConfigTubeConfig =  {
+	var datatableConfig =  {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   
 					 {
@@ -341,61 +214,42 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");
-		$scope.atmService.viewToExperiment($scope.experiment);
+		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh on tube-to-tubes");
-		
-		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
-		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
-		dtConfig.edit.byDefault = false;
-		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
-		$scope.atmService.data.datatableParam.setConfig(dtConfig);
-		
-		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
+		console.log("call event refresh");		
+		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
-		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
-		
+		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 	
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");
-		$scope.atmService.data.datatableParam.cancel();
-		$scope.atmService.data.datatableConfig.cancel();
-				
+		$scope.atmService.data.cancel();
+		
 		if($scope.isCreationMode()){
-			var dtConfig = $scope.atmService.data.datatableParam.getConfig();
+			var dtConfig = $scope.atmService.data.getConfig();
 			dtConfig.edit.byDefault = false;
-			$scope.atmService.data.datatableParam.setConfig(dtConfig);
-			
-			dtConfig = $scope.atmService.data.datatableConfig.getConfig();
-			dtConfig.edit.byDefault = false;
-			$scope.atmService.data.datatableConfig.setConfig(dtConfig);
+			$scope.atmService.data.setConfig(dtConfig);
 		}
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
 		console.log("call event activeEditMode");
-		$scope.atmService.data.datatableParam.selectAll(true);
-		$scope.atmService.data.datatableParam.setEdit();
-		
-		$scope.atmService.data.datatableConfig.selectAll(true);
-		$scope.atmService.data.datatableConfig.setEdit();
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
 	});
 	
 	
-	var atmService = atmToGenerateMany($scope, datatableConfigTubeParam, datatableConfigTubeConfig);
-	//var atmService = atmToSingleDatatable($scope, datatableConfigTubeConfig);
-	//defined new atomictransfertMethod
+	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	atmService.newAtomicTransfertMethod = function(){
 		return {
 			class:"OneToMany",
@@ -412,7 +266,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			quantity:"ng"
 	}
 	
-	atmService.$atmToSingleDatatable.convertOutputPropertiesToDatatableColumn = function(property, pName){
+	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
 		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 		if(property.code=="projectCode"){
 			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.projects")+'" bt-options="project.code as project.code+\' (\'+project.name+\')\' for project in lists.getProjects()" ></div>';			
@@ -421,7 +275,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		}
 		return column;
 	};
-		
+		/*
 	atmService.addNewAtomicTransfertMethodsInData = function(){
 		if(null != mainService.getBasket() && null != mainService.getBasket().get()){
 			$that = this;
@@ -453,7 +307,50 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			});
 		}		
 	};
+	*/
 	
+	atmService.addNewAtomicTransfertMethodsInDatatable = function(){
+		if(null != mainService.getBasket() && null != mainService.getBasket().get() && this.isAddNew){
+			$that = this;
+			
+			var type = $that.newAtomicTransfertMethod().class;
+			
+			$that.$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+				.then(function(containers) {								
+					var allData = [], i = 0;
+					
+					
+					angular.forEach(containers, function(container){
+						var tmpLine = {};
+						tmpLine.atomicTransfertMethod = $that.newAtomicTransfertMethod(container.support.line, container.support.column);
+						tmpLine.atomicIndex=i++;
+							
+						tmpLine.inputContainer = container;
+						tmpLine.inputContainerUsed = $that.$commonATM.convertContainerToInputContainerUsed(tmpLine.inputContainer);
+						
+						for(var j = 0; j < $scope.experimentType.sampleTypes.length ; j++){
+							var line = {};
+							line.atomicTransfertMethod = tmpLine.atomicTransfertMethod;
+							line.atomicIndex = tmpLine.atomicIndex;
+							line.inputContainer = tmpLine.inputContainer;
+							line.inputContainerUsed = tmpLine.inputContainerUsed;
+							line.outputContainerUsed = $that.$commonATM.newOutputContainerUsed($that.defaultOutputUnit,$that.defaultOutputValue,line.atomicTransfertMethod.line,
+									line.atomicTransfertMethod.column,line.inputContainer);
+							
+							var value = $scope.experimentType.sampleTypes[j].code;
+							var setter = $parse("experimentProperties.sampleTypeCode.value").assign;
+							setter(line.outputContainerUsed, value);
+							
+							line.outputContainer = undefined;
+							allData.push(line);
+						}						
+					});
+					
+					allData = $filter('orderBy')(allData,'inputContainer.support.code');
+					$that.data.setData(allData, allData.length);											
+			});
+		}					
+	};
 	
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);					

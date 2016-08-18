@@ -1,4 +1,4 @@
-package controllers.instruments.io.cng.miseqqcmode;
+package controllers.instruments.io.cns.labchipgx;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,7 +24,7 @@ public class Input extends AbstractInput {
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
 		
-		
+		String plateCodeInExp = experiment.inputContainerSupportCodes.iterator().next();
 		InputStream is = new ByteArrayInputStream(pfv.value);
 		
 		CSVReader reader = new CSVReader(new InputStreamReader(is));
@@ -33,8 +33,7 @@ public class Input extends AbstractInput {
 		Map<String, String[]> allMap = new HashMap<String, String[]>();
 		
 		all.forEach(array -> {
-			//Logger.debug(Arrays.asList(array).toString());
-			allMap.put(array[2], array);
+			allMap.put(plateCodeInExp+"_"+array[0], array);
 		});
 		reader.close();
 		
@@ -43,11 +42,9 @@ public class Input extends AbstractInput {
 			if(allMap.containsKey(icu.code)){
 				String[] data = allMap.get(icu.code);
 				
-				PropertySingleValue clusterDensity = getPSV(icu, "clusterDensity");
-				clusterDensity.value = Integer.parseInt(data[3]);
-				
-				PropertySingleValue measuredInsertSize = getPSV(icu, "measuredInsertSize");
-				measuredInsertSize.value = Integer.parseInt(data[8]);
+				PropertySingleValue measuredSize = getPSV(icu, "measuredSize");
+				measuredSize.value = Math.round(Double.valueOf(data[1]));
+				measuredSize.unit="pb";
 			}			
 		});
 				

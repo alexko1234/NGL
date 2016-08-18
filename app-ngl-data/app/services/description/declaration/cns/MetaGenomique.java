@@ -25,12 +25,6 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to  MetaGénomique (bq sizée)","ext-to-metagenomic-process-with-sizing",null,-1,
@@ -41,9 +35,12 @@ public class MetaGenomique extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		
-		
 		return l;
+	}
+
+	@Override
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		return null;
 	}
 
 	@Override
@@ -60,12 +57,6 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 
 		l.add(DescriptionFactory.newProcessType("MetaGénomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaGenomique(),
@@ -91,8 +82,13 @@ public class MetaGenomique extends AbstractDeclaration {
 						, getPET("prepa-flowcell",5)
 						, getPET("prepa-fc-ordered",5)
 						, getPET("illumina-depot",6)), 
-				getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		return null;
 	}
 
 	private List<PropertyDefinition> getPropertiesMetaGenomiqueWithSizing() {
@@ -134,14 +130,13 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeCommon() {
-		// TODO Auto-generated method stub
+		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
 		
 	}
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
 		
 		
 	}

@@ -76,6 +76,8 @@ public class InputHelper {
 
 	// Author: Nicolas Wiart
 	// retourne un tableau a partir d'une ligne au format CSV
+	// used CSVReader
+	@Deprecated 
 	public static String[] parseCSVLine(String s) {
 	  int start = 0;
 	  int end = 0;
