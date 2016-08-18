@@ -61,8 +61,8 @@
 					columns.push({	"property":"productionValuation.resolutionCodes",
 									"header":Messages("readsets.productionValuation.resolutions"),
 									"filter":"codes:'resolution'",
-									"groupMethod":"unique",
-									"render":'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"groupMethod":"collect",
+									"render":'<div bt-select ng-model="cellValue" bt-options="valid.name as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									"type":"text",
 									"hide":true,
 									"position":72
@@ -79,8 +79,8 @@
 					columns.push({	"property":"bioinformaticValuation.resolutionCodes",
 									"header":Messages("readsets.bioinformaticValuation.resolutions"),
 									"filter":"codes:'resolution'",
-									"groupMethod":"unique",
-									"render":'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"groupMethod":"collect",
+									"render":'<div bt-select ng-model="cellValue" bt-options="valid.name as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
 									"type":"text",
 									"hide":true,
 									"position":82
