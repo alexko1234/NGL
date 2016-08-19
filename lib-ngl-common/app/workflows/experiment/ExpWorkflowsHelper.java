@@ -1029,6 +1029,19 @@ public class ExpWorkflowsHelper {
 		
 	}
 
+	public void updateNewSampleInContentsIfNeeded(Experiment exp,
+			ContextValidation validation) {
+		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+		if(experimentType.newSample){	
+			exp.atomicTransfertMethods
+				.stream()
+				.map(atm -> atm.outputContainerUseds)
+				.flatMap(List::stream)
+				.forEach(ocu -> updateContents(ocu));
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));			
+		}
+	}
+	
 	/**
 	 * Create new sample code for the output containers in case we want to create another sample
 	 * @param exp
@@ -1051,7 +1064,7 @@ public class ExpWorkflowsHelper {
 					}
 					
 				})
-				.map(ocu -> {
+				.forEach(ocu -> {
 					Map<String,PropertyValue> experimentProperties = ocu.experimentProperties;
 					
 					if(experimentProperties.containsKey("sampleTypeCode") 
@@ -1062,11 +1075,10 @@ public class ExpWorkflowsHelper {
 						String newSampleCode=CodeHelper.getInstance().generateSampleCode(nextProjectCode);
 						ocu.experimentProperties.put("sampleCode", new PropertySingleValue(newSampleCode));
 						
-						
+					
 					}
-					return ocu;
-				})
-				.forEach(ocu -> updateContents(ocu));
+					updateContents(ocu);
+				});
 			
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));			
 		}
@@ -1076,7 +1088,7 @@ public class ExpWorkflowsHelper {
 	public void createNewSamplesIfNeeded(Experiment exp, ContextValidation validation){
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 		if(experimentType.newSample){
-			//validation.putObject(NEW_SAMPLE_CODES, new HashSet<String>());
+			validation.putObject(NEW_SAMPLE_CODES, new HashSet<String>());
 			
 			exp.atomicTransfertMethods
 			.stream()
@@ -1190,6 +1202,9 @@ public class ExpWorkflowsHelper {
 		
 		return lifeSample;
 	}
+
+
+	
 
 	
 

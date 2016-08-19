@@ -86,7 +86,6 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
 			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);				
 			expWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);
-			
 			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
 				expWorkflowsHelper.updateInputContainers(exp, validation);
 			}
@@ -105,10 +104,10 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		if("N".equals(nextState.code)){
 			
 		} else if("IP".equals(nextState.code)){			
-			//expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation); //TODO Need to clean the output container and replace new sample by old sample
+			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation); //TODO Need to clean the output container and replace new sample by old sample
 		}else if("F".equals(nextState.code)){
 			expWorkflowsHelper.deleteOutputContainerSupports(exp, errorValidation);
-			//expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
+			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
 		}
 		
 		if(errorValidation.hasErrors()){

@@ -148,7 +148,7 @@ public class ImportServiceCNS extends AbstractImportService {
 			}
 			
 		}
-		
+		values.add(DescriptionFactory.newValue("20999", "OA-999"));
 		//Panama second recption first august
 		//toutes les stations des îles 01 à 20, pour les sites 01 à 03, pour les colonies 01 à 40
 		//version 6 et version 9 I01S01 et I01S01C01 à I01S01C40
