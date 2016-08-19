@@ -53,7 +53,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 		l.add(newExperimentType("Banque RNA","rna-illumina-indexed-library","LIB",830,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsRNAIlluminaIndexedLibrary(),
-				AbstractExperimentService.getInstrumentUsedTypes("thermocycler-and-biomek-fx","hand"),"OneToOne", null,true,
+				AbstractExperimentService.getInstrumentUsedTypes("thermocycler-and-biomek-fx","thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		

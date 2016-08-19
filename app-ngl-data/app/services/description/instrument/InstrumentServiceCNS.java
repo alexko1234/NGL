@@ -289,7 +289,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<Instrument> getThermocyclerInstruments() {
 		List<Instrument> instruments = new ArrayList<Instrument>();
-		for(int i = 1; i <= 39; i++){
+		for(int i = 1; i <= 42; i++){
 			if(i < 10){
 				instruments.add(createInstrument("thermo0"+i, "Thermo_0"+i, null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 				
 			}else{
