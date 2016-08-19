@@ -493,6 +493,11 @@ docs.illumina=Séquençage Illumina
 docs.nanopore=Séquençage Nanopore
 docs.opticalmapping.opgen=Optical mapping Opgen
 docs.opticalmapping.bionano=Optical mapping BioNano
+docs.sample_prep=Prep. Ech > Extraction ADN-ARN
+docs.bank.metabarcoding=Banque > MetaBarcoding
+docs.bank.metatranscriptomique=Banque > MetaTranscriptomique
+docs.bank.metabargenomique=Banque > MetaGenomique
+				
 
 #button
 button.search = Rechercher

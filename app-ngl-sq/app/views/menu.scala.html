@@ -61,8 +61,14 @@
 	  						<li class="dropdown @("active".when(nav.startsWith("help")))">
 	  							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="help">
-									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL_SQ_Illumina.pdf")" target="doc">@Messages("docs.illumina")</a></li>
-									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL_SQ_Nanopore.pdf")" target="doc">@Messages("docs.nanopore")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Illumina.pdf")" target="doc">@Messages("docs.illumina")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Schéma_Processus_Extraction_ADN-ARN.pdf")" target="doc">@Messages("docs.sample_prep")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Schéma_Processus_MetaBarcoding.pdf")" target="doc">@Messages("docs.bank.metabarcoding")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Schéma_Processus_MetaTranscriptomique.pdf")" target="doc">@Messages("docs.bank.metatranscriptomique")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Schéma_Processus_MetaGenomique.pdf")" target="doc">@Messages("docs.bank.metabargenomique")</a></li>
+									
+									
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Nanopore.pdf")" target="doc">@Messages("docs.nanopore")</a></li>
 									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Opgen.pdf")" target="doc">@Messages("docs.opticalmapping.opgen")</a></li>
 									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Bionano.pdf")" target="doc">@Messages("docs.opticalmapping.bionano")</a></li>																		
 								</ul>
