@@ -215,6 +215,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		
 	}
 	
+
 	var computeTagCategory = function(udtData){
 		var getter = $parse("outputContainerUsed.experimentProperties.tagCategory.value");
 		var tagCategory = getter(udtData);
@@ -240,6 +241,63 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		}
 		
 	}
+	
+	
+	var populateIndexPlate = function(startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var j=0; j < lines.length; j++){
+			var line = lines[j];
+			for(var i = 1 ; i <= 12; i++){
+				var pos = currentIndex+i-1;
+				var indexName = null;
+				if(pos < 10){
+					indexName = "12BA00"+pos;
+				}else if(pos < 100){
+					indexName = "12BA0"+pos;
+				}else {
+					indexName = "12BA"+pos;
+				}
+				values[line+i]=indexName;
+			}
+			currentIndex = currentIndex+12;
+		}
+		return values
+	}
+	$scope.indexPlates = [];
+	//12BA001-12BA096 ; 12BA097-12BA192 ; 12BA193-12BA288 ; 12BA289-12BA384
+	
+	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndexPlate(1, 96)});
+	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndexPlate(97, 192)});
+	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndexPlate(193, 288)});
+	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndexPlate(289, 384)});
+	
+	$scope.updatePlateWithIndex = function(selectedPlateIndex){
+		console.log("choose : "+selectedPlateIndex);
+		var getter = $parse("experimentProperties.tag.value");
+		var wells = atmService.data.displayResult;
+		angular.forEach(wells, function(well){
+			var outputContainerUsed = well.data.outputContainerUsed;;
+			var pos = outputContainerUsed.locationOnContainerSupport.line+outputContainerUsed.locationOnContainerSupport.column;
+			if(selectedPlateIndex){
+				var index = selectedPlateIndex[pos];
+				if(index){
+					getter.assign(outputContainerUsed,index);
+				}else{
+					getter.assign(outputContainerUsed,null);
+				}
+			}else{
+				getter.assign(outputContainerUsed,null);
+			}
+			computeTagCategory(well.data);
+									
+		})	
+		
+		
+	};
 	
 	
 	//Init		
