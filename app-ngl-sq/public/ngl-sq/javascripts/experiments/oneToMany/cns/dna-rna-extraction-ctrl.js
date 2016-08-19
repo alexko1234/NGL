@@ -214,6 +214,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");
+		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
@@ -319,6 +320,10 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 				.then(function(containers) {								
 					var allData = [], i = 0;
 					
+					if($that.data.getData() !== undefined && $that.data.getData().length > 0){
+						allData = $that.data.getData();
+						i = allData.length;
+					}
 					
 					angular.forEach(containers, function(container){
 						var tmpLine = {};
