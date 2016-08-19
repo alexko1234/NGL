@@ -1076,7 +1076,7 @@ public class ExpWorkflowsHelper {
 	public void createNewSamplesIfNeeded(Experiment exp, ContextValidation validation){
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 		if(experimentType.newSample){
-			validation.putObject(NEW_SAMPLE_CODES, new HashSet<String>());
+			//validation.putObject(NEW_SAMPLE_CODES, new HashSet<String>());
 			
 			exp.atomicTransfertMethods
 			.stream()

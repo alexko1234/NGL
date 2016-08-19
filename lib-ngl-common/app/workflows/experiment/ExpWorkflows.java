@@ -105,10 +105,10 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		if("N".equals(nextState.code)){
 			
 		} else if("IP".equals(nextState.code)){			
-			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
+			//expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation); //TODO Need to clean the output container and replace new sample by old sample
 		}else if("F".equals(nextState.code)){
 			expWorkflowsHelper.deleteOutputContainerSupports(exp, errorValidation);
-			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
+			//expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation);
 		}
 		
 		if(errorValidation.hasErrors()){
