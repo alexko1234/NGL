@@ -28,7 +28,12 @@ public class Output extends AbstractOutput {
 		if ( "tube".equals(experiment.instrument.inContainerSupportCategoryCode)
 				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			// feuille de route specifique pour les pools de plaques -> plaque
-			content = OutputHelper.format(tubes_to_plate.render(getPlateSampleSheetLines(experiment)).body());
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
+		} else if ("96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode)
+				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
+			// feuille de route specifique pour les pools de plaques -> plaque
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
+
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
@@ -44,15 +49,15 @@ public class Output extends AbstractOutput {
 	}
 
 	
-	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment) {
+	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory) {
 		
 		return experiment.atomicTransfertMethods
 			.parallelStream()
-			.map(atm -> getPlateSampleSheetLine(atm))
+			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory))
 			.collect(Collectors.toList());		
 	}
 
-	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm) {
+	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory) {
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 		
@@ -66,8 +71,13 @@ public class Output extends AbstractOutput {
 		
 		pssl.dwell = OutputHelper.getNumberPositionInPlateByLine(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
 		
-		pssl.sourceADN = getSourceADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
-		pssl.swellADN = getSwellADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
+		if("tube".equals(inputContainerCategory)){
+			pssl.sourceADN = getSourceADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
+			pssl.swellADN = getSwellADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
+		}else if("plate".equals(inputContainerCategory)){
+			pssl.sourceADN = "plaque IN";
+			pssl.swellADN = OutputHelper.getNumberPositionInPlateByLine(icu.locationOnContainerSupport.line, icu.locationOnContainerSupport.column);
+		}
 		
 		return pssl;
 	}
