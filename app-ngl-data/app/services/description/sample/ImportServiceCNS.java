@@ -140,7 +140,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		//Miami first reception end june 
 		//toutes les OA-001 à 027
 		
-		for(int i = 1; i <= 27; i++){
+		for(int i = 0; i <= 27; i++){
 			if(i < 10){
 				values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
 			}else{
