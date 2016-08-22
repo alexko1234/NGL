@@ -101,6 +101,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("fluo-dosage","dosage_fluo","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification")));
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+		
+		
+		
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
 
 		
@@ -110,7 +113,11 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Tag16S_V4V5_Fuhrmann","Tag16S V4V5 Fuhrmann","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 
 		
-		lp.add(newProtocol("Amplif_ptr_Sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
+		lp.add(newProtocol("amplif_ptr_sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
+		lp.add(newProtocol("amplif_nebnext_ultraii_ptr_151_1","Amplif_NebNext_UltraII ptr 151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
+		
+		
+		
 		lp.add(newProtocol("Amplif_ptr_Sox_144-4newProtocol","Amplif ptr Sox 144-4newProtocol","path2","1","production",InstanceFactory.setExperimentTypeCodes("sizing")));
 		
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
@@ -130,7 +137,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded Proc","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
 				concatMap(newPSV("rnaLibProtocol","TruSeq Stranded Proc"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		
-		lp.add(newProtocol("smarter_stranded","Smarter Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
+		lp.add(newProtocol("smarter_stranded","Smarter Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter Stranded"),newPSV("strandOrientation","forward"),newPSV("cDNAsynthesisType","random"))));
 		/*
 		lp.add(newProtocol("indac","Indac","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
