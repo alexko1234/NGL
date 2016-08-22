@@ -237,6 +237,9 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 				transformKey: function(key, args) {
                     return Messages(key, args);
                 }
+		},
+		exportCSV:{
+			active:true
 		}
 	};
 	
