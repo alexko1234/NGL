@@ -268,10 +268,22 @@ public class ExpWorkflowsHelper {
 
 		return removeContainersCodes;
 	}
-
+	/**
+	 * Update ouput container code but not generate if null
+	 * Used when user change plate line or column
+	 * @param exp
+	 */
 	public void updateOutputContainerCode(Experiment exp) {
 		ContainerSupportCategory outputCsc = ContainerSupportCategory.find.findByCode(exp.instrument.outContainerSupportCategoryCode);
 		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> atm.updateOutputCodeIfNeeded(outputCsc, null));
+	}
+	
+	/**
+	 * Update only content
+	 * @param exp
+	 */
+	public void updateOutputContainerContents(Experiment exp) {
+		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsedContents(exp, atm));
 	}
 	
 	/**
@@ -303,15 +315,21 @@ public class ExpWorkflowsHelper {
 		if(atm.outputContainerUseds != null){
 			atm.updateOutputCodeIfNeeded(outputCsc, supportCode);
 			if(!justContainerCode){
-				atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
-					ocu.contents = getContents(exp, atm, ocu);
-					if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
-					if(ocu.concentration != null && ocu.concentration.value == null)ocu.concentration=null;
-					if(ocu.quantity != null && ocu.quantity.value == null)ocu.quantity=null;
-					if(ocu.size != null && ocu.size.value == null)ocu.size=null;
-				});
+				updateOutputContainerUsedContents(exp, atm);
 			}
 		}		
+	}
+
+
+	private void updateOutputContainerUsedContents(Experiment exp,
+			AtomicTransfertMethod atm) {
+		atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
+			ocu.contents = getContents(exp, atm, ocu);
+			if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
+			if(ocu.concentration != null && ocu.concentration.value == null)ocu.concentration=null;
+			if(ocu.quantity != null && ocu.quantity.value == null)ocu.quantity=null;
+			if(ocu.size != null && ocu.size.value == null)ocu.size=null;
+		});
 	}
 
 	private Set<String> getFromTransformationTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
