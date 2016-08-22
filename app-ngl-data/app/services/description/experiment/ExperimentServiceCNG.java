@@ -164,12 +164,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		/** Quality Control, ordered by display order **/
 		
 		// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
-				l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 100,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
-						getPropertyDefinitionsChipMigration(), 
-						getInstrumentUsedTypes("labChipGX"),
-						"OneToVoid", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+				getPropertyDefinitionsChipMigration(), 
+				getInstrumentUsedTypes("labChipGX"),
+				"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 		//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
 		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null, 200,
@@ -339,16 +339,35 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, null, null
 				).save();			
 			
-		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
-		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
-		// ATTENTION PROJET DE RENOMMAGE de "prep-pcr-free"....
-		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
-				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),
-				null,
-				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
-				getExperimentTypes("aliquoting")  
-				).save();
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			// FDS 10/08/2016 JIRA NGL-147: experience de type void ( toutes les autres existent deja)
+			newExperimentTypeNode("ext-to-x5-wg-nano",getExperimentTypes("ext-to-x5-wg-nano").get(0),
+					false,false,false,
+					null,
+					null,
+					null,
+					null
+					).save();
+
+			newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-x5-wg-pcr-free","ext-to-x5-wg-nano"),
+					null,
+					getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
+					getExperimentTypes("aliquoting")  
+					).save();
+		}else{
+			//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
+			//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
+			// ATTENTION PROJET DE RENOMMAGE de "prep-pcr-free"....
+			newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),
+					null,
+					getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
+					getExperimentTypes("aliquoting")  
+					).save();
+		}
 
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
@@ -441,14 +460,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null
 					).save();
 			
-			// FDS 10/08/2016 JIRA NGL-147: experience de type void ( toutes les autres existent deja)
-			newExperimentTypeNode("ext-to-x5-wg-nano",getExperimentTypes("ext-to-x5-wg-nano").get(0),
-					false,false,false,
-					null,
-					null,
-					null,
-					null
-					).save();
+			
+			
+			//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
+			//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
+			// ATTENTION PROJET DE RENOMMAGE de "prep-pcr-free"....
 		}
 	}
 

@@ -42,7 +42,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				AbstractExperimentService.getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Fragmentation","fragmentation","FRG",780,
+		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
 				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and-covaris-e220"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
@@ -111,7 +111,7 @@ public class MetaTProcess extends AbstractDeclaration {
 						, getPET("illumina-depot",4)), 
 				getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("MetaT cDNA frg", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTcDNA(),
+		l.add(DescriptionFactory.newProcessType("MetaT cDNA + FRG", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTcDNA(),
 				Arrays.asList(getPET("ext-to-cdna-frg-transcriptomic-process",-1)
 						,getPET("dna-rna-extraction",-1)
 						, getPET("cdna-synthesis",0)
@@ -132,7 +132,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
-		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","ext-to-metagenomic-process-with-sizing","ext-to-metagenomic-process"),	
+		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","dna-rna-extraction","ext-to-metagenomic-process-with-sizing","ext-to-metagenomic-process"),	
 				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
