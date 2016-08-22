@@ -11,10 +11,6 @@ public class PlateSampleSheetLine  implements Comparable<PlateSampleSheetLine>{
 	public String sourceADN;
 	public Integer swellADN;
 	
-	public String sourceTP = "reservoir tampon";
-	public Integer swellTP = 1;
-	
-	public String destination = "plaque a covariser";
 	public Integer dwell;
 	
 	public Double inputVolume;

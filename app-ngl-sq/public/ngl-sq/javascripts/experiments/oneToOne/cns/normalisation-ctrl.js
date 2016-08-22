@@ -520,8 +520,15 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	}
 	
 	
-	var generateSampleSheet = function(){
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+	var generateSampleSheetNormalisation = function(){
+		generateSampleSheet("normalisation");
+	};
+	var generateSampleSheetNormalisationPostPCR = function(){
+		generateSampleSheet("normalisation-post-pcr");
+	};
+	
+	var generateSampleSheet = function(type){
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
 			var filepath = header.split("filename=")[1];
@@ -546,8 +553,13 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isNewState();} ,
 			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheet,
-			label:Messages("experiments.sampleSheet")
+			click:generateSampleSheetNormalisation,
+			label:Messages("experiments.sampleSheet")+" normalisation"
+		},{
+			isDisabled : function(){return $scope.isNewState();} ,
+			isShow:function(){return !$scope.isNewState();},
+			click:generateSampleSheetNormalisationPostPCR,
+			label:Messages("experiments.sampleSheet")+" normalisation post PCR"
 		}]);
 	}
 	

@@ -23,16 +23,23 @@ public class Output extends AbstractOutput {
 
 	@Override
 	 public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
+		String type = (String)contextValidation.getObject("type");
+		
 		String content=null;
 		//tube / 96-well-plate
-		if ( "tube".equals(experiment.instrument.inContainerSupportCategoryCode)
+		if ("normalisation".equals(type) && "tube".equals(experiment.instrument.inContainerSupportCategoryCode)
 				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 			// feuille de route specifique pour les pools de plaques -> plaque
-			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
-		} else if ("96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode)
+			content = OutputHelper.format(normalisation_x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
+		} else if ("normalisation".equals(type) && "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode)
 				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
 			// feuille de route specifique pour les pools de plaques -> plaque
-			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
+			content = OutputHelper.format(normalisation_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
+
+		}else if ("normalisation-post-pcr".equals(type) && "96-well-plate".equals(experiment.instrument.inContainerSupportCategoryCode)
+				&& "96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)) {
+			// feuille de route specifique pour les pools de plaques -> plaque
+			content = OutputHelper.format(normalisation_post_pcr_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
