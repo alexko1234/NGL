@@ -323,13 +323,15 @@ public class ExpWorkflowsHelper {
 
 	private void updateOutputContainerUsedContents(Experiment exp,
 			AtomicTransfertMethod atm) {
-		atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
-			ocu.contents = getContents(exp, atm, ocu);
-			if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
-			if(ocu.concentration != null && ocu.concentration.value == null)ocu.concentration=null;
-			if(ocu.quantity != null && ocu.quantity.value == null)ocu.quantity=null;
-			if(ocu.size != null && ocu.size.value == null)ocu.size=null;
-		});
+		if(atm.outputContainerUseds != null){
+			atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
+				ocu.contents = getContents(exp, atm, ocu);
+				if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
+				if(ocu.concentration != null && ocu.concentration.value == null)ocu.concentration=null;
+				if(ocu.quantity != null && ocu.quantity.value == null)ocu.quantity=null;
+				if(ocu.size != null && ocu.size.value == null)ocu.size=null;
+			});
+		}
 	}
 
 	private Set<String> getFromTransformationTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
