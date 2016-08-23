@@ -49,22 +49,22 @@ public class Transfert extends AbstractDeclaration {
 		
 		l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
+				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
+				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10700,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
+				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
+				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		

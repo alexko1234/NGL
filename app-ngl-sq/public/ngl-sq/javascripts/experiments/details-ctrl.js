@@ -306,7 +306,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.isWorkflowModeAvailable = function(nextStateCode){
 		if($scope.experiment !== undefined){
 			return (nextStateCode === 'IP' && $parse('experiment.state.code')($scope) === "N" 
-				|| nextStateCode === 'F' && $parse('experiment.state.code')($scope) !== "F");
+				|| nextStateCode === 'F' && $parse('experiment.state.code')($scope) !== "F"
+					|| Permissions.check("admin"));
 		}else{
 			return false;
 		}
@@ -314,7 +315,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.isEditModeAvailable = function(){		
 		if($scope.experiment !== undefined){
-			return ($parse('experiment.state.code')($scope) !== "F");
+			return ($parse('experiment.state.code')($scope) !== "F" || Permissions.check("admin"));
 		}else{
 			return false;
 		}		

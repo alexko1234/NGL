@@ -40,6 +40,10 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateOutputContainerCode(exp);
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 			expWorkflowsHelper.updateOutputContainerContents(exp);			
+		}else if("F".equals(exp.state.code)){
+			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+				expWorkflowsHelper.updateQCResultInInputContainers(exp, validation);
+			}
 		}
 		expWorkflowsHelper.updateStatus(exp, validation);
 		expWorkflowsHelper.updateComments(exp, validation);		

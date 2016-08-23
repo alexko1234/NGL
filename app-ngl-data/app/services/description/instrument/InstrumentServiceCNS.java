@@ -126,7 +126,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("walle", "WALL-E", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
 						createInstrument("r2d2", "R2D2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("nono", "NONO", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) ,
+						createInstrument("maya", "MAYA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) ,
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 

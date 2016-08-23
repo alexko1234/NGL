@@ -978,7 +978,31 @@ public class ExpWorkflowsHelper {
 		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", exp, validation),null);
 	}
 
+	/**
+	 * Update only the qc result and not the container attribut
+	 * used in admin case
+	 * @param exp
+	 * @param validation
+	 */
+	public void updateQCResultInInputContainers(Experiment exp, ContextValidation validation) {
+		exp.atomicTransfertMethods
+				.parallelStream()
+				.map(atm -> atm.inputContainerUseds)
+				.flatMap(List::stream)
+				.forEach(icu -> {
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,icu.code);
+					
+					QualityControlResult qcr = container.qualityControlResults.stream()
+						.filter(rr -> rr.code.equals(exp.code))
+						.findFirst().get();
+					
+					qcr.properties = icu.experimentProperties;
+					qcr.valuation.valid = icu.valuation.valid;
+					qcr.valuation.comment = icu.valuation.comment;
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class, DBQuery.is("code", container.code), DBUpdate.set("qualityControlResults",container.qualityControlResults));
+				});
 
+	}
 	/**
 	 * update volume, concentration, quantity and size only if present
 	 * @param exp
