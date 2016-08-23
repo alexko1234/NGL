@@ -59,191 +59,58 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 	
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
-		/** voidprocess , display order -1 **/
-		
-		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
-				null, 
-				null,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
-				null, 
-				null,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
-				null, 
-				null,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//FDS 01/02/2016 ajout -- JIRA NGL-894 processus pour X5
-		l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
-				null, 
-				null ,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//FDS 15/04/2016 ajout -- JIRA NGL-894 processus court pour X5
-		l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
-				null, 
-				null ,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		/** transfert, ordered by display order **/
-		//FDS essai: le display order est distinct entre transfert et transformation puisque ce sont 2 select differents
-		//           repartir d'un petit chiffre...(100 au lieu de 10100)????
-		l.add(newExperimentType("Aliquot","aliquoting",null, 10300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
-				getPropertyAliquoting(), 
-				getInstrumentUsedTypes("hand"),
-				"OneToMany", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		
-		/** transformation, ordered by display order **/
-		
-		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-				getPropertyDefinitionsLibNormalization(),
-				getInstrumentUsedTypes("hand","janus"), 
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-		
-		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-				getPropertyDefinitionsDenatDilLibCNG(),
-				getInstrumentUsedTypes("hand"),
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
-		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-				getPropertyDefinitionsPrepaflowcellCNG(),
-				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard
-		//FDS modif 29/03/2016 -- JIRA NGL-893: ajout instrument janus-and-cBot
-		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-				getPropertyDefinitionsPrepaflowcellOrderedCNG(),
-				getInstrumentUsedTypes("cBot","janus-and-cBot"),
-				"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-
-		//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
-		l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
-				"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-		
-		//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
-		// ??? renommer  frg-and-prep-lib ???
-		l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,800,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyDefinitionsPrepPcrFree(), 
-				getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		
-		/** Quality Control, ordered by display order **/
-		
-		// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
-		l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
-				getPropertyDefinitionsChipMigration(), 
-				getInstrumentUsedTypes("labChipGX"),
-				"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
-		//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
-		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null, 200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
-				getPropertyDefinitionsQPCR(), 
-				getInstrumentUsedTypes("qpcr-lightcycler-480II"),
-				"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
-		
-		l.add(newExperimentType("QC Miseq","miseq-qc", null, 300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
-				getPropertyDefinitionsQCMiseq(), 
-				getInstrumentUsedTypes("MISEQ-QC-MODE"),
-				"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque(s)" 
-		l.add(newExperimentType("Pool plaques -> plaque","pool",null,10400,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
-				getPropertyDefinitionPool(),
-				getInstrumentUsedTypes("janus","hand"),
-				"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			List<ExperimentType> l = new ArrayList<ExperimentType>();
 			
-		l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10700,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-				getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		
-			/*
-			l.add(newExperimentType("Migration sur puce","chip-migration",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer","labChipGX"),"OneToVoid", 
+			/** voidprocess , display order -1 **/
+			
+			l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
+					null, 
+					null,
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			*/
 			
-//			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
-//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-//					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
-//			
-//			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
-//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-//					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
-//			
-//			
-//			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
-//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-//					getInstrumentUsedTypes("qubit"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
-//			
-//			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
-//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-//					getInstrumentUsedTypes("rocheLightCycler-qPCR"/*,"stratagene-qPCR"*/),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Constants.CODE.CNG))); 	
+			//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+			l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
+					null, 
+					null,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-
+			l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
+					null, 
+					null,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS 01/02/2016 ajout -- JIRA NGL-894 processus pour X5
+			l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null ,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS 15/04/2016 ajout -- JIRA NGL-894 processus court pour X5
+			l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null ,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			
+			/** transformation, ordered by display order **/
+			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
+			// ??? renommer  frg-and-prep-lib ???
+			l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsPrepPcrFree(), 
+					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			/************************************ DEV / UAT ONLY **********************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
@@ -275,32 +142,168 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				
 				
 				//--transformation
-				l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,1100,
+				l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						getPropertyDefinitionsLibraryPrep(),
 						getInstrumentUsedTypes("sciclone-ngsx"),
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("PCR+purification","pcr-and-purification",null,1150,
+				l.add(newExperimentType("PCR+purification","pcr-and-purification",null,700,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						getPropertyDefinitionsPcrAndPurification(),
 						getInstrumentUsedTypes("mastercycler-epg-and-zephyr"),
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,1170,
+				l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						getPropertyDefinitionsNormalizationAndPooling(), 
 						getInstrumentUsedTypes("janus"),
 						"ManyToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 				
-				//-- transfert  (NOTE: pas de Node a creer pour experiences type transfert )
 				
-				
-				//--Quality Control	
 			}
+
+			
+			
+			
+			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionsLibNormalization(),
+					getInstrumentUsedTypes("hand","janus"), 
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
+			
+			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionsDenatDilLibCNG(),
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					
+			l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionsPrepaflowcellCNG(),
+					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard
+			//FDS modif 29/03/2016 -- JIRA NGL-893: ajout instrument janus-and-cBot
+			l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionsPrepaflowcellOrderedCNG(),
+					getInstrumentUsedTypes("cBot","janus-and-cBot"),
+					"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+	
+			//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
+			l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsIlluminaDepot(),
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
+					"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
+			
+					
+		
+			
+			/** Quality Control, ordered by display order **/
+			
+			// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
+			l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 100,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsChipMigration(), 
+					getInstrumentUsedTypes("labChipGX"),
+					"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+					
+			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
+			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null, 200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsQPCR(), 
+					getInstrumentUsedTypes("qpcr-lightcycler-480II"),
+					"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
+			
+			l.add(newExperimentType("QC Miseq","miseq-qc", null, 300,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsQCMiseq(), 
+					getInstrumentUsedTypes("MISEQ-QC-MODE"),
+					"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+
+			/** transfert, ordered by display order **/
+			//FDS essai: le display order est distinct entre transfert et transformation puisque ce sont 2 select differents
+			//           repartir d'un petit chiffre...(100 au lieu de 10100)????
+			l.add(newExperimentType("Aliquot","aliquoting",null, 10300,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
+					getPropertyAliquoting(), 
+					getInstrumentUsedTypes("hand"),
+					"OneToMany", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque(s)" 
+			l.add(newExperimentType("Pool plaques -> plaque","pool",null,10400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
+					getPropertyDefinitionPool(),
+					getInstrumentUsedTypes("janus","hand"),
+					"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+			l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10700,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			//-- transfert  (NOTE: pas de Node a creer pour experiences type transfert )
+			
+			
+			//--Quality Control	
+			
+				/*
+				l.add(newExperimentType("Migration sur puce","chip-migration",
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+						getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer","labChipGX"),"OneToVoid", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				*/
+				
+//				l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
+//						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+//						getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+//						DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
+//				
+//				l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
+//						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+//						getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+//						DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
+//				
+//				
+//				l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
+//						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+//						getInstrumentUsedTypes("qubit"),"OneToVoid", 
+//						DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
+//				
+//				l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
+//						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+//						getInstrumentUsedTypes("rocheLightCycler-qPCR"/*,"stratagene-qPCR"*/),"OneToVoid", 
+//						DescriptionFactory.getInstitutes( Constants.CODE.CNG))); 	
+				
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 	}
