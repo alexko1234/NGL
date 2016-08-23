@@ -99,7 +99,7 @@ public class ContainerHelper {
 		//extract values with only one content
 		Map<String, Content> contentsByKeyWithOneValues = contentsByKey.entrySet().stream()
 				.filter((Map.Entry<String, List<Content>> e) -> e.getValue().size() == 1)
-				.collect(Collectors.toMap((Map.Entry<String, List<Content>> e) -> e.getKey(), (Map.Entry<String, List<Content>> e) -> cloneContent(e.getValue().get(0))));
+				.collect(Collectors.toMap((Map.Entry<String, List<Content>> e) -> e.getKey(), (Map.Entry<String, List<Content>> e) -> e.getValue().get(0)));
 		
 		//extract values with several contents and fusion the contents
 		Map<String, Content> contentsByKeyWithSeveralValues = contentsByKey.entrySet().stream()
@@ -165,17 +165,24 @@ public class ContainerHelper {
 		}		
 	}
 
+	/**
+	 * clone and compute percentage
+	 * @param contents
+	 * @param percentage
+	 * @return
+	 */
 	public static List<Content> calculPercentageContent(List<Content> contents, Double percentage){
-		if(percentage!=null){
-			for(Content cc:contents){
-				if(cc.percentage != null){
-					cc.percentage = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
-				}else{
-					cc.percentage = percentage;
-				}						
+		List<Content> newContents = new ArrayList<Content>(0);
+		for(Content cc:contents){
+			Content newContent = cloneContent(cc);
+			if(percentage!=null && newContent.percentage != null){
+				newContent.percentage = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+			}else if(percentage!=null){
+				newContent.percentage = percentage;
 			}
+			newContents.add(newContent);
 		}
-		return contents;
+		return newContents;
 	}
 
 

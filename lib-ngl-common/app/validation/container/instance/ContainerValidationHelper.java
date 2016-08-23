@@ -140,7 +140,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	//Check the sum of percentage of contents is 100
 	public static void validateContentPercentageSum(List<Content> contents, ContextValidation contextValidation){
 		Double percentageSum = 0.00;
-		for(Content t:contents){			
+		for(Content t:contents){
 			if(t.percentage!=null){
 				percentageSum = percentageSum + t.percentage;
 			}							
