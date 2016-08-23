@@ -78,7 +78,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS ajout 04/11/2015 -- JIRA 838: nouveau processus court prepa-fc-ordonée + illumina-depot
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"),
-				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),getPET("lib-normalization",-1),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
+				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),
+						getPET("lib-normalization",-1),
+						getPET("prepa-fc-ordered",0),
+						getPET("illumina-depot",1) ), //ordered list of experiment type in process type
 				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
@@ -88,7 +91,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5	
 		l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgPcrFree(),
-				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),getPET("prep-pcr-free",0),getPET("lib-normalization",1), getPET("prepa-fc-ordered",2), getPET("illumina-depot",3) ), //ordered list of experiment type in process type
+				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),
+						getPET("prep-pcr-free",0),
+						getPET("lib-normalization",1), 
+						getPET("prepa-fc-ordered",2), 
+						getPET("illumina-depot",3) ), //ordered list of experiment type in process type
 				getExperimentTypes("prep-pcr-free").get(0),         //first experiment type
 				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
 				getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void  experiment type
@@ -97,7 +104,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS ajout  12/04/2016 JIRA NGL-894/981 processus court demarrant a lib-normalization, pas de proprietes
 		l.add(DescriptionFactory.newProcessType("X5_norm,FC ord, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				null,
-				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),getPET("prep-pcr-free",-1), getPET("lib-normalization",0), getPET("prepa-fc-ordered",1), getPET("illumina-depot",2) ), //ordered list of experiment type in process type
+				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),
+						getPET("prep-pcr-free",-1), 
+						getPET("lib-normalization",0), 
+						getPET("prepa-fc-ordered",1), 
+						getPET("illumina-depot",2) ), //ordered list of experiment type in process type
 				getExperimentTypes("lib-normalization").get(0),            //first experiment type
 				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
@@ -110,7 +121,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			// processus long type "library"
 			l.add(DescriptionFactory.newProcessType("RNA Sequencing", "rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
-					Arrays.asList(getPET("ext-to-rna-sequencing",-1),getPET("library-prep",0),getPET("pcr-and-purification",1),getPET("normalization-and-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					Arrays.asList(getPET("ext-to-rna-sequencing",-1),
+							getPET("library-prep",0),
+							getPET("pcr-and-purification",1),
+							getPET("normalization-and-pooling",2), 
+							getPET("prepa-fc-ordered",3), 
+							getPET("illumina-depot",4) ), //ordered list of experiment type in process type
 					getExperimentTypes("library-prep").get(0),             //first experiment type
 					getExperimentTypes("illumina-depot").get(0),           //last  experiment type
 					getExperimentTypes("ext-to-rna-sequencing").get(0),    //void  experiment type
@@ -119,7 +135,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			// processus court type "normalization"    
 			l.add(DescriptionFactory.newProcessType("RNA norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
 					null,   /// pas de proprietes ??
-					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1),getPET("normalization-and-pooling",0), getPET("prepa-fc-ordered",1), getPET("illumina-depot",2) ), //ordered list of experiment type in process type
+					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1),
+							getPET("normalization-and-pooling",0), 
+							getPET("prepa-fc-ordered",1), 
+							getPET("illumina-depot",2) ), //ordered list of experiment type in process type
 					getExperimentTypes("normalization-and-pooling").get(0),          //first experiment type
 					getExperimentTypes("illumina-depot").get(0),                     //last  experiment type
 					getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),  //void  experiment type
@@ -128,7 +147,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO
 			l.add(DescriptionFactory.newProcessType("X5_WG NANO", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsX5WgNanoDNAseq(), 
-					Arrays.asList(getPET("ext-to-x5-wg-nano",-1),getPET("prep-pcr-free",0), getPET("pcr-and-purification",1), getPET("lib-normalization",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
+							getPET("prep-pcr-free",0), 
+							getPET("pcr-and-purification",1), 
+							getPET("lib-normalization",2),
+							getPET("prepa-fc-ordered",3), 
+							getPET("illumina-depot",4) ), //ordered list of experiment type in process type
 					getExperimentTypes("prep-pcr-free").get(0),      //first experiment type
 					getExperimentTypes("illumina-depot").get(0),     //last  experiment type
 					getExperimentTypes("ext-to-x5-wg-nano").get(0),  //void  experiment type
