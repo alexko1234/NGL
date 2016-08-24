@@ -528,6 +528,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	};
 	
 	var generateSampleSheet = function(type){
+		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");

@@ -179,6 +179,8 @@ public class QualityControl extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
 				"single", 17, true, null,null));
 		
+	
+		
 		return propertyDefinitions;
 	}
 
@@ -200,6 +202,10 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée","targetedRegion", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
 				null, null, null, null,"single", 2, true, null,null));
 
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
+				"single", 3, true, null,null));
+		
+		
 		return propertyDefinitions;
 	}
 

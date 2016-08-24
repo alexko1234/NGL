@@ -33,7 +33,13 @@ public class Input extends AbstractInput {
 		Map<String, String[]> allMap = new HashMap<String, String[]>();
 		
 		all.forEach(array -> {
-			allMap.put(plateCodeInExp+"_"+array[0], array);
+			
+			String pos = array[0];
+			if(pos.matches("[A-H]{1}0[1-9]{1}")){
+				pos = pos.replace("0", "");
+			}
+			
+			allMap.put(plateCodeInExp+"_"+pos, array);
 		});
 		reader.close();
 		

@@ -115,6 +115,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 	}
 	
 	var generateSampleSheet = function(){
+		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");

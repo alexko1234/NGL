@@ -196,9 +196,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.newValues("taq Q5","taq Kapa"), null, null, null,"single", 1, false, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Ratio billes", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
-				null, null, null, null,"single", 1, true, null, null));
+				null, null, null, null,"single", 2, true, null, null));
 
-
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
+				"single", 3, true, null,null));
+		
 		return propertyDefinitions;
 	}
 
@@ -245,6 +247,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
 				DescriptionFactory.newValues("16S_V4V5","18S_V9"), null, null, null,"single", 3, true, null,null));
 
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
+				"single", 4, true, null,null));
+		
+		
 		return propertyDefinitions;
 	}
 	

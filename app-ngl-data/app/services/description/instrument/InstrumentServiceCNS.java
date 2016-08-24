@@ -231,7 +231,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
-		l.add(newInstrumentUsedType("LabChip_GX", "labchip-gx", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
+		l.add(newInstrumentUsedType("LabChip_GX", "labchip-gx", InstrumentCategory.find.findByCode("chip-electrophoresis"), getLabChipGXProperties(), 
 				getInstruments(
 						createInstrument("labChip_GX1", "LabChip_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("labChip_GX2", "LabChip_GX2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) ,
@@ -333,7 +333,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<PropertyDefinition> getThermoBiomekProperties() {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
+		l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
 				"single", 10, true, null,null));
 		
 		//Thermo 1 -> 39 Thermo_01
@@ -535,7 +535,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		/*l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));*/
-		l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
+		l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
 				"single", 10, true, null,null));
 		return l;
 	}
@@ -584,6 +584,16 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				"QPCR_Solexa_plaque_4titude",
 				"QPCR_Solexa_plaque_BioRad"), 
 				"single", 10, true, null,null));
+		
+		return l;
+	}
+	
+	private static List<PropertyDefinition> getLabChipGXProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		l.add(newPropertiesDefinition("Nom run LabChip", "robotRunCode", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
+				"single", 10, true, null,null));
+		
 		
 		return l;
 	}

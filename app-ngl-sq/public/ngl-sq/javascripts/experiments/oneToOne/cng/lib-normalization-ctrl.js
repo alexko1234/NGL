@@ -340,7 +340,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	}
 	
 	var generateSampleSheet = function(){
-		console.log ("generateSampleSheet");
+		$scope.messages.clear();
 		
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {

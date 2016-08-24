@@ -169,6 +169,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		$scope.atmService = atmService;
 		
 		var generateSampleSheet = function(){
+			$scope.messages.clear();
 			$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 			.success(function(data, status, headers, config) {
 				var header = headers("Content-disposition");
