@@ -207,7 +207,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	};
 	
 	
-	var generateSampleSheet = function(type){
+	var generateSampleSheet = function(){
 		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {

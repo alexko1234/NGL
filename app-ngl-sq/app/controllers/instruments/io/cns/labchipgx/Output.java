@@ -3,18 +3,11 @@ package controllers.instruments.io.cns.labchipgx;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
-import controllers.instruments.io.cns.biomekfx.tpl.txt.normalisation_x_to_plate;
-import controllers.instruments.io.cns.labchipgx.tpl.txt.*;
+import controllers.instruments.io.cns.labchipgx.tpl.txt.chipmigration;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
