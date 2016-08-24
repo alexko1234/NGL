@@ -96,7 +96,8 @@ public class Container extends DBObject implements IValidation {
 
 	public String fromPurificationTypeCode;
 	public String fromPurificationCode; 
-	
+	public String fromTransfertCode;
+	public String fromTransfertTypeCode;
 	
 	//tree of life
 	public TreeOfLifeNode treeOfLife;

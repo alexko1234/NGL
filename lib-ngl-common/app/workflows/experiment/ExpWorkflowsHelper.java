@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 
 
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
@@ -64,6 +65,9 @@ import org.springframework.stereotype.Service;
 
 
 
+
+
+import com.mongodb.ErrorCategory;
 
 import play.Logger;
 import play.Play;
@@ -356,15 +360,15 @@ public class ExpWorkflowsHelper {
 		return _fromExperimentCodes;
 	}
 
-	private String getFromPurificationTypeCode(Experiment exp) {
-		if(ExperimentCategory.CODE.purification.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+	private String getFromSatTypeCode(Experiment exp, ExperimentCategory.CODE code) {
+		if(code.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
 			return exp.typeCode;
 		}
 		return null;
 	}
 	
-	private String getFromPurificationCode(Experiment exp) {
-		if(ExperimentCategory.CODE.purification.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+	private String getFromSatCode(Experiment exp, ExperimentCategory.CODE code) {
+		if(code.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
 			return exp.code;
 		}
 		return null;
@@ -589,8 +593,11 @@ public class ExpWorkflowsHelper {
 		Set<String> fromTransformationTypeCodes = getFromTransformationTypeCodes(exp, atm);
 		Set<String> fromTransformationCodes = getFromTransformationCodes(exp, atm);
 		
-		String fromPurificationTypeCode = getFromPurificationTypeCode(exp);
-		String fromPurificationCode = getFromPurificationCode(exp);
+		String fromPurificationTypeCode = getFromSatTypeCode(exp, ExperimentCategory.CODE.purification);
+		String fromPurificationCode = getFromSatCode(exp, ExperimentCategory.CODE.purification);
+		
+		String fromTransfertTypeCode =  getFromSatTypeCode(exp, ExperimentCategory.CODE.transfert);
+		String fromTransfertCode = getFromSatCode(exp, ExperimentCategory.CODE.transfert);
 		
 		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevelWithATM(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
@@ -627,6 +634,8 @@ public class ExpWorkflowsHelper {
 			c.fromTransformationCodes = fromTransformationCodes;
 			c.fromPurificationCode = fromPurificationCode;
 			c.fromPurificationTypeCode = fromPurificationTypeCode;
+			c.fromTransfertCode = fromTransfertCode;
+			c.fromTransfertTypeCode = fromTransfertTypeCode;
 			c.processTypeCodes = processTypeCodes;
 			c.processCodes = inputProcessCodes;
 			c.state = state;
@@ -660,6 +669,8 @@ public class ExpWorkflowsHelper {
 				c.fromTransformationCodes = fromTransformationCodes;
 				c.fromPurificationCode = fromPurificationCode;
 				c.fromPurificationTypeCode = fromPurificationTypeCode;
+				c.fromTransfertCode = fromTransfertCode;
+				c.fromTransfertTypeCode = fromTransfertTypeCode;				
 				c.processTypeCodes = processTypeCodes;
 				c.processCodes = newInputProcessCodes;
 				c.state = state;
