@@ -49,7 +49,7 @@ public class Output extends AbstractOutput {
 			.stream()
 			.map(atm -> atm.inputContainerUseds)
 			.flatMap(List::stream)
-			.filter(icu -> (icu.experimentProperties != null && icu.instrumentProperties.containsKey("qPCRposition")))
+			.filter(icu -> (icu.instrumentProperties != null && icu.instrumentProperties.containsKey("qPCRposition")))
 			.collect(Collectors.toMap(icu -> Integer.valueOf(icu.instrumentProperties.get("qPCRposition").value.toString()), icu -> icu.code));
 		
 		

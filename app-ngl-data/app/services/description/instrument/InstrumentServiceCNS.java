@@ -585,7 +585,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				"QPCR_Solexa_plaque_BioRad"), 
 				"single", 10, true, null,null));
 		
-		l.add(newPropertiesDefinition("Position sur puce", "qPCRposition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+		l.add(newPropertiesDefinition("Position qPCR", "qPCRposition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 				newValues("1", "2", "3", "4", "5", "6","7","8","9","10","11","12","13","14","15","16","17"), 
 				"single", 15, true, null,null));
 		
