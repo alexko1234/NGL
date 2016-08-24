@@ -125,6 +125,8 @@ public class SampleServiceCNS extends AbstractSampleService {
 		values.add(DescriptionFactory.newValue("MUC", "mucus"));
 		values.add(DescriptionFactory.newValue("GILLS", "gills"));
 		values.add(DescriptionFactory.newValue("GT", "Gut tractus"));
+		values.add(DescriptionFactory.newValue("FIN", "FIN"));
+		values.add(DescriptionFactory.newValue("OTO", "OTO"));
 		return values;	
 	}
 	

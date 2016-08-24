@@ -4,6 +4,7 @@ import static services.description.DescriptionFactory.*;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.laboratory.common.description.Level;
@@ -12,6 +13,7 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import services.description.Constants;
@@ -19,6 +21,7 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
+import services.description.experiment.AbstractExperimentService;
 
 
 public class QualityControl extends AbstractDeclaration {
@@ -26,6 +29,7 @@ public class QualityControl extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		
 		
 		l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
@@ -64,7 +68,14 @@ public class QualityControl extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		// TODO Auto-generated method stub
-		return null;
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		
+		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-qc-transfert-purif",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
+		return l;
 	}
 
 	@Override
@@ -86,8 +97,12 @@ public class QualityControl extends AbstractDeclaration {
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("library"), null,
+				Arrays.asList(getPET("ext-to-qc-transfert-purif",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return l;
 	}
 
 	@Override
@@ -110,8 +125,8 @@ public class QualityControl extends AbstractDeclaration {
 	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		// TODO Auto-generated method stub
-		
+		newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 	}
 
 	@Override

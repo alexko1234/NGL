@@ -75,10 +75,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new Opgen().getExperimentType());
 		l.addAll(new Nanopore().getExperimentType());
 		l.addAll(new Bionano().getExperimentType());
-		l.addAll(new QualityControl().getExperimentType());
-		l.addAll(new ExtractionDNARNA().getExperimentType());
 		l.addAll(new Purif().getExperimentType());
 		l.addAll(new Transfert().getExperimentType());
+		l.addAll(new QualityControl().getExperimentType());
+		l.addAll(new ExtractionDNARNA().getExperimentType());
 		l.addAll(new MetaBarCoding().getExperimentType());
 		l.addAll(new MetaGenomique().getExperimentType());
 		l.addAll(new MetaTProcess().getExperimentType());
@@ -119,6 +119,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
+		new QualityControl().getExperimentTypeNode();
+		
 		new Opgen().getExperimentTypeNode();
 		new Nanopore().getExperimentTypeNode();
 		new Bionano().getExperimentTypeNode();		

@@ -24,6 +24,7 @@ import services.description.declaration.cns.MetaGenomique;
 import services.description.declaration.cns.MetaTProcess;
 import services.description.declaration.cns.Nanopore;
 import services.description.declaration.cns.Opgen;
+import services.description.declaration.cns.QualityControl;
 import services.description.declaration.cns.RunIllumina;
 
 import com.typesafe.config.ConfigFactory;
@@ -57,7 +58,8 @@ public class ProcessServiceCNS extends AbstractProcessService {
 			*/
 
 		}
-
+		l.addAll(new QualityControl().getProcessType());
+		
 		l.addAll(new MetaBarCoding().getProcessType());
 		l.addAll(new MetaTProcess().getProcessType());
 		l.addAll(new MetaGenomique().getProcessType());
