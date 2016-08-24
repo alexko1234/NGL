@@ -68,6 +68,7 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.filter(content -> {
 				if(input.projectCode.equals(content.projectCode) &&
 						input.sampleCode.equals(content.sampleCode) &&
+						content.properties.containsKey(input.contentPropertyNameUpdated) && 
 						input.currentValue.equals(content.properties.get(input.contentPropertyNameUpdated).value)){
 							return true;
 					}else{
@@ -92,6 +93,7 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.filter(content -> {
 				if(input.projectCode.equals(content.projectCode) &&
 						input.sampleCode.equals(content.sampleCode) &&
+						content.properties.containsKey(input.contentPropertyNameUpdated) && 
 						input.currentValue.equals(content.properties.get(input.contentPropertyNameUpdated).value)){
 							return true;
 					}else{
@@ -111,6 +113,7 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.filter(atm -> atm.outputContainerUseds != null)			
 			.map(atm -> atm.outputContainerUseds)
 			.flatMap(List::stream)
+			.filter(ocu -> ocu.experimentProperties != null)
 			.map(ocu -> ocu.experimentProperties.entrySet())
 			.flatMap(Set::stream)
 			.filter(entry -> (entry.getKey().equals(input.contentPropertyNameUpdated) && entry.getValue().value.equals(input.currentValue)))
