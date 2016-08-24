@@ -108,6 +108,11 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	});
 	$scope.atmService.data.setColumnsConfig(columns);
 	
+	$scope.$watch("instrumentType", function(newValue, OldValue){
+		if(newValue)
+			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
+	})
+	
 	var generateSampleSheet = function(){
 		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})

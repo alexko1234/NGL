@@ -587,7 +587,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newPropertiesDefinition("Position sur puce", "qPCRposition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 				newValues("1", "2", "3", "4", "5", "6","7","8","9","10","11","12","13","14","15","16","17"), 
-				"single", 12, true, null,null));
+				"single", 15, true, null,null));
 		
 		
 		
@@ -612,7 +612,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 				newValues("1", "2", "3", "4", "5", "6","7","8","9","10","11"), 
-				"single", 12, true, null,null));
+				"single", 15, true, null,null));
 		
 		
 		return l;

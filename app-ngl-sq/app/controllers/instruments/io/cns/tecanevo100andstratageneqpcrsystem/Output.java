@@ -49,8 +49,8 @@ public class Output extends AbstractOutput {
 			.stream()
 			.map(atm -> atm.inputContainerUseds)
 			.flatMap(List::stream)
-			.filter(icu -> (icu.experimentProperties != null && icu.experimentProperties.containsKey("qPCRposition")))
-			.collect(Collectors.toMap(icu -> Integer.valueOf(icu.experimentProperties.get("qPCRposition").value.toString()), icu -> icu.code));
+			.filter(icu -> (icu.experimentProperties != null && icu.instrumentProperties.containsKey("qPCRposition")))
+			.collect(Collectors.toMap(icu -> Integer.valueOf(icu.instrumentProperties.get("qPCRposition").value.toString()), icu -> icu.code));
 		
 		
 		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<SampleSheetStrategeneLine>();
@@ -79,14 +79,14 @@ public class Output extends AbstractOutput {
 
 	private List<SampleSheetStrategeneLine> getSubElt(
 			String line, int startIndex, String containerCode) {
-		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<SampleSheetStrategeneLine>();
-		
-		for(int i = 0; i < 4 ; i++){
-			String wellId = line+(startIndex+i);
-			String wellName = containerCode+"_"+((i < 2)?"1":"2");
-			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine(wellId, wellName));
+		List<SampleSheetStrategeneLine> sampleSheetStrategeneLines = new ArrayList<SampleSheetStrategeneLine>(0);
+		if(null != containerCode){
+			for(int i = 0; i < 4 ; i++){
+				String wellId = line+(startIndex+i);
+				String wellName = containerCode+"_"+((i < 2)?"1":"2");
+				sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine(wellId, wellName));
+			}
 		}
-		
 		return sampleSheetStrategeneLines;
 	}
 
