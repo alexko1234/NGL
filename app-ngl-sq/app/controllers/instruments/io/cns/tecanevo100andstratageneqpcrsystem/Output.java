@@ -71,9 +71,16 @@ public class Output extends AbstractOutput {
 		sampleSheetStrategeneLines.addAll(getSubElt("F", 8, results.get(14)));
 		sampleSheetStrategeneLines.addAll(getSubElt("G", 8, results.get(15)));
 		sampleSheetStrategeneLines.addAll(getSubElt("H", 8, results.get(16)));
-		sampleSheetStrategeneLines.addAll(getSubElt("A", 12, results.get(17)));
 		
 		
+		if(null != results.get(17)){
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("A12", results.get(17)+"_1"));
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("B12", results.get(17)+"_1"));
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("C12", results.get(17)+"_2"));
+			sampleSheetStrategeneLines.add(new SampleSheetStrategeneLine("D12", results.get(17)+"_2"));
+		}
+		
+	
 		return sampleSheetStrategeneLines;
 	}
 
