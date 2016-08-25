@@ -1,7 +1,5 @@
 @()
 <!-- work with atmDragAndDrop2 -->
-<!-- FDS 25/08/2016 MODIF pour cause de chevauchement: ajout SPAN -->
-<span style="font-size: 12px;">
 <table class="table table-bordered table-condensed"
 				ng-mouseup="atmService.data.stopSelectInputContainer($event)"
 				ng-mousedown="atmService.data.startSelectInputContainer($event)">
@@ -24,12 +22,10 @@
 	        	ng-mouseenter="atmService.data.selectInputContainer($event, container)"
 	        	ng-mousedown="atmService.data.startSelectInputContainer($event, container)"
 	        	ng-class="atmService.data.getInputContainerCellClass(container)">
-	        	<!-- TEST ajout  &#13;-->
-	        		<div list-resize="container.contents | collect:'projectCode+&quot; &#13; &quot;+sampleCode+&quot; &#13; &quot;+properties.tag.value'">
+	        		<div list-resize="container.contents | collect:'projectCode+&quot; / &quot;+sampleCode+&quot; / &quot;+properties.tag.value'">
 	        		</div>				        		        	    						    					
 	         </td>          
 	    </tr>
 	  
 	<tbody>				 
 </table>	
-</span>
