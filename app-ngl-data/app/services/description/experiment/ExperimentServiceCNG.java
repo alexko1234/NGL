@@ -41,7 +41,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	/**
-	 * Save all ExperimentCategory
+	 * Save all Experiment Categories
 	 * @param errors
 	 * @throws DAOException 
 	 */
@@ -57,11 +57,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		DAOHelpers.saveModels(ExperimentCategory.class, l, errors);
 	}
 
-	
+	/**
+	 * Save all Experiment Types
+	 * @param errors
+	 * @throws DAOException 
+	 */
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 			List<ExperimentType> l = new ArrayList<ExperimentType>();
 			
-			/** voidprocess , display order -1 **/
+			/** voidprocess: ext-to-**  display order -1 **/
 			
 			l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
@@ -70,7 +74,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
 			l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
 					null, 
@@ -85,7 +88,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS 01/02/2016 ajout -- JIRA NGL-894 processus pour X5
 			l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -93,7 +95,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS 15/04/2016 ajout -- JIRA NGL-894 processus court pour X5
 			l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -101,24 +102,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			
-			/** transformation, ordered by display order **/
-			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
-			// ??? renommer  frg-and-prep-lib ???
-			l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,500,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsPrepPcrFree(), 
-					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
-					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
 			/************************************ DEV / UAT ONLY **********************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
+				//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 
 				
-				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :5 nouveaux exp type
-				//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO : 1 nouvelle experiment type void (toutes les autres existent déjà)
-				
-				//-- voidprocess
 				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-sequencing",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, 
@@ -138,10 +126,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						null, 
 						null ,
 						"OneToOne", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+			}
+			
+			
+			/** Transformation, ordered by display order **/
+			
+			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
+			// ??? renommer  frg-and-prep-lib ???
+			// renommer le label en laissant le code a cause de l'existant ou faire une reprise ??
+			l.add(newExperimentType("Prep. Librairie (avec frg)","prep-pcr-free",null,500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsPrepPcrFree(), 
+					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			/************************************ DEV / UAT ONLY **********************************************/
+			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
+				//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
 				
-				
-				//--transformation
 				l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						getPropertyDefinitionsLibraryPrep(),
@@ -161,13 +166,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						getPropertyDefinitionsNormalizationAndPooling(), 
 						getInstrumentUsedTypes("janus"),
 						"ManyToOne", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-				
-				
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			}
-
-			
-			
 			
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
@@ -205,8 +205,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-			
-					
 		
 			
 			/** Quality Control, ordered by display order **/
@@ -234,9 +232,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-			/** transfert, ordered by display order **/
-			//FDS essai: le display order est distinct entre transfert et transformation puisque ce sont 2 select differents
-			//           repartir d'un petit chiffre...(100 au lieu de 10100)????
+			
+			/** Transfert, ordered by display order **/
+			// NOTE: pas de Node a creer pour experiences type transfert 
+			
 			l.add(newExperimentType("Aliquot","aliquoting",null, 10300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 					getPropertyAliquoting(), 
@@ -244,7 +243,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToMany", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque(s)" 
+			// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque" 
 			l.add(newExperimentType("Pool plaques -> plaque","pool",null,10400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
 					getPropertyDefinitionPool(),
@@ -267,13 +266,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
+			l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			//-- transfert  (NOTE: pas de Node a creer pour experiences type transfert )
 			
 			
+			// FDS 24/08/2016: vieux code CNS a supprimer ??????
 			//--Quality Control	
 			
 				/*
@@ -309,41 +308,59 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 
 
-	
+	/**
+	 * Save all Experiment TypeNodes
+	 * @param errors
+	 * @throws DAOException 
+	 */
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant sinon==>message : experimentTypeNode is mandatory
 
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), 
 				false, false, false, 
-				null, null, null, null
+				null, 
+				null, 
+				null, 
+				null
 				).save();
 		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
 		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
 				false, false, false, 
-				null, null, null, null
+				null, 
+				null, 
+				null, 
+				null
 				).save();
 		
 		newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0),
 				false, false, false,
-				null, null, null, null
+				null, 
+				null, 
+				null,
+				null
 				).save();
 		
 		//FDS ajout 01/02/2016 -- JIRA NGL-894 : processus et experiments pour X5
 		newExperimentTypeNode("ext-to-x5-wg-pcr-free",getExperimentTypes("ext-to-x5-wg-pcr-free").get(0),
 				false,false,false,
-				null, null, null, null
+				null, 
+				null, 
+				null, 
+				null
 				).save();
 		
 		//FDS ajout 15/04/2016 -- JIRA NGL-894 : processus court pour X5
 		newExperimentTypeNode("ext-to-norm-fc-ordered-depot",getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0),
 				false,false,false,
 				null, 
-				null, null, null
+				null, 
+				null, 
+				null
 				).save();			
-			
+		
+		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			// FDS 10/08/2016 JIRA NGL-147: experience de type void ( toutes les autres existent deja)
+			// FDS 10/08/2016 JIRA NGL-1047: experience de type void (toutes les autres existent deja)
 			newExperimentTypeNode("ext-to-x5-wg-nano",getExperimentTypes("ext-to-x5-wg-nano").get(0),
 					false,false,false,
 					null,
@@ -352,7 +369,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null
 					).save();
 
-			
 			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 5 nouveau nodes
 			newExperimentTypeNode("ext-to-norm-and-pool-fc-ord-depot",getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),
 					false,false,false,
@@ -368,9 +384,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null,
 					null,
 					null
-					).save();	
-			
-			
+					).save();		
 			
 			newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 					false,false,false,
@@ -458,7 +472,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838 
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
@@ -467,7 +480,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 
-		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered dans les previous 
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
 				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
@@ -702,7 +714,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Qté engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode("ng"),MeasureUnit.find.findByCode("ng"),"single", 25, false, null,null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode("ng"),MeasureUnit.find.findByCode("ng"),"single", 25, true, null,null));
 		
 		//OuputContainer 
 		// rien...??
