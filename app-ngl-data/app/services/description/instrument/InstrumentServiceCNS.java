@@ -333,8 +333,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<PropertyDefinition> getThermoBiomekProperties() {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
-				"single", 10, true, null,null));
+		/*l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
+				"single", 10, true, null,null));*/
 		
 		//Thermo 1 -> 39 Thermo_01
 		l.add(newPropertiesDefinition("Thermocycleur", "thermocycler", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, getThermoclyclerPropertyValues(), 
@@ -535,8 +535,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		/*l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));*/
-		l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
-				"single", 10, true, null,null));
+		/*l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, false, null, null, 
+				"single", 10, true, null,null));*/
 		return l;
 	}
 	
