@@ -111,8 +111,68 @@ public class ImportServiceCNS extends AbstractImportService {
 				getTaraPacificEnvironmentValues(), "single", 3, true, null, null));
 		
 		
+		propertyDefinitions.add(newPropertiesDefinition("Protocole", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificProtocolValues(), "single", 3, true, null, null));
+		
+		
 		return propertyDefinitions;
 	}
+	
+	
+	private static List<Value> getTaraPacificProtocolValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("CORE", "IMG-(core)_Coral"));
+		values.add(DescriptionFactory.newValue("CS10", "SEQ-(10g)a_Coral"));
+		values.add(DescriptionFactory.newValue("CS40", "SEQ-(40g)_Coral"));
+		values.add(DescriptionFactory.newValue("CS10", "SEQ-(10g)b_Coral"));
+		values.add(DescriptionFactory.newValue("CS4L", "SEQ-(4g-lysing)_Coral"));
+		values.add(DescriptionFactory.newValue("CS4", "SEQ-(4g)_Coral"));
+		values.add(DescriptionFactory.newValue("CTAX", "IMG-(5g)_Coral"));
+		values.add(DescriptionFactory.newValue("CREP", "IMG-(10g)_Coral"));
+		values.add(DescriptionFactory.newValue("CTEM", "IMG-(1g)_Coral"));
+		values.add(DescriptionFactory.newValue("MUC", "SEQ_Fish-Mucus"));
+		values.add(DescriptionFactory.newValue("GT", "SEQ_Fish-Tract"));
+		values.add(DescriptionFactory.newValue("GIL", "SEQ_Fish-Gill"));
+		values.add(DescriptionFactory.newValue("FIN", "SEQ_Fish-Fin"));
+		values.add(DescriptionFactory.newValue("OTO", "IMG_Fish-Otolith"));
+		values.add(DescriptionFactory.newValue("SGS", "SEQ-IMG_SeaGrass"));
+		values.add(DescriptionFactory.newValue("SGI", "IMG_SeaGrass"));
+		values.add(DescriptionFactory.newValue("BDI", "IMG_BenthicDino"));
+		values.add(DescriptionFactory.newValue("BDS", "SEQ_BenthicDino"));
+		values.add(DescriptionFactory.newValue("S<02>", "SEQ_CW<0.22"));
+		values.add(DescriptionFactory.newValue("S<02", "SEQ-(FeCl3)_W<0.22"));
+		values.add(DescriptionFactory.newValue("FCM", "IMG-(gluta+poloxamer)_W<20"));
+		values.add(DescriptionFactory.newValue("LIVE", "IMG-(live)_CW<20"));
+		values.add(DescriptionFactory.newValue("SCG", "SEQ-IMG-(GB)_W<20"));
+		values.add(DescriptionFactory.newValue("SEM", "IMG-(dry)_W0.22-20"));
+		values.add(DescriptionFactory.newValue("FISH", "IMG-FISH-(dry)_W0.22-20"));
+		values.add(DescriptionFactory.newValue("S023", "SEQ-(50L-or-15min)_W0.22-3"));
+		values.add(DescriptionFactory.newValue("S320", "SEQ-(50L-or-15min)_W3-20"));
+		values.add(DescriptionFactory.newValue("H20", "IMG-(gluta+pfa)_N20-2000"));
+		values.add(DescriptionFactory.newValue("LIVE20", "IMG-(live)_N20-2000"));
+		values.add(DescriptionFactory.newValue("S20", "SEQ-(500mL-or-15min)_N20-2000"));
+		values.add(DescriptionFactory.newValue("E20", "SEQ-IMG-(ethanol)_N20-2000"));
+		values.add(DescriptionFactory.newValue("SCG20", "SEQ-IMG-(GB)_N20-2000"));
+		values.add(DescriptionFactory.newValue("HPLC", "BGC-PIGMENTS_W>0.7"));
+		values.add(DescriptionFactory.newValue("CARB", "BGC-CARBONATE_W<>"));
+		values.add(DescriptionFactory.newValue("NUT", "BGC-NUTRIENTS_W<>"));
+		values.add(DescriptionFactory.newValue("SSED", "SEQ-SED"));
+		values.add(DescriptionFactory.newValue("F20", "IMG-(formol)_N20-2000"));
+		values.add(DescriptionFactory.newValue("L20", "IMG-(lugol)_N20-2000"));
+		values.add(DescriptionFactory.newValue("F200", "IMG-(formol)_N>200"));
+		values.add(DescriptionFactory.newValue("S300", "SEQ-(500mL-or-15min)_N300-2000"));
+		values.add(DescriptionFactory.newValue("E300", "SEQ-IMG-(ethanol)_N300-2000"));
+		values.add(DescriptionFactory.newValue("F300", "IMG-(formol)_N>300"));
+		values.add(DescriptionFactory.newValue("F2000", "IMG-(formol)_N>2000"));
+		values.add(DescriptionFactory.newValue("IRON", "BGC-IRON_W<>"));
+		values.add(DescriptionFactory.newValue("SAL", "BGC-SALINITY_W<>"));
+		values.add(DescriptionFactory.newValue("ABS", "BGC-AEROSOL_A>0.7"));
+		values.add(DescriptionFactory.newValue("AI", "IMG-AEROSOL_A>0.7"));
+		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
+		return values;	
+	}
+	
+	
 	
 	private static List<Value> getTaraPacificEnvironmentValues(){
 		List<Value> values = new ArrayList<Value>();
