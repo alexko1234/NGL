@@ -35,8 +35,10 @@ import services.description.declaration.cns.Purif;
 import services.description.declaration.cns.QualityControl;
 import services.description.declaration.cns.RunIllumina;
 import services.description.declaration.cns.Transfert;
+import services.description.declaration.cns.BanqueIllumina;
 
 import com.typesafe.config.ConfigFactory;
+
 public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	
@@ -82,6 +84,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new MetaBarCoding().getExperimentType());
 		l.addAll(new MetaGenomique().getExperimentType());
 		l.addAll(new MetaTProcess().getExperimentType());
+		l.addAll(new BanqueIllumina().getExperimentType());
 		l.addAll(new RunIllumina().getExperimentType());
 		
 		
@@ -129,8 +132,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		new MetaGenomique().getExperimentTypeNode();
 		new MetaTProcess().getExperimentTypeNode();
 		new MetaBarCoding().getExperimentTypeNode();
+		new BanqueIllumina().getExperimentTypeNode();
 		new RunIllumina().getExperimentTypeNode();
-
+		
 		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
 		//newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();
 				

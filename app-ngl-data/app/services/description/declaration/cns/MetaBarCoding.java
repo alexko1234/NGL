@@ -139,10 +139,14 @@ public class MetaBarCoding extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
 
+		newExperimentTypeNode("ext-to-dna-illumina-indexed-library-process", getExperimentTypes("ext-to-dna-illumina-indexed-library-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-dna-illumina-indexed-lib-sizing-process", getExperimentTypes("ext-to-dna-illumina-indexed-lib-sizing-process").get(0), false, false, false, null, null, null, null).save();
+
+		
 		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 
-		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("tag-pcr","fragmentation")
+		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("ext-to-dna-illumina-indexed-library-process","ext-to-dna-illumina-indexed-lib-sizing-process","tag-pcr","fragmentation")
 				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 
 		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library","rna-illumina-indexed-library")

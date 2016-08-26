@@ -1,22 +1,20 @@
 package services.description.process;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Value;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
-import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.declaration.cns.BanqueIllumina;
 import services.description.declaration.cns.Bionano;
 import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
@@ -63,6 +61,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		l.addAll(new MetaBarCoding().getProcessType());
 		l.addAll(new MetaTProcess().getProcessType());
 		l.addAll(new MetaGenomique().getProcessType());
+		l.addAll(new BanqueIllumina().getProcessType());
 		l.addAll(new Bionano().getProcessType());
 		l.addAll(new Nanopore().getProcessType());
 		l.addAll(new RunIllumina().getProcessType());
