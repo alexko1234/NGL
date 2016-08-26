@@ -114,7 +114,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	
 	private List<PropertyDefinition> getFishPropertyDefinitions() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Partie de l'anatomie", "fishAnatomy", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Partie de l'anatomie", "fishAnatomy", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
 				getFishAnatomyValues(), "single", 2, true, null, null));
 		propertyDefinitions.addAll(getEnvironmentalPropertyDefinitions());
 		return propertyDefinitions;
