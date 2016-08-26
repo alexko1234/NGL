@@ -36,6 +36,30 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		});	
 		
 		columns.push({
+			"header":Messages("containerSupports.table.state.code"),
+			"property":"state.code",
+			"position":3,
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"edit":isStateCodeEditable,
+			"choiceInList": true,
+			"listStyle":"bt-select",
+			"possibleValues":"searchService.lists.getStates()", 
+			"filter":"codes:'state'"
+	});
+		
+		columns.push({
+			"header":Messages("containerSupports.table.nbContainers"),
+			"property":"nbContainers",
+			"position":3.5,
+			"order":true,
+			"hide":true,
+			"type":"text"
+		});
+		
+		
+		columns.push({
 			"header":Messages("containerSupports.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"position":4,
@@ -60,6 +84,15 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"position":6,
 			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 			"order":false,
+			"hide":true,
+			"type":"text"
+		});
+		
+		columns.push({
+			"header":Messages("containerSupports.table.nbContents"),
+			"property":"nbContents",
+			"position":7,
+			"order":true,
 			"hide":true,
 			"type":"text"
 		});
@@ -107,19 +140,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 				
 		});
 
-		columns.push({
-				"header":Messages("containerSupports.table.state.code"),
-				"property":"state.code",
-				"position":3,
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":isStateCodeEditable,
-				"choiceInList": true,
-				"listStyle":"bt-select",
-				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'"
-		});
+		
 		
 		return columns;
 	};
