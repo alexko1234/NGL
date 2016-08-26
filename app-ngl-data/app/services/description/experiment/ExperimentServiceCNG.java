@@ -404,9 +404,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 			newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 					true,false,false,
-					getExperimentTypeNodes("library-prep", "prep-pcr-free"), 
+					getExperimentTypeNodes("library-prep", "prep-pcr-free"),
+					null,
 					getExperimentTypes("labchip-migration-profile"), 
-					null, 
 					null
 					).save();
 		
