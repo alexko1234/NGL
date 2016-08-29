@@ -54,6 +54,7 @@ GET		/migrationTaxonSample					controllers.migration.MigrationUpdateNCBITaxonSam
 GET		/cns/migration-sampleType				controllers.migration.cns.MigrationSampleType.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 
+GET		/cns/migration-updatesample				controllers.migration.cns.MigrationUpdateSampleProperties.migration()
 GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTypeRunExt.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()		

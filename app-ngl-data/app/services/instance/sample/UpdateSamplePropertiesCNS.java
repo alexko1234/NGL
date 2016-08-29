@@ -27,6 +27,7 @@ import play.Logger;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
+import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 
 import com.mongodb.MongoException;
@@ -42,22 +43,26 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-
 		//Récupère tous les samples modifiés les derniers 48h
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -7);
-		Date date =  calendar.getTime();
-
-		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","AW-0000011")/*.greaterThanEquals("traceInformation.modifyDate", date)*/).toList();
-
-		samples.stream().forEach(sample -> {
-			updateOneSample(sample);
-		});
-
+		updateSampleModifySince(-4,contextError);
 	}
 
+	static public void updateSampleModifySince(int nbDays,ContextValidation contextError){
 
-	public void updateOneSample(Sample sample) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DATE, nbDays);
+				Date date =  calendar.getTime();
+
+				//.is("code","OA-0000041")
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date)).toList();
+				Logger.debug("Nb samples to update :"+samples.size());
+				samples.stream().forEach(sample -> {
+					//Logger.debug("Sample "+sample.code);
+					updateOneSample(sample,contextError);
+				});
+	}
+
+	static public void updateOneSample(Sample sample,ContextValidation contextError) {
 
 		Logger.debug("Update sample "+sample.code);
 
@@ -92,11 +97,11 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		updates.put("readset",updateReadSet);
 		updates.put("process",updateProcess);
 		
-		updateCollectionsFromSample(sample, updates);
+		updateCollectionsFromSample(sample, updates,contextError);
 
 	} 
 
-	private void updateCollectionsFromSample(Sample sample, Map<String,DBUpdate.Builder> updates){
+	static private void updateCollectionsFromSample(Sample sample, Map<String,DBUpdate.Builder> updates, ContextValidation contextError){
 
 		Logger.info("Update son samples, containers, readSets, process from sample :"+sample.code);
 		
@@ -131,7 +136,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		//Update son samples
 		List<Sample> sonSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("life.from.sampleCode",sample.code)).toList();
 		sonSamples.stream().forEach(sonSample ->{
-			updateCollectionsFromSample(sonSample, updates);
+			updateCollectionsFromSample(sonSample, updates, contextError);
 		});
 	}
 
