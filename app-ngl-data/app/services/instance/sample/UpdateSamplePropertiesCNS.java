@@ -53,9 +53,8 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				calendar.add(Calendar.DATE, nbDays);
 				Date date =  calendar.getTime();
 
-				//.is("code","OA-0000041")
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date)).toList();
-				Logger.debug("Nb samples to update :"+samples.size());
+				Logger.info("Nb samples to update :"+samples.size());
 				samples.stream().forEach(sample -> {
 					//Logger.debug("Sample "+sample.code);
 					updateOneSample(sample,contextError);

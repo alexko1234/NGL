@@ -19,7 +19,7 @@ public class ImportDataCNS{
 
 	public ImportDataCNS(){
 
-/*
+
 	// Import Projects tous les jours à 16h00
 		new ProjectImportCNS(Duration.create(4,TimeUnit.MINUTES),Duration.create(4,TimeUnit.HOURS));
 		new IndexImportCNS(Duration.create(40,TimeUnit.SECONDS),Duration.create(1,TimeUnit.DAYS));
@@ -50,7 +50,7 @@ public class ImportDataCNS{
 		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(5,TimeUnit.MINUTES));
 		*/
 		
-		new UpdateSamplePropertiesCNS(Duration.create(3,TimeUnit.SECONDS),Duration.create(1,TimeUnit.HOURS));
+		new UpdateSamplePropertiesCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(23,20),TimeUnit.SECONDS),Duration.create(1,TimeUnit.HOURS));
 	}
 
 }
