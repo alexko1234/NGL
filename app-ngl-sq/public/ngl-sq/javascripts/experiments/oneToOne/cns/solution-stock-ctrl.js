@@ -271,7 +271,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
 				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,"unit":value.outputContainerUsed.volume.unit};
 				
-			}else if(value.inputContainerUsed.concentration.unit==="ng/ul") {
+			}else if(value.inputContainerUsed.concentration.unit==="ng/µl") {
 				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*1000000/(660*value.inputContainerUsed.size.value));
 				requiredVolume = Math.round(requiredVolume*10)/10
 				
