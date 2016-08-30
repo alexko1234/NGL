@@ -89,12 +89,12 @@ public class Nanopore extends AbstractDeclaration{
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
-		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , 
+		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("nanopore-library"),getPropertyDefinitionsNanoporeFragmentation() , 
 				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),getPET("nanopore-fragmentation",0),getPET("nanopore-library",1),getPET("nanopore-depot",2)), 
 				getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-process-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
-		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeLibrary() , 
+		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("nanopore-library"),getPropertyDefinitionsNanoporeLibrary() , 
 				Arrays.asList(getPET("ext-to-nanopore-process-library-no-frg",-1),getPET("nanopore-fragmentation",-1), getPET("nanopore-library",0),getPET("nanopore-depot",1)),
 				getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		

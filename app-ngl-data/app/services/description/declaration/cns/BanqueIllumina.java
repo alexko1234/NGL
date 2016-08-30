@@ -32,6 +32,19 @@ public class BanqueIllumina extends AbstractDeclaration {
 		l.add(newExperimentType("Ext to Bq DNA Illumina sizée","ext-to-dna-illumina-indexed-lib-sizing-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to Amplification (non sizée)","ext-to-amplification-process",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Ext to Amplification sizée","ext-to-amplification-sizing-process",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to Découpe","ext-to-sizing-process",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		return l;
 	}
 
@@ -66,7 +79,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 					,getPET("solution-stock",2)
 					,getPET("prepa-flowcell",3)
 					,getPET("prepa-fc-ordered",3)
-					,getPET("illumina-depot",5)), 
+					,getPET("illumina-depot",4)), 
 			getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-library-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 
@@ -82,7 +95,39 @@ public class BanqueIllumina extends AbstractDeclaration {
 							,getPET("prepa-fc-ordered",4)
 							,getPET("illumina-depot",5)), 
 					getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-lib-sizing-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(DescriptionFactory.newProcessType("Ampli, stk, dépôt", "ampli-stk-illumina-depot", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaWithoutSizing(),
+					Arrays.asList(getPET("ext-to-amplification-sizing-process",-1)
+							,getPET("dna-illumina-indexed-library",-1)
+							,getPET("pcr-amplification-and-purification",0)
+							,getPET("solution-stock",1)
+							,getPET("prepa-flowcell",2)
+							,getPET("prepa-fc-ordered",2)
+							,getPET("illumina-depot",3)), 
+					getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-amplification-sizing-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+
+					l.add(DescriptionFactory.newProcessType("Ampli, sizing, stk, dépôt", "ampli-sizing-stk-illumina-depot", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaSizing(),
+							Arrays.asList(getPET("ext-to-amplification-sizing-process",-1)
+									,getPET("dna-illumina-indexed-library",-1)
+									,getPET("pcr-amplification-and-purification",0)
+									,getPET("sizing",1)
+									,getPET("solution-stock",2)
+									,getPET("prepa-flowcell",3)
+									,getPET("prepa-fc-ordered",3)
+									,getPET("illumina-depot",4)), 
+							getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-amplification-sizing-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 					
+					l.add(DescriptionFactory.newProcessType("Sizing, stk, dépôt", "sizing-stk-illumina-depot", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaSizing(),
+							Arrays.asList(getPET("ext-to-amplification-sizing-process",-1)
+									,getPET("pcr-amplification-and-purification",-1)
+									,getPET("sizing",0)
+									,getPET("solution-stock",1)
+									,getPET("prepa-flowcell",2)
+									,getPET("prepa-fc-ordered",2)
+									,getPET("illumina-depot",3)), 
+							getExperimentTypes("sizing").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-sizing-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+									
 			return l;
 
 	}
@@ -96,6 +141,8 @@ public class BanqueIllumina extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueIlluminaDA(), 
 				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
 	}
