@@ -128,7 +128,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"choiceInList" : true,
 			"listStyle" : 'bt-select',
 			"possibleValues" : 'lists.getValuations()',
-			"position" : 20,
+			"position" : 30,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		
@@ -139,7 +139,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"edit" : true,
 			"hide" : true,
 			"type" : "text",			
-			"position" : 21,
+			"position" : 31,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		columns.push({

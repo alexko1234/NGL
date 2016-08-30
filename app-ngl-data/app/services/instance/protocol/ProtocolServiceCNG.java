@@ -63,20 +63,43 @@ public class ProtocolServiceCNG {
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
 		//-------Experiences de transformation
-		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
+		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", 
+				InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
 		// meme protocole pour une exp de transformation et controle qualité ???????????
-		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
-		lp.add(newProtocol("1a-sop-ill-pcrfree-dap-plate","1A_SOP_ILL_PCRfree_DAPplate", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
+		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
+													   "labchip-migration-profile" )));
+		
+		lp.add(newProtocol("1a-sop-ill-pcrfree-dap-plate","1A_SOP_ILL_PCRfree_DAPplate", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
+													   "labchip-migration-profile" )));
 		
 		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
-		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","pcr-and-purification","lib-normalization","prepa-fc-ordered","illumina-depot" )));
+		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
+													   "pcr-and-purification",
+													   "lib-normalization",
+													   "prepa-fc-ordered",
+													   "illumina-depot" )));
 		
 		// protocoles communs a plusieurs Experiment Types.....=> en attente....
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib")));
+				InstanceFactory.setExperimentTypeCodes("illumina-depot",
+													   "denat-dil-lib")));
+		
 		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization", "aliquoting","pool", "pcr-and-purification","library-prep","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate")));
+				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
+													   "lib-normalization", 
+													   "normalization-and-pooling",
+													   "aliquoting",
+													   "pool", 
+													   "pcr-and-purification",
+													   "library-prep",
+													   "tubes-to-plate",
+													   "plate-to-tubes",
+													   "plates-to-plate",
+													   "x-to-plate")));
 
 		
 		//-------Experiences de Control Qualité

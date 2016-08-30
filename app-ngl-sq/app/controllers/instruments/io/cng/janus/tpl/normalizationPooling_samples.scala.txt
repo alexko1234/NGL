@@ -8,10 +8,11 @@
 
 @***NOTES
 OLD header: Plaque source;N° puit;Vol éch à prélever;Vol tampon;Plaque destination;N° puit
-pas de bufer volume necessaire : @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.toString()}
+pas de buffer volume necessaire : @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.toString()}
 OutputHelper.getInputContainerUsedExperimentProperty(c,"inputVolume")}  converti les "." en "," ne pas utiliser pour du CSV basique...
-@{dest_code=a.outputContainerUseds.get(0).locationOnContainerSupport.code}.. non hardcode: Poolplate
+@{dest_code=a.outputContainerUseds.get(0).locationOnContainerSupport.code}.. non hardcoder: Poolplate
 ***@
+
 Source rack;Source position;Destination rack;Destination position;Volume éch à prélever
 @for((a,index) <- experiment.atomicTransfertMethods.sortWith(_.line<_.line).sortWith(_.column.toInt<_.column.toInt).zipWithIndex){
 		@for(c <- a.inputContainerUseds){

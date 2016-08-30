@@ -48,6 +48,42 @@ public class Input extends AbstractInput {
 				
 				PropertySingleValue measuredInsertSize = getPSV(icu, "measuredInsertSize");
 				measuredInsertSize.value = Integer.parseInt(data[8]);
+				
+				
+				//FDS 26/08/2016 ajout des autres colonnes
+				PropertySingleValue clusterPercentage = getPSV(icu, "clusterPercentage");
+				clusterPercentage.value = Double.parseDouble(data[4]);
+				
+				PropertySingleValue passingFilter = getPSV(icu, "passingFilter");
+				passingFilter.value = Double.parseDouble(data[5]);
+				
+
+				String[] alignedPercentage =data[6].split("/");	
+				PropertySingleValue R1AlignedPercentage = getPSV(icu, "R1AlignedPercentage");
+				R1AlignedPercentage.value = Double.parseDouble(alignedPercentage[0]);
+				
+				PropertySingleValue R2AlignedPercentage = getPSV(icu, "R2AlignedPercentage");
+				R2AlignedPercentage.value = Double.parseDouble(alignedPercentage[1]);
+				
+				String[] mismatchPercentage =data[7].split("/");
+				PropertySingleValue R1MismatchPercentage = getPSV(icu, "R1MismatchPercentage");
+				R1MismatchPercentage.value = Double.parseDouble(mismatchPercentage[0]);
+				
+				PropertySingleValue R2MismatchPercentage = getPSV(icu, "R2MismatchPercentage");
+				R2MismatchPercentage.value = Double.parseDouble(mismatchPercentage[1]);
+				
+				PropertySingleValue minInsertSize = getPSV(icu, "minInsertSize");
+				minInsertSize.value = Integer.parseInt(data[9]);
+				
+				PropertySingleValue maxInsertSize = getPSV(icu, "maxInsertSize");
+				maxInsertSize.value = Integer.parseInt(data[10]);
+				
+				PropertySingleValue observedDiversity = getPSV(icu, "observedDiversity");
+				observedDiversity.value = Integer.parseInt(data[11]);
+				
+				PropertySingleValue estimatedDiversity = getPSV(icu, "estimatedDiversity");
+				estimatedDiversity.value = Integer.parseInt(data[12]);	
+				
 			}			
 		});
 				

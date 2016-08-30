@@ -24,7 +24,7 @@ public class Output extends AbstractOutput {
 		String content=null;
 		String fdrType=null;
 
-		if ("normalization-and-pool".equals(experiment.typeCode)){
+		if ("normalization-and-pooling".equals(experiment.typeCode)){
 			//recuperer la valeur de la key "fdrType"dans contextValidation
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	

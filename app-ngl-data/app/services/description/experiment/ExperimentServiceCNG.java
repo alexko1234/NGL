@@ -133,8 +133,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/** Transformation, ordered by display order **/
 			
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
-			// ??? renommer  frg-and-prep-lib ???
-			// renommer le label en laissant le code a cause de l'existant ou faire une reprise ??
+			//       08/2016 renommer le label mais laisser le code "prep-pcr-free a cause de l'existant...
 			l.add(newExperimentType("Prep. Librairie (avec frg)","prep-pcr-free",null,500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPrepPcrFree(), 
@@ -572,16 +571,42 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
+	
 	public static List<PropertyDefinition> getPropertyDefinitionsQCMiseq() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//InputContainer
+		//InputContainer 
 		propertyDefinitions.add(newPropertiesDefinition("Densité de clusters", "clusterDensity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("c/mm²"), MeasureUnit.find.findByCode("c/mm²"),
 				"single", 11, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "measuredInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+		//FDS 26/08/2016 -- JIRA NGL-1046: label modifé + level.CODE.Content
+		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert médiane", "measuredInsertSize", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Integer.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
-				"single", 12, true, null, null));
+				"single", 18, true, null, null));
+		
+		//FDS 26/08/2016 -- JIRA NGL-1046: ajouter toutes les autres propriétés du fichier
+		propertyDefinitions.add(newPropertiesDefinition("% cluster", "clusterPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				null,null,null,"single", 12, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% PF", "passingFilter", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% Aligned R1", "R1AlignedPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				null,null,null,"single", 14, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% Aligned R2", "R2AlignedPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				null,null,null,"single", 15, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% Mismatch R1", "R1MismatchPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				null,null,null,"single", 16, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% Mismatch R1", "R2MismatchPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				null,null,null,"single", 17, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille Min", "minInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 19, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille Max", "maxInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 20, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Observed Diversity", "observedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				null,null,null,"single", 21, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Estimated Diversity", "estimatedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				null,null,null,"single", 22, true, null, null));
 	
 		return propertyDefinitions;
 	}
@@ -591,11 +616,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//InputContainer ( pas d'outputContainer sur une experience QC )
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
 				"single", 11, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));
 		
@@ -731,7 +756,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22, true, null, null));
 		
-		// comment peut-il y avoir une qté par défaut??? depend du volume et de la concentration !!!
 		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23, true, null, null));
 	
@@ -745,7 +769,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
 				"single", 31, true, null,null));		
 		
-		// pas de niveau content car théoriques( J Guy..) | meme valeurs ??? voir spec
+		// pas de niveau content car théoriques(J Guy..) | meme valeurs ??? voir spec
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",32,true,"350", null));
 		

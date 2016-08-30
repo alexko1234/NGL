@@ -2,13 +2,21 @@
 
 @import controllers.instruments.io.utils._;
 
-@*** FDS: declaration de variables avec le mot cle 'var' et toutes sur une seule ligne ***@
+@*** FDS: declaration de variables avec le mot cle 'var' et toutes sur une seule ligne 
+           pas reussi avec BigDecimal....
+  @import java.math.BigDecimal; var buffer_vol=0.0;
+  @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.parseFloat()}
+    ni
+  @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.Float.parseFloat()}
+***@
 @import java.lang.String; var buffer_vol="";
 @import java.math.BigInteger; var dest_pos=0;
 
 @*** NOTES
-Destination rack: harcoded=Poolplate
+Destination rack: harcoded="Poolplate"
+separateur ";" 
 ***@
+
 Destination rack;Destination Position;Vol tampon
 @for((a,index) <- experiment.atomicTransfertMethods.sortWith(_.line<_.line).sortWith(_.column.toInt<_.column.toInt).zipWithIndex){
 		@for(c <- a.outputContainerUseds){

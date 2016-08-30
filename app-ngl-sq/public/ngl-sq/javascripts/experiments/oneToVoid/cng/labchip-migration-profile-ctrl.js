@@ -8,22 +8,23 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
-		/* aucune propriété ne doit etre copié
+		/* decommenté le 30/08 + ajout de la size */
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
 				
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-				/*
 				if(concentration1){
 					inputContainerUsed.concentration = concentration1;
 				}
 				
-				
+				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);
+				if(size1){
+					inputContainerUsed.size = size1;
+				}
 			}
 			
 		});	
-		*/
 	};
 	
 	
