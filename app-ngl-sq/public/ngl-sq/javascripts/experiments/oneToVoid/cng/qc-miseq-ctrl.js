@@ -18,9 +18,9 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 					inputContainerUsed.concentration = concentration1;
 				}
 				
-				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);
-				if(size1){
-					inputContainerUsed.size = size1;
+				var insertsize = $parse("experimentProperties.measuredInsertSize")(inputContainerUsed);
+				if(insertsize){
+					inputContainerUsed.size = insertsize;
 				}
 			}
 		});		
