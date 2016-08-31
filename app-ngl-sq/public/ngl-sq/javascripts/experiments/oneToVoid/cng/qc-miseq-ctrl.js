@@ -7,16 +7,22 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
-		/* FDS decommenté le 30/08 : la propriété de l'experience doit etre copiée dans le container */
+		
+		/* FDS decommenté le 30/08 + ajout de la size: les 2 propriétés de l'expérience doivent etres copiées dans le container */
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
+				
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
 					inputContainerUsed.concentration = concentration1;
 				}
+				
+				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);
+				if(size1){
+					inputContainerUsed.size = size1;
+				}
 			}
-			
 		});		
 	};
 	
