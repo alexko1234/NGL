@@ -7,7 +7,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
-		/*
+		/* FDS decommenté le 30/08 : la propriété de l'experience doit etre copiée dans le container */
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
@@ -18,7 +18,6 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 			}
 			
 		});		
-		*/	
 	};
 	
 	

@@ -611,16 +611,16 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	// FDS JIRA NGL-1030 Ajouter la propriété size et rendre les 2 de niveau Content et obligatoire
+	// FDS JIRA NGL-1030 Ajouter la propriété size et rendre les 2 obligatoires au status "F"(Terminé)
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
-		//InputContainer ( pas d'outputContainer sur une experience QC )
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, "F", null, 
+		//InputContainer (pas d'outputContainer sur une experience QC )
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
 				"single", 11, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));
 		

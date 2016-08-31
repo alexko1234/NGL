@@ -8,7 +8,7 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
-		/* decommenté le 30/08 + ajout de la size */
+		/* FDS decommenté le 30/08 + ajout de la size: les 2 propriétés de l'expérience doivent etres copiées dans le container */
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
@@ -22,8 +22,7 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 				if(size1){
 					inputContainerUsed.size = size1;
 				}
-			}
-			
+			}	
 		});	
 	};
 	

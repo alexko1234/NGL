@@ -23,8 +23,6 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
-		
-		
 		InputStream is = new ByteArrayInputStream(pfv.value);
 		
 		CSVReader reader = new CSVReader(new InputStreamReader(is));
@@ -50,27 +48,27 @@ public class Input extends AbstractInput {
 				measuredInsertSize.value = Integer.parseInt(data[8]);
 				
 				
-				//FDS 26/08/2016 ajout des autres colonnes
+				//FDS 26/08/2016 ajout des autres colonnes; !! cas des decimaux francais...
 				PropertySingleValue clusterPercentage = getPSV(icu, "clusterPercentage");
-				clusterPercentage.value = Double.parseDouble(data[4]);
+				clusterPercentage.value = Double.parseDouble(data[4].replace (",", "."));
 				
 				PropertySingleValue passingFilter = getPSV(icu, "passingFilter");
-				passingFilter.value = Double.parseDouble(data[5]);
+				passingFilter.value = Double.parseDouble(data[5].replace (",", "."));
 				
 
 				String[] alignedPercentage =data[6].split("/");	
 				PropertySingleValue R1AlignedPercentage = getPSV(icu, "R1AlignedPercentage");
-				R1AlignedPercentage.value = Double.parseDouble(alignedPercentage[0]);
+				R1AlignedPercentage.value = Double.parseDouble(alignedPercentage[0].replace (",", "."));
 				
 				PropertySingleValue R2AlignedPercentage = getPSV(icu, "R2AlignedPercentage");
-				R2AlignedPercentage.value = Double.parseDouble(alignedPercentage[1]);
+				R2AlignedPercentage.value = Double.parseDouble(alignedPercentage[1].replace (",", "."));
 				
 				String[] mismatchPercentage =data[7].split("/");
 				PropertySingleValue R1MismatchPercentage = getPSV(icu, "R1MismatchPercentage");
-				R1MismatchPercentage.value = Double.parseDouble(mismatchPercentage[0]);
+				R1MismatchPercentage.value = Double.parseDouble(mismatchPercentage[0].replace (",", "."));
 				
 				PropertySingleValue R2MismatchPercentage = getPSV(icu, "R2MismatchPercentage");
-				R2MismatchPercentage.value = Double.parseDouble(mismatchPercentage[1]);
+				R2MismatchPercentage.value = Double.parseDouble(mismatchPercentage[1].replace (",", "."));
 				
 				PropertySingleValue minInsertSize = getPSV(icu, "minInsertSize");
 				minInsertSize.value = Integer.parseInt(data[9]);
@@ -82,8 +80,7 @@ public class Input extends AbstractInput {
 				observedDiversity.value = Integer.parseInt(data[11]);
 				
 				PropertySingleValue estimatedDiversity = getPSV(icu, "estimatedDiversity");
-				estimatedDiversity.value = Integer.parseInt(data[12]);	
-				
+				estimatedDiversity.value = Integer.parseInt(data[12]);			
 			}			
 		});
 				
