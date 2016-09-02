@@ -11,8 +11,9 @@ import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
-
 import org.springframework.stereotype.Repository;
+
+import play.Logger;
 @Repository
 public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNode>{
 
@@ -62,6 +63,8 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		if(value.previousExperimentType != null && value.previousExperimentType.size() > 0){
 			insertPrevious(value.previousExperimentType, value.id, false);
 		}
+		
+		Logger.debug("saveExperimentTypeNode : "+ value.code);
 		return value.id;
 	}
 

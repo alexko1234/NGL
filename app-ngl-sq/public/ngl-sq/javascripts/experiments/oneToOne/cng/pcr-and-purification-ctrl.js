@@ -92,7 +92,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0:inputExtraHeaders}
-			         },				 
+			         },	
+			         /* suppression demandee lors du test avant mise en prod 01/09/2016
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainer.concentration.value",
@@ -103,6 +104,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			        	 "position":5,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         */
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
 			        	 "property":"inputContainer.volume.value",
@@ -347,6 +349,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
+	
+	/*  inputQuantity   supprimee avant mise en prod 01/09/2016....donc plus de calcul
 	// Calculs 
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
@@ -383,6 +387,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			console.log("Missing values to exec computeQuantity");
 		}
 	}
+	*/
 	
 	
 }]);

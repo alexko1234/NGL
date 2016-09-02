@@ -66,7 +66,6 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", 
 				InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
-		// meme protocole pour une exp de transformation et controle qualité ???????????
 		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
 													   "labchip-migration-profile" )));
@@ -74,14 +73,17 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("1a-sop-ill-pcrfree-dap-plate","1A_SOP_ILL_PCRfree_DAPplate", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
 													   "labchip-migration-profile" )));
+
 		
 		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
+		//01/09/2016 aussi pour "labchip-migration-profile"
 		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
 													   "pcr-and-purification",
 													   "lib-normalization",
 													   "prepa-fc-ordered",
-													   "illumina-depot" )));
+													   "illumina-depot",
+													   "labchip-migration-profile")));
 		
 		// protocoles communs a plusieurs Experiment Types.....=> en attente....
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
@@ -103,8 +105,15 @@ public class ProtocolServiceCNG {
 
 		
 		//-------Experiences de Control Qualité
-		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", InstanceFactory.setExperimentTypeCodes("miseq-qc")));
-		lp.add(newProtocol("3a-kapa-qPCR-240715","3A_KAPA_qPCR_240715", "?","1","production",InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
+		
+		lp.add(newProtocol("3a-kapa-qPCR-240715","3A_KAPA_qPCR_240715", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+		
+		//01/09/2016 ajout 
+		lp.add(newProtocol("labchip-gx","LabChiP_GX", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes( "labchip-migration-profile" )));
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);

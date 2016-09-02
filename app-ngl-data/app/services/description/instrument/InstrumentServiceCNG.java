@@ -141,9 +141,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// pas de properties ????
+		/* 01/09/2016 nom et code incorrects -/- specs!!! Laisser le code mais corriger le name*/
 		l.add(newInstrumentUsedType("LabChip GX", "labChipGX", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(
-						createInstrument("labGX", "Lab_GX", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))) ,
+						createInstrument("labGX", "LABCHIP_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))) ,
 				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
