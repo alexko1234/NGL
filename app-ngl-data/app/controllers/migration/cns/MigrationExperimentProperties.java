@@ -21,22 +21,29 @@ import models.utils.InstanceConstants;
 import play.Logger;
 import play.mvc.Result;
 
-public class MigrationProcessusProperties extends CommonController{
+public class MigrationExperimentProperties extends CommonController{
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	
 	/**
-	 * Propagation d'une propriété de processus au niveau content (containers et readSets)
-	 * @param processTypeCode
+	 * Propagation d'une propriété d'experiment au niveau content (containers et readSets)
+	 * @param experimentTypeCode
 	 * @param keyProperty
 	 * @return
 	 */
-	public static Result migration(String processTypeCode, String keyProperty){
+	public static Result migration(String experimentTypeCode, String keyProperty){
 
 		//backupContainerCollection();
 		//backupReadSetCollection();
 		
-		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("typeCode", processTypeCode).exists("outputContainerSupportCodes")).toList();
+		//Get list experiment
+		
+		//Get all inputQuantity to change to libraryInputQuantity
+		
+		//add libraryInputQuantity
+		
+		
+		/*List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("typeCode", processTypeCode).exists("outputContainerSupportCodes")).toList();
 
 		
 		//Check same sample Code in list content container child
@@ -94,7 +101,7 @@ public class MigrationProcessusProperties extends CommonController{
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
 				}
 			}
-		}
+		}*/
 		return ok();
 	}
 	
