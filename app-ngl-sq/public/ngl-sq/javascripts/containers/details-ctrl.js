@@ -233,7 +233,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 		var promises = [];
 		if(codes.parentContainerCodes.length > 0){ // Case no paths
-			promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
+			var nbElementByBatch = Math.ceil(codes.parentContainerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+            var queries = [];
+            for (var i = 0; i < 6 && codes.parentContainerCodes.length > 0; i++) {
+                var subContainerCodes = codes.parentContainerCodes.splice(0, nbElementByBatch);
+                promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:subContainerCodes}}));                
+            }			
 		}
 		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
 		
