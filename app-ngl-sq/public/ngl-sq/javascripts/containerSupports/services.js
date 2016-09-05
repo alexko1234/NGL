@@ -35,6 +35,19 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"groupMethod":"collect"
 		});	
 		
+		// 23/05/2016 FDS: NGL-825: suppression affichage status de validite pour les containerSupports
+		//                          factorisation state.code; storageCode editable
+		var isStateCodeEditable;
+		var isStorageCodeEditable;
+		
+		if(mainService.getHomePage() === 'state'){
+			isStateCodeEditable= true;
+			isStorageCodeEditable= false;
+		} else { 
+			isStateCodeEditable= false;
+			isStorageCodeEditable= true;
+		}
+		
 		columns.push({
 			"header":Messages("containerSupports.table.state.code"),
 			"property":"state.code",
@@ -114,19 +127,6 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"hide":true,
 			"type":"text"
 		});
-		
-		// 23/05/2016 FDS: NGL-825: suppression affichage status de validite pour les containerSupports
-		//                          factorisation state.code; storageCode editable
-		var isStateCodeEditable;
-		var isStorageCodeEditable;
-		
-		if(mainService.getHomePage() === 'state'){
-			isStateCodeEditable= true;
-			isStorageCodeEditable= false;
-		} else { 
-			isStateCodeEditable= false;
-			isStorageCodeEditable= true;
-		}
 		
 		columns.push({
 			"header":Messages("containers.table.storageCode"),
