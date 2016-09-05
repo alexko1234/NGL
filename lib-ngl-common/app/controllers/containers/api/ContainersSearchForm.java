@@ -31,6 +31,7 @@ public class ContainersSearchForm extends ListForm{
 	public String supportCodeRegex;
 	public String supportStorageCodeRegex;
 	public String containerSupportCategory;
+	public String fromPurificationTypeCode;
 	public Set<String> containerSupportCategories;
 	public Set<String> fromTransformationTypeCodes;
 	public Set<String> valuations;
