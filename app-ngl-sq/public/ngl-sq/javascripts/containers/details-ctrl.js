@@ -43,8 +43,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		mainService.stopEditMode();
 			
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
-			$scope.container = response.data;
-			console.log($scope.container);
+			$scope.container = response.data;			
 			if(tabService.getTabs().length == 0){			
 				tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("search").url,remove:true});
 				tabService.addTabs({label:$scope.container.code,href:jsRoutes.controllers.containers.tpl.Containers.get($scope.container.code).url,remove:true});
