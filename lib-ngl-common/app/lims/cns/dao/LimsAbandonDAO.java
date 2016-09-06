@@ -533,11 +533,12 @@ public class LimsAbandonDAO {
 			 int laneNum=Integer.valueOf(atomicTransfertMethods.outputContainerUseds.get(0).locationOnContainerSupport.line);
 			 for(InputContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds){
 				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-				 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
-				 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);
-				 Logger.debug("pc_DepotsolutionstockNGL @matmaco="+ds.matmaco+",@matmacos = "+matmacos+",@lanenum="+laneNum+",@rmatperpiste="+containerUsed.percentage);
-				 this.jdbcTemplate.update("pc_DepotsolutionstockNGL @matmaco=?,@matmacos = ?,@lanenum=?,@rmatperpiste=?",ds.matmaco,matmacos,laneNum,containerUsed.percentage);
-
+				 if(container.properties.containsKey("limsCode")){
+					 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
+					 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);
+					 Logger.debug("pc_DepotsolutionstockNGL @matmaco="+ds.matmaco+",@matmacos = "+matmacos+",@lanenum="+laneNum+",@rmatperpiste="+containerUsed.percentage);
+					 this.jdbcTemplate.update("pc_DepotsolutionstockNGL @matmaco=?,@matmacos = ?,@lanenum=?,@rmatperpiste=?",ds.matmaco,matmacos,laneNum,containerUsed.percentage);
+ 				 }
 			 }
 		 }
 		return ds;

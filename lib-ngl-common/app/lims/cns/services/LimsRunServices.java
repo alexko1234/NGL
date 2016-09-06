@@ -228,16 +228,16 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
-			
-			
 						
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
 			
-			Integer cptreco = null;
-			Integer tacheId = null;
 			if(firstTime){
 				sendMailAgirs(readSet);
-				
+			}
+			
+			Integer cptreco = null;
+			Integer tacheId = null;
+			if(firstTime && dao.isLseqco(readSet)){
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
 				
 				
@@ -278,7 +278,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					}
 				}
 				
-			}else{
+			}else if(dao.isLseqco(readSet)){
 				try{
 					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
 					if(null != lsv){
@@ -446,16 +446,11 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					String index = (readSet.code.contains("."))?readSet.code.split("\\.")[1]:"";
 					String key = readSet.sampleCode+"_"+readSet.laneNumber+"_"+index;
 					//Logger.debug("key readSet = "+key);
-					mapReadSets.put(key, readSet);
-					
-					if(!mapBanques.containsKey(key)){
-						throw new RuntimeException("ReadSet "+readSet.code+" not found in lims");
+					//we insert only that we find in dblims
+					if(mapBanques.containsKey(key)){
+						mapReadSets.put(key, readSet);
+						
 					}
-				}
-				Logger.debug("banques.size() != readSets.size() "+mapBanques.size()+" / "+mapReadSets.size());
-				readSets = null;
-				if(mapBanques.size() != mapReadSets.size()){
-					throw new RuntimeException("banques.size() != readSets.size() "+mapBanques.size()+" / "+mapReadSets.size());
 				}
 				
 				Logger.debug("Load DepotSolexa = "+ds);
@@ -490,9 +485,11 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void updateReadSetAfterQC(ReadSet readset) {
 		try{
-			dao.updateReadSetEtat(readset, 2);
-			dao.updateReadSetBaseUtil(readset);
-			dao.insertFiles(readset, true);
+			if(dao.isLseqco(readset)){
+				dao.updateReadSetEtat(readset, 2);
+				dao.updateReadSetBaseUtil(readset);
+				dao.insertFiles(readset, true);
+			}
 			
 		}catch(Throwable t){
 			logger.error("Synchro READSET AfterQC: "+readset.code+" : "+t.getMessage(),t);
@@ -500,13 +497,17 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	}
 
 	public void updateReadSetEtat(ReadSet readset, int etat){
-		dao.updateReadSetEtat(readset, etat);
+		if(dao.isLseqco(readset)){
+			dao.updateReadSetEtat(readset, etat);
+		}
 	}
 	
 	@Override
 	public void updateReadSetArchive(ReadSet readset) {
 		try{
-			dao.updateReadSetArchive(readset);
+			if(dao.isLseqco(readset)){
+				dao.updateReadSetArchive(readset);
+			}
 			
 		}catch(Throwable t){
 			logger.error("Synchro READSET Archive: "+readset.code+" : "+t.getMessage(),t);
