@@ -314,6 +314,10 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.regex("support.storageCode", Pattern.compile(containersSearch.supportStorageCodeRegex)));
 		}
 		
+		if(StringUtils.isNotBlank(containersSearch.fromPurificationTypeCode)){
+			queryElts.add(DBQuery.is("fromPurificationTypeCode", containersSearch.fromPurificationTypeCode));
+		}
+		
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){
 			queryElts.add(DBQuery.in("support.categoryCode", containersSearch.containerSupportCategories));
 		}else if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){

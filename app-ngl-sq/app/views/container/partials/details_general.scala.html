@@ -128,11 +128,7 @@
 							<div ng-repeat="(key, value) in content.properties">
 								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'"></label>
-								<div class="col-md-6 col-lg-6">
-								<!--  TO CORRECT no display codes for libLayoutNominalLength and insertSize properties   -->
-								<p class="form-control-static" ng-if="key !== 'libLayoutNominalLength' &&  key !=='insertSize' " ng-bind="value.value|codes:'value':false" />
-								<p class="form-control-static" ng-if="key === 'libLayoutNominalLength' || key ==='insertSize'" ng-bind="value.value" />
-								</div>
+								<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value|codes:'value.'+key:false" /></div>
 								
 							</div>
 						</td>
