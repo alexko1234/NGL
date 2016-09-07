@@ -1,8 +1,5 @@
 package services.description.instrument;
 
-import static services.description.DescriptionFactory.newInstrumentCategory;
-import static services.description.DescriptionFactory.newInstrumentUsedType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.*;
 
 import java.awt.Image;
@@ -419,7 +416,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"9"));
+    	propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, getVersionNanopore(), 
+				null,null,null,"single", 200, true, "R9-spot-on", null));	
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
        // propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",400));
@@ -747,5 +745,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("ODYSSEE", "ODYSSEE", null, true, "/env/ig/atelier/bionano/cns/ODYSSEE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;
 	}
-
+	
+	private static List<Value> getVersionNanopore(){
+        List<Value> values = new ArrayList<Value>();
+         values.add(DescriptionFactory.newValue("9","R9"));
+         values.add(DescriptionFactory.newValue("R9-spot-on", "R9-spot on"));
+         return values;
+	}
 }
