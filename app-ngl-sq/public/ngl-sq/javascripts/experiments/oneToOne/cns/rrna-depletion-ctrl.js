@@ -149,7 +149,8 @@ angular.module('home').controller('rRNADepletionCtrl',['$scope', '$parse', 'atmT
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:'inputContainer.sampleCodes'
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
