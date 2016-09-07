@@ -456,6 +456,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				
 								
 			},
+			getPlateCode:function(){
+				if($scope.experimentType.atomicTransfertMethod === 'OneToVoid'){
+					return $scope.experiment.inputContainerSupportCodes[0];
+				}else if($scope.experiment.outputContainerSupportCodes){
+					return $scope.experiment.outputContainerSupportCodes[0];
+				}
+				
+								
+			},
 			/**
 			 * Info on plate design
 			 */
