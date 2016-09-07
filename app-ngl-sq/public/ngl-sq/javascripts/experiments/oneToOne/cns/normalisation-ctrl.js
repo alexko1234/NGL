@@ -411,7 +411,10 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL"
-	}
+	};
+	atmService.defaultOutputValue = {
+			size : {copyInputContainer:true}
+	};
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	$scope.atmService = atmService;

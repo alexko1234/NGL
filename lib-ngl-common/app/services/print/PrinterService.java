@@ -94,7 +94,7 @@ public class PrinterService {
 	private void sendCommands(BBP11 printer, String commands) throws PrintServicesException {
 
 		if (Logger.isInfoEnabled())
-			Logger.info("Sending\n" + commands + "\n to " + this);
+			Logger.info("Sending\n" + commands + "\n to " + printer.name);
 
 		Socket printerSocket = new Socket();
 
@@ -107,16 +107,16 @@ public class PrinterService {
 			output.close();
 
 			if (Logger.isInfoEnabled())
-				Logger.info("Done sending commands to " + this);
+				Logger.info("Done sending commands to "  + printer.name);
 
 		} catch (Exception e) {
-			throw new PrintServicesException("While sending \n" + commands + "\n to " + this, e);
+			throw new PrintServicesException("While sending \n" + commands + "\n to "  + printer.name, e);
 		} finally {
 			try {
 				printerSocket.close();
 			} catch (IOException e) {
 				if (Logger.isDebugEnabled())
-					Logger.debug("While closing socket to " + this, e);
+					Logger.debug("While closing socket to "  + printer.name, e);
 			}
 		}
 

@@ -429,8 +429,10 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	atmService.defaultOutputUnit = {
 			volume : "µL",
 			concentration : "nM"
-	}
-	
+	};
+	atmService.defaultOutputValue = {
+			size : {copyInputContainer:true}
+	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
 		$scope.messages.clear();

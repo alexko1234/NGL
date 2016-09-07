@@ -324,6 +324,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 	/**
 	 * Update concentration. Copy input concentration to all outputs
 	 */
+	
 	$scope.updateConcentration = function(experiment){
 		
 		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
@@ -408,7 +409,10 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 	atmService.defaultOutputUnit = {
 			volume : "µL",
 			quantity:"ng"
-	}
+	};
+	atmService.defaultOutputValue = {
+			size : {copyInputContainer:true}
+	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
