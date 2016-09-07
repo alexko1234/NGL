@@ -135,7 +135,8 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 					},
 					order:{
 						mode:'local', //or 
-						active:true
+						active:true,
+						by:'inputContainer.sampleCodes'
 					},
 					remove:{
 						active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -326,7 +327,7 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 			"extraHeaders" : {
 				0 : Messages("experiments.outputs")
 			}
-		});
+		});		
 	}
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod

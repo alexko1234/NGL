@@ -275,51 +275,53 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			}			
 	};
 
-		$scope.$on('save', function(e, callbackFunction) {	
-			console.log("call event save on one-to-void");
-			$scope.atmService.data.save();			
-			$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
-			$scope.copyPropertiesToInputContainer($scope.experiment); //override from child
-			$scope.$emit('childSaved', callbackFunction);
-		});
-		
-		$scope.$on('refresh', function(e) {
-			console.log("call event refresh on one-to-void");		
-			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-			dtConfig.edit.shwoButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
-			$scope.atmService.data.setConfig(dtConfig);
-			$scope.atmService.refreshViewFromExperiment($scope.experiment);
-			$scope.$emit('viewRefeshed');
-		});
-		
-		$scope.$on('cancel', function(e) {
-			console.log("call event cancel");
-			$scope.atmService.data.cancel();				
-		});
-		
-		$scope.$on('activeEditMode', function(e) {
-			console.log("call event activeEditMode");
-			$scope.atmService.data.selectAll(true);
-			$scope.atmService.data.setEdit();
-		});
-		
-		datatableConfig.columns = getDefaultDatatableColumn();
-		var atmService = atmToSingleDatatable($scope, datatableConfig, true);
-		//defined new atomictransfertMethod
-		atmService.newAtomicTransfertMethod = function(line, column){
-			return {
-				class:"OneToVoid",
-				line:line, 
-				column:column, 				
-				inputContainerUseds:new Array(0)
-			};
+	
+	
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save on one-to-void");
+		$scope.atmService.data.save();			
+		$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
+		$scope.copyPropertiesToInputContainer($scope.experiment); //override from child
+		$scope.$emit('childSaved', callbackFunction);
+	});
+	
+	$scope.$on('refresh', function(e) {
+		console.log("call event refresh on one-to-void");		
+		var dtConfig = $scope.atmService.data.getConfig();
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.shwoButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		$scope.atmService.data.setConfig(dtConfig);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
+		$scope.$emit('viewRefeshed');
+	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.cancel();				
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
+	});
+	
+	datatableConfig.columns = getDefaultDatatableColumn();
+	var atmService = atmToSingleDatatable($scope, datatableConfig, true);
+	//defined new atomictransfertMethod
+	atmService.newAtomicTransfertMethod = function(line, column){
+		return {
+			class:"OneToVoid",
+			line:line, 
+			column:column, 				
+			inputContainerUseds:new Array(0)
 		};
-		
-		atmService.experimentToView($scope.experiment, $scope.experimentType);
-		
-		$scope.atmService = atmService;
+	};
+	
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	$scope.atmService = atmService;
 		
 
 }]);

@@ -130,7 +130,8 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:'inputContainer.sampleCodes'
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -351,7 +352,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
-		});
+		});		
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {

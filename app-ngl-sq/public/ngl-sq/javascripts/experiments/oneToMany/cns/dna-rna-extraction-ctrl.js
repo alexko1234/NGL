@@ -132,7 +132,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'inputContainer.code'
+				by:'inputContainer.sampleCodes'
 			},
 			remove:{
 				active:false,

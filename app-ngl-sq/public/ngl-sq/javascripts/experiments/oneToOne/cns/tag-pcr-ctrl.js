@@ -276,6 +276,9 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 				0 : Messages("experiments.inputs")
 			}
 		});
+		
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
+	
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
