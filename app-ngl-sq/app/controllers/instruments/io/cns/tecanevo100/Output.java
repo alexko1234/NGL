@@ -47,7 +47,7 @@ public class Output extends AbstractOutput {
 		}
 		
 		
-		String filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+experiment.code+"_Tecan.csv";
+		String filename = OutputHelper.getInstrumentPath(experiment.instrument.code,false)+experiment.code+"_Tecan.csv";
 		File file = new File(filename, content);
 		OutputHelper.writeFile(file);
 		return file;

@@ -34,7 +34,7 @@ import fr.cea.ig.MongoDBDAO;
 public class OutputHelper {
 
 	
-	public static String getInstrumentPath(String instrumentCode){
+	public static String getInstrumentPath(String instrumentCode, boolean addSampleSheet){
 		Instrument instrument = null;
 		try {
 			instrument = Instrument.find.findByCode(instrumentCode);
@@ -44,11 +44,17 @@ public class OutputHelper {
 		if(instrument != null){
 			if(Play.application().configuration().getString("ngl.path.instrument") != null){
 				return Play.application().configuration().getString("ngl.path.instrument")+java.io.File.separator;
-			}else{
+			}else if(addSampleSheet){
 				return instrument.path+java.io.File.separator+"SampleSheet"+java.io.File.separator;
+			}else {
+				return instrument.path+java.io.File.separator;
 			}
 		}
 		return null;
+	}
+	
+	public static String getInstrumentPath(String instrumentCode){		
+		return getInstrumentPath(instrumentCode, true);
 	}
 	
 	public static void writeFile(File file) {
@@ -188,12 +194,10 @@ public class OutputHelper {
 	}
 	
 	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName){	
-		Logger.debug("(1) valeur "+propertyName +" : "+container.experimentProperties.get(propertyName).value);
 		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
 	}
 	
 	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName, int scale){
-		Logger.debug("(2) valeur "+propertyName +" : "+container.experimentProperties.get(propertyName).value);
 		if(!container.experimentProperties.get(propertyName).value.equals("")){
 			return new BigDecimal(container.experimentProperties.get(propertyName).value.toString()).setScale(scale, BigDecimal.ROUND_UP).toString().replace(".",",") ;
 		}
@@ -303,4 +307,37 @@ public class OutputHelper {
 		return getNumberPositionInPlateByColumn(icu1.locationOnContainerSupport.line, icu1.locationOnContainerSupport.column) < getNumberPositionInPlateByColumn(icu2.locationOnContainerSupport.line, icu2.locationOnContainerSupport.column);
 	}
 
+	public static String getContentPropertyIfOne(InputContainerUsed container, String propertyName) {
+		List<String> l = container.contents.stream().map((Content c) -> c.properties.get(propertyName).value.toString())
+				.collect(Collectors.toList());
+		
+		if(l.size() == 1 ){
+			return l.get(0);
+		}
+		return null;
+		
+	}
+	
+	public static String getProjectCodeIfOne(InputContainerUsed container) {
+		List<String> l = container.contents.stream().map((Content c) -> c.projectCode)
+				.collect(Collectors.toList());
+		
+		if(l.size() == 1 ){
+			return l.get(0);
+		}
+		return null;
+		
+	}
+	
+	public static String getSampleCodeIfOne(InputContainerUsed container) {
+		List<String> l = container.contents.stream().map((Content c) -> c.sampleCode)
+				.collect(Collectors.toList());
+		
+		if(l.size() == 1 ){
+			return l.get(0);
+		}
+		return null;
+		
+	}
+	
 }

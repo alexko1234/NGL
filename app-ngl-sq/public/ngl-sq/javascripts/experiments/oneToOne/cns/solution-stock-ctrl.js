@@ -468,13 +468,14 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			$scope.messages.open();				
 		});
 	};
-
-	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isNewState();} ,
-		isShow:function(){return !$scope.isNewState();},
-		click:generateSampleSheet,
-		label:Messages("experiments.sampleSheet")
-	}]);
+	if("tecan-evo-100" === $scope.experiment.instrument.typeCode){
+		$scope.setAdditionnalButtons([{
+			isDisabled : function(){return $scope.isNewState();} ,
+			isShow:function(){return !$scope.isNewState();},
+			click:generateSampleSheet,
+			label:Messages("experiments.sampleSheet")
+		}]);
+	}
 	
 	
 }]);
