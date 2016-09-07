@@ -99,7 +99,7 @@ public class QualityControl extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("library"), null,
+		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), null,
 				Arrays.asList(getPET("ext-to-qc-transfert-purif",-1)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;

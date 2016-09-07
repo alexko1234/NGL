@@ -798,6 +798,11 @@ public class ResolutionService {
 
 		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
+		l.add(InstanceFactory.newResolution("Arrêt - à ré-extraire","stop-reextraire", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";

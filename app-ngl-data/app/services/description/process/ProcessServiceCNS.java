@@ -42,6 +42,8 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque Nanopore", "nanopore-library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Réévaluation et/ou exp satellites", "satellites"));
+		
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
 
 	}
