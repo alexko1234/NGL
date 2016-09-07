@@ -317,6 +317,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				0 : Messages("experiments.inputs")
 			}
 		});
+		
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
 
