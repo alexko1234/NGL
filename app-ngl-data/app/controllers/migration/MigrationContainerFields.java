@@ -1,35 +1,50 @@
 package controllers.migration;
 
-import java.util.Arrays;
-
-
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import models.laboratory.container.instance.Container;
-import models.laboratory.run.instance.ReadSet;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
-
-
-import org.apache.commons.collections.CollectionUtils;
-import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-
-
 import play.Logger;
-import play.Play;
 import play.mvc.Result;
-import rules.services.RulesMessage;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class MigrationContainerFields extends CommonController {
 	
-public static Result migration(){
+	public static Result migration(){
+		Logger.info("Start MigrationContainerFields");
+		
+		List<Experiment> purifExperiments =MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("categoryCode", "purification")).toList();
+		purifExperiments.parallelStream().forEach(p->{
+			p.outputContainerCodes.parallelStream().forEach(c->{
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.is("code",c).notExists("fromPurificationCode").notExists("fromPurificationTypeCode"),DBUpdate.set("fromPurificationTypeCode",p.typeCode).set("fromPurificationCode",p.code));
+			});
+			
+		});
+		
+		List<Experiment> transfertExperiments =MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("categoryCode", "transfert")).toList();
+		transfertExperiments.parallelStream().forEach(t->{
+			t.outputContainerCodes.parallelStream().forEach(c->{
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.is("code",c).notExists("fromTransfertTypeCode").notExists("fromTransfertCode"),DBUpdate.set("fromTransfertTypeCode",t.typeCode).set("fromTransfertCode",t.code));
+			});
+			
+		});
+		
+		return ok("Migration Finish");
+
+	}
+	
+public static Result migrationOld(){
 		
 		Logger.info("Start MigrationContainerFields");
 		
