@@ -409,6 +409,12 @@ public class LimsAbandonDAO {
 				,Integer.class, ls.matmaco, ls.lanenum) > 0);
 	}
 
+	public Boolean isPistco(String runnom, Integer lanenum){
+		return (this.jdbcTemplate.queryForObject("select count(pistco) from Piste p, Runhd r where  runhnom=? and p.runhco=r.runhco and pistnum=?"
+				,Integer.class, runnom, lanenum) > 0);
+	}
+
+	
 	private Integer convertLabel(String value) {
 		if("READ1".equalsIgnoreCase(value)){
 			return 1;
