@@ -8,6 +8,8 @@
 </h1>
 <h5>
 <span list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' horizontal></span>
-<span ng-if="container.fromPurificationTypeCode">@Messages("container.from") </span>
+<span ng-if="(container.fromPurificationTypeCode||container.fromTransfertTypeCode)">@Messages("container.from") </span>
 <span ng-if="container.fromPurificationTypeCode" ng-bind="container.fromPurificationTypeCode|codes:'type'"></span>
+<span ng-if="container.fromTransfertTypeCode" ng-bind="container.fromTransfertTypeCode|codes:'type'"></span>
+
 </h5>
