@@ -245,11 +245,13 @@ public class LimsAbandonDAO {
     	for(Lane lane : lanes){
     		try{
     		LaneSolexa ls = convertLaneToLaneSolexa(lane, ds);
-    		Logger.info("insertLanes : "+ls);
-    		this.jdbcTemplate.update("pc_Lanemetrics @lanenum=?, @matmaco=?, @lmnbseq=?, @lmnbclustfiltr=?, @lmperseqfiltr=?, @lmnbclust=?, "
-    				+ "@lmperclustfiltr=?, @lmnbbase=?, @lmnbcycle=?, @pistnbcycle=?, @lmphasing=?, @lmprephasing=?",
-    				ls.lanenum, ls.matmaco, ls.lmnbseq, ls.lmnbclustfiltr, ls.lmperseqfiltr, ls.lmnbclust,
-    				ls.lmperclustfiltr,ls.lmnbbase,ls.lmnbcycle,ls.pistnbcycle,ls.lmphasing,ls.lmprephasing);
+    		if(isLaneco(ls)){
+    			Logger.info("insertLanes : "+ls);
+	    		this.jdbcTemplate.update("pc_Lanemetrics @lanenum=?, @matmaco=?, @lmnbseq=?, @lmnbclustfiltr=?, @lmperseqfiltr=?, @lmnbclust=?, "
+	    				+ "@lmperclustfiltr=?, @lmnbbase=?, @lmnbcycle=?, @pistnbcycle=?, @lmphasing=?, @lmprephasing=?",
+	    				ls.lanenum, ls.matmaco, ls.lmnbseq, ls.lmnbclustfiltr, ls.lmperseqfiltr, ls.lmnbclust,
+	    				ls.lmperclustfiltr,ls.lmnbbase,ls.lmnbcycle,ls.pistnbcycle,ls.lmphasing,ls.lmprephasing);
+    		}
     		}catch(NullPointerException e){
     			Logger.error("No lane "+lane.number);
     		}
@@ -401,6 +403,12 @@ public class LimsAbandonDAO {
 				+ "where lseqnom = ? and runhnom = ?",Integer.class, rs.code, rs.runCode) > 0);
 	}
 	
+	public Boolean isLaneco(LaneSolexa ls){
+		return (this.jdbcTemplate.queryForObject("select count(laneco) from FlowcellNGL d, Laneflowcell l, Runhd r "
+				+ "where r.matmaco=d.matmaco and l.matmacop=d.matmaco and d.matmaco=? and l.lanenum=?"
+				,Integer.class, ls.matmaco, ls.lanenum) > 0);
+	}
+
 	private Integer convertLabel(String value) {
 		if("READ1".equalsIgnoreCase(value)){
 			return 1;
