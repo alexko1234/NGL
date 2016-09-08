@@ -142,6 +142,7 @@ containers.table.sampleTypes = Type échantillon
 containers.table.libProcessTypeCodes = Type librairie
 containers.table.sampleCodeAndTags = Echantillon / Tag
 containers.table.project_sample = Projet / Echantillon
+containers.table.processTypeCodes = Type Processus
 containers.table.processCodes = Processus
 containers.table.percentageInsidePool = % au sein du pool
 containers.table.codeAliquot = Code aliquot

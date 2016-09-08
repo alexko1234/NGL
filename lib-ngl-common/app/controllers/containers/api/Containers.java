@@ -60,7 +60,7 @@ public class Containers extends CommonController {
 	final static Form<Container> containerForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation", "state", "support","concentration");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processTypeCodes","processCodes", "valuation", "state", "support","concentration");
 	final static List<String> authorizedUpdateFields = Arrays.asList("valuation");
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
