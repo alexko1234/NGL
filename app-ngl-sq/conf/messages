@@ -225,6 +225,7 @@ search.placeholder.types = Types
 search.placeholder.user = Créé par
 search.placeholder.containerSupport = Regex pour code support
 search.placeholder.experiment = Regex pour expérience
+search.placeholder.container = Regex pour code container
 search.placeholder.process = Regex pour processus
 search.placeholder.storage= Regex pour stockage
 search.placeholder.barCodes = Scan du code barre
