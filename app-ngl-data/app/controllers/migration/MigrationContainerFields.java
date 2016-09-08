@@ -1,35 +1,96 @@
 package controllers.migration;
 
-import java.util.Arrays;
-
-
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.run.instance.ReadSet;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
-
-
-import org.apache.commons.collections.CollectionUtils;
-import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-
-
 import play.Logger;
-import play.Play;
 import play.mvc.Result;
-import rules.services.RulesMessage;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class MigrationContainerFields extends CommonController {
 	
-public static Result migration(){
+	public static Result migration(){
+		Logger.info("Start MigrationContainerFields");
+		
+		/*
+		List<Experiment> purifExperiments =MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("categoryCode", "purification")).toList();
+		purifExperiments.parallelStream().filter(t->t.outputContainerCodes!=null).forEach(p->{
+			p.outputContainerCodes.parallelStream().forEach(c->{
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.is("code",c).notExists("fromPurificationCode").notExists("fromPurificationTypeCode"),DBUpdate.set("fromPurificationTypeCode",p.typeCode).set("fromPurificationCode",p.code));
+			});
+			
+		});
+		
+		
+		List<Experiment> transfertExperiments =MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("categoryCode", "transfert")).toList();
+		
+		transfertExperiments.parallelStream().filter(t->t.outputContainerSupportCodes!=null).forEach(t->{
+			t.outputContainerSupportCodes.parallelStream().forEach(c->{
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.is("support.code",c).notExists("fromTransfertTypeCode").notExists("fromTransfertCode"),DBUpdate.set("fromTransfertTypeCode",t.typeCode).set("fromTransfertCode",t.code));
+			}); 
+		});
+		
+		*/
+		
+		List<Experiment> newSampleExperiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("typeCode", "tag-pcr","dna-rna-extraction")).toList();
+		
+		Logger.debug("Nb experiment new sample"+newSampleExperiments.size());
+		
+		newSampleExperiments.forEach(e->{
+			  e.atomicTransfertMethods.stream().collect(Collectors.toMap(a->a.inputContainerUseds.get(0),a->a.outputContainerUseds))
+			  .forEach((input,outputs)->{
+				  
+				  Logger.debug("Input "+input.code+", nb output "+outputs.size());
+				  
+				  PropertySingleValue projectCodeProperty=new PropertySingleValue(input.contents.get(0).projectCode);
+				  PropertySingleValue sampleCodeProperty=new PropertySingleValue(input.contents.get(0).sampleCode);
+				  PropertySingleValue sampleTypeCodeProperty=new PropertySingleValue(input.contents.get(0).sampleTypeCode);
+
+				  if(outputs!=null){
+				  List<String> outputContainers=outputs.stream().map(o->o.code).collect(Collectors.toList());
+				  List<String> outputSampleCodes=outputs.stream().filter(o->o.contents!=null).map(o->o.contents.get(0).sampleCode).collect(Collectors.toList());
+				  
+				  Logger.debug("contents.sampleCode"+outputSampleCodes.toString());
+				  Logger.debug("code"+outputContainers.toString());
+				  
+				  if(sampleCodeProperty.value.equals("BUF_AAAA")){
+					  Logger.error("*********BUF_AAAA*************");
+					  Logger.error("Update ");
+				  }
+				  
+				  MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("contents.sampleCode",outputSampleCodes).notEquals("contents.sampleCode", sampleCodeProperty.value),
+						  DBUpdate.set("contents.$.properties.fromProjectCode",projectCodeProperty)
+						  		.set("contents.$.properties.fromSampleCode",sampleCodeProperty)
+						  		.set("contents.$.properties.fromSampleTypeCode",sampleTypeCodeProperty));
+				  
+				  MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("code",outputContainers)
+						  ,DBUpdate.set("contents.0.properties.fromProjectCode",projectCodeProperty)
+						  .set("contents.0.properties.fromSampleCode",sampleCodeProperty)
+						  .set("contents.0.properties.fromSampleTypeCode",sampleTypeCodeProperty)
+						  );
+				  
+				  }
+			  });
+		});
+		
+		return ok("Migration Finish");
+
+	}
+	
+public static Result migrationOld(){
 		
 		Logger.info("Start MigrationContainerFields");
 		

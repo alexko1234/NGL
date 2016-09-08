@@ -109,6 +109,9 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				DBQuery.is("life.from.sampleCode",sample.code),
 				updates.get("sample")
 				.set("referenceCollab", sample.referenceCollab)
+				.set("taxonCode",sample.taxonCode)
+				.set("ncbiScientificName",sample.ncbiScientificName)
+				.set("ncbiLineage",sample.ncbiLineage)
 				.set("traceInformation.modifyUser",contextError.getUser())
 				.set("traceInformation.modifyDate",new Date() ));
 		
