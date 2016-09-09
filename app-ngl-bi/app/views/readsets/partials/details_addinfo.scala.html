@@ -18,11 +18,11 @@
 		}
 		
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleTypeCode")){
-			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleTypeCode|code:'type'"></p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleTypeCode|codes:'type'"></p>
 		}
 
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleCategoryCode")){
-			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleCategoryCode|code:'sample_cat'"></p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleCategoryCode|codes:'sample_cat'"></p>
 		}
        	
        	@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.containerSupportCode")){
