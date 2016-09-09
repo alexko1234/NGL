@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.mongojack.DBQuery;
 
+import com.typesafe.config.ConfigFactory;
+
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
@@ -75,6 +77,7 @@ public class ProtocolServiceCNG {
 													   "labchip-migration-profile" )));
 
 		
+
 		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
 		//01/09/2016 aussi pour "labchip-migration-profile"
 		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",
@@ -84,24 +87,44 @@ public class ProtocolServiceCNG {
 													   "prepa-fc-ordered",
 													   "illumina-depot",
 													   "labchip-migration-profile")));
+
 		
 		// protocoles communs a plusieurs Experiment Types.....=> en attente....
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("illumina-depot",
 													   "denat-dil-lib")));
 		
-		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
-													   "lib-normalization", 
-													   "normalization-and-pooling",
-													   "aliquoting",
-													   "pool", 
-													   "pcr-and-purification",
-													   "library-prep",
-													   "tubes-to-plate",
-													   "plate-to-tubes",
-													   "plates-to-plate",
-													   "x-to-plate")));
+		// 02/09/2016 ajout  comportement different
+		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			/** DEV / UAT only**/
+			// "normalization-and-pooling", "library-prep",	toujours en DEV
+			
+			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
+					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
+														   "lib-normalization", 
+														   "normalization-and-pooling",
+														   "aliquoting",
+														   "pool", 
+														   "pcr-and-purification",
+														   "library-prep",
+														   "tubes-to-plate",
+														   "plate-to-tubes",
+														   "plates-to-plate",
+														   "x-to-plate")));
+		}else {
+			
+			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
+					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
+														   "lib-normalization", 
+														   "aliquoting",
+														   "pool", 
+														   "pcr-and-purification",
+														   "tubes-to-plate",
+														   "plate-to-tubes",
+														   "plates-to-plate",
+														   "x-to-plate")));
+		}
+			
 
 		
 		//-------Experiences de Control Qualité

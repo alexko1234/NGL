@@ -24,11 +24,13 @@ public class Input extends AbstractInput {
 	
    /* Description du fichier a traiter: TXT CSV généré par labchipGX
     * 10/08/2016 NGL-1030 la taille est de nouveau obligatoire !!
+    * 07/09/2016 la 2eme colonne peut etre soit une concentration en (ng/ul) 
+    *                                      soit une molarité en nmol/l)
 	*Well Label,Region[200-2000] Conc. (ng/ul),Region[200-2000] Size at Maximum [BP]
+	*Well Label,Region[300-900] Molarity (nmol/l),Region[300-900] Size [BP]
 	*A01,3.7401558465,540.3455
 	*A02,...
-	*   attention les valeurs [200-2000]  sont variables ne pas les prendre en compte pour la verification
-	*   d'un entete correct
+	*   attention les valeurs Region [xxx-zzz] sont variables ne pas les prendre en compte pour la verification de l'entete
 	*/
 	
 	@Override
@@ -42,6 +44,9 @@ public class Input extends AbstractInput {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		int n = 0;
 		String line;
+		// 07/09/2016 l'unité de concentration est variable suivant les fichiers !! 
+		// String unit=""  ne marche pas car en ligne 146 le compilateur reclame un objet final...N Wiart.
+		StringBuilder unit = new StringBuilder();
 		
 		while ((line = reader.readLine()) != null) {	 
 			/// attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!????
@@ -49,15 +54,23 @@ public class Input extends AbstractInput {
 			
 			// verifier la premiere ligne d'entete
 			if (n == 0) {
-				if ( ! line.matches("Well Label(.*)") ) {
-					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Well Label");
+				if ( ! fields[0].matches("Well Label(.*)") ) {
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Well Label*");
 					return experiment;
 				}
-				else if ( ! line.matches("(.*)Conc.(.*)") ) {
-					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "*Conc*");
+				
+				if ( ( !  fields[1].matches("(.*)Conc.(.*)")) &&  ( !  fields[1].matches("(.*)Molarity(.*)")) ) {
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "*Conc* or *Molarity*");
 					return experiment;
 				}
-				else if ( ! line.matches("(.*)Size(.*)") ) {
+				// trouver la bonne unité
+				if ( fields[1].matches("(.*)Conc.(.*)")){
+					unit.append("ng/µl");
+				} else {
+					unit.append("nM"); // ou   nmol/l ??
+				}
+				
+				if ( !  fields[2].matches("(.*)Size(.*)") ) {
 					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "*Size*");
 					return experiment;
 				}
@@ -129,7 +142,8 @@ public class Input extends AbstractInput {
 					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
 					if(dataMap.containsKey(icupos0)){
 						concentration1.value = dataMap.get(icupos0).concentration;
-						concentration1.unit = "ng/µl";
+						// concentration1.unit = unit; ne marche pas...unit n'est pas "final"
+						concentration1.unit = unit.toString();
 					}
 					// 10/08/2016 retour de la taille !!!!
 					PropertySingleValue size1 = getPSV(icu, "size1");

@@ -4,29 +4,29 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
 	config.name = $scope.experiment.typeCode.toUpperCase();
-	$scope.atmService.data.setConfig(config );
+	$scope.atmService.data.setConfig(config);
 
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
-		/* FDS decommenté le 30/08 + ajout de la size: les 2 propriétés de l'expérience doivent etres copiées dans le container */
+		//FDS  30/08/2016 concentration et size de l'expérience doivent etres copiées dans le container
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
-				
+					
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
+					console.log("saving concentration1 to input container ( value :"+concentration1.value +"/ unit: "+concentration1.unit+")" );
 					inputContainerUsed.concentration = concentration1;
 				}
 				
 				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);
 				if(size1){
+					console.log("saving size1 to input container( value :"+size1.value +"/ unit: "+size1.unit+")" );
 					inputContainerUsed.size = size1;
 				}
 			}	
 		});	
 	};
-	
-	
 	
 	var importData = function(){
 		$scope.messages.clear();
@@ -100,9 +100,24 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
 	
+	// FDS 08/09/2016 ajouter une colonne "concentration.unit" car la colonne "concentration" issue des 
+	// properties de l'experience est maintenant définie sans unité car cette derniere est variable...
+    columns.push({
+		"header" :  Messages("containers.table.concentration.unit"),
+		"property" : "inputContainerUsed.experimentProperties.concentration1.unit",
+		"order" : true,
+		"edit" : true,
+		"hide" : true,
+		"type" : "text",
+		"position" : 11.1,
+		"choiceInList":true,
+		"listStyle":"select",
+		"possibleValues":[{"name":"nM","code":"nM"},{"name":"ng/µl","code":"ng/µl"} ],
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
+	});
+	
 	$scope.atmService.data.setColumnsConfig(columns);
 	
-
 	
 	var profilsMap = {};
 	angular.forEach($scope.experiment.atomicTransfertMethods, function(atm){
@@ -133,6 +148,6 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		
 		}
 		
-	})
+	});
 	
 }]);

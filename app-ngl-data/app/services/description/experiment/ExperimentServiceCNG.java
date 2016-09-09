@@ -371,18 +371,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();
 		
 		//commun X5_WG NANO et RNAseq	
-		if(	ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
-			/** DEV **/
-			
-				newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
-						true,false,false,
-						getExperimentTypeNodes("library-prep","prep-pcr-free"),
-						null,
-						getExperimentTypes("labchip-migration-profile"), 
-						null
-						).save();
-				
-		} else {
+		if(	! ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
 			/** UAT and PROD **/
 				newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 						true,false,false,
@@ -394,6 +383,39 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		}
 			
+
+		/************************************ DEV / UAT ONLY **********************************************/
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+			
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025 RNA_Seq
+			newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-rna-sequencing"),
+					null,
+					null, 
+					null
+					).save();
+			
+			//commun X5_WG NANO et RNAseq			
+			newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
+							true,false,false,
+							getExperimentTypeNodes("library-prep","prep-pcr-free"),
+							null,
+							getExperimentTypes("labchip-migration-profile"), 
+							null
+							).save();
+					
+			} else {
+		
+			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification"),
+					null,
+					null,
+					null
+					).save();	
+		}
+
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
@@ -406,27 +428,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("aliquoting","pool")
 				).save();
 		
-		/************************************ DEV / UAT ONLY **********************************************/
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025 RNA_Seq
-			newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
-					false,false,false,
-					getExperimentTypeNodes("ext-to-rna-sequencing"),
-					null,
-					null, 
-					null
-					).save();
-		
-			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
-					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification"),
-					null,
-					null,
-					null
-					).save();	
-		}
-
 		
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
@@ -589,16 +590,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//InputContainer (pas d'outputContainer sur une experience QC )
+		// l'unité est variable. NE PLUS LA SPECIFIER..., MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl")
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), null, null,
 				"single", 11, true, null, null));
 		
+		// laiser la position 12 libre pour la colonne unit
+
 		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
-				"single", 12, true, null, null));
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 13, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
-				"img", 13, false, null, null));
+				"img", 14, false, null, null));
 		
 		return propertyDefinitions;
 	}
