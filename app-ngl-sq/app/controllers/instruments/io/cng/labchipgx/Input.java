@@ -23,10 +23,9 @@ import controllers.instruments.io.utils.InputHelper;
 public class Input extends AbstractInput {
 	
    /* Description du fichier a traiter: TXT CSV généré par labchipGX
-    * 10/08/2016 NGL-1030 la taille est de nouveau obligatoire !!
-    * 07/09/2016 la 2eme colonne peut etre soit une concentration en (ng/ul) 
-    *                                      soit une molarité en nmol/l)
+    * 10/08/2016 NGL-1030 la taille est de nouveau obligatoire !!                
 	*Well Label,Region[200-2000] Conc. (ng/ul),Region[200-2000] Size at Maximum [BP]
+	* 07/09/2016 la 2eme colonne peut aussi etre une molarité en nmol/l
 	*Well Label,Region[300-900] Molarity (nmol/l),Region[300-900] Size [BP]
 	*A01,3.7401558465,540.3455
 	*A02,...
@@ -45,7 +44,7 @@ public class Input extends AbstractInput {
 		int n = 0;
 		String line;
 		// 07/09/2016 l'unité de concentration est variable suivant les fichiers !! 
-		// String unit=""  ne marche pas car en ligne 146 le compilateur reclame un objet final...N Wiart.
+		// String unit="";  ne marche pas car en ligne 146 le compilateur reclame un objet final...utiliser StringBuilder (N Wiart)
 		StringBuilder unit = new StringBuilder();
 		
 		while ((line = reader.readLine()) != null) {	 
@@ -67,7 +66,7 @@ public class Input extends AbstractInput {
 				if ( fields[1].matches("(.*)Conc.(.*)")){
 					unit.append("ng/µl");
 				} else {
-					unit.append("nM"); // ou   nmol/l ??
+					unit.append("nM");
 				}
 				
 				if ( !  fields[2].matches("(.*)Size(.*)") ) {
@@ -129,6 +128,7 @@ public class Input extends AbstractInput {
 				});
 		}
 		*/
+		
 		// ne positionner les valeurs que s'il n'y a pas d'erreur a la verification precedente...
 		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
@@ -142,7 +142,7 @@ public class Input extends AbstractInput {
 					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
 					if(dataMap.containsKey(icupos0)){
 						concentration1.value = dataMap.get(icupos0).concentration;
-						// concentration1.unit = unit; ne marche pas...unit n'est pas "final"
+						// concentration1.unit = unit; ne marche pas si unit n'est pas "final"
 						concentration1.unit = unit.toString();
 					}
 					// 10/08/2016 retour de la taille !!!!

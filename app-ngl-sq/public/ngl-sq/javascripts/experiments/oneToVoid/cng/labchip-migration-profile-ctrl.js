@@ -15,13 +15,11 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 					
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
-					console.log("saving concentration1 to input container ( value :"+concentration1.value +"/ unit: "+concentration1.unit+")" );
 					inputContainerUsed.concentration = concentration1;
 				}
 				
 				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);
 				if(size1){
-					console.log("saving size1 to input container( value :"+size1.value +"/ unit: "+size1.unit+")" );
 					inputContainerUsed.size = size1;
 				}
 			}	
@@ -113,6 +111,7 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		"choiceInList":true,
 		"listStyle":"select",
 		"possibleValues":[{"name":"nM","code":"nM"},{"name":"ng/µl","code":"ng/µl"} ],
+		"defaultValues":"ng/µl", // essai...
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
 	
