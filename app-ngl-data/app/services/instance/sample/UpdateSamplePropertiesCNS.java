@@ -53,12 +53,12 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				calendar.add(Calendar.DATE, nbDays);
 				Date date =  calendar.getTime();
 
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date)).toList();
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life")).toList();
 				Logger.info("Nb samples to update :"+samples.size());
-				samples.stream().forEach(sample -> {
+				/*samples.stream().forEach(sample -> {
 					//Logger.debug("Sample "+sample.code);
 					updateOneSample(sample,contextError);
-				});
+				});*/
 	}
 
 	static public void updateOneSample(Sample sample,ContextValidation contextError) {
@@ -112,8 +112,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				.set("taxonCode",sample.taxonCode)
 				.set("ncbiScientificName",sample.ncbiScientificName)
 				.set("ncbiLineage",sample.ncbiLineage)
-				.set("traceInformation.modifyUser",contextError.getUser())
-				.set("traceInformation.modifyDate",new Date() ));
+				);
 		
 		//Containers content update contents.$.properties
 		//TODO Verifier si fonctionne pool meme sample et tag diff
