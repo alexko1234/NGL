@@ -315,7 +315,19 @@ public class Containers extends CommonController {
 		}
 		
 		if(StringUtils.isNotBlank(containersSearch.fromPurificationTypeCode)){
-			queryElts.add(DBQuery.is("fromPurificationTypeCode", containersSearch.fromPurificationTypeCode));
+			if("none".equals(containersSearch.fromPurificationTypeCode)){
+				queryElts.add(DBQuery.notExists("fromPurificationTypeCode"));
+			}else{
+				queryElts.add(DBQuery.is("fromPurificationTypeCode", containersSearch.fromPurificationTypeCode));
+			}			
+		}
+		
+		if(StringUtils.isNotBlank(containersSearch.fromTransfertTypeCode)){
+			if("none".equals(containersSearch.fromTransfertTypeCode)){
+				queryElts.add(DBQuery.notExists("fromTranfertTypeCode"));
+			}else{
+				queryElts.add(DBQuery.is("fromTranfertTypeCode", containersSearch.fromTransfertTypeCode));
+			}			
 		}
 		
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){

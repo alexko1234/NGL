@@ -136,6 +136,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		columns.push({
 			"header" : Messages("processes.table.resolutionCode"),
 			"property" : "state.resolutionCodes",
+			"filter":"codes:'resolution'",
 			"position" : 7,
 			"order" : true,
 			"hide" : true,

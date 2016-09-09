@@ -1106,6 +1106,9 @@ public class ExpWorkflowsHelper {
 		
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 		if(experimentType.newSample){	
+			Set<String> newProjectCodes = new TreeSet<String>();
+			Set<String> newSampleCodes = new TreeSet<String>();
+			
 			exp.atomicTransfertMethods
 				.stream()
 				.map(atm -> atm.outputContainerUseds)
@@ -1130,12 +1133,23 @@ public class ExpWorkflowsHelper {
 						String newSampleCode=CodeHelper.getInstance().generateSampleCode(nextProjectCode);
 						ocu.experimentProperties.put("sampleCode", new PropertySingleValue(newSampleCode));
 						
-					
+						newProjectCodes.add(nextProjectCode);
+						newSampleCodes.add(newSampleCode);
+						
 					}
 					updateContents(ocu);
 				});
 			
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));			
+			if(newProjectCodes.size() > 0){
+				exp.projectCodes.addAll(newProjectCodes);
+			}
+			
+			if(newSampleCodes.size() > 0){
+				exp.sampleCodes.addAll(newSampleCodes);
+			}
+			
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), 
+					DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods).set("projectCodes", exp.projectCodes).set("sampleCodes",exp.sampleCodes));			
 		}
 	};
 	
