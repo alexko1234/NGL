@@ -10,27 +10,27 @@
 	<div class="row">
 	@column(){
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleCode")){
-			<p class="form-control-static">{{readset.sampleOnContainer.sampleCode}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleCode"></p>
 		}
 		
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.referenceCollab")){
-			<p class="form-control-static">{{readset.sampleOnContainer.referenceCollab}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.referenceCollab"></p>
 		}
 		
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleTypeCode")){
-			<p class="form-control-static">{{readset.sampleOnContainer.sampleTypeCode}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleTypeCode|code:'type'"></p>
 		}
 
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleCategoryCode")){
-			<p class="form-control-static">{{readset.sampleOnContainer.sampleCategoryCode}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleCategoryCode|code:'sample_cat'"></p>
 		}
        	
        	@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.containerSupportCode")){
-			<p class="form-control-static">{{readset.sampleOnContainer.containerSupportCode}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.containerSupportCode"></p>
 		}
        	
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.containerCode")){
-			<p class="form-control-static">{{readset.sampleOnContainer.containerCode}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.containerCode"></p>
 		}
 		
 		
@@ -39,7 +39,7 @@
 	}
 	@column(){
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.percentage")){
-			<p class="form-control-static">{{readset.sampleOnContainer.percentage}}</p>
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.percentage"></p>
 		}
 		<div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties">
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
