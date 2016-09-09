@@ -115,6 +115,7 @@ containers.table.sampleCodes.length = Nb d''échantillons
 containers.table.contents.length = Nb de contents
 containers.table.fromTransformationTypeCodes = Issu du type d''expérience
 containers.table.fromPurificationTypeCode = Issu de la purification
+containers.table.fromTransfertTypeCode = Issu du transfert
 containers.table.state.code = Etat container
 containers.table.support.name = Support container
 containers.table.stateCode = Etat
@@ -412,6 +413,7 @@ experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)
 experiment.placeholder.user = Expérience créée par
 experiment.placeholder.code = Sélect. une expérience
 experiment.placeholder.reagents.kit = Taper ici
+experiment.placeholder.containerFromTransformationTypeCode = Container issu du type d''exp. 
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
