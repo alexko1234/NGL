@@ -165,6 +165,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.processTypeCodes"),
 			"property":"processTypeCodes",
+			"filter":"codes:'type'",
 			"order":false,
 			"hide":true,
 			"type":"text",
