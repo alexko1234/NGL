@@ -147,8 +147,6 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertyBanqueIlluminaWithoutSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueIlluminaDA(), 
-				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
@@ -157,8 +155,6 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertyBanqueIlluminaSizing() {
 			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-			propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueIlluminaDB(), 
-					null,null,null,"single", 13, true, null, null));
 			propertyDefinitions.addAll(getSizingProperties());
 			return propertyDefinitions;
 	}
