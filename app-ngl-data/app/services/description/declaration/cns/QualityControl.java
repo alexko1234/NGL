@@ -62,6 +62,12 @@ public class QualityControl extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
 				getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-qc-transfert-purif",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
 		return l;
 	}
 	
@@ -70,10 +76,7 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-qc-transfert-purif",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
+		
 		
 		return l;
 	}
@@ -91,18 +94,17 @@ public class QualityControl extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), null,
 				Arrays.asList(getPET("ext-to-qc-transfert-purif",-1)), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
+	}
+	
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		return null;
 	}
 
 	@Override
@@ -119,14 +121,14 @@ public class QualityControl extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeCommon() {
-		// TODO Auto-generated method stub
-		
+		newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
+	
 	}
 	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false, 
-				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
+	
 	}
 
 	@Override

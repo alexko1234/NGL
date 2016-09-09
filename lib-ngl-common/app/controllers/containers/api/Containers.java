@@ -60,7 +60,7 @@ public class Containers extends CommonController {
 	final static Form<Container> containerForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation", "state", "support","concentration");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processTypeCodes","processCodes", "valuation", "state", "support","concentration");
 	final static List<String> authorizedUpdateFields = Arrays.asList("valuation");
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
@@ -315,7 +315,19 @@ public class Containers extends CommonController {
 		}
 		
 		if(StringUtils.isNotBlank(containersSearch.fromPurificationTypeCode)){
-			queryElts.add(DBQuery.is("fromPurificationTypeCode", containersSearch.fromPurificationTypeCode));
+			if("none".equals(containersSearch.fromPurificationTypeCode)){
+				queryElts.add(DBQuery.notExists("fromPurificationTypeCode"));
+			}else{
+				queryElts.add(DBQuery.is("fromPurificationTypeCode", containersSearch.fromPurificationTypeCode));
+			}			
+		}
+		
+		if(StringUtils.isNotBlank(containersSearch.fromTransfertTypeCode)){
+			if("none".equals(containersSearch.fromTransfertTypeCode)){
+				queryElts.add(DBQuery.notExists("fromTranfertTypeCode"));
+			}else{
+				queryElts.add(DBQuery.is("fromTranfertTypeCode", containersSearch.fromTransfertTypeCode));
+			}			
 		}
 		
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){

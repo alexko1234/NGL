@@ -25,6 +25,7 @@ public class ExperimentSearchForm extends ListForm{
 	public String containerSupportCode;
 	public Set<String> containerSupportCodes;
 	public String containerSupportCodeRegex;
+	public String containerFromTransformationTypeCode;
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
 	

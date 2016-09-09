@@ -219,7 +219,9 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		try{
 			dao.updateRunAbandon(run.code, getAbandon(run.valuation, run.code), 47);
 			for(Lane lane: run.lanes){
-				dao.updatePisteAbandon(run.code, lane.number, getAbandon(lane.valuation, run.code), 47);
+				if(dao.isPistco(run.code, lane.number)){
+					dao.updatePisteAbandon(run.code, lane.number, getAbandon(lane.valuation, run.code), 47);
+				}
 			}
 		}catch(Throwable t){
 			logger.error(run.code+" : "+t.getMessage());

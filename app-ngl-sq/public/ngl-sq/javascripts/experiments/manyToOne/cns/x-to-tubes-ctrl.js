@@ -156,6 +156,20 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
 	});
 	
+	var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
+	columns.push({
+		"header" : Messages("containers.table.size"),
+		"property": "inputContainer.size.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" :7.5,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
+	$scope.atmService.$atmToSingleDatatable.data.setColumnsConfig(columns);
 	
 	
 }]);

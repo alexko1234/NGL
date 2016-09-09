@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -19,6 +23,7 @@ import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -41,6 +46,8 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
+import controllers.containers.api.ContainersSearchForm;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class Experiments extends DocumentController<Experiment>{
@@ -147,6 +154,28 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("codes", experimentSearch.codes));
 		}
 
+		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
+			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
+			
+			Query containerQuery = DBQuery.and(listContainerQuery.toArray(new DBQuery.Query[queryElts.size()]));
+			BasicDBObject keys = new BasicDBObject();
+			keys.append("code", 1);
+			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerQuery,keys).toList();
+			
+			Set<String> containerCodes = new TreeSet<String>();
+			for(Container p : containers){
+				containerCodes.add(p.code);
+			}
+			
+			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+
+			qs.add(DBQuery.in("inputContainerCodes",containerCodes));
+			qs.add(DBQuery.in("outputContainerCodes",containerCodes));
+			
+			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
+		}
+		
+		
 		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
 			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
 
@@ -170,11 +199,7 @@ public class Experiments extends DocumentController<Experiment>{
 		if(StringUtils.isNotBlank(experimentSearch.sampleCode)){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
 		}
-/*
-		if(CollectionUtils.isNotEmpty(experimentSearch.tags)){
-			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.properties.tag.value", experimentSearch.tags));
-		}
-*/		
+
 		if(CollectionUtils.isNotEmpty(experimentSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
@@ -204,7 +229,11 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.sampleTypeCode", experimentSearch.sampleTypeCodes));
 		}
 		
-		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));
+		if(StringUtils.isNotBlank(experimentSearch.containerFromTransformationTypeCode)){
+			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));
+		}
+		
+		//queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.experimentProperties, Level.CODE.Experiment, "experimentProperties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.instrumentProperties, Level.CODE.Instrument, "instrumentProperties"));
 

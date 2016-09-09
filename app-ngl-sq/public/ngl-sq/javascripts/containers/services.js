@@ -163,6 +163,17 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				
 		});
 		columns.push({
+			"header":Messages("containers.table.processTypeCodes"),
+			"property":"processTypeCodes",
+			"filter":"codes:'type'",
+			"order":false,
+			"hide":true,
+			"type":"text",
+			"position":15.6,
+			"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
+			"groupMethod":"collect"
+		});
+		columns.push({
 				"header":Messages("containers.table.processCodes"),
 				"property":"processCodes",
 				"order":false,
@@ -228,6 +239,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			datatable:undefined,
 			isRouteParam:false,
 			lists : lists,
+			form:undefined,
 			additionalFilters:[],
 			additionalColumns:[],
 			selectedAddColumns:[],

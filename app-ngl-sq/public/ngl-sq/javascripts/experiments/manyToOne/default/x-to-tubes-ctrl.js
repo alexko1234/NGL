@@ -6,16 +6,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	var datatableConfig = {		
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   					
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },	
+					
 			         {
 			        	 "header":Messages("containers.table.supportCategoryCode"),
 			        	 "property":"inputContainer.support.categoryCode",
@@ -193,7 +184,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:"inputContainer.code"
+				by:"inputContainer.support.code"
 			},
 			remove:{
 				active:false,
@@ -235,6 +226,64 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 				dynamic:true,
 			}
 	};	
+	
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.supportCode"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.line"),
+			"property" : "inputContainer.support.line",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1.1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.support.column"),
+			"property" : "inputContainer.support.column*1",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "number",
+			"position" : 1.2,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+
+	} else {
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
+	
+	}
+	
 	
 	$scope.drop = function(e, data, ngModel, alreadyInTheModel, fromModel) {
 		//capture the number of the atomicTransfertMethod

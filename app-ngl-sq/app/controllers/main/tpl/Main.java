@@ -9,6 +9,7 @@ import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import play.Application;
@@ -77,6 +78,16 @@ public class Main extends CommonController{
 			sb.append("\"").append("valuation_criteria").append(".").append(vc.code)
 			.append("\":\"").append(vc.name).append("\",");
 		}
+		
+		List<ResolutionConfiguration> resolutionConfigs = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList();
+		resolutionConfigs
+			.stream()
+			.map(rc -> rc.resolutions)
+			.flatMap(List::stream)
+			.forEach(r ->{
+				sb.append("\"").append("resolution").append(".").append(r.code)
+				.append("\":\"").append(r.name).append("\",");
+			});
 		
 		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
 		for(Protocol protocol:protocols){

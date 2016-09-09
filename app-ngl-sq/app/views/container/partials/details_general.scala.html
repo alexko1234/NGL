@@ -21,6 +21,9 @@
 			@columnLabelValue(Messages("containers.table.fromPurificationTypeCode"), Html(" ng-if='container.fromPurificationTypeCode'")){
 				<p class="form-control-static" ng-bind="container.fromPurificationTypeCode|unique|codes:'type'" />
 			}
+			@columnLabelValue(Messages("containers.table.fromTransfertTypeCode"), Html(" ng-if='container.fromTransfertTypeCode'")){
+				<p class="form-control-static" ng-bind="container.fromTransfertTypeCode|unique|codes:'type'" />
+			}
 			@columnLabelValue(Messages("containers.table.support.categoryCode")){
 				<p class="form-control-static" ng-bind="container.support.categoryCode|codes:'container_support_cat'" />
 			}
@@ -119,7 +122,7 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="content in container.contents|orderBy:'-percentage'">
-						<td ng-bind="content.percentage" />
+						<td ng-bind="content.percentage|number" />
 						<td ng-bind="content.projectCode" />
 						<td ng-bind="content.sampleCode" />
 						<td ng-bind="content.referenceCollab" />

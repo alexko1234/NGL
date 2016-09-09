@@ -163,7 +163,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit2", "QuBit2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit3", "QuBit3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit4", "QuBit4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))
+						createInstrument("QuBit4", "QuBit4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit5", "QuBit5", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))						
 						), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); //ok
