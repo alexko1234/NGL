@@ -55,10 +55,10 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life")).toList();
 				Logger.info("Nb samples to update :"+samples.size());
-				/*samples.stream().forEach(sample -> {
+				samples.stream().forEach(sample -> {
 					//Logger.debug("Sample "+sample.code);
 					updateOneSample(sample,contextError);
-				});*/
+				});
 	}
 
 	static public void updateOneSample(Sample sample,ContextValidation contextError) {
