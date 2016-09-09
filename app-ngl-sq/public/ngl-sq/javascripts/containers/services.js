@@ -238,6 +238,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			datatable:undefined,
 			isRouteParam:false,
 			lists : lists,
+			form:undefined,
 			additionalFilters:[],
 			additionalColumns:[],
 			selectedAddColumns:[],

@@ -1,6 +1,7 @@
 "use strict"
 
-angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containersSearchService','$routeParams', function($scope, datatable, lists,$filter,mainService,tabService,containersSearchService,$routeParams) {
+angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containersSearchService','$routeParams', 
+                                                 function($scope, datatable, lists,$filter,mainService,tabService,containersSearchService,$routeParams) {
 	var datatableConfig = {
 		group:{active:true},
 		search:{
