@@ -25,7 +25,7 @@ public class MigrationContainerFields extends CommonController {
 	public static Result migration(){
 		Logger.info("Start MigrationContainerFields");
 		
-		/*
+		
 		List<Experiment> purifExperiments =MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("categoryCode", "purification")).toList();
 		purifExperiments.parallelStream().filter(t->t.outputContainerCodes!=null).forEach(p->{
 			p.outputContainerCodes.parallelStream().forEach(c->{
@@ -43,7 +43,7 @@ public class MigrationContainerFields extends CommonController {
 			}); 
 		});
 		
-		*/
+		
 		
 		List<Experiment> newSampleExperiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("typeCode", "tag-pcr","dna-rna-extraction")).toList();
 		
@@ -86,7 +86,7 @@ public class MigrationContainerFields extends CommonController {
 			  });
 		});
 		
-		return ok("Migration Finish");
+		return ok("Migration Finish !");
 
 	}
 	
