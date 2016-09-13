@@ -132,6 +132,7 @@ containers.table.createUser = Container créé par
 containers.table.valid = Container valide ?
 containers.table.supportCode = Support container
 containers.table.well = Puit
+containers.table.workName= Label travail
 containers.table.support.categoryCode = Catégorie support
 containers.table.support.line = Ligne
 containers.table.support.column = Colonne
