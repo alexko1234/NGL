@@ -166,7 +166,7 @@ public class ProtocolServiceCNS {
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
 			// a mettre en PROD		
 			//fin mise en prod
-			
+			lp.add(newProtocol("Ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure")));
 			
         	//lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes()));
 			

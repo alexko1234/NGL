@@ -35,6 +35,7 @@ public class Purif extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		return l;
 		
 	}
@@ -53,8 +54,13 @@ public class Purif extends AbstractDeclaration {
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+
+		l.add(newExperimentType("Ampure Post-PCR","post-pcr-ampure",null, 30300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
+				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
+		return l;
 	}
 
 	@Override
