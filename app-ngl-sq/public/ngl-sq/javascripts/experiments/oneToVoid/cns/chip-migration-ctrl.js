@@ -131,8 +131,20 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				0 : Messages("experiments.inputs")
 			}
 		});
-		
-		
+	
+	
+	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
+		columns.push({
+			"header" : Messages("containers.table.workName"),
+			"property" : "inputContainer.properties.workName.value",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 3.1,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+	}
 /*	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",

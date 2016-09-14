@@ -106,6 +106,19 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		"position":10.1,
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 	});
+	
+	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
+		columns.push({
+			"header" : Messages("containers.table.workName"),
+			"property" : "inputContainer.properties.workName.value",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 3.1,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+	}
 	$scope.atmService.data.setColumnsConfig(columns);
 	
 	$scope.$watch("instrumentType", function(newValue, OldValue){

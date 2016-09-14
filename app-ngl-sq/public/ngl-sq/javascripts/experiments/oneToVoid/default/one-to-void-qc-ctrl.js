@@ -220,17 +220,6 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"position" : 3,
 				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
-			
-			columns.push({
-				"header" : Messages("containers.table.workName"),
-				"property" : "inputContainer.properties.workName",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 3.1,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
 
 		}
 		return columns;
