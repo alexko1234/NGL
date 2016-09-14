@@ -3218,7 +3218,7 @@ directive("udtHtmlFilter", function($filter, udtI18n) {
 					    	var convertedData = data;
 					    	   if(attrs.udtHtmlFilter === "number" && null != convertedData && undefined != convertedData 
 					    			   && angular.isString(convertedData)){
-					    		   convertedData = convertedData.replace(",",".");
+					    		   convertedData = convertedData.replace(",",".").replace(/\u00a0/g,"");
 					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
 					    			   convertedData = convertedData*1;
 					    		   }else if( isNaN(convertedData) || convertedData === ""){
