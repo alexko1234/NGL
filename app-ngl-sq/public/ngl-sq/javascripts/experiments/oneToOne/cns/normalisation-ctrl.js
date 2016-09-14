@@ -318,6 +318,18 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			}
 		});
 		
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.workName"),
+			"property" : "inputContainer.properties.workName",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1.1,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+
+		
 		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
