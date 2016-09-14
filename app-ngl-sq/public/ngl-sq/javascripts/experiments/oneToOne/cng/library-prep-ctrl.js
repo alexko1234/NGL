@@ -333,11 +333,18 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	var computeQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
 
+		if($parse("inputContainerUsed.concentration.unit === 'nM'")(udtData)) {
+			console.log("unit = nM");
+		}
+		
 		var compute = {
+				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
 				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
 				isReady:function(){
-					return (this.inputConc && this.inputVolume);
+					/// return (this.inputVolume && this.inputConc); bug!!!  le calcul ne se fait pas si inputConc=0 ( par exemple WATER)
+					/// bloquer le calcul si l'unité n'est pas nM TODO...
+					return (this.inputVolume && (this.inputConc != undefined) && (this.inputConcUnit === 'nM') );
 				}
 		};
 		
@@ -357,6 +364,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 		}
 	}
 	
+	// PLUS APPELLEE...voir plus haut...
 	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainer.concentration.value
 	var computeVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");

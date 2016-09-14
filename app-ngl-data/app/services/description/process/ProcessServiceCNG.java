@@ -104,7 +104,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgPcrFree(),
 				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),
-						getPET("prep-pcr-free",0),
+						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
 						getPET("lib-normalization",1), 
 						getPET("prepa-fc-ordered",2), 
 						getPET("illumina-depot",3) ), //ordered list of experiment type in process type
@@ -117,7 +117,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("X5_norm,FC ord, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				null,
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),
-						getPET("prep-pcr-free",-1), 
+						getPET("prep-pcr-free",-1),  /// === frag-and-library-preparation
 						getPET("lib-normalization",0), 
 						getPET("prepa-fc-ordered",1), 
 						getPET("illumina-depot",2) ), //ordered list of experiment type in process type
@@ -130,7 +130,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("X5_WG NANO", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgNanoDNAseq(), 
 				Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
-						getPET("prep-pcr-free",0), 
+						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
 						getPET("prepa-fc-ordered",3), 
@@ -144,9 +144,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			// FDS ajout 31/05/2016 JIRA NGL-1025 2 processus pour RNASeq
-			// processus long type "library"
-			l.add(DescriptionFactory.newProcessType("RNA Sequencing", "rna-sequencing", ProcessCategory.find.findByCode("library"),
+			// FDS ajout 31/05/2016 JIRA NGL-1025: 2 processus pour RNASeq; processus long type "library". 
+			// FDS modif 13/09/2016 JIRA NGL-1025: renommer en "X5/4000_RNAseq" pour le differentier d'un processus RNAseq qui pourrait exister en 2000...
+			l.add(DescriptionFactory.newProcessType("X5/4000 RNA Sequencing", "x5-4000-rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1),
 							getPET("library-prep",0),

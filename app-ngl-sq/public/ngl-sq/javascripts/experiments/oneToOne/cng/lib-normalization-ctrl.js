@@ -91,13 +91,22 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
-					 { //Concentration !!! en entree on a nM et pas (ng/µL)
-			        	 "header":Messages("containers.table.concentration") + " (nM)", 
+					 { //Concentration .. 12/09/2016 ne pas inclure l'unité dans le label
+			        	 "header":Messages("containers.table.concentration"), 
 			        	 "property":"inputContainer.concentration.value",  
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":8,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         { // 12/09/2016 afficher l'unité concentration dans une colonne séparée pour récupérer la vraie valeur
+			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "property":"inputContainer.concentration.unit",  
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":8.5,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { //Volume 

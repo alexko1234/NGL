@@ -422,10 +422,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 	
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894...
+	//FDS 13/09/2016 ajout "RNAseq_RAPplate" JIRA NGL-1026
 	private static List<PropertyDefinition> getScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate"), null, "single"));
+				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate","RNAseq_RAPplate"), null, "single"));
 		
 		return l;
 	}

@@ -102,17 +102,16 @@ containers.tabs.resultsqc = Résultats QC
 containers.tabs.new = Création / mise à jour depuis fichier
 
 #Containers table
+
 containers.table.code = Code Container
-containers.table.support.out.code = Container (Sortie)
-containers.table.support.in.code = Container (Entrée)
-containers.table.supportCategoryCode = Catégorie support
+# NOTE FDS: 2 declarations quasi identiques...
 containers.table.categoryCode = Catégorie Support
+containers.table.supportCategoryCode = Catégorie support
 containers.table.projectCodes = Projet(s)
 containers.table.projectCode = Projet
 containers.table.sampleCodes = Echantillon(s)
 containers.table.sampleCode = Echantillon
 containers.table.sampleCodes.length = Nb d''échantillons
-containers.table.contents.length = Nb de contents
 containers.table.fromTransformationTypeCodes = Issu du type d''expérience
 containers.table.fromPurificationTypeCode = Issu de la purification
 containers.table.fromTransfertTypeCode = Issu du transfert
@@ -123,6 +122,7 @@ containers.table.creationDate = Création container
 containers.table.concentration = Concentration
 containers.table.concentration.shortlabel = Conc.
 containers.table.concentration.unit = Unité Concentration
+containers.table.concentration.value= Concentration Container
 containers.table.volume = Volume
 containers.table.quantity = Quantité
 containers.table.quantity.unit = Unité Quantité
@@ -132,7 +132,8 @@ containers.table.createUser = Container créé par
 containers.table.valid = Container valide ?
 containers.table.supportCode = Support container
 containers.table.well = Puit
-containers.table.workName= Label travail
+containers.table.support.out.code = Container (Sortie)
+containers.table.support.in.code = Container (Entrée)
 containers.table.support.categoryCode = Catégorie support
 containers.table.support.line = Ligne
 containers.table.support.column = Colonne
@@ -141,7 +142,6 @@ containers.table.percentage = % à déposer
 containers.table.tags = Tag
 containers.table.tagCategory=Type de Tag
 containers.table.sampleTypes = Type échantillon
-containers.table.libProcessTypeCodes = Type librairie
 containers.table.sampleCodeAndTags = Echantillon / Tag
 containers.table.project_sample = Projet / Echantillon
 containers.table.processTypeCodes = Type Processus
@@ -151,20 +151,21 @@ containers.table.codeAliquot = Code aliquot
 containers.table.storageCode = Stockage
 containers.table.status = Statut
 containers.table.dispatch = Orientation
-containers.table.concentration.unit=Unité Concentration 
-containers.table.concentration.value=Concentration Container
 containers.table.libProcessType = Type Banque	
+containers.table.libProcessTypeCodes = Type librairie
 containers.table.libProcessTypeCode = Type Processus Banque (Code)
+# NOTE FDS: 2 decalarations pour size : c'est la premiere ou la derniere qui gagne ???
 containers.table.size = Taille banque (pb)
-containers.table.treeOfLife = Arbre de vie
-containers.table.quantity = Quantité
-containers.table.concentration= Concentration
-containers.table.properties = Autres Propriétés
 containers.table.size = Taille
+containers.table.treeOfLife = Arbre de vie
+containers.table.properties = Autres Propriétés
 containers.table.comments = Commentaires
+containers.table.contents.length = Nb de contents
 containers.table.contents = Contents
 containers.table.percents = Pourcentage
 containers.table.referenceCollab = Réf. collab
+containers.table.workName = Label de travail 
+
 container.from = issu de
 
 containers.supportView.results = Résultat(s)
@@ -578,7 +579,7 @@ samples.table.sample = Echantillon
 ###############
 admin.menu = Administration
 admin.supports.title = Supports
-admin.supports.menu.switchindex = Inversion d'index
+admin.supports.menu.switchindex = Inversion d''index
 admin.supports.switch-index.tabs.search = Recherche des objets NGL
 authorisation.userroles.page = Gestion des roles utilisateurs
 authorisation.users.page.tab.search = Recherche des utilisateurs

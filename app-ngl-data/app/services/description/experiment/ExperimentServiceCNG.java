@@ -369,19 +369,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
 				).save();
-		
-		//commun X5_WG NANO et RNAseq	
-		if(	! ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
-			/** UAT and PROD **/
-				newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
-						true,false,false,
-						getExperimentTypeNodes("prep-pcr-free"),
-						null,
-						getExperimentTypes("labchip-migration-profile"), 
-						null
-						).save();
-		
-		}
 			
 
 		/************************************ DEV / UAT ONLY **********************************************/
@@ -404,8 +391,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 							getExperimentTypes("labchip-migration-profile"), 
 							null
 							).save();
-					
-			} else {
 		
 			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 					false,false,false,
@@ -419,7 +404,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
-		//FDS 01/09/2016 -- ajout "pcr-and-purification"
+		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
 				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification"), 
