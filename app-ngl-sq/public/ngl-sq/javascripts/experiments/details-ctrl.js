@@ -3,8 +3,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
                                                   function($scope,$sce,$window, $http,$parse,$q,$position,$routeParams,$location,$filter,
                                                 		  mainService,tabService,lists,datatable, messages,valuationService) {
 	
-	console.log("call DetailsCtrl");
-	
 	$scope.updateInstrumentProperty = function(pName){
 		$scope.$broadcast('updateInstrumentProperty', pName);
 	}
@@ -99,7 +97,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	});
 	
 	$scope.activeEditMode = function(){
-		console.log("call activeEditMode");
 		$scope.messages.clear();
 		mainService.startEditMode();
 		
@@ -125,7 +122,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.cancel = function(){
-		console.log("call cancel");
 		$scope.$broadcast('cancel');
 		$scope.messages.clear();
 		mainService.stopEditMode();
@@ -148,16 +144,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.save = function(callbackFunction){
-		console.log("call save on main");
+		
 		$scope.messages.clear();
 		saveInProgress = true;
 		$scope.$broadcast('saveReagents', callbackFunction);		
 	};
 	
 	$scope.startExperiment = function(){
-		console.log("call startExperiment");
+		
 		$scope.save(function(experiment){
-			console.log("call callback startExperiment");
 			
 			mainService.put("experiment",$scope.experiment);
 			$scope.experiment = experiment;
@@ -180,15 +175,12 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	
 	$scope.finishExperiment = function(){
-		console.log("call finishExperiment");
 		
 		if($scope.experiment.status.valid !== 'UNSET'){
 			
 			angular.element('#finalResolutionModal').modal('hide');
 			
 			$scope.save(function(experiment){
-				console.log("call callback finishExperiment");
-				
 				mainService.put("experiment",$scope.experiment);
 				$scope.experiment = experiment;
 				var state =  angular.copy($scope.experiment.state);
@@ -213,7 +205,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.$on('reagentsSaved', function(e, callbackFunction) {
-		console.log('call event reagentsSaved on main');
+		
 		$scope.$broadcast('save', callbackFunction);
 	});
 	
@@ -244,7 +236,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	}
 	
 	$scope.$on('childSaved', function(e, callbackFunction) {
-		console.log('call event childSaved on main');
+		
 		updatePropertyUnit($scope.experiment);
 		if(creationMode){
 			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
@@ -343,7 +335,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.changeInstrumentType = function(){
-		console.log("call changeInstrumentType see getInstrumentsTrigger() in old version");
+		
 		if($scope.experiment && $scope.experiment.instrument && $scope.experiment.instrument.typeCode){
 			var instrumentTypeCode = $scope.experiment.instrument.typeCode;
 			$scope.experiment.instrument = {};
@@ -359,7 +351,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.loadTemplate = function(){
-		console.log("call loadTemplate see getTemplate() in old version");
 		if($scope.experimentType && $scope.experiment.instrument && $scope.experiment.instrument.outContainerSupportCategoryCode){
 			$scope.experimentTypeTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod.toLowerCase(),
 					$scope.experiment.instrument.outContainerSupportCategoryCode,
@@ -870,7 +861,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 
 	$scope.getBoxCatalogs = function(value, isActive){
-		console.log("getBoxCatalogs");
+		
 		var kitCatalogCode = $parse("data.kitCatalogCode")(value);
 		
 		if(null !== kitCatalogCode && undefined !== kitCatalogCode){			
@@ -885,9 +876,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}			
 			}	
 			return result;
-		} else {
-			console.log("pas de kitCatalogCode");
-		}				
+		} 				
 	}
 	
 	$scope.getReagentCatalogs = function(value){
@@ -902,11 +891,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	}
 
 	$scope.searchReagents = function(){
-		console.log ("je fais un search de reagent");
+		
 		//$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 		$http.get(jsRoutes.controllers.reagents.api.KitCatalogs.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 		.success(function(data, status,headers,config){
-			console.log("bon if" + data);
+			
 			var datatableData = $scope.datatableReagent.getData();
 			for(var i=0;i<data.length;i++){
 				var closureData = data[i];
@@ -917,7 +906,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							"kitCatalogCode":closureData.catalogCode};
 					if($scope.isReagentAdded(r.code) === false){
 						datatableData.push(r);
-						console.log(dataBox);
+						
 						$scope.datatableReagent.setData(datatableData);
 					}
 				});
@@ -931,10 +920,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.reagentCodeErrorClass = ""
 		$scope.reagentCodeError = "";
 		if($scope.searchBarCode !== undefined && $scope.searchBarCode !== ""){
-			console.log("mauvais if");
+			
 			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 			.success(function(data, status,headers,config){
-				console.log(data);
 				var datatableData = $scope.datatableReagent.getData();
 				if(data.length > 0){
 				for(var i=0;i<data.length;i++){
@@ -946,8 +934,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 									"code":closureData.catalogRefCode+"_"+closureData.bundleBarCode+"_"+closureData.barCode,
 									"kitCatalogCode":closureData.catalogCode};
 							if($scope.isReagentAdded(r.code) === false){
-								datatableData.push(r);
-								console.log(dataBox);
+								datatableData.push(r);								
 								$scope.datatableReagent.setData(datatableData);
 							}
 						}
@@ -982,8 +969,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.datatableReagent = datatable(datatableConfigReagents);
 	
-	$scope.$watch('experiment', function() {
-		console.log('watch experiment on reagents')
+	$scope.$watch('experiment', function() {		
 		if (angular.isDefined($scope.experiment)){
 			if($scope.experiment.reagents === null || $scope.experiment.reagents === undefined || $scope.experiment.reagents.length === 0){
 				$scope.datatableReagent.setData([]);				
@@ -995,25 +981,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	});
 
 	$scope.$on('saveReagents', function(e, callbackFunction) {	
-		console.log("call event save for reagents");
 		$scope.datatableReagent.save()
 		$scope.experiment.reagents = $scope.datatableReagent.getData();
 		$scope.$emit('reagentsSaved', callbackFunction);
 	});
 	
 	$scope.$on('cancel', function(e) {
-		console.log("call event cancel");
 		$scope.datatableReagent.cancel();						
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
-		console.log("call event activeEditMode");
 		$scope.datatableReagent.selectAll(true);
 		$scope.datatableReagent.setEdit();
 	});
 	
 	$scope.$on('activeFinishEditMode', function(e) {
-		console.log("call event activeEditMode");
 		$scope.datatableReagent.selectAll(true);
 		$scope.datatableReagent.setEdit();
 	});
