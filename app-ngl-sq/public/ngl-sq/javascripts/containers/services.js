@@ -220,7 +220,10 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		if(!isInit){
 			lists.refresh.containerSupportCategories();
 			lists.refresh.containerCategories();
-			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false});
+			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false},"transformation");
+			lists.refresh.experimentTypes({categoryCode:"purification"}, "purification");
+			lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrol");
+			lists.refresh.experimentTypes({categoryCode:"transfert"}, "transfert");
 			lists.refresh.containerSupports();
 			lists.refresh.projects();
 			lists.refresh.processCategories();

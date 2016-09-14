@@ -152,7 +152,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		if(!isInit){
 			lists.refresh.containerSupportCategories();
 			lists.refresh.containerCategories();
-			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false});
+			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false},'transformation');
 			lists.refresh.containerSupports();
 			lists.refresh.projects();
 			lists.refresh.users();

@@ -214,27 +214,15 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.selectDefaultFromExperimentType = function(){
-		var selectionList = {};	
 		$scope.searchService.form.fromTransformationTypeCodes=[];
-			
 		if(angular.isDefined($scope.searchService.form.nextProcessTypeCode)){
-			selectionList = angular.copy($scope.lists.getExperimentTypesWithNone());
 			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.searchService.form.nextProcessTypeCode).url)
 			.success(function(data, status, headers, config) {
 				var defaultFirstExperimentTypes = data;
 				console.log("defaultFirstExperimentTypes= "+defaultFirstExperimentTypes);
 				angular.forEach(defaultFirstExperimentTypes, function(experimentType, key){
-					angular.forEach(selectionList, function(item, index){
-						if(experimentType.code==item.code){
-							console.log("experimentType.code= "+experimentType.code);
-							console.log("item.code= "+item.code);
-							console.log("index= "+index);								
-							$scope.searchService.form.fromTransformationTypeCodes.push(item.code);							
-							console.log("form.fromTransformationTypeCodes= "+$scope.searchService.form.fromTransformationTypeCodes);
-						}
-					});
-				});
-				
+					$scope.searchService.form.fromTransformationTypeCodes.push(experimentType.code);							
+				});				
 				$scope.search();
 			});
 		}		
@@ -514,7 +502,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.lists.refresh.containerSupports();
 		$scope.lists.refresh.containerSupportCategories();
 		$scope.lists.refresh.users();
-		lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
+		lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true},'transformation');
 		lists.refresh.reportConfigs({pageCodes:["containers-search"]});
 		$scope.lists.refresh.reportConfigs({pageCodes:["containers-addcolumns-processes-creation"]}, "containers-addcolumns-processes-creation");
 		$scope.lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");

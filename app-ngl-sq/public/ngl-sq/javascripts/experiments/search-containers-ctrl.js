@@ -293,7 +293,8 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"purification","isActive":true}, "purification");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"qualitycontrol","isActive":true}, "qualitycontrol");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transfert","isActive":true}, "transfert");
-		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation","isActive":true, withoutOneToVoid:true});
+		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformation");
+		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation","isActive":true, withoutOneToVoid:true},"fromTransformation");
 	};
 	
 	$scope.refreshSamples = function(){
@@ -569,9 +570,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 	
 	//init
 	$scope.errors = {};
-	$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url).success(function(data, status, headers, config) {
-		$scope.experimentTypeList=data;    				
-	});
+	
 	if(angular.isUndefined(mainService.getDatatable())){
 		$scope.datatable = datatable($scope.datatableConfig);
 		mainService.setDatatable($scope.datatable);	
@@ -598,12 +597,11 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 	//$scope.searchService.lists.clear("processTypes");
 	$scope.searchService.lists.refresh.projects();
 	$scope.searchService.lists.refresh.types({objectTypeCode:"Process"}, true);
-	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformation");
 	$scope.searchService.lists.refresh.processCategories();
 	$scope.searchService.lists.refresh.experimentCategories();
 	$scope.searchService.lists.refresh.users();
 	$scope.searchService.lists.refresh.containerSupports();
-	$scope.searchService.lists.refresh.experiments();
+	//$scope.searchService.lists.refresh.experiments();
 	$scope.searchService.lists.refresh.states({objectTypeCode:"Container"});
 	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-search"]});
 	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
@@ -616,6 +614,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 	$scope.searchService.additionalColumns=[];
 	$scope.searchService.selectedAddColumns=[];
 	$scope.searchService.getColumns=$scope.datatableConfig.columns;
+	
 	$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url,{params:{"list":true}})
 		.success(function(data, status, headers, config) {
 			var processesTypes = data;

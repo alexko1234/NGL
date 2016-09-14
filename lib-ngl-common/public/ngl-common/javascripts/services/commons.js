@@ -279,8 +279,15 @@ angular.module('commonsServices', []).
     		
     		return {
     			refresh : refresh,
-    			get : function(key){return results[key];},
-    			clear : function(key){results[key] = undefined;},
+    			get : function(key, addNone){
+    				if(addNone){
+    					return putNoneInResult(results[key]);
+    				}else{
+    					return results[key];
+    				}
+    				
+    			},
+    			clear : function(key){results[key] = null;},
     			getResolutions : function(){return results['resolutions'];},
     			getValuationCriterias :function(params,key){
     				key = (key)?key:'valuationCriterias';
@@ -310,9 +317,8 @@ angular.module('commonsServices', []).
     			getContainerSupports : function(){return results['containerSupports'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
+    			
     			getExperimentTypes : function(){return results['experimentTypes'];},
-    			getExperimentTypesWithNone : function(){   								   				
-    				return putNoneInResult(results['experimentTypes']);},
     			getStates : function(){
     				return results['states'];
     				},
