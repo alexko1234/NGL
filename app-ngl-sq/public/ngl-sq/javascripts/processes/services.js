@@ -443,10 +443,12 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			this.form.typeCodes = undefined;
 			this.lists.clear("processTypes");
 
-			if (this.form.categoryCodes) {
+			if (this.form.categoryCodes && this.form.categoryCodes.length > 0) {
 				this.lists.refresh.processTypes({
 					categoryCodes : this.form.categoryCodes
 				});
+			}else {
+				this.form.categoryCodes = undefined;
 			}
 		},
 
