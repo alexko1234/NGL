@@ -431,6 +431,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			// il manquait "normalization-and-pooling  en previous !!!
+			newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization", "normalization-and-pooling"),
+					null,
+					null,
+					null
+					).save();
+			
+		} else {
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
@@ -438,7 +449,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();
-
+		}
+		
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
 				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
