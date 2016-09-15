@@ -669,13 +669,15 @@ public class ValidationHelper {
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyListValue propertyValue, PropertyDefinition propertyDefinition){
 		if(propertyDefinition.choiceInList){
 			int i = 0;
+			boolean isOk = true;
 			for(Object value : propertyValue.value){
 				if(!checkIfExistInTheList(propertyDefinition, value.toString())){
 					contextValidation.addErrors(propertyDefinition.code+".value["+i+++"]", ERROR_VALUENOTAUTHORIZED_MSG, value);
+					isOk = false;
 				}
 			}
 			
-			return false;
+			return isOk;
 		}else{
 			return true;
 		}
@@ -690,13 +692,15 @@ public class ValidationHelper {
 	 */
 	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectValue propertyValue, PropertyDefinition propertyDefinition) {
 		if(propertyDefinition.choiceInList){
+			boolean isOk = true;
 			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
 				Object value = entryValue.getValue();
 				if((propertyDefinition.code.endsWith(entryValue.getKey())) && !checkIfExistInTheList(propertyDefinition, value.toString())){
 					contextValidation.addErrors(propertyDefinition.code+".value."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
+					isOk = false;
 				}
 			}			
-			return false;
+			return isOk;
 		}else{
 			return true;
 		}
@@ -707,10 +711,25 @@ public class ValidationHelper {
 	 * @param contextValidation
 	 * @param propertyValue
 	 * @param propertyDefinition
+	 * @return 
 	 */
-	public static void checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectListValue propertyValue, PropertyDefinition propertyDefinition) {
-		//TODO !
-		Logger.error("checkIfExistInTheList not implemented");
+	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyObjectListValue propertyValue, PropertyDefinition propertyDefinition) {
+		if(propertyDefinition.choiceInList){
+			int i = 0;
+			boolean isOk = true;
+			for(Map<String, ?> map : propertyValue.value){
+				for(Entry<String, ?> entryValue : map.entrySet()){
+					Object value = entryValue.getValue();
+					if((propertyDefinition.code.endsWith(entryValue.getKey())) && !checkIfExistInTheList(propertyDefinition, value.toString())){
+						contextValidation.addErrors(propertyDefinition.code+".value["+i+++"]."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
+						isOk = false;
+					}
+				}								
+			}
+			return isOk;	
+		}else{
+			return true;
+		}
 	}
 	
 	/**
