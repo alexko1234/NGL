@@ -117,6 +117,23 @@ public class ExpWorkflowsHelper {
 			inputProcessTypeCodes.addAll(inputContainer.processTypeCodes);
 		});
 
+		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+		if(experimentType.newSample){
+			exp.atomicTransfertMethods.stream().map(atm -> atm.outputContainerUseds)
+			.flatMap(List::stream)
+			.forEach(ocu -> {
+				Map<String,PropertyValue> experimentProperties = ocu.experimentProperties;
+				if(experimentProperties.containsKey("projectCode")){
+					projectCodes.add(experimentProperties.get("projectCode").value.toString());
+				}
+				
+				if(experimentProperties.containsKey("sampleCode")){
+					sampleCodes.add(experimentProperties.get("sampleCode").value.toString());
+				}						
+			});
+		}
+		
+		
 		exp.projectCodes = projectCodes;		
 		exp.sampleCodes = sampleCodes;
 		exp.inputContainerSupportCodes = inputContainerSupportCodes;		

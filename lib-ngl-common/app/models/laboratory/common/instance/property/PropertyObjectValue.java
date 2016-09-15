@@ -45,8 +45,8 @@ public class PropertyObjectValue extends PropertyValue<Map<String,?>>{
 			PropertyDefinition propertyDefinition = propertyDefinitions.next();
 			if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
 				if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				
-					if(ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition)){
-						ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition);
+					if(ValidationHelper.convertPropertyValue(contextValidation, this, propertyDefinition)){
+						ValidationHelper.checkIfExistInTheList(contextValidation, this, propertyDefinition);
 						//TODO FORMAT AND UNIT
 					}
 				}
