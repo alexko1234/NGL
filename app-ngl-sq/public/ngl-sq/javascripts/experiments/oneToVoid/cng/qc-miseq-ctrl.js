@@ -56,7 +56,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 	
 	$scope.button = {
 		isShow:function(){
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";

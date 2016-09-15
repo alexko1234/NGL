@@ -177,7 +177,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	
 	$scope.button = {
 		isShow:function(){
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
 			}	
 	};
 	
@@ -210,7 +210,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	
 	$scope.importButton = {
 		isShow:function(){
-			return ("labchip-gx" === $scope.experiment.instrument.typeCode && $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ("labchip-gx" === $scope.experiment.instrument.typeCode && $scope.isInProgressState() && !$scope.mainService.isEditMode()
+					 || Permissions.check("admin"))
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
