@@ -89,7 +89,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
+		l.add(DescriptionFactory.newProcessType("4000 / X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"),
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),
 						getPET("lib-normalization",-1),
@@ -100,8 +100,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5	
-		l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5; chgt label 15/09/2016
+		l.add(DescriptionFactory.newProcessType("4000 / X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgPcrFree(),
 				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),
 						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
@@ -113,8 +113,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout  12/04/2016 JIRA NGL-894/981 processus court demarrant a lib-normalization, pas de proprietes
-		l.add(DescriptionFactory.newProcessType("X5_norm,FC ord, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+		// FDS ajout  12/04/2016 JIRA NGL-894/981 processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
+		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				null,
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),
 						getPET("prep-pcr-free",-1),  /// === frag-and-library-preparation
@@ -126,8 +126,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016
-		l.add(DescriptionFactory.newProcessType("X5_WG NANO", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
+		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016; chgt label 15/06/2016
+		l.add(DescriptionFactory.newProcessType("4000 / X5_WG NANO", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgNanoDNAseq(), 
 				Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
 						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
@@ -145,8 +145,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 			// FDS ajout 31/05/2016 JIRA NGL-1025: 2 processus pour RNASeq; processus long type "library". 
-			// FDS modif 13/09/2016 JIRA NGL-1025: renommer en "X5/4000_RNAseq" pour le differentier d'un processus RNAseq qui pourrait exister en 2000...
-			l.add(DescriptionFactory.newProcessType("X5/4000 RNA Sequencing", "x5-4000-rna-sequencing", ProcessCategory.find.findByCode("library"),
+			// FDS modif 13/09/2016 JIRA NGL-1025: renommer en "4000 / X5_RNAseq" pour le differentier d'un processus RNAseq qui pourrait exister en 2000...
+			l.add(DescriptionFactory.newProcessType("4000 / X5_RNAseq", "x5-rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1),
 							getPET("library-prep",0),
@@ -159,8 +159,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("ext-to-rna-sequencing").get(0),    //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// processus court type "normalization"    
-			l.add(DescriptionFactory.newProcessType("RNA norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
+			// processus court type "normalization"; chgt label 15/09/2016
+			l.add(DescriptionFactory.newProcessType("Norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
 					null,   /// pas de proprietes ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1),
 							getPET("normalization-and-pooling",0), 
