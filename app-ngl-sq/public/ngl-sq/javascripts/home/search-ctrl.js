@@ -85,14 +85,164 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 						}
 						]
 	};
-	
-	
-	
+	var datatableProcessConfigN = {
+			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
+			search:{
+				url:jsRoutes.controllers.processes.api.Processes.list()
+			},
+			pagination:{
+				mode:'local',
+				numberRecordsPerPage:5
+			},
+			select:{
+				active:false
+			},
+			showTotalNumberRecords:false,
+			columns : [
+			           {  	property:"code",
+					    	header: "Code",
+					    	type :"text",
+					    	"position":1,
+					    	order:true
+			           },
+			           {
+							"header":Messages("processes.table.typeCode"),
+							"property":"typeCode",
+							"order":true,
+							"hide":true,
+							"position":2,
+							"filter":"codes:'type'",
+							"type":"text"         
+						} ,
+						 {
+							"header":Messages("processes.table.category"),
+							"property":"categoryCode",
+							"order":true,
+							"hide":true,
+							"position":2.5,
+							"filter":"codes:'type'",
+							"type":"text"         
+						} ,
+			           {
+							"header":Messages("processes.table.projectCode"),
+							"property":"projectCode",
+							"order":true,
+							"hide":true,
+							"position":3,
+							"type":"text"
+						},
+						{
+							"header":Messages("processes.table.sampleCode"),
+							"property":"sampleCode",
+							"order":true,
+							"hide":true,
+							"position":4,
+							"type":"text"
+							},
+						{
+							"header":Messages("processes.table.inputContainerCode"),
+							"property":"inputContainerCode",
+							"order":true,
+							"hide":true,								
+							"position":5,
+							"type":"text"
+							}
+						]
+	};  
+	var datatableProcessConfigIP = {
+			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
+			search:{
+				url:jsRoutes.controllers.processes.api.Processes.list()
+			},
+			pagination:{
+				mode:'local',
+				numberRecordsPerPage:5
+			},
+			select:{
+				active:false
+			},
+			showTotalNumberRecords:false,
+			columns : [
+			           {  	property:"code",
+					    	header: "Code",
+					    	type :"text",
+					    	"position":1,
+					    	order:true
+			           },
+			           {
+							"header":Messages("processes.table.typeCode"),
+							"property":"typeCode",
+							"order":true,
+							"hide":true,
+							"position":2,
+							"filter":"codes:'type'",
+							"type":"text"         
+						} ,
+						 {
+							"header":Messages("processes.table.category"),
+							"property":"categoryCode",
+							"order":true,
+							"hide":true,
+							"position":2.5,
+							"filter":"codes:'type'",
+							"type":"text"         
+						} ,
+			           {
+							"header":Messages("processes.table.projectCode"),
+							"property":"projectCode",
+							"order":true,
+							"hide":true,
+							"position":3,
+							"type":"text"
+						},
+						 {
+							"header":Messages("processes.table.experimentCodes"),
+							"property":"experimentCodes",
+							"order":true,
+							"hide":true,
+							"render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='1'>",
+							"position":4,
+							"type":"text"
+						},
+						{
+							"header":Messages("processes.table.sampleCode"),
+							"property":"sampleCode",
+							"order":true,
+							"hide":true,
+							"position":5,
+							"type":"text"
+						},
+						{
+							"header":Messages("processes.table.inputContainerCode"),
+							"property":"inputContainerCode",
+							"order":true,
+							"hide":true,
+							"position":6,
+							"type":"text"
+						},
+						{
+							"header":Messages("processes.table.currentExperimentTypeCode"),
+							"property":"currentExperimentTypeCode",
+							"order":true,
+							"hide":true,
+							"position":7,
+							"filter":"codes:'type'",
+							"type":"text"
+						}
+						
+						]
+	};  
 		$scope.experimentIPDatatable = datatable(datatableConfig);			
 		$scope.experimentIPDatatable.search({stateCodes:["IP"]});
 		
 		$scope.experimentNDatatable = datatable(datatableConfig);			
 		$scope.experimentNDatatable.search({stateCodes:["N"]});
+		
+		$scope.processIPDatatable = datatable(datatableProcessConfigIP);			
+		$scope.processIPDatatable.search({stateCodes:["IP"]});
+		
+		$scope.processNDatatable = datatable(datatableProcessConfigN);			
+		$scope.processNDatatable.search({stateCodes:["N"]});
 }]);
 
 

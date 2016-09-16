@@ -4,6 +4,8 @@ index.title = Welcome to NGL-SQ
 #home
 home.experiments.ip = Experiences en cours
 home.experiments.new = Experiences à nouveau
+home.processes.ip = Processus en cours
+home.processes.new = Processus à nouveau
 
 #home page main
 home.h10.header=Bienvenue {0} sur NGL - Séquençage
@@ -293,6 +295,7 @@ processes.table.properties.libProcessTypeCode = Type Processus Banque (Code)
 processes.table.line = X
 processes.table.columns = Y
 processes.table.tag = Tag
+processes.table.category= Catégorie Processus
 processes.table.sampleOnInputContainer.properties.tag = Tag
 processes.table.sampleOnInputContainer.volume = Volume
 processes.table.sampleOnInputContainer.concentration = Concentration
