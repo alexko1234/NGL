@@ -124,11 +124,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 		new QualityControl().getExperimentTypeNode();
 		
-		new Opgen().getExperimentTypeNode();
-		new Nanopore().getExperimentTypeNode();
-		new Bionano().getExperimentTypeNode();		
-		
 		new ExtractionDNARNA().getExperimentTypeNode();
+		
+		new Opgen().getExperimentTypeNode();
+		new Bionano().getExperimentTypeNode();		
+		new Nanopore().getExperimentTypeNode();
+		
 		new MetaGenomique().getExperimentTypeNode();
 		new MetaTProcess().getExperimentTypeNode();
 		new MetaBarCoding().getExperimentTypeNode();
