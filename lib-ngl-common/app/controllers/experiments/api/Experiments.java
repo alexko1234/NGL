@@ -246,7 +246,7 @@ public class Experiments extends DocumentController<Experiment>{
 	}
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
 	public Result save() throws DAOException{
 		Form<Experiment> filledForm = getMainFilledForm();
 		Experiment input = filledForm.get();
@@ -283,7 +283,7 @@ public class Experiments extends DocumentController<Experiment>{
 	}
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
 	public Result update(String code) throws DAOException{
 		Experiment objectInDB =  getObject(code);
 		if(objectInDB == null) {
