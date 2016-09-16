@@ -4,6 +4,8 @@
 
 @scripts() = {
 	 <script src="@controllers.experiments.tpl.routes.Experiments.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+     <script src="@controllers.processes.tpl.routes.Processes.javascriptRoutes" type="text/javascript" charset="utf-8"></script> <!-- GS -->
+    
      <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
      <script src="@controllers.main.tpl.routes.Main.jsPermissions" type="text/javascript" charset="utf-8"></script>
      <script src="@routes.Assets.at("datatable/javascripts/services/ultimate-datatable.js")" type="text/javascript" charset="utf-8"></script>                           
@@ -54,6 +56,37 @@
 				</div>
 				<div class="panel-body">
       					<div ultimate-datatable="experimentIPDatatable"></div>				
+      			</div>
+			</div>
+		</div>
+		
+		 <div class="col-md-6 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.processes.tpl.routes.Processes.home("search")?stateCodes=N">
+							<span class="label label-primary pull-right">{{processDatatable.totalNumberRecords}}</span>
+							@Messages("home.processes.new")							
+						</a>
+					</h3>
+				</div>
+				<div class="panel-body">
+					 	<div ultimate-datatable="processNDatatable"></div>
+				</div>
+			</div>
+		</div>
+		 <div class="col-md-6 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.processes.tpl.routes.Processes.home("search")?stateCodes=IP">
+							<span class="label label-primary pull-right">{{processDatatable.totalNumberRecords}}</span>
+							@Messages("home.processes.ip")							
+						</a>
+					</h3>
+				</div>
+				<div class="panel-body">
+      					<div ultimate-datatable="processIPDatatable"></div>				
       			</div>
 			</div>
 		</div>
