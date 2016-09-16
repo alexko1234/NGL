@@ -431,10 +431,14 @@ public class Containers extends CommonController {
 					Logger.debug("NB Previous exp : "+previousExpType.size());
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
 					
-					if(CollectionUtils.isEmpty(containersSearch.fromTransformationTypeCodes)){
+					if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
+						previousExpTypeCodes.retainAll(containersSearch.fromTransformationTypeCodes);
+					}
+					
+					if(CollectionUtils.isNotEmpty(previousExpTypeCodes)){
 						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));
 					}else{
-						subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes));
+						subQueryElts.add(DBQuery.in("processTypeCodes", "-1")); //force to return zero result;
 					}
 					
 					
