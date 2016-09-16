@@ -44,6 +44,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                      "defaultValues":"" //If the value of the column is undefined or "" when the user edit, this value show up
                      "url"://to lazy data
                      "mergeCells":false //to enable merge cell on this column
+                     "required":true/false //to add * on column header if required
                      "
                    }*/
                 columnsUrl: undefined, //Load columns config
@@ -3281,14 +3282,17 @@ directive('udtTable', function(){
 	    			};
 	    		
 	    			scope.udtTableFunctions.getThClass = function(col, currentScope){
+	    				var clazz = '';
 	    				if(angular.isFunction(col.thClass)){
-	    					return col.thClass(col);
+	    					clazz = col.thClass(col);
 	    				} else if(angular.isString(col.thClass)){
 	    					//we try to evaluation the string against the scope
-	    					return currentScope.$eval(col.thClass) || col.thClass;
-	    				}else{
-	    					return '';
+	    					clazz =  currentScope.$eval(col.thClass) || col.thClass;
 	    				}
+	    				if(col.required)clazz = clazz +' required';
+	    				
+	    				return clazz;
+	    				
 	    			};
 	    			/**
 					 * Select all the table line or just one
@@ -3873,7 +3877,7 @@ run(function($templateCache) {
    +                    '</tr>'
    +                    '<tr>'
    +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" ng-if="!udtTable.isHide(column.id)" ng-class="udtTableFunctions.getThClass(column, this)">'
-   +                            '<span ng-model="udtTable" droppable drop-fn="udtTable.onDrop" drop-item="column" ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
+   +                            '<span class="header" ng-model="udtTable" droppable drop-fn="udtTable.onDrop" drop-item="column" ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
    +                            '<div class="btn-group pull-right">'
    +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setEdit(column)"        ng-if="udtTable.isShowButton(\'edit\', column)"  ng-disabled="!udtTable.canEdit()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
    +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setOrderColumn(column)" ng-if="udtTable.isShowButton(\'order\', column)" ng-disabled="!udtTable.canOrder()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.sort\')}}"><i ng-class="udtTable.getOrderColumnClass(column.id)"></i></button>'

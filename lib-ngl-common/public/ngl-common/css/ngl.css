@@ -86,3 +86,10 @@ input[type="checkbox"] {
 	height: 14px;
 	font-size:8px;
 }
+
+.form-group.required .control-label:after {
+  content:" *";
+  color:red;
+}
+
+

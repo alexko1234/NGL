@@ -66,6 +66,8 @@ angular.module('atomicTransfereServices', [])
     				var column = {};
     				column.watch=true;
     				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);
+    				column.required=propertyDefinition.required;
+    				    				
     				column.property = propertyNamePrefix+propertyDefinition.code+propertyNameSuffix;
     				column.edit = propertyDefinition.editable;
     				column.hide =  true;

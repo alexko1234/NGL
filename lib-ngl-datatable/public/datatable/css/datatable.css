@@ -100,3 +100,10 @@
 .datatable .thumbnail {
 	margin-bottom:0px;
 }
+
+
+.datatable .required .header:after {
+  content:" *";
+  color:red;
+}
+
