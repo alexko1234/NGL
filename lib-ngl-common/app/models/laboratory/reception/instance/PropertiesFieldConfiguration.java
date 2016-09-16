@@ -7,9 +7,11 @@ import java.util.Set;
 
 
 
+
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
+
 
 
 
@@ -41,10 +43,9 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 	public void populateField(Field field, Object dbObject,
 			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
 		
+		Map<String,PropertyValue> properties = getProperties(field, dbObject, action);
 		//we create or update all the properties
-		Map<String,PropertyValue> properties = new HashMap<String, PropertyValue>();
 		Set<String> propertyNames = configs.keySet();
-		//TODO GA 20/06/2016 : Only create PropertySingleValue, can be add type in config with a PropertyFieldConfiguration Object but not priority		
 		propertyNames.forEach(pName -> {
 			try {
 				PropertyValueFieldConfiguration propertyFieldConfig = configs.get(pName);
@@ -63,6 +64,20 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 		});
 		
 		populateField(field, dbObject, properties);		
+	}
+
+	private Map<String, PropertyValue> getProperties(Field field,
+			Object dbObject, Action action)
+			throws IllegalAccessException {
+		Map<String,PropertyValue> properties = null;
+		if(Action.update.equals(action)){
+			properties = (Map<String,PropertyValue>) field.get(dbObject);
+		}
+		
+		if(properties == null){
+			properties = new HashMap<String, PropertyValue>();			
+		}
+		return properties;
 	}
 
 	

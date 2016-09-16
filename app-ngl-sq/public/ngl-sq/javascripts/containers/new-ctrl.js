@@ -9,6 +9,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 	$scope.upload = function(){
 		$scope.messages.clear();
 		if($scope.form.receptionConfigurationCode && $scope.form.file){
+			$scope.spinner = true;
 			$http.post(jsRoutes.controllers.receptions.io.Receptions.importFile($scope.form.receptionConfigurationCode).url, $scope.form.file)
 			.success(function(data, status, headers, config) {
 				$scope.messages.clazz="alert alert-success";
@@ -17,8 +18,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 				$scope.messages.open();	
 				$scope.file = undefined;
 				angular.element('#importFile')[0].value = null;
-				$scope.$emit('refresh');
-				
+				$scope.spinner = false;
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.clazz = "alert alert-danger";
@@ -27,6 +27,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 				$scope.messages.open();	
 				$scope.file = undefined;
 				angular.element('#importFile')[0].value = null;
+				$scope.spinner = false;
 			});
 		}
 	};
