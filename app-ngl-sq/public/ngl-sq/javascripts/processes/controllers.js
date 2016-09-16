@@ -218,7 +218,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.searchService.form.fromTransformationTypeCodes=[];
 			
 		if(angular.isDefined($scope.searchService.form.nextProcessTypeCode)){
-			selectionList = angular.copy($scope.lists.getExperimentTypesWithNone());
+			selectionList = angular.copy($scope.lists.get('transformation',true));
 			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.searchService.form.nextProcessTypeCode).url)
 			.success(function(data, status, headers, config) {
 				var defaultFirstExperimentTypes = data;
