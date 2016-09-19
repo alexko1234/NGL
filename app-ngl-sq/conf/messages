@@ -405,6 +405,7 @@ experiments.button.purif=Purification
 experiments.button.transfert=Transfert
 experiments.button.transformation=Transformation
 experiments.button.qualitycontrol=Controle qualité
+experiments.button.computeSize=Taille
 experiments.button.plate.computeLineMode = Calcul position plaque en mode ligne
 experiments.button.plate.computeColumnMode = Calcul position plaque en mode colonne
 experiments.button.plate.computeLineMode.advanced = Choix de la colonne max.

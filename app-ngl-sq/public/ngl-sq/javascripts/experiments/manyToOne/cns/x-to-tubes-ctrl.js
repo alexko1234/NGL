@@ -114,6 +114,30 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 		}
 	}
 	
+	$scope.computeInSizeToOut= function(){
+		
+		console.log("Compute out size");
+		var atm = $scope.atmService.data.atm;	
+		angular.forEach(atm, function(value){
+			var sizeTotal=0;
+			value.inputContainerUseds.forEach(function(icu){
+				if(icu.size==null || icu.size.value==null){
+					sizeTotal=undefined;
+				}
+				if(sizeTotal!=undefined){
+				sizeTotal+=icu.size.value;
+				}
+			})
+			if(value.outputContainerUseds!=null && sizeTotal!=undefined){
+				var size= {value : undefined, unit : 'pb'};
+				size.value= Math.round(sizeTotal/value.inputContainerUseds.length*100)/100;
+				$parse("outputContainerUseds[0].size").assign(value, size);
+			}
+			
+		});
+		$scope.atmService.data.updateDatatable();
+	}
+	
 	var generateSampleSheet = function(){
 		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
@@ -156,6 +180,14 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
 	});
 	
+	var config = $scope.atmService.$atmToSingleDatatable.data.getConfig();
+	config.otherButtons= {
+		active : true,
+        template: 
+        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.computeSize")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
+    };
+	
+
 	var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
 	columns.push({
 		"header" : Messages("containers.table.size"),
@@ -167,6 +199,20 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 		"position" :7.5,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
+		}
+	});
+	
+	
+	columns.push({
+		"header" : Messages("containers.table.size"),
+		"property": "outputContainerUsed.size.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" :100,
+		"extraHeaders" : {
+			0 : Messages("experiments.outputs")
 		}
 	});
 	$scope.atmService.$atmToSingleDatatable.data.setColumnsConfig(columns);
