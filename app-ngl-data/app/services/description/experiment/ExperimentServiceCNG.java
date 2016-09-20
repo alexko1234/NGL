@@ -401,6 +401,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					).save();	
 		}
 
+		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
@@ -413,6 +414,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("aliquoting","pool")
 				).save();
 		
+		} else {
+		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
+				false, false, false, 
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), 
+				null, 
+				getExperimentTypes("miseq-qc"),
+				getExperimentTypes("aliquoting","pool")
+				).save();
+		}
 		
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
