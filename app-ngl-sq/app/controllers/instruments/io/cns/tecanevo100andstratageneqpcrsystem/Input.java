@@ -10,6 +10,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -30,20 +31,23 @@ public class Input extends AbstractInput {
 		Sheet sheet = wb.getSheetAt(0);
 		Map<String,Data> results = new HashMap<String,Data>(0);
 		for(int i = 31; i <= sheet.getLastRowNum(); i=i+4){
-			String sampleBarcode = getStringValue(sheet.getRow(i).getCell(1));
-			Double concentration1 = getNumericValue(sheet.getRow(i).getCell(10));
-			Double concentration2 = getNumericValue(sheet.getRow(i).getCell(12));
-			
-			if(ValidationHelper.required(contextValidation, sampleBarcode, "nom échantillon : ligne = "+i)
-					&& ValidationHelper.required(contextValidation, concentration1, "Moy. concentration (nM) : ligne = "+i)
-					&& ValidationHelper.required(contextValidation, concentration2, "Moy. concentration (ng/µl) : ligne = "+i)){
-				String key = sampleBarcode.replaceAll("_\\d$","");
-				if(!results.containsKey(key)){
-					results.put(key, new Data(concentration1, concentration2));
-				}else{
-					contextValidation.addErrors("Erreurs fichier", "Résultats en double pour "+key+" : ligne = "+i);
+			String test = getStringValue(sheet.getRow(i).getCell(0));
+			if(StringUtils.isNotBlank(test)){
+				String sampleBarcode = getStringValue(sheet.getRow(i).getCell(1));
+				Double concentration1 = getNumericValue(sheet.getRow(i).getCell(10));
+				Double concentration2 = getNumericValue(sheet.getRow(i).getCell(12));
+				
+				if(ValidationHelper.required(contextValidation, sampleBarcode, "nom échantillon : ligne = "+i)
+						&& ValidationHelper.required(contextValidation, concentration1, "Moy. concentration (nM) : ligne = "+i)
+						&& ValidationHelper.required(contextValidation, concentration2, "Moy. concentration (ng/µl) : ligne = "+i)){
+					String key = sampleBarcode.replaceAll("_\\d$","");
+					if(!results.containsKey(key)){
+						results.put(key, new Data(concentration1, concentration2));
+					}else{
+						contextValidation.addErrors("Erreurs fichier", "Résultats en double pour "+key+" : ligne = "+i);
+					}
 				}
-			}			
+				}
 		}
 		//validation
 		if(!contextValidation.hasErrors()){
