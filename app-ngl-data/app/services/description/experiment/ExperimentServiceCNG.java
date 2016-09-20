@@ -137,9 +137,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
 			//       08/2016 renommer le label mais laisser le code "prep-pcr-free a cause de l'existant...
-			l.add(newExperimentType("Prep. Librairie (avec frg)","prep-pcr-free",null,500,
+			//       16/09/2016 remttre l'ancien label
+			l.add(newExperimentType("Prep. PCR free","prep-pcr-free",null,500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsPrepPcrFree(), 
+					getPropertyDefinitionsPrepPcrFree_WgNano(), 
 					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -152,25 +153,33 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			/************************************ DEV / UAT ONLY **********************************************/
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
-				//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
+		/************************************ DEV / UAT ONLY **********************************************/
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
+			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
 				
-				l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-						getPropertyDefinitionsLibraryPrep(),
-						getInstrumentUsedTypes("sciclone-ngsx"),
-						"OneToOne", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsLibraryPrep(),
+					getInstrumentUsedTypes("sciclone-ngsx"),
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
-						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-						getPropertyDefinitionsNormalizationAndPooling(), 
-						getInstrumentUsedTypes("janus"),
-						"ManyToOne", 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-			}
+			/* dupliquer experience prep-pcr-free en prep-wg-nano*/
+			l.add(newExperimentType("Prep.WG Nano","prep-wg-nano",null,500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsPrepPcrFree_WgNano(), 
+					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsNormalizationAndPooling(), 
+					getInstrumentUsedTypes("janus"),
+					"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		}
 			
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
@@ -338,30 +347,50 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 		
-		/************************************ DEV / UAT ONLY **********************************************/
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+	/************************************ DEV / UAT ONLY **********************************************/
+	if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025 RNA_Seq
-			newExperimentTypeNode("ext-to-norm-and-pool-fc-ord-depot",getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),
-					false,false,false,
-					null,
-					null,
-					null,
-					null
-					).save();	
-			
-			newExperimentTypeNode("ext-to-rna-sequencing",getExperimentTypes("ext-to-rna-sequencing").get(0),
-					false,false,false,
-					null,
-					null,
-					null,
-					null
-					).save();	
-		}
+		//FDS ajout 31/05/2016 -- JIRA NGL-1025 RNA_Seq; processus long
+		newExperimentTypeNode("ext-to-norm-and-pool-fc-ord-depot",getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),
+				false,false,false,
+				null,
+				null,
+				null,
+				null
+				).save();	
 		
+		//FDS ajout 31/05/2016 -- JIRA NGL-1025 RNA_Seq; processus court
+		newExperimentTypeNode("ext-to-rna-sequencing",getExperimentTypes("ext-to-rna-sequencing").get(0),
+				false,false,false,
+				null,
+				null,
+				null,
+				null
+				).save();	
+	}
+		
+	
+	// duplication du node prep-pcr-free en test...
+	if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), //plus ext-to-x5-wg-nano !!
+				null,
+				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
+				getExperimentTypes("aliquoting")  
+				).save();	
+		
+		newExperimentTypeNode("prep-wg-nano",getExperimentTypes("prep-wg-nano").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-x5-wg-nano"), //ext-to-x5-wg-nano uniqut
+				null,
+				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
+				getExperimentTypes("aliquoting")  
+				).save();	
+	}
+	else {
 		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
 		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
-		// NOTE==Prep.Librairie (avec frg); ajout "ext-to-x5-wg-nano" 01/09/2016
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-x5-wg-pcr-free","ext-to-x5-wg-nano"),
@@ -369,37 +398,36 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
 				).save();
-			
-
-		/************************************ DEV / UAT ONLY **********************************************/
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025 RNA_Seq
-			newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
-					false,false,false,
-					getExperimentTypeNodes("ext-to-rna-sequencing"),
-					null,
-					null, 
-					null
-					).save();
-			
-			//commun X5_WG NANO et RNAseq			
-			newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
-							true,false,false,
-							getExperimentTypeNodes("library-prep","prep-pcr-free"),
-							null,
-							getExperimentTypes("labchip-migration-profile"), 
-							null
-							).save();
-		
-			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
-					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification"),
-					null,
-					null,
-					null
-					).save();	
 		}
+
+	/************************************ DEV / UAT ONLY **********************************************/
+	if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+			
+		//commun WG_NANO et RNAseq
+		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
+				true,false,false,
+				getExperimentTypeNodes("library-prep","prep-wg-nano"), // prep-pcr-free remplacee par prep-wg-nano
+				null,
+				getExperimentTypes("labchip-migration-profile"), 
+				null
+				).save();
+		
+		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification"),
+				null,
+				null,
+				null
+				).save();	
+	} else {
+		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
+				true,false,false,
+				getExperimentTypeNodes("library-prep","prep-pcr-free"),
+				null,
+				getExperimentTypes("labchip-migration-profile"), 
+				null
+				).save();
+	}
 
 		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
@@ -441,20 +469,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			// il manquait "normalization-and-pooling  en previous !!!
-			newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
-					false,false,false,
-					getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization", "normalization-and-pooling"),
-					null,
-					null,
-					null
-					).save();
-			
-		} else {
+	if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
+				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization", "normalization-and-pooling"),
+				null,
+				null,
+				null
+				).save();
+			
+	} else {
+		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"), //processus RNAseq pas encore en prod
 				null,
 				null,
 				null
@@ -626,21 +653,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment PrepPcrFree pour le process X5
-	// ATTENTION project de renommage => frg-and-library-prep ????
-	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree() throws DAOException {
+	// 16/09/2016 modification du nom car commun a prep-pcr-free et prep-wgnano + supression des valeurs par defaut
+	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree_WgNano() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "55"
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",20));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1100"
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",21));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "55"
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1100"
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23));
 	
 		//OuputContainer

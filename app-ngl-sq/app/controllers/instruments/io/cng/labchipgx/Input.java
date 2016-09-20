@@ -97,7 +97,9 @@ public class Input extends AbstractInput {
 				  Logger.info ("conc="+fields[1]+" size="+fields[2]);
 				  double conc=Double.parseDouble(fields[1].replace(",","."));
 				  double sz=Double.parseDouble(fields[2].replace(",","."));
-				  LabChipData data=new LabChipData(conc,sz);
+				  int rsz = (int)Math.round(sz); // 19/09/2016: arrondir les sizes a l'entier le plus proche...
+
+				  LabChipData data=new LabChipData(conc,rsz);
 				
 				  dataMap.put(pos384, data);
 				}

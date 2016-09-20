@@ -1,5 +1,5 @@
 // FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
-// 04/08/2016 A RENOMMER frg-and-library-prep ??????? VOIR AVEC julie
+// 16/09/2016 commun a prepprcfree et prepwgnano ?????? si oui renommer !!!
 angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 
@@ -380,7 +380,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
 	// pour l'instant une seule plaque => faire un simple tableau
-	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
+	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
 	var tagPlateCode=[];
 	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
 	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
@@ -449,5 +449,15 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		select:setTags,
 	};
 	
-	
+	/* TEST 16/09...   .....*/
+    var dataMain = atmService.data.getData();
+    for(var i = 0; i < dataMain.length; i++){
+		var udtData = dataMain[i];
+		var icu=udtData.inputContainerUsed;
+		//var ic=udtData.inputContainer;
+		console.log("input volume="+ icu.volume.value);
+		icu.experimentProperties.inputVolumeFrag=icu.volume;
+		icu.experimentProperties.inputVolumeLib=icu.volume;
+    }
+    
 }]);

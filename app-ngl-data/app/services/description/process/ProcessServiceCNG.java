@@ -100,8 +100,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5; chgt label 15/09/2016
-		l.add(DescriptionFactory.newProcessType("4000 / X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5; chgt label 16/09/2016
+		l.add(DescriptionFactory.newProcessType("WG PCR free (FC ordonnée)", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgPcrFree(),
 				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),
 						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
@@ -126,8 +126,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016; chgt label 15/06/2016
-		l.add(DescriptionFactory.newProcessType("4000 / X5_WG NANO", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
+		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016; chgt label 16/06/2016
+		l.add(DescriptionFactory.newProcessType("WG NANO (FC ordonnée)", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgNanoDNAseq(), 
 				Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
 						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
@@ -145,8 +145,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 			// FDS ajout 31/05/2016 JIRA NGL-1025: 2 processus pour RNASeq; processus long type "library". 
-			// FDS modif 13/09/2016 JIRA NGL-1025: renommer en "4000 / X5_RNAseq" pour le differentier d'un processus RNAseq qui pourrait exister en 2000...
-			l.add(DescriptionFactory.newProcessType("4000 / X5_RNAseq", "x5-rna-sequencing", ProcessCategory.find.findByCode("library"),
+			// FDS modif label 16/09/2016 JIRA NGL-1025:
+			l.add(DescriptionFactory.newProcessType("RNAseq (FC ordonnée)", "x5-rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1),
 							getPET("library-prep",0),

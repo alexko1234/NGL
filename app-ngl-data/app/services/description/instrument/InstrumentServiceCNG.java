@@ -82,7 +82,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("cBot1", "cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot4", "cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot4", "cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						// 19/09/20167 ajout 6 cbots de type 2: possibilité de lire des codes barres...
 						createInstrument("cBotA", "cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBotB", "cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -200,9 +200,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		/** liquid-handling-robot  **/
+		// un seul Janus pour l'instant => Janus1
 		l.add(newInstrumentUsedType("Janus", "janus", InstrumentCategory.find.findByCode("liquid-handling-robot"), getJanusProperties(), 
 				getInstruments(
-						createInstrument("janus", "Janus", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("janus", "Janus1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -249,20 +250,21 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** FDS ajout 29/07/2016 JIRA NGL-1027 pseudo instrument Masterycler EP-Gradient + Zephyr **/
+		// un seul Zephyr pour l'instant donc=> Zephyr1
 		l.add(newInstrumentUsedType("Mastercycler EP-Gradient + Zephyr", "mastercycler-epg-and-zephyr", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerEPGAndZephyrProperties(), 
 				getInstruments(
-						createInstrument("mastercycler1-and-zephyr", "Mastercycler 1 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler2-and-zephyr", "Mastercycler 2 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler3-and-zephyr", "Mastercycler 3 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler4-and-zephyr", "Mastercycler 4 (EP-Gradient) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler1-and-zephyr", "Mastercycler1 (EP-Gradient) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler2-and-zephyr", "Mastercycler2 (EP-Gradient) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						//createInstrument("mastercycler3-and-zephyr", "Mastercycler3 (EP-Gradient) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("mastercycler4-and-zephyr", "Mastercycler4 (EP-Gradient) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** FDS prevision.... pseudo instrument Masterycler Nexus SX1 + Zephyr **/
 		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1 + Zephyr", "mastercycler-nsx1-epg-and-zephyr", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerNSX1AndZephyrProperties(), 
 				getInstruments(
-						createInstrument("mastercycler5-and-zephyr", "Mastercycler 5 (Nexus SX1) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler6-and-zephyr", "Mastercycler 6 (Nexus SX1) / Zephyr", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler5-and-zephyr", "Mastercycler5 (Nexus SX1) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler6-and-zephyr", "Mastercycler6 (Nexus SX1) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
