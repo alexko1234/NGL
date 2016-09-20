@@ -17,7 +17,7 @@ public class BanqueAmpliImportCNS extends ContainerImportCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		createContainers(contextError,"pl_BanqueAmpliToNGL ","tube","IW-P","amplification","pl_ContentFromContainer @matmanom=?");
+		createContainers(contextError,"pl_BanqueAmpliToNGL ","tube","IW-P","pcr-amplification-and-purification","pl_ContentFromContainer @matmanom=?");
 
 	}
 
