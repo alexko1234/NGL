@@ -8,6 +8,7 @@
   @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.parseFloat()}
     ni
   @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.Float.parseFloat()}
+  => rester avec une definition string: var buffer_vol="";
 ***@
 @import java.lang.String; var buffer_vol="";
 @import java.math.BigInteger; var dest_pos=0;

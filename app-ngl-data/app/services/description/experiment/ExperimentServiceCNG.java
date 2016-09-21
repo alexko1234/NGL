@@ -370,7 +370,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 		
 	
-	// duplication du node prep-pcr-free en test...
+	// 19/09/2016 duplication du node prep-pcr-free en test...
 	if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
