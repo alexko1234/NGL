@@ -375,6 +375,11 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			if(rs.getString("libLayoutNominalLength") != null){
 				sampleUsed.properties.put("libLayoutNominalLength", new PropertySingleValue(rs.getInt("libLayoutNominalLength")));
 			}
+			
+			if(rs.getString("sampleAliquotCode") !=null){
+				sampleUsed.properties.put("sampleAliquotCode", new PropertySingleValue(rs.getString("sampleAliquotCode")));
+			}
+			
 			container.contents.add(sampleUsed);
 
 		}
