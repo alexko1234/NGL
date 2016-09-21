@@ -16,6 +16,6 @@ public class SizingImportCNS extends ContainerImportCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
-		createContainers(contextError,"pl_SizingToNGL ","tube","IW-P","sizing","pl_ContentFromContainer @matmanom=?");
+		createContainers(contextError,"pl_MaterielmanipToNGL @emnco=16 ","tube","IW-P","sizing","pl_ContentFromContainer @matmanom=?");
 	}
 }

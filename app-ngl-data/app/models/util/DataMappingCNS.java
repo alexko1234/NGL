@@ -485,7 +485,7 @@ public class DataMappingCNS {
 			return getStateFromStatePrepaflowcellLims(etatLims);
 		}else if(experimentTypeCode.equals("solution-stock")){
 			return getStateFromStateSolutionStock(etatLims);
-		}else if(experimentTypeCode.equals("amplification") || experimentTypeCode.equals("sizing")){
+		}else if(experimentTypeCode.equals("pcr-amplification-and-purification") || experimentTypeCode.equals("sizing")){
 			return getStateFromStateAmplification(etatLims);
 		}
 		return null;
