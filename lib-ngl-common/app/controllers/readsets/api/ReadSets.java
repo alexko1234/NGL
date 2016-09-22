@@ -44,6 +44,7 @@ import play.Play;
 import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -65,7 +66,7 @@ public class ReadSets extends ReadSetsController{
 
 	final static Form<ReadSetBatchElement> batchElementForm = form(ReadSetBatchElement.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path");
+	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties");
 
 	@Permission(value={"reading"})
@@ -374,6 +375,7 @@ public class ReadSets extends ReadSetsController{
 
 
 	@Permission(value={"writing"})
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
