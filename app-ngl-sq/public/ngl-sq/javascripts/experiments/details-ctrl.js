@@ -2,7 +2,31 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
                                                  'mainService','tabService','lists','datatable', 'messages','valuationService',
                                                   function($scope,$sce,$window, $http,$parse,$q,$position,$routeParams,$location,$filter,
                                                 		  mainService,tabService,lists,datatable, messages,valuationService) {
+	var enableValidation = false;
+	$scope.getHasErrorClass = function(formName, property){
+		if(enableValidation
+			&& $scope[formName] 
+			&& $scope[formName][property] 
+			&& $scope[formName][property].$error 
+			&& $scope[formName][property].$error.required){
+			return 'has-error';
+		}else{
+			return undefined;
+		}
+	}
 	
+	$scope.isRequired=function(propertyDefinition){
+		if($scope.experiment !== undefined){
+		if(propertyDefinition.required 
+				&& ((propertyDefinition.requiredState === null || propertyDefinition.requiredState === 'N' || propertyDefinition.requiredState === 'IP'))
+				|| (propertyDefinition.requiredState === 'F' && ($parse('experiment.state.code')($scope) === "IP" || $parse('experiment.state.code')($scope) === "F"))
+				)
+				return true;
+		}
+		return false;
+	}
+	
+		
 	$scope.updateInstrumentProperty = function(pName){
 		$scope.$broadcast('updateInstrumentProperty', pName);
 	}
@@ -127,6 +151,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		mainService.stopEditMode();
 		finishEditMode=false;
 		saveInProgress = false;
+		enableValidation = false;
 		updateData();
 		
 		if(mainService.isHomePage('search') 
@@ -218,6 +243,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		mainService.stopEditMode();
 		finishEditMode=false;
 		saveInProgress = false;
+		enableValidation = false;
 		
 		if(mainService.isHomePage('search') 
 				&& tabService.isBackupTabs() ){
@@ -238,7 +264,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.$on('childSaved', function(e, callbackFunction) {
 		
 		updatePropertyUnit($scope.experiment);
-		if(creationMode){
+		
+		if($scope.allForm.$invalid){
+			enableValidation = true;
+			$scope.messages.setError("save");
+			saveInProgress = false;	
+			if(mainService.isEditMode()){
+				$scope.$broadcast('activeEditMode');
+			}
+		}else if(creationMode){
 			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
 				.success(function(data, status, headers, config) {
 					

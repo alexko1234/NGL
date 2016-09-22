@@ -436,7 +436,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification"), 
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), 
 				null, 
 				getExperimentTypes("miseq-qc"),
 				getExperimentTypes("aliquoting","pool")

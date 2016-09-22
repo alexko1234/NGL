@@ -66,7 +66,9 @@ angular.module('atomicTransfereServices', [])
     				var column = {};
     				column.watch=true;
     				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);
-    				column.required=propertyDefinition.required;
+    				if($scope.isRequired(propertyDefinition)){
+    					column.required=true;
+    				}
     				    				
     				column.property = propertyNamePrefix+propertyDefinition.code+propertyNameSuffix;
     				column.edit = propertyDefinition.editable;
@@ -333,6 +335,7 @@ angular.module('atomicTransfereServices', [])
 		
 		var $outputIsVoid = (outputIsVoid !== undefined)?outputIsVoid : false; //false when void in output
 		var $commonATM = commonAtomicTransfertMethod($scope);
+		datatableConfig.formName="experimentDatatableForm";
 		var $datatable = datatable(datatableConfig);
 		
 		var view = {
@@ -1307,7 +1310,7 @@ angular.module('atomicTransfereServices', [])
 
 	var constructor = function($scope, datatableConfigTubeParam, datatableConfigTubeConfig){
 		var $commonATM = commonAtomicTransfertMethod($scope);
-		
+		datatableConfigTubeParam.formName="experimentDatatableForm";
 		var $datatable = datatable(datatableConfigTubeParam);
 		var $atmToSingleDatatable = atmToSingleDatatable($scope, datatableConfigTubeConfig);
 		$atmToSingleDatatable.isAddNew = false;
