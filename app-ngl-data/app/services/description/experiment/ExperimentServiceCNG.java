@@ -157,7 +157,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
 			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
-				
+			// TODO ? renommer library-prep
+			//l.add(newExperimentType("Prep. RNASeq","prep-rna-sequencing",null,600,
 			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsLibraryPrep(),
@@ -166,7 +167,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 			/* dupliquer experience prep-pcr-free en prep-wg-nano*/
-			l.add(newExperimentType("Prep.WG Nano","prep-wg-nano",null,500,
+			l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPrepPcrFree_WgNano(), 
 					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
@@ -222,7 +223,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/** Quality Control, ordered by display order **/
 			
 			// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
-			l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 100,
+			// 22/09/2016 modification du name => suppression profil mais garder code a cause existant
+			l.add(newExperimentType("LABCHIP_GX","labchip-migration-profile", null, 100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsChipMigration(), 
 					getInstrumentUsedTypes("labChipGX"),
@@ -374,7 +376,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), //plus ext-to-x5-wg-nano !!
+				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), //ext-to-x5-wg-pcr-free  uniqt
 				null,
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
@@ -382,7 +384,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		newExperimentTypeNode("prep-wg-nano",getExperimentTypes("prep-wg-nano").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-nano"), //ext-to-x5-wg-nano uniqut
+				getExperimentTypeNodes("ext-to-x5-wg-nano"), //ext-to-x5-wg-nano   uniqut
 				null,
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
@@ -393,7 +395,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free","ext-to-x5-wg-nano"),
+				getExperimentTypeNodes("ext-to-x5-wg-pcr-free","ext-to-x5-wg-nano"), // les 2 en prod...
 				null,
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
@@ -402,8 +404,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 	/************************************ DEV / UAT ONLY **********************************************/
 	if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+		
+		// remise 22/09/2016 car perdue.... 
+		// TODO ?? renommer newExperimentTypeNode("Prep. RNASeq",getExperimentTypes("prep-rna-sequencing").get(0),
+		newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
+				true,false,false,
+				getExperimentTypeNodes("ext-to-rna-sequencing"), 
+				null,
+				null, // pas de QC ???????????????????????
+				null
+				).save();
 			
 		//commun WG_NANO et RNAseq
+		//TODO ?? remommer node library-prep
 		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 				true,false,false,
 				getExperimentTypeNodes("library-prep","prep-wg-nano"), // prep-pcr-free remplacee par prep-wg-nano
@@ -422,7 +435,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	} else {
 		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 				true,false,false,
-				getExperimentTypeNodes("library-prep","prep-pcr-free"),
+				getExperimentTypeNodes("prep-pcr-free"),
 				null,
 				getExperimentTypes("labchip-migration-profile"), 
 				null
@@ -593,6 +606,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single", 18, true, null, null));
 		
 		//FDS 26/08/2016 -- JIRA NGL-1046: ajouter toutes les autres propriétés du fichier
+		//    22/09/2016 
 		propertyDefinitions.add(newPropertiesDefinition("% cluster", "clusterPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 12, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("% PF", "passingFilter", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
@@ -611,9 +625,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Taille Max", "maxInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 20, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Observed Diversity", "observedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+		// !! NGL-1046 et SUPSQCNG-413 =>mettre des doubles
+		propertyDefinitions.add(newPropertiesDefinition("Observed Diversity", "observedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 21, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Estimated Diversity", "estimatedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Estimated Diversity", "estimatedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 22, true, null, null));
 	
 		return propertyDefinitions;

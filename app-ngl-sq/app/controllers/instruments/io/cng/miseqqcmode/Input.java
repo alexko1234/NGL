@@ -47,7 +47,6 @@ public class Input extends AbstractInput {
 				PropertySingleValue measuredInsertSize = getPSV(icu, "measuredInsertSize");
 				measuredInsertSize.value = Integer.parseInt(data[8]);
 				
-				
 				//FDS 26/08/2016 ajout des autres colonnes; !! cas des decimaux francais...
 				PropertySingleValue clusterPercentage = getPSV(icu, "clusterPercentage");
 				clusterPercentage.value = Double.parseDouble(data[4].replace (",", "."));
@@ -76,11 +75,12 @@ public class Input extends AbstractInput {
 				PropertySingleValue maxInsertSize = getPSV(icu, "maxInsertSize");
 				maxInsertSize.value = Integer.parseInt(data[10]);
 				
+				// FDS 22/09/2016 !! NGL-1046 et SUPSQCNG-413 dans certains la valeur necessite un double
 				PropertySingleValue observedDiversity = getPSV(icu, "observedDiversity");
-				observedDiversity.value = Integer.parseInt(data[11]);
+				observedDiversity.value = Double.parseDouble(data[11]);
 				
 				PropertySingleValue estimatedDiversity = getPSV(icu, "estimatedDiversity");
-				estimatedDiversity.value = Integer.parseInt(data[12]);			
+				estimatedDiversity.value = Double.parseDouble(data[12]);			
 			}			
 		});
 				
