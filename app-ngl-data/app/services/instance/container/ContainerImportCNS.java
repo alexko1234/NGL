@@ -228,6 +228,12 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		Container container = new Container();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
+		try{
+			container.traceInformation.creationDate=rs.getDate("dc");
+		} catch(SQLException e){
+		}
+
+
 		//Logger.debug("Container :"+rs.getString("code"));
 		container.code=rs.getString("code");
 		
