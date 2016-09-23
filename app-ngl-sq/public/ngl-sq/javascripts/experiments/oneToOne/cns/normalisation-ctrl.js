@@ -320,7 +320,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.workName"),
-			"property" : "inputContainer.properties.workName",
+			"property" : "inputContainer.properties.workName.value",
 			"order" : true,
 			"edit" : false,
 			"hide" : true,
