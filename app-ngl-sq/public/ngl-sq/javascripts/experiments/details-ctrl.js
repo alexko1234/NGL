@@ -18,9 +18,13 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.isRequired=function(propertyDefinition){
 		if($scope.experiment !== undefined){
 		if(propertyDefinition.required 
-				&& ((propertyDefinition.requiredState === null || propertyDefinition.requiredState === 'N' || propertyDefinition.requiredState === 'IP'))
-				|| (propertyDefinition.requiredState === 'F' && ($parse('experiment.state.code')($scope) === "IP" || $parse('experiment.state.code')($scope) === "F"))
-				)
+				&& (
+					($scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  
+							&& propertyDefinition.requiredState === 'N')
+					|| (!$scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  
+							&& (propertyDefinition.requiredState === null || propertyDefinition.requiredState === 'N' || propertyDefinition.requiredState === 'IP'))
+					|| (($parse('experiment.state.code')($scope) === "IP" || $parse('experiment.state.code')($scope) === "F"))
+				))
 				return true;
 		}
 		return false;
