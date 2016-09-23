@@ -413,6 +413,16 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				if(lists.get("containers-search-addfilters") && lists.get("containers-search-addfilters").length === 1){
 					var formFilters = [];
 					var allFilters = angular.copy(lists.get("containers-search-addfilters")[0].filters);
+					
+					/* add static filters*/
+					allFilters.push({property:"fromPurificationCode",html: '<div class="form-control" bt-select ng-model="searchService.form.fromPurificationCode" multiple="true" ' +
+							'placeholder="'+Messages('containers.select.fromPurificationCode')+'"' +
+									' bt-options="expType.code as expType.name for expType in searchService.lists.get(\'purification\',true)">',position:allFilters.length+1});
+					allFilters.push({property:"fromTransfertCode",html: '<div class="form-control" bt-select ng-model="searchService.form.fromTransfertCode" multiple="true" ' +
+							'placeholder="'+Messages('containers.select.fromTransfertCode')+'"' +
+									' bt-options="expType.code as expType.name for expType in searchService.lists.get(\'transfert\',true)">',position:allFilters.length+1});
+					
+					
 					var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 					for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 						formFilters.push(allFilters.splice(0, nbElementByColumn));	    								

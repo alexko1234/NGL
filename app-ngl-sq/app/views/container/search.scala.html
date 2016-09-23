@@ -29,8 +29,7 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" multiple="true" ng-model="searchService.form.containerSupportCategories" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()"  auto-select></div>
-			
+			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" multiple="true" ng-model="searchService.form.containerSupportCategories" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()"  auto-select></div>					
 		}
 		@formGroup{
 			@***
@@ -45,25 +44,15 @@
 	}
 	@columnSearchForm{		
 		@formGroup{
+			@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>					
+		}
 			<div class="form-control" bt-select ng-model="searchService.form.fromTransformationTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromTransformationTypeCodes")" 
 				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation',true)">
 			</div>
 		}
-		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.fromTransfertCode" multiple="true" placeholder="@Messages("containers.select.fromTransfertCode")" 
-				bt-options="expType.code as expType.name for expType in searchService.lists.get('transfert',true)">
-			</div>
 		}
-		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.fromPurificationCode" multiple="true" placeholder="@Messages("containers.select.fromPurificationCode")" 
-				bt-options="expType.code as expType.name for expType in searchService.lists.get('purification',true)">
-			</div>
-		}
-		}
-	@columnSearchForm{
-		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>					
-		}
+	@columnSearchForm{	
 		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containers.placeholder.toDate")' title='@Messages("containers.placeholder.toDate")'>
 					
@@ -124,7 +113,7 @@
 					</div>
 				</div>
 				
-				@columnSearchForm{
+		@columnSearchForm{
 				@formGroup{
 				<div class="btn-toolbar">
 					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
