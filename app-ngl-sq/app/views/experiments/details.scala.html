@@ -3,7 +3,8 @@
 @import views.html.helper._
 @import views.html.experiments.partials._
 
-
+<div ng-form name="allForm" class="row">
+<div class="col-md-12 col-lg-12">
 @imageModal()
 @headerSection()
 <div class="inProgressSpinner" ng-if="isSaveInProgress()">
@@ -22,3 +23,5 @@
 @commentSection(currentUser)
 @finalResolutionModal()
 @finalDispatchModal()
+</div>
+</div>
