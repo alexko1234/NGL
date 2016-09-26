@@ -80,14 +80,17 @@ public class ProtocolServiceCNG {
 
 		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
 		//01/09/2016 aussi pour "labchip-migration-profile"
+		//26/09/206 supression "lib-normalization",
 		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
 													   "pcr-and-purification",
-													   "lib-normalization",
 													   "prepa-fc-ordered",
 													   "illumina-depot",
 													   "labchip-migration-profile")));
 
+		// creation protocole "normalisation" dedié a  l'experience lib-normalization"
+		lp.add(newProtocol("normalization","normalisation","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("lib-normalization")));
 		
 		// protocoles communs a plusieurs Experiment Types.....=> en attente....
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
@@ -95,13 +98,13 @@ public class ProtocolServiceCNG {
 													   "denat-dil-lib")));
 		
 		// 02/09/2016 ajout  comportement different
+		//26/09/206 supression "lib-normalization",
 		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			/** DEV / UAT only**/
 			// "normalization-and-pooling", "library-prep",	toujours en DEV
 			
 			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
 					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
-														   "lib-normalization", 
 														   "normalization-and-pooling",
 														   "aliquoting",
 														   "pool", 
@@ -114,8 +117,7 @@ public class ProtocolServiceCNG {
 		}else {
 			
 			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
-														   "lib-normalization", 
+					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered", 
 														   "aliquoting",
 														   "pool", 
 														   "pcr-and-purification",
