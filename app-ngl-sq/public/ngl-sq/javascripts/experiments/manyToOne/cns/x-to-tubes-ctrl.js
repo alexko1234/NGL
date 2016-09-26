@@ -184,7 +184,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 	config.otherButtons= {
 		active : true,
         template: 
-        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.computeSize")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
+        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.title.computeSize")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
     };
 	
 
