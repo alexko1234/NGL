@@ -448,16 +448,5 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			},	
 		select:setTags,
 	};
-	
-	/* TEST 16/09...   .....*/
-    var dataMain = atmService.data.getData();
-    for(var i = 0; i < dataMain.length; i++){
-		var udtData = dataMain[i];
-		var icu=udtData.inputContainerUsed;
-		//var ic=udtData.inputContainer;
-		console.log("input volume="+ icu.volume.value);
-		icu.experimentProperties.inputVolumeFrag=icu.volume;
-		icu.experimentProperties.inputVolumeLib=icu.volume;
-    }
     
 }]);
