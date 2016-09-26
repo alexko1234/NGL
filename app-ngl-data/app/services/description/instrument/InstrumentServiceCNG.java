@@ -207,10 +207,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS ajout 04/08/2016 JIRA NGL-1026: Sciclone NGSX seul
+		//FDS ajout 04/08/2016 JIRA NGL-1026: Sciclone NGSX seul; 23/09/2016 deuxieme Sciclone oublié !!!
 		l.add(newInstrumentUsedType("Sciclone NGSX", "sciclone-ngsx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(), 
 				getInstruments(
-						createInstrument("ngs1", "NGS-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("ngs1", "NGS-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("ngs2", "NGS-2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
@@ -246,7 +247,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						// 22/09/2016 arrivée des cBots type 2 ( pas de proprietes differentes ??)
+						// 22/09/2016 arrivée des cBots type 2 (pas de propriétés differentes ??)
 						createInstrument("janus1-and-cBotA", "Janus1 / cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBotB", "Janus1 / cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBotC", "Janus1 / cBotC", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -436,11 +437,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 	
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894...
-	//FDS 13/09/2016 ajout "RNAseq_RAPplate" JIRA NGL-1026
+	//FDS 13/09/2016 ajout "RNAseq_RAPplate" JIRA NGL-1026; 23/09/2016 la mettre en commentaire pour l'instant
 	private static List<PropertyDefinition> getScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate","RNAseq_RAPplate"), null, "single"));
+				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate"), null, "single"));
+	    							   //newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate","RNAseq_RAPplate"), null, "single"));
 		
 		return l;
 	}

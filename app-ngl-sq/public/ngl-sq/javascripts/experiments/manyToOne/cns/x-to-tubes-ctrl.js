@@ -182,9 +182,9 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 	
 	var config = $scope.atmService.$atmToSingleDatatable.data.getConfig();
 	config.otherButtons= {
-		active : true,
+		active : ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
         template: 
-        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.title.computeSize")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
+        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.title.computeSize")+'" "><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
     };
 	
 
