@@ -64,7 +64,7 @@
 					
 					<div  ng-repeat="propertyDef in experimentType.propertiesDefinitions | filter:'Experiment' | orderBy : 'displayOrder'"
 					 class="form-group {{isRequired(propertyDef)?'required':''}} {{getHasErrorClass('experimentForm', 'experimentProperties'+propertyDef.code)}}"
-			   		ng-switch on="propertyDef.valueType">
+						ng-switch on="propertyDef.valueType">
 						@dynamicPropertyDefinition("experimentProperties", "updateExperimentProperty")						
 				</div>	
 													
