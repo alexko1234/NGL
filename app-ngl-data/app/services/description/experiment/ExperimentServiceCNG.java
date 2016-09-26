@@ -369,8 +369,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 		
 	
-	// 19/09/2016 duplication du node prep-pcr-free en test...
-	if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+	    // 26/09/2016 duplication du node prep-pcr-free en prod
+
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), //ext-to-x5-wg-pcr-free  uniqt
@@ -386,24 +386,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
 				).save();	
-	}
-	else {
-		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
-		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
-		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
-				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free","ext-to-x5-wg-nano"), // les 2 en prod...
-				null,
-				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
-				getExperimentTypes("aliquoting")  
-				).save();
-		}
 
 	/************************************ DEV / UAT ONLY **********************************************/
 	if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
 		
 		// remise 22/09/2016 car perdue.... 
-		// TODO ?? renommer newExperimentTypeNode("Prep. RNASeq",getExperimentTypes("prep-rna-sequencing").get(0),
 		newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
 				true,false,false,
 				getExperimentTypeNodes("ext-to-rna-sequencing"), 
@@ -429,9 +416,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();	
 	} else {
+		// 26/09/2016 en prod previous=prep-wg-nano
 		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 				true,false,false,
-				getExperimentTypeNodes("prep-pcr-free"),
+				getExperimentTypeNodes("prep-wg-nano"),
 				null,
 				getExperimentTypes("labchip-migration-profile"), 
 				null
