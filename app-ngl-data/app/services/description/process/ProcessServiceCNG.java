@@ -303,7 +303,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing
-         
+        values.add(DescriptionFactory.newValue("RG","RG - mRNASe")); // messenger RNA sequencing
+        
         return values;
 	}
 	

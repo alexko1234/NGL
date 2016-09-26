@@ -344,7 +344,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 				isReady:function(){
 					/// return (this.inputVolume && this.inputConc); bug!!!  le calcul ne se fait pas si inputConc=0 ( par exemple WATER)
 					/// bloquer le calcul si l'unité n'est pas nM TODO...
-					return (this.inputVolume && (this.inputConc != undefined) && (this.inputConcUnit === 'nM') );
+					return (this.inputVolume && (this.inputConc != undefined));
 				}
 		};
 		
