@@ -104,7 +104,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("WG PCR free (FC ordonnée)", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgPcrFree(),
 				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),
-						getPET("prep-pcr-free",0),  /// === frag-and-library-preparation
+						getPET("prep-pcr-free",0),
 						getPET("lib-normalization",1), 
 						getPET("prepa-fc-ordered",2), 
 						getPET("illumina-depot",3) ), //ordered list of experiment type in process type
@@ -114,12 +114,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout  12/04/2016 JIRA NGL-894/981 processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
-		// 26/09/2016 bug manquait ("prep-and-purification",-1), 
+		// 26/09/2016 bug manquait ("pcr-and-purification",-1), 
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				null,
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),
 						getPET("prep-pcr-free",-1),
-						getPET("prep-and-purification",-1), 
+						getPET("pcr-and-purification",-1), 
 						getPET("lib-normalization",0), 
 						getPET("prepa-fc-ordered",1), 
 						getPET("illumina-depot",2) ), //ordered list of experiment type in process type
@@ -128,8 +128,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016; chgt label 16/06/2016
+		// 26/09/2016 modif commence par ("prep-wg-nano",0)
 		l.add(DescriptionFactory.newProcessType("WG NANO (FC ordonnée)", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgNanoDNAseq(), 
 				Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
@@ -138,26 +138,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("lib-normalization",2),
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-				getExperimentTypes("prep-pcr-free").get(0),      //first experiment type; !! NOTE == Prep Librarie (avec frg)
+				getExperimentTypes("prep-wg-nano").get(0),      //first experiment type;
 				getExperimentTypes("illumina-depot").get(0),     //last  experiment type
 				getExperimentTypes("ext-to-x5-wg-nano").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		} else {
-		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016; chgt label 16/06/2016
-		l.add(DescriptionFactory.newProcessType("WG NANO (FC ordonnée)", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
-				getPropertyDefinitionsX5WgNanoDNAseq(), 
-				Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
-						getPET("prep-pcr-free",0), 
-						getPET("pcr-and-purification",1), 
-						getPET("lib-normalization",2),
-						getPET("prepa-fc-ordered",3), 
-						getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-				getExperimentTypes("prep-pcr-free").get(0),      //first experiment type; !! NOTE == Prep Librarie (avec frg)
-				getExperimentTypes("illumina-depot").get(0),     //last  experiment type
-				getExperimentTypes("ext-to-x5-wg-nano").get(0),  //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		}	
+
 
 		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){

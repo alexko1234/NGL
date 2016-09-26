@@ -163,14 +163,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-			/* dupliquer experience prep-pcr-free en prep-wg-nano*/
-			l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsPrepPcrFree_WgNano(), 
-					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
-					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
@@ -178,6 +170,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
+		
+		    // dupliquer experience prep-pcr-free en prep-wg-nano; prod 26/09/206
+		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
+				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				   getPropertyDefinitionsPrepPcrFree_WgNano(), 
+				   getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
+				   "OneToOne", 
+				   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
