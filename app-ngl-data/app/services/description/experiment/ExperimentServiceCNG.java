@@ -136,8 +136,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/** Transformation, ordered by display order **/
 			
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
-			//       08/2016 renommer le label mais laisser le code "prep-pcr-free a cause de l'existant...
-			//       16/09/2016 remttre l'ancien label
 			l.add(newExperimentType("Prep. PCR free","prep-pcr-free",null,500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPrepPcrFree_WgNano(), 
@@ -157,7 +155,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
 			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
-			// TODO ? renommer library-prep
 			//l.add(newExperimentType("Prep. RNASeq","prep-rna-sequencing",null,600,
 			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
@@ -416,7 +413,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();
 			
 		//commun WG_NANO et RNAseq
-		//TODO ?? remommer node library-prep
 		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 				true,false,false,
 				getExperimentTypeNodes("library-prep","prep-wg-nano"), // prep-pcr-free remplacee par prep-wg-nano
@@ -442,28 +438,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();
 	}
 
-		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
-		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous
+		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous (fait partie de WG_Nano)
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), 
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification"), 
 				null, 
 				getExperimentTypes("miseq-qc"),
 				getExperimentTypes("aliquoting","pool")
 				).save();
-		
-		} else {
-		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
-				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), 
-				null, 
-				getExperimentTypes("miseq-qc"),
-				getExperimentTypes("aliquoting","pool")
-				).save();
-		}
 		
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
