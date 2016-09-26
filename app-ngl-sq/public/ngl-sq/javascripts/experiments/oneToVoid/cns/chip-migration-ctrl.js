@@ -210,8 +210,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	
 	$scope.importButton = {
 		isShow:function(){
-			return ("labchip-gx" === $scope.experiment.instrument.typeCode && $scope.isInProgressState() && !$scope.mainService.isEditMode()
-					 || Permissions.check("admin"))
+			return ("labchip-gx" === $scope.experiment.instrument.typeCode  && !$scope.mainService.isEditMode() 
+					&& ($scope.isInProgressState() || Permissions.check("admin")))
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";

@@ -2692,7 +2692,8 @@ directive("udtCell", function(){
 						}
 						
 						var requiredDirective = "";
-						if(col.required && !header){
+						if(col.required != undefined && !header && (angular.isFunction(col.required) && col.required()) 
+	    						|| (!angular.isFunction(col.required) && col.required)){
 							requiredDirective = "name='"+col.id+"' ng-required=true";
 						}
 						
@@ -3334,7 +3335,10 @@ directive('udtTable', function(){
 	    					//we try to evaluation the string against the scope
 	    					clazz =  currentScope.$eval(col.thClass) || col.thClass;
 	    				}
-	    				if(col.required)clazz = clazz +' required';
+	    				if(col.required != undefined && (angular.isFunction(col.required) && col.required()) 
+	    						|| (!angular.isFunction(col.required) && col.required)){
+	    					clazz = clazz +' required';
+	    				}
 	    				
 	    				return clazz;
 	    				

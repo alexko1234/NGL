@@ -159,8 +159,9 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	$scope.button = {
 		isShow:function(){
-			return ("fluoroskan" === $scope.experiment.instrument.typeCode && $scope.isInProgressState() && !$scope.mainService.isEditMode()
-					 || Permissions.check("admin"))
+			return ("fluoroskan" === $scope.experiment.instrument.typeCode && !$scope.mainService.isEditMode() 
+					&& ($scope.isInProgressState() || Permissions.check("admin")))
+					 
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
