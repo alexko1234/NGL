@@ -2695,6 +2695,8 @@ directive("udtCell", function(){
 						if(col.required != undefined && !header && (angular.isFunction(col.required) && col.required()) 
 	    						|| (!angular.isFunction(col.required) && col.required)){
 							requiredDirective = "name='"+col.id+"' ng-required=true";
+						}else{
+							requiredDirective = "name='"+col.id+"' ";
 						}
 						
 						
@@ -3265,14 +3267,14 @@ directive("udtHtmlFilter", function($filter, udtI18n) {
 					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
 					    			   convertedData = convertedData*1;
 					    		   }else if( isNaN(convertedData) || convertedData === ""){
-					    			   convertedData = undefined;
+					    			   convertedData = null;
 					    		   }
 					    	   }else if(attrs.udtHtmlFilter === "date" && null != convertedData && undefined != convertedData 
 					    			   && angular.isString(convertedData)){
 					    		   if(moment && convertedData !== ""){
 					    			   convertedData = moment(data, messagesService.Messages("date.format").toUpperCase()).valueOf();
 					    		   }else{
-					    			   convertedData = undefined;
+					    			   convertedData = null;
 					    			   console.log("mission moment library to convert string to date");
 					    		   }
 					    	   }
