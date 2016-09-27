@@ -130,7 +130,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 			})
 			if(value.outputContainerUseds!=null && sizeTotal!=undefined){
 				var size= {value : undefined, unit : 'pb'};
-				size.value= Math.round(sizeTotal/value.inputContainerUseds.length*100)/100;
+				size.value= Math.round(sizeTotal/value.inputContainerUseds.length*1)/1;
 				$parse("outputContainerUseds[0].size").assign(value, size);
 			}
 			
