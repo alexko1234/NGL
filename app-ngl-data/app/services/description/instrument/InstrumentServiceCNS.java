@@ -698,15 +698,15 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MN15407", "MK15407", null, false, "/env/ig/atelier/nanopore/cns/MN15407", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN15336", "MK15336", null, false, "/env/ig/atelier/nanopore/cns/MN15336", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		instruments.add(createInstrument("MN15782", "MK15782", null, true, "/env/ig/atelier/nanopore/cns/MN15782", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("MN15794", "MK15794", null, true, "/env/ig/atelier/nanopore/cns/MN15794", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN15782", "MK15782", null, false, "/env/ig/atelier/nanopore/cns/MN15782", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN15794", "MK15794", null, false, "/env/ig/atelier/nanopore/cns/MN15794", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN15464", "MK15464", null, false, "/env/ig/atelier/nanopore/cns/MN15464", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 		
-		instruments.add(createInstrument("MN15904", "MK15904", null, true, "/env/ig/atelier/nanopore/cns/MN15904", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("MN15911", "MK15911", null, true, "/env/ig/atelier/nanopore/cns/MN15911", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("MN15940", "MK15940", null, true, "/env/ig/atelier/nanopore/cns/MN15940", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN15904", "MK15904", null, false, "/env/ig/atelier/nanopore/cns/MN15904", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN15911", "MK15911", null, false, "/env/ig/atelier/nanopore/cns/MN15911", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN15940", "MK15940", null, false, "/env/ig/atelier/nanopore/cns/MN15940", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		instruments.add(createInstrument("MN16288", "MK16288", null, true, "/env/ig/atelier/nanopore/cns/MN16288", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN16288", "MK16288", null, false, "/env/ig/atelier/nanopore/cns/MN16288", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
@@ -720,6 +720,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MN17479", "MK17479", null, true, "/env/ig/atelier/nanopore/cns/MN17479", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN17273", "MK17273", null, true, "/env/ig/atelier/nanopore/cns/MN17273", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		instruments.add(createInstrument("MN17273", "MK17273", null, true, "/env/ig/atelier/nanopore/cns/MN17273", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		instruments.add(createInstrument("MN19358", "MK19358", null, true, "/env/ig/atelier/nanopore/cns/MN19358", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
 		return instruments;
 	}
 	
@@ -730,6 +735,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MN02280", "MN02280", null, false, "/env/ig/atelier/nanopore/cns/MN02280", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN02259", "MN02259", null, false, "/env/ig/atelier/nanopore/cns/MN02259", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("MN02833", "MN02833", null, false, "/env/ig/atelier/nanopore/cns/MN02833", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
 		return instruments;
 	}
 	
