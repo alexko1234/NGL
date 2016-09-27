@@ -178,7 +178,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 
 		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library","rna-illumina-indexed-library")
-				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 
 		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("pcr-amplification-and-purification")
 				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
