@@ -165,9 +165,9 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		
 		//Update traceInformation.creationDate
-		for(ContainerSupport cs:containerSupports){
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", cs.code),DBUpdate.set("traceInformation.creationDate", cs.traceInformation.creationDate),true);
-		}
+		//for(ContainerSupport cs:containerSupports){
+			//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", cs.code),DBUpdate.set("traceInformation.creationDate", cs.traceInformation.creationDate),true);
+		//}
 
 		/*
 		if(experimentTypeCode.equals("solution-stock")){
@@ -382,8 +382,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				sampleUsed.properties.put("libLayoutNominalLength", new PropertySingleValue(rs.getInt("libLayoutNominalLength")));
 			}
 			
-			if(rs.getString("sampleAliquotCode") !=null){
-				sampleUsed.properties.put("sampleAliquotCode", new PropertySingleValue(rs.getString("sampleAliquotCode")));
+			if(rs.getString("sampleAliquoteCode") !=null){
+				sampleUsed.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("sampleAliquoteCode")));
 			}
 			
 			container.contents.add(sampleUsed);
