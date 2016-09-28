@@ -128,7 +128,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			         },
 			         // colonnes specifiques experience viennent ici...
 			         //--------------------- OUTPUT containers section -----------------------
-			         
+			         // 27/09/2016 ajout defaut value=30
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -138,10 +138,11 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
+			        	 "defaultValues":30,
 			        	 "position":300,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         /* ne pas aficher les containercodes  sauf pour DEBUG
+			         /* ne pas afficher les containercodes  sauf pour DEBUG
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",

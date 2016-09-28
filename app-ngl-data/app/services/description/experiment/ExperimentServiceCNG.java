@@ -138,7 +138,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
 			l.add(newExperimentType("Prep. PCR free","prep-pcr-free",null,500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyDefinitionsPrepPcrFree_WgNano(), 
+					getPropertyDefinitionsPrepPcrFree(), 
 					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -171,10 +171,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
 		
-		    // dupliquer experience prep-pcr-free en prep-wg-nano; prod 26/09/206
+		    // FDS dupliquer experience prep-pcr-free en prep-wg-nano; prod 26/09/206; separer les proprietes de celles de prep-pcr-free ...
 		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
 				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				   getPropertyDefinitionsPrepPcrFree_WgNano(), 
+				   getPropertyDefinitionsPrepWgNano(), 
 				   getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
 				   "OneToOne", 
 				   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -373,7 +373,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), //ext-to-x5-wg-pcr-free  uniqt
+				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),
 				null,
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
 				getExperimentTypes("aliquoting")  
@@ -381,9 +381,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		newExperimentTypeNode("prep-wg-nano",getExperimentTypes("prep-wg-nano").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-nano"), //ext-to-x5-wg-nano   uniqut
+				getExperimentTypeNodes("ext-to-x5-wg-nano"),
 				null,
-				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"),
+				null,  // pas de QC possible..
 				getExperimentTypes("aliquoting")  
 				).save();	
 
@@ -642,8 +642,46 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment PrepPcrFree pour le process X5
-	// 16/09/2016 modification du nom car commun a prep-pcr-free et prep-wgnano + supression des valeurs par defaut
-	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree_WgNano() throws DAOException {
+	// 27/09/2016 laisser les valeurs par defaut pour l'instant mais une evoulution est prevue...
+	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",20,true,"55",null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",21,true,"1100",null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22,true,"55",null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23,true,"1100",null));
+	
+		//OuputContainer
+		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
+		// GA 14/03/2016 => il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
+
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
+				"single", 30, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
+				"single", 31, true, null,null));		
+		
+		// pas de niveau content car théoriques( J Guy..)
+		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",32,true,"350", null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théorique)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null	
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",33, true,"470",null));
+	
+		return propertyDefinitions;
+	}
+	
+	// FDS ajout 27/09/2016  pour le process WG_NANO
+	// similaire a PrepPcrFree mais : pas de valeurs par defaut, pas de tailles theoriques
+	private List<PropertyDefinition> getPropertyDefinitionsPrepWgNano() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
@@ -668,13 +706,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
 				"single", 31, true, null,null));		
-		
-		// pas de niveau content car théoriques( J Guy..)
-		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",32,true,"350", null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théorique)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null	
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",33, true,"470",null));
 	
 		return propertyDefinitions;
 	}
@@ -735,8 +766,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		// volume engagé editable et obligatoire, qté pas editable calculée en fonction volume engagé et pas sauvegardée
+		// 27/09/2016 ajout default value '25"
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, "25",null));
 		
 		/* suppression demandée lors du test avant mise en prod
 		propertyDefinitions.add(newPropertiesDefinition("Qté engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
