@@ -37,7 +37,7 @@ public class Purif extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Ampure Post-PCR","post-pcr-ampure",null, 30300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmupurePCR(),
 				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
 		return l;
@@ -56,6 +56,15 @@ public class Purif extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 	
+	
+	private List<PropertyDefinition> getPropertyDefinitionsPostAmupurePCR() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Ratio billes (Ampure Post PCR)", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
+				null, null, null, null,"single", 2, true, null, null));
+	
+		return propertyDefinitions;
+	}
+
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		return null;
