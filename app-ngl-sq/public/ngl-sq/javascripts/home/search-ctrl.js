@@ -2,7 +2,7 @@
 
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
 
-	var datatableConfig = {
+	var datatableExperimentConfig = {
 			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
 			search:{
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
@@ -85,7 +85,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 						}
 						]
 	};
-	var datatableProcessConfigN = {
+	
+	var datatableProcessConfig = {
 			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
 			search:{
 				url:jsRoutes.controllers.processes.api.Processes.list()
@@ -99,149 +100,81 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 			},
 			showTotalNumberRecords:false,
 			columns : [
-			           {  	property:"code",
-					    	header: "Code",
-					    	type :"text",
-					    	"position":1,
-					    	order:true
-			           },
 			           {
-							"header":Messages("processes.table.typeCode"),
-							"property":"typeCode",
-							"order":true,
-							"hide":true,
-							"position":2,
-							"filter":"codes:'type'",
-							"type":"text"         
-						} ,
-						 {
-							"header":Messages("processes.table.category"),
-							"property":"categoryCode",
-							"order":true,
-							"hide":true,
-							"position":2.5,
-							"filter":"codes:'process_cat'",
-							"type":"text"         
-						} ,
+						"header":Messages("processes.table.inputContainerCode"),
+						"property":"inputContainerCode",
+						"position":1,
+						"type":"text"
+						},
 			           {
 							"header":Messages("processes.table.projectCode"),
 							"property":"projectCode",
-							"order":true,
-							"hide":true,
-							"position":3,
+							"position":2,
 							"type":"text"
 						},
 						{
 							"header":Messages("processes.table.sampleCode"),
 							"property":"sampleCode",
-							"order":true,
-							"hide":true,
-							"position":4,
-							"type":"text"
-							},
-						{
-							"header":Messages("processes.table.inputContainerCode"),
-							"property":"inputContainerCode",
-							"order":true,
-							"hide":true,								
-							"position":5,
-							"type":"text"
-							}
-						]
-	};  
-	var datatableProcessConfigIP = {
-			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
-			search:{
-				url:jsRoutes.controllers.processes.api.Processes.list()
-			},
-			pagination:{
-				mode:'local',
-				numberRecordsPerPage:5
-			},
-			select:{
-				active:false
-			},
-			showTotalNumberRecords:false,
-			columns : [
-			           {  	property:"code",
-					    	header: "Code",
-					    	type :"text",
-					    	"position":1,
-					    	order:true
-			           },
-			           {
-							"header":Messages("processes.table.typeCode"),
-							"property":"typeCode",
-							"order":true,
-							"hide":true,
-							"position":2,
-							"filter":"codes:'type'",
-							"type":"text"         
-						} ,
-						 {
-							"header":Messages("processes.table.category"),
-							"property":"categoryCode",
-							"order":true,
-							"hide":true,
-							"position":2.5,
-							"filter":"codes:'process_cat'",
-							"type":"text"         
-						} ,
-			           {
-							"header":Messages("processes.table.projectCode"),
-							"property":"projectCode",
-							"order":true,
-							"hide":true,
 							"position":3,
 							"type":"text"
 						},
-						 {
-							"header":Messages("processes.table.experimentCodes"),
-							"property":"experimentCodes",
-							"order":true,
-							"hide":true,
-							"render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='1'>",
+			          
+			           {
+							"header":Messages("processes.table.typeCode"),
+							"property":"typeCode",
 							"position":4,
-							"type":"text"
-						},
-						{
-							"header":Messages("processes.table.sampleCode"),
-							"property":"sampleCode",
-							"order":true,
-							"hide":true,
-							"position":5,
-							"type":"text"
-						},
-						{
-							"header":Messages("processes.table.inputContainerCode"),
-							"property":"inputContainerCode",
-							"order":true,
-							"hide":true,
-							"position":6,
-							"type":"text"
-						},
-						{
-							"header":Messages("processes.table.currentExperimentTypeCode"),
-							"property":"currentExperimentTypeCode",
-							"order":true,
-							"hide":true,
-							"position":7,
 							"filter":"codes:'type'",
-							"type":"text"
+							"type":"text"         
+						} ,
+						{
+							"header" : Messages("processes.table.currentExperimentTypeCode"),
+							"property" : "currentExperimentTypeCode",
+							"filter" : "codes:'type'",
+							"position" : 5,
+							"type" : "text"
+						},
+						{
+							"header" : Messages("processes.table.outputContainerSupportCodes"),
+							"property" : "outputContainerSupportCodes",
+							"position" : 6,
+							"filter":"unique",
+							"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
+							"type" : "text"
+						},
+						{
+							"header" : Messages("processes.table.creationDate"),
+							"property" : "traceInformation.creationDate",
+							"position" : 7,
+							"format" : Messages("datetime.format"),
+							"type" : "date"
+						},
+						{
+							"header" : Messages("processes.table.createUser"),
+							"property" : "traceInformation.createUser",
+							"position" : 8,
+							"type" : "text"
+						},
+						{
+							"header" : Messages("processes.table.comments"),
+							"property" : "comments[0].comment",
+							"position" : 9,
+							"type" : "text"
 						}
 						
 						]
 	};  
-		$scope.experimentIPDatatable = datatable(datatableConfig);			
+	
+
+		$scope.experimentIPDatatable = datatable(datatableExperimentConfig);			
 		$scope.experimentIPDatatable.search({stateCodes:["IP"]});
 		
-		$scope.experimentNDatatable = datatable(datatableConfig);			
+		$scope.experimentNDatatable = datatable(datatableExperimentConfig);			
 		$scope.experimentNDatatable.search({stateCodes:["N"]});
 		
-		$scope.processIPDatatable = datatable(datatableProcessConfigIP);			
+		$scope.processIPDatatable = datatable(datatableProcessConfig);			
 		$scope.processIPDatatable.search({stateCodes:["IP"]});
 		
-		$scope.processNDatatable = datatable(datatableProcessConfigN);			
+		$scope.processNDatatable = datatable(datatableProcessConfig);			
 		$scope.processNDatatable.search({stateCodes:["N"]});
 }]);
 
