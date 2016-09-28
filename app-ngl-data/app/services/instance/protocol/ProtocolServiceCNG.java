@@ -68,6 +68,10 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", 
 				InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
+		// 27/06/2016 ajout "protocole_FC_ordonnée"
+		lp.add(newProtocol("protocole-FC-ordered","protocole_FC_ordonnée","","1","production", 
+				InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+		
 		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
 													   "labchip-migration-profile" )));
@@ -77,38 +81,26 @@ public class ProtocolServiceCNG {
 													   "labchip-migration-profile" )));
 
 
-		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
-		//01/09/2016 aussi pour "labchip-migration-profile"
-		//26/09/206 supression "lib-normalization",
+		// 10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
+		// 01/09/2016 aussi pour "labchip-migration-profile"
+		// 27/09/2016 prepa-fc-ordered, normalisation, illumina-depot ont leur propre protocole
 		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("prep-wg-nano",
 													   "pcr-and-purification",
-													   "prepa-fc-ordered",
-													   "illumina-depot",
 													   "labchip-migration-profile")));
-
-		// creation protocole "normalisation" dedié a  l'experience lib-normalization"
-		lp.add(newProtocol("normalization","normalisation","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("lib-normalization")));
 		
 		// protocoles communs a plusieurs Experiment Types.....=> en attente....
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("illumina-depot",
-													   "denat-dil-lib")));
+				InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		
-		// 02/09/2016 ajout  comportement different
-		//26/09/206 supression "lib-normalization",
 		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			/** DEV / UAT only**/
 			// "normalization-and-pooling", "library-prep",	toujours en DEV
 			
 			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered",
-														   "normalization-and-pooling",
+					InstanceFactory.setExperimentTypeCodes("normalization-and-pooling",
+														   "library-prep",														   
 														   "aliquoting",
-														   "pool", 
-														   "pcr-and-purification",
-														   "library-prep",
 														   "tubes-to-plate",
 														   "plate-to-tubes",
 														   "plates-to-plate",
@@ -116,16 +108,24 @@ public class ProtocolServiceCNG {
 		}else {
 			
 			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered", 
-														   "aliquoting",
-														   "pool", 
-														   "pcr-and-purification",
+					InstanceFactory.setExperimentTypeCodes("aliquoting",
 														   "tubes-to-plate",
 														   "plate-to-tubes",
 														   "plates-to-plate",
 														   "x-to-plate")));
 		}
-			
+		
+		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"
+		lp.add(newProtocol("normalization","normalisation","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("lib-normalization")));
+		
+		// 27/09/2016 ajout protocole "protocole_pool" dédié a l'experience "pool plaque a plaque"
+		lp.add(newProtocol("protocol-pool","protocole_pool","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("pool")));
+		
+		// 27/09/2016 ajout protocole "protocole_dépôt_illumina" dédié a l'experience "illumina-depot"
+		lp.add(newProtocol("protocol-illumina-depot","protocole_dépôt_illumina","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 
 		
 		//-------Experiences de Control Qualité
