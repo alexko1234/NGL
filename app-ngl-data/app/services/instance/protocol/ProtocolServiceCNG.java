@@ -76,13 +76,12 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
 													   "labchip-migration-profile" )));
 
-		
 
 		//10/08/2016 protocole  pour toutes les experiences du processus X5_WG NANO
 		//01/09/2016 aussi pour "labchip-migration-profile"
 		//26/09/206 supression "lib-normalization",
 		lp.add(newProtocol("1a-sop-ill-nano-240214","1A_SOP_ILL_NANO_240214", "?","1","production",
-				InstanceFactory.setExperimentTypeCodes("prep-pcr-free",
+				InstanceFactory.setExperimentTypeCodes("prep-wg-nano",
 													   "pcr-and-purification",
 													   "prepa-fc-ordered",
 													   "illumina-depot",

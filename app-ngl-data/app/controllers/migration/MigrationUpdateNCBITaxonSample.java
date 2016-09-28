@@ -31,7 +31,8 @@ public class MigrationUpdateNCBITaxonSample extends CommonController {
 		if(!"all".equals(code)){
 			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",code)).toList();						
 		}else if(onlyNull.booleanValue()){
-			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.or(DBQuery.notExists("ncbiScientificName"),DBQuery.notExists("ncbiLineage"))).toList();						
+			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.or(DBQuery.notExists("ncbiScientificName"),DBQuery.notExists("ncbiLineage"), 
+																			DBQuery.is("ncbiScientificName", null), DBQuery.is("ncbiLineage", null))).toList();						
 		}else {
 			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code")).toList();
 		}

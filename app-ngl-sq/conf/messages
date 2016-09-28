@@ -200,9 +200,9 @@ containers.placeholder.user = Container créé par
 containers.select.state =  Etats container
 containers.select.categoryCode =  Catégorie container
 containers.select.categorySupportCode =  Catégorie support
-containers.select.fromTransformationTypeCodes= Issu de la transformation
-containers.select.fromTransfertCode = Issu du transfert
-containers.select.fromPurificationCode = Issu de la purif
+containers.select.fromTransformationTypeCodes= Issu du type d''exp.
+containers.select.fromTransfertCode = Issu du type transfert
+containers.select.fromPurificationCode = Issu du type purif
 
 containers.dispatch.value.0 = Exp. Suivante
 containers.dispatch.value.1 = Exp. Transfert

@@ -67,12 +67,19 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
 
-		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton)", "dna-rna-extraction-process", ProcessCategory.find.findByCode("sample-prep"), null,
-				Arrays.asList(getPET("ext-to-dna-rna-extraction-process",-1),getPET("dna-rna-extraction",0)), 
+		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton ou à partir d'aliquot corail poisson)", "dna-rna-extraction-process", 
+				ProcessCategory.find.findByCode("sample-prep"), null,
+				Arrays.asList(
+						getPET("ext-to-dna-rna-extraction-process",-1),
+						getPET("grinding",-1),
+						getPET("dna-rna-extraction",0)), 
 				getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (corail)", "grinding-and-dna-rna-extraction", ProcessCategory.find.findByCode("sample-prep"), null,
-				Arrays.asList(getPET("ext-to-grinding-and-dna-rna-extraction",-1),getPET("grinding",0),getPET("dna-rna-extraction",1)), 
+		l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (corail et poisson)", "grinding-and-dna-rna-extraction", ProcessCategory.find.findByCode("sample-prep"), null,
+				Arrays.asList(
+						getPET("ext-to-grinding-and-dna-rna-extraction",-1),
+						getPET("grinding",0),
+						getPET("dna-rna-extraction",1)), 
 				getExperimentTypes("grinding").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;	
 	}

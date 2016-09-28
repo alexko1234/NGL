@@ -59,7 +59,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.searchService = processesSearchService;
 	$scope.searchService.init($routeParams, $scope.datatableConfig)
 	
-	if($scope.form.project || $scope.form.type){
+	if($scope.form.project || $scope.form.type || $scope.searchService.form.stateCodes){
 		$scope.search();
 	}
 	

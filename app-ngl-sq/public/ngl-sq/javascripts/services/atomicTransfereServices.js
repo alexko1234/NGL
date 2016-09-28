@@ -68,7 +68,7 @@ angular.module('atomicTransfereServices', [])
     				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);
     				
     				column.required=function(){
-    					var pd = angular.copy(propertyDefinition);
+    					var pd = propertyDefinition;
     					return  $scope.isRequired(pd);
     				}
     				    				

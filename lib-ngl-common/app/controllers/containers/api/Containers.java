@@ -324,9 +324,9 @@ public class Containers extends CommonController {
 		
 		if(StringUtils.isNotBlank(containersSearch.fromTransfertTypeCode)){
 			if("none".equals(containersSearch.fromTransfertTypeCode)){
-				queryElts.add(DBQuery.notExists("fromTranfertTypeCode"));
+				queryElts.add(DBQuery.notExists("fromTransfertTypeCode"));
 			}else{
-				queryElts.add(DBQuery.is("fromTranfertTypeCode", containersSearch.fromTransfertTypeCode));
+				queryElts.add(DBQuery.is("fromTransfertTypeCode", containersSearch.fromTransfertTypeCode));
 			}			
 		}
 		
