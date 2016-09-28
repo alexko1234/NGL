@@ -37,6 +37,8 @@ public class CodeLabelDAO {
 						"union all "+
 						"select 'project_cat' as table_name, code, name as label from project_category "+
 						"union all "+
+						"select 'process_cat' as table_name, code, name as label from process_category "+
+						"union all "+						
 						"select distinct 'value' as table_name, code, name as label from value "+
 						"union all "+
 						"select distinct concat('value','.',+pd.code) as table_name, v.code, v.name as label "

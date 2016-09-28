@@ -120,7 +120,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 							"order":true,
 							"hide":true,
 							"position":2.5,
-							"filter":"codes:'type'",
+							"filter":"codes:'process_cat'",
 							"type":"text"         
 						} ,
 			           {
@@ -184,7 +184,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 							"order":true,
 							"hide":true,
 							"position":2.5,
-							"filter":"codes:'type'",
+							"filter":"codes:'process_cat'",
 							"type":"text"         
 						} ,
 			           {
