@@ -184,7 +184,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 	config.otherButtons= {
 		active : ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
         template: 
-        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.title.computeSize")+'" "><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
+        	'<button class="btn btn-default" ng-click="computeInSizeToOut()" data-toggle="tooltip" ng-disabled="!(isEditModeAvailable() && isWorkflowModeAvailable(\'F\'))"  title="'+Messages("experiments.button.title.computeSize")+'" "><i class="fa fa-magic" aria-hidden="true"></i> '+ Messages("experiments.button.computeSize")+' </button>'                	                	
     };
 	
 
