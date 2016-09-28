@@ -41,17 +41,18 @@ public class MigrationContainerProperties  extends CommonController{
 		ContextValidation contextError=new ContextValidation("ngl-sq");
 		List<Container> containers=null;
 
-	//	List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("properties.limsCode").is("code","BNU_A1")/*.notExists("contents.properties.sampleAliquotCode")*/.notExists("fromTransformationTypeCodes")).toList();
-/*
+		containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+				DBQuery.exists("properties.limsCode").notExists("contents.properties.sampleAliquoteCode").notExists("contents.properties.tag").notIn("fromTransformationTypeCodes","prepa-flowcell")).toList();
+
 		Logger.info("Nb containers to update :"+containers.size());
 
 		containers.forEach(c->{
-			MigrationContainerProperties.updateProperties(c, "sampleAliquotCode", new PropertySingleValue(c.code), c.contents.get(0).sampleCode, null);
+			MigrationContainerProperties.updateProperties(c, "sampleAliquoteCode", new PropertySingleValue(c.code), c.contents.get(0).sampleCode, null);
 		});
 
-*/
+/*
 		
-		containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("properties.limsCode").notExists("contents.properties.sampleAliquotCode").size("fromTransformationTypeCodes", 1)).toList();
+		containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("properties.limsCode").notExists("contents.properties.sampleAliquoteCode").size("fromTransformationTypeCodes", 1)).toList();
 
 		Logger.info("Nb containers to update :"+containers.size());
 		containers.forEach(container -> {
@@ -61,7 +62,7 @@ public class MigrationContainerProperties  extends CommonController{
 				List<Content> contents =limsServices.findContentsFromContainer("pl_ContentFromContainer @matmanom=?", container.code);
 				contents.forEach(c->{
 					Logger.debug("Content container :"+ container.code+", sample "+c.sampleCode+", tag "+c.properties.get("tag").value);
-					MigrationContainerProperties.updateProperties(container, "sampleAliquotCode", (PropertySingleValue) c.properties.get("sampleAliquotCode"), c.sampleCode, c.properties.get("tag").value.toString());
+					MigrationContainerProperties.updateProperties(container, "sampleAliquoteCode", (PropertySingleValue) c.properties.get("sampleAliquoteCode"), c.sampleCode, c.properties.get("tag").value.toString());
 				});
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -69,9 +70,9 @@ public class MigrationContainerProperties  extends CommonController{
 			}
 
 		});
-		
+	*/	
 
-		return ok("Migration update sampleAliquotCode Finish");
+		return ok("Migration update sampleAliquoteCode Finish");
 	}
 
 	public static void updateProperties(Container container, String propertyName, PropertySingleValue propertyValue,String sampleCode, String tag){

@@ -384,8 +384,8 @@ public class LimsCNSDAO{
 					sampleUsed.properties.put("libLayoutNominalLength", new PropertySingleValue(rs.getInt("libLayoutNominalLength")));
 				}
 				
-				if(rs.getString("sampleAliquotCode") !=null){
-					sampleUsed.properties.put("sampleAliquotCode", new PropertySingleValue(rs.getString("sampleAliquotCode")));
+				if(rs.getString("sampleAliquoteCode") !=null){
+					sampleUsed.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("sampleAliquoteCode")));
 				}
 				
 				return sampleUsed;
