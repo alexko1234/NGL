@@ -240,7 +240,6 @@ angular.module('home').controller('DNAseTreatmentCtrl',['$scope', '$parse', 'atm
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
 	
 	if($scope.experiment.instrument.inContainerSupportCategoryCode === "tube"){
 		$scope.messages.clear();
