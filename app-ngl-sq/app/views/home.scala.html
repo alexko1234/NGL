@@ -32,7 +32,7 @@
 				<div class="panel-heading">
 					<h3 class="text-center">
 						<a href="@controllers.experiments.tpl.routes.Experiments.home("search")?stateCodes=N">
-							<span class="label label-primary pull-right">{{experimentDatatable.totalNumberRecords}}</span>
+							<span class="label label-primary pull-right" ng-bind="experimentNDatatable.totalNumberRecords"></span>
 							@Messages("home.experiments.new")							
 						</a>
 					</h3>
@@ -48,7 +48,7 @@
 				<div class="panel-heading">
 					<h3 class="text-center">
 						<a href="@controllers.experiments.tpl.routes.Experiments.home("search")?stateCodes=IP">
-							<span class="label label-primary pull-right">{{experimentDatatable.totalNumberRecords}}</span>
+							<span class="label label-primary pull-right" ng-bind="experimentIPDatatable.totalNumberRecords"></span>
 							@Messages("home.experiments.ip")							
 						</a>
 					</h3>
@@ -64,7 +64,7 @@
 				<div class="panel-heading">
 					<h3 class="text-center">
 						<a href="@controllers.processes.tpl.routes.Processes.home("search")?stateCodes=N">
-							<span class="label label-primary pull-right">{{processDatatable.totalNumberRecords}}</span>
+							<span class="label label-primary pull-right" ng-bind="processNDatatable.totalNumberRecords"></span>
 							@Messages("home.processes.new")							
 						</a>
 					</h3>
@@ -79,7 +79,7 @@
 				<div class="panel-heading">
 					<h3 class="text-center">
 						<a href="@controllers.processes.tpl.routes.Processes.home("search")?stateCodes=IP">
-							<span class="label label-primary pull-right">{{processDatatable.totalNumberRecords}}</span>
+							<span class="label label-primary pull-right" ng-bind="processIPDatatable.totalNumberRecords"></span>
 							@Messages("home.processes.ip")							
 						</a>
 					</h3>
