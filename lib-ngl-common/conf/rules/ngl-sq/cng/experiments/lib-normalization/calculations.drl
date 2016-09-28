@@ -35,18 +35,24 @@ rule "InputVolume in lib-normalization inputContainer"
         // NGL-981:25/04/2016 attention si inputConcentration=0 --> division par 0
         eval ( $inputConcentration.value != null && convertPVToDouble($inputConcentration) != 0 )
         
-        //ne pas calculer le volume engagé si l'utilisateur saisi qq chose... TODO ???? Voir avec Julie
    then
    		Double engVolume = 0.0;
    		Double bfVolume = 0.0;
    		Double inputConcentration = 0.0;
    		
-        // 15/04/2016 si concentration IN < concentration OUT : inutile d'essayer de faire des calculs--> vol engagé=15, buffer =0
+   		 // 15/04/2016 si concentration IN < concentration OUT : inutile d'essayer de faire des calculs--> vol engagé=15, buffer =0
         // 25/04/2016 ET concentration OUT= concentration IN
 		if ( convertPVToDouble($inputConcentration) <= convertPVToDouble($outputConcentration)){	
 			inputConcentration = Double.parseDouble($inputConcentration.getValue().toString());
 			Logger.debug("Warning: concentration initiale "+ inputConcentration +" plus faible que la concentration de normalisation");
-		    engVolume=15.0;
+		    
+		    if($inputContainerUsed.experimentProperties !=null && $inputContainerUsed.experimentProperties.containsKey("inputVolume")){
+		    	engVolume=convertPVToDouble($inputContainerUsed.experimentProperties.get("inputVolume"));
+		    }else{
+		    	engVolume=15.0;
+		    }
+		    
+		    
 	    } else {
 	    
 	    	// -1- calcul volume engagé
