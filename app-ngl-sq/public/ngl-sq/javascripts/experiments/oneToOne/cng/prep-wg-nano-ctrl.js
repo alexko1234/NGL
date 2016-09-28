@@ -209,7 +209,7 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			"hide":{
 				"active":true
 			},
-			"edit":{ // editable si mode=Finished ????
+			"edit":{ 
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
@@ -292,6 +292,8 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 		console.log("call event activeEditMode");
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
+		   // test FDS copier le volume IN container dans le volume Engagé Lib et Volume engagé Frag ???
+		   $scope.calculQuantities();
 	});
 		
 	//Init
@@ -313,6 +315,15 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			volume : "µL"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	// TEST...
+	if($scope.isCreationMode()){
+	    //  recopier le volume container dans experimentProperties.volume Lib et experimentProperties.volume Frag
+	    //  avant l'envoi a l'affichage...
+	    // !!! creer experiment properties car n'existent pas encore ??????
+		
+		console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
+	}
 	
 	$scope.atmService = atmService;
 	
@@ -452,17 +463,12 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	};
 	
 	// 27/09/2016  en attendant un mécanisme pour automatiquement copier dans  vol engagé Frag et vol engagé Lib
-	// L'utilisateur saisi un volume puis calculer les qtés 
-	// Calculs ( code modifié  depuis pcr-and-purification )
-	// inputVolumeFrag / inputQuantityFrag
-	// inputVolumeLib / inputQuantityLib
-	
-	// updatePropertyFromUDT  automatiqut defini pour les colonnes injectees dans le datatable....
+	// L'utilisateur saisi un volume puis calculer les qtés inputQuantityFrag et inputQuantityLib
+	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
 	$scope.updatePropertyFromUDT = function(value, col){
-		console.log("update from property : "+col.property);
+		//console.log("update from property : "+col.property);
 
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeFrag.value'){
-			
 			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
 			// TODO...?? pas le temps
 			
@@ -487,18 +493,20 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
 				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeFrag.value")(udtData),		
 				isReady:function(){
-					return (this.inputConc && this.inputConc);
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0  && this.inputVolume >= 0);
 				}
 			};
 		
 		if(compute.isReady()){
 			var result = $parse("inputConc * inputVolume")(compute);
-			console.log("result = "+result);
+			//console.log("result = "+result);
 			
 			if(angular.isNumber(result) && !isNaN(result)){
 				inputQuantity = Math.round(result*10)/10;				
 			}else{
-				inputQuantity = undefined;
+				//inputQuantity = undefined;
+				inputQuantity = 0;
 			}	
 			getter.assign(udtData, inputQuantity);
 			
@@ -510,7 +518,7 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 		}
 	}
 	
-	/// pourrait pas faire une seule fonction mais avec un parametre????
+	/// TODO: faire une seule fonction mais avec un parametre Lib ou Frag
 	var computeQuantityLib = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
 
@@ -518,7 +526,8 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
 				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
 				isReady:function(){
-					return (this.inputConc && this.inputConc);
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0 && this.inputVolume >= 0 );
 				}
 			};
 		
@@ -529,13 +538,14 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			if(angular.isNumber(result) && !isNaN(result)){
 				inputQuantity = Math.round(result*10)/10;				
 			}else{
-				inputQuantity = undefined;
+				///inputQuantity = undefined;\\
+				inputQuantity = 0;
 			}	
 			getter.assign(udtData, inputQuantity);
 			
 		}else{
 			console.log("Missing values to exec computeQuantityLib");
 		}
-	}
+	}	
     
 }]);
