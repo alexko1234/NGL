@@ -50,7 +50,6 @@ public class MigrationContainerProperties  extends CommonController{
 			MigrationContainerProperties.updateProperties(c, "sampleAliquoteCode", new PropertySingleValue(c.code), c.contents.get(0).sampleCode, null);
 		});
 
-/*
 		
 		containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("properties.limsCode").notExists("contents.properties.sampleAliquoteCode").size("fromTransformationTypeCodes", 1)).toList();
 
@@ -70,7 +69,7 @@ public class MigrationContainerProperties  extends CommonController{
 			}
 
 		});
-	*/	
+		
 
 		return ok("Migration update sampleAliquoteCode Finish");
 	}
