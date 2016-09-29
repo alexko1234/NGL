@@ -3,7 +3,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
 
 	var datatableExperimentConfig = {
-			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
+			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},
 			search:{
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
 			},
@@ -86,8 +86,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 						]
 	};
 	
-	var datatableProcessConfig = {
-			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
+	var datatableProcessIPConfig = {
+			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},			
 			search:{
 				url:jsRoutes.controllers.processes.api.Processes.list()
 			},
@@ -164,17 +164,79 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 						]
 	};  
 	
-
+	var datatableProcessNConfig = {
+			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},
+			search:{
+				url:jsRoutes.controllers.processes.api.Processes.list()
+			},
+			pagination:{
+				mode:'local',
+				numberRecordsPerPage:5
+			},
+			select:{
+				active:false
+			},
+			showTotalNumberRecords:false,
+			columns : [
+			           {
+						"header":Messages("processes.table.inputContainerCode"),
+						"property":"inputContainerCode",
+						"position":1,
+						"type":"text"
+						},
+			           {
+							"header":Messages("processes.table.projectCode"),
+							"property":"projectCode",
+							"position":2,
+							"type":"text"
+						},
+						{
+							"header":Messages("processes.table.sampleCode"),
+							"property":"sampleCode",
+							"position":3,
+							"type":"text"
+						},
+			          
+			           {
+							"header":Messages("processes.table.typeCode"),
+							"property":"typeCode",
+							"position":4,
+							"filter":"codes:'type'",
+							"type":"text"         
+						} ,
+						
+						{
+							"header" : Messages("processes.table.creationDate"),
+							"property" : "traceInformation.creationDate",
+							"position" : 7,
+							"format" : Messages("datetime.format"),
+							"type" : "date"
+						},
+						{
+							"header" : Messages("processes.table.createUser"),
+							"property" : "traceInformation.createUser",
+							"position" : 8,
+							"type" : "text"
+						},
+						{
+							"header" : Messages("processes.table.comments"),
+							"property" : "comments[0].comment",
+							"position" : 9,
+							"type" : "text"
+						}
+						
+						]
+	};  
 		$scope.experimentIPDatatable = datatable(datatableExperimentConfig);			
 		$scope.experimentIPDatatable.search({stateCodes:["IP"]});
 		
 		$scope.experimentNDatatable = datatable(datatableExperimentConfig);			
 		$scope.experimentNDatatable.search({stateCodes:["N"]});
 		
-		$scope.processIPDatatable = datatable(datatableProcessConfig);			
+		$scope.processIPDatatable = datatable(datatableProcessIPConfig);			
 		$scope.processIPDatatable.search({stateCodes:["IP"]});
 		
-		$scope.processNDatatable = datatable(datatableProcessConfig);			
+		$scope.processNDatatable = datatable(datatableProcessNConfig);			
 		$scope.processNDatatable.search({stateCodes:["N"]});
 }]);
 

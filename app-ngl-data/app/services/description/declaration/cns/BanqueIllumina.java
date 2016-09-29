@@ -70,7 +70,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina à partir de frg", "dna-illumina-indexed-library-process", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaWithoutSizing(),
+		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina à partir de frg ou amplicon", "dna-illumina-indexed-library-process", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaWithoutSizing(),
 			Arrays.asList(getPET("ext-to-dna-illumina-indexed-library-process",-1)
 					,getPET("fragmentation",-1)
 					,getPET("tag-pcr",-1)
@@ -83,7 +83,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 			getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-library-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 
-			l.add(DescriptionFactory.newProcessType("Bq DNA Illumina sizée à partir de frg", "dna-illumina-indexed-lib-sizing-process", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaSizing(),
+			l.add(DescriptionFactory.newProcessType("Bq DNA Illumina sizée à partir de frg ou amplicon", "dna-illumina-indexed-lib-sizing-process", ProcessCategory.find.findByCode("library"), getPropertyBanqueIlluminaSizing(),
 					Arrays.asList(getPET("ext-to-dna-illumina-indexed-lib-sizing-process",-1)
 							,getPET("fragmentation",-1)
 							,getPET("tag-pcr",-1)

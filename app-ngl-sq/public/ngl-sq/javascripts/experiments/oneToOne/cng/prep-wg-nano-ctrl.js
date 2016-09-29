@@ -1,6 +1,6 @@
-// FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
-// 16/09/2016 commun a prepprcfree et prepwgnano ???NON
-angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
+// FDS 27/09/2016 copié depuis prep-pcr-free-ctrl.js car qq differences...
+
+angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 
 	
@@ -128,7 +128,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			        	 "position":99,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },*/
-			         { // Volume avec valeur par defaut
+			         /* en prep-wg-nano ne pas afficher de volume OUT
+			          { // Volume avec valeur par defaut
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "hide":true,
@@ -138,6 +139,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			        	 "position":34,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },
+			         */
 			         { //  barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
@@ -207,7 +209,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			"hide":{
 				"active":true
 			},
-			"edit":{ // editable si mode=Finished ????
+			"edit":{ 
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
@@ -290,6 +292,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		console.log("call event activeEditMode");
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
+		   // test FDS copier le volume IN container dans le volume Engagé Lib et Volume engagé Frag ???
+		   $scope.calculQuantities();
 	});
 		
 	//Init
@@ -311,6 +315,15 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			volume : "µL"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	// TEST...
+	if($scope.isCreationMode()){
+	    //  recopier le volume container dans experimentProperties.volume Lib et experimentProperties.volume Frag
+	    //  avant l'envoi a l'affichage...
+	    // !!! creer experiment properties car n'existent pas encore ??????
+		
+		console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
+	}
 	
 	$scope.atmService = atmService;
 	
@@ -450,6 +463,89 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	};
 	
 	// 27/09/2016  en attendant un mécanisme pour automatiquement copier dans  vol engagé Frag et vol engagé Lib
+	// L'utilisateur saisi un volume puis calculer les qtés inputQuantityFrag et inputQuantityLib
+	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
+	$scope.updatePropertyFromUDT = function(value, col){
+		//console.log("update from property : "+col.property);
 
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeFrag.value'){
+			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
+			// TODO...?? pas le temps
+			
+			// marche pas !!
+			//var inputVolumeFrag =$parse("inputContainerUsed.experimentProperties.inputVolumeFrag.value")(value);
+			//console.log("LIB="+inputVolumeFrag); 
+			
+			computeQuantityFrag(value.data);
+		}
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
+			computeQuantityLib(value.data);
+		}
+	}
+
+	//inputQuantity=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	var computeQuantityFrag = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityFrag.value");
+		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeFrag.value")(udtData),		
+				isReady:function(){
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0  && this.inputVolume >= 0);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			//console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				//inputQuantity = undefined;
+				inputQuantity = 0;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+			//copie inputVolumeLib--> inputVolumeFrag
+			getter2.assign(udtData, $parse("inputVolume")(compute));
+			
+		}else{
+			console.log("Missing values to exec computeQuantityFrag");
+		}
+	}
+	
+	/// TODO: faire une seule fonction mais avec un parametre Lib ou Frag
+	var computeQuantityLib = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
+				isReady:function(){
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0 && this.inputVolume >= 0 );
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				///inputQuantity = undefined;\\
+				inputQuantity = 0;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+		}else{
+			console.log("Missing values to exec computeQuantityLib");
+		}
+	}	
     
 }]);
