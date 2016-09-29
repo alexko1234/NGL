@@ -313,7 +313,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				qcConcentrationResult.typeCode=rs.getString("concentrationTypeCode");
 				qcConcentrationResult.code=qcConcentrationResult.typeCode+"_"+container.code;
 				qcConcentrationResult.properties=new HashMap<String, PropertyValue>();
-				qcConcentrationResult.properties.put("concentration", container.concentration);
+				qcConcentrationResult.properties.put("concentration1", container.concentration);
 				qcConcentrationResult.date=rs.getDate("concentrationDate");
 				container.qualityControlResults.add(qcConcentrationResult);
 				}
@@ -328,7 +328,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				qcSizeResult.typeCode=rs.getString("sizeTypeCode");
 				qcSizeResult.code=qcSizeResult.typeCode+"_"+container.code;
 				qcSizeResult.properties=new HashMap<String, PropertyValue>();
-				qcSizeResult.properties.put("size", container.size);
+				qcSizeResult.properties.put("insertSize", container.size);
 				qcSizeResult.date=rs.getDate("sizeDate");
 				container.qualityControlResults.add(qcSizeResult);
 			}
