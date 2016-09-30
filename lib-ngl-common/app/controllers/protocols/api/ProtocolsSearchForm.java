@@ -7,5 +7,6 @@ import controllers.ListForm;
 public class ProtocolsSearchForm extends ListForm{
 	public String experimentTypeCode;
 	public List<String> experimentTypeCodes;
+	public Boolean isActive;
 
 }

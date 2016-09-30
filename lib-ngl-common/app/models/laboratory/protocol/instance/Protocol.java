@@ -22,6 +22,7 @@ public class Protocol extends DBObject implements IValidation{
 	public String categoryCode;
 	public List<String> experimentTypeCodes;
 	public Map<String, PropertyValue> properties;
+	public Boolean active = Boolean.TRUE;
 	
 	public Protocol() {		
 		super();

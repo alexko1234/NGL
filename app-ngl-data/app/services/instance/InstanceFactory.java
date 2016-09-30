@@ -37,11 +37,22 @@ public class InstanceFactory {
 	 */
 	public static Protocol newProtocol( String code,String name,
 			String path, String version, String cat, List<String> exp) {
-		return newProtocol(code, name, path, version, cat, exp, null);
+		return newProtocol(code, name, path, version, cat, exp, null,true	);
 	}
-	
+
 	public static Protocol newProtocol( String code,String name,
 			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties) {
+		return newProtocol(code, name, path, version, cat, exp, properties, true);
+	}
+
+	public static Protocol newProtocol( String code,String name,
+			String path, String version, String cat, List<String> exp,  Boolean active) {
+		return newProtocol(code, name, path, version, cat, exp, null, active);
+	}
+
+	
+	public static Protocol newProtocol( String code,String name,
+			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties,Boolean active) {
 		Protocol p = new Protocol();
 		p.code = code.toLowerCase().replace("\\s+", "-");
 		p.name = name;
@@ -50,6 +61,7 @@ public class InstanceFactory {
 		p.categoryCode = cat;
 		p.experimentTypeCodes = exp;
 		p.properties = properties;
+		p.active=active;
 		return p;
 	}
 	

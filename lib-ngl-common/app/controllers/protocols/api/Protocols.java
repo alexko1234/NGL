@@ -93,8 +93,11 @@ public class Protocols extends CommonController{
 		}else if(StringUtils.isNotBlank(protocolsSearch.experimentTypeCode)){
 			queryElts.add(DBQuery.in("experimentTypeCodes",protocolsSearch.experimentTypeCode));
 		}
-
-
+		
+		if(protocolsSearch.isActive!=null){
+			queryElts.add(DBQuery.is("active", protocolsSearch.isActive));
+		}
+		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));			
 		}
