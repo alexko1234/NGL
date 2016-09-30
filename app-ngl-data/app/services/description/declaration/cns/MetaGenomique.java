@@ -110,7 +110,7 @@ public class MetaGenomique extends AbstractDeclaration {
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"), 
 				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 15, true, null, null));
 
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());

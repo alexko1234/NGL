@@ -139,7 +139,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyAmpliIlluminaWithOutSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
@@ -147,7 +147,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertyBanqueIlluminaWithoutSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;

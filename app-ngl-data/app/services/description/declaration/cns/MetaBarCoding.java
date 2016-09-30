@@ -284,7 +284,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTA(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.addAll(getPropertyMetaB());
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
@@ -299,7 +299,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("650-800"), 
 				null,null,null,"single", 18, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 19, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
@@ -310,7 +310,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Primers", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S-FL + Fuhrman primer"), null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null,
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S + V4V5 Fuhrman"),	null,null,null,"single", 15, true, null, null));
+				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5"),	null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
 				DescriptionFactory.newValues("400","170"), 	null,null,null,"single", 16, true, null, null));
 		return propertyDefinitions;

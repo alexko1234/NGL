@@ -249,7 +249,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("Smarter V4","Ovation RNAseq system v2"), 
 				null,null,null,"single", 15, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
@@ -267,7 +267,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("TruSeq Stranded poly A","TruSeq Stranded Proc","Smarter Stranded"), 
 				null,null,null,"single", 15, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Volume ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
