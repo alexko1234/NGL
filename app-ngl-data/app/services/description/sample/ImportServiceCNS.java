@@ -12,6 +12,8 @@ import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.sample.description.ImportCategory;
@@ -22,6 +24,7 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.common.MeasureService;
 
 public class ImportServiceCNS extends AbstractImportService {
 
@@ -42,17 +45,37 @@ public class ImportServiceCNS extends AbstractImportService {
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ImportType> l = new ArrayList<ImportType>();
 		
+		
+		//import-type for lims import
 		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getCommonPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Banque", "library", ImportCategory.find.findByCode("sample-import"), getLibraryPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Tara", "tara-default", ImportCategory.find.findByCode("sample-import"), getTaraPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Banque tara", "tara-library", ImportCategory.find.findByCode("sample-import"), getLibraryTaraPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
+		//import-type for NGL import
 		l.add(newImportType("Reception Tara Pacific", "reception-tara-pacific", ImportCategory.find.findByCode("sample-import"), getTaraReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Update Tara Pacific", "update-tara-pacific", ImportCategory.find.findByCode("sample-import"), getTaraUpdatePropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newImportType("Reception d'ADN", "dna-reception", ImportCategory.find.findByCode("sample-import"), getDNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
+		
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
 	}
 
+	private static List<PropertyDefinition> getDNAReceptionPropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 1, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 1, false, null, null));
+		
+		return propertyDefinitions;
+	}
+	
+	
 	private static List<PropertyDefinition> getCommonPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, true, null, null));

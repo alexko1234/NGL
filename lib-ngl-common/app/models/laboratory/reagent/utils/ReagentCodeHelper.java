@@ -4,8 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import models.sra.submit.util.SraCodeHelper;
 import models.utils.CodeHelper;
+import models.utils.code.DefaultCodeImpl;
 
-public class ReagentCodeHelper extends CodeHelper{
+public class ReagentCodeHelper extends DefaultCodeImpl{
 	
 	public ReagentCodeHelper()
 	{}

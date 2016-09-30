@@ -18,6 +18,9 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	<context:component-scan base-package="workflows" />    
     <context:component-scan base-package="lims.cng" />
 
+	<bean id="code" class="models.utils.code.DefaultCodeImpl"></bean>
+  	
+
   	<jee:jndi-lookup id="ngl" jndi-name="ngl" />
   	<jee:jndi-lookup id="lims" jndi-name="lims" />
   	

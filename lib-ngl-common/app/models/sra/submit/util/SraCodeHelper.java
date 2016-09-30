@@ -5,9 +5,10 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import models.utils.code.DefaultCodeImpl;
 
 
-public class SraCodeHelper extends CodeHelper {
+public class SraCodeHelper extends DefaultCodeImpl {
 
 	
 	public SraCodeHelper()

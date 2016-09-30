@@ -132,15 +132,20 @@ public class SampleServiceCNS extends AbstractSampleService {
 	
 	private List<PropertyDefinition> getEnvironmentalPropertyDefinitions() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//TODO move to import tara specific
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 1, true, null, null));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getSampleCommonPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//TODO move to default import and reception import
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
+		//TODO can be deleted ? => no move to default-import
 		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false, "single"));
+		//TODO can be deleted ? => no move to default-import
 		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false, "single"));
+		//TODO move to default import
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
 		return propertyDefinitions;
 	}
@@ -148,6 +153,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	
 	private static List<PropertyDefinition> getSampleDefinitionADNplug() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//TODO Move to import-default and reception-default
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
 		return propertyDefinitions;
 	}
@@ -156,6 +162,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	public static List<PropertyDefinition> getPropertyDefinitionsADNClone() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
+        //TODO Move to specific import for all properties => DELETE
         propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "insertSize", LevelService.getLevels(Level.CODE.Sample),Double.class, false,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Vecteur", "vector", LevelService.getLevels(Level.CODE.Sample),String.class, false, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Souche", "strain", LevelService.getLevels(Level.CODE.Sample),String.class, false, "single"));
@@ -166,6 +173,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	public static List<PropertyDefinition> getPropertyDefinitionsADN() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
+        //TODO isWGA import type property to specific import => DELETE
         propertyDefinitions.add(newPropertiesDefinition("WGA", "isWGA", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false, "single"));
 		return propertyDefinitions;
 	}
@@ -174,6 +182,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getPropertyDefinitionsADN());
         //TODO GCpercent same as TreatmentService
+      //TODO GCPercent import type property to default reception import
         propertyDefinitions.add(newPropertiesDefinition("% GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Double.class, false, "single"));
         //For CNG only
         return propertyDefinitions;
@@ -182,6 +191,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	public static List<PropertyDefinition> getPropertyDefinitionsAmplicon() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
+        //TODO Move to import type => DELETE
         propertyDefinitions.add(newPropertiesDefinition("Matériel ciblé", "targetSampleCategory", LevelService.getLevels(Level.CODE.Sample),String.class, false, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Plusieurs Régions ciblées", "isSeveralTargets", LevelService.getLevels(Level.CODE.Sample), Boolean.class, false, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Régions ciblées", "targets", LevelService.getLevels(Level.CODE.Sample), String.class, false, "single"));
@@ -191,8 +201,11 @@ public class SampleServiceCNS extends AbstractSampleService {
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsARN() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//TODO Move to import-default
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
+		//TODO plus utile à supprimer 
 		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
+		//TODO move to import-default
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
 		return propertyDefinitions;
 	}
@@ -200,6 +213,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	public static List<PropertyDefinition> getPropertyDefinitionscDNA() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getSampleCommonPropertyDefinitions());
+        //TODO move to specific import can be delete => DELETE
         propertyDefinitions.add(newPropertiesDefinition("Type de synthèse", "synthesisType", LevelService.getLevels(Level.CODE.Sample), String.class, false, newValues("random","oligoDT"), "single"));        
         return propertyDefinitions;
 	}

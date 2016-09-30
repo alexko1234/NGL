@@ -30,7 +30,6 @@ public class QualityControl extends AbstractDeclaration {
 	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		
 		l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
 				getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
@@ -67,6 +66,12 @@ public class QualityControl extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		//QC provenant de collaborateur extérieur.
+		l.add(newExperimentType("QC Exterieur","external-qc", null,22000,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsExternalQC(), 
+				getInstrumentUsedTypes("hand"),"OneToVoid", false, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		return l;
 	}
@@ -142,6 +147,24 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume fournit", "profidedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration fournit", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité fournit", "providedQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 15, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+				null, null, null, null,"single", 16, true, null,null));
+
+		return propertyDefinitions;
+		
+	}
+	
+	
 	
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometrique() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

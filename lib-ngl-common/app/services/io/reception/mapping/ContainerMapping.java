@@ -52,6 +52,11 @@ public class ContainerMapping extends Mapping<Container> {
 			c.categoryCode = ContainerCategory.find.findByContainerSupportCategoryCode(c.support.categoryCode).code;
 		}
 		
+		//TODO code is null
+		if(c.code == null){
+			c.code = getContainerCode(c);
+		}
+		
 		c.projectCodes = new TreeSet<String>();
 		c.sampleCodes = new TreeSet<String>();
 		
@@ -67,6 +72,11 @@ public class ContainerMapping extends Mapping<Container> {
 			c.projectCodes.add(content.projectCode);
 			c.sampleCodes.add(content.sampleCode);
 		});				
+	}
+
+	private String getContainerCode(Container c) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private Map<String, PropertyValue> computeProperties(
