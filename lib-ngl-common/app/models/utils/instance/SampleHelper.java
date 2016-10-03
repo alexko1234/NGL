@@ -6,15 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
-import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -112,6 +110,27 @@ public class SampleHelper {
 					DBUpdate.set("sampleOnInputContainer.referenceCollab",sample.referenceCollab),true);
 		
 	}
+	
+	
+	public static void updateKeyInSampleAndPropertyContentContainer(Sample sample, String key, PropertyValue value, ContextValidation contextError) {
+		
+		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
+				DBQuery.is("code",sample.code),
+				DBUpdate.set(key,value.value));
+		
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Run.class, 
+				 DBQuery.is("contents.sampleCode", sample.code),
+				DBUpdate.set("contents.$.properties."+key,value),true);					
+		
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
+				DBQuery.is("sampleOnContainer.sampleCode", sample.code),
+				DBUpdate.set("sampleOnContainer.properties."+key,value),true);
+
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+				DBQuery.is("sampleOnInputContainer.sampleCode", sample.code),
+				DBUpdate.set("sampleOnInputContainer.properties."+key,value),true);
+	
+}
 	
 	
 	public static void executeRules(Sample sample,String rulesName){

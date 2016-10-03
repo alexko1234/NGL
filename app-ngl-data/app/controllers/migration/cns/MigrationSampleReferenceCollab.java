@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mongojack.DBQuery;
 
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
@@ -26,6 +27,8 @@ public class MigrationSampleReferenceCollab extends CommonController {
 		//List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code","BKP_EB")).toList();
 		for(Sample s:samples){
 			SampleHelper.updateSampleReferenceCollab(s, contextError);
+			SampleHelper.updateKeyInSampleAndPropertyContentContainer(s, "ncbiScientificName", new PropertySingleValue(s.ncbiScientificName), contextError);
+			SampleHelper.updateKeyInSampleAndPropertyContentContainer(s, "ncbiLineage", new PropertySingleValue(s.ncbiLineage), contextError);
 		}
 	}
 }
