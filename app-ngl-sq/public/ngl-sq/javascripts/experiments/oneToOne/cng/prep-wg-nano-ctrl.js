@@ -313,16 +313,28 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	atmService.defaultOutputUnit = {
 			volume : "µL"
 	}
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	// TEST...
+	//////////// TEST FDS EN COURS....
 	if($scope.isCreationMode()){
 	    //  recopier le volume container dans experimentProperties.volume Lib et experimentProperties.volume Frag
 	    //  avant l'envoi a l'affichage...
 	    // !!! creer experiment properties car n'existent pas encore ??????
-		
-		console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
+		var dataMain = atmService.data.getData();
+		for(var i = 0; i < dataMain.length; i++){
+		    // console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
+			
+		    var udtData = dataMain[i];
+		    var icu=udtData.inputContainerUsed;
+		    console.log("copier container.volume... "+ icu.volume.value);
+		    //icu.experimentProperties["inputVolumeLib"]={"_type":"single","value": "999"};
+			//icu.experimentProperties["inputVolumeFrag"]={"_type":"single","value": "999"};
+			
+		    //console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
+		}
 	}
+	//////////////////////////
 	
 	$scope.atmService = atmService;
 	

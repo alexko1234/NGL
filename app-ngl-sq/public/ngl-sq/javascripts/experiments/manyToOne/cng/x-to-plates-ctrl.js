@@ -19,7 +19,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		return column;
 	};
 	
-	/* TEST comportement different en fonction du programme choisi ??
+	/* TEST comportement different en fonction du programme choisi ??*/
 	$scope.$on('updateInstrumentProperty', function(e, pName) {
 		console.log("call event updateInstrumentProperty "+pName);
 		
@@ -27,20 +27,18 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			console.log("update program "+$scope.experiment.instrumentProperties[pName].value);
 			var program = $scope.experiment.instrumentProperties[pName].value
 			
-			if ( program === 'pooling custom (mode colonne)'){
-				//laisser comme maintenant...
-			} else if ( program === 'pooling 3-plex (mode colonne)'){
+			 if ( program === 'pooling 3-plex (mode colonne)'){
 				// pooling automatique...3 puits par 3 puits
 				// TODO mais quoi ??
 			} else if ( program === 'pooling 4-plex (mode colonne)'){	
 				// pooling automatique...4 puits par 4 puits
 				// TODO mais quoi ??
 			} else if ( program === 'programme 1_normalisation' ) {
-				// ???????
+				// laisser comme avant...== mode custom
 			}
 		}
 	});
-	*/
+	
 	
 	/*TEST...VERIFIER UNE SEULE PLAQUE EN ENTREE POUR  "normalization-and-pooling" !!!
 	// marche pas !!!
@@ -247,7 +245,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		if ( $scope.experiment.instrument.categoryCode !== "hand") {
 			// ancien code:  if ! pool  ... supprimé=> 2 feuilles de routes dans tous les cas
 			
-				// FDS 2 boutons pour genenern 2 generateSampleSheet...
+				// FDS 2 boutons pour genener 2 generateSampleSheet...
 				$scope.setAdditionnalButtons([{
 					isDisabled : function(){return $scope.isNewState();} ,
 					isShow:function(){return !$scope.isNewState();},
@@ -283,13 +281,32 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	};
 	
 	// pour selects
-	$scope.columns = ['1','2','3','4','5','6','7','8','9','10','11','12']; 
-	$scope.lines=['A','B','C','D','E','F','G','H'];  
+	$scope.columns = ["1","2","3","4","5","6","7","8","9","10","11","12"]; 
+	$scope.lines=["A","B","C","D","E","F","G","H"];  
 	
 	//variables tampon
     $scope.lastSupportCode=null;
     $scope.lastStorageCode=null;
+    
+    //TEST FDS
+    $scope.poolOrientation=null;
+    $scope.nbPlex=null;
+    $scope.startColumn=null; 
+    $scope.endColumn=null;
+    $scope.startLine=null;
+    $scope.endLine=null;
+    
+    $scope.showSelections =function( poolOrientation, nbPlex, startColumn, startLine, endColumn, endLine ){
+    	console.log("selection changed...");
+    	
+    	console.log("selected orientation="+ poolOrientation);
+    	console.log("selected nbPlex="+nbPlex);
+    	console.log("selected startColumn="+startColumn);
+    	console.log("selected startLine="+startLine);
+    	console.log("selected endColumn="+endColumn);
+    	console.log("selected endLine="+endLine);
+    	 //calcul algo..........
 
-
-	
+    }
+    
 }]);
