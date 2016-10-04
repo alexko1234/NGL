@@ -52,11 +52,6 @@ public class ContainerMapping extends Mapping<Container> {
 			c.categoryCode = ContainerCategory.find.findByContainerSupportCategoryCode(c.support.categoryCode).code;
 		}
 		
-		//TODO code is null
-		if(c.code == null){
-			c.code = getContainerCode(c);
-		}
-		
 		c.projectCodes = new TreeSet<String>();
 		c.sampleCodes = new TreeSet<String>();
 		

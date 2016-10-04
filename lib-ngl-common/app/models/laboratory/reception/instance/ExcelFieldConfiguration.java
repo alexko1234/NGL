@@ -14,6 +14,8 @@ public class ExcelFieldConfiguration extends AbstractFieldConfiguration {
 	public String headerValue;
 	public Integer cellPosition;
 	
+	public String defaultValue;
+	
 	public ExcelFieldConfiguration() {
 		super(AbstractFieldConfiguration.excelType);		
 	}
@@ -25,7 +27,9 @@ public class ExcelFieldConfiguration extends AbstractFieldConfiguration {
 		if(rowMap.containsKey(cellPosition)){
 			String value = rowMap.get(cellPosition);			
 			populateField(field, dbObject, value);				
-		}else if(required){
+		}else if(defaultValue != null){
+			populateField(field, dbObject, defaultValue);
+		} else if(required){
 			contextValidation.addErrors(headerValue, ERROR_REQUIRED_MSG);
 		}
 	}

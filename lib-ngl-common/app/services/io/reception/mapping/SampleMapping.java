@@ -6,6 +6,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.laboratory.sample.instance.Sample;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
@@ -40,4 +41,13 @@ public class SampleMapping extends Mapping<Sample> {
 		// TODO Auto-generated method stub
 		
 	}	
+	
+	@Override
+	public void synchronizeMongoDB(DBObject c){
+		if(Action.save.equals(action)){
+			Sample sample = (Sample)c;
+			CodeHelper.getInstance().updateProjectSampleCodeIfNeeded(sample.projectCodes.iterator().next(), sample.code);
+		}
+		super.synchronizeMongoDB(c);
+	}
 }

@@ -104,35 +104,45 @@ public class DefaultCodeImpl implements Code {
 				.random()).toUpperCase();
 	}
 	
-	public synchronized String generateSampleCode(String projectCode){
+	public synchronized String generateSampleCode(String projectCode, boolean updateProject){
 		Project project =MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
-		String newCode=nextCode(project.lastSampleCode);			
-		MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", project.code),DBUpdate.set("lastSampleCode",newCode));
-		return projectCode+"_"+newCode; //TODO !!! Genoscope rules !!!!
+		return generateSampleCode(project, updateProject);
 	}
 	
 	
-	private static String nextCode(String oldCode){
+	
+	public synchronized String generateSampleCode(Project project, boolean updateProject){
+		String newCode=nextSampleCode(project);
+		if(updateProject){
+			updateProjectSampleCodeIfNeeded(project.code, newCode);
+		}
+		return newCode;
+	}
+		
+	private static String nextSampleCode(Project project){
+		
+		String currentCode = (null != project.lastSampleCode)?project.lastSampleCode.replace(project.code+"_", ""):null;
+		
 		String newCode=null;
 		String beginCode=null;
 		char lastLetter='Z';
 
-		if(oldCode==null){
+		if(currentCode==null){
 			newCode="AAAA";
 		}else {
 			
-			int nbCharacter=oldCode.length();
+			int nbCharacter=currentCode.length();
 			int lastCharacter=nbCharacter;
 
 			//Recupère la position à partir de laquelle il faut changer de lettre
-			while (lastCharacter!=0 && oldCode.substring(lastCharacter-1, lastCharacter).equals(Character.toString(lastLetter))) {
+			while (lastCharacter!=0 && currentCode.substring(lastCharacter-1, lastCharacter).equals(Character.toString(lastLetter))) {
 				lastCharacter--;
 			}
 			
-			if( lastCharacter>1 || (lastCharacter==1 && !oldCode.substring(lastCharacter-1, lastCharacter).equals(String.valueOf(lastLetter))))
+			if( lastCharacter>1 || (lastCharacter==1 && !currentCode.substring(lastCharacter-1, lastCharacter).equals(String.valueOf(lastLetter))))
 			{
-				beginCode=oldCode.substring(0, lastCharacter-1); // debut du code sample a conserver
-				newCode=beginCode+Character.toString((char) (oldCode.charAt(lastCharacter-1)+1)); // Concatenation debut code sample + lettre suivante
+				beginCode=currentCode.substring(0, lastCharacter-1); // debut du code sample a conserver
+				newCode=beginCode+Character.toString((char) (currentCode.charAt(lastCharacter-1)+1)); // Concatenation debut code sample + lettre suivante
 			}
 			else {
 				newCode="AA";
@@ -145,6 +155,12 @@ public class DefaultCodeImpl implements Code {
 			}
 		}
 		
-		return newCode;
+		return project.code+"_"+newCode;
+	}
+	
+	public synchronized void updateProjectSampleCodeIfNeeded(String projectCode, String newSampleCode){
+		MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode)
+				.or(DBQuery.notExists("lastSampleCode"), DBQuery.lessThan("lastSampleCode", newSampleCode)),
+				DBUpdate.set("lastSampleCode",newSampleCode));
 	}
 }

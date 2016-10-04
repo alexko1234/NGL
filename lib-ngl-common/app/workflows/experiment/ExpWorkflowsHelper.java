@@ -1147,7 +1147,7 @@ public class ExpWorkflowsHelper {
 							&& !experimentProperties.containsKey("sampleCode")){
 						String nextProjectCode = (String)experimentProperties.get("projectCode").value;
 						
-						String newSampleCode=CodeHelper.getInstance().generateSampleCode(nextProjectCode);
+						String newSampleCode=CodeHelper.getInstance().generateSampleCode(nextProjectCode, true);
 						ocu.experimentProperties.put("sampleCode", new PropertySingleValue(newSampleCode));
 						
 						newProjectCodes.add(nextProjectCode);

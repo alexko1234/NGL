@@ -8,10 +8,20 @@ import java.util.Set;
 import java.util.TreeMap;
 
 
+
+
+
+
+
+
+
 import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.instance.OutputContainerUsed;
+import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ExcelFieldConfiguration;
 import models.laboratory.reception.instance.ObjectFieldConfiguration;
@@ -20,6 +30,8 @@ import models.laboratory.reception.instance.PropertyValueFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.laboratory.sample.instance.Sample;
+import models.utils.CodeHelper;
+import models.utils.InstanceConstants;
 import services.io.reception.mapping.ContainerMapping;
 import services.io.reception.mapping.SampleMapping;
 import services.io.reception.mapping.SupportMapping;
@@ -34,6 +46,9 @@ public abstract class FileService {
 	protected ReceptionConfiguration configuration;
 	protected PropertyFileValue fileValue;
 	protected ContextValidation contextValidation;
+	
+	private Map<String, Project> lastSampleCodeForProjects = new HashMap<String, Project>(0);
+			
 	
 	private Map<String, Mapping<? extends DBObject>> mappings = new HashMap<String,Mapping<? extends DBObject>>();
 	
@@ -62,7 +77,7 @@ public abstract class FileService {
 			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
 		}else if(Mapping.Keys.support.toString().equals(objectType)){
 			return new SupportMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
-		}else if("container".equals(objectType)){
+		}else if(Mapping.Keys.container.toString().equals(objectType)){
 			return new ContainerMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
 		}
 		else{
@@ -74,25 +89,110 @@ public abstract class FileService {
 	/**
 	 * analyse one line of the file
 	 * @param rowMap
+	 * @param contextValidation2 
 	 */
 	protected void treatLine(Map<Integer, String> rowMap) {
 		
 		Set<String> objectTypes = configuration.configs.keySet();
-		
+		Map<String, DBObject> objectInLine = new HashMap<String, DBObject>(0);
 		objectTypes.stream().forEach(s -> {
 			try {
 				DBObject dbObject = mappings.get(s).convertToDBObject(rowMap);
-				if (null != dbObject.code && !objects.get(s).containsKey(dbObject.code)){
-					objects.get(s).put(dbObject.code, dbObject);
-				}else{
-					Logger.warn(s+" already load from another line");
-				}
+				objectInLine.put(s, dbObject);
+				
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		});
+		
+		consolidateCodesOnLineObject(objectInLine);			
+		
+		objectInLine.entrySet()
+			.stream().forEach(entry -> {
+				String s = entry.getKey();
+				DBObject dbObject = entry.getValue();
+				if (null != dbObject.code && !objects.get(s).containsKey(dbObject.code)){
+					objects.get(s).put(dbObject.code, dbObject);
+				}else if(null != dbObject.code){
+					Logger.warn(s+" already load from another line");
+				}else{
+					throw new RuntimeException("no code found for "+s);
+				}
+			});
+		
+		
+		
 	}
 	
+	
+	private void consolidateCodesOnLineObject(Map<String, DBObject> objectInLine) {
+		Container container = (Container)objectInLine.get(Mapping.Keys.container.toString());
+		if(null != container){
+			if(Action.save.equals(configuration.action)){
+				//allready one sample by line
+				Sample sample = (Sample)objectInLine.get(Mapping.Keys.sample.toString());
+				if(null != sample && null == sample.code && sample.projectCodes.size() == 1){
+					sample.code = generateSampleCode(sample); 
+					//update content sampleCode
+					if(container.contents.get(0).sampleCode == null){
+						container.contents.get(0).sampleCode = sample.code;				
+					}else{
+						contextValidation.addErrors("container.content.sampleCode", "not null during sample code generation : "+container.contents.get(0).sampleCode);
+					};			
+				}else if(null != sample && null == sample.code && sample.projectCodes.size() == 0){
+					contextValidation.addErrors("sample.projectCodes", "no project code found for sample code generation");
+				}
+				
+				ContainerSupport support = (ContainerSupport)objectInLine.get(Mapping.Keys.support.toString());
+				if(null != support && null == support.code){
+					support.code = CodeHelper.getInstance().generateContainerSupportCode(); 
+					//update content sampleCode
+					if(container.support.code == null){
+						container.support.code = support.code;				
+					}else{
+						contextValidation.addErrors("container.support.code", "not null during support code generation : "+container.support.code);
+					};			
+				}
+			}
+			//compute container code from support code and line and column
+			ContainerSupport support = (ContainerSupport)objectInLine.get(Mapping.Keys.support.toString());
+			String containerCode = getContainerCode(support, container);
+			if(null != containerCode && null == container.code){
+				container.code = containerCode;
+			}else{
+				contextValidation.addErrors("container.code", "error during container code generation : "+containerCode+" / "+container.code);
+			}
+		}		
+	}
+
+	private String generateSampleCode(Sample sample) {
+		String projectCode = sample.projectCodes.iterator().next();
+		
+		if(!lastSampleCodeForProjects.containsKey(projectCode)){
+			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
+			lastSampleCodeForProjects.put(projectCode, project);
+		}
+		Project project = lastSampleCodeForProjects.get(projectCode);
+		project.lastSampleCode = CodeHelper.getInstance().generateSampleCode(project, false);
+		return project.lastSampleCode;
+	}
+
+	private String getContainerCode(ContainerSupport support,
+			Container container) {
+		ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
+		String code = null;
+		if(csc.nbLine == 1 && csc.nbColumn == 1){
+			code= support.code;
+		}else if(csc.nbLine > 1 && csc.nbColumn == 1){
+			code=support.code+"_"+container.support.line;
+			
+		}else if(csc.nbLine > 1 && csc.nbColumn > 1){
+			code=support.code+"_"+container.support.line+container.support.column;
+		}
+		
+		return code;
+	}
+
 	/**
 	 * Consolidate the object obtain after file parsing
 	 */
@@ -105,7 +205,7 @@ public abstract class FileService {
 				
 			});
 		}
-		//Second consolodate support
+		//Second consolidate support
 		if(configuration.configs.containsKey(Mapping.Keys.support.toString())){
 			Map<String, DBObject> supports = objects.get(Mapping.Keys.support.toString());
 			supports.values().forEach(c -> {

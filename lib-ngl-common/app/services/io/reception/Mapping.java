@@ -60,7 +60,7 @@ public abstract class Mapping<T extends DBObject> {
 			T objectInDB = get(object, rowMap, false);
 			if(null != objectInDB){
 				contextValidation.addErrors("Error", "error.objectexist", type.getSimpleName(), objectInDB.code);
-			}else{
+			}else if(object.code != null){
 				T objectInObjects = (T)objects.get(key.toString()).get(object.code);
 				if(null != objectInObjects){
 					object = objectInObjects;
@@ -131,15 +131,21 @@ public abstract class Mapping<T extends DBObject> {
 	protected T get(T object, Map<Integer, String> rowMap, boolean errorIsNotFound) {
 		try {
 			AbstractFieldConfiguration codeConfig = configuration.get("code");
-			codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation, action);
-			if(null != object.code){
-				String code = object.code;
-				object = MongoDBDAO.findByCode(collectionName, type, object.code);	
-				if(errorIsNotFound && null == object){
-					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
+			if(null != codeConfig){
+				codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation, action);
+				if(null != object.code){
+					String code = object.code;
+					object = MongoDBDAO.findByCode(collectionName, type, object.code);	
+					if(errorIsNotFound && null == object){
+						contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
+					}
+				}else if(codeConfig.required){
+					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" code !!!");
+				}else{
+					object = null;
 				}
 			}else{
-				contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" code !!!");
+				object = null;
 			}
 		} catch (Exception e) {
 			Logger.error("Error", e.getMessage(), e);
