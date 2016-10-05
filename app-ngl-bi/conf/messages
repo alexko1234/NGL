@@ -260,9 +260,9 @@ runs.treatments.minknow-metrichor.minknowChannelsWithReads = Channels with Reads
 runs.treatments.minknow-metrichor.minknowEvents = Events in Reads
 runs.treatments.minknow-metrichor.minknowCompleteReads = Complete reads
 runs.treatments.minknow-metrichor.metrichorReadCount = Read count
-runs.treatments.minknow-metrichor.metrichor2DReadsYield = Total 2D yield (bases)
-runs.treatments.minknow-metrichor.metrichorMax2DRead = Longest 2D read (bases)
-runs.treatments.minknow-metrichor.metrichorMax2DQualityScore = Peak 2D quality score
+runs.treatments.minknow-metrichor.metrichor2DReadsYield = Total yield (bases)
+runs.treatments.minknow-metrichor.metrichorMax2DRead = Longest read (bases)
+runs.treatments.minknow-metrichor.metrichorMax2DQualityScore = Peak quality score
 
 run.treatments.sav.default.yieldTotal=Rendement total (Gb)
 run.treatments.sav.default.nonIndexedYieldTotal=Rendement total non indexé (Gb)
