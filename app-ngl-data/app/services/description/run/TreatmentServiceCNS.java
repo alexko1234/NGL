@@ -784,9 +784,9 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Complete reads","minknowCompleteReads", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read count","metrichorReadCount", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
 
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Total 2D yield (bases)","metrichor2DReadsYield", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Longest 2D read (bases)","metrichorMax2DRead", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));        
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Peak 2D quality score","metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Total yield (bases)","metrichor2DReadsYield", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Longest read (bases)","metrichorMax2DRead", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));        
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Peak quality score","metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
 
 		return propertyDefinitions;
 	}

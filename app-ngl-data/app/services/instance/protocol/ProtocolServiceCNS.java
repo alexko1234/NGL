@@ -61,29 +61,33 @@ public class ProtocolServiceCNS {
 		
 		
 		//To disable
-		lp.add(newProtocol("map005","MAP005","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
-		lp.add(newProtocol("map005-on-beads","MAP005 sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
-		lp.add(newProtocol("map006-low-input","MAP006 low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
-		lp.add(newProtocol("map006","MAP006","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
-		
-		//??
+			
+		//Nanopore
 		lp.add(newProtocol("R9-Long-Read","R9-Long Read","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
-		
 		lp.add(newProtocol("R9-1D-ligation","R9-1D ligation","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("R9-1D-transposition","R9-1D transposition","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("R9-Long-Read 1D","R9-Long Read 1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("R9-Long-Read 2D","R9-Long Read 2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("R9-Low-input","R9-Low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
-
+		lp.add(newProtocol("R9-1D","R9-1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
+		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
+		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		
+		
 		//To disable
+		lp.add(newProtocol("map005","MAP005","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
+		lp.add(newProtocol("map005-on-beads","MAP005 sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
+		lp.add(newProtocol("map006-low-input","MAP006 low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
+		lp.add(newProtocol("map006","MAP006","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),false));
+	
+		
 		lp.add(newProtocol("map005-depot","MAP005_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
 		lp.add(newProtocol("map005-on-bead-depot","MAP005 sur billes_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
 		lp.add(newProtocol("map006-depot","MAP006_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
 		lp.add(newProtocol("map006-low-input-depot","MAP006 low input_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
-		lp.add(newProtocol("R9-1D","R9-1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot"),false));
-		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot"),false));
-		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
-		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
+		lp.add(newProtocol("R9-1D-depot","R9-1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot"),false));
+		lp.add(newProtocol("R9-2D-depot","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot"),false));
 		
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
 		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));

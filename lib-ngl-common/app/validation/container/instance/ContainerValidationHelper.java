@@ -209,8 +209,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				contextValidation.removeKeyFromRootKeyName("["+qcr.typeCode+"]");
 			});
 		}
-		contextValidation.removeKeyFromRootKeyName("qualityControlResults");
-		
+		contextValidation.removeKeyFromRootKeyName("qualityControlResults");		
 	};
 	
 	public static void validateVolume(PropertyValue volume, ContextValidation contextValidation) {

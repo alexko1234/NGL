@@ -1,0 +1,2 @@
+#projects
+GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
