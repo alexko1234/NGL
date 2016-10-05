@@ -135,8 +135,7 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 					},
 					order:{
 						mode:'local', //or 
-						active:true,
-						by:'inputContainer.sampleCodes'
+						active:true
 					},
 					remove:{
 						active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -273,6 +272,8 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 				0 : Messages("experiments.inputs")
 			}
 		});
+		
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {

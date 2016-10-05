@@ -272,6 +272,7 @@ angular.module('home').controller('PostPCRAmpureCtrl',['$scope', '$parse', 'atmT
 				0 : Messages("experiments.inputs")
 			}
 		});
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {

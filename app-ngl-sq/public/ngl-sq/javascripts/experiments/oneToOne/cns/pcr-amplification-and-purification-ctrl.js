@@ -274,6 +274,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 				0 : Messages("experiments.inputs")
 			}
 		});
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
