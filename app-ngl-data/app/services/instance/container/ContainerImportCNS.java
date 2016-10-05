@@ -300,7 +300,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 		try{
 			if(rs.getString("measuredSize")!=null){
-			container.size=new PropertySingleValue(Math.round(rs.getFloat("measuredSize")*100.0)/100.0, mesuredSizeUnit);
+			container.size=new PropertySingleValue(rs.getInt("measuredSize"), mesuredSizeUnit);
 			}
 		}catch(SQLException e){
 			
