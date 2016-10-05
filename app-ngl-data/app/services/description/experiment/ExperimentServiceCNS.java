@@ -1,29 +1,22 @@
 package services.description.experiment;
 
-import static services.description.DescriptionFactory.newExperimentType;
-import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
-import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
-import services.description.common.MeasureService;
+import services.description.declaration.cns.BanqueIllumina;
 import services.description.declaration.cns.Bionano;
 import services.description.declaration.cns.ExtractionDNARNA;
 import services.description.declaration.cns.MetaBarCoding;
@@ -35,7 +28,6 @@ import services.description.declaration.cns.Purif;
 import services.description.declaration.cns.QualityControl;
 import services.description.declaration.cns.RunIllumina;
 import services.description.declaration.cns.Transfert;
-import services.description.declaration.cns.BanqueIllumina;
 
 import com.typesafe.config.ConfigFactory;
 

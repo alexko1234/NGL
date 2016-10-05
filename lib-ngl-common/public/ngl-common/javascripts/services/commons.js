@@ -1136,7 +1136,7 @@ angular.module('commonsServices', []).
     				});
     				//TODO GA ?? better way with formatter
 					scope.$watch(ngModel, function(value){
-			                if(_defaultValue != null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+			                if(_defaultValue != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
 									ngModel.$setViewValue(_defaultValue);
 									ngModel.$render();
 							}
