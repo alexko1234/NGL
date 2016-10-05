@@ -9,6 +9,8 @@ public interface Code {
 	
 	public String generateContainerSupportCode();
 	
+	public String generateExperimentCode(String typeCode);
+	
 	public String generateExperimentCode(Experiment exp);
 	
 	public String generateExperimentCommentCode(Comment com);

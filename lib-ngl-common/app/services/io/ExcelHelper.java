@@ -1,5 +1,7 @@
 package services.io;
 
+import java.util.Locale;
+
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -37,8 +39,7 @@ public class ExcelHelper {
 			if (HSSFDateUtil.isCellDateFormatted(cell)){
 				return cell.getDateCellValue().getTime()+"";
 			}else{
-				DataFormatter df = new DataFormatter();
-				return df.formatCellValue(cell);
+				return Double.toString(cell.getNumericCellValue());
 			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();

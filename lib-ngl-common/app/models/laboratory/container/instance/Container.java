@@ -8,12 +8,7 @@ import static validation.common.instance.CommonValidationHelper.validateId;
 import static validation.common.instance.CommonValidationHelper.validateProjectCodes;
 import static validation.common.instance.CommonValidationHelper.validateSampleCodes;
 import static validation.common.instance.CommonValidationHelper.validateTraceInformation;
-import static validation.container.instance.ContainerValidationHelper.validateContainerCategoryCode;
-import static validation.container.instance.ContainerValidationHelper.validateContainerSupport;
-import static validation.container.instance.ContainerValidationHelper.validateContents;
-import static validation.container.instance.ContainerValidationHelper.validateImportType;
-import static validation.container.instance.ContainerValidationHelper.validateInputProcessCodes;
-import static validation.container.instance.ContainerValidationHelper.validateState;
+import static validation.container.instance.ContainerValidationHelper.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,6 +29,7 @@ import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.experiment.instance.ContainerUsedValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -140,6 +136,13 @@ public class Container extends DBObject implements IValidation {
 		validateContents(contents,contextValidation);
 		validateContainerSupport(support,contextValidation);//bug here Yann
 		validateInputProcessCodes(processCodes,contextValidation);
+		
+		validateQualityControlResults(qualityControlResults, contextValidation);
+		
+		validateConcentration(concentration, contextValidation);
+		validateQuantity(quantity, contextValidation);
+		validateVolume(volume, contextValidation);
+		validateSize(size, contextValidation);
 		
 	}
 

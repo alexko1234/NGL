@@ -70,6 +70,11 @@ public class DefaultCodeImpl implements Code {
 	}
 
 	public synchronized String generateExperimentCode(Experiment exp) {
+		return generateExperimentCode(exp.typeCode);
+	}
+	
+	
+	public synchronized String generateExperimentCode(String typeCode) {
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
@@ -86,7 +91,7 @@ public class DefaultCodeImpl implements Code {
 					+Integer.toString(Integer.valueOf(m.group(3)) +10,36)
 					+Integer.toString(Integer.valueOf(m.group(4)) +10,36)
 					+Integer.toString(Integer.valueOf(m.group(5)) +10,36);
-			return (exp.typeCode + "-" + code).toUpperCase();
+			return (typeCode + "-" + code).toUpperCase();
 		} else {
 			try {
 				Logger.error("Error matches of the date fail"+date);

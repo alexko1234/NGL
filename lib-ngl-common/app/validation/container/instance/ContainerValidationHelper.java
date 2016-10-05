@@ -2,12 +2,14 @@ package validation.container.instance;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
@@ -16,6 +18,8 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.laboratory.container.instance.QualityControlResult;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
@@ -191,6 +195,83 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}
 		
 	};
+	
+	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults,
+			ContextValidation contextValidation){
+		contextValidation.addKeyToRootKeyName("qualityControlResults");
+		
+		qualityControlResults.stream().forEach(qcr -> {
+			contextValidation.addKeyToRootKeyName("["+qcr.typeCode+"]");
+			ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
+			if(exType!=null){
+				ValidationHelper.validateProperties(contextValidation, qcr.properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn), true, true, null, null);			
+			}
+			contextValidation.removeKeyFromRootKeyName("["+qcr.typeCode+"]");
+		});
+		contextValidation.removeKeyFromRootKeyName("qualityControlResults");
+		
+	};
+	
+	public static void validateVolume(PropertyValue volume, ContextValidation contextValidation) {
+		if(volume!=null && volume.value!=null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
+			PropertyDefinition pd = new PropertyDefinition();			
+			pd.code = "volume";
+			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			volume.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");			
+		}
+	}
+
+
+	public static void validateConcentration(PropertyValue concentration, ContextValidation contextValidation) {
+		if(concentration!=null && concentration.value!=null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();
+			PropertyDefinition pd = new PropertyDefinition();
+			pd.code = "concentration";
+			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			concentration.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");			
+		}
+		
+	}
+	
+	public static void validateQuantity(PropertyValue quantity,	ContextValidation contextValidation) {
+		if(quantity != null && quantity.value != null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();
+			PropertyDefinition pd = new PropertyDefinition();
+			pd.code = "quantity";
+			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			quantity.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");			
+		}
+		
+	}
+
+	
+	public static void validateSize(PropertyValue size, ContextValidation contextValidation) {
+		if(size!=null && size.value!=null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
+			PropertyDefinition pd = new PropertyDefinition();			
+			pd.code = "size";
+			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			size.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");			
+		}
+	}
+	
 	
 	@Deprecated
 	public static void validateProcessTypeCode(String processTypeCode,
