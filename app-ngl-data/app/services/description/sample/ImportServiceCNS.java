@@ -338,7 +338,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null,null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				null,null,null,null,"single", 16, true, null, null));
+				DescriptionFactory.newValues("DNA","RNA"),null,null,null,"single", 16, true, null, null));
 		
 		return propertyDefinitions;
 	}
