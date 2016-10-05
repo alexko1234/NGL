@@ -122,7 +122,8 @@ public class ContainerHelper {
 		finalContent.referenceCollab = content.referenceCollab;
 		finalContent.percentage = content.percentage;
 		finalContent.properties.putAll(content.properties);
-		
+		finalContent.taxonCode=content.taxonCode;
+		finalContent.ncbiScientificName=content.ncbiScientificName;
 		return finalContent;
 	}
 	
