@@ -3,8 +3,11 @@ package controllers.migration.cns;
 import java.util.List;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
@@ -27,8 +30,15 @@ public class MigrationSampleReferenceCollab extends CommonController {
 		//List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code","BKP_EB")).toList();
 		for(Sample s:samples){
 			SampleHelper.updateSampleReferenceCollab(s, contextError);
-			SampleHelper.updateKeyInSampleAndPropertyContentContainer(s, "ncbiScientificName", new PropertySingleValue(s.ncbiScientificName), contextError);
-			SampleHelper.updateKeyInSampleAndPropertyContentContainer(s, "ncbiLineage", new PropertySingleValue(s.ncbiLineage), contextError);
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+					 DBQuery.is("contents.sampleCode", s.code),
+					DBUpdate.set("contents.$.taxonCode",s.taxonCode)
+					.set("contents.$.ncbiScientificName", s.ncbiScientificName),true);					
+			
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
+					DBQuery.is("sampleOnContainer.sampleCode", s.code),
+					DBUpdate.set("sampleOnContainer.taxonCode",s.taxonCode)
+					.set("sampleOnContainer.ncbiScientificName", s.ncbiScientificName),true);
 		}
 	}
 }

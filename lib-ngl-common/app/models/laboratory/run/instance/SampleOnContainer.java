@@ -35,7 +35,11 @@ public class SampleOnContainer implements IValidation{
 	//Percentage of content on the container
 	public Double percentage;
 	//Collaborator's reference
-	public String referenceCollab;	
+	public String referenceCollab;
+	//NCBI information from Sample
+	public String taxonCode;
+	public String ncbiScientificName;
+
 	//Measured concentration from Container
 	public PropertySingleValue containerConcentration;
 	

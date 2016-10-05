@@ -26,7 +26,9 @@ public class Content implements IValidation{
 	public Double percentage;
 	
 	public String referenceCollab;
-	
+	public String taxonCode;
+	public String ncbiScientificName;
+
 	public Map<String,PropertyValue> properties;
 	public Content(){
 		properties=new HashMap<String, PropertyValue>();		
