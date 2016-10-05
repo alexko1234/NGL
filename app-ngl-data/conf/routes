@@ -7,6 +7,7 @@ GET     /                           			controllers.Application.index()
 
 GET		/api/description/all					controllers.description.All.save()
 GET		/api/description/ngl-sq					controllers.description.NGLSeq.save()
+GET		/api/description/ngl-bi					controllers.description.NGLBI.save()
 GET		/api/description/ngl-sample				controllers.description.NGLSample.save()
 GET		/api/description/commons/states			controllers.description.commons.States.save()
 GET		/api/description/commons/measures		controllers.description.commons.Measures.save()
