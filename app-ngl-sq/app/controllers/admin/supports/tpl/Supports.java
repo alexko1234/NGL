@@ -31,6 +31,7 @@ public class Supports extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.experiments.api.routes.javascript.Experiments.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
+  	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.commons.api.routes.javascript.Users.list(),
 	      		controllers.commons.api.routes.javascript.Values.list(),
 	      		controllers.commons.api.routes.javascript.Parameters.list(),

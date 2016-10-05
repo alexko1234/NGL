@@ -122,6 +122,12 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 				}
 			},
 			
+			refreshReadSets : function(){
+				if(this.form.projectCode){
+					lists.refresh.readSets({projectCode:this.form.projectCode});
+				}
+			},
+			
 			reset : function(){
 				this.form = {};									
 			},
@@ -197,14 +203,32 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 	
 	var dtConfigBI = angular.copy(datatableConfig);
 	dtConfigBI.columns.push({
+	   	 "header":"New value",
+		 "property":"newValue",
+		 "order":true,
+		 "edit":true,
+		 "editTemplate":'<input class="form-control" type="text" #ng-model typeahead="tag.code as tag.name for tag in searchService.lists.getTags() | filter:$viewValue | limitTo:20" typeahead-min-length="1" />',
+		 "type":"text",
+		 "position":8
+		},
+		{
+		   	 "header":"ReadSet to switch",
+			 "property":"readSetToSwitchCode",
+			 "order":true,
+			 "edit":true,
+			 "editTemplate":'<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.readsets")+'" bt-options="readset.code as readset.code for readset in searchService.lists.getReadSets()" ng-focus="searchService.refreshReadSets()"></div>',
+			 "type":"text",
+			 "position":9
+			},
+		{
 	   	 "header":"Action",
 		 "property":"action",
 		 "order":true,
 		 "edit":true,
 		 "choiceInList":true,
-		 "possibleValues":[{"code":"delete","name":"Delete"}],
+		 "possibleValues":[{"code":"delete","name":"Delete"},{"code":"replace","name":"Replace"}],
 		 "type":"text",
-		 "position":8
+		 "position":10
 		}
 	);
 	$scope.searchService.datatableBI =  datatable(dtConfigBI);
