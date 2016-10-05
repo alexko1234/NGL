@@ -198,16 +198,21 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	
 	public static void validateQualityControlResults(List<QualityControlResult> qualityControlResults,
 			ContextValidation contextValidation){
-		contextValidation.addKeyToRootKeyName("qualityControlResults");
-		
-		qualityControlResults.stream().forEach(qcr -> {
-			contextValidation.addKeyToRootKeyName("["+qcr.typeCode+"]");
-			ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
-			if(exType!=null){
-				ValidationHelper.validateProperties(contextValidation, qcr.properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn), true, true, null, null);			
-			}
-			contextValidation.removeKeyFromRootKeyName("["+qcr.typeCode+"]");
-		});
+		if(null != qualityControlResults){
+			contextValidation.addKeyToRootKeyName("qualityControlResults");
+			
+			qualityControlResults.stream().forEach(qcr -> {
+				contextValidation.addKeyToRootKeyName("["+qcr.typeCode+"]");
+				ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, qcr.typeCode, "typeCode", ExperimentType.find,true);
+				if(exType!=null){
+					ValidationHelper.validateProperties(contextValidation, qcr.properties, exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn), true, true, null, null);			
+				}
+				contextValidation.removeKeyFromRootKeyName("["+qcr.typeCode+"]");
+			});
+			
+			contextValidation.addKeyToRootKeyName("qualityControlResults");
+			
+		}
 		contextValidation.removeKeyFromRootKeyName("qualityControlResults");
 		
 	};
