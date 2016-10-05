@@ -346,6 +346,8 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				0 : Messages("experiments.inputs")
 			}
 		});
+		
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
