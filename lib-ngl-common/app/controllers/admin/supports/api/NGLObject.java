@@ -20,6 +20,7 @@ public class NGLObject extends DBObject implements IValidation{
 		public String sampleCode;
 		public String currentValue;
 		public String newValue;
+		public String readSetToSwitchCode;
 		
 		public String action;
 		

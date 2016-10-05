@@ -372,7 +372,13 @@ angular.module('commonsServices', []).
     			},
     			getSraStudies : function(){return results['sraStudies'];},
     			getSraConfigurations : function(){return results['sraConfigurations'];},
-    			getReadSets : function(){return results['readSets'];},
+    			getReadSets : function(params,key){
+    				key = (key)?key:'readSets';
+    				if(results[key] === undefined){
+    					refresh.tags(params, key);
+    				}
+    				return results[key];
+    			},
     			getTags : function(params,key){
     				key = (key)?key:'tags';
     				if(results[key] === undefined){

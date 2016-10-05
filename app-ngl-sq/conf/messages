@@ -237,6 +237,7 @@ search.placeholder.barCodes = Scan du code barre
 search.placeholder.pools = Pools
 search.placeholder.printing.printer = Imprimante
 search.placeholder.printing.barcode.position = Barre code position
+search.placeholder.readsets = ReadSets
 
 
 search.tab.addfilters = Filtres supplémentaires
