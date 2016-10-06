@@ -119,6 +119,9 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 				 DBQuery.is("contents.sampleCode", sample.code),
 				updates.get("container")
+						.set("contents.$.referenceCollab", sample.referenceCollab)
+						.set("contents.$.taxonCode",sample.taxonCode)
+						.set("contents.$.ncbiScientificName",sample.ncbiScientificName)
 						.set("traceInformation.modifyUser",contextError.getUser())
 						.set("traceInformation.modifyDate",new Date() ),true);
 		
@@ -126,12 +129,19 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
 				DBQuery.is("sampleOnContainer.sampleCode", sample.code),
 				updates.get("readset")
-						.set("sampleOnContainer.lastUpdateDate", new Date()),true);
+					.set("sampleOnContainer.referenceCollab",sample.referenceCollab)
+					.set("sampleOnContainer.taxonCode",sample.taxonCode)
+					.set("sampleOnContainer.ncbiScientificName", sample.ncbiScientificName)
+					.set("sampleOnContainer.lastUpdateDate", new Date()),true);
 		
 		// Processes update sampleOnInputContainer.properties
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 				DBQuery.is("sampleOnInputContainer.sampleCode", sample.code),
-				updates.get("process"),true);
+				updates.get("process")
+					.set("sampleOnInputContainer.referenceCollab",sample.referenceCollab)
+					.set("sampleOnInputContainer.taxonCode",sample.taxonCode)
+					.set("sampleOnInputContainer.ncbiScientificName", sample.ncbiScientificName)
+					,true);
 		
 
 		//Update son samples

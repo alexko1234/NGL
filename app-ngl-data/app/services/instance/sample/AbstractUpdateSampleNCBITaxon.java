@@ -1,6 +1,7 @@
 package services.instance.sample;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -37,17 +38,8 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 			String ncbiLineage=getLineage(sample.taxonCode);
 			
 			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
-					DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage));
-			
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-					 DBQuery.is("contents.sampleCode", sample.code),
-					DBUpdate.set("contents.$.taxonCode",sample.taxonCode)
-					.set("contents.$.ncbiScientificName", ncbiScientificName),true);					
-			
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
-					DBQuery.is("sampleOnContainer.sampleCode", sample.code),
-					DBUpdate.set("sampleOnContainer.taxonCode",sample.taxonCode)
-					.set("sampleOnContainer.ncbiScientificName", ncbiScientificName),true);
+					DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage)
+					.set("traceInformation.modifyDate",new Date() ));
 						
 			if(ncbiScientificName==null)
 				contextError.addErrors(sample.code, "no scientific name ");
