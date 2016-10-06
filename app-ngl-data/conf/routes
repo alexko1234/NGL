@@ -33,6 +33,7 @@ GET		/api/instance/parameters/printers		controllers.instance.parameters.Printers
 GET 	/api/import/updateTara					controllers.instance.ImportDatas.updateTara()
 
 GET		/migration-container-support			controllers.migration.MigrationDataCNS.updateFromExperimentTypeCodesContainerSupport()
+GET		/migration-container-date				controllers.migration.MigrationDataCNS.updateContainerDate()
 
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()

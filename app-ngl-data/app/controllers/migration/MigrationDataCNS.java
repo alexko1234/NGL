@@ -2,6 +2,9 @@ package controllers.migration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 import models.Constants;
 import models.LimsCNSDAO;
@@ -69,6 +72,47 @@ public class MigrationDataCNS extends CommonController{
 
 	}*/
 	
+	
+	
+public static Result updateContainerDate() throws DAOException {
+		
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
+		
+		//List<Container> tubes =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",tube.code).exists("properties.receptionDate")).toList();
+	List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.exists("properties.receptionDate").exists("properties.limsCode")).toList();
+		Logger.info(">>>>>>>>>>> Migration update containers date starts");
+		
+		
+			for(Container container:containers){
+				if(container.properties.get("receptionDate") !=null){
+					//Logger.info("update support "+container.code);
+					String limsDate= container.properties.get("receptionDate").value.toString();
+				
+					 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+					
+					 try {
+
+				            Date newDate = formatter.parse(limsDate);
+				             Logger.info("update support "+container.code+" date "+container.properties.get("receptionDate"));
+						      
+				            MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("properties.limsCode.value",container.properties.get("limsCode").value),DBUpdate.set("properties.receptionDate.value", newDate));
+				         } catch (ParseException e) {
+				            e.printStackTrace();
+				        }
+				
+						// return ok("Migration test");
+				}
+			}	
+		
+		contextValidation.displayErrors(logger);
+		Logger.info(">>>>>>>>>>> Migration update containers date end");
+
+		if(contextValidation.hasErrors()){
+			return badRequest("Errors");
+		}else 
+			return ok("Migration containers Dateok");
+
+	}
 	
 public static Result updateFromExperimentTypeCodesContainerSupport() throws DAOException {
 
