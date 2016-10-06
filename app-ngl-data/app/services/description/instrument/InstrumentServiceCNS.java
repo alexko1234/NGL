@@ -724,6 +724,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		instruments.add(createInstrument("MN19358", "MK19358", null, true, "/env/ig/atelier/nanopore/cns/MN19358", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		instruments.add(createInstrument("MN19361", "MK19361", null, true, "/env/ig/atelier/nanopore/cns/MN19361", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN19368", "MK19368", null, true, "/env/ig/atelier/nanopore/cns/MN19368", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return instruments;
 	}
