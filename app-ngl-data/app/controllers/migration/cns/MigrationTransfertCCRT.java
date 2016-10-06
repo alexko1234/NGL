@@ -48,11 +48,15 @@ public class MigrationTransfertCCRT extends CommonController{
 				//Update project collection 
 				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class,DBQuery.is("code", project.code),
 						DBUpdate.set("bioinformaticParameters.fgGroup",projectTransfertCCRT.groupefg).set("bioinformaticParameters.fgPriority", projectTransfertCCRT.priorityfg));
+				//Update ReadSet to transfert to CCRT
+				//State=A; location=CNS
+				//MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				//			DBQuery.is("projectCode", project.code).is("state.code", "A").is("location", "CCRT"),
+				//			DBUpdate.set("state.code", "IW-TF"));
 			}
 			
+			
 		}
-
-
 
 		return ok();
 

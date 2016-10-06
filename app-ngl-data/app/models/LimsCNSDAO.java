@@ -819,8 +819,8 @@ public class LimsCNSDAO{
 					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
 						ReadSet readset = new ReadSet();
 						readset.code = rs.getString("code");
-						readset.location = rs.getString("location");
-						readset.path = rs.getString("path");
+						//readset.location = rs.getString("location");
+						//readset.path = rs.getString("path");
 						if(null != rs.getString("strandOrientation")){
 							readset.properties.put("strandOrientation", new PropertySingleValue(rs.getString("strandOrientation")));
 						}
