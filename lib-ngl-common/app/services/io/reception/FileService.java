@@ -7,14 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-
-
-
-
-
-
-
-
 import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -134,11 +126,16 @@ public abstract class FileService {
 				if(null != sample && null == sample.code && sample.projectCodes != null && sample.projectCodes.size() == 1){
 					sample.code = generateSampleCode(sample); 
 					//update content sampleCode
-					if(container.contents.get(0).sampleCode == null){
+					if(container.contents.get(0).sampleCode == null || !container.contents.get(0).sampleCode.equals(sample.code)){
 						container.contents.get(0).sampleCode = sample.code;				
 					}else{
 						contextValidation.addErrors("container.content.sampleCode", "not null during sample code generation : "+container.contents.get(0).sampleCode);
 					};			
+				}else if(null != sample && null != sample.code){
+					if(container.contents.get(0).sampleCode == null || !container.contents.get(0).sampleCode.equals(sample.code)){
+						container.contents.get(0).sampleCode = sample.code;				
+					}
+					
 				}else if(null != sample && null == sample.code && sample.projectCodes.size() == 0){
 					contextValidation.addErrors("sample.projectCodes", "no project code found for sample code generation");
 				}
