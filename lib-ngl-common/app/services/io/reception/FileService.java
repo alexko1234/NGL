@@ -156,7 +156,7 @@ public abstract class FileService {
 			String containerCode = getContainerCode(support, container);
 			if(null != containerCode && null == container.code){
 				container.code = containerCode;
-			}else{
+			}else if(!containerCode.equals(container.code)){
 				contextValidation.addErrors("container.code", "error during container code generation : "+containerCode+" / "+container.code);
 			}
 		}		
