@@ -12,6 +12,7 @@ import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
+import play.Logger;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -93,7 +94,7 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 		
 		readSet.files = readSet.files.stream().filter(file->!file.typeCode.equals("CLEAN")).collect(Collectors.toList());
 		readSet.files.stream().forEach(file->{
-			file.fullname.replace(oldValue, newValue);
+			file.fullname = file.fullname.replace(oldValue, newValue);
 			file.usable=true;
 		});
 	}
