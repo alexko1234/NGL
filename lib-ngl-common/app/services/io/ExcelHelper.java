@@ -39,7 +39,8 @@ public class ExcelHelper {
 			if (HSSFDateUtil.isCellDateFormatted(cell)){
 				return cell.getDateCellValue().getTime()+"";
 			}else{
-				return Double.toString(cell.getNumericCellValue());
+				DataFormatter df = new DataFormatter(Locale.US);
+				return df.formatCellValue(cell);
 			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();
