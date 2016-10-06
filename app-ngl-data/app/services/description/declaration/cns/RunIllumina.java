@@ -171,7 +171,13 @@ public class RunIllumina extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Utiliser par import ngl-data CNG de creation des depot-illumina
 		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
-		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, null,
+				null, "single",21, true,null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Activation NGS-RG", "rgActivation", LevelService.getLevels(Level.CODE.Experiment), Boolean.class, true, null,
+				null, "single",22, true,"true", null));
+		
 		return propertyDefinitions;
 	}
 
