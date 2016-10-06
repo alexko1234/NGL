@@ -213,7 +213,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("ngs1", "NGS-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("ngs2", "NGS-2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		
+		//FDS ajout 04/10/2016 Epimotion (input plate/ output tubes)
+		l.add(newInstrumentUsedType("Epimotion", "epimotion", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(), 
+				getInstruments(
+						createInstrument("epimotion1", "Epimotion1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		
 		
 		
 		/** FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) **/
@@ -243,10 +251,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot  **/
 		l.add(newInstrumentUsedType("Janus + cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
 				getInstruments(
+						// 4/10/2016 les cBots de  type 1 sont remplacee par les cBot type 2
 						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						/** 
 						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						**/
 						// 22/09/2016 arrivée des cBots type 2 (pas de propriétés differentes ??)
 						createInstrument("janus1-and-cBotA", "Janus1 / cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBotB", "Janus1 / cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -487,6 +498,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
+	
 	//FDS 22/03/2016 ajout Janus+cbot --JIRA NGL-982
 	 private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
@@ -504,6 +516,18 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		return l;
 	}
+	 
+	//FDS 04/10/2016 ajout Epimotion .....EN COURS......
+	private static List<PropertyDefinition> getEpimotionProperties() throws DAOException {
+			List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+			// propriete obligatoire ou pas ??????
+			l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
+					// newValues("programme 1_normalisation"), "single", null, false ,null, null));
+					newValues("programme 1",  
+							  "---"),                         // ajouté pour éviter qu'en pooling "programme 1_normalisation" soit selectionné par defaut
+							  "single", null, false ,null, null));
+			return l;
+	} 
 	 
 	//FDS 31/03/2016 ajout proprietes LightCyclers
 	private static List<PropertyDefinition> getLightCyclerProperties() throws DAOException {

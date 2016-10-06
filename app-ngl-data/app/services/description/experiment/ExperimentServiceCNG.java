@@ -162,11 +162,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("sciclone-ngsx"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
+			
+			// TEST AJOUT Epimotion	
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
-					getInstrumentUsedTypes("janus"),
+					getInstrumentUsedTypes("janus","epimotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
@@ -254,11 +255,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToMany", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// FDS 10/08/2016 NGL-1029: "pool : plaques vers plaque" 
-			l.add(newExperimentType("Pool plaques -> plaque","pool",null,10400,
+			// FDS 10/08/2016 NGL-1029: 
+			// 05/10/2016 ajout Epimotion; renommage en "plaque ou tubes"
+			l.add(newExperimentType("Pool plaques -> plaque ou tubes","pool",null,10400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
 					getPropertyDefinitionPool(),
-					getInstrumentUsedTypes("janus","hand"),
+					getInstrumentUsedTypes("hand","janus","epimotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
@@ -763,6 +765,23 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
+	
+	// FDS TEST : copie de getPropertyDefinitionPool
+	private static List<PropertyDefinition> getPropertyDefinitionPoolToTubes() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
+		
+		//OuputContainer 
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 25, true, null,null));
+		
+		return propertyDefinitions;
+	}
+	
+	
 	
 	// FDS ajout 01/08/2016 -- JIRA NGL-1027: experiment PCR + purification en plaque	
 	private static List<PropertyDefinition> getPropertyDefinitionsPcrAndPurification() throws DAOException {
