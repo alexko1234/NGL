@@ -56,7 +56,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 		l.add(newExperimentType("Amplification/PCR","pcr-amplification-and-purification","PCR",900,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsAmpliPurif(),
-				getInstrumentUsedTypes("thermocycler","thermocycler-and-biomek-fx"),"OneToOne", null,true,
+				getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Sizing (gel / spri select)","sizing","SIZ",950,
@@ -219,10 +219,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("DNA polymerase", "dnaPolymerase", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
 				DescriptionFactory.newValues("taq Q5","taq Kapa"), null, null, null,"single", 1, false, null,null));
-
-		propertyDefinitions.add(newPropertiesDefinition("Ratio billes (Ampure Post PCR)", "adnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
-				null, null, null, null,"single", 2, true, null, null));
-
+		
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
 				"single", 3, true, null,null));
 		
