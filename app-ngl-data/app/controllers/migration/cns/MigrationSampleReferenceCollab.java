@@ -7,6 +7,7 @@ import org.mongojack.DBUpdate;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -39,6 +40,12 @@ public class MigrationSampleReferenceCollab extends CommonController {
 					DBQuery.is("sampleOnContainer.sampleCode", s.code),
 					DBUpdate.set("sampleOnContainer.taxonCode",s.taxonCode)
 					.set("sampleOnContainer.ncbiScientificName", s.ncbiScientificName),true);
+			
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+					DBQuery.is("sampleOnInputContainer.sampleCode", s.code),
+					DBUpdate.set("sampleOnInputContainer.taxonCode",s.taxonCode)
+					.set("sampleOnInputContainer.ncbiScientificName", s.ncbiScientificName),true);
+			
 		}
 	}
 }
