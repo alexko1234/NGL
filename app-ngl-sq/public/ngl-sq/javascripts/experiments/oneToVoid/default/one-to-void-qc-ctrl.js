@@ -153,7 +153,8 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
         	 "extraHeaders":{0:Messages("experiments.inputs")}
 		});
 		
-		if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') > -1) {
+		
+		if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
 			columns.push({
 				"header" : Messages("containers.table.supportCode"),
 				"property" : "inputContainer.support.code",
@@ -184,32 +185,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"position" : 1.2,
 				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
-		} else {
-			/*columns.push({
-				"header" : Messages("containers.table.supportCode"),
-				"property" : "inputContainer.support.code",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 1,
-				"extraHeaders" : {
-					0 : Messages("experiments.inputs")
-				}
-			});
-			columns.push({
-				"header" : Messages("containers.table.categoryCode"),
-				"property" : "inputContainer.support.categoryCode",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 2,
-				"filter" : "codes:'container_support_cat'",
-				"extraHeaders" : {
-					0 : Messages("experiments.inputs")
-				}
-			});*/
+		}else{
 			columns.push({
 				"header" : Messages("containers.table.code"),
 				"property" : "inputContainer.support.code",
@@ -220,10 +196,15 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"position" : 3,
 				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
-
 		}
+		
 		return columns;
 	}
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode ==="tube"){
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
+	}
+	
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfig = {		
