@@ -201,9 +201,6 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 		return columns;
 	}
 	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode ==="tube"){
-		datatableConfig.order.by = 'inputContainer.sampleCodes';
-	}
 	
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
@@ -255,7 +252,11 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				dynamic:true,
 			}			
 	};
-
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode ==="tube"){
+		datatableConfig.order.by = 'inputContainer.sampleCodes';
+	}
+	
 	
 	
 	$scope.$on('save', function(e, callbackFunction) {	
