@@ -88,7 +88,7 @@ public class MigrationReadSetFileCNS  extends CommonController {
 			for(Run run:runs){
 				i++;
 				updateRunPiste(run,ctxVal);
-				UpdateReadSetCNS.updateReadSet(run, ctxVal);
+				//UpdateReadSetCNS.updateReadSet(run, ctxVal);
 				if((i % 100) == 0){
 					Logger.info("Nb Run Traité : "+i);
 				}

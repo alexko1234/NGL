@@ -66,7 +66,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 				updateReadSet(contextError, newReadset, readset.sampleOnContainer.sampleCategoryCode);
 			}else if(null == newReadset){
 				if("A".equals(readset.state.code) && !readset.typeCode.equals("rsnanopore")){
-					contextError.addErrors("readset", "not found in db lims");
+					Logger.warn("not found ReadSet on LIMS : "+readset.code);
 				}
 			}
 			contextError.removeKeyFromRootKeyName(readset.code);
@@ -132,109 +132,4 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	public void updateReadSetArchive(ContextValidation contextError) {
-		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
-				DBQuery.and(DBQuery.is("dispatch", true), DBQuery.is("archiveId", null), DBQuery.notEquals("state.code", "UA"))).toList();
-		Logger.info("Start synchro archive  : nb ReadSet ="+readSets.size());
-		logger.info("nb ReadSet ="+readSets.size());
-		for(ReadSet rs : readSets){
-			ReadSet updateRS;
-			try {
-				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
-				logger.info("Update ReadSet ="+rs.code);
-				if(updateRS.archiveDate != null && updateRS.archiveId != null){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
-							, DBQuery.is("code", rs.code)
-							, DBUpdate.set("archiveDate",updateRS.archiveDate)
-										.set("archiveId", updateRS.archiveId)
-										.set("traceInformation.modifyDate", new Date())
-										.set("traceInformation.modifyUser", "lims"));					
-				}else if(updateRS.archiveDate == null && updateRS.archiveId != null){
-					contextError.addErrors("archiveDate", "Probleme archivage date null / id not null : "+rs.code);
-					logger.error("Probleme archivage date null / id not null : "+rs.code);
-				}else if(updateRS.archiveDate != null && updateRS.archiveId == null){
-					contextError.addErrors("archiveId", "Probleme archivage date not null / id null : "+rs.code);
-					logger.error("Probleme archivage date not null / id null : "+rs.code);
-				}
-			} catch (SQLException e) {
-				contextError.addErrors("database", e.getMessage());
-				logger.error(e.getMessage());
-			}
-		}
-	}
-	
-
-	public static void updateReadSet(Run run,ContextValidation contextError) {
-		List<ReadSet> readSets=null;
-		try {
-			readSets =limsServices.findReadSetToCreateFromRun(run, contextError);
-		
-		for(ReadSet newReadSet:readSets){
-			
-			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class, newReadSet.code)) {
-				updateReadSet(newReadSet, contextError);
-				updateFiles(newReadSet,contextError);		
-			}else {
-				contextError.addErrors( "code", "error.codeNotExist",newReadSet.code);
-			}
-			
-			//limsServices.updateReadSetLims(newReadSet, true, contextError);
-
-		}
-		
-		} catch (SQLException e) {
-			Logger.error("Erreur sql");
-		}		
-
-	}
-
-
-
-	private static void updateReadSet(ReadSet newReadSet,
-			ContextValidation contextError) {
-		
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
-				, DBQuery.is("code", newReadSet.code)
-				, DBUpdate.set("productionValuation", newReadSet.productionValuation)
-							.set("bioinformaticValuation", newReadSet.bioinformaticValuation)
-							.set("archiveDate",newReadSet.archiveDate)
-							.set("archiveId", newReadSet.archiveId)
-							.set("state",newReadSet.state)
-							.set("traceInformation.modifyDate", new Date())
-							.set("traceInformation.modifyUser", "lims"));
-		
-	}
-
-	public static void updateFiles(ReadSet readSet,ContextValidation ctxVal) {
-
-		List<File> files;
-		try {
-			files = limsServices.findFileToCreateFromReadSet(readSet,ctxVal);
-		} catch (SQLException e) {
-			throw new RuntimeException();
-		}
-		/*String rootKeyName=null;
-		ctxVal.putObject("readSet", readSet);
-		ctxVal.setDeleteMode();
-		for(File file:files){
-			rootKeyName="file["+file.fullname+"]";
-			ctxVal.addKeyToRootKeyName(rootKeyName);
-			file.validate(ctxVal);
-			ctxVal.removeKeyFromRootKeyName(rootKeyName);
-
-		}*/
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-					DBQuery.is("code", readSet.code),
-					DBUpdate.unset("files"));
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-					DBQuery.is("code", readSet.code),
-					DBUpdate.pushAll("files", files));  
-	}
-
 }
