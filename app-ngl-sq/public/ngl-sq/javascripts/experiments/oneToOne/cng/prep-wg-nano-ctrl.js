@@ -128,18 +128,17 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			        	 "position":99,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },*/
-			         /* en prep-wg-nano ne pas afficher de volume OUT
+			        
 			          { // Volume avec valeur par defaut
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "hide":true,
 			        	 "edit":true,
 			        	 "type":"number",
-			        	 "defaultValues":20,
 			        	 "position":34,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },
-			         */
+			        
 			         { //  barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
