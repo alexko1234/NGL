@@ -278,9 +278,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases 2D pass","2DPass.basesPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases utiles","useful.basesPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences utiles","useful.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Long.class, false, "object"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases utiles","useful.nbBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Long.class, false, "object"));
-
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences 1D forward","1DForward.readsPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences 1D reverse","1DReverse.readsPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences 2D all","2DAll.readsPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
@@ -293,11 +291,14 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D all","2DAll.nbBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D fail","nbBases2DFail", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D pass","2DPass.nbBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases utiles","useful.nbBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D forward","1DForward.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D reverse","1DReverse.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 2D all","2DAll.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 2D pass","2DPass.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences utiles","useful.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D forward (MOYENNE)","1DForward.avgSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D forward (MAX)","1DForward.maxSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object"));
@@ -327,6 +328,13 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences > 10kb 2D pass","2DPass.nbReadsOver10kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Qualité moyenne 2D pass","2DPass.qualityAvg", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% GC 2D pass","2DPass.GCPercent", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, false, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille utile (MOYENNE)","useful.avgSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille utile (MAX)","useful.maxSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 utile","useful.N50", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences > 10kb utile","useful.nbReadsOver10kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Qualité moyenne utile","useful.qualityAvg", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% GC utile","useful.GCPercent", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, false, "object"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GC Distribution","GCDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Length vs Read Quality","readLengthVsreadQuality", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
@@ -640,6 +648,16 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 2D pass","2DPass.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D pass","2DPass.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (2D pass) par rapport à la référence","2DPass.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% paires de bases alignées utile","useful.percentAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences alignées utile","useful.percentAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences alignées sur 100% de leur longueur utile","useful.percentAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées avec 100% d'identité 2D all","2DAll.nbAlignedReadsID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur et avec 100% d'identité 2D all","2DAll.nbAlignedReadsL100ID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Moyenne du % d'identité des séquences utile","useful.identityPercentageAvg",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences utile","useful.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "object"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D all","2DAll.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (utile) par rapport à la référence","useful.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "object"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs quality (read)","identityPercentVsReadQuality",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs longueur alignée (read)","identityPercentVsReadAlignedLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));

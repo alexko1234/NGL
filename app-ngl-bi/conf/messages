@@ -396,6 +396,7 @@ treatments.nanopore.1DForward = 1D forward
 treatments.nanopore.1DReverse = 1D reverse
 treatments.nanopore.2DAll = 2D all
 treatments.nanopore.2DPass = 2D pass
+treatments.nanopore.useful = Useful
 
 treatments.ngsrg_nanopore.useful = useful
 treatments.ngsrg_nanopore.nbBases = Nb bases
