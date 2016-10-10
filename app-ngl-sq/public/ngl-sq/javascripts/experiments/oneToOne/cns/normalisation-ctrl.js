@@ -408,6 +408,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
 				return undefined;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode === "tube"){
+				return "1";
 			}
 			
 		}

@@ -88,7 +88,17 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			        	 "mergeCells" : true,
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },		         
+			         },	
+			         {
+			 			"header" : Messages("containers.table.workName"),
+			 			"property" : "inputContainer.properties.workName.value",
+			 			"order" : true,
+			 			"edit" : false,
+			 			"hide" : true,
+			 			"type" : "text",
+			 			"position" : 1.1,
+			 			"extraHeaders" : {0 : Messages("experiments.inputs")}
+			 		},
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",

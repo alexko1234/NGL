@@ -39,7 +39,7 @@ public class Transfert extends AbstractDeclaration {
 		
 		l.add(newExperimentType("Pool générique","pool",null,10300,
 			ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
+			getInstrumentUsedTypes("tecan-evo-100", "biomek-fx", "hand"),"ManyToOne", 
 			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Normalisation","normalisation",null,10400,
