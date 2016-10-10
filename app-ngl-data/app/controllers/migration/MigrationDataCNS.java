@@ -86,6 +86,8 @@ public static Result updateContainerDate() throws DAOException {
 			for(Container container:containers){
 				if(container.properties.get("receptionDate") !=null){
 					//Logger.info("update support "+container.code);
+					if (container.properties.get("receptionDate").value instanceof SimpleDateFormat == false){
+					
 					String limsDate= container.properties.get("receptionDate").value.toString();
 				
 					 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
@@ -97,9 +99,10 @@ public static Result updateContainerDate() throws DAOException {
 						      
 				            MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("properties.limsCode.value",container.properties.get("limsCode").value),DBUpdate.set("properties.receptionDate.value", newDate));
 				         } catch (ParseException e) {
+				        	 Logger.error("update support "+container.code+" date "+container.properties.get("receptionDate"));
 				            e.printStackTrace();
 				        }
-				
+					}
 						// return ok("Migration test");
 				}
 			}	
@@ -110,7 +113,7 @@ public static Result updateContainerDate() throws DAOException {
 		if(contextValidation.hasErrors()){
 			return badRequest("Errors");
 		}else 
-			return ok("Migration containers Dateok");
+			return ok("Migration containers Date ok");
 
 	}
 	
