@@ -266,7 +266,7 @@ public class RunIllumina extends AbstractDeclaration {
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",13, false));
 		//Add list value
 		propertyDefinitions.add(newPropertiesDefinition("Conc. Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, getPhixConcentrationCodeValues(), null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",14));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",14));
 		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",15,true));
 		propertyDefinitions.add(newPropertiesDefinition("Volume dilution", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
