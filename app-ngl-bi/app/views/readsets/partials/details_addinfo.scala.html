@@ -17,6 +17,14 @@
 			<p class="form-control-static" ng-bind="readset.sampleOnContainer.referenceCollab"></p>
 		}
 		
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.taxonCode")){
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.taxonCode"></p>
+		}
+		
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.ncbiScientificName")){
+			<p class="form-control-static" ng-bind="readset.sampleOnContainer.ncbiScientificName"></p>
+		}
+		
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleTypeCode")){
 			<p class="form-control-static" ng-bind="readset.sampleOnContainer.sampleTypeCode|codes:'type'"></p>
 		}
@@ -41,6 +49,7 @@
 		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.percentage")){
 			<p class="form-control-static" ng-bind="readset.sampleOnContainer.percentage"></p>
 		}
+		
 		<div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties">
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'"></label>
