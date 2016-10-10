@@ -10,6 +10,7 @@
 					<th>@Messages("treatments.nanopore.1DReverse")</th>
 					<th>@Messages("treatments.nanopore.2DAll")</th>
 					<th>@Messages("treatments.nanopore.2DPass")</th>
+					<th>@Messages("treatments.nanopore.useful")</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -19,6 +20,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.percentAlignedBasePairs | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.percentAlignedBasePairs | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.percentAlignedBasePairs | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.percentAlignedBasePairs | number:2}}</td>
 				</tr>	
 				
 				<tr>
@@ -27,6 +29,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.percentAlignedReads | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.percentAlignedReads | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.percentAlignedReads | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.percentAlignedReads | number:2}}</td>
 				</tr>						
 				<tr>
 					<th>@Messages("readsets.treatments.mapping_nanopore.percentAlignedReadsL100")</th>
@@ -34,6 +37,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.percentAlignedReadsL100 | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.percentAlignedReadsL100 | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.percentAlignedReadsL100 | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.percentAlignedReadsL100 | number:2}}</td>
 				</tr>	
 				
 				<tr>
@@ -42,6 +46,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.identityPercentageAvg | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.identityPercentageAvg | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.identityPercentageAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.identityPercentageAvg | number:2}}</td>
 				</tr>			
 				<tr>
 					<th>@Messages("readsets.treatments.mapping_nanopore.readAlignementSizeMax")</th>
@@ -49,6 +54,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.readAlignementSizeMax | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.readAlignementSizeMax | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.readAlignementSizeMax | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.readAlignementSizeMax | number}}</td>
 				</tr>	
 				
 				<tr>
@@ -57,6 +63,7 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.referenceCoverage | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.referenceCoverage | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.referenceCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.referenceCoverage | number:2}}</td>
 				</tr>					
 			</tbody>
 		 </table>
