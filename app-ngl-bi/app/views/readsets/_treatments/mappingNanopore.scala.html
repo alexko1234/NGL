@@ -58,12 +58,20 @@
 				</tr>	
 				
 				<tr>
-					<th>@Messages("readsets.treatments.mapping_nanopore.referenceCoverage")</th>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.referenceCoverage | number:2}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.referenceCoverage | number:2}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.referenceCoverage | number:2}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.referenceCoverage | number:2}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.referenceCoverage | number:2}}</td>
+					<th>@Messages("readsets.treatments.mapping_nanopore.verticalCoverage")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.verticalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.verticalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.verticalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.verticalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.verticalCoverage | number:2}}</td>
+				</tr>	
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.horizontalCoverage")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.horizontalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.horizontalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.horizontalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.horizontalCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['useful'].value.horizontalCoverage | number:2}}</td>
 				</tr>					
 			</tbody>
 		 </table>

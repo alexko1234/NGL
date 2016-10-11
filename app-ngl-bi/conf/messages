@@ -429,7 +429,8 @@ readsets.treatments.mapping_nanopore.nbAlignedReadsL100ID100 = Nb séquences ali
 readsets.treatments.mapping_nanopore.identityPercentageAvg = Moyenne du % d''identité des séquences
 readsets.treatments.mapping_nanopore.readAlignementSizeMax = Taille max d''alignement des séquences
 readsets.treatments.mapping_nanopore.nbLoci = Nb loci
-readsets.treatments.mapping_nanopore.referenceCoverage = Couverture par rapport à la référence
+readsets.treatments.mapping_nanopore.verticalCoverage = Couverture verticale
+readsets.treatments.mapping_nanopore.horizontalCoverage = Couverture horizontale
 
 readsets.treatments.mapping.tabs.read1 = Read 1
 readsets.treatments.mapping.tabs.read2 = Read 2
