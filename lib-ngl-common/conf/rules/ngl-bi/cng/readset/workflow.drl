@@ -1,7 +1,7 @@
 //created on: Nov 21, 2013
 package rules
 
-rule "Set state to In Waiting Transfert CCRT from In Waiting BI Analyse readSet"
+/*rule "Set state to In Waiting Transfert CCRT from In Waiting BI Analyse readSet"
 	@nglBI( IW_BA_1 )
 	dialect "java"
 	salience 600
@@ -37,4 +37,4 @@ rule "Set state to In Progress BI Analyse from In Waiting BI Analyse CCRT"
 		$readSet : ReadSet(location!=null, location=="CCRT")
 	then
 		$nextState.code="IP-BA";
-end
+end*/
