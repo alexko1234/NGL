@@ -37,7 +37,7 @@ rule "Create Object ContainerUpdateLims"
     	containerUpdateLims.setLimsCode($limsCode.value.toString());
     	containerUpdateLims.setLimsStateCode(null);
     	insert(containerUpdateLims);
-		//Logger.debug("Container to update in Lims "+$container.code+ " experiment Type "+$experimentType);    
+		Logger.debug("Container to update in Lims "+$container.code+ " experiment Type "+$experimentType);    
 	end
     	    
 rule "Solution stock IS"
@@ -77,7 +77,7 @@ rule "Banque Amplifié/Sizing  A-TM ou A-QC"
     when
     	$containerUpdateLims:ContainerUpdateLims((experimentType=="pcr-amplification-and-purification" || experimentType=="sizing"),(stateCode=="A-TM" || stateCode=="A-QC"),limsStateCode==null)
     then
-    	//Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
+    	Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
     	//Etat Lims = En reserve
     	$containerUpdateLims.setLimsStateCode(5);
     	update($containerUpdateLims);
