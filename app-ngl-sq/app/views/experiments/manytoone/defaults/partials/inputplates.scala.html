@@ -1,7 +1,7 @@
 @()
 <!-- work with atmDragAndDrop2 -->
 
-<!--FDS TEST30/09/2016  ajouter ligne avec boutons: orientation, nb-plex, start position,  end-position -->
+<!--FDS TEST 30/09/2016  ajouter ligne avec boutons: mode, nb-plex, start position,  end-position -->
 <div class="row col-md-11 col-lg-11">
 	<div class="col-md-2 col-lg-2">
 	   <label for="poolMode" class="control-label">Mode</label>
@@ -17,7 +17,7 @@
 	   <select class="form-control input-sm"					
 	  					ng-model="poolPlex"
 						ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"				
-						ng-options="plex for plex in [2, 3, 4]"> 
+						ng-options="plex for plex in [3,4,5,6,7,8,12,16]"> 
 						<option value="">choisir le plex</option>  			     	 							     	 
 	   </select>	
 	</div>
