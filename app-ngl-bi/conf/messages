@@ -189,7 +189,7 @@ runs.lane.ngsrg_illumina.phasing = Phasing
 runs.lane.ngsrg_illumina.prephasing = Prephasing
 runs.lane.ngsrg_illumina.nbCycles = Nb Cycles Utiles
 runs.lane.ngsrg_illumina.seqLossPercent = % Perte
-runs.lane.ngsrg_illumina.nbMismatch = Nb Mismatch
+runs.lane.ngsrg_illumina.nbMismatch = Nb Mismatch Démultiplexage 
 
 runs.ngsrg_nanopore.poreOccupancy = Occupation des pores
 runs.ngsrg_nanopore.poreOccupancyTime = Activité des pores
