@@ -54,6 +54,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"projectCodes",
 			"order":false,
 			"hide":true,
+			"group":true,
 			"position":6,					
 			"render":"<div list-resize='cellValue' ' list-resize-min-size='2'>",
 			"filter":"unique",
