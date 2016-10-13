@@ -57,7 +57,6 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"group":true,
 			"position":6,					
 			"render":"<div list-resize='cellValue' ' list-resize-min-size='2'>",
-			"filter":"unique",
 			"type":"text",
 			"groupMethod":"collect"
 		});			
@@ -77,8 +76,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"position":8,
 			"type":"text",
-			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			"filter":"unique",
+			"render":"<div list-resize='cellValue|unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 			
 		});

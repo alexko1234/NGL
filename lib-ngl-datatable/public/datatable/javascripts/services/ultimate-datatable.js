@@ -438,9 +438,11 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             computeGroup: function() {
                 if (this.config.group.active && this.config.group.by) {
                     var propertyGroupGetter = this.config.group.by.property;
+                    propertyGroupGetter += this.getFilter(this.config.group.by);
                     var groupGetter = $parse(propertyGroupGetter);
+                   
                     var groupValues = this.allResult.reduce(function(array, value) {
-                        var groupValue = groupGetter(value);
+                        var groupValue = groupGetter(value).toString();
                         if (!array[groupValue]) {
                             array[groupValue] = [];
                         }
@@ -459,46 +461,48 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         var that = this;
                         //compute for each number column the sum
                         groupMethodColumns.forEach(function(column) {
-                            var propertyGetter = column.property;
-                            propertyGetter += that.getFilter(column);
-                            var columnGetter = $parse(propertyGetter);
-                            var columnSetter = $parse("group." + column.id);
-
-                            if ('sum' === column.groupMethod || 'average' === column.groupMethod) {
-                                var result = groupData.reduce(function(value, element) {
-                                    return value += columnGetter(element);
-                                }, 0);
-
-                                if ('average' === column.groupMethod) result = result / groupData.length;
-
-                                if (isNaN(result)) {
-                                    result = "#ERROR";
-                                }
-
-                                try {
-                                    columnSetter.assign(group, result);
-                                } catch (e) {
-                                    console.log("computeGroup Error : " + e);
-                                }
-                            } else if ('unique' === column.groupMethod) {
-                                var result = $filter('udtUnique')(groupData, column.property);
-                                if (result.length > 1) {
-                                    result = '#MULTI';
-                                } else if (result.length === 1) {
-                                    result = columnGetter(result[0]);
-                                } else {
-                                    result = undefined;
-                                }
-                                columnSetter.assign(group, result);
-                            } else if ('countDistinct' === column.groupMethod) {
-                                var result = $filter('udtCountdistinct')(groupData, propertyGetter);
-                                columnSetter.assign(group, result);
-                            } else if ('collect' === column.groupMethod) {
-                                var result = $filter('udtCollect')(groupData, propertyGetter);
-                                columnSetter.assign(group, result);
-                            } else {
-                                console.error("groupMethod is not managed " + column.groupMethod);
-                            }
+                            if(column.id != that.config.group.by.id){                        	
+	                        	var propertyGetter = column.property;
+	                            propertyGetter += that.getFilter(column);
+	                            var columnGetter = $parse(propertyGetter);
+	                            var columnSetter = $parse("group." + column.id);
+	
+	                            if ('sum' === column.groupMethod || 'average' === column.groupMethod) {
+	                                var result = groupData.reduce(function(value, element) {
+	                                    return value += columnGetter(element);
+	                                }, 0);
+	
+	                                if ('average' === column.groupMethod) result = result / groupData.length;
+	
+	                                if (isNaN(result)) {
+	                                    result = "#ERROR";
+	                                }
+	
+	                                try {
+	                                    columnSetter.assign(group, result);
+	                                } catch (e) {
+	                                    console.log("computeGroup Error : " + e);
+	                                }
+	                            } else if ('unique' === column.groupMethod) {
+	                                var result = $filter('udtUnique')(groupData, column.property);
+	                                if (result.length > 1) {
+	                                    result = '#MULTI';
+	                                } else if (result.length === 1) {
+	                                    result = columnGetter(result[0]);
+	                                } else {
+	                                    result = undefined;
+	                                }
+	                                columnSetter.assign(group, result);
+	                            } else if ('countDistinct' === column.groupMethod) {
+	                                var result = $filter('udtCountdistinct')(groupData, propertyGetter);
+	                                columnSetter.assign(group, result);
+	                            } else if ('collect' === column.groupMethod) {
+	                                var result = $filter('udtCollect')(groupData, propertyGetter);
+	                                columnSetter.assign(group, result);
+	                            } else {
+	                                console.error("groupMethod is not managed " + column.groupMethod);
+	                            }
+	                        }
                         });
 
                         groups[key] = group;
@@ -602,11 +606,13 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             },
             addGroup: function(displayResultTmp) {
                 var displayResult = [];
-                var groupGetter = $parse(this.config.group.by.property);
+                var propertyGroupGetter = this.config.group.by.property;
+                propertyGroupGetter += this.getFilter(this.config.group.by);
+                var groupGetter = $parse(propertyGroupGetter);
                 var groupConfig = this.config.group;
                 displayResultTmp.forEach(function(element, index, array) {
                     /* previous mode */
-                    if (!groupConfig.after && (index === 0 || groupGetter(element.data) !== groupGetter(array[index - 1].data))) {
+                    if (!groupConfig.after && (index === 0 || groupGetter(element.data).toString() !== groupGetter(array[index - 1].data).toString())) {
                         var line = {
                             edit: undefined,
                             selected: undefined,
@@ -615,14 +621,14 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             "new": false
                         };
                         this.push({
-                            data: groupConfig.data[groupGetter(element.data)],
+                            data: groupConfig.data[groupGetter(element.data).toString()],
                             line: line
                         });
                     }
                     this.push(element);
 
                     /* after mode */
-                    if (groupConfig.after && (index === (array.length - 1) || groupGetter(element.data) !== groupGetter(array[index + 1].data))) {
+                    if (groupConfig.after && (index === (array.length - 1) || groupGetter(element.data).toString() !== groupGetter(array[index + 1].data).toString())) {
                         var line = {
                             "edit": undefined,
                             "selected": undefined,
@@ -631,7 +637,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             "new": false
                         };
                         this.push({
-                            data: groupConfig.data[groupGetter(element.data)],
+                            data: groupConfig.data[groupGetter(element.data).toString()],
                             line: line
                         });
                     };
@@ -3747,7 +3753,7 @@ filter('udtCollect', ['$parse',function($parse) {
     	    			if(undefined !== currentValue && null !== currentValue){
     	    				//Array.prototype.push.apply take only arrays
     	    				if(angular.isArray(currentValue)){
-    	    					Array.prototype.push.apply(possibleValues, currentValue);
+    	    					possibleValues = possibleValues.concat(currentValue);
     	    				}else{
     	    					possibleValues.push(currentValue);
     	    				}
