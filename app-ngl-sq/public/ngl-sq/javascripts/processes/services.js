@@ -1,42 +1,23 @@
 "use strict";
 
-angular.module('ngl-sq.processesServices', []).factory('processesSearchService', [ '$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable) {
+angular.module('ngl-sq.processesServices', []).factory('processesSearchService', [ '$http', '$filter', 'mainService', 'lists', 'datatable', 
+                                                                                   function($http, $filter, mainService, lists, datatable) {
 	var isInit = false;
 
 	var initListService = function() {
 		if (!isInit) {
-			lists.refresh.processes();
-			lists.refresh.experiments();
-			lists.refresh.containerSupportCategories();
-			lists.refresh.projects();
 			lists.refresh.processCategories();
-			lists.refresh.containerSupports();
+			lists.refresh.projects();
 			lists.refresh.users();
 			lists.refresh.states({
 				objectTypeCode : "Process"
 			});
-			lists.refresh.processTypes();
 			lists.refresh.reportConfigs({
 				pageCodes : [ "processes-addcolumns" ]
 			}, "processes-addcolumns");
 			lists.refresh.filterConfigs({
 				pageCodes : [ "processes-search-addfilters" ]
 			}, "processes-search-addfilters");
-
-			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url, {
-				params : {
-					"list" : true
-				}
-			}).success(function(data, status, headers, config) {
-				var processesTypes = data;
-				angular.forEach(processesTypes, function(processType) {
-					lists.refresh.filterConfigs({
-						pageCodes : [ "process-" + processType.code ]
-					}, "process-" + processType.code);
-				})
-
-			});
-
 			isInit = true;
 		}
 	};
@@ -234,6 +215,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		isProcessFiltered : false,
 		additionalColumns : [],
 		selectedAddColumns : [],
+		processTypesByCategory : {},
+		processTypesForCategories : [],
 		setRouteParams : function($routeParams) {
 			var count = 0;
 			for ( var p in $routeParams) {
@@ -272,7 +255,6 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 				$http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url).success(function(data, status, headers, config) {
 					if (data != null) {
-						console.log(data);
 						angular.forEach(data, function(property) {
 							var column = {};
 							var unit = "";
@@ -387,6 +369,67 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 		},
 
+		
+
+		search : function() {
+			this.updateForm();
+			mainService.setForm(this.form);
+			searchService.datatable.setColumnsConfig(this.columnsDefault);
+			searchService.setColumns();
+			this.datatable.search(this.convertForm());
+
+		},
+
+		refreshSamples : function() {
+			if (this.form.projectCodes && this.form.projectCodes.length > 0) {
+				this.lists.refresh.samples({
+					projectCodes : this.form.projectCodes
+				});
+			}
+		},
+
+		initProcessTypes:function(){
+			//load all process cat
+			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url, {processTypesByCategory:this.processTypesByCategory})
+				.success(function(data, status, headers, config) {
+				data.forEach(function(processType){
+					if(!config.processTypesByCategory[processType.category.code]){
+						config.processTypesByCategory[processType.category.code] = [];
+					}
+					config.processTypesByCategory[processType.category.code].push(processType);
+				})
+				
+				
+			});
+		},		
+		changeProcessCategories : function() {
+			this.additionalProcessFilters = [];
+			this.form.typeCodes = undefined;
+			this.processTypesForCategories=[];
+
+			if (this.form.categoryCodes && this.form.categoryCodes.length > 0) {
+				this.form.categoryCodes.forEach(function(code){
+					this.processTypesForCategories = this.processTypesForCategories.concat(this.processTypesByCategory[code])
+				},this)
+				this.processTypesForCategories = $filter('orderBy')(this.processTypesForCategories, 'name');
+			}else {
+				this.form.categoryCodes = undefined;
+			}
+		},
+
+		changeProcessTypeCode : function() {
+			if (angular.isDefined(this.form.categoryCodes)) {
+				if(angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1){
+					lists.refresh.filterConfigs({
+						pageCodes : [ "process-" + this.form.typeCodes[0] ]
+					}, "process-" + this.form.typeCodes[0]);
+				}				
+			} else {
+				this.form.typeCodes = undefined;
+			}
+			this.initAdditionalProcessFilters();
+		},
+		
 		initAdditionalProcessFilters : function() {
 			this.additionalProcessFilters = [];
 			var formFilters = [];
@@ -420,50 +463,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			}
 			return this.additionalProcessFilters;
 		},
-
-		search : function() {
-			this.updateForm();
-			mainService.setForm(this.form);
-			searchService.datatable.setColumnsConfig(this.columnsDefault);
-			searchService.setColumns();
-			this.datatable.search(this.convertForm());
-
-		},
-
-		refreshSamples : function() {
-			if (this.form.projectCodes && this.form.projectCodes.length > 0) {
-				this.lists.refresh.samples({
-					projectCodes : this.form.projectCodes
-				});
-			}
-		},
-
-		changeProcessCategories : function() {
-			this.additionalProcessFilters = [];
-			this.form.typeCodes = undefined;
-			this.lists.clear("processTypes");
-
-			if (this.form.categoryCodes && this.form.categoryCodes.length > 0) {
-				this.lists.refresh.processTypes({
-					categoryCodes : this.form.categoryCodes
-				});
-			}else {
-				this.form.categoryCodes = undefined;
-			}
-		},
-
-		changeProcessTypeCode : function() {
-			if (angular.isDefined(this.form.categoryCodes)) {
-				if(angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 0){
-					lists.refresh.filterConfigs({
-						pageCodes : [ "process-" + this.form.typeCodes[0] ]
-					}, "process-" + this.form.typeCodes[0]);
-				}				
-			} else {
-				this.form.typeCodes = undefined;
-			}
-			this.initAdditionalProcessFilters();
-		},
+		
 		initAdditionalColumns : function() {
 			this.additionalColumns = [];
 			this.selectedAddColumns = [];
@@ -556,6 +556,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			if (angular.isDefined($routeParams)) {
 				this.setRouteParams($routeParams);
 			}
+			
+			searchService.initProcessTypes();
 		}
 	};
 

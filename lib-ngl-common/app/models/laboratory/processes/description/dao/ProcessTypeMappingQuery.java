@@ -21,6 +21,8 @@ import play.api.modules.spring.Spring;
 
 public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 
+	boolean lightVersion = false;
+	
 	public ProcessTypeMappingQuery()
 	{
 		super();
@@ -53,15 +55,17 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 			ProcessCategory processCategory=(ProcessCategory) processCategoryDAO.findById(idProjectCategory);
 			processType.category = processCategory;
 			//Get list experimentType
-			ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-			//List<ExperimentType> experimentTypes = expTypeDAO.findByProcessTypeId(processType.id);
-			//processType.experimentTypes=experimentTypes;
-			//Get voidExperimentType
-			processType.voidExperimentType=expTypeDAO.findById(idVoidExpType);
-			//Get voidExperimentType
-			processType.firstExperimentType=expTypeDAO.findById(idFirstExpType);
-			//Get voidExperimentType
-			processType.lastExperimentType=expTypeDAO.findById(idLastExpType);
+			if(!lightVersion){
+				ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
+				//List<ExperimentType> experimentTypes = expTypeDAO.findByProcessTypeId(processType.id);
+				//processType.experimentTypes=experimentTypes;
+				//Get voidExperimentType
+				processType.voidExperimentType=expTypeDAO.findById(idVoidExpType);
+				//Get voidExperimentType
+				processType.firstExperimentType=expTypeDAO.findById(idFirstExpType);
+				//Get voidExperimentType
+				processType.lastExperimentType=expTypeDAO.findById(idLastExpType);
+			}
 			return processType;
 		} catch (DAOException e) {
 			throw new SQLException(e);

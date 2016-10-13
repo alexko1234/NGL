@@ -20,6 +20,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.object.MappingSqlQuery;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
@@ -170,4 +171,11 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 			return null;
 		}
 	}
+	
+	public List<ProcessType> findAllLight() throws DAOException {
+		ProcessTypeMappingQuery mapping = (ProcessTypeMappingQuery)initializeMapping(sqlCommon);
+		mapping.lightVersion = true;
+		return mapping.execute();
+	}
+	
 }

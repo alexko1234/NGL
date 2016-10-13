@@ -42,7 +42,7 @@ public class ProcessTypes extends CommonController{
 			}else if(CollectionUtils.isNotEmpty(processTypesSearch.codes)){
 				processTypes = ProcessType.find.findByCodes(processTypesSearch.codes);
 			}else{
-				processTypes = ProcessType.find.findAll();
+				processTypes = ProcessType.find.findAllLight();
 			}
 			if(processTypesSearch.datatable){
 				return ok(Json.toJson(new DatatableResponse<ProcessType>(processTypes, processTypes.size()))); 

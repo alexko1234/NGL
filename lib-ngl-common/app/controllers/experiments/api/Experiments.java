@@ -125,7 +125,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}else if(StringUtils.isNotBlank(experimentSearch.code)){
 			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
 		}
-
+		
 		if(StringUtils.isNotBlank(experimentSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", experimentSearch.typeCode));
 		}
@@ -150,9 +150,7 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
 		}
 
-		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
-			queryElts.add(DBQuery.in("codes", experimentSearch.codes));
-		}
+		
 
 		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
 			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");

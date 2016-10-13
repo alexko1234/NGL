@@ -46,6 +46,10 @@ public class ProcessType extends CommonInfoType{
 		public List<ProcessType> findByExperimentTypeCode(String experimentTypeCode) throws DAOException {
 			return ((ProcessTypeDAO)getInstance()).findByExperimentCode(experimentTypeCode);
 		}
+		
+		public List<ProcessType> findAllLight() throws DAOException {
+			return ((ProcessTypeDAO)getInstance()).findAllLight();
+		}
 	}
 	
 }

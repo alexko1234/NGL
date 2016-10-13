@@ -120,7 +120,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
-         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO-DNASeq"));
+         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
          values.add(DescriptionFactory.newValue("FB","FB - ChipSeq"));
          values.add(DescriptionFactory.newValue("FC","FC - MeDipSeq/Depl"));

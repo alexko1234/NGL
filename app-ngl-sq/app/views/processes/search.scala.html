@@ -21,7 +21,7 @@
 	@columnSearchForm{	
 	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" multiple=true ng-disabled="searchService.form.categoryCodes === undefined" class="form-control" ng-model="searchService.form.typeCodes" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")" multiple=true ng-disabled="searchService.form.categoryCodes === undefined" class="form-control" ng-model="searchService.form.typeCodes" bt-options="typeCode.code as typeCode.name for typeCode in searchService.processTypesForCategories" ng-change="searchService.changeProcessTypeCode()" auto-select>
 			</div>
 		}
 		@formGroup{

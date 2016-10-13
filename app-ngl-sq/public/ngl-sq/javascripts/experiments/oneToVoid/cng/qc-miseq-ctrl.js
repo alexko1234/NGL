@@ -13,11 +13,6 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
 				
-				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
-				if(concentration1){
-					inputContainerUsed.concentration = concentration1;
-				}
-				
 				var insertsize = $parse("experimentProperties.measuredInsertSize")(inputContainerUsed);
 				if(insertsize){
 					console.log("copy experimentProperties.measuredInsertSize to inputContainerUsed.size :"+ insertsize.value);
