@@ -1,26 +1,35 @@
 // FDS 21/06/2016 dupliqué depuis manyToOne.experiments.cns.x-to-tubes avec modifs
 angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
-                                                               function($scope, $http, $parse) {
+                                                               function($scope, $http, $filter, $parse) {
 
+	//-----------------------------------------reutilisables ailleurs ??----------------------------------------------------------
 	// FDS 29/06/2016 calcul de la ligne en fonction de position 96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
-	// reutilisable ailleurs ??
-	$scope.setLineFromPosition96_C = function(pos96){	
-		line= String.fromCharCode (((pos96 -1) % 8 ) + 65 );
-		//console.log("set line to "+ line +"("+pos96+")" );
+	$scope.getLineFromPosition96_C = function(pos96){	
+		var line= String.fromCharCode (((pos96 -1) % 8 ) + 65 );
+		//console.log(">line ="+ line +" ("+pos96+")");
 		return line;
 	};
 	
-	//  FDS 29/06/2016  calcul de la colonne en fonction de position 96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
-	//  reutilisable ailleurs ??
-	$scope.setColFromPosition96_C = function(pos96){	
-		c=Math.floor((pos96 -1) / 8) +1 ;
-		column= c.toString();
-		//console.log("set col to "+column+"("+pos96+")" );
+	//  FDS 29/06/2016  calcul de la colonne en fonction de position-96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
+	$scope.getColumnFromPosition96_C = function(pos96){	
+		var c=Math.floor((pos96 -1) / 8) +1 ;
+		var column= c.toString();
+		//console.log(">col ="+column+" ("+pos96+")");
 		return column;
 	};
 	
-	// FDS 03/10/2016 calculer la position96 en mode colonne a partir de ligne et colonne ( 1=A1, 2=B1... 9=A2...) 
-	$scope.setPos96FromLineAndCol_C = function(ln,col){
+	
+	$scope.getLineFromPosition96_L = function(pos96){	
+		//TODO
+	}
+	
+	$scope.getColFromPosition96_L = function(pos96){	
+		//TODO
+	}
+	
+	
+	// FDS 03/10/2016 calculer la position-96 en mode colonne a partir de ligne et colonne ( 1=A1, 2=B1... 9=A2...) 
+	$scope.getPos96FromLineAndCol_C = function(ln,col){
 		if ( ln && col ){
 			// numeroter a partir de 1 et pas 0!!   var pos= (col  -1 )*8 + ( ln.charCodeAt(0) -65);
 			var pos96=(col -1 )*8 + ( ln.charCodeAt(0) -64);
@@ -29,12 +38,13 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 	}
 	
-	//  FDS 03/10/2016 calculer la position96 en mode ligne a partir de ligne et colonne ( 1=A1, 2=A2...13=B1...)
-	$scope.setPos96FromLineAndCol_L = function(ln,col){
+	//  FDS 03/10/2016 calculer la position-96 en mode ligne a partir de ligne et colonne ( 1=A1, 2=A2...13=B1...)
+	$scope.getPos96FromLineAndCol_L = function(ln,col){
        //TODO
 	}
+	//---------------------------------------------------------------------------------------------------------------------------
 	
-	
+	 
 	/*TEST...VERIFIER UNE SEULE PLAQUE EN ENTREE POUR  "normalization-and-pooling" !!!
 	// marche pas !!!
     if (($scope.experiment.typeCode == "normalization-and-pooling") && $scope.isNewState()) ;{
@@ -79,10 +89,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			// DEVRAIT PAS ETRE DANS UPDATE CONCENTRATION ???....a voir avec GA  ( atomicTransfereservice ??? )
 
 			// 05/10/2016 si le support de sortie est tube: il faut mettre 1/1 ????
-			atm.outputContainerUseds[0].locationOnContainerSupport.column=$scope.setColFromPosition96_C(atm.viewIndex);
+			atm.outputContainerUseds[0].locationOnContainerSupport.column=$scope.getColumnFromPosition96_C(atm.viewIndex);
 			atm.column=atm.outputContainerUseds[0].locationOnContainerSupport.column;
 			
-			atm.outputContainerUseds[0].locationOnContainerSupport.line=$scope.setLineFromPosition96_C(atm.viewIndex);
+			atm.outputContainerUseds[0].locationOnContainerSupport.line=$scope.getLineFromPosition96_C(atm.viewIndex);
 			atm.line=atm.outputContainerUseds[0].locationOnContainerSupport.line;
 			
 			// récupérer le dernier supportCode entré par l'utilisateur
@@ -99,7 +109,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	};
 	
 	// !! controller commun a normalization-and-pooling et pooling
-	// Julie demande de bloquer le calcul en normalization-and-pooling si unité de concentration n'EST PAS nM TODO...
+	// Julie demande de bloquer le calcul en normalization-and-pooling si unité de concentration n'EST PAS nM 
+	// TODO...
 		
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
@@ -284,73 +295,63 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     $scope.lastSupportCode=null;
     $scope.lastStorageCode=null;
     
-    // 01/10/2016  gestion du mode pooling "automatique"
-    $scope.poolModes=[ {code: 'Lmode',  name: 'ligne'}, 
-                       {code: 'Cmode',  name: 'colonne'},
-                       {code: 'IDmode', name: 'Illumina Dual Index'},
-                       {code: 'ISmode', name: 'Illumina Single Index'}
-                       ];
-    
-    $scope.poolMode=null;
-    $scope.poolPlex=null;
-    $scope.startColumn=null; 
-    $scope.startLine=null;
-    $scope.endColumn=null;
-    $scope.endLine=null;
-    
-    $scope.showSelections =function( poolMode, poolPlex, startColumn, startLine, endColumn, endLine ){
-    	console.log("selection changed...");
-    	
-    	console.log("mode="+ poolMode.name + "("+ poolMode.code+")");
-    	console.log("plex="+ poolPlex);
-    	//console.log("selected startColumn="+startColumn);
-    	//console.log("selected startLine="+startLine);
-    	//console.log("selected endColumn="+endColumn);
-    	//console.log("selected endLine="+endLine);
-    		
-        // 12/10/2016 si le mode choisi est le mode Ligne il faut ultiliser les fonctions XX_L
-    	if ( poolMode.code === "Lmode") {
-    		var startPos=$scope.setPos96FromLineAndCol_L(startLine, startColumn );
-    		var endPos=$scope.setPos96FromLineAndCol_L(endLine, endColumn);		
-    	} else {
-    		var startPos=$scope.setPos96FromLineAndCol_C(startLine, startColumn );
-    		var endPos=$scope.setPos96FromLineAndCol_C(endLine, endColumn);
-    	}	
+    // 01/10/2016--------------------  gestion du mode pooling "automatique"--------------------------------
+    // TODO supprimer le prefixage $scope.  pour toutes les foctions strictement locales !!
+    ////    remplacer $scope.xxxx = function (   par var xxx= function (
+
+    // HARDCODER les parametres des modes predefinis
+    $scope.poolingModes=[ 
+                          //{code: 'L4',  name:'ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
+                          //{code: 'L6',  name:'ligne 6-p',    poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
+                          //{code: 'C4',  name:'colonne 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+                          //{code: 'C6',  name:'colonne 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+                          //{code: 'IS4', name:'Ill Sing 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
+                          //{code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
+                          {code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+                          {code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
+                         ];
+
+    $scope.poolingMode=null;
+    $scope.autoPooling =function (poolingMode){
+    	console.log( "poolingMode ="+poolingMode.name);
+    	console.log( "plaque en cours="+ $scope.atmService.data.getCurrentSupportCode() );
+
+    	if ( poolingMode.numtype === "L") {
+    		var startPos=$scope.getPos96FromLineAndCol_L( poolingMode.startLine, poolingMode.startColumn );
+    		var endPos=$scope.getPos96FromLineAndCol_L( poolingMode.endLine, poolingMode.endColumn);		
+    	} else if (poolingMode.numtype === "C")  {
+    		var startPos=$scope.getPos96FromLineAndCol_C( poolingMode.startLine, poolingMode.startColumn );
+    		var endPos=$scope.getPos96FromLineAndCol_C( poolingMode.endLine, poolingMode.endColumn);
+    	} else { 
+    		throw "OOps incorrect numtype :"+ poolingMode.numtype ;
+    	}
 		console.log ("start position ="+ startPos);
 		console.log ("end position ="+ endPos);
 		
-	    if ( endPos && startPos && poolPlex ){	
-    		if ( endPos > startPos ){
-    			$scope.messages.clear();
-            	if      ( poolMode.code === "IDmode"){ $scope.poolIlluminaDual( poolPlex, startPos, endPos ); }
-            	else if ( poolMode.code === "ISmode"){ $scope.poolIlluminaSingle( poolPlex, startPos, endPos ); }
-            	// 12/10/2016 en fait mode colonn ou ligne sont identiques si le robot est capable de switcher sa numerotation 
-            	// en fonction de l'orientation de la plaque " horizontalement ou verticalement !! Voir D. Derbala
-            	// la methode de pooling etant alors "poolContigu" !!!
-            	//else if ( poolMode.code === "Cmode") { $scope.poolColumn( poolPlex, startPos, endPos ); }
-            	//else if ( poolMode.code === "Lmode") { $scope.poolLine( poolPlex, startPos, endPos ); }
-            	else if ( (poolMode.code === "Lmode") || ( poolMode.code === "Cmode")) { $scope.poolContigu( poolPlex, startPos, endPos ); }
-    		}else{
-        		$scope.messages.clazz = "alert alert-danger";
-        		$scope.messages.text = Messages("Position debut doit etre apres la position fin sur la plaque");
-        		$scope.messages.showDetails = false;
-        		$scope.messages.open();
-    		}
+		if (( poolingMode.code === "L4")||( poolingMode.code === "C4")||( poolingMode.code === "C4")){ 
+			$scope.poolContigu( poolingMode.poolPlex, poolingMode.startPos, poolingMode.endPos, poolingMode.numtype ); 
+		}
+		else if ((poolingMode.code === "ID4")||(poolingMode.code === "ID6")){ 
+			$scope.poolIlluminaDual( poolingMode.poolPlex, poolingMode.startPos, poolingMode.endPos );
+    	}else{
+    		throw "OOps pooling mode not supported: "+ poolingMode.name;
     	}
     }
     
 
-    $scope.poolIlluminaDual=function( poolPlex,  startPos, endPos ){
+    $scope.poolIlluminaDual=function( poolPlex, startPos, endPos ){
     	// le pooling illumina Dual index est un pooling par blocs contigus...( voir doc Illumina: TruSeq Library prepPooling)
     	//    3-plex =bloc 2x2 avec 1 trou; 4-plex=bloc 2X2;
     	//    5-plex= bloc 2x3 avec 1 trou; 6-plex=bloc 2x3; 
     	//    7-plex= bloc 2x4 avec 1 trou; 8-plex-option1 =bloc 2x4; 8-plex-option2=bloc 4x2
     	//    12-plex= bloc 4x3; 16-plex= bloc xx4
     	console.log ("POOLING MODE ILLUMINA DUAL INDEX");
+    	console.log (">> startPos="+ startPos +" endPos"+ endPos );
     	
     	var block=null;
-    	// members contient la position relative des autres puits du bloc par rapport au puit "pere" du bloc
-    	// ATTENTION numerotation en mode colonne des puits!!!!=> plaque placee horizontalement sur robot 8 aiguilles
+    	// members contient la position relative des autres puits du bloc par rapport au puit "0" du bloc
+    	// ATTENTION numerotation en mode colonne des puits!!!!
+    	/// cas non geree...if      (poolPlex === 2) { block={ line: 1, col:2, members:['X']}; }  // ESSAI!!!!!!!! marche pas
     	if      (poolPlex === 3) { block={ line: 2, col:2, members:[1,8]}; }  // comme poolPlex 4 mais sans le puit +9
     	else if (poolPlex === 4) { block={ line: 2, col:2, members:[1,8,9]}; }
     	else if (poolPlex === 5) { block={ line: 2, col:3, members:[1,8,9,16]}; } // comme poolPlex 6 mais sans le puit +17
@@ -368,7 +369,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 
     	if ( block ){
     		$scope.messages.clear();
-    		//console.log ("POOLING MODE ILLUMINA DUAL INDEX plex="+ poolPlex + "("+ block.line+"/"+block.col+")" );
+    		console.log (">> plex="+ poolPlex + "("+ block.line+"/"+block.col+")" );
     		
     	    var blockSize=block.line*block.col;
     	    var lastBlockMember=block.members.slice(-1)[0];
@@ -377,9 +378,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     	    //  PB PAS SI SIMPLE !!!!    nbWellsSelected=endPos-StartPos +1;
     	    //  par exemple si debut =0 et fin =12 en mode block de 4 on a 8 puits et pas 12 (11-0 +1)!!! 
     	    
-    	    // attention !!! en fonction de la posion de depart  le block  peut se retrouver a cheval le bord de plaque
+    	    // attention !!! en fonction de la position de depart  le block peut se retrouver a cheval le bord de plaque
     	    // ==> comment controler ca ?????????
 
+    	    // ALGORITHME pour determiner le puit "0" (en haut a gauche) de chaque bloc en fonction de ses dimensions
     	    var pi=0 //pool index
     	    var loop=true;
     	    while ( loop  ) {
@@ -394,8 +396,9 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     	        console.log ("pool "+ (pi+1) +" commence au puit "+(wi+1)+" et fini au puit "+lastWell);
     	        $scope.createPoolBlock( pi+1, wi+1, block.members );
     	        
-    	        // il faut sortir quand le plus grand indice de puit du block courant est plus grand que la position de fin demandee
-    	        // probleme pour les blocs a trou...compter les trous
+    	        // il faut sortir quand le plus grand indice de puit des membres du block courant est plus grand que la position de fin demandee
+    	        // probleme pour les blocs a trou...compter les trous ( toujours testé avec 1 seul trou...)
+    	        //   !!! marche pas pour le pool 1x2 !!!
     	        var blockHoles=blockSize - block.members.length -1;
     	        
         	    if (lastWell  >=  ( endPos - blockHoles )) { 
@@ -407,13 +410,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     	}
     }// end poolIlluminaDual
     
-    $scope.poolIlluminaSingle=function( poolPlex,  startPos, endPos ){
-    	console.log ("POOLINGMODE ILLUMINA SINGLE INDEX");
-    	console.log ("....TODO....");
+    $scope.poolIlluminaSingle=function( poolPlex,  startPos, endPos, XXXX ){
+    	console.log ("POOLINGMODE ILLUMINA SINGLE INDEX...TODO");
     } 
     
-    $scope.poolContigu=function( poolPlex,  startPos, endPos ){
-    	console.log ("POOLING MODE 'CONTIGU'");
+    $scope.poolContigu=function( poolPlex,  startPos, endPos, numtype ){
+    	console.log ("POOLING MODE 'CONTIGU' ");
     	
 		var nbWells=endPos - startPos +1;
 		var nbPools= Math.floor(nbWells / poolPlex);
@@ -423,62 +425,92 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		//le dernier pool est donc un pool reduit
 		console.log ("reste="+ remain);
 		
-		// ici les indices pi et wi commencent a 1
+		// ici les indices pi et wi commencent a 1 et non 0 
 		var pi=1;
 		var pool=[];
 		for ( var wi= startPos; wi < (endPos+1); wi++){
 			 //console.log (">>ajouter puit "+ wi +" dans pool "+ pi);
 			 pool.push(wi);
-			 // si wi multiple de poolPlex alors on change de pool 
-			 // ATTENTION prise en compte de la position de debut 	 
+			 // si wi multiple de poolPlex alors on change de pool  ATTENTION prise en compte de la position de debut 	 
 			 if  ((wi - startPos +1 )%poolPlex == 0 ) {
-				 $scope.createPoolContigu( pi, pool);
+				 $scope.createPoolContigu( pi, pool, numtype);
 				 var pool=[];
 				 pi++;
 			 }
-			 // et le pool reduitfinal eventuel
+			 // et le pool reduit final eventuel
 			 if (( wi == endPos )&& ( remain > 0)) {
 				 console.log ("pool final avec le reste");
-				 $scope.createPoolContigu( pi, pool); 
+				 $scope.createPoolContigu( pi, pool, numtype); 
 			}
 		}
     } 
     
     $scope.createPoolBlock=function(p, firstWell, otherWellsArray ){
     	console.log ("creating pool "+ p);
+    	var supportCode=$scope.atmService.data.getCurrentSupportCode() ;
     	
-    	if ( $scope.isValidForPool(firstWell) ) {
-    	   console.log ("add well="+ firstWell+" in pool");
-    	  //add2Pool.....
-        }
+    	//--1-- puit "0" du block ( numtype toujours en mode Colonne )
+    	var line=$scope.getLineFromPosition96_C(firstWell);
+    	var column=$scope.getColumnFromPosition96_C(firstWell);
+   		
+       	// recuperer le container en position  line/column sur le supportCode et s'il existe le flagger
+		var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
+		if(containers && containers.length === 1)
+			containers[0]._addToOutputContainer = true;
     	
-    	// utiliser plutot forEach ???NON plus lent et pas standard...
-    	for (var j=0; j < otherWellsArray.length; j++){
-    		if ( $scope.isValidForPool(firstWell + otherWellsArray[j]) ) {
-    		   console.log ("add well="+  (firstWell+ otherWellsArray[j]) +" in pool" );
-    		   //add2Pool...
+    	//--2-- autres puits
+    	
+    	// ESSAI cas 'X'    PB....a revoir
+    	//if ( otherWellsArray[0] === "X") {
+    	//	console.log("cas X");
+    	//	//si p est pair: +9; si p est impair: +7
+    	//	if ( p%2 === 0) { posLC=$scope.getLineAndColFormPosition96(firstWell + 9, "Cmode" );}
+    	//	else            { posLC=$scope.getLineAndColFormPosition96(firstWell + 7, "Cmode" );}
+    	//	
+    	//	if ( $scope.isValidForPool(posLC) ) {
+		//		console.log ("add well="+  posLC +" in pool" );
+		//		////var b = results[0]._addToOutputContainer;
+		//	}	
+    	//}else {
+
+    		for (var j=0; j < otherWellsArray.length; j++){
+    	    	var line=$scope.getLineFromPosition96_C (firstWell + otherWellsArray[j]);
+    	    	var column=$scope.getColumnFromPosition96_C (firstWell + otherWellsArray[j]);
+    	    	
+    	    	// recuperer le container en position  line/column sur le supportCode et s'il existe le flagger
+    			var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
+    			if(containers && containers.length === 1)
+    				containers[0]._addToOutputContainer = true;
+    			
     		}
-    	}
+    	//}
     }
     
-    $scope.createPoolContigu=function(p, wellsArray ){
+    $scope.createPoolContigu=function( p, wellsArray, numtype ){
     	// pour les mode ligne ou colonne
     	console.log ("creating pool "+ p);
     	
-    	// utiliser plutot forEach ???NON plus lent et pas standard...
     	for (var j=0; j < wellsArray.length; j++){
-    		if ( $scope.isValidForPool( wellsArray[j]) ) {
-    		   console.log ("add well="+  wellsArray[j] +" in pool" );
-    		   //add2Pool...
-    		}
+    		// retraduire l'index en position <ligne><colonne>, depend du mode de numerotation
+    		if (numtype === 'C') {
+        		var line=$scope.getLineFromPosition96_C( wellsArray[j] );
+        		var column=$scope.getColumnFromPosition96_C( wellsArray[j] );
+    		} else if (numtype === 'L') {
+        		var line=$scope.getLineFromPosition96_L( wellsArray[j] );
+        		var column=$scope.getColumnFromPosition96_L( wellsArray[j] );
+    		} else { 
+    			throw "OOps incorrect numtype:"+ numtype; 
+    		}	
+    		
+    		var supportCode=$scope.atmService.data.getCurrentSupportCode() ;
+        	// recuperer le container en position  line/column  sur le support et s'il existe le flagger
+    		var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
+    		if(containers && containers.length === 1)
+    			containers[0]._addToOutputContainer = true;
     	}
-    }
     
-    $scope.isValidForPool=function(well){
-    	//TODO
-       	//  -1- il doit y avoir qq chose dans le puits
-    	//  -2- concentration minimale ???
-    	console.log ("Check  valid criteria for well "+well);
+        // creer le container de sortie correspondant au pool
+    	$scope.atmService.data.dropInSelectInputContainer();
     }
     
 }]);

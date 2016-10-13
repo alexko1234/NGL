@@ -1,67 +1,6 @@
 @()
 <!-- work with atmDragAndDrop2 -->
 
-<!--FDS TEST 30/09/2016  ajouter ligne avec boutons: mode, nb-plex, start position,  end-position -->
-<div class="row col-md-11 col-lg-11">
-	<div class="col-md-2 col-lg-2">
-	   <label for="poolMode" class="control-label">Mode</label>
-	   <select class="form-control input-sm"
-	  					ng-model="poolMode"
-						ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"						
-						ng-options="mode as mode.name for mode in poolModes track by mode.code">  	
-						<option value="">choisir un mode</option>  			    							     	 
-	   </select>	
-	</div>
-    <div class="col-md-2 col-lg-2">
-	   <label for="nbPlex" class="control-label">plex</label>
-	   <select class="form-control input-sm"					
-	  					ng-model="poolPlex"
-						ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"				
-						ng-options="plex for plex in [3,4,5,6,7,8,12,16]"> 
-						<option value="">choisir le plex</option>  			     	 							     	 
-	   </select>	
-	</div>
-	<div class="col-md-2 col-lg-2">
-	   <label for="lignePosDebut" class="control-label">Ligne position début</label>
-	   <!--  si on met  le meme ng-model pour 2 select ils sont synchronisés ce que je ne veut pas .....!!!!-->
-	  	<select class="form-control input-sm" 							
-					ng-model="startLine"
-					ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"
-					ng-options="lignePosDebut for lignePosDebut in ['A','B','C','D','E','F','G','H']">		
-					 <option value="">choisir une ligne</option> 	     	 							     	 
-		</select>	
-	</div>
-	<div class="col-md-2 col-lg-2">
-      <label for="colPosDebut" class="control-label">Col. position début</label>
-	  <select class="form-control input-sm"
-		             ng-model="startColumn" 
-		             ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"
-	  				 ng-options="colPosDebut for colPosDebut in [1,2,3,4,5,6,7,8,9,10,11,12]">
-	  				 <option value="">choisir une colonne</option> 
-				     	 							     	 
-	  </select>
-	</div>
-	<div class="col-md-2 col-lg-2">
-	   <label for="lignePosFin" class="control-label">Ligne position fin</label>
-	   <select class="form-control input-sm" 	
-	   				ng-model="endLine"	
-	   				ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"		
-					ng-options="lignePosFin for lignePosFin in  ['A','B','C','D','E','F','G','H']">
-				    <option value="">choisir une ligne</option> 	 							     	 
-	  </select>
-	</div>
-	<div class="col-md-2 col-lg-2">
-      <label for="colPosFin" class="control-label">Col. position fin</label>
-	  <select class="form-control input-sm"
-	  				ng-model="endColumn" 	
-	  				ng-change="showSelections(poolMode,poolPlex,startColumn,startLine,endColumn,endLine )"		
-					ng-options="colPosFin for colPosFin in  [1,2,3,4,5,6,7,8,9,10,11,12]"> 
-					 <option value="">choisir une colonne</option> 	 		
-				     	 							     	 
-	  </select>
-	</div>
-	
-</div>
 <table class="table table-bordered table-condensed"
 				ng-mouseup="atmService.data.stopSelectInputContainer($event)"
 				ng-mousedown="atmService.data.startSelectInputContainer($event)">
