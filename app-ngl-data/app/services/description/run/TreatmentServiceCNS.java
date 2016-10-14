@@ -599,6 +599,9 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences prises aléatoirement","inputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases","inputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% paires de bases alignées 1D forward","1DForward.percentAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences alignées 1D forward","1DForward.percentAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences alignées sur 100% de leur longueur 1D forward","1DForward.percentAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
