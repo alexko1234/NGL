@@ -44,7 +44,7 @@ public class ImportDataCNS{
 		new UpdateSolutionStockCNS(Duration.create(20,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
 		
 		//Update NCBI scientificName and lineage for Sample
-		new UpdateSampleNCBITaxonCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(1,TimeUnit.HOURS));
+		new UpdateSampleNCBITaxonCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
 	
 		/*	
 		new BanqueAmpliImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
@@ -55,7 +55,7 @@ public class ImportDataCNS{
 		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
 		*/
 		
-		new UpdateSamplePropertiesCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(23,20),TimeUnit.SECONDS),Duration.create(1,TimeUnit.HOURS));
+		new UpdateSamplePropertiesCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
 	}
 
 }

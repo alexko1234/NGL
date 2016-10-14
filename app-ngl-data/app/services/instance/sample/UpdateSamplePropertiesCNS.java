@@ -44,13 +44,13 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		//Récupère tous les samples modifiés les derniers 48h
-		updateSampleModifySince(-4,contextError);
+		updateSampleModifySince(-1,contextError);
 	}
 
-	static public void updateSampleModifySince(int nbDays,ContextValidation contextError){
+	private static void updateSampleModifySince(int nbDays,ContextValidation contextError){
 
 				Calendar calendar = Calendar.getInstance();
-				calendar.add(Calendar.DATE, nbDays);
+				calendar.add(Calendar.DAY_OF_YEAR, nbDays);
 				Date date =  calendar.getTime();
 
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life")).toList();
@@ -61,7 +61,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				});
 	}
 
-	static public void updateOneSample(Sample sample,ContextValidation contextError) {
+	private static void updateOneSample(Sample sample,ContextValidation contextError) {
 
 		Logger.debug("Update sample "+sample.code);
 
