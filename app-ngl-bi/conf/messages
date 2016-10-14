@@ -418,6 +418,8 @@ readsets.treatments.ngsrg_nanopore.readLengthDistribution = Read Length Distribu
 readsets.treatments.ngsrg_nanopore.readQualityDistribution = Read Quality Distribution
 readsets.treatments.ngsrg_nanopore.KmersDistribution = Kmers Distribution
 
+readsets.treatments.mapping_nanopore.inputNbReads = Nb séquences échantillonnage
+readsets.treatments.mapping_nanopore.inputNbBases = Nb bases échantillonnage
 readsets.treatments.mapping_nanopore.percentAlignedBasePairs = % paires de bases alignées
 readsets.treatments.mapping_nanopore.percentAlignedReads = % séquences alignées
 readsets.treatments.mapping_nanopore.percentAlignedReadsL100 = % séquences alignées sur 100% de leur longueur

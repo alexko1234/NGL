@@ -1,4 +1,27 @@
 @()
+
+<div class="row">		
+	<div class="col-md-2 col-lg-2">				  	
+			<table class="table table-condensed table-hover table-bordered">
+				<tbody>
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.inputNbReads")</th>
+					<td>
+						{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.inputNbReads.value | number}}
+					</td>
+				</tr>
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.inputNbBases")</th>
+					<td>
+						{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.inputNbBases.value | number}}
+					</td>
+							
+				</tr>
+				</tbody>
+			</table>
+		</div>					
+	</div>	
+
 <!-- Tableau a 2 dimensions -->
  <div class="row">
 	<div class="col-md-6 col-lg-6">	
