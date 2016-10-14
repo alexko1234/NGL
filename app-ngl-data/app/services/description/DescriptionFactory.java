@@ -878,6 +878,7 @@ public class DescriptionFactory {
 	 * @param name
 	 * @param code
 	 * @param category
+	 * @param displayOrder TODO
 	 * @param propertiesDefinitions
 	 * @param experimentTypes
 	 * @param firstExperimentType
@@ -887,8 +888,8 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ProcessType newProcessType(String name, String code, ProcessCategory category, List<PropertyDefinition> propertiesDefinitions, 
-			List<ProcessExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType, List<Institute> institutes) throws DAOException {
+	public static ProcessType newProcessType(String name, String code, ProcessCategory category, Integer displayOrder, 
+			List<PropertyDefinition> propertiesDefinitions, List<ProcessExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType, List<Institute> institutes) throws DAOException {
 		ProcessType pt = new ProcessType();
 		pt.code =code.toLowerCase();
 		pt.name =name;
@@ -902,6 +903,7 @@ public class DescriptionFactory {
 		pt.voidExperimentType = voidExperimentType;
 		pt.experimentTypes = experimentTypes;
 		pt.institutes = institutes;
+		pt.displayOrder = displayOrder;
 		return pt;
 	}
 

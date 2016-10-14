@@ -97,7 +97,7 @@ public abstract class AbstractDeclaration {
 	protected abstract void getExperimentTypeNodeUAT();
 
 	public void getExperimentTypeNode(){
-
+		getExperimentTypeNodeCommon();
 		//Logger.debug(this.getClass().getSimpleName()+" getExperimentTypeNode");
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			getExperimentTypeNodeDEV();
@@ -108,7 +108,7 @@ public abstract class AbstractDeclaration {
 		}else {
 			throw new RuntimeException("ngl.env value not implemented");
 		}
-		getExperimentTypeNodeCommon();
+		
 	}
 	
 	

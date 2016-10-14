@@ -61,7 +61,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				});
 	}
 
-	private static void updateOneSample(Sample sample,ContextValidation contextError) {
+	public static void updateOneSample(Sample sample,ContextValidation contextError) {
 
 		Logger.debug("Update sample "+sample.code);
 

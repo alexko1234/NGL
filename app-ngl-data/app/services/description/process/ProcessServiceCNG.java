@@ -67,81 +67,81 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// Attention l'ordre de déclaration sera l'ordre de présentation dans les menus !!
 		
 		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
-				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
-            	Arrays.asList(getPET("ext-to-denat-dil-lib",-1), 
+				null,
+            	getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),// ordered list of experiment type in process type
+				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), 
             			getPET("lib-normalization",-1), 
             			getPET("denat-dil-lib",0),
             			getPET("prepa-flowcell",1),
-            			getPET("illumina-depot",2)),// ordered list of experiment type in process type
-				getExperimentTypes("denat-dil-lib").get(0),        //first experiment type
-				getExperimentTypes("illumina-depot").get(0),       //last  experiment type
-				getExperimentTypes("ext-to-denat-dil-lib").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+            			getPET("illumina-depot",2)),        //first experiment type
+				getExperimentTypes("denat-dil-lib").get(0),       //last  experiment type
+				getExperimentTypes("illumina-depot").get(0), //void  experiment type
+				getExperimentTypes("ext-to-denat-dil-lib").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	   
 		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
-				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
+				null,
+				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"), //ordered list of experiment type in process type
 				Arrays.asList(getPET("ext-to-prepa-flowcell",-1),
 						getPET("denat-dil-lib",-1),
 						getPET("prepa-flowcell",0),
-						getPET("illumina-depot",1) ), //ordered list of experiment type in process type
-				getExperimentTypes("prepa-flowcell").get(0),        //first experiment type
-				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
-				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+						getPET("illumina-depot",1) ),        //first experiment type
+				getExperimentTypes("prepa-flowcell").get(0),        //last  experiment type
+				getExperimentTypes("illumina-depot").get(0), //void  experiment type
+				getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		l.add(DescriptionFactory.newProcessType("4000 / X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
-				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"),
+				null,
+				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), //ordered list of experiment type in process type
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),
 						getPET("lib-normalization",-1),
 						getPET("prepa-fc-ordered",0),
-						getPET("illumina-depot",1) ), //ordered list of experiment type in process type
-				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
-				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
-				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+						getPET("illumina-depot",1) ),        //first experiment type
+				getExperimentTypes("prepa-fc-ordered").get(0),          //last  experiment type
+				getExperimentTypes("illumina-depot").get(0), //void  experiment type
+				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5; chgt label 16/09/2016
 		l.add(DescriptionFactory.newProcessType("WG PCR free (FC ordonnée)", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
-				getPropertyDefinitionsX5WgPcrFree(),
+				null,
+				getPropertyDefinitionsX5WgPcrFree(), //ordered list of experiment type in process type
 				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),
 						getPET("prep-pcr-free",0),
 						getPET("lib-normalization",1), 
 						getPET("prepa-fc-ordered",2), 
-						getPET("illumina-depot",3) ), //ordered list of experiment type in process type
-				getExperimentTypes("prep-pcr-free").get(0),         //first experiment type
-				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
-				getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+						getPET("illumina-depot",3) ),         //first experiment type
+				getExperimentTypes("prep-pcr-free").get(0),        //last  experiment type
+				getExperimentTypes("illumina-depot").get(0), //void  experiment type
+				getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout  12/04/2016 JIRA NGL-894/981 processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
 		// 26/09/2016 bug manquait ("pcr-and-purification",-1), 
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				null,
+				null, //ordered list of experiment type in process type
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),
 						getPET("prep-pcr-free",-1),
 						getPET("pcr-and-purification",-1), 
 						getPET("lib-normalization",0), 
 						getPET("prepa-fc-ordered",1), 
-						getPET("illumina-depot",2) ), //ordered list of experiment type in process type
-				getExperimentTypes("lib-normalization").get(0),            //first experiment type
-				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
-				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+						getPET("illumina-depot",2) ),            //first experiment type
+				getExperimentTypes("lib-normalization").get(0),               //last  experiment type
+				getExperimentTypes("illumina-depot").get(0), //void  experiment type
+				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS ajout 10/08/2016 JIRA NGL-1047 processus X5_WG NANO; mise en prod 1/09/2016; chgt label 16/06/2016
 		// 26/09/2016 modif commence par ("prep-wg-nano",0)
 		l.add(DescriptionFactory.newProcessType("WG NANO (FC ordonnée)", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
-				getPropertyDefinitionsX5WgNanoDNAseq(), 
+				null, 
+				getPropertyDefinitionsX5WgNanoDNAseq(), //ordered list of experiment type in process type
 				Arrays.asList(getPET("ext-to-x5-wg-nano",-1),
 						getPET("prep-wg-nano",0),
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
 						getPET("prepa-fc-ordered",3), 
-						getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-				getExperimentTypes("prep-wg-nano").get(0),      //first experiment type;
-				getExperimentTypes("illumina-depot").get(0),     //last  experiment type
-				getExperimentTypes("ext-to-x5-wg-nano").get(0),  //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+						getPET("illumina-depot",4) ),      //first experiment type;
+				getExperimentTypes("prep-wg-nano").get(0),     //last  experiment type
+				getExperimentTypes("illumina-depot").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-x5-wg-nano").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 
 		/************************************ DEV / UAT ONLY **********************************************/
@@ -150,31 +150,31 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			// FDS ajout 31/05/2016 JIRA NGL-1025: 2 processus pour RNASeq; processus long type "library". 
 			// FDS modif label 16/09/2016 JIRA NGL-1025:
 			l.add(DescriptionFactory.newProcessType("RNAseq (FC ordonnée)", "x5-rna-sequencing", ProcessCategory.find.findByCode("library"),
-					getPropertyDefinitionsRNAseq(),
+					null,
+					getPropertyDefinitionsRNAseq(), //ordered list of experiment type in process type
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1),
 							getPET("library-prep",0),
 							getPET("pcr-and-purification",1),
 							getPET("normalization-and-pooling",2), 
 							getPET("prepa-fc-ordered",3), 
-							getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-					getExperimentTypes("library-prep").get(0),             //first experiment type
-					getExperimentTypes("illumina-depot").get(0),           //last  experiment type
-					getExperimentTypes("ext-to-rna-sequencing").get(0),    //void  experiment type
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+							getPET("illumina-depot",4) ),             //first experiment type
+					getExperimentTypes("library-prep").get(0),           //last  experiment type
+					getExperimentTypes("illumina-depot").get(0),    //void  experiment type
+					getExperimentTypes("ext-to-rna-sequencing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			// processus court type "normalization"; chgt label 15/09/2016
 			// 26/09/2016 bug manquait ("pcr-and-purification",-1),
 			l.add(DescriptionFactory.newProcessType("Norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
 					null,   /// pas de proprietes ??
+					null, //ordered list of experiment type in process type
 					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1),
 							getPET("pcr-and-purification",-1),
 							getPET("normalization-and-pooling",0), 
 							getPET("prepa-fc-ordered",1), 
-							getPET("illumina-depot",2) ), //ordered list of experiment type in process type
-					getExperimentTypes("normalization-and-pooling").get(0),          //first experiment type
-					getExperimentTypes("illumina-depot").get(0),                     //last  experiment type
-					getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),  //void  experiment type
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+							getPET("illumina-depot",2) ),          //first experiment type
+					getExperimentTypes("normalization-and-pooling").get(0),                     //last  experiment type
+					getExperimentTypes("illumina-depot").get(0),  //void  experiment type
+					getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		}
 			
 		DAOHelpers.saveModels(ProcessType.class, l, errors);

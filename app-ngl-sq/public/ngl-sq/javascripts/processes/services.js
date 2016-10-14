@@ -411,7 +411,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				this.form.categoryCodes.forEach(function(code){
 					this.processTypesForCategories = this.processTypesForCategories.concat(this.processTypesByCategory[code])
 				},this)
-				this.processTypesForCategories = $filter('orderBy')(this.processTypesForCategories, 'name');
+				this.processTypesForCategories = $filter('orderBy')(this.processTypesForCategories, 'displayOrder');
 			}else {
 				this.form.categoryCodes = undefined;
 			}

@@ -100,7 +100,8 @@ public class MetaTProcess extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTRNA(),
+		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
+				getPropertiesMetaTRNA(), 
 				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
 						,getPET("dna-rna-extraction",-1)
 						, getPET("rna-illumina-indexed-library",0)
@@ -108,10 +109,10 @@ public class MetaTProcess extends AbstractDeclaration {
 						, getPET("solution-stock",2)
 						, getPET("prepa-flowcell",3)
 						, getPET("prepa-fc-ordered",3)
-						, getPET("illumina-depot",4)), 
-				getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("MetaT cDNA + FRG", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaTcDNA(),
+		l.add(DescriptionFactory.newProcessType("MetaT cDNA + FRG", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), 22,
+				getPropertiesMetaTcDNA(), 
 				Arrays.asList(getPET("ext-to-cdna-frg-transcriptomic-process",-1)
 						,getPET("dna-rna-extraction",-1)
 						, getPET("cdna-synthesis",0)
@@ -121,8 +122,7 @@ public class MetaTProcess extends AbstractDeclaration {
 						, getPET("solution-stock",4)
 						, getPET("prepa-flowcell",5)
 						, getPET("prepa-fc-ordered",5)
-						, getPET("illumina-depot",6)), 
-				getExperimentTypes("cdna-synthesis").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+						, getPET("illumina-depot",6)), getExperimentTypes("cdna-synthesis").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
 	}
 

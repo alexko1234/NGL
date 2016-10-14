@@ -59,7 +59,8 @@ public class MetaGenomique extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 
-		l.add(DescriptionFactory.newProcessType("MetaGénomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), getPropertiesMetaGenomique(),
+		l.add(DescriptionFactory.newProcessType("MetaGénomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
+				getPropertiesMetaGenomique(), 
 				Arrays.asList(getPET("ext-to-metagenomic-process",-1)
 						,getPET("dna-rna-extraction",-1)
 						, getPET("fragmentation",0)
@@ -69,9 +70,11 @@ public class MetaGenomique extends AbstractDeclaration {
 						, getPET("prepa-flowcell",4)
 						, getPET("prepa-fc-ordered",4)
 						, getPET("illumina-depot",5)), 
-				getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("MetaGénomique (bq sizée)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), getPropertiesMetaGenomiqueWithSizing(),
+		l.add(DescriptionFactory.newProcessType("MetaGénomique (bq sizée)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 32,
+				getPropertiesMetaGenomiqueWithSizing(), 
 				Arrays.asList(getPET("ext-to-metagenomic-process-with-sizing",-1)
 						,getPET("dna-rna-extraction",-1)
 						, getPET("fragmentation",0)
@@ -82,7 +85,8 @@ public class MetaGenomique extends AbstractDeclaration {
 						, getPET("prepa-flowcell",5)
 						, getPET("prepa-fc-ordered",5)
 						, getPET("illumina-depot",6)), 
-				getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return l;
 	}
 

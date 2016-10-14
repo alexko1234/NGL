@@ -121,11 +121,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		new Opgen().getExperimentTypeNode();
 		new Bionano().getExperimentTypeNode();		
 		new Nanopore().getExperimentTypeNode();
+		new BanqueIllumina().getExperimentTypeNode();
 		
 		new MetaGenomique().getExperimentTypeNode();
 		new MetaTProcess().getExperimentTypeNode();
 		new MetaBarCoding().getExperimentTypeNode();
-		new BanqueIllumina().getExperimentTypeNode();
 		new RunIllumina().getExperimentTypeNode();
 		
 		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	

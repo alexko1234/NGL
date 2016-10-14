@@ -86,17 +86,34 @@ public class Bionano extends AbstractDeclaration{
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
 
-		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
-				getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", 
+				ProcessCategory.find.findByCode("mapping"), 101, 
+				getPropertyDefinitionsBionano(), 
+				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),
+						getPET("irys-nlrs-prep",0),
+						getPET("irys-chip-preparation",1),
+						getPET("bionano-depot",2)), 
+						getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-				Arrays.asList(getPET("ext-to-bionano-chip-process",-1),getPET("irys-nlrs-prep",-1),getPET("irys-chip-preparation",0),getPET("bionano-depot",1)),
-				getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-chip-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", 
+				ProcessCategory.find.findByCode("mapping"), 102, 
+				getPropertyDefinitionsBionano(),
+				Arrays.asList(getPET("ext-to-bionano-chip-process",-1),
+						getPET("irys-nlrs-prep",-1),
+						getPET("irys-chip-preparation",0),
+						getPET("bionano-depot",1)), 
+						getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-chip-process").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-				Arrays.asList(getPET("ext-to-bionano-run",-1), getPET("irys-chip-preparation",-1), getPET("bionano-depot",0)), 
-				getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", 
+				ProcessCategory.find.findByCode("mapping"), 103, 
+				getPropertyDefinitionsBionano(), 
+				Arrays.asList(getPET("ext-to-bionano-run",-1), 
+						getPET("irys-chip-preparation",-1), 
+						getPET("bionano-depot",0)), 
+						getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-run").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		return l;
 	}
