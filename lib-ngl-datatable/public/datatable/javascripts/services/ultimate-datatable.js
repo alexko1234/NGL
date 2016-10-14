@@ -573,9 +573,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         console.log("edit is active, you lost all modification !!");
                         this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
                     }
-
                     this.computeGroup();
-                    this.sortAllResult(); //sort all the result
+                    this.sortAllResult(); //sort all the result                    
                     this.computePaginationList(); //redefined pagination
                     this.computeDisplayResult(); //redefined the result must be displayed
                     var that = this;
@@ -2215,6 +2214,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 
                     //calcule results ( code extracted from method computeDisplayResult() )
                     var displayResultTmp = [];
+                    if (this.isGroupActive()) {
+                    	this.allResult = $filter('orderBy')(this.allResult, this.config.group.by.property);
+                    }
+                    
                     angular.forEach(this.allResult, function(value, key) {
                         var line = {
                             "edit": undefined,
@@ -2229,7 +2232,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         });
                     }, displayResultTmp);
                     if (this.isGroupActive()) {
-                        displayResultTmp = this.addGroup(displayResultTmp);
+                    	displayResultTmp = this.addGroup(displayResultTmp);
                     }
                     //manage results
                     if (displayResultTmp) {
