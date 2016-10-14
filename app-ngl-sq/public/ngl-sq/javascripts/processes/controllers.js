@@ -536,127 +536,148 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','tabService','$q', function($scope, datatable,$http,mainService,tabService,$q) {
 
 var	datatableConfig = {
-			columns:[
-			         {
-			        	 "header":Messages("processes.table.supportCode"),
-			        	 "property":"support.code",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "position":1,
-			        	 "type":"text"
-			         },
-			 /*        {
-			        	 "header":Messages("processes.table.line"),
-			        	 "property":"support.line",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "position":2,
-			        	 "type":"text"
-			         },
-			         {
-			        	 "header":Messages("processes.table.columns"),
-			        	 "property":"support.column*1",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "position":3,
-			        	 "type":"number"
-			         },  */
-			         {
-			        	 "header":Messages("processes.table.projectCode"),
-			        	 "property":"projectCodes",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "position":4,
-			        	 "render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
-			        	 "type":"text"
-			         },
-			         {
-			        	 "header":Messages("processes.table.sampleCode"),
-			        	 "property":"sampleCodes",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "position":5,
-			        	 "render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
-			        	 "type":"text"
-			         },
-			         {
-			 			"header":Messages("containers.table.contents.length"),
-			 			"property":"contents.length",
-			 			"order":true,
-			 			"hide":true,
-			 			"position":5.01,
-			 			"type":"number"
-			 		},
-			         {
-			        	 "header": function(){
-				        		 if($scope.supportView){
-				        			 return Messages("containers.table.stateCode");
-				        		 }else{
-				        			 return  Messages("containers.table.state.code");	
-				        		 }
-			        	 },
-			        	 "property":"state.code",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "position":6,
-			        	 "filter": "codes:'state'",
-			        	 "type":"text"
-			         },
-			         {
-			        	"header" : Messages("processes.table.comments"),
-						"property" : "comments[0].comment",
-						"position" : 500,
-						"order" : false,
-						"edit" : true,
-						"hide" : true,
-						"type" : "text"
-			         }
-			         ],
-			         pagination:{
-			        	 active:false
-			         },		
-			         search:{
-			        	 active:false
-			         },
-			         order:{
-			        	 mode:'local',
-			        	 active:true,
-			        	 by:'inputContainerCode'
-			         },
-			         edit:{  			        	
-			        	 columnMode:true,
-			        	 byDefault : true,
-			         },
-			         save:{
-			        	 active: !$scope.doneAndRecorded,
-			        	 withoutEdit:true,
-			        	 showButton : false,
-			        	 mode:"local",
-			        	 changeClass : false
-			         },
-			         remove:{			        	 
-			        	 mode:'local',
-			        	 active:true,
-			        	 withEdit:true,
-			        	 callback : function(datatable){
-			        		 $scope.basket.reset();
-			        		 $scope.basket.add(datatable.allResult);
-			        	 }
-			         },
-			         messages:{
-			        	 active:false,
-			        	 transformKey: function(key, args) {
-				             return Messages(key, args);
-			        	 }
-			         },
-			         otherButtons :{
-			        	 active:true,
-			        	 template:'<button ng-if="doneAndRecorded==false" class="btn" ng-click="save()"><i class="fa fa-save"></i></button>'
-			        	 +' <button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
-			        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
-			        	 Messages("baskets.switchView.containers")+'</b>'+
-			        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
-			         }
+			 columns: [],
+	         pagination:{
+	        	 active:false
+	         },		
+	         search:{
+	        	 active:false
+	         },
+	         order:{
+	        	 mode:'local',
+	        	 active:true,
+	        	 by:'inputContainerCode'
+	         },
+	         edit:{  			        	
+	        	 columnMode:true,
+	        	 byDefault : true,
+	         },
+	         save:{
+	        	 active: !$scope.doneAndRecorded,
+	        	 withoutEdit:true,
+	        	 showButton : false,
+	        	 mode:"local",
+	        	 changeClass : false
+	         },
+	         remove:{			        	 
+	        	 mode:'local',
+	        	 active:true,
+	        	 withEdit:true,
+	        	 callback : function(datatable){
+	        		 $scope.basket.reset();
+	        		 $scope.basket.add(datatable.allResult);
+	        	 }
+	         },
+	         messages:{
+	        	 active:false,
+	        	 transformKey: function(key, args) {
+		             return Messages(key, args);
+	        	 }
+	         },
+	         otherButtons :{
+	        	 active:true,
+	        	 template:'<button ng-if="doneAndRecorded==false" class="btn" ng-click="save()"><i class="fa fa-save"></i></button>'
+	        	 +' <button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+	        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
+	        	 Messages("baskets.switchView.containers")+'</b>'+
+	        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
+	         }
+	};
+
+
+	var getCreationProcessColumns = function(view){
+		var columns = [];
+		
+		
+		if("container" === view){
+			
+			columns.push({
+		       	 "header":Messages("processes.table.supportCode"),
+		       	 "property":"support.code",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":1,
+		       	 "type":"text"
+			});
+			
+
+			
+			columns.push({
+		       	 "header":Messages("processes.table.line"),
+		       	 "property":"support.line",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":2,
+		       	 "type":"text"
+			});
+			columns.push({
+		       	 "header":Messages("processes.table.columns"),
+		       	 "property":"support.column*1",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":3,
+		       	 "type":"number"
+			});			
+			
+		}else{
+			columns.push({
+		       	 "header":Messages("processes.table.supportCode"),
+		       	 "property":"support.code",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":1,
+		       	 "type":"text"
+			});
+			
+		}
+		
+		
+       
+		columns.push({
+				       	 "header":Messages("processes.table.projectCode"),
+				       	 "property":"projectCodes",
+				       	 "order":true,
+				       	 "hide":true,
+				       	 "position":4,
+				       	 "render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+				       	 "type":"text"
+		});
+		columns.push({
+       	 "header":Messages("processes.table.sampleCode"),
+       	 "property":"sampleCodes",
+       	 "order":true,
+       	 "hide":true,
+       	 "position":5,
+       	 "render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+       	 "type":"text"
+		});
+		columns.push({
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":5.01,
+			"type":"number"
+		});
+		columns.push({
+       	 "header":Messages("containers.table.stateCode"),
+       	 "property":"state.code",
+       	 "order":true,
+       	 "hide":true,
+       	 "position":6,
+       	 "filter": "codes:'state'",
+       	 "type":"text"
+		});
+		columns.push({
+       	"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
 	};
 
 	var getProcessesColumns = function(){
@@ -790,7 +811,7 @@ var	datatableConfig = {
 		}
 
 
-		$scope.datatable.config.columns[0].header = Messages("containers.table.code");
+		$scope.datatable.setColumnsConfig(getCreationProcessColumns("container"));
 	};
 
 	$scope.swithToSupportView = function(){
@@ -817,7 +838,7 @@ var	datatableConfig = {
 
 		console.log($scope.datatable.config);
 		if($scope.datatable.config.columns.length>0)
-			$scope.datatable.config.columns[0].header = Messages("containers.table.supportCode");
+			$scope.datatable.setColumnsConfig(getCreationProcessColumns("support"));
 	};
 	
 	
@@ -1111,7 +1132,7 @@ var	datatableConfig = {
 	$scope.containers = [];
 	$scope.lineClasses = [];
 	$scope.processes = [];
-	
+	datatableConfig.columns = getCreationProcessColumns();
 	$scope.datatable = datatable(datatableConfig);	
 	$scope.basket = mainService.getBasket();
 	$scope.addNewProcessColumns();
