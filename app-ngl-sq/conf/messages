@@ -165,7 +165,10 @@ containers.table.comments = Commentaires
 containers.table.contents.length = Nb de contents
 containers.table.contents = Contents
 containers.table.percents = Pourcentage
+containers.table.sampleDetail = Détails Echantillon
 containers.table.referenceCollab = Réf. collab
+containers.table.taxonCode= Taxon Id
+containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
 
 container.from = issu de
