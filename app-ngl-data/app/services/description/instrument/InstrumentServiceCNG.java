@@ -216,9 +216,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		//FDS ajout 04/10/2016 Epimotion (input plate/ output tubes)
-		l.add(newInstrumentUsedType("Epimotion", "epimotion", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(), 
+		l.add(newInstrumentUsedType("Epimotion", "epimotion", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpimotionProperties(), 
 				getInstruments(
-						createInstrument("epimotion1", "Epimotion1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("epimotion2", "Epimotion2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
@@ -524,7 +524,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 			l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
 					// newValues("programme 1_normalisation"), "single", null, false ,null, null));
 					newValues("programme 1",  
-							  "---"),                         // ajouté pour éviter qu'en pooling "programme 1_normalisation" soit selectionné par defaut
+							  "---"),                         // ajouté pour éviter selection par defaut
 							  "single", null, false ,null, null));
 			return l;
 	} 

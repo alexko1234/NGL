@@ -1,17 +1,17 @@
 // FDS 21/06/2016 dupliqué depuis manyToOne.experiments.cns.x-to-tubes avec modifs
-angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
-                                                               function($scope, $http, $filter, $parse) {
+angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '$filter',
+                                                               function($scope, $http, $parse, $filter) {
 
 	//-----------------------------------------reutilisables ailleurs ??----------------------------------------------------------
 	// FDS 29/06/2016 calcul de la ligne en fonction de position 96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
-	$scope.getLineFromPosition96_C = function(pos96){	
+	var getLineFromPosition96_C = function(pos96){	
 		var line= String.fromCharCode (((pos96 -1) % 8 ) + 65 );
 		//console.log(">line ="+ line +" ("+pos96+")");
 		return line;
 	};
 	
 	//  FDS 29/06/2016  calcul de la colonne en fonction de position-96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
-	$scope.getColumnFromPosition96_C = function(pos96){	
+	var getColumnFromPosition96_C = function(pos96){	
 		var c=Math.floor((pos96 -1) / 8) +1 ;
 		var column= c.toString();
 		//console.log(">col ="+column+" ("+pos96+")");
@@ -19,17 +19,17 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	};
 	
 	
-	$scope.getLineFromPosition96_L = function(pos96){	
-		//TODO
+	var getLineFromPosition96_L = function(pos96){	
+		//TODO ??
 	}
 	
-	$scope.getColFromPosition96_L = function(pos96){	
-		//TODO
+	var getColFromPosition96_L = function(pos96){	
+		//TODO ??
 	}
 	
 	
 	// FDS 03/10/2016 calculer la position-96 en mode colonne a partir de ligne et colonne ( 1=A1, 2=B1... 9=A2...) 
-	$scope.getPos96FromLineAndCol_C = function(ln,col){
+	var getPos96FromLineAndCol_C = function(ln,col){
 		if ( ln && col ){
 			// numeroter a partir de 1 et pas 0!!   var pos= (col  -1 )*8 + ( ln.charCodeAt(0) -65);
 			var pos96=(col -1 )*8 + ( ln.charCodeAt(0) -64);
@@ -39,7 +39,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	}
 	
 	//  FDS 03/10/2016 calculer la position-96 en mode ligne a partir de ligne et colonne ( 1=A1, 2=A2...13=B1...)
-	$scope.getPos96FromLineAndCol_L = function(ln,col){
+	var getPos96FromLineAndCol_L = function(ln,col){
        //TODO
 	}
 	//---------------------------------------------------------------------------------------------------------------------------
@@ -88,11 +88,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			// FDS  29/06/2016 positionnement automatique de ligne et colonne
 			// DEVRAIT PAS ETRE DANS UPDATE CONCENTRATION ???....a voir avec GA  ( atomicTransfereservice ??? )
 
-			// 05/10/2016 si le support de sortie est tube: il faut mettre 1/1 ????
-			atm.outputContainerUseds[0].locationOnContainerSupport.column=$scope.getColumnFromPosition96_C(atm.viewIndex);
+			// 05/10/2016 si le support de sortie est tube: il faut mettre 1/1 ???? 
+			// 17/10/2016.....OUI   A VOIR!!!!
+			atm.outputContainerUseds[0].locationOnContainerSupport.column=getColumnFromPosition96_C(atm.viewIndex);
 			atm.column=atm.outputContainerUseds[0].locationOnContainerSupport.column;
 			
-			atm.outputContainerUseds[0].locationOnContainerSupport.line=$scope.getLineFromPosition96_C(atm.viewIndex);
+			atm.outputContainerUseds[0].locationOnContainerSupport.line=getLineFromPosition96_C(atm.viewIndex);
 			atm.line=atm.outputContainerUseds[0].locationOnContainerSupport.line;
 			
 			// récupérer le dernier supportCode entré par l'utilisateur
@@ -245,6 +246,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	};
 
     // boutons generateSampleSheet seulement si autre type de containerSuppor que tubes
+	// A VERIFIER!!!! Epimotion travaille plaque=>tube... donc faut ne feuille de route ???
+	
 	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
 		// FDS pas de boutons generateSampleSheet pour la main
 		//console.log ("container="+ $scope.atmService.inputContainerSupportCategoryCode );
@@ -295,21 +298,27 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     $scope.lastSupportCode=null;
     $scope.lastStorageCode=null;
     
-    // 01/10/2016--------------------  gestion du mode pooling "automatique"--------------------------------
-    // TODO supprimer le prefixage $scope.  pour toutes les foctions strictement locales !!
-    ////    remplacer $scope.xxxx = function (   par var xxx= function (
+    // 01/10/2016---------------------------  gestion du mode pooling "automatique"--------------------------------------------------------------------
 
-    // HARDCODER les parametres des modes predefinis
-    $scope.poolingModes=[ 
-                          //{code: 'L4',  name:'ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
-                          //{code: 'L6',  name:'ligne 6-p',    poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
-                          //{code: 'C4',  name:'colonne 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
-                          //{code: 'C6',  name:'colonne 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
-                          //{code: 'IS4', name:'Ill Sing 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
-                          //{code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
-                          {code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
-                          {code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
-                         ];
+    // HARDCODER les parametres des modes predefinis ( numtype=typ de numerotation  L:en ligne C: en colonne )
+    // TEST 17/10/2016 gerer 2 listes en fonction du robot choisi: OK ca marche !!!
+    if ( $scope.experiment.instrument.typeCode === "janus") {	
+    	$scope.poolingModes=[ 
+                           //{code: 'L4',  name:'Ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
+                           //{code: 'L6',  name:'Ligne 6-p',    poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
+                           //{code: 'C4',  name:'Col 4-p',      poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+                           //{code: 'C6',  name:'Col 6-p',      poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+                           //{code: 'IS4', name:'Ill Sing 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
+                           //{code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
+                             {code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+                             {code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
+                            ];
+    } else if ( $scope.experiment.instrument.typeCode === "epimotion") {	
+    	$scope.poolingModes=[ 
+    	                     {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
+    	                     {code: 'C6',  name:'Col 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
+    	                    ];
+    } 
 
     $scope.poolingMode=null;
     $scope.autoPooling =function (poolingMode){
@@ -317,36 +326,40 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     	console.log( "plaque en cours="+ $scope.atmService.data.getCurrentSupportCode() );
 
     	if ( poolingMode.numtype === "L") {
-    		var startPos=$scope.getPos96FromLineAndCol_L( poolingMode.startLine, poolingMode.startColumn );
-    		var endPos=$scope.getPos96FromLineAndCol_L( poolingMode.endLine, poolingMode.endColumn);		
+    		var startPos=getPos96FromLineAndCol_L( poolingMode.startLine, poolingMode.startColumn );
+    		var endPos=getPos96FromLineAndCol_L( poolingMode.endLine, poolingMode.endColumn);		
     	} else if (poolingMode.numtype === "C")  {
-    		var startPos=$scope.getPos96FromLineAndCol_C( poolingMode.startLine, poolingMode.startColumn );
-    		var endPos=$scope.getPos96FromLineAndCol_C( poolingMode.endLine, poolingMode.endColumn);
+    		var startPos=getPos96FromLineAndCol_C( poolingMode.startLine, poolingMode.startColumn );
+    		var endPos=getPos96FromLineAndCol_C( poolingMode.endLine, poolingMode.endColumn);
     	} else { 
     		throw "OOps incorrect numtype :"+ poolingMode.numtype ;
     	}
 		console.log ("start position ="+ startPos);
 		console.log ("end position ="+ endPos);
 		
-		if (( poolingMode.code === "L4")||( poolingMode.code === "C4")||( poolingMode.code === "C4")){ 
-			$scope.poolContigu( poolingMode.poolPlex, poolingMode.startPos, poolingMode.endPos, poolingMode.numtype ); 
+		if (( poolingMode.code === "L4")||( poolingMode.code === "L6")||( poolingMode.code === "C4")||( poolingMode.code === "C6")){ 
+			poolContigu( poolingMode.poolPlex, startPos, endPos, poolingMode.numtype ); 
 		}
 		else if ((poolingMode.code === "ID4")||(poolingMode.code === "ID6")){ 
-			$scope.poolIlluminaDual( poolingMode.poolPlex, poolingMode.startPos, poolingMode.endPos );
+			poolIlluminaDual( poolingMode.poolPlex, startPos, endPos );
+		}
+		else if ((poolingMode.code === "IS4")||(poolingMode.code === "IS6")){ 
+			poolIlluminaSingle( poolingMode.poolPlex, startPos, endPos );
     	}else{
     		throw "OOps pooling mode not supported: "+ poolingMode.name;
     	}
+		console.log ("--END OF POOLING--");
     }
     
 
-    $scope.poolIlluminaDual=function( poolPlex, startPos, endPos ){
+    var poolIlluminaDual = function( poolPlex, startPos, endPos ){
     	// le pooling illumina Dual index est un pooling par blocs contigus...( voir doc Illumina: TruSeq Library prepPooling)
     	//    3-plex =bloc 2x2 avec 1 trou; 4-plex=bloc 2X2;
     	//    5-plex= bloc 2x3 avec 1 trou; 6-plex=bloc 2x3; 
     	//    7-plex= bloc 2x4 avec 1 trou; 8-plex-option1 =bloc 2x4; 8-plex-option2=bloc 4x2
     	//    12-plex= bloc 4x3; 16-plex= bloc xx4
     	console.log ("POOLING MODE ILLUMINA DUAL INDEX");
-    	console.log (">> startPos="+ startPos +" endPos"+ endPos );
+    	///console.log (">> startPos="+ startPos +" endPos="+ endPos );
     	
     	var block=null;
     	// members contient la position relative des autres puits du bloc par rapport au puit "0" du bloc
@@ -393,16 +406,16 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     	        var wi= j + k +(startPos -1);// prendre en compte la position de debut !!
     	        
     	        var lastWell=lastBlockMember + (wi+1);
-    	        console.log ("pool "+ (pi+1) +" commence au puit "+(wi+1)+" et fini au puit "+lastWell);
-    	        $scope.createPoolBlock( pi+1, wi+1, block.members );
+    	        //console.log ("pool "+ (pi+1) +" commence au puit "+(wi+1)+" et fini au puit "+lastWell);
+    	        createPoolBlock( pi+1, wi+1, block.members );
     	        
     	        // il faut sortir quand le plus grand indice de puit des membres du block courant est plus grand que la position de fin demandee
-    	        // probleme pour les blocs a trou...compter les trous ( toujours testé avec 1 seul trou...)
+    	        // probleme pour les blocs a trou...compter les trous ( toujours testé avec 1 seul trou !!)
     	        //   !!! marche pas pour le pool 1x2 !!!
     	        var blockHoles=blockSize - block.members.length -1;
     	        
         	    if (lastWell  >=  ( endPos - blockHoles )) { 
-    	        	console.log ("exit loop!!!"); 
+    	        	//console.log ("exit loop!!!"); 
     	        	loop=false
     	        } 
     	    	pi++;
@@ -410,12 +423,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
     	}
     }// end poolIlluminaDual
     
-    $scope.poolIlluminaSingle=function( poolPlex,  startPos, endPos, XXXX ){
+    var poolIlluminaSingle = function( poolPlex,  startPos, endPos, numtype ){
     	console.log ("POOLINGMODE ILLUMINA SINGLE INDEX...TODO");
     } 
     
-    $scope.poolContigu=function( poolPlex,  startPos, endPos, numtype ){
-    	console.log ("POOLING MODE 'CONTIGU' ");
+    var poolContigu = function( poolPlex,  startPos, endPos, numtype ){
+    	console.log ("POOLING MODE 'CONTIGU'");
     	
 		var nbWells=endPos - startPos +1;
 		var nbPools= Math.floor(nbWells / poolPlex);
@@ -433,83 +446,72 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			 pool.push(wi);
 			 // si wi multiple de poolPlex alors on change de pool  ATTENTION prise en compte de la position de debut 	 
 			 if  ((wi - startPos +1 )%poolPlex == 0 ) {
-				 $scope.createPoolContigu( pi, pool, numtype);
+				 createPoolContigu( pi, pool, numtype);
 				 var pool=[];
 				 pi++;
 			 }
 			 // et le pool reduit final eventuel
 			 if (( wi == endPos )&& ( remain > 0)) {
 				 console.log ("pool final avec le reste");
-				 $scope.createPoolContigu( pi, pool, numtype); 
+				 createPoolContigu( pi, pool, numtype); 
 			}
 		}
     } 
     
-    $scope.createPoolBlock=function(p, firstWell, otherWellsArray ){
+    var createPoolBlock = function(p, firstWell, otherWellsArray ){
     	console.log ("creating pool "+ p);
-    	var supportCode=$scope.atmService.data.getCurrentSupportCode() ;
+    	var supportCode=$scope.atmService.data.getCurrentSupportCode();
     	
     	//--1-- puit "0" du block ( numtype toujours en mode Colonne )
-    	var line=$scope.getLineFromPosition96_C(firstWell);
-    	var column=$scope.getColumnFromPosition96_C(firstWell);
-   		
-       	// recuperer le container en position  line/column sur le supportCode et s'il existe le flagger
-		var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
+    	var line=getLineFromPosition96_C(firstWell);
+    	var column=getColumnFromPosition96_C(firstWell);
+    	//console.log( ">>container 0:"+ supportCode+"/"+line+"/"+column);
+
+       	// recuperer LE container en position  line/column sur le supportCode et s'il existe le flager ( il ne doit y enavoir qu'un seul a une position donnée)
+    	var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);	
 		if(containers && containers.length === 1)
 			containers[0]._addToOutputContainer = true;
     	
-    	//--2-- autres puits
-    	
-    	// ESSAI cas 'X'    PB....a revoir
-    	//if ( otherWellsArray[0] === "X") {
-    	//	console.log("cas X");
-    	//	//si p est pair: +9; si p est impair: +7
-    	//	if ( p%2 === 0) { posLC=$scope.getLineAndColFormPosition96(firstWell + 9, "Cmode" );}
-    	//	else            { posLC=$scope.getLineAndColFormPosition96(firstWell + 7, "Cmode" );}
-    	//	
-    	//	if ( $scope.isValidForPool(posLC) ) {
-		//		console.log ("add well="+  posLC +" in pool" );
-		//		////var b = results[0]._addToOutputContainer;
-		//	}	
-    	//}else {
-
+    	   //--2-- autres puits  	
     		for (var j=0; j < otherWellsArray.length; j++){
-    	    	var line=$scope.getLineFromPosition96_C (firstWell + otherWellsArray[j]);
-    	    	var column=$scope.getColumnFromPosition96_C (firstWell + otherWellsArray[j]);
+    	    	var line=getLineFromPosition96_C (firstWell + otherWellsArray[j]);
+    	    	var column=getColumnFromPosition96_C (firstWell + otherWellsArray[j]);
     	    	
-    	    	// recuperer le container en position  line/column sur le supportCode et s'il existe le flagger
+    	    	// recuperer LE container en position  line/column sur le supportCode et s'il existe le flagger
     			var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
     			if(containers && containers.length === 1)
     				containers[0]._addToOutputContainer = true;
-    			
     		}
-    	//}
+    		
+            // creer le container de sortie correspondant au pool (ne sera pas cree si ne contient aucun puit)
+        	$scope.atmService.data.dropInSelectInputContainer();	
     }
     
-    $scope.createPoolContigu=function( p, wellsArray, numtype ){
+    var createPoolContigu = function( p, wellsArray, numtype ){
     	// pour les mode ligne ou colonne
     	console.log ("creating pool "+ p);
+    	var supportCode=$scope.atmService.data.getCurrentSupportCode() ;
     	
     	for (var j=0; j < wellsArray.length; j++){
-    		// retraduire l'index en position <ligne><colonne>, depend du mode de numerotation
+    		// retraduire l'index en position <ligne><colonne> (depend du mode de numerotation)
     		if (numtype === 'C') {
-        		var line=$scope.getLineFromPosition96_C( wellsArray[j] );
-        		var column=$scope.getColumnFromPosition96_C( wellsArray[j] );
+        		var line=getLineFromPosition96_C( wellsArray[j] );
+        		var column=getColumnFromPosition96_C( wellsArray[j] );
     		} else if (numtype === 'L') {
-        		var line=$scope.getLineFromPosition96_L( wellsArray[j] );
-        		var column=$scope.getColumnFromPosition96_L( wellsArray[j] );
+        		var line=getLineFromPosition96_L( wellsArray[j] );
+        		var column=getColumnFromPosition96_L( wellsArray[j] );
     		} else { 
     			throw "OOps incorrect numtype:"+ numtype; 
-    		}	
+    		}		
+    		//console.log( ">>container :"+ supportCode+"/"+line+"/"+column);
     		
-    		var supportCode=$scope.atmService.data.getCurrentSupportCode() ;
         	// recuperer le container en position  line/column  sur le support et s'il existe le flagger
     		var containers = $filter('filter')($scope.atmService.data.inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
     		if(containers && containers.length === 1)
     			containers[0]._addToOutputContainer = true;
     	}
     
-        // creer le container de sortie correspondant au pool
+        // creer le container de sortie correspondant au pool (ne sera pas cree si ne contient aucun puit)
     	$scope.atmService.data.dropInSelectInputContainer();
     }
     

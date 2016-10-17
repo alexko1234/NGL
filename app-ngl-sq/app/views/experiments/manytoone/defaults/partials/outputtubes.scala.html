@@ -42,8 +42,8 @@
 			<th>
 				@Messages("containers.table.concentration")
 			</th>									
-			<th>
-				@Messages("containers.table.percentageInsidePool")
+			<th><!-- ajouts  &nbsp;. pour cause de non lisibilité de la valeur-->
+				@Messages("containers.table.percentageInsidePool")&nbsp;&nbsp;&nbsp;&nbsp;.
 			</th>
 			<th ng-repeat="property in inputContainerProperties track by $index">
 				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
