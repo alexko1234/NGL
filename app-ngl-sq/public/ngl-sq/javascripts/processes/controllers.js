@@ -533,7 +533,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 }]);
 
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','tabService','$q', function($scope, datatable,$http,mainService,tabService,$q) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','$filter', 'mainService','tabService','$q', 
+                                                  function($scope, datatable,$http,$filter,mainService,tabService,$q) {
 
 var	datatableConfig = {
 			 columns: [],
@@ -805,7 +806,9 @@ var	datatableConfig = {
 
 	$scope.swithToContainerView = function(){
 		if($scope.basket.length() != 0){
-			$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+			var data = $scope.basket.get();
+			data = $filter('orderBy')(data, ['support.column*1', 'support.line']);
+			$scope.datatable.setData(data,data.length);
 		}else{
 			$scope.datatable.setData($scope.processes);
 		}
