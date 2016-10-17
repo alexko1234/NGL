@@ -278,12 +278,14 @@ public class QualityControl extends AbstractDeclaration {
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 13, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Proportion pic 1", "ratioSize1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
-				"single", 14, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille 2", "measuredSize2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 14, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Proportion pic 1", "ratioSize1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
 				"single", 15, true, null, null));
+		
 		
 		propertyDefinitions.add(newPropertiesDefinition("Proportion pic 2", "ratioSize2", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
 				"single", 16, true, null, null));

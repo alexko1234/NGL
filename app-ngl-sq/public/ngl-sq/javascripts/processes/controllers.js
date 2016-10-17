@@ -811,7 +811,7 @@ var	datatableConfig = {
 		}
 
 
-		$scope.datatable.setColumnsConfig(getCreationProcessColumns("container"));
+		$scope.datatable.setColumnsConfig(getCreationProcessColumns("container").concat($scope.processPropertyColumns));
 	};
 
 	$scope.swithToSupportView = function(){
@@ -838,7 +838,7 @@ var	datatableConfig = {
 
 		console.log($scope.datatable.config);
 		if($scope.datatable.config.columns.length>0)
-			$scope.datatable.setColumnsConfig(getCreationProcessColumns("support"));
+			$scope.datatable.setColumnsConfig(getCreationProcessColumns("support").concat($scope.processPropertyColumns));
 	};
 	
 	
