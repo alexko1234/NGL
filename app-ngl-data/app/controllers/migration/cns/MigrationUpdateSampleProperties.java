@@ -26,7 +26,7 @@ public class MigrationUpdateSampleProperties  extends CommonController{
 		ContextValidation contextError=new ContextValidation("ngl-sq");
 		
 		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DATE, -25);
+		calendar.add(Calendar.DATE, -1);
 		Date date =  calendar.getTime();
 
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life")).toList();

@@ -96,11 +96,11 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		updates.put("readset",updateReadSet);
 		updates.put("process",updateProcess);
 		
-		updateCollectionsFromSample(sample, updates,contextError);
+		updateCollectionsFromSample(sample, properties, updates,contextError);
 
 	} 
 
-	static private void updateCollectionsFromSample(Sample sample, Map<String,DBUpdate.Builder> updates, ContextValidation contextError){
+	static private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Map<String,DBUpdate.Builder> updates, ContextValidation contextError){
 
 		Logger.info("Update son samples, containers, readSets, process from sample :"+sample.code);
 		
@@ -115,7 +115,8 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				);
 		
 		//Containers content update contents.$.properties
-		//TODO Verifier si fonctionne pool meme sample et tag diff
+		//TODO Verifier si fonctionne pool meme sample et tag diff => GA le 17/10/2016 confirme marche pas !!!
+		/*
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 				 DBQuery.is("contents.sampleCode", sample.code),
 				updates.get("container")
@@ -124,6 +125,21 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 						.set("contents.$.ncbiScientificName",sample.ncbiScientificName)
 						.set("traceInformation.modifyUser",contextError.getUser())
 						.set("traceInformation.modifyDate",new Date() ),true);
+		*/
+		
+		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("contents.sampleCode", sample.code))
+			.cursor.forEach(container -> {
+				container.traceInformation.setTraceInformation(contextError.getUser());
+				container.contents.stream()
+					.filter(content -> content.sampleCode.equals(sample.code))
+					.forEach(content -> {
+						content.ncbiScientificName = sample.ncbiScientificName;
+						content.taxonCode = sample.taxonCode;
+						content.referenceCollab = sample.referenceCollab;
+						content.properties.putAll(updatedProperties);
+					});;
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+			});;
 		
 		// ReadSet update sampleOnContainer.properties
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
@@ -147,7 +163,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		//Update son samples
 		List<Sample> sonSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("life.from.sampleCode",sample.code)).toList();
 		sonSamples.stream().forEach(sonSample ->{
-			updateCollectionsFromSample(sonSample, updates, contextError);
+			updateCollectionsFromSample(sonSample, updatedProperties, updates, contextError);
 		});
 	}
 
