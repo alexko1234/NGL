@@ -231,6 +231,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("AW", "Ambient Water"));
 		values.add(DescriptionFactory.newValue("IW", "Interstitial Water"));
 		values.add(DescriptionFactory.newValue("OA", "Ocean Atmosphere"));
+		values.add(DescriptionFactory.newValue("CSW", "Coral Surounding Water"));
+		values.add(DescriptionFactory.newValue("SRF", "Surface"));
+		
 		return values;	
 	}
 	

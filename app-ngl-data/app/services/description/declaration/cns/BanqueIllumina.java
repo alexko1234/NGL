@@ -114,7 +114,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		l.add(DescriptionFactory.newProcessType("Ampli, STK, Dépôt", "ampli-stk-illumina-depot", 
 				ProcessCategory.find.findByCode("library"),43,
-				getPropertyAmpliIlluminaWithOutSizing(), 
+				getPropertyBanqueIlluminaWithoutSizing(), 
 				Arrays.asList(getPET("ext-to-ampli-stk-illumina-depot",-1)
 						,getPET("dna-illumina-indexed-library",-1)
 						,getPET("pcr-amplification-and-purification",0)
@@ -129,7 +129,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 		l.add(DescriptionFactory.newProcessType("Ampli, sizing, STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
 				ProcessCategory.find.findByCode("library"), 44,
-				getSizingProperties(), 
+				getPropertyBanqueIlluminaSizing(),
 				Arrays.asList(getPET("ext-to-ampli-sizing-stk-illumina-depot",-1)
 						,getPET("dna-illumina-indexed-library",-1)
 						,getPET("pcr-amplification-and-purification",0)
@@ -143,7 +143,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		l.add(DescriptionFactory.newProcessType("Ampure, Sizing, STK, Dépôt", "ampure-sizing-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 45,
-				getPropertyAmpliIlluminaWithSizing(), 
+				getPropertyBanqueIlluminaSizing(), 
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
 						,getPET("sizing",0)
@@ -172,7 +172,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		l.add(DescriptionFactory.newProcessType("Ampure, STK, Dépôt", "ampure-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 47,
-				getPropertyAmpliIlluminaWithOutSizing(), 
+				getPropertyBanqueIlluminaWithoutSizing(), 
 				Arrays.asList(getPET("ext-to-ampure-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
 						,getPET("solution-stock",0)
@@ -195,22 +195,6 @@ public class BanqueIllumina extends AbstractDeclaration {
 		return null;
 	}
 	
-	private List<PropertyDefinition> getPropertyAmpliIlluminaWithOutSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
-				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
-		return propertyDefinitions;
-	}
-	
-	private List<PropertyDefinition> getPropertyAmpliIlluminaWithSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
-				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.addAll(getSizingProperties());
-		return propertyDefinitions;
-	}
-
 	private List<PropertyDefinition> getPropertyBanqueIlluminaWithoutSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
@@ -221,6 +205,9 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertyBanqueIlluminaSizing() {
 			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+			propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
+					null,null,null,"single", 14, true, null, null));
+			
 			propertyDefinitions.addAll(getSizingProperties());
 			return propertyDefinitions;
 	}

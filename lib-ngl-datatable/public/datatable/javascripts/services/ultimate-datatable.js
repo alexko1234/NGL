@@ -2217,7 +2217,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     if (this.isGroupActive()) {
                     	this.allResult = $filter('orderBy')(this.allResult, this.config.group.by.property);
                     }
-                    
                     angular.forEach(this.allResult, function(value, key) {
                         var line = {
                             "edit": undefined,
