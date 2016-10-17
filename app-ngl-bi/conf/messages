@@ -492,6 +492,15 @@ readsets.treatments.read_quality.suspectedKmers = Suspected Kmers
 readsets.treatments.read_quality.suspectedPrimers = Suspected Primers
 readsets.treatments.read_quality.sampleInput = Sample input
 
+readsets.treatments.sortingRibo.tabs.bilan = Bilans
+readsets.treatments.sortingRibo.tabs.taxon = Taxon
+readsets.treatments.sortingRibo.tabs.krona = Krona
+
+readsets.treatments.sorting_ribo.taxon = taxon
+readsets.treatments.sorting_ribo.nbSeq = nb seq
+readsets.treatments.sorting_ribo.Percent = %
+
+readsets.treatments.sorting_ribo.software = Version logiciel
 readsets.treatments.sorting_ribo.readsInput = Reads input
 readsets.treatments.sorting_ribo.no_rRNA = No-rRNA
 readsets.treatments.sorting_ribo.rRNA = rRNA
