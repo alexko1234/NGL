@@ -2,8 +2,13 @@ package rules.services;
 
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.kie.api.runtime.rule.AgendaFilter;
 import org.kie.api.runtime.rule.Match;
+
+import play.Logger;
 
 
 
@@ -12,14 +17,14 @@ public class RulesAgendaFilter6 implements AgendaFilter{
 	private String metadataKey;
 	private String metadataValue;
 
-	private static RulesAgendaFilter6 rulesAgendaFilter;
+	private static Map<String, RulesAgendaFilter6> rulesAgendaFilter = new HashMap<String, RulesAgendaFilter6>();
 	
 	public static RulesAgendaFilter6 getInstance(String metadataKey, String metadataValue) {
-		if (rulesAgendaFilter == null)
-			rulesAgendaFilter = new RulesAgendaFilter6(metadataKey, metadataValue);
-		rulesAgendaFilter.metadataKey = metadataKey;
-		rulesAgendaFilter.metadataValue = metadataValue;
-		return rulesAgendaFilter;
+		if (!rulesAgendaFilter.containsKey(metadataValue)){
+			rulesAgendaFilter.put(metadataValue,new RulesAgendaFilter6(metadataKey, metadataValue));
+			
+		}
+		return rulesAgendaFilter.get(metadataValue);
 	}
 	
 	private RulesAgendaFilter6(String metadataKey, String metadataValue) {
@@ -32,11 +37,11 @@ public class RulesAgendaFilter6 implements AgendaFilter{
 	public boolean accept(Match match) {
 		String s = (String) match.getRule().getMetaData().get(metadataKey);
 		if (s!= null && s.equals(this.metadataValue)) {
-			//Logger.debug("rule " + activation.getRule().getName() + " is activated ");
 			return true;
+		}else{
+			return false;
 		}
-		//Logger.debug("rule " + activation.getRule().getName() + " is not activated ");
-		return false;
+		
 	}
 
 	

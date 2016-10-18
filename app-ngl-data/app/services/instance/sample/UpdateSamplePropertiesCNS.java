@@ -138,7 +138,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 						content.referenceCollab = sample.referenceCollab;
 						content.properties.putAll(updatedProperties);
 					});;
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 			});;
 		
 		// ReadSet update sampleOnContainer.properties

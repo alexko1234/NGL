@@ -18,7 +18,7 @@ rule "Test"
     then
 		Logger.debug("Rules annotation @nglSQ(workflow)");    
 	end
-	
+
 rule "Create Object ContainerUpdateLims"
 	@nglSQ( workflow )
 	dialect "java"
@@ -70,7 +70,7 @@ rule "Solution stock UA"
     end
 
 rule "Banque Amplifié/Sizing  A-TM ou A-QC"
-@nglSQ( workflow )
+	@nglSQ( workflow )
 	dialect "java"
 	salience 800
 	no-loop
