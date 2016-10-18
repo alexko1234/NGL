@@ -75,7 +75,7 @@ rule "Banque Amplifié/Sizing  A-TM ou A-QC"
 	salience 800
 	no-loop
     when
-    	$containerUpdateLims:ContainerUpdateLims((experimentType=="pcr-amplification-and-purification" || experimentType=="sizing"),(stateCode=="A-TM" || stateCode=="A-QC"),limsStateCode==null)
+    	$containerUpdateLims:ContainerUpdateLims((experimentType=="pcr-amplification-and-purification" || experimentType=="sizing"),(stateCode=="A-TM" || stateCode=="A-QC" || stateCode=="A-PF" || stateCode=="A-TF"),limsStateCode==null)
     then
     	Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
     	//Etat Lims = En reserve
