@@ -58,12 +58,12 @@ angular.module('biCommonsServices', []).
     			
     			for (var key in treatments) {
 					var treatment = treatments[key];	
-					if(!_allTreatments[key] && (angular.isUndefined(excludes) || angular.isUndefined(excludes[treatment.code]))){
+					if(!_allTreatments[key+"-"+treatment.typeCode] && (angular.isUndefined(excludes) || angular.isUndefined(excludes[treatment.code]))){
 						queries.push($http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(treatment.typeCode).url, 
 								{key:key})	
 						);
-					}else if(_allTreatments[key]){
-						_allTreatments[key].show = true;						
+					}else if(_allTreatments[key+"-"+treatment.typeCode]){
+						_allTreatments[key+"-"+treatment.typeCode].show = true;						
 					}
     			}	
     			if(queries.length > 0){
@@ -71,7 +71,7 @@ angular.module('biCommonsServices', []).
     					for(var i = 0; i  < results.length; i++){
     						var result = results[i];
     						
-    						_allTreatments[result.config.key]={code:result.config.key, name:Messages(msgkey+".treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key), show:true, propDefinitions:result.data.propertiesDefinitions};
+    						_allTreatments[result.config.key+"-"+result.data.code]={code:result.config.key, name:Messages(msgkey+".treatments."+result.config.key), url:url(result.data.code).url, order:displayOrder(result, key), show:true, propDefinitions:result.data.propertiesDefinitions};
     					}
     					prepareCurrentTreatments();    					
     				});
