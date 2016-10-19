@@ -27,7 +27,6 @@
 		}
 		@columnSearchForm{
 			@formGroup{
-			<div class="col-md-5 col-lg-5">
 			<div class="btn-toolbar">
 				<button type="submit" data-toggle="tooltip" ng-click="upload()" class="btn btn-primary" >
 					<i class="fa fa-upload"></i>
@@ -36,8 +35,12 @@
 					<i class="fa fa-undo"></i>
 				</button>										 	
 			</div>	
-			</div>
-			<div class="col-md-7 col-lg-7">
+			
+			}				
+		}
+		@columnSearchForm{
+			@formGroup{
+			
 			<div class="input-group">
 			      <input type="text" class="form-control" placeholder="@Messages("containerSupports.placeholder.barcodeGeneration.nbCodes")" ng-model="nbCodes">
 			      <span class="input-group-btn">
@@ -46,10 +49,9 @@
 					</button>
 			      </span>
 			    </div>
-			  </div>
+			 
 			}				
-		}
-				
+		}		
 		</div>
 	</form>	
 	

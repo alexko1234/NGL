@@ -62,6 +62,8 @@ public class ContainerMapping extends Mapping<Container> {
 		c.contents.forEach(content -> {
 			Sample sample = getSample(content.sampleCode);
 			content.referenceCollab = sample.referenceCollab;
+			content.taxonCode = sample.taxonCode;
+			content.ncbiScientificName = sample.ncbiScientificName;
 			content.sampleCategoryCode = sample.categoryCode;
 			content.sampleTypeCode = sample.typeCode;
 			content.percentage = percentage;
