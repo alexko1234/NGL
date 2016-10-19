@@ -3,8 +3,9 @@
  angular.module('ngl-sq.experimentsServices', []).
 	factory('experimentsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		var getColumns = function(){
-			var columns = [
-			             {
+			var columns = [];
+			
+			columns.push({
 			            	 "header":Messages("experiments.table.typeCode"),
 			            	 "property":"typeCode",
 			            	 "filter":"codes:'type'",
@@ -12,16 +13,16 @@
 			            	 "hide":true,
 			            	 "position":1,
 			            	 "type":"text"
-			             },
-						{
+			});
+			columns.push({
 							"header":Messages("experiments.table.code"),
 							"property":"code",
 							"order":true,
 							"hide":false,
 							"position":2,
 							"type":"text"
-						},
-						{
+			});
+			columns.push({
 							"header":Messages("experiments.intrument"),
 							"property":"instrument.code",
 							"order":true,
@@ -29,44 +30,8 @@
 							"position":3,
 							"type":"text",
 							"filter":"codes:'instrument'"
-						},						
-						{
-							"header":Messages("experiments.table.categoryCode"),
-							"property":"categoryCode",
-							"order":true,
-							"hide":true,
-							"position":4,
-							"type":"text",
-							"filter":"codes:'experiment_cat'"
-						},
-						{
-							"header":Messages("experiments.table.state.code"),
-							"property":"state.code",
-							"order":true,
-							"type":"text",
-							"position":5,
-							"hide":true,
-							"filter":"codes:'state'"
-						},
-						{
-							"header":Messages("experiments.table.status"),
-							"property":"status.valid",
-							"render":"<div bt-select ng-model='value.data.status.valid' bt-options='valid.code as valid.name for valid in searchService.lists.get(\"status\")'  ng-edit='false'></div>",
-							"order":false,
-							"hide":true,
-							"position":5.5,
-							"type":"text"
-						},
-						{
-							"header":Messages("experiments.table.resolutionCodes"),
-							"property":"state.resolutionCodes",
-							"render":"<div bt-select ng-model='value.data.state.resolutionCodes' bt-options='valid.code as valid.name for valid in searchService.lists.getResolutions()'  ng-edit=\"false\"></div>",
-							"order":false,
-							"hide":true,
-							"position":6,
-							"type":"text"
-						},
-						{
+			});
+			columns.push({
 							"header":Messages("experiments.table.projectCodes"),
 							"property":"projectCodes",
 							"order":false,
@@ -74,53 +39,144 @@
 							"hide":true,
 							"position":7,
 							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.sampleCodes.length"),
-							"property":"sampleCodes.length",
-							"order":true,
-							"hide":true,
-							"position":8,
-							"type":"number"
-						},
-						{
+			});
+			columns.push({
 							"header":Messages("containers.table.sampleCodes"),
 							"property":"sampleCodes",
 							"order":false,
 							"hide":true,
 							"position":9,
 							"type":"text",
-							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
-						},
-						{
-							"header":Messages("containers.table.tags"),
-							"property":"atomicTransfertMethods",
-							"order":true,
-							"hide":true,
-							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-							"filter":"flatArray:\"inputContainerUseds\" | flatArray:\"contents\" | getArray:\"properties.tag.value\" | unique",
-							
-							"position":10,
-							"type":"text"
-						},					
-						{
+				"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>"					
+			});
+			columns.push({
 							"header":Messages("experiments.table.creationDate"),
 							"property":"traceInformation.creationDate",
 							"order":true,
 							"hide":true,
 							"position":11,
 							"type":"date"
-						},
-						{
+			});
+			columns.push({
 							"header":Messages("experiments.table.createUser"),
 							"property":"traceInformation.createUser",
 							"order":true,
 							"hide":true,
 							"position":12,
 							"type":"text"
-						}
-						];
+			});
 			
+			if(mainService.getHomePage() === 'reagents'){
+				
+				columns.push({
+		        	 "header":Messages("reagents.table.kitname"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "position":13,
+		        	 "filter":"getArray:'kitCatalogCode' | unique"
+
+		        });
+				columns.push({
+		        	 "header":Messages("reagents.table.boxname"),
+		        	 "property":"reagents",
+		        	 "order":false,
+		        	 "type":"text",
+		        	 "position":14,
+		        	 "filter":"getArray:'boxCatalogCode' | unique"
+				});
+				columns.push({
+		        	 "header":Messages("reagents.table.boxcode"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "position":15,
+		        	 "filter":"getArray:'boxCode' | unique"					
+				});
+				columns.push({
+		        	 "header":Messages("reagents.table.reagentname"),
+		        	 "property":"reagents",
+		        	 "order":false,
+		        	 "type":"text",
+		        	 "position":16,
+		        	 "filter":"getArray:'reagentCatalogCode' | unique"				
+				});
+				columns.push({
+		        	 "header":Messages("reagents.table.reagentcode"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "position":17,
+		        	 "filter":"getArray:'code' | unique"				
+				});
+				columns.push({
+		        	 "header":Messages("reagents.table.description"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "position":18,
+		        	 "filter":"getArray:'description' | unique"				
+				});				
+				
+			}else{	// getHomePage() = "new" || "search"				
+				
+				columns.push({
+					"header":Messages("experiments.table.categoryCode"),
+					"property":"categoryCode",
+					"order":true,
+					"hide":true,
+					"position":4,
+					"type":"text",
+					"filter":"codes:'experiment_cat'"				
+				});
+				columns.push({
+					"header":Messages("experiments.table.state.code"),
+					"property":"state.code",
+					"order":true,
+					"type":"text",
+					"position":5,
+					"hide":true,
+					"filter":"codes:'state'"					
+				});
+				columns.push({
+					"header":Messages("experiments.table.status"),
+					"property":"status.valid",
+					"render":"<div bt-select ng-model='value.data.status.valid' bt-options='valid.code as valid.name for valid in searchService.lists.get(\"status\")'  ng-edit='false'></div>",
+					"order":false,
+					"hide":true,
+					"position":5.5,
+					"type":"text"					
+				});
+				columns.push({
+					"header":Messages("experiments.table.resolutionCodes"),
+					"property":"state.resolutionCodes",
+					"render":"<div bt-select ng-model='value.data.state.resolutionCodes' bt-options='valid.code as valid.name for valid in searchService.lists.getResolutions()'  ng-edit=\"false\"></div>",
+					"order":false,
+					"hide":true,
+					"position":6,
+					"type":"text"					
+				});
+				columns.push({
+					"header":Messages("containers.table.sampleCodes.length"),
+					"property":"sampleCodes.length",
+					"order":true,
+					"hide":true,
+					"position":8,
+					"type":"text"					
+				});
+				columns.push({
+					"header":Messages("containers.table.tags"),
+					"property":"atomicTransfertMethods",
+					"order":true,
+					"hide":true,
+					"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					"filter":"flatArray:\"inputContainerUseds\" | flatArray:\"contents\" | getArray:\"properties.tag.value\" | unique",
+					"position":10,
+					"type":"text"				
+				});
+				
+			}
+		         
 			return columns;
 		};
 		
@@ -201,7 +257,6 @@
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
 					return _form
-
 				},
 				
 				resetForm : function(){					

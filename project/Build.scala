@@ -73,6 +73,7 @@ object ApplicationBuild extends Build {
 		"org.julienrf" %% "play-jsmessages" % "1.6.2",
 		"javax.mail" % "mail" % "1.4.2",
 	    "org.codehaus.janino" % "janino" % "2.5.15",
+	    "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
 	    cache
     	)	
    	val ngldatatableDependencies = Seq(

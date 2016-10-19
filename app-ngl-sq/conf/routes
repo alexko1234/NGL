@@ -47,8 +47,7 @@ GET		/tpl/experiments/list-containers														controllers.experiments.tpl.E
 GET		/tpl/experiments/get-template/:atomicType/:outputCategoryCode/:experimentCategoryCode/:experimentType			controllers.experiments.tpl.Experiments.getTemplate(atomicType:java.lang.String,outputCategoryCode:java.lang.String, experimentCategoryCode:java.lang.String, experimentType:java.lang.String)
 #GET		/tpl/experiments/create-or-edit-experiment												controllers.experiments.tpl.Experiments.createOrEditExperiment()
 GET		/tpl/experiments/search/:experimentTypeCode												controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
-GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()
-
+GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()		
 
 #tags api
 GET 	/printing/:homecode/home										controllers.printing.tpl.Printing.home(homecode:java.lang.String)

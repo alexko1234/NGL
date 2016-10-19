@@ -147,6 +147,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentComments.delete(),
   	    		
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.get(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentReagents.list(),
   	    		
   	    		controllers.containers.api.routes.javascript.Containers.updateState(),
   	    		controllers.containers.api.routes.javascript.Containers.updateStateBatch(),

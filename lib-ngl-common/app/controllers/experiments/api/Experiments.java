@@ -57,6 +57,7 @@ public class Experiments extends DocumentController<Experiment>{
 	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	
 	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
 	
 	public static final String calculationsRules ="calculations";
@@ -100,7 +101,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 	}
 
-	private DatatableForm updateForm(ExperimentSearchForm form) {
+	protected DatatableForm updateForm(ExperimentSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
@@ -113,9 +114,9 @@ public class Experiments extends DocumentController<Experiment>{
 	 * @param experimentSearch
 	 * @return the query
 	 */
-	private DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
+	protected DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		Query query=null;
+		Query query=DBQuery.empty();
 
 		Logger.info("Experiment Query : "+experimentSearch);
 

@@ -77,3 +77,69 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.search();
 	}	
 }]);
+
+
+
+"use strict"
+angular.module('home').controller('SearchReagentsCtrl', ['$scope', '$http', '$q', '$routeParams', 'datatable', 'experimentsSearchService', 'mainService', 'tabService', 
+                                                         function($scope,$http,$q,$routeParams,datatable,experimentsSearchService,mainService,tabService){
+	$scope.datatableConfig = {
+			name:"experimentReagents",
+			search:{
+				active:true,
+				url:jsRoutes.controllers.experiments.api.ExperimentReagents.list()
+			},
+			order:{
+				active:true,
+				mode:'local'
+			},
+	        pagination:{
+	        	mode:'local'
+	        },	
+			show:{
+				active:true,
+				add :function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get(line.code).url,remove:true});
+				}
+			},
+			edit:{
+				active:false
+			},
+			hide:{
+				active:false
+			},
+			exportCSV:{
+				active:true,
+				showButton:true,
+				delimiter:";"
+			},
+			compact:true
+	};
+
+	
+	$scope.search = function(){
+		$scope.searchService.search();
+	};
+	$scope.reset = function(){
+		$scope.searchService.resetForm();
+	}
+	
+	
+	//init	
+	if(angular.isUndefined($scope.getHomePage())){
+		mainService.setHomePage('reagents');
+		tabService.addTabs({label:Messages('experiments.tabs.reagents'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("reagents").url,remove:true});
+		tabService.activeTab(0);
+	}
+	
+	if(angular.isUndefined($scope.getForm())){
+		$scope.form = {};
+		mainService.setForm($scope.form);
+	}else{
+		$scope.form = mainService.getForm();		
+	}
+	
+	$scope.searchService = experimentsSearchService;
+	$scope.searchService.init($routeParams, $scope.datatableConfig);
+
+}]);
