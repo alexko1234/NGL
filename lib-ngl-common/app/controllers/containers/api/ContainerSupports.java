@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
@@ -16,6 +17,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -34,6 +36,7 @@ import play.i18n.Lang;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
+import scala.collection.generic.BitOperations.Int;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
@@ -417,6 +420,16 @@ public class ContainerSupports extends CommonController {
 		}
 
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+	}
+	
+	@Permission(value={"writing"})
+	public static Result saveCode(Integer numberOfCode) {
+		List<String> codes = new ArrayList(numberOfCode);
+		IntStream.range(0, numberOfCode).forEach(i -> {
+			codes.add(CodeHelper.getInstance().generateContainerSupportCode());
+		});
+		
+		return ok(Json.toJson(codes));
 	}
 }
 

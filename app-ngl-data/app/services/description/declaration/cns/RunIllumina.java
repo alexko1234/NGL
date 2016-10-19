@@ -111,7 +111,7 @@ public class RunIllumina extends AbstractDeclaration {
 						getExperimentTypes("prepa-flowcell").get(0),getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-illumina-run").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Norm, FC, dépôt Illumina", "norm-fc-depot-illumina", 
+		l.add(DescriptionFactory.newProcessType("STK, FC, dépôt Illumina", "norm-fc-depot-illumina", 
 				ProcessCategory.find.findByCode("sequencing"), 63,
 				getPropertyDefinitionsQPCRQuantification(), 
 				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),

@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists', 'mainService', 'tabService','datatable', 'messages',
-                                                  function($scope,$http,lists,mainService,tabService,datatable, messages){
+angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','$filter','lists', 'mainService', 'tabService','datatable', 'messages',
+                                                  function($scope,$http,$filter,lists,mainService,tabService,datatable, messages){
 
 	
 	
@@ -35,7 +35,32 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 	$scope.reset = function(){
 		$scope.form = {};	
 		angular.element('#importFile')[0].value = null;
-	}
+	};
+	
+	$scope.generateBarcode = function(){
+		if($scope.nbCodes > 0){
+			$http.post(jsRoutes.controllers.containers.api.ContainerSupports.saveCode().url+"?nbCodes="+$scope.nbCodes)
+				.success(function(data) {
+					var lineValue = "";
+					data.forEach(function(code){
+						lineValue += code + "\n";
+					});
+	
+					
+					var fixedstring = "\ufeff" + lineValue;
+	
+	                //save
+	                var blob = new Blob([fixedstring], {
+	                    type: "text/plain;charset=utf-8"
+	                });
+	                var currdatetime = $filter('date')(new Date(), 'yyyyMMdd_HHmmss');
+	                var text_filename = "barcodes_" + currdatetime;
+	                saveAs(blob, text_filename + ".csv");
+					
+				});
+		}
+	};
+	
 	
 	/*
 	 * init()

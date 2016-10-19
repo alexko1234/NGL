@@ -11,6 +11,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
@@ -62,20 +63,16 @@ public class ContainerMapping extends Mapping<Container> {
 			content.sampleCategoryCode = sample.categoryCode;
 			content.sampleTypeCode = sample.typeCode;
 			content.percentage = percentage;
-			content.properties = computeProperties(content.properties, sample);
+			content.properties = computeProperties(content.properties, sample, c.code);
 			
 			c.projectCodes.add(content.projectCode);
 			c.sampleCodes.add(content.sampleCode);
 		});				
 	}
 
-	private String getContainerCode(Container c) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	private Map<String, PropertyValue> computeProperties(
-			Map<String, PropertyValue> properties, Sample sample) {
+			Map<String, PropertyValue> properties, Sample sample, String containerCode) {
 		SampleType sampleType = SampleType.find.findByCode(sample.typeCode);
 		if(sampleType !=null){
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
@@ -84,6 +81,12 @@ public class ContainerMapping extends Mapping<Container> {
 		ImportType importType = ImportType.find.findByCode(sample.importTypeCode);
 		if(importType !=null){
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+		}
+		
+		//HACK to have the original container on the readset
+		if(Action.save.equals(action) && !properties.containsKey("sampleAliquoteCode")){
+			PropertySingleValue psv = new PropertySingleValue(containerCode);
+			properties.put("sampleAliquoteCode", psv);
 		}
 		
 		return properties;

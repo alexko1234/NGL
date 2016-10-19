@@ -27,24 +27,34 @@
 		}
 		@columnSearchForm{
 			@formGroup{
+			<div class="col-md-5 col-lg-5">
 			<div class="btn-toolbar">
 				<button type="submit" data-toggle="tooltip" ng-click="upload()" class="btn btn-primary" >
 					<i class="fa fa-upload"></i>
 				</button>
 				<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
 					<i class="fa fa-undo"></i>
-				</button>
-											 	
+				</button>										 	
 			</div>	
+			</div>
+			<div class="col-md-7 col-lg-7">
+			<div class="input-group">
+			      <input type="text" class="form-control" placeholder="@Messages("containerSupports.placeholder.barcodeGeneration.nbCodes")" ng-model="nbCodes">
+			      <span class="input-group-btn">
+			        <button title='@Messages("containerSupports.button.barcodeGeneration")' data-toggle="tooltip" ng-click="generateBarcode()"  class="btn btn-default">
+					<i class="fa fa-barcode"></i>
+					</button>
+			      </span>
+			    </div>
+			  </div>
 			}				
 		}
+				
 		</div>
 	</form>	
 	
 </div>
 </div>
 <div class="row">
-	
-		
-	<div class="col-md-12 col-lg-12"  messages="messages"></div>
+	<div class="col-md-12 col-lg-12"  messages="messages"></div>	
 </div>

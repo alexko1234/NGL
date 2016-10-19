@@ -71,12 +71,16 @@ containerSupports.select.categoryCode =  Catégorie Support
 containerSupports.placeholder.fromDate = Support depuis le (jj/mm/aaaa)
 containerSupports.placeholder.toDate = Support jusqu''au (jj/mm/aaaa)
 containerSupports.placeholder.user = Support créé par
+containerSupports.placeholder.barcodeGeneration.nbCodes = Nb code barres
+
 
 containerSupports.button.table = Vue Tableau
 containerSupports.button.plate = Vue Plaque
 containerSupports.button.flowcell = Vue Flowcell
 containerSupports.button.mapcard = Vue Mapcard
 containerSupports.button.iryschip = Vue Iryschip
+containerSupports.button.barcodeGeneration = Génération de code barres
+
 
 containerSupports.storage.code = Localisation
 containerSupports.storage.date = Fait le
