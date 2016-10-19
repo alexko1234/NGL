@@ -493,11 +493,13 @@ readsets.treatments.read_quality.suspectedPrimers = Suspected Primers
 readsets.treatments.read_quality.sampleInput = Sample input
 
 readsets.treatments.sortingRibo.tabs.bilan = Bilans
-readsets.treatments.sortingRibo.tabs.taxon = Taxon
+readsets.treatments.sortingRibo.tabs.taxonRead1 = Taxo. Read1
+readsets.treatments.sortingRibo.tabs.taxonRead2 = Taxo. Read2
+readsets.treatments.sortingRibo.tabs.taxonSingle = Taxo. Single
 readsets.treatments.sortingRibo.tabs.krona = Krona
 
-readsets.treatments.sorting_ribo.taxon = taxon
-readsets.treatments.sorting_ribo.nbSeq = nb seq
+readsets.treatments.sorting_ribo.taxon = Taxon
+readsets.treatments.sorting_ribo.nbSeq = Nb Seq.
 readsets.treatments.sorting_ribo.Percent = %
 
 readsets.treatments.sorting_ribo.software = Version logiciel

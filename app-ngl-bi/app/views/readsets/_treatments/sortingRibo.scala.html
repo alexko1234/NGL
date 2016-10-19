@@ -4,8 +4,9 @@
 	<div class="col-md-12 col-lg-12">
 	   <ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.bilan")</a></li>
-	   	<li><a href="#" data-target="#taxon" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxon")</a></li>    
-	   	<li><a href="#" data-target="#krona" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.krona")</a></li>    
+	   	<li><a href="#" data-target="#taxonR1" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonRead1")</a></li>    
+	   	<li><a href="#" data-target="#taxonR2" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonRead2")</a></li>    
+	   	<li><a href="#" data-target="#taxonS" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonSingle")</a></li>    
 	   
 	   </ul>
 			
@@ -15,15 +16,17 @@
 				@partials.sortingRibo_main()			
 			</div>
 		
-			<div class="tab-pane" id="taxon">
-				@partials.sortingRibo_taxon()
+			<div class="tab-pane" id="taxonR1">
+				@partials.sortingRibo_taxon("read1")
 			</div>
 				
-			<div class="tab-pane" id="krona">
-				@partials.sortingRibo_krona()
+			<div class="tab-pane" id="taxonR2">
+				@partials.sortingRibo_taxon("read2")
 			</div>
 				
-			
+			<div class="tab-pane" id="taxonS">
+				@partials.sortingRibo_taxon("single")
+			</div>
 		</div>
 				
 	</div>
