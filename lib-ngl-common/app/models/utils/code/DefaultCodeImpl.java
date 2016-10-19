@@ -66,7 +66,7 @@ public class DefaultCodeImpl implements Code {
 
 	// ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public synchronized String generateProcessCode(Process process) {
-		return (process.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
+		return (process.sampleOnInputContainer.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
 	}
 
 	public synchronized String generateExperimentCode(Experiment exp) {

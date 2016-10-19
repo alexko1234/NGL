@@ -1,12 +1,14 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
@@ -130,6 +132,29 @@ public class SampleHelper {
 		facts.add(sample);
 		
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);				
+	}
+
+	public static Set<String> getSampleParent(String sampleCode) {
+		Sample sample=MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code", sampleCode));
+		Set<String> sampleCodes=new HashSet<String>();
+		sampleCodes.add(sampleCode);
+
+		if(sample.life!=null && sample.life.path!=null){
+			sampleCodes.addAll(Arrays.asList(sample.life.path.split(",")));
+		} 
+
+		return sampleCodes;
+	}
+
+	public static Set<String> getProjectParent(Set<String> sampleCodes) {
+		Set<String> projectCodes=new HashSet<String>();
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.in("code", sampleCodes)).toList();
+		
+		for(Sample s:samples){
+			projectCodes.addAll(s.projectCodes);
+		}
+		
+		return projectCodes;
 	}
 
 }

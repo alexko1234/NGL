@@ -2,12 +2,15 @@ package controllers.processes.api;
 
 import static play.data.Form.form;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -23,6 +26,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
 
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +34,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
+
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -47,7 +52,9 @@ import views.components.datatable.DatatableForm;
 import workflows.process.ProcWorkflows;
 import workflows.process.ProcessWorkflows;
 
+
 import com.mongodb.BasicDBObject;
+
 
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
@@ -194,7 +201,8 @@ public class Processes extends CommonController{
 				}
 				process.code = CodeHelper.getInstance().generateProcessCode(process);
 				process.sampleOnInputContainer.lastUpdateDate = new Date();
-				process.sampleOnInputContainer.referenceCollab = InstanceHelpers.getReferenceCollab(process.sampleCode);
+				process.sampleOnInputContainer.referenceCollab = InstanceHelpers.getReferenceCollab(process.sampleCodes.iterator().next());
+				//TO-DO NGL-119
 				process.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
 					Process p = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
@@ -244,10 +252,13 @@ public class Processes extends CommonController{
 			newProcess.state = process.state;
 			newProcess.traceInformation = process.traceInformation;
 			newProcess.typeCode = process.typeCode;
-			newProcess.sampleCode = c.sampleCode;
-			newProcess.projectCode = c.projectCode;
-			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
+			//TODO NGL-1119
+			newProcess.sampleCodes = new HashSet<String>();
+			newProcess.sampleCodes.add(c.sampleCode);
+			newProcess.projectCodes = new HashSet<String>();
+			newProcess.projectCodes.add(c.projectCode);
 			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
+			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
 			//Logger.info("New process code : "+newProcess.code);
 			processes.add(newProcess);	
 			//We don't need to validate all the properties for each creation
@@ -256,8 +267,8 @@ public class Processes extends CommonController{
 			//These are the properties that change for each process so we have to validate them each time we create
 			//the copy
 			ProcessValidationHelper.validateCode(newProcess, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
-			ProcessValidationHelper.validateProjectCode(newProcess.projectCode, contextValidation);
-			ProcessValidationHelper.validateSampleCode(newProcess.sampleCode, newProcess.projectCode, contextValidation);
+			ProcessValidationHelper.validateProjectCodes(newProcess.projectCodes, contextValidation);
+			ProcessValidationHelper.validateSampleCodes(newProcess.sampleCodes,contextValidation);
 		});
 		/*
 		for(Content c:container.contents){
@@ -475,15 +486,15 @@ public class Processes extends CommonController{
 		Logger.info("Process Query : "+processesSearch);
 
 		if (CollectionUtils.isNotEmpty(processesSearch.projectCodes)) { //all
-			queryElts.add(DBQuery.in("projectCode", processesSearch.projectCodes));
+			queryElts.add(DBQuery.in("projectCodes", processesSearch.projectCodes));
 		}else if(StringUtils.isNotBlank(processesSearch.projectCode)){
-			queryElts.add(DBQuery.is("projectCode", processesSearch.projectCode));
+			queryElts.add(DBQuery.is("projectCodes", processesSearch.projectCode));
 		}
 
 		if (CollectionUtils.isNotEmpty(processesSearch.sampleCodes)) { //all
-			queryElts.add(DBQuery.in("sampleCode", processesSearch.sampleCodes));
+			queryElts.add(DBQuery.in("sampleCodes", processesSearch.sampleCodes));
 		}else if(StringUtils.isNotBlank(processesSearch.sampleCode)){
-			queryElts.add(DBQuery.is("sampleCode", processesSearch.sampleCode));
+			queryElts.add(DBQuery.is("sampleCodes", processesSearch.sampleCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(processesSearch.sampleTypeCodes)) { //all

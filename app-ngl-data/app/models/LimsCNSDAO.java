@@ -779,8 +779,10 @@ public class LimsCNSDAO{
 					process.typeCode=processType.code;
 					process.categoryCode=processType.category.code;
 					process.inputContainerCode=container.code;
-					process.projectCode=rs.getString("projectCode");
-					process.sampleCode=rs.getString("sampleCode");
+					process.projectCodes=new HashSet<String>();
+					process.projectCodes.add(rs.getString("projectCode"));
+					process.sampleCodes=new HashSet<String>();
+					process.sampleCodes.add(rs.getString("sampleCode"));
 					process.traceInformation=new TraceInformation();
 					process.traceInformation.createUser=contextError.getUser();
 					process.traceInformation.creationDate=new Date();
@@ -790,7 +792,7 @@ public class LimsCNSDAO{
 					process.code=CodeHelper.getInstance().generateProcessCode(process);
 					Content c=null;
 					for(Content content:container.contents){
-						if(content.projectCode.equals(process.projectCode) && content.sampleCode.equals(process.sampleCode)){
+						if(content.projectCode.equals(process.projectCodes) && content.sampleCode.equals(process.sampleCodes)){
 							c=content;
 						}
 					}

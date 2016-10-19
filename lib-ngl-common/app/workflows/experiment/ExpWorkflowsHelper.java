@@ -715,7 +715,7 @@ public class ExpWorkflowsHelper {
 		Set<String> newInputProcessCodes = new HashSet<String>();
 		processes.forEach(p -> {
 			p._id = null;
-			p.code = CodeHelper.getInstance().generateProcessCode(p);
+			p.code = CodeHelper.getInstance().generateProcessCode(p); //TO-DO NGL-119 => Quel est le sample d'origine ??
 			MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, p);
 			newInputProcessCodes.add(p.code);			
 		});		

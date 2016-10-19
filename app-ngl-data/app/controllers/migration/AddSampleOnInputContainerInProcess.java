@@ -51,7 +51,7 @@ public class AddSampleOnInputContainerInProcess extends CommonController {
 					process.inputContainerCode);
 			Logger.debug("Container Code="+ container.code);
 			for (Content content : container.contents) {
-				if ((process.sampleCode).equals(content.sampleCode)){
+				if ((process.sampleCodes).equals(content.sampleCode)){
 					process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content,container);
 				}
 			}

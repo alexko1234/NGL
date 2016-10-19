@@ -38,9 +38,9 @@ public class Process extends DBObject implements IValidation{
 	public Map<String,PropertyValue> properties;
 
 	// Projects ref
-	public String projectCode;
+	public Set<String> projectCodes;
 	// Samples ref
-	public String sampleCode;
+	public Set<String> sampleCodes;
 
 	public String currentExperimentTypeCode;
 	public String inputContainerCode;
@@ -64,8 +64,8 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
 		ProcessValidationHelper.validateContainerSupportCode(inputContainerSupportCode, contextValidation, "inputContainerSupportCode");
-		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
-		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
+		ProcessValidationHelper.validateProjectCodes(projectCodes, contextValidation);
+		ProcessValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
 		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		
 		ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
 
