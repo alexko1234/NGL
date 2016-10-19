@@ -57,6 +57,7 @@ public class Experiments extends DocumentController<Experiment>{
 	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	
 	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
 	
 	public static final String calculationsRules ="calculations";
@@ -150,6 +151,20 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
 		}
 
+		
+
+		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
+			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
+			
+			Query containerQuery = DBQuery.and(listContainerQuery.toArray(new DBQuery.Query[queryElts.size()]));
+			BasicDBObject keys = new BasicDBObject();
+			keys.append("code", 1);
+			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerQuery,keys).toList();
+			
+			Set<String> containerCodes = new TreeSet<String>();
+			for(Container p : containers){
+				containerCodes.add(p.code);
+			}
 			
 			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
 

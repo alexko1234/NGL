@@ -169,7 +169,7 @@
 					"property":"atomicTransfertMethods",
 					"order":true,
 					"hide":true,
-		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					"filter":"flatArray:\"inputContainerUseds\" | flatArray:\"contents\" | getArray:\"properties.tag.value\" | unique",
 					"position":10,
 					"type":"text"				
