@@ -44,7 +44,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		});
 		columns.push({
 			"header" : Messages("processes.table.projectCode"),
-			"property" : "projectCode",
+			"property" : "projectCodes",
 			"order" : true,
 			"hide" : true,
 			"group" : true,
@@ -55,7 +55,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		});
 		columns.push({
 			"header" : Messages("processes.table.sampleCode"),
-			"property" : "sampleCode",
+			"property" : "sampleCodes",
 			"order" : true,
 			"hide" : false,
 			"group" : true,

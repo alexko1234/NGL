@@ -75,7 +75,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> batchElementForm = form(ProcessesBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","inputContainerSupportCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","inputContainerSupportCode","sampleCodes", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCodes", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
 	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
