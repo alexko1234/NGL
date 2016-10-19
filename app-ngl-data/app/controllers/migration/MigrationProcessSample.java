@@ -8,8 +8,10 @@ import models.utils.instance.SampleHelper;
 import org.mongojack.JacksonDBCollection;
 
 import play.Logger;
+import play.Logger.ALogger;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.processes.instance.ProcessValidationHelper;
 import controllers.CommonController;
 import controllers.migration.models.ContainerOld;
 import controllers.migration.models.ProcessOld;
@@ -19,15 +21,16 @@ public class MigrationProcessSample extends CommonController {
 	
 	private static final String PROCESS_COLL_NAME_BCK = InstanceConstants.PROCESS_COLL_NAME+"_BCK";
 
+	static ALogger logger=Logger.of("MigrationProcessSample");
 
 	public static Result migration(){
 
-		Logger.info("Start point of Migration ContainerSupport");
+		Logger.info("Start point of Migration Process");
 
 		JacksonDBCollection<ProcessOld, String> containersCollBck = MongoDBDAO.getCollection(PROCESS_COLL_NAME_BCK, ProcessOld.class);
 		if(containersCollBck.count() == 0){
 
-			Logger.info("Migration ContainerSupport start");
+			Logger.info("Migration Process start");
 
 			backupContainerCollection();
 
@@ -54,11 +57,14 @@ public class MigrationProcessSample extends CommonController {
 		process.projectCode=null;
 		
 		ContextValidation contextValidation=new ContextValidation("migration");
-		process.validate(contextValidation);
+		ProcessValidationHelper.validateProjectCodes(process.projectCodes, contextValidation);
+		ProcessValidationHelper.validateSampleCodes(process.sampleCodes, contextValidation);
 		
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 		}else {
+			
+			contextValidation.displayErrors(logger);
 			Logger.error("ERROR VALIDATION "+process.code);
 		}
 		

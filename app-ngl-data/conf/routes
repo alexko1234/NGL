@@ -32,6 +32,7 @@ GET		/api/instance/parameters/printers		controllers.instance.parameters.Printers
 
 GET 	/api/import/updateTara					controllers.instance.ImportDatas.updateTara()
 
+GET		/migration/process-samples				controllers.migration.MigrationProcessSample.migration()
 GET		/migration-container-support			controllers.migration.MigrationDataCNS.updateFromExperimentTypeCodesContainerSupport()
 GET		/migration-container-date				controllers.migration.MigrationDataCNS.updateContainerDate()
 

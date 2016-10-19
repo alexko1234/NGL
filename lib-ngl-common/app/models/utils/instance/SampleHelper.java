@@ -140,7 +140,7 @@ public class SampleHelper {
 		sampleCodes.add(sampleCode);
 
 		if(sample.life!=null && sample.life.path!=null){
-			sampleCodes.addAll(Arrays.asList(sample.life.path.split(",")));
+			sampleCodes.addAll(Arrays.asList(sample.life.path.substring(1).split(",")));
 		} 
 
 		return sampleCodes;
