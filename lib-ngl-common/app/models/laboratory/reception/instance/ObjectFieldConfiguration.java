@@ -30,7 +30,7 @@ public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
     }
 	
 	public ObjectFieldConfiguration() {
-		super(AbstractFieldConfiguration.propertiesType);		
+		super(AbstractFieldConfiguration.objectType);		
 	}
 
 	protected ObjectFieldConfiguration(String type) {
