@@ -1,5 +1,6 @@
 @()
 <!-- work with atmDragAndDrop2 -->
+
 <table class="table" >
 <thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
@@ -47,7 +48,7 @@
 				@Messages("containers.table.volume") (µL)
 			</th>
 			<th>
-				@Messages("containers.table.concentration.shortlabel")
+				@Messages("containers.table.concentration.shortLabel")
 			</th>									
 			<th><!-- FDS : OK apres allegement -->
 				@Messages("containers.table.percentageInsidePool")
@@ -66,10 +67,10 @@
 				@Messages("containers.table.support.column")
 			</th>
 			<th>
-				@Messages("containers.table.concentration")
+				@Messages("containers.table.concentration.shortLabel")
 			</th>
-			<th>
-				@Messages("containers.table.concentration.unit")
+			<th><!--FDS !!! problem graphique avec select -->
+				@Messages("containers.table.concentration.unit.shortLabel")
 			</th>
 			<th>
 				@Messages("containers.table.volume") (µL)

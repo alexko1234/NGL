@@ -1,6 +1,60 @@
 @()
 <!--- FDS 05/10/2016 cree pour gerer le cas des sorties tubes ou plaques et le pooling automatique--->
 
+<!--   TEST FDS  avant tabs....-->
+<div class="col-md-12 col-lg-12" ng-switch="atmService.outputContainerSupportCategoryCode">
+    <form class="form-inline">
+         <div class="form-group col-lg-3" >
+           <div ng-switch on="mainService.isEditMode()"> 
+           <div ng-switch-when="false">   
+                <label for="workLabel" class="control-label">Label de travail</label>
+                <span class="form-control-static" ng-bind="rootWorkName"></span> 
+            </div>
+            <div ng-switch-when="true">
+                 <label for="rootWorkName" class="control-label">Label de travail</label>
+                 <input class="form-control input-sm" type="text" id="WorkName"
+								                      title="Label de travail"
+								                      ng-change="updateWorkNames(rootWorkName,atm)"
+			 						                  ng-model="rootWorkName" />	
+		    </div>
+		    </div>  
+         </div>
+         <div class="form-group col-lg-3">
+              <div ng-switch on="mainService.isEditMode()"> 
+              <div ng-switch-when="false">   
+                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
+                   <span class="form-control-static" ng-bind="outputContainerSupport.storageCode"></span> 
+              </div>
+              <div ng-switch-when="true">
+                  <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
+                  <input class="form-control input-sm" type="text" id="plateStorage"
+									                   title=@Messages("experiments.outputContainerSupportStorageCode")
+									                   ng-change="updateStorageCodes(outputContainerSupport.storageCode,atm)" 
+			 						                   ng-model="outputContainerSupport.storageCode" />	
+			  </div>
+			  </div>   
+	     </div>
+         <div class="form-group col-lg-3" ng-switch-when="96-well-plate">          
+              <div ng-switch on="mainService.isEditMode()"> 
+              <div ng-switch-when="false">   
+                   <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
+                   <span class="form-control-static" ng-bind="outputContainerSupport.code"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <label for="plateCode"  class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
+                   <input class="form-control input-sm" type="text" id="plateCode"
+									                    title=@Messages("experiments.outputContainerSupportCode")
+									                    ng-change="updateSupportCodes(outputContainerSupport.code,atm)"
+			  							                ng-model="outputContainerSupport.code" />	
+			  </div>
+			  </div>   
+	     </div>   
+
+    </form>	
+</div>	 
+<br/>
+<!--  END TEST OK -->
+
 <div class="col-md-12 col-lg-12" ng-switch="atmService.inputContainerSupportCategoryCode">
 <div ng-switch-when="tube">
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist">
@@ -127,7 +181,9 @@
 				</tr>				
 			</table>
 		</div>
-	<div class="col-md-4 col-lg-4">
+	<!--  ajout ng-switch car il faut un label dans le cas des tubes en sortie -->
+	<div class="col-md-4 col-lg-4"  ng-switch="atmService.outputContainerSupportCategoryCode">
+	<div ng-switch-when="96-well-plate">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -160,6 +216,37 @@
 				</tr>				
 			</table>
 		</div>	
+		<div ng-switch-when="tube">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>
+						@Messages("experiments.src_dest.outputContainerSupportCode")
+					</th>
+					<th>
+						@Messages("experiments.src_dest.dest")
+					</th>
+					<th>
+						@Messages("experiments.src_dest.label")
+					</th>										
+				</tr>
+				</thead>	
+				<!--  <tr ng-model="container" ng-repeat="container    in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >	-->			
+				<tr ng-model="containerSupport" ng-repeat="containerSupport in getDistinctOutputContainerSupports()  | orderBy track by $index" >
+					<td>
+						{{containerSupport.code}}
+					</td>
+					<td>
+						{{$index+1}}
+					</td>
+					<td>
+						{{container.experimentProperties.workName.value}}
+					</td>								
+				</tr>				
+			</table>
+		</div>
+		</div>
+		</div >
 	</div>
 	</div>
 </div>

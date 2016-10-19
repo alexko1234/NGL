@@ -368,15 +368,27 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	atmService.outputContainerSupportCategoryCode = $scope.experiment.instrument.outContainerSupportCategoryCode;
 	
 	
-	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(){
+	// 19/10/2016 version de Guillaume pour gerer les cas tubes ou 96-well-plate
+	atmService.newAtomicTransfertMethod =  function(line, column){
+		var getLine = function(line){
+			if($scope.experiment.instrument.outContainerSupportCategoryCode 
+					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
+				return line;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
+				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
+				return undefined;
+			}
+			
+		}
+		var getColumn=getLine;
+		
 		return {
 			class:"ManyToOne",
-			line:"1", //TODO only exact for oneToOne of type  tube to tube but not for plate to plate
-			column:"1", 				
+			line:getLine(line), 
+			column:getColumn(column), 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
-		};		
+		};
 	};
 	
 	//defined default output unit
@@ -384,6 +396,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			volume : "µL"			
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
 	
 	$scope.atmService = atmService;
 	
