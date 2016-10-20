@@ -36,7 +36,7 @@ public class MigrationExperimentProperties extends CommonController{
 		//backupReadSetCollection();
 
 		//Get list experiment
-		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("typeCode", experimentTypeCode)).limit(1).toList();
+		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("typeCode", experimentTypeCode)).toList();
 
 		//Get list experiment with no experiment properties
 		for(Experiment exp : experiments){
@@ -97,7 +97,7 @@ public class MigrationExperimentProperties extends CommonController{
 			});
 
 			//Update experiment in database
-			//MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
 
 
@@ -105,7 +105,7 @@ public class MigrationExperimentProperties extends CommonController{
 		return ok();
 	}
 
-	private static void getListContainerCode(String codeContainer, List<String> listContainerCode)
+	protected static void getListContainerCode(String codeContainer, List<String> listContainerCode)
 	{
 		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("inputContainerSupportCodes", codeContainer)).toList();
 		for(Experiment exp : experiments){
@@ -122,30 +122,32 @@ public class MigrationExperimentProperties extends CommonController{
 		}
 	}
 
-	private static void updateContainer(String codeContainer, String newKeyProperty, PropertyValue propValue)
+	protected static void updateContainer(String codeContainer, String newKeyProperty, PropertyValue propValue)
 	{
 		//Get container
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, codeContainer);
-		//add property to container
-		container.contents.stream().forEach(c->{
-			Logger.debug("Update container "+codeContainer+" for content "+c.sampleCode);
-			c.properties.put(newKeyProperty, propValue);
-		});
-		//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
+		if(container!=null){
+			//add property to container
+			container.contents.stream().forEach(c->{
+				Logger.debug("Update container "+codeContainer+" for content "+c.sampleCode);
+				c.properties.put(newKeyProperty, propValue);
+			});
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
 
-		//Get ReadSet to update
-		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", container.code)).toList();
-		readSets.stream().forEach(r->{
-			Logger.debug("Update ReadSet"+r.code);
-			r.sampleOnContainer.properties.put(newKeyProperty, propValue);
-		});
+			//Get ReadSet to update
+			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", container.code)).toList();
+			readSets.stream().forEach(r->{
+				Logger.debug("Update ReadSet"+r.code);
+				r.sampleOnContainer.properties.put(newKeyProperty, propValue);
+			});
 
-		for(ReadSet readSet : readSets){
-			//MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
+			for(ReadSet readSet : readSets){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
+			}
 		}
 	}
 
-	private static void backupContainerCollection() {
+	protected static void backupContainerCollection() {
 		String backupName = InstanceConstants.CONTAINER_COLL_NAME+"_BCK_"+sdf.format(new java.util.Date());
 
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" start");
@@ -153,7 +155,7 @@ public class MigrationExperimentProperties extends CommonController{
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" end");
 	}
 
-	private static void backupReadSetCollection() {
+	protected static void backupReadSetCollection() {
 		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_"+sdf.format(new java.util.Date());
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);

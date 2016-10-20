@@ -79,6 +79,8 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	
+			       //pass by copie of dynamic properties
+			         /*
 			         {
 			        	 "header":"Conc. finale Ligation (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -88,7 +90,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+			         },*/
 			         //pass by copie of dynamic properties
 			         /*
 			         {
@@ -146,7 +148,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 	        	changeClass:false,
 	        	mode:'local',
 	        	callback:function(datatable){
-	        		copyLigationQuantityToOutputContainerUsedQuantity(datatable);
+	        		copyLigationPropertiesToOutputContainerUsedQuantity(datatable);
 	        	}
 	        		
 			},
@@ -175,11 +177,14 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			}
 	};
 	
-	var copyLigationQuantityToOutputContainerUsedQuantity = function(datatable){
+	var copyLigationPropertiesToOutputContainerUsedQuantity = function(datatable){
 		var data = datatable.getData();
 		angular.forEach(data, function(value){
 			var ligationQuantity = $parse("outputContainerUsed.experimentProperties.ligationQuantity.value")(value);
 			$parse("outputContainerUsed.quantity.value").assign(value, ligationQuantity);
+			
+			var ligationConcentration = $parse("outputContainerUsed.experimentProperties.ligationConcentration.value")(value);
+			$parse("outputContainerUsed.concentration.value").assign(value, ligationConcentration);
 		})
 		//datatable.setData(data);
 		

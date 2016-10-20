@@ -65,6 +65,7 @@ GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeT
 GET		/cns/update-lane-content 				controllers.migration.cns.MigrationContentPropertiesContainer.migration()
 GET		/cns/migration-process-properties		controllers.migration.cns.MigrationProcessusProperties.migration(processTypeCode: java.lang.String, keyProperty: java.lang.String)
 GET 	/cns/migration-experiment-properties	controllers.migration.cns.MigrationExperimentProperties.migration(experimentTypeCode: java.lang.String, keyProperty: java.lang.String, newKeyProperty: java.lang.String)
+GET 	/cns/migration-experiment-properties-conc	controllers.migration.cns.MigrationExperimentPropertiesConcentration.migration(experimentTypeCode: java.lang.String, newKeyProperty: java.lang.String)
 
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
