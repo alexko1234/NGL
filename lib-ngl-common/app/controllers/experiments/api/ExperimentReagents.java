@@ -2,11 +2,12 @@ package controllers.experiments.api;
 
 import static play.data.Form.form;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
+import models.laboratory.experiment.instance.Experiment;
+import models.utils.InstanceConstants;
 
 import org.mongojack.Aggregation;
 import org.mongojack.Aggregation.Expression;
@@ -15,26 +16,17 @@ import org.mongojack.AggregationResult;
 import org.mongojack.DBProjection;
 import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.DBQuery;
+import org.mongojack.JacksonDBCollection;
 
-import com.mongodb.BasicDBObject;
-
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResult;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-import play.Logger;
-import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import play.mvc.Results;
-import views.components.datatable.DatatableResponse;
-import workflows.experiment.ExpWorkflows;
+
+import com.mongodb.AggregationOutput;
+import com.mongodb.DBObject;
+
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
 
 /**
  * 
@@ -61,14 +53,55 @@ public class ExperimentReagents extends Experiments{
 		ExperimentSearchForm experimentsSearch = filledFormQueryString(ExperimentSearchForm.class);
 		DBQuery.Query query = getQuery(experimentsSearch);
 		Pipeline<Expression<?>> pipeline = aggregation(query);
-
+		JacksonDBCollection<Experiment, String> collection = MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);
+		AggregationResult<Experiment> ar =collection.aggregate(pipeline, Experiment.class);
+		
 		if(experimentsSearch.datatable){
-			AggregationResult<Experiment> ar = MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).aggregate(pipeline, Experiment.class);
-			return ok(Json.toJson(new DatatableResponse<Experiment>(ar.results(), ar.results().size())));
+			return ok(
+				new StringChunks() {
+					@Override
+					public void onReady(Out<String> out) {
+						AggregationOutput output = ar.getAggregationOutput();
+						Iterable<DBObject> iterable = output.results();
+			            Iterator<DBObject> iter = iterable.iterator();
+			            int count = 0;
+			            out.write("{\"data\":[");
+					    while (iter.hasNext())
+			            {
+					    	count++;
+			            	Experiment exp = collection.convertFromDbObject(iter.next(), Experiment.class);
+			                out.write(Json.toJson(exp).toString());
+			                if(iter.hasNext())out.write(",");
+			            }					
+			            out.write("],\"recordsNumber\":"+count);
+					    out.write("}");
+					    out.close();					
+					}
+				}
+				).as("application/json");
+			
 		}else{
-			AggregationResult<Experiment> ar = MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).aggregate(pipeline, Experiment.class);
-			List<Experiment> experiments = ar.results();
-			return ok(Json.toJson(experiments));
+			return ok(
+					new StringChunks() {
+						@Override
+						public void onReady(Out<String> out) {
+							AggregationOutput output = ar.getAggregationOutput();
+							Iterable<DBObject> iterable = output.results();
+				            Iterator<DBObject> iter = iterable.iterator();
+				            int count = 0;
+				            out.write("[");
+						    while (iter.hasNext())
+				            {
+						    	count++;
+				            	Experiment exp = collection.convertFromDbObject(iter.next(), Experiment.class);
+				                out.write(Json.toJson(exp).toString());
+				                if(iter.hasNext())out.write(",");
+				            }					
+				            out.write("]");
+						    out.close();					
+						}
+					}
+					).as("application/json");
 		}
 	}
 	

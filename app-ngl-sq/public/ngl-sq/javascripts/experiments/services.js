@@ -70,52 +70,50 @@
 				
 				columns.push({
 		        	 "header":Messages("reagents.table.kitname"),
-		        	 "property":"reagents",
+		        	 "property":"reagents[0].kitCatalogCode",
+		        	 "filter":"codes:'reagentKit'",
 		        	 "order":true,
 		        	 "type":"text",
-		        	 "position":13,
-		        	 "filter":"getArray:'kitCatalogCode' | unique"
+		        	 "position":13
 
 		        });
 				columns.push({
 		        	 "header":Messages("reagents.table.boxname"),
-		        	 "property":"reagents",
+		        	 "property":"reagents[0].boxCatalogCode",
+		        	 "filter":"codes:'reagentBox'",
+		        	 
 		        	 "order":false,
 		        	 "type":"text",
-		        	 "position":14,
-		        	 "filter":"getArray:'boxCatalogCode' | unique"
+		        	 "position":14
 				});
 				columns.push({
 		        	 "header":Messages("reagents.table.boxcode"),
-		        	 "property":"reagents",
+		        	 "property":"reagents[0].boxCode",
 		        	 "order":true,
 		        	 "type":"text",
-		        	 "position":15,
-		        	 "filter":"getArray:'boxCode' | unique"					
+		        	 "position":15			
 				});
 				columns.push({
 		        	 "header":Messages("reagents.table.reagentname"),
-		        	 "property":"reagents",
+		        	 "property":"reagents[0].reagentCatalogCode",
+		        	 "filter":"codes:'reagentReagent'",
 		        	 "order":false,
 		        	 "type":"text",
-		        	 "position":16,
-		        	 "filter":"getArray:'reagentCatalogCode' | unique"				
+		        	 "position":16	
 				});
 				columns.push({
 		        	 "header":Messages("reagents.table.reagentcode"),
-		        	 "property":"reagents",
+		        	 "property":"reagents[0].code",
 		        	 "order":true,
 		        	 "type":"text",
-		        	 "position":17,
-		        	 "filter":"getArray:'code' | unique"				
+		        	 "position":17			
 				});
 				columns.push({
 		        	 "header":Messages("reagents.table.description"),
-		        	 "property":"reagents",
+		        	 "property":"reagents[0].description",
 		        	 "order":true,
 		        	 "type":"text",
-		        	 "position":18,
-		        	 "filter":"getArray:'description' | unique"				
+		        	 "position":18			
 				});				
 				
 			}else{	// getHomePage() = "new" || "search"				

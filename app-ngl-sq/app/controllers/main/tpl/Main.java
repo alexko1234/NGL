@@ -2,25 +2,28 @@ package controllers.main.tpl;
 
 import java.util.List;
 
-import controllers.CommonController;
-import models.administration.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
+import org.mongojack.DBQuery;
+
 import jsmessages.JsMessages;
+import models.administration.authorisation.Permission;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
+import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.description.BoxCatalog;
+import models.laboratory.reagent.description.KitCatalog;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
-import play.Application;
-import play.Logger;
 import play.Play;
 import play.Routes;
 import play.api.modules.spring.Spring;
-import play.libs.Json;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import views.html.home;
+import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
 
 
 public class Main extends CommonController{
@@ -93,6 +96,24 @@ public class Main extends CommonController{
 		for(Protocol protocol:protocols){
 			sb.append("\"").append("protocol").append(".").append(protocol.code).append("\":\"").append(protocol.name).append("\",");
 		}
+		
+		MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit"))
+			.cursor.forEach(reagent -> {
+				sb.append("\"").append("reagentKit").append(".").append(reagent.code)
+				.append("\":\"").append(reagent.name).append("\",");
+			});
+		
+		MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box"))
+		.cursor.forEach(reagent -> {
+			sb.append("\"").append("reagentBox").append(".").append(reagent.code)
+			.append("\":\"").append(reagent.name).append("\",");
+		});
+		
+		MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent"))
+		.cursor.forEach(reagent -> {
+			sb.append("\"").append("reagentReagent").append(".").append(reagent.code)
+			.append("\":\"").append(reagent.name).append("\",");
+		});
 		
 		sb.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 		return sb.toString();
