@@ -30,15 +30,10 @@ public class MigrationExperimentPropertiesConcentration extends MigrationExperim
 		//backupReadSetCollection();
 
 		//Get list experiment
-		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("typeCode", experimentTypeCode)).toList();
-
+		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode));
 		//Get list experiment with no experiment properties
 		for(Experiment exp : experiments){
-			//Logger.debug("Code experiment "+exp.code);
-			//Logger.debug("Classe "+OneToOneContainer.class.getName());
-			exp.atomicTransfertMethods.stream().filter(atm->!atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
-				Logger.debug("Experiment "+exp.code+" ATM not one to one ");
-			});
+			checkATMExperiment(exp);
 			exp.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
 				atm.outputContainerUseds.stream().filter(output->output.experimentProperties==null).forEach(output->{
 					Logger.debug("Experiment "+exp.code+" inputContainer "+output.code+" no experiment property");
@@ -64,6 +59,7 @@ public class MigrationExperimentPropertiesConcentration extends MigrationExperim
 					PropertyValue propValue = output.concentration;
 					output.experimentProperties.put(newKeyProperty, propValue);
 
+					updateContainerContents(output, newKeyProperty, propValue);
 					if(output.contents!=null){
 						if(output.contents.size()>1)
 							Logger.error("Multiple contents ");

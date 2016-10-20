@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import com.mongodb.BasicDBObject;
 
@@ -12,8 +13,10 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.instance.AbstractContainerUsed;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
@@ -36,25 +39,12 @@ public class MigrationExperimentProperties extends CommonController{
 		//backupReadSetCollection();
 
 		//Get list experiment
-		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("typeCode", experimentTypeCode)).toList();
+		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode));
 
 		//Get list experiment with no experiment properties
 		for(Experiment exp : experiments){
-			//Logger.debug("Code experiment "+exp.code);
-			//Logger.debug("Classe "+OneToOneContainer.class.getName());
-			exp.atomicTransfertMethods.stream().filter(atm->!atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
-				Logger.debug("Experiment "+exp.code+" ATM not one to one ");
-			});
-			exp.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
-				atm.inputContainerUseds.stream().filter(input->input.experimentProperties==null).forEach(input->{
-					Logger.debug("Experiment "+exp.code+" inputContainer "+input.code+" no experiment property");
-				});
-			});
-			exp.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
-				atm.inputContainerUseds.stream().filter(input->input.experimentProperties!=null && !input.experimentProperties.containsKey(keyProperty)).forEach(input->{
-					Logger.debug("Experiment "+exp.code+" inputContainer "+input.code+" no property "+keyProperty);
-				});
-			});
+			checkATMExperiment(exp);
+			checkInputExperimentProperties(exp, newKeyProperty);
 		}
 
 		//Get all inputQuantity to change to libraryInputQuantity
@@ -69,30 +59,12 @@ public class MigrationExperimentProperties extends CommonController{
 					input.experimentProperties.remove(keyProperty);
 					PropertyValue propValue = input.experimentProperties.get(newKeyProperty);
 					//add property to contents properties to inputContainerUsed
-					if(input.contents.size()>1)
-						Logger.error("Multiple contents ");
-					if(input.contents.size()>0){
-						input.contents.stream().filter(content->!content.properties.containsKey(newKeyProperty)).forEach(content->{
-							Logger.debug("add property to content "+content.sampleCode);
-							content.properties.put(newKeyProperty, propValue);
-						});
-					}
+					updateContainerContents(input, newKeyProperty, propValue);
+
 					//Get container from input
 					updateContainer(input.code, newKeyProperty, propValue);
 
-					//Get outputContainer
-					atm.outputContainerUseds.stream().forEach(output->{
-						Logger.debug("Get outputContainerCode "+output.code);
-						updateContainer(output.code, newKeyProperty, propValue);
-						//Get list of all Container in process
-						List<String> containerCodes = new ArrayList<String>();
-						getListContainerCode(output.locationOnContainerSupport.code, containerCodes);
-						for(String codeContainer : containerCodes){
-							Logger.debug("Update container code "+codeContainer);
-							updateContainer(codeContainer, newKeyProperty, propValue);
-						}
-					});
-
+					updateOutputContainer(atm,newKeyProperty,propValue);
 				});
 			});
 
@@ -103,6 +75,62 @@ public class MigrationExperimentProperties extends CommonController{
 
 
 		return ok();
+	}
+
+	protected static List<Experiment> getListExperiments(Query query)
+	{
+		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).toList();
+	}
+
+	protected static void checkATMExperiment(Experiment experiment)
+	{
+		experiment.atomicTransfertMethods.stream().filter(atm->!atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
+			Logger.debug("Experiment "+experiment.code+" ATM not one to one ");
+		});
+	}
+
+	protected static void checkInputExperimentProperties(Experiment experiment, String keyProperty)
+	{
+		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
+			atm.inputContainerUseds.stream().filter(input->input.experimentProperties==null).forEach(input->{
+				Logger.debug("Experiment "+experiment.code+" inputContainer "+input.code+" no experiment property");
+			});
+		});
+		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
+			atm.inputContainerUseds.stream().filter(input->input.experimentProperties!=null && !input.experimentProperties.containsKey(keyProperty)).forEach(input->{
+				Logger.debug("Experiment "+experiment.code+" inputContainer "+input.code+" no property "+keyProperty);
+			});
+		});
+	}
+
+	protected static void updateOutputContainer(AtomicTransfertMethod atm, String keyProperty, PropertyValue propValue)
+	{
+		//Get outputContainer
+		atm.outputContainerUseds.stream().forEach(output->{
+			Logger.debug("Get outputContainerCode "+output.code);
+			updateContainer(output.code, keyProperty, propValue);
+			//Get list of all Container in process
+			List<String> containerCodes = new ArrayList<String>();
+			getListContainerCode(output.locationOnContainerSupport.code, containerCodes);
+			for(String codeContainer : containerCodes){
+				Logger.debug("Update container code "+codeContainer);
+				updateContainer(codeContainer, keyProperty, propValue);
+			}
+		});
+	}
+
+	protected static void updateContainerContents(AbstractContainerUsed container, String keyProperty, PropertyValue propValue)
+	{
+		if(container.contents!=null){
+			if(container.contents.size()>1)
+				Logger.error("Multiple contents ");
+			if(container.contents.size()>0){
+				container.contents.stream().filter(content->!content.properties.containsKey(keyProperty)).forEach(content->{
+					Logger.debug("add property to content "+content.sampleCode);
+					content.properties.put(keyProperty, propValue);
+				});
+			}
+		}
 	}
 
 	protected static void getListContainerCode(String codeContainer, List<String> listContainerCode)
