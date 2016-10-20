@@ -76,20 +76,21 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			}
 			
 			// FDS 29/06/2016 positionnement automatique de ligne et colonne sur une plaque
-			// A NE PAS FAIRE EN MODE TUBE...
 			console.log("instrument.outContainerSupportCategoryCode="+ $scope.experiment.instrument.outContainerSupportCategoryCode);
-			if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ){
-				
+			if ( $scope.experiment.instrument.outContainerSupportCategoryCode === "96-well-plate" ){	
 				atm.outputContainerUseds[0].locationOnContainerSupport.column=getColumnFromPosition96_C(atm.viewIndex);
-				atm.column=atm.outputContainerUseds[0].locationOnContainerSupport.column;
-				console.log ("setting locationOnContainerSupport.column=..."+atm.outputContainerUseds[0].locationOnContainerSupport.column);
-			
 				atm.outputContainerUseds[0].locationOnContainerSupport.line=getLineFromPosition96_C(atm.viewIndex);
-				atm.line=atm.outputContainerUseds[0].locationOnContainerSupport.line;
-				console.log ("setting locationOnContainerSupport.line=..."+ atm.outputContainerUseds[0].locationOnContainerSupport.line);	
+			} else {
+				atm.outputContainerUseds[0].locationOnContainerSupport.column=1;
+				atm.outputContainerUseds[0].locationOnContainerSupport.line=1;
 			}
+				
+			atm.column=atm.outputContainerUseds[0].locationOnContainerSupport.column;
+			console.log ("setting locationOnContainerSupport.column=..."+atm.outputContainerUseds[0].locationOnContainerSupport.column);
+
+			atm.line=atm.outputContainerUseds[0].locationOnContainerSupport.line;
+			console.log ("setting locationOnContainerSupport.line=..."+ atm.outputContainerUseds[0].locationOnContainerSupport.line);	
 			
-			// mais ca oui
 			atm.outputContainerUseds[0].locationOnContainerSupport.code=$scope.outputContainerSupport.code;
 			//pas d'affectation atm.xx= ???
 			console.log("setting locationOnContainerSupport.code="+$scope.outputContainerSupport.code);	
@@ -99,20 +100,21 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			//pasd'affectation atm.xx= ???
 			console.log("setting locationOnContainerSupport.StorageCode: "+$scope.outputContainerSupport.storageCode);
 			
-
-			// FDS ESSAIS 18/10/2016 positionnement automatique du workName
-			// PB...   experimentProperties  pas encore defini !!! POURQUOI???????/
-			//atm.outputContainerUseds[0].experimentProperties.workName.value=$scope.rootWorkName+atm.viewIndex;
-			//
-			//var workName={value: $scope.rootWorkName+atm.viewIndex};
-			//var getterWorkName=$parse("outputContainerUseds[0].experimentProperties.workName")(atm);
-			//getterWorkName.assign(atm, workName);
-			
+			// 19/10/2016  affectation de WorkName. !! GA: la propriete n'existe pas=> la creer
+			/*  methode basique...
+			if(!atm.outputContainerUseds[0].experimentProperties){
+				atm.outputContainerUseds[0].experimentProperties = {};
+				atm.outputContainerUseds[0].experimentProperties.workName = {};
+			}
+			atm.outputContainerUseds[0].experimentProperties.workName.value=$scope.outputContainerSupport.rootWorkName+atm.viewIndex;
+			*/
+			/* methode angular*/
+			$parse('experimentProperties.workName.value').assign(atm.outputContainerUseds[0],$scope.outputContainerSupport.rootWorkName+atm.viewIndex);
 		}
 	};
 	
-	//TEST 19/10/2016 modification des ATM deja crees s'il y en a.. MARCHE PAS.
-	$scope.updateSupportCodes= function(supportCode,atm){
+	//TEST 19/10/2016 modification des ATM deja crees s'il y en a.......... MARCHE PAS.. avoir ??
+	/*$scope.updateSupportCodes= function(supportCode,atm){
 		console.log ("supportCode changed: "+supportCode);
 	    if (atm){
 		//PAS OK...PASSE PAS ICI !!
@@ -142,6 +144,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		   });
 		}
 	};
+	*/
 	
 	// !! controller commun a normalization-and-pooling et pooling
 	// Julie demande de bloquer le calcul en normalization-and-pooling si unité de concentration n'EST PAS nM 
@@ -247,14 +250,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			}	
 			
 			$parse("outputContainerUseds[0].experimentProperties.bufferVolume").assign(atm, bufferVolume);
-
 		}
-		
-		// CA MARCHE ICI !!!
-		var workName = {value : $scope.rootWorkName+"_"+atm.viewIndex};
-		console.log('setting workName='+ workName.value);
-
-		$parse("outputContainerUseds[0].experimentProperties.workName").assign(atm,workName);
 	}
 	
     //FDS ajout param ftype + {'fdrType':ftype} 
@@ -287,45 +283,30 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		});
 	};
 
-    // boutons generateSampleSheet seulement si autre type de containerSuppor que tubes
-	// 18/10/2016  Epimotion travaille plaque=>tube... donc faut une feuille de route 
-	//if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
+	// 20/10/2016 OK!!!
+	$scope.getInstrumentCategoryCode= function() { return $scope.experiment.instrument.categoryCode; }
 	
-		// FDS pas de boutons generateSampleSheet pour la main
-		//console.log ("container="+ $scope.atmService.inputContainerSupportCategoryCode );
-		//console.log ("instrument="+ $scope.experiment.instrument.categoryCode + " / experiment="+$scope.experiment.typeCode);	
-		if ( $scope.experiment.instrument.categoryCode !== "hand") {	
-				// FDS 2 boutons pour genener 2 generateSampleSheet...
-				$scope.setAdditionnalButtons([{
-					isDisabled : function(){return $scope.isNewState();} ,
-					isShow:function(){return !$scope.isNewState();},
-					//click:generateSampleSheet,
-					click: function(){return generateSampleSheet("samples")},
-					label: Messages("experiments.sampleSheet")+ " / échantillons"
-				},{
-					isDisabled : function(){return $scope.isNewState();} ,
-					isShow:function(){return !$scope.isNewState();},
-					//click:generateSampleSheet,
-					click: function(){return generateSampleSheet("buffer")},
-					label:Messages("experiments.sampleSheet")+ " / tampon"
-				}]);	
-			
+	// FDS pas de boutons generateSampleSheet pour la main
+	//console.log ("container="+ $scope.atmService.inputContainerSupportCategoryCode );
+	//console.log ("instrument="+ $scope.experiment.instrument.categoryCode + " / experiment="+$scope.experiment.typeCode);	
+	if ( $scope.experiment.instrument.categoryCode !== "hand") {	
+			// FDS 2 boutons pour genener 2 generateSampleSheet...
+			$scope.setAdditionnalButtons([{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				//click:generateSampleSheet,
+				click: function(){return generateSampleSheet("samples")},
+				label: Messages("experiments.sampleSheet")+ " / échantillons"
+			},{
+				isDisabled : function(){return $scope.isNewState();} ,
+				isShow:function(){return !$scope.isNewState();},
+				//click:generateSampleSheet,
+				click: function(){return generateSampleSheet("buffer")},
+				label:Messages("experiments.sampleSheet")+ " / tampon"
+			}]);		
 		}
-	//}
 
-	/*  NON   modifier le controleur parent XtoTubesCtrl
-	//FDS 23/06/2016 surcharger newAtomicTransfertMethod pour mettre line et column a null
-	$scope.atmService.newAtomicTransfertMethod = function(){
-		return {
-			class:"ManyToOne",
-			line:null,
-			column:null, 				
-			inputContainerUseds:new Array(0), 
-			outputContainerUseds:new Array(0)
-		};		
-	};
-	*/
-		
+	
 	// 19/10/2016 Only tube is authorized for hand marche PRESQUE...
 	$scope.$watch("$scope.experiment.instrument.categoryCode", function(){
 			if ($scope.experiment.instrument.categoryCode === "hand")
@@ -333,15 +314,13 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	});	
 	
 	
-	
 	// pour selects de position de sortie dans le cas des plaques !!!!
 	//// TODO mettre ces tableaux dans le scala.html plutot qu'ici ???
 	$scope.columns = ["1","2","3","4","5","6","7","8","9","10","11","12"]; 
 	$scope.lines=["A","B","C","D","E","F","G","H"];  
 	
-
-    $scope.outputContainerSupport = { code : null , storageCode : null};
-    $scope.rootWorkName="pool"; // pour generation automatique du label de travail
+    //rootWorkName= valeur par defaut pour generation automatique du label de travail
+    $scope.outputContainerSupport = { code : null , storageCode : null, rootWorkName:"pool"};
     
     // 01/10/2016--------------------------- pooling "automatique"--------------------------------------------------------------------
     // HARDCODER les parametres des modes predefinis ( numtype=typ de numerotation  L:en ligne C: en colonne )

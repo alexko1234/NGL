@@ -1,21 +1,21 @@
 @()
 <!--- FDS 05/10/2016 cree pour gerer le cas des sorties tubes ou plaques et le pooling automatique--->
 
-<!--   TEST FDS  avant tabs....-->
-<div class="col-md-12 col-lg-12" ng-switch="atmService.outputContainerSupportCategoryCode">
+<!--  FDS 19/10/2016FDS  ajout 3 champs de travail avant les tabs -->
+<div class="col-md-12 col-lg-12 page-header" ng-switch="atmService.outputContainerSupportCategoryCode">
     <form class="form-inline">
          <div class="form-group col-lg-3" >
            <div ng-switch on="mainService.isEditMode()"> 
            <div ng-switch-when="false">   
-                <label for="workLabel" class="control-label">Label de travail</label>
-                <span class="form-control-static" ng-bind="rootWorkName"></span> 
+                <label for="workLabel" class="control-label">Préfixe pour labels de travail</label>
+                <span class="form-control-static" ng-bind="outputContainerSupport.rootWorkName"></span> 
             </div>
             <div ng-switch-when="true">
-                 <label for="rootWorkName" class="control-label">Label de travail</label>
+                 <label for="rootWorkName" class="control-label">Préfixe pour labels de travail</label>
                  <input class="form-control input-sm" type="text" id="WorkName"
 								                      title="Label de travail"
-								                      ng-change="updateWorkNames(rootWorkName,atm)"
-			 						                  ng-model="rootWorkName" />	
+								                      ng-change="updateWorkNames(outputContainerSupport.rootWorkName,atm)"
+			 						                  ng-model="outputContainerSupport.rootWorkName" />	
 		    </div>
 		    </div>  
          </div>
@@ -49,11 +49,8 @@
 			  </div>
 			  </div>   
 	     </div>   
-
     </form>	
 </div>	 
-<br/>
-<!--  END TEST OK -->
 
 <div class="col-md-12 col-lg-12" ng-switch="atmService.inputContainerSupportCategoryCode">
 <div ng-switch-when="tube">
@@ -72,15 +69,13 @@
 				@inputtubes()
 			</div>
 			<div class="col-md-2 col-lg-2" ng-if="mainService.isEditMode() && isNewState()">
-			<!-- Drop buttons -->
-			
-			<div class="page-header">
-				<button class="btn btn-default btn-lg btn-block" ng-click="atmService.data.dropInSelectInputContainer()" ng-disabled="!atmService.data.isSelectInputContainers()">
-				<i class="fa fa-sign-in fa-2x"></i>
-				</button>
-				
-				</div>
-	
+			<!-- Drop buttons -->	
+			  <div class="page-header">
+				 <button class="btn btn-default btn-lg btn-block" ng-click="atmService.data.dropInSelectInputContainer()" 
+				                                                  ng-disabled="!atmService.data.isSelectInputContainers()">
+				 <i class="fa fa-sign-in fa-2x"></i>
+				 </button>
+			  </div>
 			</div>
 			</div>
 			<!-- OutputContainers table -->
@@ -99,7 +94,7 @@
 		</div>
 		</div>
 	</div>		
-	</div>
+</div>
 	
 <div ng-switch-when="96-well-plate">
 <!--- FDS 25/08/2016 MODIF des colonnes pour cause de chevauchement a l'affichage-->
@@ -112,33 +107,38 @@
 <div class="tab-content">
 	<div class="tab-pane active" id="plate">
 		<div class="row"  ng-if="mainService.isEditMode() && isNewState()">
-		<div class="col-md-11 col-lg-11">
+		<div class="col-md-11 col-lg-11"> 
 			@inputplates()
 		</div>
-		<div class="col-md-1 col-lg-1">
+		<div class="col-md-1 col-lg-1"> 
 			<div class="page-header">
-			<button class="btn btn-default btn-sm btn-block" ng-click="atmService.data.dropInSelectInputContainer()" ng-disabled="!atmService.data.isSelectInputContainers()">
-			<i class="fa fa-sign-in fa-2x"></i>
-			</button>
-			</div>	 
-			<button class="btn btn-default btn-sm btn-block" ng-repeat="supportCode in atmService.data.inputContainerSupports" type="button" 
-				ng-class="atmService.data.getPlateBtnClass(supportCode)" 
-				ng-click="atmService.data.setCurrentSupportCode(supportCode)">
-				{{supportCode}}
-			</button>	
-			<div>
-			 <select class="form-control input-sm"
+			<!--- GA prefere laisser les 2 modes manuel + auto disponibles... 
+			  <div ng-if="getInstrumentCategoryCode() === 'hand'"> --->
+			  <button class="btn btn-default btn-sm btn-block" 
+			          ng-click="atmService.data.dropInSelectInputContainer()" 
+			          ng-disabled="!atmService.data.isSelectInputContainers()">
+			  <i class="fa fa-sign-in fa-2x"></i>
+			  </button>
+		    <!--- </div>
+			<div ng-if="getInstrumentCategoryCode() !== 'hand'"> --->
+			  <select class="form-control input-sm"
 	  					ng-model="poolingMode"
 						ng-change="autoPooling(poolingMode)"						
 						ng-options="mode as mode.name for mode in poolingModes track by mode.code">  	
 						<option value="">pool mode</option>  			    							     	 
-	        </select>	
+	          </select>	
+	        <!--- </div> --->
 	        </div>
-		</div>	
-	
+			<button class="btn btn-default btn-sm btn-block" 
+			        ng-repeat="supportCode in atmService.data.inputContainerSupports" type="button" 
+				    ng-class="atmService.data.getPlateBtnClass(supportCode)" 
+				    ng-click="atmService.data.setCurrentSupportCode(supportCode)">
+				{{supportCode}}
+			</button>	
 		</div>
+		</div>	
 		<div class="row">
-			<div class="col-md-11 col-lg-11 flowcellTable"  ng-switch="atmService.outputContainerSupportCategoryCode">
+			<div class="col-md-12 col-lg-12 flowcellTable"  ng-switch="atmService.outputContainerSupportCategoryCode">
             <div ng-switch-when="96-well-plate">
 			   @outputplates()
 			</div>
