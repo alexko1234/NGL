@@ -3,6 +3,7 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 
 import models.laboratory.common.description.Level;
@@ -27,6 +29,8 @@ import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
 
 
+import models.utils.instance.SampleHelper;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +38,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
+
 
 
 import play.Logger;
@@ -53,7 +58,9 @@ import workflows.process.ProcWorkflows;
 import workflows.process.ProcessWorkflows;
 
 
+
 import com.mongodb.BasicDBObject;
+
 
 
 import controllers.CommonController;
@@ -252,11 +259,10 @@ public class Processes extends CommonController{
 			newProcess.state = process.state;
 			newProcess.traceInformation = process.traceInformation;
 			newProcess.typeCode = process.typeCode;
-			//TODO NGL-1119
 			newProcess.sampleCodes = new HashSet<String>();
-			newProcess.sampleCodes.add(c.sampleCode);
 			newProcess.projectCodes = new HashSet<String>();
-			newProcess.projectCodes.add(c.projectCode);
+			newProcess.sampleCodes=SampleHelper.getSampleParent(c.sampleCode);
+			newProcess.projectCodes=SampleHelper.getProjectParent(newProcess.sampleCodes);
 			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
 			//Logger.info("New process code : "+newProcess.code);

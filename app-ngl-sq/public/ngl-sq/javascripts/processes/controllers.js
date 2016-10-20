@@ -702,7 +702,7 @@ var	datatableConfig = {
 			 	},
 		         {
 		        	 "header":Messages("processes.table.sampleCode"),
-		        	 "property":"sampleCode",
+		        	 "property":"sampleCodes",
 		        	 "order":true,
 		        	 "hide":true,
 		        	 "position":2.01,
@@ -772,7 +772,7 @@ var	datatableConfig = {
 		         },
 		         {
 		        	 "header":Messages("processes.table.projectCode"),
-		        	 "property":"projectCode",
+		        	 "property":"projectCodes",
 		        	 "order":true,
 		        	 "hide":true,
 		        	 "position":37,
@@ -898,7 +898,7 @@ var	datatableConfig = {
 				url =  jsRoutes.controllers.processes.api.Processes.save().url;
 				var processData = data[i];
 				var process = {
-						projectCode: processData.projectCodes[0],
+						projectCodes: [processData.projectCodes[0]],
 						typeCode:$scope.form.nextProcessTypeCode,
 						categoryCode:$scope.form.processCategory,
 						comments:data[i].comments,
@@ -917,7 +917,7 @@ var	datatableConfig = {
 				url =  jsRoutes.controllers.processes.api.Processes.save().url;
 				var processData = data[i];
 				var process = {
-						projectCode: processData.projectCodes[0],
+						projectCodes: [processData.projectCodes[0]],
 						typeCode:$scope.form.nextProcessTypeCode,
 						categoryCode:$scope.form.processCategory,
 						comments:data[i].comments,
