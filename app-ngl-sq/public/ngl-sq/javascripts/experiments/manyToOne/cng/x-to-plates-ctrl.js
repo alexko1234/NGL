@@ -283,7 +283,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		});
 	};
 
-	// 20/10/2016 OK!!!
+	// sert pour determiner quels mode  de pooling est laissé a l'utilisateur: bouton ou select ?
 	$scope.getInstrumentCategoryCode= function() { return $scope.experiment.instrument.categoryCode; }
 	
 	// FDS pas de boutons generateSampleSheet pour la main
@@ -307,11 +307,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		}
 
 	
-	// 19/10/2016 Only tube is authorized for hand marche PRESQUE...
+	/* 19/10/2016 Only tube is authorized for hand....  NON laisser le choix!!
 	$scope.$watch("$scope.experiment.instrument.categoryCode", function(){
 			if ($scope.experiment.instrument.categoryCode === "hand")
 				$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
 	});	
+	*/
 	
 	
 	// pour selects de position de sortie dans le cas des plaques !!!!
