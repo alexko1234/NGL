@@ -293,7 +293,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"purification","isActive":true}, "purification");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"qualitycontrol","isActive":true}, "qualitycontrol");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transfert","isActive":true}, "transfert");
-		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformation");
+		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation","isActive":true},"transformation");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation","isActive":true, withoutOneToVoid:true},"fromTransformation");
 	};
 	
