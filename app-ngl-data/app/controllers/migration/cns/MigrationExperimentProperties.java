@@ -16,70 +16,19 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.mvc.Result;
 
 public class MigrationExperimentProperties extends CommonController{
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 
-	/**
-	 * Propagation d'une propriété d'experiment au niveau content (containers et readSets)
-	 * @param experimentTypeCode
-	 * @param keyProperty
-	 * @return
-	 */
-	public static Result migration(String experimentTypeCode, String keyProperty, String newKeyProperty){
-
-		//backupContainerCollection();
-		//backupReadSetCollection();
-
-		//Get list experiment
-		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode));
-
-		//Get list experiment with no experiment properties
-		for(Experiment exp : experiments){
-			checkATMExperiment(exp);
-			checkInputExperimentProperties(exp, newKeyProperty);
-		}
-
-		//Get all inputQuantity to change to libraryInputQuantity
-		for(Experiment exp : experiments){
-			Logger.debug("Code experiment "+exp.code);
-			Logger.debug("Classe "+OneToOneContainer.class.getName());
-			exp.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
-				Logger.debug("ATM "+atm.getClass());
-				atm.inputContainerUseds.stream().filter(input->input.experimentProperties!=null && input.experimentProperties.containsKey(keyProperty)).forEach(input->{
-					Logger.debug("Update property");
-					input.experimentProperties.put(newKeyProperty, input.experimentProperties.get(keyProperty));
-					input.experimentProperties.remove(keyProperty);
-					PropertyValue propValue = input.experimentProperties.get(newKeyProperty);
-					//add property to contents properties to inputContainerUsed
-					updateContainerContents(input, newKeyProperty, propValue);
-
-					//Get container from input
-					updateContainer(input.code, newKeyProperty, propValue);
-
-					updateOutputContainer(atm,newKeyProperty,propValue);
-				});
-			});
-
-			//Update experiment in database
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-		}
-
-
-
-		return ok();
-	}
 
 	protected static List<Experiment> getListExperiments(Query query)
 	{
-		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).toList();
+		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).limit(1).toList();
 	}
 
 	protected static void checkATMExperiment(Experiment experiment)
@@ -99,6 +48,20 @@ public class MigrationExperimentProperties extends CommonController{
 		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
 			atm.inputContainerUseds.stream().filter(input->input.experimentProperties!=null && !input.experimentProperties.containsKey(keyProperty)).forEach(input->{
 				Logger.debug("Experiment "+experiment.code+" inputContainer "+input.code+" no property "+keyProperty);
+			});
+		});
+	}
+	
+	protected static void checkOutputExperimentProperties(Experiment experiment, String keyProperty)
+	{
+		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
+			atm.outputContainerUseds.stream().filter(output->output.experimentProperties==null).forEach(output->{
+				Logger.debug("Experiment "+experiment.code+" inputContainer "+output.code+" no experiment property");
+			});
+		});
+		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
+			atm.outputContainerUseds.stream().filter(output->output.concentration==null).forEach(output->{
+				Logger.debug("Experiment "+experiment.code+" inputContainer "+output.code+" no concentration attribute");
 			});
 		});
 	}

@@ -1,7 +1,6 @@
 package controllers.migration.cns;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.mongojack.DBQuery;
@@ -14,7 +13,7 @@ import models.utils.InstanceConstants;
 import play.Logger;
 import play.mvc.Result;
 
-public class MigrationExperimentPropertiesConcentration extends MigrationExperimentProperties{
+public class MigrationInputExperimentProperties extends MigrationExperimentProperties{
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 
@@ -24,18 +23,18 @@ public class MigrationExperimentPropertiesConcentration extends MigrationExperim
 	 * @param keyProperty
 	 * @return
 	 */
-	public static Result migration(String experimentTypeCode, String newKeyProperty){
+	public static Result migration(String experimentTypeCode, String keyProperty, String newKeyProperty){
 
 		//backupContainerCollection();
 		//backupReadSetCollection();
 
 		//Get list experiment
 		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode));
+
 		//Get list experiment with no experiment properties
 		for(Experiment exp : experiments){
 			checkATMExperiment(exp);
-			checkOutputExperimentProperties(exp, newKeyProperty);
-
+			checkInputExperimentProperties(exp, newKeyProperty);
 		}
 
 		//Get all inputQuantity to change to libraryInputQuantity
@@ -44,23 +43,20 @@ public class MigrationExperimentPropertiesConcentration extends MigrationExperim
 			Logger.debug("Classe "+OneToOneContainer.class.getName());
 			exp.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
 				Logger.debug("ATM "+atm.getClass());
-				atm.outputContainerUseds.stream().filter(output->output.experimentProperties!=null && !output.experimentProperties.containsKey(newKeyProperty)).forEach(output->{
-					//Get property
-					Logger.debug("Update property for container out "+output.code);
-					PropertyValue propValue = output.concentration;
-					output.experimentProperties.put(newKeyProperty, propValue);
-
-					updateContainerContents(output, newKeyProperty, propValue);
-					
-					updateContainer(output.code, newKeyProperty, propValue);
-
-					List<String> containerCodes = new ArrayList<String>();
-					getListContainerCode(output.locationOnContainerSupport.code, containerCodes);
-					for(String codeContainer : containerCodes){
-						Logger.debug("Update container code "+codeContainer);
-						updateContainer(codeContainer, newKeyProperty, propValue);
+				atm.inputContainerUseds.stream().filter(input->input.experimentProperties!=null).forEach(input->{
+					Logger.debug("Update property");
+					if(keyProperty!=null){
+						input.experimentProperties.put(newKeyProperty, input.experimentProperties.get(keyProperty));
+						input.experimentProperties.remove(keyProperty);
 					}
+					PropertyValue propValue = input.experimentProperties.get(newKeyProperty);
+					//add property to contents properties to inputContainerUsed
+					updateContainerContents(input, newKeyProperty, propValue);
 
+					//Get container from input
+					updateContainer(input.code, newKeyProperty, propValue);
+
+					updateOutputContainer(atm,newKeyProperty,propValue);
 				});
 			});
 
@@ -68,8 +64,9 @@ public class MigrationExperimentPropertiesConcentration extends MigrationExperim
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
 
+
+
 		return ok();
 	}
-
 
 }
