@@ -1,10 +1,13 @@
 package controllers.migration;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
 
+import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
 
 import play.Logger;
@@ -13,9 +16,9 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
 import controllers.CommonController;
-import controllers.migration.models.ContainerOld;
 import controllers.migration.models.ProcessOld;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.processes.instance.Process;
 
 public class MigrationProcessSample extends CommonController {
 	
@@ -39,6 +42,10 @@ public class MigrationProcessSample extends CommonController {
 			for (ProcessOld process : oldProcesses) {
 				migrationProcess(process);
 			}
+			
+			//TO TEST
+			//migrationProcessExperimentWithNewSample();
+			
 			Logger.info("Migration process end");
 
 		}else{
@@ -46,6 +53,33 @@ public class MigrationProcessSample extends CommonController {
 		}
 		Logger.info("Migration Process finish");
 		return ok("Migration Process Finish");
+	}
+
+	private static void migrationProcessExperimentWithNewSample() {
+		List<String> experimentTypeCodes=new ArrayList<String>();
+		experimentTypeCodes.add("tag-pcr");
+		experimentTypeCodes.add("dna-rna-extraction");
+		List<Experiment> experiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("typeCode",experimentTypeCodes)).toList();
+	
+		Logger.debug("Nb Experiments "+experiments.size());
+		experiments.stream().forEach(e->{
+			Logger.debug("Experiment "+e.code +" de type "+e.typeCode);
+			e.atomicTransfertMethods.stream().forEach(a->{
+				a.outputContainerUseds.stream().forEach(container->{
+					Logger.debug("OutputContainer "+container.code);
+					List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("outputContainerSupportCodes",container.locationOnContainerSupport.code)).toList();
+					if(processes.size()!=1){
+						Logger.error("Many process for output container "+container.code);
+					}else {
+						Process p=processes.get(0);
+						Logger.debug("Process "+p.code);
+						p.sampleCodes.add(container.contents.get(0).sampleCode);
+						p.projectCodes.add(container.contents.get(0).projectCode);
+						MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
+					}
+				});
+			});
+		});
 	}
 
 	private static void migrationProcess(ProcessOld process) {
