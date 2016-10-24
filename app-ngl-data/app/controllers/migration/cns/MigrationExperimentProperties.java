@@ -28,7 +28,7 @@ public class MigrationExperimentProperties extends CommonController{
 
 	protected static List<Experiment> getListExperiments(Query query)
 	{
-		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).limit(1).toList();
+		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).toList();
 	}
 
 	protected static void checkATMExperiment(Experiment experiment)

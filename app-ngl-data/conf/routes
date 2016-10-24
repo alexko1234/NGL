@@ -68,6 +68,7 @@ GET 	/cns/migration-experiment-input-properties		controllers.migration.cns.Migra
 GET 	/cns/migration-experiment-output-properties		controllers.migration.cns.MigrationOutputExperimentProperties.migration(experimentTypeCode: java.lang.String, keyProperty: java.lang.String ?=null, newKeyProperty: java.lang.String)
 GET 	/cns/migration-experiment-properties-conc		controllers.migration.cns.MigrationExperimentPropertiesConcentration.migration(experimentTypeCode: java.lang.String, newKeyProperty: java.lang.String)
 GET		/cns/migration-experiment-instrument-properties	controllers.migration.cns.MigrationExperimentInstrumentProperties.migration(experimentTypeCode: java.lang.String, keyProperty:java.lang.String)
+GET		/cns/migration-experiment-protocol-properties	controllers.migration.cns.MigrationExperimentProtocolProperties.migration(experimentTypeCode: java.lang.String, keyProperty:java.lang.String)
 
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
