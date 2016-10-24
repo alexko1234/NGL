@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 
 
+
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
@@ -53,12 +55,16 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ExperimentHelper;
+import models.utils.instance.SampleHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.mongojack.WriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 
 
@@ -437,7 +443,9 @@ public class ExpWorkflowsHelper {
 		//Map<ContainerSupport, List<Container>> containersBySupport = new HashMap<ContainerSupport, List<Container>>(0);
 		ContextValidation supportsValidation = new ContextValidation(validation.getUser());
 		supportsValidation.setCreationMode();
-
+		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+		List<String> processusWithNewProjectCode=new ArrayList<String>();
+		
 		containersBySupportCode.entrySet().forEach(entry -> {
 			List<Container> containers = entry.getValue();
 			ContainerSupport support = createContainerSupport(entry.getKey(), containers, validation);
@@ -461,6 +469,21 @@ public class ExpWorkflowsHelper {
 						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 								DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
 								DBUpdate.push("outputContainerSupportCodes",container.support.code));
+						
+						if(experimentType.newSample){
+							boolean projectCodeNotExist = MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+									DBQuery.in("code", container.processCodes).notIn("projectCodes", container.projectCodes));
+							
+							if(projectCodeNotExist){
+								processusWithNewProjectCode.add(container.code);
+								MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+										DBQuery.in("code", container.processCodes).notIn("projectCodes", container.projectCodes),
+										DBUpdate.push("projectCodes",container.projectCodes.iterator().next()));
+							}
+							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+									DBQuery.in("code", container.processCodes),
+									DBUpdate.push("sampleCodes",container.sampleCodes.iterator().next()));
+						}
 					}else{
 						supportsValidation.addErrors(containerValidation.errors);
 					}
@@ -476,6 +499,7 @@ public class ExpWorkflowsHelper {
 
 
 		});
+		
 		long t2 = System.currentTimeMillis();
 		//delete all supports and containers if only one error
 		if(supportsValidation.hasErrors()){
@@ -486,6 +510,23 @@ public class ExpWorkflowsHelper {
 						DBUpdate.pull("outputContainerSupportCodes",entry.getKey()));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
+				
+				//Retract sampleCode/projectCode of new container from a new sample
+				if(experimentType.newSample){
+					List<Container> containers = entry.getValue();
+					containers.parallelStream()
+					.forEach(container -> {
+						 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+								DBQuery.in("code", container.processCodes),
+								DBUpdate.pull("sampleCodes",container.sampleCodes.iterator().next()));
+						if(processusWithNewProjectCode.contains(container.code)){
+							Logger.debug("Pull container "+container.code+", projectCodes "+container.projectCodes.iterator().next());
+							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+									DBQuery.in("code", container.processCodes),
+									DBUpdate.pull("projectCodes",container.projectCodes.iterator().next()));
+						}
+					});
+				}
 			});
 			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
 			if(null != newProcessCodes){
