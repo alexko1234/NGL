@@ -59,9 +59,9 @@ public class RunServiceCNS extends AbstractRunService {
 
 		l.add(DescriptionFactory.newRunType("RARGUS","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newRunType("RMINION","RMINION", 1, RunCategory.find.findByCode("nanopore"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RMKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RMKIB","RMKIB", 1, RunCategory.find.findByCode("nanopore"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RMINION","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RMKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RMKIB","RMKIB", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
@@ -150,6 +150,14 @@ public class RunServiceCNS extends AbstractRunService {
 				getLibProcessTypeCodeValues(), "list"));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mail Agirs envoyé ?", "sendMailAgirs", LevelService.getLevels(Level.CODE.Run), Boolean.class, false, null, null, 
+				"single", null, false, null, null));
+		
+	    return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getRunNanoporePropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Run), String.class, false, null, null, 
 				"single", null, false, null, null));
 		
 	    return propertyDefinitions;

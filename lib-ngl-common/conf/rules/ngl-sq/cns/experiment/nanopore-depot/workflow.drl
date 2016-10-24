@@ -35,6 +35,9 @@ rule "Create Run and ReadSets Nanopore"
 		treatment.results.put("default",new HashMap<String, PropertyValue>(0));
 		run.treatments.put("minknowMetrichor",treatment);
 		
+		//Add properties
+		run.properties.put("flowcellChemistry",$experiment.instrumentProperties.get("flowcellChemistry"));
+		
 		insert(run);			
 end
 
