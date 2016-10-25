@@ -26,16 +26,18 @@ public class Output extends AbstractOutput {
 	 public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {
 		String content=null;
 		String fdrType=null;
-
+		
 		if ("normalization-and-pooling".equals(experiment.typeCode)){
 			//recuperer la valeur de la key "fdrType"dans contextValidation
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	
 				fdrType="samples";
+				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				// 21/09/2016 appeler une methode pour generer la liste des lignes a mettre dans la feuille de route
 				content = OutputHelper.format(normalizationPooling_samples.render(getSampleSheetPoolLines(experiment)).body());
 			} else if ("buffer".equals(ftype)) {
 				fdrType="buffer";
+				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				content = OutputHelper.format(normalizationPooling_buffer.render(experiment).body());
 			}else {
 				throw new RuntimeException("Janus sampleSheet type not managed : "+experiment.typeCode + "/" +ftype);
@@ -47,14 +49,19 @@ public class Output extends AbstractOutput {
 			Object ftype =contextValidation.getObject("fdrType");
 			if ("samples".equals(ftype) ){	
 				fdrType="samples";
+				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				// 21/09/2016 appeler une methode pour generer la liste des lignes a mettre dans la feuille de route
 				content = OutputHelper.format(pool_PlatesToPlate_samples.render(getSampleSheetPoolLines(experiment)).body());	
 			} else if ("buffer".equals(ftype)) {
 				fdrType="buffer";
+				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				content = OutputHelper.format(pool_PlatesToPlate_buffer.render(experiment).body());	
 			}
+			
 		} else if ("lib-normalization".equals(experiment.typeCode)){
+			Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
 			content = OutputHelper.format(normalization.render(experiment).body());	
+			
 		}else {
 			// a venir ????
 			//    rna-prep; 
@@ -127,5 +134,4 @@ public class Output extends AbstractOutput {
 		}
 		return sources;
 	}
-
 }

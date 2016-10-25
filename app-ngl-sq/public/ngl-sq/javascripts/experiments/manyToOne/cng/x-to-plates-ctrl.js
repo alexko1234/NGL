@@ -40,11 +40,11 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	
 	//  FDS 03/10/2016 calculer la position-96 en mode ligne a partir de ligne et colonne ( 1=A1, 2=A2...13=B1...)
 	var getPos96FromLineAndCol_L = function(ln,col){
-       //TODO
+       //TODO ??
 	}
 	//---------------------------------------------------------------------------------------------------------------------------
 	
-	// s'execute a la creation de chaque ATM meme sans mise a jour de concentration!!!!
+	// s'execute a la creation de chaque ATM meme sans mise a jour de concentration le nom est trompeur!!!
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -76,6 +76,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			}
 			
 			// FDS 29/06/2016 positionnement automatique de ligne et colonne sur une plaque
+			//     19/10/2016 gerer les 2 cas plaques/tubes
 			console.log("instrument.outContainerSupportCategoryCode="+ $scope.experiment.instrument.outContainerSupportCategoryCode);
 			if ( $scope.experiment.instrument.outContainerSupportCategoryCode === "96-well-plate" ){	
 				atm.outputContainerUseds[0].locationOnContainerSupport.column=getColumnFromPosition96_C(atm.viewIndex);
@@ -113,7 +114,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		}
 	};
 	
-	//TEST 19/10/2016 modification des ATM deja crees s'il y en a.......... MARCHE PAS.. avoir ??
+	//TEST 19/10/2016 modification des ATM deja crees s'il y en a.......... MARCHE PAS.. voir avec Guillaume
 	/*$scope.updateSupportCodes= function(supportCode,atm){
 		console.log ("supportCode changed: "+supportCode);
 	    if (atm){
@@ -253,7 +254,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		}
 	}
 	
-    //FDS ajout param ftype + {'fdrType':ftype} 
+    //    06/2016 FDS ajout param ftype + {'fdrType':ftype} 
+	// 25/10/2016 FDS le mode 2 feuilles de routes distinctes est-il valide pour tous les type d'instruments ??
+	//           Janus    : oui
+	//           Epimotion: ???
 	var generateSampleSheet = function(ftype){
 		console.log ("generateSampleSheet type="+ftype);
 		
@@ -283,14 +287,23 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		});
 	};
 
-	// sert pour determiner quels mode  de pooling est laissé a l'utilisateur: bouton ou select ?
-	$scope.getInstrumentCategoryCode= function() { return $scope.experiment.instrument.categoryCode; }
+	// pourrait servir dans le scala.html pour determiner quels mode  de pooling est laissé a l'utilisateur: bouton ou select ?
+	//    $scope.getInstrumentCategoryCode= function() { return $scope.experiment.instrument.categoryCode; }
+	 
 	
-	// FDS pas de boutons generateSampleSheet pour la main
+	// 06/2016 FDS: Boutons "Action"
+	//   => pas de boutons generateSampleSheet pour la main
+	
+	
 	//console.log ("container="+ $scope.atmService.inputContainerSupportCategoryCode );
 	//console.log ("instrument="+ $scope.experiment.instrument.categoryCode + " / experiment="+$scope.experiment.typeCode);	
-	if ( $scope.experiment.instrument.categoryCode !== "hand") {	
-			// FDS 2 boutons pour genener 2 generateSampleSheet...
+	if ( $scope.experiment.instrument.categoryCode !== "hand") {
+         // 06/2016 FDS: 2 boutons pour 2 generateSampleSheet de type different
+		 /* 25/10/2016 le mode 2 boutons est-il valide pour tous les type d'instrument ?
+		          Janus    : Oui
+		          Epimotion: ??
+		 */
+		
 			$scope.setAdditionnalButtons([{
 				isDisabled : function(){return $scope.isNewState();} ,
 				isShow:function(){return !$scope.isNewState();},
@@ -304,7 +317,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 				click: function(){return generateSampleSheet("buffer")},
 				label:Messages("experiments.sampleSheet")+ " / tampon"
 			}]);		
-		}
+	}
 
 	
 	/* 19/10/2016 Only tube is authorized for hand....  NON laisser le choix!!
@@ -320,11 +333,11 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	$scope.columns = ["1","2","3","4","5","6","7","8","9","10","11","12"]; 
 	$scope.lines=["A","B","C","D","E","F","G","H"];  
 	
-    //rootWorkName= valeur par defaut pour generation automatique du label de travail
+    //rootWorkName= préfix par defaut pour génération automatique des labels de travail
     $scope.outputContainerSupport = { code : null , storageCode : null, rootWorkName:"pool"};
     
     // 01/10/2016--------------------------- pooling "automatique"--------------------------------------------------------------------
-    // HARDCODER les parametres des modes predefinis ( numtype=typ de numerotation  L:en ligne C: en colonne )
+    // HARDCODER les parametres des modes predefinis ( numtype=type de numerotation  L:en ligne C: en colonne )
     if ( $scope.experiment.instrument.typeCode === "janus") {	
     	$scope.poolingModes=[ 
                            //{code: 'L4',  name:'Ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 

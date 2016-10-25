@@ -193,14 +193,13 @@
 					<th>
 						@Messages("experiments.src_dest.dest")
 					</th>
-					<!-- pas necessaire pour 1 seule paque de sortie..
+					<!-- le label de travail est sur les containers pas les supports...
 					<th>
 						@Messages("experiments.src_dest.label")
 					</th>	
 					 -->										
 				</tr>
-				</thead>	
-				<!--  <tr ng-model="container" ng-repeat="container    in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >	-->			
+				</thead>				
 				<tr ng-model="containerSupport" ng-repeat="containerSupport in getDistinctOutputContainerSupports()  | orderBy track by $index" >
 					<td>
 						{{containerSupport.code}}
@@ -208,7 +207,7 @@
 					<td>
 						{{$index+1}}
 					</td>
-					<!-- pas necessaire pour 1 seule paque de sortie..
+					<!-- le label de travail est sur les containers pas les supports...
 					<td>
 						{{container.experimentProperties.workName.value}}
 					</td>		
@@ -231,10 +230,10 @@
 					</th>										
 				</tr>
 				</thead>	
-				<!--  <tr ng-model="container" ng-repeat="container    in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >	-->			
-				<tr ng-model="containerSupport" ng-repeat="containerSupport in getDistinctOutputContainerSupports()  | orderBy track by $index" >
+				<tr ng-model="container" ng-repeat="container in getOutputContainers() | orderBy:'locationOnContainerSupport.code' track by $index" >
+
 					<td>
-						{{containerSupport.code}}
+						{{container.locationOnContainerSupport.code}}
 					</td>
 					<td>
 						{{$index+1}}
