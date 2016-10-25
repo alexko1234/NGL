@@ -1,12 +1,12 @@
 @()
 
-<div class="row">
+<div class="row" ng-controller="SortingRiboCtrl">
 	<div class="col-md-12 col-lg-12">
 	   <ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#main" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.bilan")</a></li>
-	   	<li><a href="#" data-target="#taxonR1" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonRead1")</a></li>    
-	   	<li><a href="#" data-target="#taxonR2" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonRead2")</a></li>    
-	   	<li><a href="#" data-target="#taxonS" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonSingle")</a></li>    
+	   	<li ng-show="isDataExistsForRead('read1')"><a href="#" data-target="#taxonR1" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonRead1")</a></li>    
+	   	<li ng-show="isDataExistsForRead('read2')"><a href="#" data-target="#taxonR2" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonRead2")</a></li>    
+	   	<li ng-show="isDataExistsForRead('single')"><a href="#" data-target="#taxonS" data-toggle="tab">@Messages("readsets.treatments.sortingRibo.tabs.taxonSingle")</a></li>    
 	   
 	   </ul>
 			
