@@ -1,6 +1,6 @@
 /* 25/10/2016 FDS: creation */
 
-package controllers.instruments.io.cng.epimotion;
+package controllers.instruments.io.cng.epmotion;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,7 +11,7 @@ import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
 
-import controllers.instruments.io.cng.epimotion.tpl.txt.*;
+import controllers.instruments.io.cng.epmotion.tpl.txt.*;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
