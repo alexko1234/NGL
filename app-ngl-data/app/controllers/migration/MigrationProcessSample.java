@@ -8,6 +8,7 @@ import models.utils.InstanceConstants;
 import models.utils.instance.SampleHelper;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 
 import play.Logger;
@@ -32,19 +33,19 @@ public class MigrationProcessSample extends CommonController {
 
 		JacksonDBCollection<ProcessOld, String> containersCollBck = MongoDBDAO.getCollection(PROCESS_COLL_NAME_BCK, ProcessOld.class);
 		if(containersCollBck.count() == 0){
-
+		
 			Logger.info("Migration Process start");
-
+			
 			backupContainerCollection();
-
+			
 			List<ProcessOld> oldProcesses = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, ProcessOld.class).toList();
-			Logger.debug("migre "+oldProcesses.size()+" containers");
+			Logger.debug("migre "+oldProcesses.size()+" process");
 			for (ProcessOld process : oldProcesses) {
 				migrationProcess(process);
 			}
 			
-			//TO TEST
-			//migrationProcessExperimentWithNewSample();
+			//TO VALID
+			migrationProcessExperimentWithNewSample();
 			
 			Logger.info("Migration process end");
 
@@ -66,18 +67,23 @@ public class MigrationProcessSample extends CommonController {
 			Logger.debug("Experiment "+e.code +" de type "+e.typeCode);
 			e.atomicTransfertMethods.stream().forEach(a->{
 				a.outputContainerUseds.stream().forEach(container->{
-					Logger.debug("OutputContainer "+container.code);
-					List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("outputContainerSupportCodes",container.locationOnContainerSupport.code)).toList();
-					if(processes.size()!=1){
-						Logger.error("Many process for output container "+container.code);
+
+					List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+							DBQuery.or(DBQuery.in("outputContainerSupportCodes",a.inputContainerUseds.get(0).locationOnContainerSupport.code).in("sampleCodes", a.inputContainerUseds.get(0).contents.get(0).sampleCode),DBQuery.is("inputContainerCode",a.inputContainerUseds.get(0).code)).in("experimentCodes", e.code).in("outputContainerSupportCodes", container.locationOnContainerSupport.code)).toList();				
+					if(processes.size()==0){
+						Logger.error("No process for input container "+a.inputContainerUseds.get(0).code+", sample code "+a.inputContainerUseds.get(0).contents.get(0).sampleCode);
 					}else {
-						Process p=processes.get(0);
-						Logger.debug("Process "+p.code);
-						p.sampleCodes.add(container.contents.get(0).sampleCode);
-						p.projectCodes.add(container.contents.get(0).projectCode);
-						MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
+
+						Logger.debug("OutputContainer "+container.code);										
+						for(Process p:processes){
+							Logger.debug("Process "+p.code+"  new sampleCode "+container.contents.get(0).sampleCode+", new project code"+container.contents.get(0).projectCode);
+							p.sampleCodes.add(container.contents.get(0).sampleCode);
+							p.projectCodes.add(container.contents.get(0).projectCode);
+							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.is("code", p.code),DBUpdate.set("projectCodes", p.projectCodes).set("sampleCodes", p.sampleCodes));
+						}
 					}
 				});
+				
 			});
 		});
 	}
