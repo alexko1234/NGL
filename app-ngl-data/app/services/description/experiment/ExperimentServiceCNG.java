@@ -163,11 +163,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// TEST AJOUT Epimotion	
+			// 25/10/2016 AJOUT EpMotion	
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
-					getInstrumentUsedTypes("janus","epimotion"),
+					getInstrumentUsedTypes("janus","epmotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
@@ -256,11 +256,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			// FDS 10/08/2016 NGL-1029: 
-			// 05/10/2016 ajout Epimotion; renommage en "plaque ou tubes"
+			// 05/10/2016 ajout EpMotion; renommage en "plaque ou tubes"
 			l.add(newExperimentType("Pool plaques -> plaque ou tubes","pool",null,10400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
 					getPropertyDefinitionPool(),
-					getInstrumentUsedTypes("hand","janus","epimotion"),
+					getInstrumentUsedTypes("hand","janus","epmotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				

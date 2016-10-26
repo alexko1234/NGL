@@ -216,9 +216,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		//FDS ajout 04/10/2016 Epimotion (input plate / output tubes)
-		l.add(newInstrumentUsedType("Epimotion", "epimotion", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpimotionProperties(), 
+		l.add(newInstrumentUsedType("EpMotion", "epmotion", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpMotionProperties(), 
 				getInstruments(
-						createInstrument("epimotion1", "Epimotion1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("epmotion1", "EpMotion1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
@@ -254,6 +254,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						// 4/10/2016 les cBots de  type 1 sont remplacee par les cBot type 2
 						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						/** 
+						Question faut-il laisser les anciens instrument pour afficher les donnees anicenne ??
 						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -447,16 +448,39 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 
 	
-	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894...
-	//FDS 13/09/2016 ajout "RNAseq_RAPplate" JIRA NGL-1026; 23/09/2016 la mettre en commentaire pour l'instant
+	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
 	private static List<PropertyDefinition> getScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate"), null, "single"));
-	    							   //newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate","RNAseq_RAPplate"), null, "single"));
+		
+		//FDS 25/10/2016 -- NGL-1025 : nouvelle liste (!! pas de contextualisation, tous les programmes seront listés dans toutes les experiences)
+		// => les séparer au moins a la declaration..	
+		ArrayList<String> progList = new ArrayList<String>();
+		
+		// prep lib (sans frag)
+		progList.add("Stranded_TotalRNA_Avril2016");
+		progList.add("Stranded_TotalRNA_Avril2016_RAP_Plate");
+		progList.add("Stranded_mRNA_Avril2016");
+		progList.add("Stranded_mRNA_Avril2016_RAP_Plate");
+		
+        //Nano
+		progList.add("TruSEQ_DNA_Nano");
+		
+		//PCR free
+		progList.add("TruSEQ_DNA_PCR_Free_Library_Prep");
+		progList.add("TruSEQ_DNA_PCR_Free_Library_Prep_DAP_Plate");
+
+		//transformer ArrayList progList en Array progList2 car newValue() prend un Array en argument !!
+		String progList2[] = new String[progList.size()];
+		progList2 = progList.toArray(progList2);
+       
+		//prop obligatoire 
+		// propertyValueType pas verifiee !!!!!!!!!!!!!!!!!!!!! et n'a aucun effet ???
+		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				                       newValues(progList2), "XXXX",null,false, null,null));
 		
 		return l;
 	}
+
 	
 	// 05/08/2016 Il faut une methode distincte pour ajouter la propriété "robotRunCode", et ne pas la mettre directement dans getScicloneNGSXProperties
 	// sinon il y a un doublon pour l'instrument fictif CovarisAndScicloneNGSX
@@ -487,13 +511,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		//05/08/2016: demande de Julie=> le Janus est utilisé dans certaines experiences ou on ne veut pas tracer le programme
-		// => rendre cette propriété non obligatoire !
-		// il faut ici lister tous les programmes dans lequel peut etre utilisé le janus qui sert dans plusieurs experiences...
+		//FDS 05/08/2016 le Janus est utilisé dans certaines experiences ou on ne veut pas tracer le programme => rendre cette propriété non obligatoire !
+		//FDS 25/10/2016 -- NGL-1025 : nouvelle liste (!! pas de contextualisation, tous les programmes seront listés dans toutes les experiences)
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
-				// newValues("programme 1_normalisation"), "single", null, false ,null, null));
 				newValues("programme 1_normalisation",    // normalization
-						  "---"),                         // ajouté pour éviter qu'en pooling "programme 1_normalisation" soit selectionné par defaut
+						  "1_HiseqCluster_Normalisation_V0",
+						  "1_HiseqCluster_Normalisation_gros_vol_tris"),
 						  "single", null, false ,null, null));
 		return l;
 	}
@@ -517,12 +540,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	 
-	//FDS 04/10/2016 ajout Epimotion .....EN COURS......
-	private static List<PropertyDefinition> getEpimotionProperties() throws DAOException {
+	//FDS 04/10/2016 ajout EpMotion
+	private static List<PropertyDefinition> getEpMotionProperties() throws DAOException {
 			List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 			// propriete obligatoire ou pas ??????
+			// liste des programmes pas encore definie
 			l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
-					// newValues("programme 1_normalisation"), "single", null, false ,null, null));
 					newValues("programme 1",  
 							  "---"),                         // ajouté pour éviter selection par defaut
 							  "single", null, false ,null, null));
@@ -572,7 +595,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-		
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1", true, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("MISEQ2", "MISEQ2", "M2", false, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
@@ -580,6 +602,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	private static List<Instrument> getInstrumentMiSeqQC() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
+		
 		instruments.add(createInstrument("MISEQ1-QC", "MISEQ1 QC", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("MISEQ2-QC", "MISEQ2 QC", null, true, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
