@@ -197,3 +197,44 @@ rule "Calculate useful basesPercent and readsPercent for ngsrg-nanopore"
 			DBUpdate.set("treatments.ngsrg.default.useful", propertyValueUseful));
 end
 
+rule "Get ReadSet nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 300
+	no-loop
+	when
+		$run : Run(categoryCode == "nanopore",$treatment : treatments["minknowMetrichor"], $treatment!=null)
+	then
+		Logger.debug("Get ReadSet for nanopore Run "+$run.code);
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", $run.code)).toList();
+		for(ReadSet readSet : readSets){
+			insert(readSet);
+		}
+end
+
+rule "Add treatment minKnowMetrichor from Run to ReadSet nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 300
+	no-loop
+	when
+		$run : Run(categoryCode == "nanopore",$treatment : treatments["minknowMetrichor"], $treatment!=null)
+		$readSet : ReadSet(runCode == $run.code)
+	then
+		Logger.debug("Add minKnowMetrichor from Run "+$run.code+" to ReadSet "+$readSet.code);
+		//Copy only few values
+		Map<String, PropertyValue> newResultsValue = new HashMap<String, PropertyValue>();
+		newResultsValue.put("minKnowVersion",$treatment.results.get("default").get("minKnowVersion"));
+		newResultsValue.put("metrichorVersion",$treatment.results.get("default").get("metrichorVersion"));
+		newResultsValue.put("metrichorWorkflowName",$treatment.results.get("default").get("metrichorWorkflowName"));
+		newResultsValue.put("metrichorWorkflowVersion",$treatment.results.get("default").get("metrichorWorkflowVersion"));
+		newResultsValue.put("metrichorRunID",$treatment.results.get("default").get("metrichorRunID"));
+		
+		Treatment treatMetrichorForReadSet = $treatment;
+		treatMetrichorForReadSet.results.put("default",newResultsValue);
+		$readSet.treatments.put("minknowMetrichor",treatMetrichorForReadSet);
+		
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
+			DBQuery.is("code",$readSet.code),
+			DBUpdate.set("treatments", $readSet.treatments));
+end

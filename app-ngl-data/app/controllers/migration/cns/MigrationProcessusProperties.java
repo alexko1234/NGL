@@ -73,7 +73,7 @@ public class MigrationProcessusProperties extends CommonController{
 			for(String containerCode : p.outputContainerSupportCodes){
 				//Get container
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerCode);
-				container.contents.stream().filter(c->c.sampleCode.equals(p.sampleCode) && c.projectCode.equals(p.projectCode)).forEach(c->{
+				container.contents.stream().filter(c-> p.sampleCodes.contains(c.sampleCode) && p.projectCodes.contains(c.projectCode) ).forEach(c->{
 					c.properties.put(keyProperty, property);
 				});
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
@@ -81,7 +81,7 @@ public class MigrationProcessusProperties extends CommonController{
 				//get readSet and update
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", containerCode)).toList();
 				int sizeAllReadSets = readSets.size();
-				readSets.stream().filter(readset->readset.sampleCode.equals(p.sampleCode) && readset.projectCode.equals(p.projectCode)).forEach(r->{
+				readSets.stream().filter(readset-> p.sampleCodes.contains(readset.sampleCode) && p.projectCodes.contains(readset.projectCode) ).forEach(r->{
 					r.sampleOnContainer.properties.put(keyProperty, property);
 				});
 				

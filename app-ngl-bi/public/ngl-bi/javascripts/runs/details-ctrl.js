@@ -408,6 +408,18 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.messages.setError("save");				
 			});
 	});
+	
+	$scope.isEditMode = function(){
+		if($scope.mainService.isEditMode()){
+			if($scope.run.state.code in {"IW-V","IP-V","F-V","F-RG"}){
+				return false;
+			}else{
+				return true;
+			}
+		}else
+			return $scope.mainService.isEditMode();
+    	
+    };
 
 	init();
 	

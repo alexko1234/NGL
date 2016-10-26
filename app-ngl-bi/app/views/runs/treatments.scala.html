@@ -1,17 +1,11 @@
 @(code: String)
-
-@column()(value: Html) = {
-	<div class="col-md-3 col-lg-3" ng-switch on="mainService.isEditMode()">
-		@value
-	</div>
-}
 	
 @if(code == "minknow-metrichor") {
 <div class="panel panel-default">
   <div class="panel-body">
 <form class="form-horizontal" ng-controller="RunMinknowMetrichorCtrl">
 		<div class="row">
-			@column(){
+			<div class="col-md-3 col-lg-3" ng-switch on="mainService.isEditMode()">
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minKnowVersion")){					
 					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minKnowVersion.value"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minKnowVersion.value" default-value="propDefinitions['minKnowVersion'].defaultValue"/>					
@@ -40,8 +34,8 @@
 					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowEvents.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minknowEvents.value" />					
 				}
-			}
-			@column(){
+			</div>
+			<div class="col-md-3 col-lg-3" ng-switch on="mainService.isEditMode()">
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minknowCompleteReads")){
 			  		<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowCompleteReads.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minknowCompleteReads.value" />
@@ -67,7 +61,7 @@
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorMax2DQualityScore.value" />
 					
 				}
-			}
+			</div>
 		
 		</div>	
 </form>	
