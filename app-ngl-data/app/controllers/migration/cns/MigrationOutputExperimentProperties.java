@@ -53,7 +53,8 @@ public class MigrationOutputExperimentProperties extends MigrationExperimentProp
 					PropertyValue propValue = output.experimentProperties.get(newKeyProperty);
 					//add property to contents properties to inputContainerUsed
 					updateContainerContents(output, newKeyProperty, propValue);
-
+					updateContainer(output.code, newKeyProperty, propValue);
+					
 					List<String> containerCodes = new ArrayList<String>();
 					getListContainerCode(output.locationOnContainerSupport.code, containerCodes);
 					for(String codeContainer : containerCodes){
