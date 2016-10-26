@@ -411,7 +411,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	
 	$scope.isEditMode = function(){
 		if($scope.mainService.isEditMode()){
-			if($scope.run.state.code in {"IW-V","IP-V","F-V","F-RG"}){
+			if(['F-V', 'IW-V', 'IP-V'].indexOf($scope.run.state.code) >=0){
 				return false;
 			}else{
 				return true;
