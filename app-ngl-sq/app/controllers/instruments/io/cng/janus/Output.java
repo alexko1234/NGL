@@ -35,10 +35,12 @@ public class Output extends AbstractOutput {
 				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				// 21/09/2016 appeler une methode pour generer la liste des lignes a mettre dans la feuille de route
 				content = OutputHelper.format(normalizationPooling_samples.render(getSampleSheetPoolLines(experiment)).body());
+				
 			} else if ("buffer".equals(ftype)) {
 				fdrType="buffer";
 				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				content = OutputHelper.format(normalizationPooling_buffer.render(experiment).body());
+				
 			}else {
 				throw new RuntimeException("Janus sampleSheet type not managed : "+experiment.typeCode + "/" +ftype);
 			}
@@ -51,11 +53,15 @@ public class Output extends AbstractOutput {
 				fdrType="samples";
 				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				// 21/09/2016 appeler une methode pour generer la liste des lignes a mettre dans la feuille de route
-				content = OutputHelper.format(pool_PlatesToPlate_samples.render(getSampleSheetPoolLines(experiment)).body());	
+				content = OutputHelper.format(pool_PlatesToPlate_samples.render(getSampleSheetPoolLines(experiment)).body());
+				
 			} else if ("buffer".equals(ftype)) {
 				fdrType="buffer";
 				Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode + "/ type="+ fdrType );
 				content = OutputHelper.format(pool_PlatesToPlate_buffer.render(experiment).body());	
+				
+			} else {
+				throw new RuntimeException("Janus sampleSheet type not managed : "+experiment.typeCode + "/" +ftype);
 			}
 			
 		} else if ("lib-normalization".equals(experiment.typeCode)){
@@ -98,8 +104,7 @@ public class Output extends AbstractOutput {
 			
 			atm.inputContainerUseds.forEach(input -> {
 				lines.add(getSampleSheetPoolLine(input, output, sourceMapping));
-			});
-			
+			});	
 		});
 		
 		return lines;
@@ -124,13 +129,14 @@ public class Output extends AbstractOutput {
 		return sspl;
 	}
 
+	
 	private Map<String, String> getSourceMapping(Experiment experiment) {
 		Map<String, String> sources = new HashMap<String, String>();
 		
 		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
 		Arrays.sort(inputContainerSupportCodes);
 		for(int i = 0; i < inputContainerSupportCodes.length ; i++){
-			sources.put(inputContainerSupportCodes[i], "Source_"+(i+1));
+			sources.put(inputContainerSupportCodes[i], "Source_"+(i+1)); // HARDCODED "Source_" 
 		}
 		return sources;
 	}
