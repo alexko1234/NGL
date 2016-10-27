@@ -163,11 +163,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// 25/10/2016 AJOUT EpMotion	
+			// 25/10/2016 AJOUT EpMotion; 27/10/2016 ajout main
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
-					getInstrumentUsedTypes("janus","epmotion"),
+					getInstrumentUsedTypes("hand","janus","epmotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
