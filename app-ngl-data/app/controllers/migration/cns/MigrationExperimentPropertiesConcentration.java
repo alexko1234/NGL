@@ -52,13 +52,13 @@ public class MigrationExperimentPropertiesConcentration extends MigrationExperim
 
 					updateContainerContents(output, newKeyProperty, propValue);
 					
-					updateContainer(output.code, newKeyProperty, propValue);
+					updateContainer(output.code, newKeyProperty, propValue, false);
 
 					List<String> containerCodes = new ArrayList<String>();
 					getListContainerCode(output.locationOnContainerSupport.code, containerCodes);
 					for(String codeContainer : containerCodes){
 						Logger.debug("Update container code "+codeContainer);
-						updateContainer(codeContainer, newKeyProperty, propValue);
+						updateContainer(codeContainer, newKeyProperty, propValue, false);
 					}
 
 				});

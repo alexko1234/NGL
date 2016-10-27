@@ -608,6 +608,8 @@ readsets.treatments.gender = Gender
 
 readsets.treatments.images.margin=25
 
+readsets.treatments.minknowMetrichor = MinKnow-Metrichor
+
 readsets.files.fullname = Nom du fichier
 readsets.files.typeCode = Type de fichier
 readsets.files.usable = Utilisable

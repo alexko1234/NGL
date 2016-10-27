@@ -24,13 +24,15 @@ public class MigrationExperimentInstrumentProperties extends MigrationExperiment
 	 * @param keyProperty
 	 * @return
 	 */
-	public static Result migration(String experimentTypeCode, String keyProperty){
+	public static Result migration(String experimentTypeCode, String keyProperty, boolean addToRun){
 
 		//backupContainerCollection();
 		//backupReadSetCollection();
 
+		Logger.debug("Get experiments "+experimentTypeCode+" / "+keyProperty+" / "+addToRun);
 		//Get list experiment
 		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode).exists("instrumentProperties."+keyProperty));
+		Logger.debug("Size experiments "+experiments.size());
 
 		//Get list experiment with no experiment properties
 		for(Experiment exp : experiments){
@@ -51,9 +53,9 @@ public class MigrationExperimentInstrumentProperties extends MigrationExperiment
 					updateContainerContents(input, keyProperty, propValue);
 					
 					//Get container from input
-					updateContainer(input.code, keyProperty, propValue);
+					updateContainer(input.code, keyProperty, propValue, addToRun);
 
-					updateOutputContainer(atm, keyProperty, propValue);
+					updateOutputContainer(atm, keyProperty, propValue, addToRun);
 
 				});
 			});

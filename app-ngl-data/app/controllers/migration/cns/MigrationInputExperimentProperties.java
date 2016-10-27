@@ -54,9 +54,9 @@ public class MigrationInputExperimentProperties extends MigrationExperimentPrope
 					updateContainerContents(input, newKeyProperty, propValue);
 
 					//Get container from input
-					updateContainer(input.code, newKeyProperty, propValue);
+					updateContainer(input.code, newKeyProperty, propValue, false);
 
-					updateOutputContainer(atm,newKeyProperty,propValue);
+					updateOutputContainer(atm,newKeyProperty,propValue, false);
 				});
 			});
 

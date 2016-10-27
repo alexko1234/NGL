@@ -103,7 +103,8 @@ public class RunServiceCNS extends AbstractRunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
-				
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Protocole","libraryProtocol",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		
 		return propertyDefinitions;
 	}
 	

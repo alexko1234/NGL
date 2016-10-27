@@ -18,6 +18,7 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import play.Logger;
 
@@ -66,18 +67,18 @@ public class MigrationExperimentProperties extends CommonController{
 		});
 	}
 
-	protected static void updateOutputContainer(AtomicTransfertMethod atm, String keyProperty, PropertyValue propValue)
+	protected static void updateOutputContainer(AtomicTransfertMethod atm, String keyProperty, PropertyValue propValue, boolean addToRun)
 	{
 		//Get outputContainer
 		atm.outputContainerUseds.stream().forEach(output->{
 			Logger.debug("Get outputContainerCode "+output.code);
-			updateContainer(output.code, keyProperty, propValue);
+			updateContainer(output.code, keyProperty, propValue, addToRun);
 			//Get list of all Container in process
 			List<String> containerCodes = new ArrayList<String>();
 			getListContainerCode(output.locationOnContainerSupport.code, containerCodes);
 			for(String codeContainer : containerCodes){
 				Logger.debug("Update container code "+codeContainer);
-				updateContainer(codeContainer, keyProperty, propValue);
+				updateContainer(codeContainer, keyProperty, propValue, addToRun);
 			}
 		});
 	}
@@ -113,7 +114,7 @@ public class MigrationExperimentProperties extends CommonController{
 		}
 	}
 
-	protected static void updateContainer(String codeContainer, String newKeyProperty, PropertyValue propValue)
+	protected static void updateContainer(String codeContainer, String newKeyProperty, PropertyValue propValue, boolean addToRun)
 	{
 		//Get container
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, codeContainer);
@@ -130,11 +131,15 @@ public class MigrationExperimentProperties extends CommonController{
 			readSets.stream().forEach(r->{
 				Logger.debug("Update ReadSet"+r.code);
 				r.sampleOnContainer.properties.put(newKeyProperty, propValue);
+				if(addToRun){
+					Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, r.runCode);
+					run.properties.put(newKeyProperty, propValue);
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
+				}
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, r);
 			});
 
-			for(ReadSet readSet : readSets){
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet);
-			}
+			
 		}
 	}
 
