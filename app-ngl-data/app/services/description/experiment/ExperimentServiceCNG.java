@@ -256,8 +256,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			// FDS 10/08/2016 NGL-1029: 
-			// 05/10/2016 ajout EpMotion; renommage en "plaque ou tubes"
-			l.add(newExperimentType("Pool plaques -> plaque ou tubes","pool",null,10400,
+			// 05/10/2016 ajout EpMotion; 26/10/2016 renommage en "Pool"
+			l.add(newExperimentType("Pool","pool",null,10400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
 					getPropertyDefinitionPool(),
 					getInstrumentUsedTypes("hand","janus","epmotion"),

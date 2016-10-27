@@ -21,15 +21,7 @@
 			</th>
 			<th>
 				@Messages("containers.table.code")
-			</th>
-			<!-- FDS allègement demandé
-			<th>
-				@Messages("containers.table.supportCategoryCode")
-			</th>
-			<th>
-				@Messages("containers.table.fromTransformationTypeCodes")
-			</th>
-			-->						
+			</th>					
 			<th>
 				@Messages("containers.table.project_sample")
 			</th>						
@@ -39,18 +31,13 @@
 			<th>
 				@Messages("containers.table.codeAliquot")
 			</th>
-			<!-- FDS allègement demandé
-			<th>
-				@Messages("containers.table.state.code")
-			</th>
-			-->
 			<th>
 				@Messages("containers.table.volume") (µL)
 			</th>
 			<th>
 				@Messages("containers.table.concentration.shortLabel")
 			</th>									
-			<th><!-- FDS : OK apres allegement -->
+			<th>
 				@Messages("containers.table.percentageInsidePool")
 			</th>
 			<th ng-repeat="property in inputContainerProperties track by $index">
@@ -63,13 +50,13 @@
 			<th><!-- FDS !!! problem graphique avec select &nbsp;&nbsp;&nbsp;&nbsp;. -->
 				@Messages("containers.table.support.line")&nbsp;&nbsp;&nbsp;&nbsp;.
 			</th>
-			<th><!-- FDS OK apres allegement -->
+			<th>
 				@Messages("containers.table.support.column")
 			</th>
 			<th>
 				@Messages("containers.table.concentration.shortLabel")
 			</th>
-			<th><!--FDS !!! problem graphique avec select -->
+			<th>
 				@Messages("containers.table.concentration.unit.shortLabel")
 			</th>
 			<th>
@@ -90,8 +77,66 @@
 				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
 			</th>
 		</tr>
-	<thead>
-
+		
+		<!--26/10/2016 TEST AJOUT TR -->
+		<tr ng-if="!atmService.data.isAllATMViewClose">
+			<th colspan="9"></th>
+			<th ng-repeat="property in inputContainerProperties track by $index"></th>
+			<th>
+			  <!--  PAS POUR TUBES??-->
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.supportCode"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <input class="form-control input-sm" type="text" id="plateCode"
+									                    ng-change="updateOuputContainers(atmService.data.atm,'supportCode',outputContainer.supportCode)"
+			  							                ng-model="outputContainer.supportCode" />	
+			   </div>
+			   </div>   
+			</th>			
+			<th colspan="2"></th>
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.concentration"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <input class="form-control input-sm" type="text" id="concentration"
+									                    ng-change="updateOuputContainers(atmService.data.atm,'concentration',outputContainer.concentration)"
+			  							                ng-model="outputContainer.concentration" />	
+			   </div>
+			   </div> 
+			</th>
+			<th></th>
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.volume"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <input class="form-control input-sm" type="text" id="volume"
+									                    ng-change="updateOuputContainers(atmService.data.atm,'volume',outputContainer.volume)"
+			  							                ng-model="outputContainer.volume" />	
+			   </div>
+			   </div> 
+			</th>			
+			<th ng-repeat="property in outputContainerProperties track by $index"></th>
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.supportStorageCode"></span> 
+               </div>
+               <div ng-switch-when="true">
+                  <input class="form-control input-sm" type="text" id="plateStorageCode"
+									                   ng-change="updateOuputContainers(atmService.data.atm,'supportStorageCode',outputContainer.supportStorageCode)"
+			 						                   ng-model="outputContainer.supportStorageCode" />	
+			   </div>
+			   </div>   
+			</th>		
+		</tr>
+		<!-- FIN TEST AJOUT TR -->
+</thead>
 
 <tbody ng-repeat="atm in atmService.data.atm | orderBy:'viewIndex' track by $index" 	
 	ng-switch="atmService.data.getATMViewMode(atm, $index)">
@@ -201,7 +246,7 @@
 						</div>
 					</div>	
 				</td>
-				<!------- POUR L"INSTANT REPETER LA SAISIE DU SUPPORT CONTAINER CODE.---------->
+				<!------- POUR L"INSTANT REPETER LA SAISIE DU SUPPORT CONTAINER CODE---------->
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.code" />						 
