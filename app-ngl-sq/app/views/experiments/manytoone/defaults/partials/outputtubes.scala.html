@@ -75,7 +75,68 @@
 				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
 			</th>
 		</tr>
-	<thead>
+		
+		@if("CNG" == play.Play.application().configuration().getString("institute")){
+		<!-- 27/10/2016 TR pour CNG uniquement-->
+		<tr ng-if="!atmService.data.isAllATMViewClose">
+			<th colspan="11"></th> <!--  DIFFERENT DE outputplates-->
+			<th ng-repeat="property in inputContainerProperties track by $index"></th>
+			<th>
+			  <!--  Pour des tubes permet de mettre un motif commun...-->
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.supportCode"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <input class="form-control input-sm" type="text" id="plateCode"
+									                    ng-change="updateOuputContainers(atmService.data.atm,'supportCode',outputContainer.supportCode)"
+			  							                ng-model="outputContainer.supportCode" />	
+			   </div>
+			   </div>   
+			</th>			
+			<!-- DIFFERENT DE outputplates<th colspan="2"></th> -->
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.concentration"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <input class="form-control input-sm" type="text" id="concentration"
+									                    ng-change="updateOuputContainers(atmService.data.atm,'concentration',outputContainer.concentration)"
+			  							                ng-model="outputContainer.concentration" />	
+			   </div>
+			   </div> 
+			</th>
+			<th></th>
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.volume"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <input class="form-control input-sm" type="text" id="volume"
+									                    ng-change="updateOuputContainers(atmService.data.atm,'volume',outputContainer.volume)"
+			  							                ng-model="outputContainer.volume" />	
+			   </div>
+			   </div> 
+			</th>			
+			<th ng-repeat="property in outputContainerProperties track by $index"></th>
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.supportStorageCode"></span> 
+               </div>
+               <div ng-switch-when="true">
+                  <input class="form-control input-sm" type="text" id="plateStorageCode"
+									                   ng-change="updateOuputContainers(atmService.data.atm,'supportStorageCode',outputContainer.supportStorageCode)"
+			 						                   ng-model="outputContainer.supportStorageCode" />	
+			   </div>
+			   </div>   
+			</th>		
+		</tr>
+		<!-- FIN ajout TR -->
+		}
+<thead>
 
 
 <tbody ng-repeat="atm in atmService.data.atm | orderBy:'viewIndex' track by $index" 	

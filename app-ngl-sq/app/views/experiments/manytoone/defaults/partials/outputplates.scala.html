@@ -78,12 +78,12 @@
 			</th>
 		</tr>
 		
-		<!--26/10/2016 TEST AJOUT TR -->
+		<!--26/10/2016 FDS ajout TR pour -->
 		<tr ng-if="!atmService.data.isAllATMViewClose">
 			<th colspan="9"></th>
 			<th ng-repeat="property in inputContainerProperties track by $index"></th>
 			<th>
-			  <!--  PAS POUR TUBES??-->
+			  <!--  Pour des tubes permet de mettre un motif commun...-->
                <div ng-switch on="mainService.isEditMode()"> 
                <div ng-switch-when="false">   
                    <span class="form-control-static" ng-bind="outputContainer.supportCode"></span>    
@@ -135,7 +135,7 @@
 			   </div>   
 			</th>		
 		</tr>
-		<!-- FIN TEST AJOUT TR -->
+		<!-- FIN ajout TR -->
 </thead>
 
 <tbody ng-repeat="atm in atmService.data.atm | orderBy:'viewIndex' track by $index" 	

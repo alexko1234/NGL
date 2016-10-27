@@ -113,11 +113,11 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		}
 	};
 	
-    // Pseuso header de datatable => mise a jour des outputContainers
+    // Pseudo header de datatable => mise a jour des outputContainers
 	$scope.updateOuputContainers = function (atm, propertyName, propertyValue){
-	    console.log (" updateOuputContainers :"+ propertyName + " changed");
+	    //console.log (" updateOuputContainers :"+ propertyName + " changed");
 		if (atm){
-			console.log ("updating all ATMs "+ propertyName +" with :" + propertyValue);
+			//console.log ("updating all ATMs "+ propertyName +" with :" + propertyValue);
 		    atm.forEach(function(a){	
 		    	
 		    	 if ((propertyName === "supportStorageCode") && propertyValue)  {
@@ -128,30 +128,31 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		 		    //console.log ("updating "+ a.outputContainerUseds[0].locationOnContainerSupport.code +"=>"+ propertyValue);
 		 		    a.outputContainerUseds[0].locationOnContainerSupport.code=propertyValue;
 		 		 
-		 		 // pourraient etre fusionnes en 1 seul cas...avec $parse???
+		 		 // ces 2 cas pourraient etre fusionnés en 1 seul cas...avec $parse???
 		    	 } else if  ((propertyName === "concentration") && propertyValue) {
 			 		    //console.log ("updating "+ a.outputContainerUseds[0].concentration +"=>"+ propertyValue);
 			 		    a.outputContainerUseds[0].concentration.value=propertyValue;
 			 		    
-			 		    // il faut recalculer les volumes engagés et buffer... MARCHE PAS
-			 		    console.log("compute all input volumes");
-			 			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
-							computeInputVolume(inputContainerUsed, atm);
+			 		    // recalculer les volumes engagés et buffer
+			 		    //console.log("compute all input volumes");
+			 			angular.forEach(a.inputContainerUseds, function(inputContainerUsed){
+						computeInputVolume(inputContainerUsed, atm);
 						});
-			 			console.log("compute buffer volume");
-			 			computeBufferVolume(atm);
+			 		    
+			 			//console.log("compute buffer volume");
+			 			computeBufferVolume(a);
 			 		    
 			     } else if  ((propertyName === "volume" && propertyValue)) {
 			 		    //console.log ("updating "+ a.outputContainerUseds[0].volume +"=>"+ propertyValue);
 			 		    a.outputContainerUseds[0].volume.value=propertyValue;
 			 		    
-			 		    //il faut recalculer les volumes engagés et buffer ... MARCHE PAS
+			 		    // recalculer les volumes engagés et buffer
 			 		    console.log("compute all input volumes");
-			 			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
-							computeInputVolume(inputContainerUsed, atm);
+			 			angular.forEach(a.inputContainerUseds, function(inputContainerUsed){
+							computeInputVolume(inputContainerUsed, a);
 						})
 			 			console.log("compute buffer volume");
-			 			computeBufferVolume(atm);
+			 			computeBufferVolume(a);
 			     }
 		    })
 		}
@@ -161,6 +162,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	// /!\ controller commun a normalization-and-pooling et pool
 	// Julie demande de bloquer le calcul en normalization-and-pooling si unité de concentration n'EST PAS nM 
 	// TODO...
+    /* FDS 27/10/2016  la modification des proprietes line et column n'as pas besoin de recalculer les volumes!!
+                       Vu avec Julie: la modification des proprietes experimentProperties.inputVolume et experimentProperties.bufferVolume
+                       ne DOIT PAS refaire les calculs => c'est l'utilisteur qui impose son choix!
+    */
 		
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
@@ -168,15 +173,21 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		if(propertyName === 'outputContainerUseds[0].concentration.value' ||
 				propertyName === 'outputContainerUseds[0].concentration.unit' ||
 				propertyName === 'outputContainerUseds[0].volume.value'){
-			console.log("compute all input volumes");
 			
+			console.log("compute all input volumes");
 			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
 				computeInputVolume(inputContainerUsed, atm);
 			});
 			
+			console.log("compute buffer volume");
+			computeBufferVolume(atm);
+			
 		}else if(propertyName.match(/inputContainerUseds\[\d\].percentage/) != null){
 			console.log("compute one input volume");
 			computeInputVolume(containerUsed, atm);
+			
+			console.log("compute buffer volume");
+			computeBufferVolume(atm);
 		} 
 		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.line' ){
 			atm.line =$parse("outputContainerUseds[0].locationOnContainerSupport.line")(atm)
@@ -186,9 +197,6 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			atm.column =$parse("outputContainerUseds[0].locationOnContainerSupport.column")(atm)
 			console.log("support.column="+atm.column);
 		}
-
-		console.log("compute buffer volume");
-		computeBufferVolume(atm);
 	}
 	
 	// calcul du "volume engagé"
