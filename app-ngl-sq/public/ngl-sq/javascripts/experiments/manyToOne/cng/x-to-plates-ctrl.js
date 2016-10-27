@@ -133,25 +133,25 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			 		    //console.log ("updating "+ a.outputContainerUseds[0].concentration +"=>"+ propertyValue);
 			 		    a.outputContainerUseds[0].concentration.value=propertyValue;
 			 		    
-			 		    // il faut recalculer les volumes engagés et buffer
+			 		    // il faut recalculer les volumes engagés et buffer... MARCHE PAS
 			 		    console.log("compute all input volumes");
 			 			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
 							computeInputVolume(inputContainerUsed, atm);
 						});
-			 			//console.log("compute buffer volume");
-			 			//computeBufferVolume(atm);
+			 			console.log("compute buffer volume");
+			 			computeBufferVolume(atm);
 			 		    
 			     } else if  ((propertyName === "volume" && propertyValue)) {
 			 		    //console.log ("updating "+ a.outputContainerUseds[0].volume +"=>"+ propertyValue);
 			 		    a.outputContainerUseds[0].volume.value=propertyValue;
 			 		    
-			 		    //il faut recalculer les volumes engagés et buffer 
+			 		    //il faut recalculer les volumes engagés et buffer ... MARCHE PAS
 			 		    console.log("compute all input volumes");
 			 			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
 							computeInputVolume(inputContainerUsed, atm);
 						})
-			 			//console.log("compute buffer volume");
-			 			//computeBufferVolume(atm);
+			 			console.log("compute buffer volume");
+			 			computeBufferVolume(atm);
 			     }
 		    })
 		}

@@ -40,10 +40,10 @@
 				@Messages("containers.table.volume") (µL)
 			</th>
 			<th>
-				@Messages("containers.table.concentration.shortLabel")
+				@Messages("containers.table.concentration")
 			</th>									
-			<th><!-- ajouts  &nbsp;. pour cause de non lisibilité de la valeur-->
-				@Messages("containers.table.percentageInsidePool")&nbsp;&nbsp;&nbsp;&nbsp;.
+			<th>
+				@Messages("containers.table.percentageInsidePool")
 			</th>
 			<th ng-repeat="property in inputContainerProperties track by $index">
 				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
@@ -52,10 +52,10 @@
 				@Messages("containers.table.code")
 			</th>
 			<th>
-				@Messages("containers.table.concentration.shortLabel")&nbsp;&nbsp;.
+				@Messages("containers.table.concentration")
 			</th>
 			<th>
-				@Messages("containers.table.concentration.unit.shortLabel")&nbsp;&nbsp;.
+				@Messages("containers.table.concentration.unit")
 			</th>
 			<th>
 				@Messages("containers.table.volume") (µL)

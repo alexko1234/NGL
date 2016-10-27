@@ -14,7 +14,7 @@
 
 @*** FDS corrections 26/10/2016
 CRLF pour le header
-Destination rack: harcoded="1" [ 1 seule plaque en sortie possible ? ]
+Destination rack: HARDCODED="1" [ 1 seule plaque en sortie possible ? ]
 correction séparateur "," 
 ***@
 
