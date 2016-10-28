@@ -128,6 +128,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						null ,
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+				// TEST FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
+				l.add(newExperimentType("Ext to RNA norm+pool, dénat, FC, dépôt","ext-to-norm-and-pool-denat-fc-depot",null,-1,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+						null, 
+						null ,
+						"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			}
 				
 
@@ -155,7 +163,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
 			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
-			//l.add(newExperimentType("Prep. RNASeq","prep-rna-sequencing",null,600,
 			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsLibraryPrep(),
@@ -163,7 +170,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// 25/10/2016 AJOUT EpMotion; 27/10/2016 ajout main
+			// 25/10/2016 ajout epmotion; 27/10/2016 ajout main
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
