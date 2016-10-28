@@ -126,7 +126,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	   
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Prep FC, dépôt"
-		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
+		// !!! majuscules pas supportee dans le codes
+		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
 				52,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-prepa-flowcell",-1), //ordered list of experiment type in process type
@@ -138,7 +139,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
+		// !!! majuscules pas supportee dans le codes
+		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				53,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
@@ -158,7 +160,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"
             // FDS modif 28/10/2016 JIRA NGL-1025: modif label + modif code + suppression des experiences d'ordre 3 et 4;
 			//  !! label pas definitif...
-			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm+pool)", "rna-seq", ProcessCategory.find.findByCode("library"),
+			
+            //code  "rna-seq" deja utilsé pour un traitement !!!
+			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm+pool)", "rna-sequencing", ProcessCategory.find.findByCode("library"),
 					3,
 					getPropertyDefinitionsRNAseq(), 
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
@@ -172,7 +176,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			
             // FDS ajout 28/10/2016 JIRA NGL-1025: duplication a partir du precedent mais last experiment est different
 			// !! label pas definitifs...
-			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm puis pool)", "rna-seq-2", ProcessCategory.find.findByCode("library"),
+		
+			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm puis pool)", "rna-sequencing-2", ProcessCategory.find.findByCode("library"),
 					4,
 					getPropertyDefinitionsRNAseq(), 
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
@@ -183,6 +188,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("lib-normalization").get(0),      //last  experiment type
 					getExperimentTypes("ext-to-rna-sequencing").get(0),  //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+			
 			
 			// FDS ajout 31/05/2016 JIRA NGL-1025: processus court type "normalization"; chgt label 28/10/2016
 			l.add(DescriptionFactory.newProcessType("RNA Norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
@@ -200,7 +206,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			
             //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
 			l.add(DescriptionFactory.newProcessType("RNA Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
-					5,   
+					6,   
 					null, // pas de propriétés ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-denat-fc-depot",-1), //ordered list of experiment type in process type
 							getPET("lib-normalization", -1), //???
