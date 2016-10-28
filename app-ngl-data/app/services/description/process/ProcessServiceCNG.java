@@ -156,31 +156,40 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 			// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"
-	// TEST FDS modif 28/10/2016 JIRA NGL-1025: modif label + suppression de 2 experiences de niveau 3 et 4; ajout d'une experience de niveau 2
-			//l.add(DescriptionFactory.newProcessType("RNAseq (prep FC ordonnée)", "x5-rna-sequencing", ProcessCategory.find.findByCode("library"),
-			l.add(DescriptionFactory.newProcessType("prep lib RNAseq", "x5-rna-sequencing", ProcessCategory.find.findByCode("library"),
+            // FDS modif 28/10/2016 JIRA NGL-1025: modif label + modif code + suppression des experiences d'ordre 3 et 4;
+			//  !! label pas definitif...
+			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm+pool)", "rna-seq", ProcessCategory.find.findByCode("library"),
 					3,
 					getPropertyDefinitionsRNAseq(), 
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
 							getPET("library-prep",0),
 							getPET("pcr-and-purification",1),
-							getPET("normalization-and-pooling",2), 
-							getPET("lib-normalization",2) ), 
-							//getPET("prepa-fc-ordered",3), 
-							//getPET("illumina-depot",4) ),             
-					getExperimentTypes("library-prep").get(0),           //first experiment type
-					//getExperimentTypes("illumina-depot").get(0),         //last  experiment type
-					getExperimentTypes("normalization-and-pooling","lib-normalization").get(0), //// ?????? du coup il y a 2 last !!!!
-					getExperimentTypes("ext-to-rna-sequencing").get(0),  //void  experiment type
+							getPET("normalization-and-pooling",2) ),          
+					getExperimentTypes("library-prep").get(0),              //first experiment type
+					getExperimentTypes("normalization-and-pooling").get(0), //last  experiment type
+					getExperimentTypes("ext-to-rna-sequencing").get(0),     //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// FDS ajout 31/05/2016 JIRA NGL-1025: processus court type "normalization"; chgt label 15/09/2016
-			// 26/09/2016 bug manquait ("pcr-and-purification",-1),
-			l.add(DescriptionFactory.newProcessType("Norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
-					4,   
+            // FDS ajout 28/10/2016 JIRA NGL-1025: duplication a partir du precedent mais last experiment est different
+			// !! label pas definitifs...
+			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm puis pool)", "rna-seq-2", ProcessCategory.find.findByCode("library"),
+					4,
+					getPropertyDefinitionsRNAseq(), 
+					Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
+							getPET("library-prep",0),
+							getPET("pcr-and-purification",1), 
+							getPET("lib-normalization",2) ),            
+					getExperimentTypes("library-prep").get(0),           //first experiment type       
+					getExperimentTypes("lib-normalization").get(0),      //last  experiment type
+					getExperimentTypes("ext-to-rna-sequencing").get(0),  //void  experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+			
+			// FDS ajout 31/05/2016 JIRA NGL-1025: processus court type "normalization"; chgt label 28/10/2016
+			l.add(DescriptionFactory.newProcessType("RNA Norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
+					5,   
 					null, // pas de propriétés ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1), //ordered list of experiment type in process type
-							getPET("pcr-and-purification",-1),
+							getPET("pcr-and-purification",-1), // ???
 							getPET("normalization-and-pooling",0), 
 							getPET("prepa-fc-ordered",1), 
 							getPET("illumina-depot",2) ),          
@@ -189,12 +198,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0), //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-		// TEST FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
+            //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
 			l.add(DescriptionFactory.newProcessType("RNA Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 					5,   
 					null, // pas de propriétés ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-denat-fc-depot",-1), //ordered list of experiment type in process type
-							getPET("pcr-and-purification",-1), //?????liste exacte des previous
+							getPET("lib-normalization", -1), //???
 							getPET("normalization-and-pooling",0),  
 							getPET("denat-dil-lib",1),
 							getPET("prepa-flowcell",2),
@@ -287,7 +296,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
-						, null, "single" ,100, true, "30X", null));
+						, null, "single" ,101, true, "30X", null));
 		
 		return propertyDefinitions;
 	}
@@ -316,7 +325,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
-						, null, "single" ,100, true, "30X", null));
+						, null, "single" ,101, true, "30X", null));
 		
 		return propertyDefinitions;
 	}
@@ -346,7 +355,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
-						, null, "single" ,100, true, "30X", null));
+						, null, "single" ,101, true, "30X", null));
 		
 		return propertyDefinitions;
 	}
