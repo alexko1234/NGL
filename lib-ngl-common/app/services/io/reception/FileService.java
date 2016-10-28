@@ -32,20 +32,20 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class FileService {
-	
+
 	protected Map<Integer, String> headerByIndex = new HashMap<Integer,String>();
-	
+
 	protected ReceptionConfiguration configuration;
 	protected PropertyFileValue fileValue;
 	protected ContextValidation contextValidation;
-	
+
 	private Map<String, Project> lastSampleCodeForProjects = new HashMap<String, Project>(0);
-			
-	
+
+
 	private Map<String, Mapping<? extends DBObject>> mappings = new HashMap<String,Mapping<? extends DBObject>>();
-	
+
 	private Map<String, Map<String, DBObject>> objects = new HashMap<String,Map<String, DBObject>>();
-	
+
 	public Map<String, Map<String, DBObject>> getObjects() {
 		return objects;
 	}
@@ -60,11 +60,11 @@ public abstract class FileService {
 			objects.put(s, new TreeMap<String, DBObject>());
 			mappings.put(s, mappingFactory(s));						
 		});
-				
+
 	}
 
 	private Mapping<? extends DBObject> mappingFactory(String objectType) {
-		
+
 		if(Mapping.Keys.sample.toString().equals(objectType)){
 			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
 		}else if(Mapping.Keys.support.toString().equals(objectType)){
@@ -77,43 +77,43 @@ public abstract class FileService {
 			throw new UnsupportedOperationException("Mapping : "+objectType);
 		}
 	}
-	 
+
 	/**
 	 * analyse one line of the file
 	 * @param rowMap
 	 * @param contextValidation2 
 	 */
 	protected void treatLine(Map<Integer, String> rowMap) {
-		
+
 		Set<String> objectTypes = configuration.configs.keySet();
 		Map<String, DBObject> objectInLine = new HashMap<String, DBObject>(0);
 		objectTypes.stream().forEach(s -> {
 			try {
 				DBObject dbObject = mappings.get(s).convertToDBObject(rowMap);
 				objectInLine.put(s, dbObject);
-				
+
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		});
-		
+
 		consolidateCodesOnLineObject(objectInLine);			
-		
+
 		objectInLine.entrySet()
-			.stream().forEach(entry -> {
-				String s = entry.getKey();
-				DBObject dbObject = entry.getValue();
-				if (null != dbObject.code && !objects.get(s).containsKey(dbObject.code)){
-					objects.get(s).put(dbObject.code, dbObject);
-				}else if(null != dbObject.code){
-					Logger.warn(s+" already load from another line");
-				}else{
-					throw new RuntimeException("no code found for "+s);
-				}
-			});		
+		.stream().forEach(entry -> {
+			String s = entry.getKey();
+			DBObject dbObject = entry.getValue();
+			if (null != dbObject.code && !objects.get(s).containsKey(dbObject.code)){
+				objects.get(s).put(dbObject.code, dbObject);
+			}else if(null != dbObject.code){
+				Logger.warn(s+" already load from another line");
+			}else{
+				throw new RuntimeException("no code found for "+s);
+			}
+		});		
 	}
-	
-	
+
+
 	private void consolidateCodesOnLineObject(Map<String, DBObject> objectInLine) {
 		Container container = (Container)objectInLine.get(Mapping.Keys.container.toString());
 		if(null != container){
@@ -132,11 +132,11 @@ public abstract class FileService {
 					if(container.contents.get(0).sampleCode == null || !container.contents.get(0).sampleCode.equals(sample.code)){
 						container.contents.get(0).sampleCode = sample.code;				
 					}
-					
+
 				}else if(null != sample && null == sample.code && sample.projectCodes.size() == 0){
 					contextValidation.addErrors("sample.projectCodes", "no project code found for sample code generation");
 				}
-				
+
 				ContainerSupport support = (ContainerSupport)objectInLine.get(Mapping.Keys.support.toString());
 				if(null != support && null == support.code){
 					support.code = CodeHelper.getInstance().generateContainerSupportCode(); 
@@ -150,18 +150,20 @@ public abstract class FileService {
 			}
 			//compute container code from support code and line and column
 			ContainerSupport support = (ContainerSupport)objectInLine.get(Mapping.Keys.support.toString());
-			String containerCode = getContainerCode(support, container);
-			if(null != containerCode && null == container.code){
-				container.code = containerCode;
-			}else if(!containerCode.equals(container.code)){
-				contextValidation.addErrors("container.code", "error during container code generation : "+containerCode+" / "+container.code);
+			if(null != support){
+				String containerCode = getContainerCode(support, container);
+				if(null != containerCode && null == container.code){
+					container.code = containerCode;
+				}else if(!containerCode.equals(container.code)){
+					contextValidation.addErrors("container.code", "error during container code generation : "+containerCode+" / "+container.code);
+				}
 			}
 		}		
 	}
 
 	private String generateSampleCode(Sample sample) {
 		String projectCode = sample.projectCodes.iterator().next();
-		
+
 		if(!lastSampleCodeForProjects.containsKey(projectCode)){
 			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 			lastSampleCodeForProjects.put(projectCode, project);
@@ -179,11 +181,11 @@ public abstract class FileService {
 			code= support.code;
 		}else if(csc.nbLine > 1 && csc.nbColumn == 1){
 			code=support.code+"_"+container.support.line;
-			
+
 		}else if(csc.nbLine > 1 && csc.nbColumn > 1){
 			code=support.code+"_"+container.support.line+container.support.column;
 		}
-		
+
 		return code;
 	}
 
@@ -196,7 +198,7 @@ public abstract class FileService {
 			Map<String, DBObject> containers = objects.get(Mapping.Keys.container.toString());
 			containers.values().forEach(c -> {
 				((ContainerMapping)mappings.get(Mapping.Keys.container.toString())).consolidate((Container)c);
-				
+
 			});
 		}
 		//Second consolidate support
@@ -204,12 +206,12 @@ public abstract class FileService {
 			Map<String, DBObject> supports = objects.get(Mapping.Keys.support.toString());
 			supports.values().forEach(c -> {
 				((SupportMapping)mappings.get(Mapping.Keys.support.toString())).consolidate((ContainerSupport)c);
-				
+
 			});
 		}
-		
+
 		//normally not necessary to consolidate sample
-		
+
 	}
 	/**
 	 * Save or update objects in mongodb
@@ -229,7 +231,7 @@ public abstract class FileService {
 				rollbackObjectIFNeeded(Mapping.Keys.sample.toString()); //??? Good idea ???
 			}			
 		}
-		
+
 	}
 
 	private void rollbackObjectIFNeeded(String...keys) {
@@ -242,7 +244,7 @@ public abstract class FileService {
 				});
 			}
 		});
-		
+
 	}
 
 	/**
@@ -253,13 +255,13 @@ public abstract class FileService {
 		if(!contextValidation.hasErrors() && configuration.configs.containsKey(key)){
 			Map<String, DBObject> dbobjects = objects.get(key);
 			Mapping<? extends DBObject> mapping = mappings.get(key);
-			
+
 			contextValidation.addKeyToRootKeyName(key);
 			dbobjects.values().forEach(o -> {
 				mapping.validate(o);				
 			});
 			contextValidation.removeKeyFromRootKeyName(key);
-			
+
 			if(!contextValidation.hasErrors()){
 				dbobjects.values().forEach(c -> {
 					mapping.synchronizeMongoDB(c);					
@@ -268,7 +270,7 @@ public abstract class FileService {
 		}
 		return !contextValidation.hasErrors();
 	}
-	
+
 	/**
 	 * Update HeaderLabel in ExcelFieldConfiguration to have a good error message
 	 */
@@ -315,8 +317,8 @@ public abstract class FileService {
 			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellPosition);
 		}
 	}
-	
-	
+
+
 	public abstract void analyse();
-	
+
 }
