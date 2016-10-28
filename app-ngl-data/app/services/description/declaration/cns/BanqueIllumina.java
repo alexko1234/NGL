@@ -214,7 +214,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getSizingProperties(){
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","500-650"), 
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","500-650", "300", "400", "500", "600","700","800"), 
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("650-800"), 
 				null,null,null,"single", 18, true, null, null));

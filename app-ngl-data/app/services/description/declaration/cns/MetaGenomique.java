@@ -59,7 +59,7 @@ public class MetaGenomique extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 
-		l.add(DescriptionFactory.newProcessType("MetaGénomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
+		l.add(DescriptionFactory.newProcessType("(Meta)Génomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
 				getPropertiesMetaGenomique(), 
 				Arrays.asList(getPET("ext-to-metagenomic-process",-1)
 						,getPET("dna-rna-extraction",-1)
@@ -73,7 +73,7 @@ public class MetaGenomique extends AbstractDeclaration {
 						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("MetaGénomique (bq sizée)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 32,
+		l.add(DescriptionFactory.newProcessType("(Meta)Génomique (bq sizée)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 32,
 				getPropertiesMetaGenomiqueWithSizing(), 
 				Arrays.asList(getPET("ext-to-metagenomic-process-with-sizing",-1)
 						,getPET("dna-rna-extraction",-1)
@@ -101,8 +101,11 @@ public class MetaGenomique extends AbstractDeclaration {
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"), 
 				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"), 
+		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 15, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("300, 400, 500, 600, 700, 800, ss0.6/0.53","ss0.7/0.58"), 
+				null,null,null,"single", 16, true, null, null));
+		
 
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		return propertyDefinitions;
