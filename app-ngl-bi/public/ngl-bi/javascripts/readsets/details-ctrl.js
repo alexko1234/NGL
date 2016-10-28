@@ -145,6 +145,8 @@
     	return '';				
 	};
 	
+	
+	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;

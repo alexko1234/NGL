@@ -637,6 +637,8 @@ readset.sampleOnContainer.referenceCollab = Ref. Collaborateur
 readset.sampleOnContainer.percentage = % par piste
 readset.sampleOnContainer.ncbiScientificName=Taxon
 readset.sampleOnContainer.taxonCode=Taxon Id
+readset.sampleOnContainer.loadingReport=Bilan chargement
+readset.sampleOnContainer.qcFlowcell=QC Flowcell
 
 readsets.workflow.state = Etat
 readsets.workflow.who = Par
