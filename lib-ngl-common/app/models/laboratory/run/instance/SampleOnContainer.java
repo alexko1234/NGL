@@ -21,6 +21,8 @@ public class SampleOnContainer implements IValidation{
 	//last update date
 	public Date lastUpdateDate;
 	// Reference Sample code
+	public String projectCode;
+	// Reference Sample code
 	public String sampleCode;
 	// Reference SampleType code
 	public String sampleTypeCode;

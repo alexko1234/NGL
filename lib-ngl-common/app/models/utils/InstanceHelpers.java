@@ -204,6 +204,7 @@ public class InstanceHelpers {
 	public static SampleOnInputContainer getSampleOnInputContainer(Content content,Container container) {
 
 		SampleOnInputContainer sampleOnInputContainer = new SampleOnInputContainer();
+		sampleOnInputContainer.projectCode = content.projectCode;
 		sampleOnInputContainer.sampleCode = content.sampleCode;
 		sampleOnInputContainer.sampleCategoryCode = content.sampleCategoryCode;
 		sampleOnInputContainer.sampleTypeCode = content.sampleTypeCode;
@@ -227,6 +228,7 @@ public class InstanceHelpers {
 		sc.lastUpdateDate = new Date();
 		sc.containerSupportCode = containerSupportCode;
 		sc.containerCode = container.code;
+		sc.projectCode = readSet.projectCode;
 		sc.sampleCode = readSet.sampleCode;
 		sc.sampleTypeCode = content.sampleTypeCode;
 		sc.sampleCategoryCode = content.sampleCategoryCode;

@@ -1348,6 +1348,7 @@ public class ExpWorkflowsHelper {
 		lifeSample.from.processCodes=icu.processCodes;
 		lifeSample.from.processTypeCodes=icu.processTypeCodes;
 		
+		lifeSample.from.projectCodes =  sampleIn.projectCodes;
 		lifeSample.from.sampleCode=sampleIn.code;
 		lifeSample.from.sampleTypeCode=sampleIn.typeCode;
 		

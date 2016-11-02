@@ -30,6 +30,14 @@ public class Content implements IValidation{
 	public String ncbiScientificName;
 
 	public Map<String,PropertyValue> properties;
+
+	/* Put process properties to analyse container*/
+	public String processTypeCode;
+	public String processCode;
+	public Map<String,PropertyValue> processProperties;
+
+
+	
 	public Content(){
 		properties=new HashMap<String, PropertyValue>();		
 	}

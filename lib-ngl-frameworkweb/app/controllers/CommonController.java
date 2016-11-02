@@ -13,8 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
+
+
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BSONObject;
+import org.jongo.MongoCollection;
+import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.BeanWrapper;
@@ -25,8 +30,12 @@ import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
+import play.modules.jongo.MongoDBPlugin;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
+import play.mvc.Results.StringChunks;
+import play.mvc.Results.Chunks.Out;
+import play.mvc.Result;
 import play.mvc.With;
 import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
@@ -315,5 +324,56 @@ public abstract class CommonController extends Controller{
 		cal.set(Calendar.SECOND, 0);
 		return cal;
 	}
+	
+	protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type){
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
+		if(form.datatable){
+			return ok(getUDTChunk(all)).as("application/json");
+		}else if(form.list){
+			return ok(getChunk(all)).as("application/json");									
+		}else if(form.count){
+			int count = all.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		}else{
+			return badRequest();
+		}
+	}
+
+	private static <T extends DBObject> StringChunks getChunk(MongoCursor<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				Iterator<T> iter = all.iterator();
+		    	out.write("[");
+			    while (iter.hasNext()) {
+			    	out.write(Json.toJson(iter.next()).toString());
+		            if(iter.hasNext())out.write(",");
+		        }					
+		        out.write("]");
+			    out.close();					
+			}
+		};
+	}
+	
+	private static <T extends DBObject> StringChunks getUDTChunk(MongoCursor<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				out.write("{\"recordsNumber\":"+all.count()+",");
+			    out.write("\"data\":[");
+			    Iterator<T> iter = all.iterator();
+			    while(iter.hasNext()){
+			    	out.write(Json.toJson(iter.next()).toString());
+		            if(iter.hasNext())out.write(",");    	
+			    }
+			    out.write("]}");
+			    out.close();				
+			}
+		};
+	}
+	
 	
 }

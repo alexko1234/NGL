@@ -3,7 +3,8 @@ package models.laboratory.sample.instance.tree;
 import java.util.Set;
 
 public class From {
-	
+
+	public Set<String> projectCodes;
 	public String sampleCode;
 	public String sampleTypeCode;
 	

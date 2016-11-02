@@ -78,10 +78,12 @@
 	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
 	   	<li ng-if="searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>
 	   	<li ng-if="searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>       
+	   	<li><a href="#" data-target="#nativeQuery" data-toggle="tab">Experimental search mode</a></li>       
+	   	
 	   	</ul>
 			
-		<div class="tab-content">
-		<div class="tab-pane active" id="filters">
+<div class="tab-content">
+	<div class="tab-pane active" id="filters">
 			<form class="well well-small">
 			<div class="row">
 			@form
@@ -154,6 +156,28 @@
 				}					
 			}
 			</div>			
+		</form>	
+	</div>
+	
+	<div class="tab-pane" id="nativeQuery">
+			<form class="well well-small">
+			<div class="row">
+				<div class="col-md-10 col-lg-10">
+					<textarea class="form-control" rows="10" ng-model="searchService.form.reportingQuery"></textarea>
+				</div>
+			@columnSearchForm{
+				@formGroup{
+				<div class="btn-toolbar">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
+						<i class="fa fa-search"></i>
+					</button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
+						<i class="fa fa-undo"></i>
+					</button>						 	
+				</div>
+				}				
+			}
+			</div>		
 		</form>	
 	</div>
 	

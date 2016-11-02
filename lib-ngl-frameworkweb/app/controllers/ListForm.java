@@ -10,6 +10,8 @@ public class ListForm extends DatatableForm {
 	
 	public Integer limit = 5000; //limit the number or element in the result
 
+	public boolean reporting = Boolean.FALSE;
+	public String reportingQuery;
 	
 	
 }

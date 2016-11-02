@@ -282,6 +282,17 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					}
 					
 				}
+				
+				if(this.form.reportingQuery){
+					this.form.reportingQuery.trim();
+					if(this.form.reportingQuery.length > 0){
+						this.form.reporting=true;
+					}else{
+						this.form.reporting=false;
+					}
+				}else{
+					this.form.reporting=false;
+				}
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
