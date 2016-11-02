@@ -372,22 +372,12 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	// 27/10/2016 bug vu par JG: au CNS pool generique tube=> tube : line et column sont undefined
 	atmService.newAtomicTransfertMethod =  function(line, column){
 		var getLine = function(line){
-			
 			//TEST correction FDS
 			if ($scope.experiment.instrument.outContainerSupportCategoryCode === "tube"){
 				return 1; // ligne et colonne=1 pour un tube
-			}	
-			else 
-			//
-				
-			if($scope.experiment.instrument.outContainerSupportCategoryCode 
-					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
-				return line;
-			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
-				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
+			} else {
 				return undefined;
-			}
-			
+			}			
 		}
 		var getColumn=getLine;
 		

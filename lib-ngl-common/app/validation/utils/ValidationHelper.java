@@ -253,6 +253,43 @@ public class ValidationHelper {
 		return null;		
 	}
 	
+	
+	public static Object convertValue(Class<?> valueClass, Object value, String inputFormat) {
+		if(Number.class.isAssignableFrom(value.getClass())){
+			return convertValue(valueClass, (Number)value);
+		}else{
+			return convertValue(valueClass, value.toString(), inputFormat);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param type : final type
+	 * @param value : the value
+	 * @param format : format Date
+	 * @return
+	 */
+	public static Object convertValue(Class<?> type, Number value) {
+		Object o = null;
+		if (String.class.equals(type)) {
+			o = value.toString();
+		} else if (Integer.class.equals(type)) {
+			o = value.intValue();
+		} else if (Double.class.equals(type)) {
+			o = value.doubleValue();
+		} else if (Float.class.equals(type)) {
+			o = value.floatValue();
+		} else if (Long.class.equals(type)) {
+			o = value.longValue();
+		} else if (Date.class.equals(type)) {
+			o = new Date(value.longValue());			
+		} else {
+			Logger.info("Erreur de type :"+type);
+			throw new RuntimeException("Type not managed: "+type);
+		}
+		return o;
+	}
+	
 	/**
 	 * 
 	 * @param type : final type
@@ -367,7 +404,7 @@ public class ValidationHelper {
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
 			if(null != propertyValue.value && !valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
 				//Logger.debug("convertValue "+propertyDefinition.code);
-				propertyValue.value = convertValue(valueClass, propertyValue.value.toString(), null);
+				propertyValue.value = convertValue(valueClass, propertyValue.value, null);
 			}
 			if(propertyDefinition.saveMeasureValue!=null && propertyValue.unit == null){
 				propertyValue.unit=propertyDefinition.saveMeasureValue.value; 
@@ -411,7 +448,7 @@ public class ValidationHelper {
 			List<Object> newList = new ArrayList<Object>(propertyValue.value.size());
 			for(Object value : propertyValue.value){
 				if(!valueClass.isInstance(value)){ //transform only if not the good type
-					value = convertValue(valueClass, value.toString(), null);
+					value = convertValue(valueClass, value, null);
 				}
 				newList.add(value);
 			}			
@@ -443,7 +480,7 @@ public class ValidationHelper {
 			Object value = map.get(codes[1]);
 			
 			if(!valueClass.isInstance(value) && value!=null){ //transform only if not the good type
-				value = convertValue(valueClass, value.toString(), null);
+				value = convertValue(valueClass, value, null);
 			}	
 			map.put(codes[1], value);			
 
@@ -471,7 +508,7 @@ public class ValidationHelper {
 			for(Map<String, ?> map: list){
 				Object value = map.get(codes[1]);
 				if(!valueClass.isInstance(value) && value!=null){ //transform only if not the good type
-					value = convertValue(valueClass, value.toString(), null);
+					value = convertValue(valueClass, value, null);
 				}	
 				((Map<String, Object>)map).put(codes[1], value);
 			}
