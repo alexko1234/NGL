@@ -20,6 +20,9 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 							break;
 						}
 					}
+				}else if(concentration !== undefined || unit !== undefined){
+					isSame = false;
+					break;
 				}
 			}
 			if(isSame 

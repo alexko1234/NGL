@@ -392,8 +392,9 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µL"			
+			volume : "µL",				
 	}
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	
