@@ -145,6 +145,30 @@
     	return '';				
 	};
 	
+	$scope.getLoadingReport = function(){
+		if(angular.isDefined($scope.readset.sampleOnContainer.properties.loadingReport)){
+			var loadingReport = '';
+			for(var i=0; i<$scope.readset.sampleOnContainer.properties.loadingReport.value.length; i++){
+				loadingReport += Messages("readset.sampleOnContainer.loadingReport.time")+' '+$scope.readset.sampleOnContainer.properties.loadingReport.value[i].time+' : '+$scope.readset.sampleOnContainer.properties.loadingReport.value[i].volume+'µL ; '
+			}
+			return loadingReport.substring(0,loadingReport.length-2);
+		}
+		return '';
+	}
+	
+	$scope.getQCFlowCell = function(){
+		if(angular.isDefined($scope.readset.sampleOnContainer.properties.qcFlowcell)){
+			for(var i=0; i<$scope.readset.sampleOnContainer.properties.qcFlowcell.value.length; i++){
+				if($scope.readset.sampleOnContainer.properties.qcFlowcell.value[i].group == 'total'){
+					return Messages("readset.sampleOnContainer.qcFlowcell.preLoading")+' : '+$scope.readset.sampleOnContainer.properties.qcFlowcell.value[i].preLoadingNbActivePores +' '+Messages("readset.sampleOnContainer.qcFlowcell.pores")+' ; '+
+							Messages("readset.sampleOnContainer.qcFlowcell.postLoading")+' : '+$scope.readset.sampleOnContainer.properties.qcFlowcell.value[i].postLoadingNbActivePores+' '+Messages("readset.sampleOnContainer.qcFlowcell.pores")
+					
+				}
+			}
+		}
+		return '';
+	}
+	
 	
 	
 	var init = function(){

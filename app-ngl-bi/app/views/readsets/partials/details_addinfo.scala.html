@@ -1,7 +1,7 @@
 @()
 
 @column()(value: Html) = {
-	<div class="col-md-4 col-lg-4 col-xs-4">
+	<div class="col-md-5 col-lg-5 col-xs-5">
 		@value
 	</div>
 }
@@ -50,13 +50,16 @@
 			<p class="form-control-static" ng-bind="readset.sampleOnContainer.percentage"></p>
 		}
 		
-		<div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties">
+		<div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties" ng-if="value._type == 'single'">
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'"></label>
 		    <div class="col-md-6 col-lg-6">
 		      <p class="form-control-static" ng-bind="value.value|codes:'value.'+key:false"></p>
 		    </div>
 		</div>		
+		<div ng_if="readset.typeCode=='rsnanopore'">
+		@details_addinfo_nanopore()		
+		</div>
 	}
 	
 	</div>
