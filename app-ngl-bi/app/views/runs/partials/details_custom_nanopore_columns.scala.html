@@ -65,6 +65,10 @@
 				<p class="form-control-static">{{run.containerSupportCode}}</p>
 			}
 			
+			@views.html.helper.columnLabelValue(Messages("runs.flowcellVersion")){
+				<p class="form-control-static">{{run.properties.flowcellChemistry.value}}</p>
+			}
+			
 			@views.html.helper.columnLabelValue(Messages("runs.keep")){
 				<div class="checkbox" ng-if="mainService.isEditMode()">
  					<label>

@@ -144,6 +144,7 @@ runs.controlLane = Ligne Contrôle
 runs.flowcellVersion = Version Flowcell
 runs.rtaVersion = Version RTA
 runs.containerSupportCode = Code Flowcell 
+runs.properties.flowcellChemistry = Version Flowcell 
 runs.intrumentCode = Code Instrument
 runs.intrumentCategoryCode = Catégorie Instrument
 runs.intrumentTypeCode = Type d''Instrument
