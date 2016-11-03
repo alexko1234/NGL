@@ -13,6 +13,16 @@ then
 	if($experimentProperties==null){
 		$experiment.experimentProperties=new HashMap<String,PropertyValue>();
 	}
+	
+	Calendar c = Calendar.getInstance();
+	c.setTime($creationDate);
+	c.set(Calendar.HOUR,0);
+	c.set(Calendar.MINUTE,0);
+	c.set(Calendar.SECOND,0);
+	c.set(Calendar.MILLISECOND,0);
+	
+	$creationDate = c.getTime();
+	
 	PropertySingleValue value = new PropertySingleValue($creationDate);
 	$experiment.experimentProperties.put("runStartDate", value);
 	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
