@@ -146,8 +146,8 @@
 	};
 	
 	$scope.getLoadingReport = function(){
-		if(angular.isDefined($scope.readset.sampleOnContainer.properties.loadingReport)){
-			var loadingReport = '';
+		if(angular.isDefined($scope.readset.sampleOnContainer.properties.loadingReport) && $scope.readset.sampleOnContainer.properties.loadingReport.value.length>0){
+			var loadingReport = $scope.readset.sampleOnContainer.properties.loadingReport.value.length+' '+Messages("readset.sampleOnContainer.loadingReport.loading")+' : ';
 			for(var i=0; i<$scope.readset.sampleOnContainer.properties.loadingReport.value.length; i++){
 				loadingReport += Messages("readset.sampleOnContainer.loadingReport.time")+' '+$scope.readset.sampleOnContainer.properties.loadingReport.value[i].time+' : '+$scope.readset.sampleOnContainer.properties.loadingReport.value[i].volume+'µL ; '
 			}

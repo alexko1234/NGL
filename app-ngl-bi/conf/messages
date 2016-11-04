@@ -639,6 +639,7 @@ readset.sampleOnContainer.ncbiScientificName=Taxon
 readset.sampleOnContainer.taxonCode=Taxon Id
 readset.sampleOnContainer.loadingReport=Bilan chargement
 readset.sampleOnContainer.loadingReport.time=Temps
+readset.sampleOnContainer.loadingReport.loading=chargement(s)
 readset.sampleOnContainer.qcFlowcell=QC Flowcell
 readset.sampleOnContainer.qcFlowcell.preLoading=réception
 readset.sampleOnContainer.qcFlowcell.postLoading=dépôt
