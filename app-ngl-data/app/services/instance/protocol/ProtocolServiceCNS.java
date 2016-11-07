@@ -77,8 +77,8 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		 
-		lp.add(newProtocol("R9-on-bead-depot","R9-on-bead dépot","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
-		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-on-bead-spotOn dépot","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		lp.add(newProtocol("R9-on-bead-depot","R9-dépôt sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
 		
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
