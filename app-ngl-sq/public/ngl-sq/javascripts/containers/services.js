@@ -168,7 +168,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":false,
 			"hide":true,
 			"type":"text",
-			"position":15.6,
+			"position":15.9,
 			"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
 			"groupMethod":"collect"
 		});
