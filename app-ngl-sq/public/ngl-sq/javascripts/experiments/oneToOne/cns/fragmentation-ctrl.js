@@ -109,6 +109,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 					        	 "order":true,
 								 "edit":true,
 								 "hide":true,
+								 "required":true,
 								 "type":"number",
 					        	 "position":51,
 					        	 "extraHeaders":{0:Messages("experiments.outputs")}
