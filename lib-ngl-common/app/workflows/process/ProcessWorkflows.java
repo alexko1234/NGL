@@ -122,9 +122,7 @@ public class ProcessWorkflows {
 					ProcessType processType;
 					try {
 						processType = ProcessType.find.findByCode(processTypeCode);
-						MongoDBDAO
-						.update(InstanceConstants.CONTAINER_COLL_NAME,
-								Container.class,
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,
 								DBQuery.is("code", containerInPutCode).in("fromTransformationTypeCodes",
 										processType.voidExperimentType.code),
 										DBUpdate.unset("fromTransformationTypeCodes"));
