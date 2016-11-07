@@ -221,21 +221,26 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			selectionList = angular.copy($scope.lists.get('transformation',true));
 			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.searchService.form.nextProcessTypeCode).url)
 			.success(function(data, status, headers, config) {
-				var defaultFirstExperimentTypes = data;
-				console.log("defaultFirstExperimentTypes= "+defaultFirstExperimentTypes);
+				
+				data = data.filter(function(exp){
+					return !exp.code.startsWith("ext");
+				});
+				
+				data.unshift({name: "None", code: "none"});
+				
+				$scope.defaultFirstExperimentTypes = data;
+				
+				/*
 				angular.forEach(defaultFirstExperimentTypes, function(experimentType, key){
 					angular.forEach(selectionList, function(item, index){
 						if(experimentType.code==item.code){
-							console.log("experimentType.code= "+experimentType.code);
-							console.log("item.code= "+item.code);
-							console.log("index= "+index);								
 							$scope.searchService.form.fromTransformationTypeCodes.push(item.code);							
-							console.log("form.fromTransformationTypeCodes= "+$scope.searchService.form.fromTransformationTypeCodes);
+							
 						}
 					});
-				});
-				
+				});				
 				$scope.search();
+				*/
 			});
 		}		
 	};
