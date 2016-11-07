@@ -39,7 +39,8 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateXCodes(exp); //TODO GA 22/01/2016 hack for old experiment without contents, remove in 03/2016
 			expWorkflowsHelper.updateOutputContainerCode(exp);
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
-			expWorkflowsHelper.updateOutputContainerContents(exp);			
+			expWorkflowsHelper.updateOutputContainerContents(exp);		
+			expWorkflowsHelper.updateWithNewSampleCodesIfNeeded(exp);
 		}else if("F".equals(exp.state.code)){
 			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
 				expWorkflowsHelper.updateQCResultInInputContainers(exp, validation);

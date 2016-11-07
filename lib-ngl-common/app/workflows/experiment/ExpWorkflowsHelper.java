@@ -1141,19 +1141,20 @@ public class ExpWorkflowsHelper {
 		});
 		
 	}
-
-	public void updateNewSampleInContentsIfNeeded(Experiment exp,
-			ContextValidation validation) {
+	
+	public void updateWithNewSampleCodesIfNeeded(Experiment exp){
+		
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 		if(experimentType.newSample){	
 			exp.atomicTransfertMethods
 				.stream()
 				.map(atm -> atm.outputContainerUseds)
-				.flatMap(List::stream)
-				.forEach(ocu -> updateContents(ocu));
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));			
+				.flatMap(List::stream)				
+				.forEach(ocu -> {					
+					updateContents(ocu);
+				});				
 		}
-	}
+	};
 	
 	/**
 	 * Create new sample code for the output containers in case we want to create another sample
