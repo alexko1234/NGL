@@ -128,7 +128,7 @@ containers.table.creationDate = Création container
 containers.table.concentration = Concentration
 containers.table.concentration.shortLabel = Conc.
 containers.table.concentration.unit = Unité Concentration
-containers.table.concentration.unit.shortLabel = Unité Concent.
+containers.table.concentration.unit.shortLabel = Unité Conc.
 containers.table.concentration.value= Concentration Container
 containers.table.volume = Volume
 containers.table.quantity = Quantité
@@ -175,6 +175,7 @@ containers.table.referenceCollab = Réf. collab
 containers.table.taxonCode= Taxon Id
 containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
+containers.table.expectedCoverage= Couv. souhaitée
 
 container.from = issu de
 

@@ -80,6 +80,17 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
+			         { // libProcessType ajout 08/11/2016
+					 		"header":Messages("containers.table.libProcessType"),
+					 		"property": "inputContainer.contents",
+					 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+					 		"order":false,
+					 		"hide":true,
+					 		"type":"text",
+					 		"position":6.5,
+					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					 		"extraHeaders": {0: inputExtraHeaders}	 						 			
+					 },
 					 { //Tags
 					    "header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
@@ -91,8 +102,18 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
-					 { //Concentration .. 12/09/2016 ne pas inclure l'unité dans le label
-			        	 "header":Messages("containers.table.concentration"), 
+			         { // TEST expected Coverage.. a voir avec Guillaume
+				        	"header":Messages("containers.table.expectedCoverage"),
+				 			"property": "inputContainer.TODO",
+				 			"order":true,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":7.5,
+				 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        	 "extraHeaders":{0: inputExtraHeaders}
+					 },
+					 { //Concentration; 12/09/2016 ne pas inclure l'unité dans le label; 08/11/2016 label court
+			        	 "header":Messages("containers.table.concentration.shortLabel"), 
 			        	 "property":"inputContainer.concentration.value",  
 			        	 "order":true,
 						 "hide":true,
@@ -101,7 +122,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         { // 12/09/2016 afficher l'unité concentration dans une colonne séparée pour récupérer la vraie valeur
-			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "header":Messages("containers.table.concentration.unit.shortLabel"),
 			        	 "property":"inputContainer.concentration.unit",  
 			        	 "order":true,
 						 "hide":true,
@@ -170,8 +191,8 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
-			         { // Concentration           EDITABLE???
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			         { // Concentration; 08/11/2016 shortLabel
+			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 						 "edit":true,
 						 "hide":true,
