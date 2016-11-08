@@ -64,7 +64,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"type":"text",
 						"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 						"groupMethod":"collect",
-			        	"position":8
+						"position":8
 					},
 			 		{
 						"header":Messages("containers.table.contents.length"),

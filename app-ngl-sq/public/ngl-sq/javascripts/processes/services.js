@@ -49,7 +49,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : true,
 			"group" : true,
 			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"filter":"orderBy",
+        	"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"position" : 2,
 			"type" : "text"
 		});
@@ -60,7 +61,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"group" : true,
 			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"filter":"orderBy",
+        	"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"position" : 3,
 			"type" : "text"
 		});
@@ -141,7 +143,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 9,
 			"filter":"unique",
 			"groupMethod" : "unique",
-			"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
+			"filter":"orderBy",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
 		});
 		columns.push({
@@ -152,7 +155,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 10,
 			"filter" : "unique",
 			"groupMethod" : "unique",
-			"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
+			"filter":"orderBy:searchService.extractDate",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
 		});
 		columns.push({
@@ -204,6 +208,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		return columns;
 	};
 
+	
+	
 	var searchService = {
 
 		datatable : undefined,
@@ -227,6 +233,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				this.isRouteParam = true;
 				this.form = $routeParams;
 			}
+		},
+		extractDate: function(value){
+			return value.split(/(\d+_\d+)/)[1];
 		},
 		getPropertyColumnType : function(type) {
 			if (type === "java.lang.String") {
