@@ -913,7 +913,10 @@ public class ExpWorkflowsHelper {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
-		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
+		
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level).stream().map(s->{
+			return getKeyPropertiesInstance(s);
+		}).collect(Collectors.toSet());
 
 		//extract experiment content properties
 		if(null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0){
@@ -943,7 +946,9 @@ public class ExpWorkflowsHelper {
 
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
-		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level);
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level).stream().map(s->{
+			return getKeyPropertiesInstance(s);
+		}).collect(Collectors.toSet());
 
 		if(null != exp.instrumentProperties && instrumentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(exp.instrumentProperties.entrySet()
@@ -964,10 +969,13 @@ public class ExpWorkflowsHelper {
 		 * To put process property in container used rules*/
 		if(null != atm){
 			//extract process content properties for only the inputContainer of the process
-			List<String> processesPropertyDefinitionCodes = atm.inputContainerUseds.stream()
+			Set<String> processesPropertyDefinitionCodes = atm.inputContainerUseds.stream()
 					.map((InputContainerUsed icu) -> getProcessesPropertyDefinitionCodes(icu, level))
 					.flatMap(List::stream)
-					.collect(Collectors.toList()); 
+					.collect(Collectors.toList()).stream().map(s->{
+						return getKeyPropertiesInstance(s);
+					}).collect(Collectors.toSet());
+			
 			if(processesPropertyDefinitionCodes.size() >0){
 				propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 						.map((InputContainerUsed icu) -> getProcessesProperties(icu))
@@ -980,6 +988,14 @@ public class ExpWorkflowsHelper {
 		return propertiesForALevel;
 	}
 
+	private String getKeyPropertiesInstance(String keyPropertyDefinition)
+	{
+		if(keyPropertyDefinition.contains("."))
+			return keyPropertyDefinition.substring(0, keyPropertyDefinition.indexOf("."));
+		else
+			return keyPropertyDefinition;
+	}
+	
 	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
 		if(u.value.equals(v.value)){
 			return u;
