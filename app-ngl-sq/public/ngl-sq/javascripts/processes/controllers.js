@@ -828,19 +828,25 @@ var	datatableConfig = {
 			$scope.datatable.setData($scope.processes);
 		}else{
 			var processes =  mainService.getBasket().basket;
-			$scope.processesSupports = [];
+			
+			var supportProcesses = {};
+			
 			angular.forEach(processes,function(process){
-				var alreadyExist = false;
-				angular.forEach($scope.processesSupports,function(processesSupport){
-					if(processesSupport.support.code == process.support.code){
-						alreadyExist = true;
-					}
-				});
-				if(!alreadyExist){
-					$scope.processesSupports.push(process);
-				}
+				if(supportProcesses[process.support.code]){
+					supportProcesses[process.support.code].projectCodes = supportProcesses[process.support.code].projectCodes.concat(process.projectCodes);
+					supportProcesses[process.support.code].sampleCodes = supportProcesses[process.support.code].sampleCodes.concat(process.sampleCodes);
+					supportProcesses[process.support.code].contents = supportProcesses[process.support.code].contents.concat(process.contents);
+				}else{
+					supportProcesses[process.support.code] = process;							
+				}				
 			});
-			$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
+			
+			var processes = [];
+			for(var key in supportProcesses){
+				processes.push(supportProcesses[key]);
+			}
+			
+			$scope.datatable.setData(processes,processes.length);
 		}
 
 

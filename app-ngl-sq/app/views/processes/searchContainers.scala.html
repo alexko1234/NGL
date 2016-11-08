@@ -29,7 +29,7 @@
 	
 	@columnSearchForm{
 		@formGroup{
-			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-model="searchService.form.containerSupportCategory" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" ng-change="search()" auto-select>
+			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-model="searchService.form.containerSupportCategory" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in lists.getContainerSupportCategories()" auto-select>
 			</div>
 		}
 		@formGroup{
