@@ -109,17 +109,17 @@ public class Purif extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeCommon() {
-		// TODO Auto-generated method stub
+		//GA 07/11/2016 USED FOR PROCESS who start with ampure
+		newExperimentTypeNode("post-pcr-ampure",getExperimentTypes("post-pcr-ampure").get(0),false, false,false,
+				getExperimentTypeNodes("pcr-amplification-and-purification")
+				,null,null,null).save();
 		
 	}
 	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
 		
-		//GA 07/11/2016 USED FOR PROCESS who start with ampure
-		newExperimentTypeNode("post-pcr-ampure",getExperimentTypes("post-pcr-ampure").get(0),false, false,false,
-				getExperimentTypeNodes("pcr-amplification-and-purification")
-				,null,null,null).save();
+		
 		
 	}
 
