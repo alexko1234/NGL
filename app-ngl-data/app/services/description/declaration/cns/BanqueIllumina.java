@@ -132,12 +132,12 @@ public class BanqueIllumina extends AbstractDeclaration {
 				getPropertyBanqueIlluminaSizing(),
 				Arrays.asList(getPET("ext-to-ampli-sizing-stk-illumina-depot",-1)
 						,getPET("dna-illumina-indexed-library",-1)
-						,getPET("pcr-amplification-and-purification",0)
-						,getPET("sizing",1)
-						,getPET("solution-stock",2)
-						,getPET("prepa-flowcell",3)
-						,getPET("prepa-fc-ordered",3)
-						,getPET("illumina-depot",4)), 
+						,getPET("pcr-amplification-and-purification",0) //GA 08/11/2016 purif need to declare on first during process creation
+						,getPET("sizing",0) //GA 08/11/2016 transformation need to declare on first for experiment creation
+						,getPET("solution-stock",1)
+						,getPET("prepa-flowcell",2)
+						,getPET("prepa-fc-ordered",2)
+						,getPET("illumina-depot",3)), 
 						getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampli-sizing-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -147,11 +147,11 @@ public class BanqueIllumina extends AbstractDeclaration {
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
 						,getPET("post-pcr-ampure",0)
-						,getPET("sizing",1)
-						,getPET("solution-stock",2)
-						,getPET("prepa-flowcell",3)
-						,getPET("prepa-fc-ordered",3)
-						,getPET("illumina-depot",4)), 
+						,getPET("sizing",0)
+						,getPET("solution-stock",1)
+						,getPET("prepa-flowcell",2)
+						,getPET("prepa-fc-ordered",2)
+						,getPET("illumina-depot",3)), 
 						getExperimentTypes("post-pcr-ampure").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampure-sizing-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
