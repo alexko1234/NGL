@@ -148,7 +148,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library","rna-illumina-indexed-library")
 				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-
+		
+		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
+				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+	
 	}
 	
 	@Override
@@ -162,9 +165,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("pcr-amplification-and-purification")
 				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		 */
-		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
-				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	
+		
 	}
 
 	@Override

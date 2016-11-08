@@ -1,6 +1,7 @@
 package services.description.declaration.cns;
 
 import static services.description.DescriptionFactory.newExperimentType;
+import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.util.ArrayList;
@@ -114,7 +115,11 @@ public class Purif extends AbstractDeclaration {
 	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		// TODO Auto-generated method stub
+		
+		//GA 07/11/2016 USED FOR PROCESS who start with ampure
+		newExperimentTypeNode("post-pcr-ampure",getExperimentTypes("post-pcr-ampure").get(0),false, false,false,
+				getExperimentTypeNodes("pcr-amplification-and-purification")
+				,null,null,null).save();
 		
 	}
 

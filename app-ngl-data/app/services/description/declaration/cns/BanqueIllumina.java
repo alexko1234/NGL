@@ -146,11 +146,12 @@ public class BanqueIllumina extends AbstractDeclaration {
 				getPropertyBanqueIlluminaSizing(), 
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
-						,getPET("sizing",0)
-						,getPET("solution-stock",1)
-						,getPET("prepa-flowcell",2)
-						,getPET("prepa-fc-ordered",2)
-						,getPET("illumina-depot",3)), 
+						,getPET("post-pcr-ampure",0)
+						,getPET("sizing",1)
+						,getPET("solution-stock",2)
+						,getPET("prepa-flowcell",3)
+						,getPET("prepa-fc-ordered",3)
+						,getPET("illumina-depot",4)), 
 						getExperimentTypes("post-pcr-ampure").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampure-sizing-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -175,10 +176,11 @@ public class BanqueIllumina extends AbstractDeclaration {
 				getPropertyBanqueIlluminaWithoutSizing(), 
 				Arrays.asList(getPET("ext-to-ampure-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
-						,getPET("solution-stock",0)
-						,getPET("prepa-flowcell",1)
-						,getPET("prepa-fc-ordered",1)
-						,getPET("illumina-depot",2)), 
+						,getPET("post-pcr-ampure",0)
+						,getPET("solution-stock",1)
+						,getPET("prepa-flowcell",2)
+						,getPET("prepa-fc-ordered",2)
+						,getPET("illumina-depot",3)), 
 						getExperimentTypes("post-pcr-ampure").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampure-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		

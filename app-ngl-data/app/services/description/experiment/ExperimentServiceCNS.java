@@ -114,7 +114,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
-		new QualityControl().getExperimentTypeNode();
 		
 		new ExtractionDNARNA().getExperimentTypeNode();
 		
@@ -127,6 +126,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		new MetaTProcess().getExperimentTypeNode();
 		new MetaBarCoding().getExperimentTypeNode();
 		new RunIllumina().getExperimentTypeNode();
+		
+		new QualityControl().getExperimentTypeNode();
+		new Purif().getExperimentTypeNode();
+		new Transfert().getExperimentTypeNode();
+		
 		
 		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
 		//newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();
