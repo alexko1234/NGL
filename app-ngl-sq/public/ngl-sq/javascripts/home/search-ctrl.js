@@ -108,13 +108,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 						},
 			           {
 							"header":Messages("processes.table.projectCode"),
-							"property":"projectCode",
+							"property":"projectCodes",
 							"position":2,
 							"type":"text"
 						},
 						{
 							"header":Messages("processes.table.sampleCode"),
-							"property":"sampleCode",
+							"property":"sampleCodes",
 							"position":3,
 							"type":"text"
 						},
@@ -186,13 +186,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 						},
 			           {
 							"header":Messages("processes.table.projectCode"),
-							"property":"projectCode",
+							"property":"projectCodes",
 							"position":2,
 							"type":"text"
 						},
 						{
 							"header":Messages("processes.table.sampleCode"),
-							"property":"sampleCode",
+							"property":"sampleCodes",
 							"position":3,
 							"type":"text"
 						},
