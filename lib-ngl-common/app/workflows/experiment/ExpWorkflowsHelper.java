@@ -802,12 +802,30 @@ public class ExpWorkflowsHelper {
 
 		return propertyDefs.stream().filter(pd -> pd.levels.contains(l)).map(pd -> pd.code).collect(Collectors.toSet());
 	}
+	
+	/**
+	 * Filter key by object syntax
+	 * @param propertyDefs
+	 * @param level
+	 * @return
+	 */
+	private Set<String> getPropertyDefinitionCodesByLevelFilterObject(List<PropertyDefinition> propertyDefs, Level.CODE level){
+
+		Level l = new Level(level);
+
+		return propertyDefs.stream().filter(pd -> pd.levels.contains(l)).map(pd -> pd.code).collect(Collectors.toSet()).stream().map(s->{
+			if(s.contains("."))
+				return s.substring(0, s.indexOf("."));
+			else
+				return s;
+		}).collect(Collectors.toSet());
+	}
 
 	private Map<String, PropertyValue> getOutputPropertiesForALevel(Experiment exp, OutputContainerUsed ocu, Level.CODE level) {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
-		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
 
 		if(null != ocu && ocu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(ocu.experimentProperties.entrySet().stream()
@@ -817,7 +835,7 @@ public class ExpWorkflowsHelper {
 
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
-		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level);
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, level);
 
 		if(null != ocu && ocu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0){			
 			propertiesForALevel.putAll(ocu.instrumentProperties.entrySet().stream()
@@ -914,9 +932,7 @@ public class ExpWorkflowsHelper {
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
 		
-		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level).stream().map(s->{
-			return getKeyPropertiesInstance(s);
-		}).collect(Collectors.toSet());
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
 
 		//extract experiment content properties
 		if(null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0){
