@@ -256,9 +256,9 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<Value> getTaraPacificStationValues(){
 		List<Value> values = new ArrayList<Value>();
 		//Miami first reception end june 
-		//toutes les OA-001 à 027
-		
-		for(int i = 0; i <= 27; i++){
+		//toutes les OA-001 à 066
+				
+		for(int i = 0; i <= 66 ; i++){
 			if(i < 10){
 				values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
 			}else{
