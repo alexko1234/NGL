@@ -814,12 +814,18 @@ public class ExpWorkflowsHelper {
 		Level l = new Level(level);
 
 		return propertyDefs.stream().filter(pd -> pd.levels.contains(l)).map(pd -> pd.code).collect(Collectors.toSet()).stream().map(s->{
-			if(s.contains("."))
-				return s.substring(0, s.indexOf("."));
-			else
-				return s;
+			return getKeyPropertiesInstance(s);
 		}).collect(Collectors.toSet());
 	}
+	
+	private String getKeyPropertiesInstance(String keyPropertyDefinition)
+	{
+		if(keyPropertyDefinition.contains("."))
+			return keyPropertyDefinition.substring(0, keyPropertyDefinition.indexOf("."));
+		else
+			return keyPropertyDefinition;
+	}
+	
 
 	private Map<String, PropertyValue> getOutputPropertiesForALevel(Experiment exp, OutputContainerUsed ocu, Level.CODE level) {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
@@ -962,9 +968,7 @@ public class ExpWorkflowsHelper {
 
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
-		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level).stream().map(s->{
-			return getKeyPropertiesInstance(s);
-		}).collect(Collectors.toSet());
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, level);
 
 		if(null != exp.instrumentProperties && instrumentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(exp.instrumentProperties.entrySet()
@@ -1004,13 +1008,6 @@ public class ExpWorkflowsHelper {
 		return propertiesForALevel;
 	}
 
-	private String getKeyPropertiesInstance(String keyPropertyDefinition)
-	{
-		if(keyPropertyDefinition.contains("."))
-			return keyPropertyDefinition.substring(0, keyPropertyDefinition.indexOf("."));
-		else
-			return keyPropertyDefinition;
-	}
 	
 	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
 		if(u.value.equals(v.value)){
