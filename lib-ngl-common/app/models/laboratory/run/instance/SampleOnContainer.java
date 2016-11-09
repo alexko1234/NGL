@@ -58,6 +58,7 @@ public class SampleOnContainer implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		//TODO
+		SampleOnContainerValidationHelper.validateProjectCode(projectCode, contextValidation);
 		SampleOnContainerValidationHelper.validateSampleCode(sampleCode, contextValidation);
 		SampleType sampleType = SampleOnContainerValidationHelper.validateSampleTypeCode(sampleTypeCode, contextValidation);
 		SampleOnContainerValidationHelper.validateSampleCategoryCode(sampleCategoryCode, sampleType, contextValidation);
