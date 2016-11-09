@@ -41,6 +41,7 @@ rule "Create external sample"
 		}
 		
 		//update sampleOnContainer
+		$sampleOnContainer.projectCode = $readset.projectCode;
 		$sampleOnContainer.lastUpdateDate = new Date();
 		$sampleOnContainer.containerCode = $sampleOnContainer.containerSupportCode;
 		$sampleOnContainer.sampleTypeCode = extSample.typeCode;
