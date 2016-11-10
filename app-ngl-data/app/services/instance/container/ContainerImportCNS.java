@@ -64,18 +64,19 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			}
 	
 
-			for(Content sampleUsed : contents){
+			for(Content content : contents){
 				/* Sample content not in MongoDB */
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleUsed.sampleCode)){
-					rootKeyName="sample["+sampleUsed.sampleCode+"]";
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, content.sampleCode)){
+					rootKeyName="sample["+content.sampleCode+"]";
 					contextError.addKeyToRootKeyName(rootKeyName);
 					
-					sample = limsServices.findSampleToCreate(contextError,sampleUsed.sampleCode);
+					sample = limsServices.findSampleToCreate(contextError,content.sampleCode);
 	
-					
 					if(sample!=null){
 						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
-						sampleUsed.referenceCollab=newSample.referenceCollab;
+						content.referenceCollab=newSample.referenceCollab;
+						content.taxonCode = newSample.taxonCode;
+						content.ncbiScientificName = newSample.ncbiScientificName;
 						if(!contextError.hasErrors()){
 							limsServices.updateMaterielLims(newSample, contextError);
 						}
@@ -85,8 +86,10 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 				}else {	
 					/* Find sample in Mongodb */
-					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);
-					sampleUsed.referenceCollab=newSample.referenceCollab;
+					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, content.sampleCode);
+					content.referenceCollab=newSample.referenceCollab;
+					content.taxonCode = newSample.taxonCode;
+					content.ncbiScientificName = newSample.ncbiScientificName;
 					
 				}			
 	
@@ -96,12 +99,12 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				/* Error : No sample, remove container from list to create */
 				if(newSample==null){
 					containers.remove(container);
-					contextError.addErrors("sample","error.codeNotExist", sampleUsed.sampleCode);
+					contextError.addErrors("sample","error.codeNotExist", content.sampleCode);
 				}
 				else{
 					/* From sample, add content in container */
-					container.contents.remove(sampleUsed);
-					ContainerHelper.addContent(container, newSample, sampleUsed);
+					container.contents.remove(content);
+					ContainerHelper.addContent(container, newSample, content);
 				}
 				contextError.removeKeyFromRootKeyName(rootKeyName);
 	
