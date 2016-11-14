@@ -271,13 +271,13 @@ public class ImportServiceCNS extends AbstractImportService {
 		}
 		values.add(DescriptionFactory.newValue("20999", "OA-999"));
 		//Panama second recption first august
-		//toutes les stations des îles 01 à 20, pour les sites 01 à 03, pour les colonies 01 à 40
+		//toutes les stations des îles 01 à 20, pour les sites 01 à 04, pour les colonies 01 à 40
 		//version 6 et version 9 I01S01 et I01S01C01 à I01S01C40
 		
 		values.add(DescriptionFactory.newValue("100000000", "I00S00C00"));	
 		for(int i = 1; i <= 20; i++){
 			String ile = (i < 10)?"0"+i:""+i;
-			for(int j = 1; j <= 3; j++){
+			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
 				values.add(DescriptionFactory.newValue("1"+ile+"0"+site, "I"+ile+"S"+site));
 				for(int k = 1; k <= 40; k++){
@@ -293,7 +293,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("100000100", "I00S00F00"));	
 		for(int i = 1; i <= 20; i++){
 			String ile = (i < 10)?"0"+i:""+i;
-			for(int j = 1; j <= 3; j++){
+			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
 				for(int k = 1; k <= 15; k++){
 					String fish = (k < 10)?"0"+k:""+k;
