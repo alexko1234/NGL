@@ -107,7 +107,21 @@
 			   </div>
 			   </div> 
 			</th>
-			<th></th>
+			<th>
+               <div ng-switch on="mainService.isEditMode()"> 
+               <div ng-switch-when="false">   
+                   <span class="form-control-static" ng-bind="outputContainer.conc_unit"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+               	   <select class="form-control input-sm" 
+								ng-change="updateOuputContainers(atmService.data.atm, 'conc_unit', outputContainer.conc_unit)"
+								ng-model="outputContainer.conc_unit">
+							      <option value="nM">nM</option> 
+							      <option value="ng/µl">ng/µl</option>	
+					</select>	
+			   </div>
+			   </div> 
+			</th>
 			<th>
                <div ng-switch on="mainService.isEditMode()"> 
                <div ng-switch-when="false">   
@@ -134,8 +148,7 @@
 			   </div>   
 			</th>		
 		</tr>
-		<!-- FIN ajout TR -->
-		}
+		}<!-- FIN ajout TR pour CNG -->
 <thead>
 
 

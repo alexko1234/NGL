@@ -108,16 +108,17 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			}
 			atm.outputContainerUseds[0].experimentProperties.workName.value=$scope.outputContainer.experimentRootWorkName+atm.viewIndex;
 			*/
-			/* methode angular*/
+			/* methode angular => parse + assign*/
+			// 10/09/2016 bug si on supprime un pool puis on en recrée un => le dernier workname est en doublon!!!
 			$parse('experimentProperties.workName.value').assign(atm.outputContainerUseds[0],$scope.outputContainer.experimentRootWorkName+atm.viewIndex);
 		}
 	};
 	
-    // Pseudo header de datatable => mise a jour des outputContainers
+    // Pseudo header de datatable => mise a jour de tous les outputContainers
 	$scope.updateOuputContainers = function (atm, propertyName, propertyValue){
-	    //console.log (" updateOuputContainers :"+ propertyName + " changed");
+	    console.log (" updateOuputContainers :"+ propertyName + " changed");
 		if (atm){
-			//console.log ("updating all ATMs "+ propertyName +" with :" + propertyValue);
+			console.log ("updating all ATMs "+ propertyName +" with :" + propertyValue);
 		    atm.forEach(function(a){	
 		    	
 		    	 if ((propertyName === "supportStorageCode") && propertyValue)  {
@@ -153,7 +154,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 						})
 			 			console.log("compute buffer volume");
 			 			computeBufferVolume(a);
-			     }
+			 			
+			     } else if  (propertyName === "conc_unit" ) {
+			    	 a.outputContainerUseds[0].concentration.unit=propertyValue;
+			     }		    	 
 		    })
 		}
     };
@@ -344,12 +348,14 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	$scope.lines=["A","B","C","D","E","F","G","H"];  
 	
     // rootWorkName= préfixe par defaut pour génération automatique des labels de travail
-    $scope.outputContainer = { supportCode: null, supportStorageCode: null, experimentRootWorkName:"pool", concentration: null, volume: null};
+    $scope.outputContainer = { supportCode: null, supportStorageCode: null, experimentRootWorkName:"pool", concentration: null, conc_unit: null, volume: null};
     
     // 01/10/2016--------------------------- pooling "automatique"--------------------------------------------------------------------
-    // HARDCODER les paramètres des modes prédéfinis ( numtype=type de numérotation  L:en ligne C: en colonne )
+    //           ne pas encore tout mettre en service...
+    // 10/11/2016 ajout mode 'MOUSE' et modification du mode fonctionnement=> passer par le bouton "=>]" pour lancer la creation des pools
     if ( $scope.experiment.instrument.typeCode === "janus") {	
     	$scope.poolingModes=[ 
+    	                     {code: 'MOUSE', name:'libre'},
                            //{code: 'L4',  name:'Ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
                            //{code: 'L6',  name:'Ligne 6-p',    poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
                            //{code: 'IS4', name:'Ill Sing 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
@@ -359,14 +365,34 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
                             ];
     } else if ( $scope.experiment.instrument.typeCode === "epmotion") {	
     	$scope.poolingModes=[ 
+    	                     {code: 'MOUSE', name:'libre'},
     	                     {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
     	                     {code: 'C6',  name:'Col 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
     	                    ];
     } 
 
+    // 10/11/2016 ajout doPooling pour remplacer l'ancien fonctionnement
+    $scope.doPooling=function (){
+    	//console.log( "poolingMode ="+ $scope.poolingMode.name);
+    	
+    	if ( $scope.poolingMode.code === "MOUSE") {
+    		// traiter le pool créé a la main
+    	    $scope.atmService.data.dropInSelectInputContainer();
+    	} else {
+    		//lancer la creation auto
+    		autoPooling($scope.poolingMode)
+    	} 	
+    }
+    
+    // 10/11/2016 ajout setPoolingMode  !!! pourquoi l'assignation par ng-model ne le fait pas automatiquement ????
+    $scope.setPoolingMode=function(p){
+    	//console.log( "DEBUG selected poolingMode ="+ p.name);
+    	$scope.poolingMode=p; 
+    }
+    
     $scope.poolingMode=null;
-    $scope.autoPooling =function (poolingMode){
-    	// vérifier qu'on a une seule plaque en entree
+    var autoPooling =function (poolingMode){
+    	// vérifier qu'on a une seule plaque en entree en mode automatique
     	// ca marche mais il faudrait le détecter plus tot !!
     	if ($scope.atmService.data.inputContainerSupports.length > 1) {
     		$scope.messages.clear();
@@ -376,9 +402,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
     		$scope.messages.open();	
     	} else {
     		
-        	console.log( "poolingMode ="+poolingMode.name);
+        	console.log( "auto poolingMode ="+poolingMode.name);
         	console.log( "plaque en cours="+ $scope.atmService.data.getCurrentSupportCode() );
-    	
     	
         	if ( poolingMode.numtype === "L") {
         		var startPos=getPos96FromLineAndCol_L( poolingMode.startLine, poolingMode.startColumn );
