@@ -1461,12 +1461,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode],  "A-PF"));
 						
 					}else if(data[i].dispatch === 4){
-						
+						/*
 						if(nextExperimentsForExperimentType[data[i].container.fromTransformationTypeCodes[0]]){
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
 						}else{
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						}
+						*/
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}else if(data[i].dispatch === 6){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));

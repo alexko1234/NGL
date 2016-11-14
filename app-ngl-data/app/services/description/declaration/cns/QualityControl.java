@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -13,7 +14,9 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import services.description.Constants;
@@ -66,6 +69,21 @@ public class QualityControl extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newExperimentType("Ext to Eval ADN à réception","ext-to-dna-sample-valuation",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Ext to Eval ARN à réception","ext-to-rna-sample-valuation",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Ext to Eval Amplicon à réception","ext-to-amplicon-sample-valuation",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
+		
+		
 		//QC provenant de collaborateur extérieur.
 		l.add(newExperimentType("QC Exterieur","external-qc", null,22000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsExternalQC(), 
@@ -102,12 +120,46 @@ public class QualityControl extends AbstractDeclaration {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", 
-				ProcessCategory.find.findByCode("satellites"), 1001,
+				ProcessCategory.find.findByCode("satellites"), 1020,
 				null, 
-				Arrays.asList(getPET("ext-to-qc-transfert-purif",-1)), 
+				getPETForQCTransfertPurif(), 
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				null, 
+				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				null, 
+				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				null, 
+				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
 		return l;
+	}
+	
+	
+	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
+		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getPET(et.code, -1))
+			.collect(Collectors.toList());
+		pets.add(getPET("ext-to-qc-transfert-purif",-1));
+		pets.add(getPET("fluo-quantification",0));
+		return pets;		
 	}
 	
 	@Override
@@ -131,8 +183,30 @@ public class QualityControl extends AbstractDeclaration {
 	protected void getExperimentTypeNodeCommon() {
 		newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false, 
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
+		
+		newExperimentTypeNode("ext-to-dna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-dna-sample-valuation").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
+		newExperimentTypeNode("ext-to-rna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-rna-sample-valuation").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
+		newExperimentTypeNode("ext-to-amplicon-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 	
+		
+		//GA 07/11/2016 USED FOR PROCESS who start with ampure
+		newExperimentTypeNode("fluo-quantification",getExperimentTypes("fluo-quantification").get(0),false, false,false,
+				getETForFluoQuantification()
+				,null,null,null).save();
 	}
+	
+	private List<ExperimentTypeNode> getETForFluoQuantification(){
+		List<ExperimentTypeNode> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getExperimentTypeNodes(et.code).get(0))
+			.collect(Collectors.toList());
+		return pets;		
+	}
+	
+	
 	
 	@Override
 	protected void getExperimentTypeNodeDEV() {
