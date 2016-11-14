@@ -129,34 +129,22 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		 		    //console.log ("updating "+ a.outputContainerUseds[0].locationOnContainerSupport.code +"=>"+ propertyValue);
 		 		    a.outputContainerUseds[0].locationOnContainerSupport.code=propertyValue;
 		 		 
-		 		 // ces 2 cas pourraient etre fusionnés en 1 seul cas...avec $parse???
-		    	 } else if  ((propertyName === "concentration") && propertyValue) {
-			 		    //console.log ("updating "+ a.outputContainerUseds[0].concentration +"=>"+ propertyValue);
-			 		    a.outputContainerUseds[0].concentration.value=propertyValue;
-			 		    
-			 		    // recalculer les volumes engagés et buffer
-			 		    //console.log("compute all input volumes");
-			 			angular.forEach(a.inputContainerUseds, function(inputContainerUsed){
-						computeInputVolume(inputContainerUsed, atm);
-						});
-			 		    
-			 			//console.log("compute buffer volume");
-			 			computeBufferVolume(a);
-			 		    
-			     } else if  ((propertyName === "volume" && propertyValue)) {
-			 		    //console.log ("updating "+ a.outputContainerUseds[0].volume +"=>"+ propertyValue);
-			 		    a.outputContainerUseds[0].volume.value=propertyValue;
-			 		    
+		    	 } else if  (((propertyName === "concentration")||(propertyName === "volume")) && propertyValue) {
+			 		    //console.log ("updating "+propertyName+".value =>"+ propertyValue);
+			 		    $parse(propertyName+'.value').assign(a.outputContainerUseds[0],propertyValue);
+			 		   
 			 		    // recalculer les volumes engagés et buffer
 			 		    console.log("compute all input volumes");
 			 			angular.forEach(a.inputContainerUseds, function(inputContainerUsed){
-							computeInputVolume(inputContainerUsed, a);
-						})
+						computeInputVolume(inputContainerUsed, a);
+						});
+			 		    
 			 			console.log("compute buffer volume");
 			 			computeBufferVolume(a);
 			 			
 			     } else if  (propertyName === "conc_unit" ) {
-			    	 a.outputContainerUseds[0].concentration.unit=propertyValue;
+			    	 //console.log ("updating concentration.unit =>"+ propertyValue);
+			    	 $parse('concentration.unit').assign(a.outputContainerUseds[0],propertyValue);
 			     }		    	 
 		    })
 		}
@@ -258,7 +246,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			var bufferVolume = {value : undefined, unit : 'µL'};
 			var result = outputVolume.value - inputVolumeTotal;
 			
-			// FDS laisser les cas negatifs...permet de voir qu'il y a un pb...!!
+			// Julie->FDS: laisser les cas negatifs...permet de voir qu'il y a un pb...!!
 			if(angular.isNumber(result) && !isNaN(result)){
 				bufferVolume.value = Math.round(result*10)/10;				
 			}else{

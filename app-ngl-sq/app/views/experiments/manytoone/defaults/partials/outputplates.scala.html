@@ -78,75 +78,39 @@
 			</th>
 		</tr>
 		
-		<!--26/10/2016 FDS ajout TR -->
-		<tr ng-if="!atmService.data.isAllATMViewClose">
+		<!--26/10/2016 FDS ajout TR; 14/11/2016 ne rien afficher du tout si pas edit mode... -->
+		<tr ng-if="!atmService.data.isAllATMViewClose && mainService.isEditMode()">
 			<th colspan="9"></th>
 			<th ng-repeat="property in inputContainerProperties track by $index"></th>
 			<th>
-			  <!--  Pour des tubes permet de mettre un motif commun...-->
-               <div ng-switch on="mainService.isEditMode()"> 
-               <div ng-switch-when="false">   
-                   <span class="form-control-static" ng-bind="outputContainer.supportCode"></span>    
-               </div>                           
-               <div ng-switch-when="true">
                    <input class="form-control input-sm" type="text" id="plateCode"
 									                    ng-change="updateOuputContainers(atmService.data.atm,'supportCode',outputContainer.supportCode)"
 			  							                ng-model="outputContainer.supportCode" />	
-			   </div>
-			   </div>   
 			</th>			
 			<th colspan="2"></th>
 			<th>
-               <div ng-switch on="mainService.isEditMode()"> 
-               <div ng-switch-when="false">   
-                   <span class="form-control-static" ng-bind="outputContainer.concentration"></span>    
-               </div>                           
-               <div ng-switch-when="true">
                    <input class="form-control input-sm" type="text" id="concentration"
 									                    ng-change="updateOuputContainers(atmService.data.atm,'concentration',outputContainer.concentration)"
 			  							                ng-model="outputContainer.concentration" />	
-			   </div>
-			   </div> 
 			</th>
 			<th>
-               <div ng-switch on="mainService.isEditMode()"> 
-               <div ng-switch-when="false">   
-                   <span class="form-control-static" ng-bind="outputContainer.conc_unit"></span>    
-               </div>                           
-               <div ng-switch-when="true">
                	   <select class="form-control input-sm" 
 								ng-change="updateOuputContainers(atmService.data.atm, 'conc_unit', outputContainer.conc_unit)"
 								ng-model="outputContainer.conc_unit">
 							      <option value="nM">nM</option> 
 							      <option value="ng/µl">ng/µl</option>	
 					</select>	
-			   </div>
-			   </div> 
 			</th>
 			<th>
-               <div ng-switch on="mainService.isEditMode()"> 
-               <div ng-switch-when="false">   
-                   <span class="form-control-static" ng-bind="outputContainer.volume"></span>    
-               </div>                           
-               <div ng-switch-when="true">
                    <input class="form-control input-sm" type="text" id="volume"
 									                    ng-change="updateOuputContainers(atmService.data.atm,'volume',outputContainer.volume)"
 			  							                ng-model="outputContainer.volume" />	
-			   </div>
-			   </div> 
 			</th>			
 			<th ng-repeat="property in outputContainerProperties track by $index"></th>
 			<th>
-               <div ng-switch on="mainService.isEditMode()"> 
-               <div ng-switch-when="false">   
-                   <span class="form-control-static" ng-bind="outputContainer.supportStorageCode"></span> 
-               </div>
-               <div ng-switch-when="true">
                   <input class="form-control input-sm" type="text" id="plateStorageCode"
 									                   ng-change="updateOuputContainers(atmService.data.atm,'supportStorageCode',outputContainer.supportStorageCode)"
 			 						                   ng-model="outputContainer.supportStorageCode" />	
-			   </div>
-			   </div>   
 			</th>		
 		</tr>
 		<!-- FIN ajout TR -->

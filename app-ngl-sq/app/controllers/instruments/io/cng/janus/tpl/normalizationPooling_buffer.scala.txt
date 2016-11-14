@@ -3,7 +3,7 @@
 @import controllers.instruments.io.utils._;
 
 @*** FDS: déclarations de variables avec le mot clé 'var' et toutes sur une seule ligne 
-   pas réussi avec BigDecimal....
+  pas réussi avec BigDecimal....
   @import java.math.BigDecimal; var buffer_vol=0.0;
   @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.parseFloat()}
     ni
@@ -16,6 +16,7 @@
 CRLF pour le header
 Destination rack: HARDCODED="1" [ 1 seule plaque en sortie possible ? ]
 correction séparateur "," 
+FDS correction 14/11/2016 le destination rack doit s'appeller "poolplate"
 ***@
 
 Destination rack,Destination position,volume\u000D\u000A
@@ -25,6 +26,6 @@ Destination rack,Destination position,volume\u000D\u000A
 			 @{dest_pos=OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line, c.locationOnContainerSupport.column)}
 			 @{buffer_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.toString() }
 			 
-			 1,@(dest_pos),@(buffer_vol)\u000D\u000A
+			 poolplate,@(dest_pos),@(buffer_vol)\u000D\u000A
 		}	
 } 
