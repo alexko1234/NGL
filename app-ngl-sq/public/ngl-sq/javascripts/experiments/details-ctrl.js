@@ -1461,12 +1461,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode],  "A-PF"));
 						
 					}else if(data[i].dispatch === 4){
-						
+						/*
 						if(nextExperimentsForExperimentType[data[i].container.fromTransformationTypeCodes[0]]){
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
 						}else{
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						}
+						*/
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}else if(data[i].dispatch === 6){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
@@ -1717,7 +1719,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			var initNextExperimentAvailable = function(fromTransformationTypeCodes){
 				var fromTransformationTypeCode = fromTransformationTypeCodes[0];			
 				var key = fromTransformationTypeCode;
-				if(undefined === nextExperimentsForExperimentType[key]){	
+				if(undefined === nextExperimentsForExperimentType[key]){
+					nextExperimentsForExperimentType[key] = [];
 					$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,{params:{previousExperimentTypeCode:fromTransformationTypeCode}})
 						.success(function(data, status,headers,config){
 							var isNextExperimentType = (data.length > 0) ? true:false;	
