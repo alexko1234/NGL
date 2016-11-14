@@ -224,6 +224,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("ABS", "BGC-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("AI", "IMG-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
+		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		return values;	
 	}
 	
@@ -256,11 +257,13 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<Value> getTaraPacificStationValues(){
 		List<Value> values = new ArrayList<Value>();
 		//Miami first reception end june 
-		//toutes les OA-001 à 066
+		//toutes les OA-001 à 150
 				
-		for(int i = 0; i <= 66 ; i++){
+		for(int i = 0; i <= 150 ; i++){
 			if(i < 10){
 				values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
+			}else if(i > 99){
+				values.add(DescriptionFactory.newValue("20"+i, "OA-"+i));
 			}else{
 				values.add(DescriptionFactory.newValue("200"+i, "OA-0"+i));
 			}
