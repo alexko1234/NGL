@@ -211,7 +211,13 @@ public class InstanceHelpers {
 		sampleOnInputContainer.percentage = content.percentage;
 		sampleOnInputContainer.properties = content.properties;
 
-		sampleOnInputContainer.referenceCollab = getReferenceCollab(content.sampleCode);		
+		Sample sample = getSample(content.sampleCode);
+		
+		sampleOnInputContainer.referenceCollab = sample.referenceCollab;
+		sampleOnInputContainer.ncbiScientificName = sample.ncbiScientificName;
+		sampleOnInputContainer.taxonCode = sample.taxonCode;
+		
+		sampleOnInputContainer.containerConcentration = container.concentration;
 		sampleOnInputContainer.containerCode = container.code;
 		sampleOnInputContainer.containerSupportCode = container.support.code;
 		sampleOnInputContainer.containerVolume = container.volume;
@@ -234,8 +240,12 @@ public class InstanceHelpers {
 		sc.sampleCategoryCode = content.sampleCategoryCode;
 		sc.percentage = content.percentage;
 		sc.properties = content.properties;
-		sc.referenceCollab = getReferenceCollab(readSet.sampleCode);
 		sc.containerConcentration = container.concentration;
+		
+		Sample sample = getSample(content.sampleCode);
+		sc.referenceCollab = sample.referenceCollab;
+		sc.ncbiScientificName = sample.ncbiScientificName;
+		sc.taxonCode = sample.taxonCode;
 		
 		return sc;
 	}
@@ -289,9 +299,15 @@ public class InstanceHelpers {
 		return (codeParts.length == 2) ? codeParts[1] : null;
 	}
 	
-	public static String getReferenceCollab(String sampleCode){
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
+	
+	private static Sample getSample(String sampleCode){
+		return MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
 				DBQuery.is("code", sampleCode));
+	}
+	
+	
+	public static String getReferenceCollab(String sampleCode){
+		Sample sample = getSample(sampleCode);
 		return sample.referenceCollab;
 	}
 
