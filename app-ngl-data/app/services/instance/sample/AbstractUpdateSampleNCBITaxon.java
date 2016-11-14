@@ -39,7 +39,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 			
 			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
 					DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage)
-					.set("traceInformation.modifyDate",new Date() ));
+					.set("traceInformation.modifyDate",new Date() ).set("traceInformation.modifyUser","ngl-data"));
 						
 			if(ncbiScientificName==null)
 				contextError.addErrors(sample.code, "no scientific name ");

@@ -42,7 +42,7 @@ GET		/migration-percentage-content			controllers.migration.AddPercentageContent.
 GET		/migration-runstartdate-opgen-depot		controllers.migration.AddRunStartDateToOpgenDepot.migration()
 
 GET 	/migration-update-support-plaque		controllers.migration.cns.MigrationUpdateSupportPlaque.migration()
-GET		/migration-reference-collab				controllers.migration.cns.MigrationSampleReferenceCollab.migration()
+GET		/migration-sample_info					controllers.migration.cns.MigrationSampleInformations.migration()
 GET		/migration-valuation-container			controllers.migration.cns.MigrationValuationContainer.migration()
 
 GET		/migration-tara							controllers.migration.cns.MigrationTara.migration()

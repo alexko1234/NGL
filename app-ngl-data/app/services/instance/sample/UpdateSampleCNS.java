@@ -52,7 +52,7 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 			Sample newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextValidation,true);
 			if(!contextValidation.hasErrors()){
 				limsServices.updateMaterielLims(newSample, contextError);
-
+				/*
 				SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 				ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
@@ -67,7 +67,10 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 
 				SampleHelper.updateSampleProperties(sampleCode, properties,contextError);
 				SampleHelper.updateSampleReferenceCollab(sample,contextError);
-
+				*/
+				
+				UpdateSamplePropertiesCNS.updateOneSample(newSample, contextError);
+				
 			}else {
 				contextError.errors.putAll(contextValidation.errors);
 			}

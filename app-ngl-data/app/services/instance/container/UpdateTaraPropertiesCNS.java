@@ -54,12 +54,12 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 		//Logger.debug("Nb Map Tara"+taraPropertyList.size());
 		for(Map<String,PropertyValue> taraProperties : taraPropertyList){
 	
-			Integer limsCode=Integer.valueOf(taraProperties.get(LimsCNSDAO.LIMS_CODE).value.toString());
-			//Logger.debug("Tara lims Code :"+limsCode);
 			if(!taraProperties.containsKey(LimsCNSDAO.LIMS_CODE)){
 				contextError.addErrors(LimsCNSDAO.LIMS_CODE,"error.codeNotExist","");
 			}else {
-	
+				Integer limsCode=Integer.valueOf(taraProperties.get(LimsCNSDAO.LIMS_CODE).value.toString());
+				Logger.debug("Tara lims Code :"+limsCode);
+				
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("properties.limsCode.value",limsCode)).toList();
 	
 				if(samples.size()==1 ){
@@ -74,15 +74,26 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					
 					String importTypeCode=DataMappingCNS.getImportTypeCode(true,adaptater);
 					
-					taraProperties.remove(LimsCNSDAO.LIMS_CODE);
-					ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).getPropertyDefinitionByLevel(Level.CODE.Content));
-					
+					/*NEW ALGO*/
+					sample.properties.putAll(taraProperties);
+					sample.importTypeCode = importTypeCode;
+					sample.traceInformation.setTraceInformation("ngl-data");
+					contextError.setUpdateMode();
+					sample.validate(contextError);
+					if(!contextError.hasErrors()){
+						
+						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sample);
+					}
+					//OLD ALGO
+					//taraProperties.remove(LimsCNSDAO.LIMS_CODE);
+					//ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).getPropertyDefinitionByLevel(Level.CODE.Content));
+					/*
 					if(!importTypeCode.equals(sample.importTypeCode)){
 						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",importTypeCode));
 					}
 					
 					SampleHelper.updateSampleProperties(sample.code,taraProperties,contextError);
-					
+					*/
 				}
 			}
 	
