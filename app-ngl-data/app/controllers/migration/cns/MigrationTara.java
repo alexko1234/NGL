@@ -68,7 +68,7 @@ public class MigrationTara extends AbstractMigration {
 			if(sample.typeCode!=null && importType!=null){
 				ValidationHelper.validateProperties(contextValidation,taraProperties, importType.getPropertiesDefinitionSampleLevel());
 			}
-			SampleHelper.updateSampleProperties(sample.code, taraProperties, contextValidation);
+			//SampleHelper.updateSampleProperties(sample.code, taraProperties, contextValidation);
 		}
 		
 		contextValidation.displayErrors(logger);

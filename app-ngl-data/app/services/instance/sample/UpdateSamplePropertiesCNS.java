@@ -79,20 +79,20 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 		Map<String,DBUpdate.Builder> updates=new HashMap<String, DBUpdate.Builder>();
 		DBUpdate.Builder updateSample = new DBUpdate.Builder();
-		DBUpdate.Builder updateContainer = new DBUpdate.Builder();
+		//DBUpdate.Builder updateContainer = new DBUpdate.Builder();
 		DBUpdate.Builder updateReadSet = new DBUpdate.Builder();
 		DBUpdate.Builder updateProcess = new DBUpdate.Builder();
 		
 		properties.forEach((k,v) -> {
 			Logger.debug("properties "+k+" value "+v);
 			updateSample.set("properties."+k,v);
-			updateContainer.set("contents.$.properties."+k,v);
+			//updateContainer.set("contents.$.properties."+k,v);
 			updateReadSet.set("sampleOnContainer.properties."+k,v);
 			updateProcess.set("sampleOnInputContainer.properties."+k,v);
 		});		
 		
 		updates.put("sample",updateSample);
-		updates.put("container",updateContainer);
+		//updates.put("container",updateContainer);
 		updates.put("readset",updateReadSet);
 		updates.put("process",updateProcess);
 		

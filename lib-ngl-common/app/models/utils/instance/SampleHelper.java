@@ -29,7 +29,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class SampleHelper {
 	
-	
+	/* 10/11/2016 GA DO NOT USED ANYMORE
 	public static void updateSampleProperties(String sampleCode, Map<String,PropertyValue>  properties,ContextValidation contextValidation){
 		
 		if(properties !=null){
@@ -61,7 +61,7 @@ public class SampleHelper {
 		}
 		
 	}
-
+	*/
 	//Return true if sample deleted 
 	//Return false if error sample => Sample must be update
 	public static boolean deleteSample(String sampleCode,ContextValidation contextValidation) {
@@ -92,7 +92,7 @@ public class SampleHelper {
 		return true;
 
 	}
-
+	/* 10/11/2016 GA DO NOT USED ANYMORE
 	public static void updateSampleReferenceCollab(Sample sample, ContextValidation contextError) {
 			
 			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
@@ -112,20 +112,7 @@ public class SampleHelper {
 					DBUpdate.set("sampleOnInputContainer.referenceCollab",sample.referenceCollab),true);
 		
 	}
-	
-	
-	public static void updateSampleTaxon(Sample sample, ContextValidation contextError) {
-				
-		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-				 DBQuery.is("contents.sampleCode", sample.code),
-				DBUpdate.set("contents.$.taxonCode",sample.taxonCode)
-				.set("contents.$.ncbiScientificName", sample.ncbiScientificName),true);					
-		
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
-				DBQuery.is("sampleOnContainer.sampleCode", sample.code),
-				DBUpdate.set("sampleOnContainer.taxonCode",sample.taxonCode)
-				.set("sampleOnContainer.ncbiScientificName", sample.ncbiScientificName),true);
-	}	
+	*/
 	
 	public static void executeRules(Sample sample,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();

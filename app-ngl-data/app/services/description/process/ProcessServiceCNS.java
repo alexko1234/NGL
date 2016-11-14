@@ -37,6 +37,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 
 		}
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Evaluation à reception", "sample-valuation"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Préparation échantillon", "sample-prep"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque Illumina", "library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque Nanopore", "nanopore-library"));

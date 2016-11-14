@@ -127,8 +127,8 @@ public class ProcessesTest extends AbstractTests{
 		String supportCode = InitDataHelper.getSupportCodesInContext("flowcell-8").get(0);
 		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));	
 		cs.state.code="IW-P";
-		process.projectCodes = cs.projectCodes.toArray(new String[0])[0];
-		process.sampleCodes = cs.sampleCodes.toArray(new String[0])[0];
+		process.projectCodes = cs.projectCodes;
+		process.sampleCodes = cs.sampleCodes;
 		
 		process.code = CodeHelper.getInstance().generateProcessCode(process);
 		Process pro1 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);

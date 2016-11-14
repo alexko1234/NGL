@@ -81,7 +81,7 @@ public class ProcessControllerTests extends AbstractTests {
 		public void validateSaveFromSupportIlluminaRunProcess() throws JsonParseException, JsonMappingException, IOException{
 			ContainerSupport cs =  MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.and(DBQuery.regex("code", Pattern.compile("^ASR")),DBQuery.is("state.code", "IW-P"))).toList().get(0);		
 			Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");
-			process.projectCodes = cs.projectCodes.toArray(new String[0])[0];
+			process.projectCodes = cs.projectCodes;
 			process.properties = new HashMap<String, PropertyValue>();
 			process.properties.put("estimatedPercentPerLane", new PropertySingleValue("50"));
 			process.properties.put("readLength", new PropertySingleValue("100"));
@@ -131,7 +131,7 @@ public class ProcessControllerTests extends AbstractTests {
 			List<Process> processes=mapper.readValue(play.test.Helpers.contentAsString(result),new TypeReference<List<Process>>(){});
 			
 			assertThat(processes.size()).isEqualTo(1);
-			assertThat(processes.get(0).projectCodes).isEqualTo("ADI");
+			assertThat(processes.get(0).projectCodes).contains("ADI");
 			
 			result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest("GET","?datatable=true&projectCode=XXX"));
 			assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
