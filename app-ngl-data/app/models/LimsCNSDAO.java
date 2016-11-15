@@ -741,7 +741,7 @@ public class LimsCNSDAO{
 	public List<String> findSampleUpdated(List<String> sampleCodes) {
 		String sql="select code=rtrim(prsco)+'_'+rtrim(adnnom) from Materiel m, Useadn u where u.adnco=m.adnco and ";
 		if(sampleCodes==null){
-			sql=sql+"  datediff(day,uaddm,uadInNGL)<0";
+			sql=sql+"  uaddm > uadInNGL";
 		}else {
 			//Pour les tests unitaires
 			sql=sql+" rtrim(prsco)+'_'+rtrim(adnnom) in (";
