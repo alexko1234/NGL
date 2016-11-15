@@ -3,6 +3,7 @@ package controllers.migration.cns;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -29,7 +30,7 @@ public class MigrationExperimentProperties extends CommonController{
 
 	protected static List<Experiment> getListExperiments(Query query)
 	{
-		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).toList();
+		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).limit(1).toList();
 	}
 
 	protected static void checkATMExperiment(Experiment experiment)
@@ -79,6 +80,21 @@ public class MigrationExperimentProperties extends CommonController{
 			for(String codeContainer : containerCodes){
 				Logger.debug("Update container code "+codeContainer);
 				updateContainer(codeContainer, keyProperty, propValue, addToRun);
+			}
+		});
+	}
+	
+	protected static void updateOutputContainerTreeOfLife(AtomicTransfertMethod atm, String keyProperty, PropertyValue propValue, boolean addToRun)
+	{
+		//Get outputContainer
+		atm.outputContainerUseds.stream().forEach(output->{
+			Logger.debug("Get outputContainerCode "+output.code);
+			updateContainer(output.code, keyProperty, propValue, addToRun);
+			//Get list of all Container in process
+			List<Container> containerOuts = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.regex("treeOfLife.paths", Pattern.compile(","+output.code))).toList();
+			for(Container container : containerOuts){
+				Logger.debug("Update container code "+container.code);
+				updateContainer(container.code, keyProperty, propValue, addToRun);
 			}
 		});
 	}
