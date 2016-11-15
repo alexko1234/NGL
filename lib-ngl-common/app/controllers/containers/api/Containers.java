@@ -466,16 +466,12 @@ public class Containers extends CommonController {
 			
 			
 		} else if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
-			
-			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes) || containersSearch.fromTransformationTypeCodes.contains("none")){
+			if(containersSearch.fromTransformationTypeCodes.contains("none")){
 					queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")
-					,DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes)));
-			}
-			else {
+					, DBQuery.regex("fromTransformationTypeCodes", Pattern.compile("^ext-to-.+$")),DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes)));
+			} else {
 				queryElts.add(DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes));
-
 			}
-				
 		}
 		
 		

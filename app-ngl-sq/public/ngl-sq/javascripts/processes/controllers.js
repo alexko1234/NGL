@@ -273,12 +273,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		
 		if((_form.processCategory && _form.nextProcessTypeCode) || _form.createUser){			
 			_form.stateCode = 'IW-P';
-			
-			if(_form.fromTransformationTypeCodes){			
-				_form.isEmptyFromExperimentTypeCodes = false;
-			}
-
-
 			if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
 
