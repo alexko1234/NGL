@@ -32,7 +32,7 @@ public class ProcWorkflows extends Workflows<Process> {
 	public void applyCurrentStateRules(ContextValidation validation,
 			Process object) {
 		// TODO Auto-generated method stub
-		
+		//TODO Update container properties
 	}
 	
 	@Override

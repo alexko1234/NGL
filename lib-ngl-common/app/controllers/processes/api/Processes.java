@@ -10,11 +10,13 @@ import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -28,6 +30,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
@@ -195,6 +198,72 @@ public class Processes extends DocumentController<Process> {
 	}
 	
 	
+	@Permission(value={"writing"})
+	public Result save(){	
+		Form<Process> filledForm = getMainFilledForm();
+		Process input = filledForm.get();		
+		List<Process> processes = new ArrayList<Process>();	
+
+		if (null == input._id) {			//init state
+			//the trace
+			input.traceInformation = new TraceInformation();
+			input.traceInformation.setTraceInformation(getCurrentUser());
+			if(null == input.state){
+				input.state = new State();
+			}
+			input.state.code = "N";
+			input.state.user = getCurrentUser();
+			input.state.date = new Date();
+		}else {
+			return badRequest("use PUT method to update the process");
+		}
+
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
+		contextValidation.setCreationMode();
+		
+
+		if(contextValidation.hasErrors())
+		{
+			return badRequest(filledForm.errorsAsJson());
+		}else {
+			return ok(Json.toJson(processes));
+		}
+	}
+	
+	@Permission(value={"writing"})
+	public Result update(String code){
+		Process objectInDB = getObject(code);
+		if(objectInDB == null){
+			return notFound("Process with code "+code+" does not exist");
+		}
+
+		Form<Process> filledForm = getMainFilledForm();
+		Process input = filledForm.get();
+		if (input.code.equals(code)) {
+			if(null != input.traceInformation){
+				input.traceInformation = getUpdateTraceInformation(input.traceInformation);
+			}else{
+				Logger.error("traceInformation is null !!");
+			}
+			
+			if(!objectInDB.state.code.equals(input.state.code)){
+				return badRequest("you cannot change the state code. Please used the state url ! ");
+			}
+
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ctxVal.setUpdateMode();
+			workflows.applyCurrentStateRules(ctxVal, input);
+			input.validate(ctxVal);			
+			if (!ctxVal.hasErrors()) {									
+				updateObject(input);	
+				return ok(Json.toJson(input));
+			}else {
+				return badRequest(filledForm.errorsAsJson());			
+			}
+		}else{
+			return badRequest("process code are not the same");
+		}
+	}
 	
 	@Permission(value={"writing"})
 	public Result updateState(String code){

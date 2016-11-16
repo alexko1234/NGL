@@ -29,15 +29,15 @@ GET		/api/container-categories										controllers.containers.api.ContainerCate
 GET		/api/processes													@controllers.processes.api.Processes.list()
 GET		/api/processes/:code											@controllers.processes.api.Processes.get(code:java.lang.String)
 HEAD	/api/processes/:code               								@controllers.processes.api.Processes.head(code: java.lang.String)
-
+POST	/api/processes													@controllers.processes.api.Processes.save()
+PUT		/api/processes/:code											@controllers.processes.api.Processes.update(code:java.lang.String)
 PUT		/api/processes/batch/state										@controllers.processes.api.Processes.updateStateBatch()
 PUT		/api/processes/:code/state										@controllers.processes.api.Processes.updateState(code:java.lang.String)
-
 DELETE	/api/processes/:code											@controllers.processes.api.Processes.delete(code:java.lang.String)
 
-POST	/api-old/processes													controllers.processes.api.ProcessesOld.save()
-POST	/api-old/processes/batch											controllers.processes.api.ProcessesOld.saveBatch()
-PUT		/api-old/processes/:code											controllers.processes.api.ProcessesOld.update(code:java.lang.String)
+#POST	/api-old/processes													controllers.processes.api.ProcessesOld.save()
+#POST	/api-old/processes/batch											controllers.processes.api.ProcessesOld.saveBatch()
+#PUT		/api-old/processes/:code											controllers.processes.api.ProcessesOld.update(code:java.lang.String)
 
 #PUT		/api-old/processes/batch/state										controllers.processes.api.ProcessesOld.updateStateBatch()
 #PUT		/api-old/processes/:code/state										controllers.processes.api.ProcessesOld.updateState(code:java.lang.String)

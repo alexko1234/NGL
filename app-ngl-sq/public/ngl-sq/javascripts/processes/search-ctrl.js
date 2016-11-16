@@ -25,7 +25,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			},
 			save:{
 				active:Permissions.check("writing")?true:false,
-				url:function(line){return jsRoutes.controllers.processes.api.ProcessesOld.update(line.code).url;},
+				url:function(line){return jsRoutes.controllers.processes.api.Processes.update(line.code).url;},
 				mode:'remote',
 				method:'put',
 			},
