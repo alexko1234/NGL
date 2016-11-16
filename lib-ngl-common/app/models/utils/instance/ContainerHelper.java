@@ -57,6 +57,8 @@ public class ContainerHelper {
 		finalContent.projectCode = content.projectCode;
 		finalContent.percentage=content.percentage;
 		finalContent.referenceCollab=content.referenceCollab;
+		finalContent.taxonCode=content.taxonCode;
+		finalContent.ncbiScientificName=content.ncbiScientificName;
 		
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
