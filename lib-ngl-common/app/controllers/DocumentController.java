@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.List;
+
 import models.laboratory.common.instance.TraceInformation;
 import fr.cea.ig.DBObject;
 
@@ -7,6 +9,11 @@ public class DocumentController<T extends DBObject> extends MongoCommonControlle
 
 	protected DocumentController(String collectionName, Class<T> type) {
 		super(collectionName, type);
+		
+	}
+	
+	protected DocumentController(String collectionName, Class<T> type, List<String> defaultKeys) {
+		super(collectionName, type, defaultKeys);
 		
 	}
 	

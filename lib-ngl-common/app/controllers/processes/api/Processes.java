@@ -7,34 +7,34 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.Container;
+import models.laboratory.processes.instance.Process;
+import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.mvc.Result;
+import validation.ContextValidation;
+import validation.utils.ValidationConstants;
+
 import com.mongodb.BasicDBObject;
 
-import play.Logger;
-import play.data.Form;
-import play.libs.Json;
-import play.mvc.Result;
-import play.mvc.Results;
-import views.components.datatable.DatatableResponse;
-import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.Container;
-import models.laboratory.processes.instance.Process;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-import models.utils.dao.DAOException;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Processes extends DocumentController<Process> {
 
@@ -48,35 +48,16 @@ public class Processes extends DocumentController<Process> {
 	@Permission(value={"reading"})
 	public Result list(){
 		ProcessesSearchForm searchForm = filledFormQueryString(ProcessesSearchForm.class);
-		DBQuery.Query query = getQuery(searchForm);
-
-		if(searchForm.datatable){
-			MongoDBResult<Process> results =  mongoDBFinder(searchForm, query);
-			List<Process> processes = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Process>(processes, results.count())));
-		}else if (searchForm.list){
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
-			if(null == searchForm.orderBy)searchForm.orderBy = "code";
-			if(null == searchForm.orderSense)searchForm.orderSense = 0;				
-
-			MongoDBResult<Process> results = mongoDBFinder(searchForm, query, keys);
-			List<Process> processes = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
-			for(Process p: processes){					
-				los.add(new ListObject(p.code, p.code));								
-			}
-			return Results.ok(Json.toJson(los));
+		if(searchForm.reporting){
+			return nativeMongoDBQuery(searchForm);
 		}else{
-			if(null == searchForm.orderBy)searchForm.orderBy = "code";
-			if(null == searchForm.orderSense)searchForm.orderSense = 0;
-			MongoDBResult<Process> results = mongoDBFinder(searchForm, query);
-			List<Process> processes = results.toList();
-			return ok(Json.toJson(processes));
+			DBQuery.Query query = getQuery(searchForm);
+			return mongoJackQuery(searchForm, query);			
 		}
 	}
 	
+	
+
 	/**
 	 * Construct the process query
 	 * @param processesSearch
@@ -200,5 +181,37 @@ public class Processes extends DocumentController<Process> {
 		}
 
 		return query;
+	}
+	
+	
+	@Permission(value={"writing"})
+	public Result delete(String code) throws DAOException{
+		Process process = getObject(code);
+		if(process == null){
+			return notFound("Process with code "+code+" does not exist");
+		}
+		
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
+		if(container==null){
+			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
+		}
+		
+		DynamicForm deleteForm = form();
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
+		
+		if(!process.state.code.equals("N")){
+			contextValidation.addErrors("process", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
+		}else if(CollectionUtils.isNotEmpty(process.experimentCodes)){
+			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
+		}else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)){
+			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
+		}
+
+		if(!contextValidation.hasErrors()){
+			return super.delete(code);
+		}else {
+			return badRequest(deleteForm.errorsAsJson());
+		}
+		
 	}
 }

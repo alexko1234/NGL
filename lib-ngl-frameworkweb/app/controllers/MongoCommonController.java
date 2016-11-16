@@ -1,15 +1,21 @@
 package controllers;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import org.bson.BSONObject;
+import org.jongo.MongoCollection;
+import org.jongo.MongoCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate.Builder;
 
-import org.bson.BSONObject;
-
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
+import play.modules.jongo.MongoDBPlugin;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
@@ -25,10 +31,18 @@ import fr.cea.ig.MongoDBResult.Sort;
 public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T>{
 
 	protected String collectionName;
+	protected List<String> defaultKeys;
+	
 	
 	protected MongoCommonController(String collectionName, Class<T> type) {
 		super(type);
 		this.collectionName = collectionName;
+	}
+	
+	protected MongoCommonController(String collectionName, Class<T> type, List<String> defaultKeys) {
+		super(type);
+		this.collectionName = collectionName;
+		this.defaultKeys = defaultKeys;
 	}
 
 	protected T getObject(String code) {
@@ -90,6 +104,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 
 	protected MongoDBResult<T> mongoDBFinder(ListForm form, DBQuery.Query query, BasicDBObject keys){
 		MongoDBResult<T> results = null;
+		
 		if(form.datatable){
 			results = MongoDBDAO.find(collectionName, type, query, keys) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense));
@@ -225,5 +240,145 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return ok();	
 	}
 		
+	protected Result nativeMongoDBQuery(ListForm form){
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
+		if(form.datatable){
+			return ok(getUDTChunk(all)).as("application/json");
+		}else if(form.list){
+			return ok(getChunk(all)).as("application/json");									
+		}else if(form.count){
+			int count = all.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		}else{
+			return badRequest();
+		}
+	}
 	
+	private StringChunks getChunk(MongoCursor<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				Iterator<T> iter = all.iterator();
+		    	out.write("[");
+			    while (iter.hasNext()) {
+			    	out.write(Json.toJson(iter.next()).toString());
+		            if(iter.hasNext())out.write(",");
+		        }					
+		        out.write("]");
+			    out.close();					
+			}
+		};
+	}
+	
+	private StringChunks getUDTChunk(MongoCursor<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				out.write("{\"recordsNumber\":"+all.count()+",");
+			    out.write("\"data\":[");
+			    Iterator<T> iter = all.iterator();
+			    while(iter.hasNext()){
+			    	out.write(Json.toJson(iter.next()).toString());
+		            if(iter.hasNext())out.write(",");    	
+			    }
+			    out.write("]}");
+			    out.close();				
+			}
+		};
+	}
+	
+	protected Result mongoJackQuery(ListForm searchForm, Query query) {
+		BasicDBObject keys = getKeys(updateForm(searchForm));
+		
+		if(searchForm.datatable){
+			MongoDBResult<T> results =  mongoDBFinder(searchForm, query,keys);
+			return ok(getUDTChunk(results)).as("application/json");
+		}else if (searchForm.list){
+			keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			if(null == searchForm.orderBy)searchForm.orderBy = "code";
+			if(null == searchForm.orderSense)searchForm.orderSense = 0;				
+
+			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
+			return ok(getLOChunk(results)).as("application/json");
+		}else if(searchForm.count){
+			keys = new BasicDBObject();
+			keys.put("_id", 1);//Don't need the _id field
+			MongoDBResult<T> results =  mongoDBFinder(searchForm, query);
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", results.count());
+			return ok(Json.toJson(m));
+		}else{
+			if(null == searchForm.orderBy)searchForm.orderBy = "code";
+			if(null == searchForm.orderSense)searchForm.orderSense = 0;
+			MongoDBResult<T> results = mongoDBFinder(searchForm, query,keys);
+			return ok(getChunk(results)).as("application/json");	
+		}
+	}
+	
+	protected DatatableForm updateForm(ListForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			if(null != defaultKeys){
+				form.includes.addAll(defaultKeys);
+			}
+			
+		}
+		return form;
+	}
+	
+	private StringChunks getUDTChunk(MongoDBResult<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				out.write("{\"recordsNumber\":"+all.count()+",");
+			    out.write("\"data\":[");
+			    Iterator<T> iter = all.getCursor();
+			    while(iter.hasNext()){
+			    	out.write(Json.toJson(iter.next()).toString());
+		            if(iter.hasNext())out.write(",");    	
+			    }
+			    out.write("]}");
+			    out.close();				
+			}
+		};
+	}
+	
+	private StringChunks getChunk(MongoDBResult<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				Iterator<T> iter = all.getCursor();
+		    	out.write("[");
+			    while (iter.hasNext()) {
+			    	out.write(Json.toJson(iter.next()).toString());
+		            if(iter.hasNext())out.write(",");
+		        }					
+		        out.write("]");
+			    out.close();					
+			}
+		};
+	}
+	//TODO Beter implementation to choose which property must be used to populate list_object
+	//the better way is to implement getListObject inside DBObject
+	private StringChunks getLOChunk(MongoDBResult<T> all) {
+		return new StringChunks() {
+			@Override
+			public void onReady(Out<String> out) {
+				Iterator<T> iter = all.getCursor();
+		    	out.write("[");
+			    while (iter.hasNext()) {
+			    	T o = iter.next();
+			    	out.write(Json.toJson(new ListObject(o.code, o.code)).toString());
+		            if(iter.hasNext())out.write(",");
+		        }					
+		        out.write("]");
+			    out.close();					
+			}
+		};
+	}
 }

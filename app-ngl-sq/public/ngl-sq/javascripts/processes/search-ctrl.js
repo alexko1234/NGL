@@ -155,14 +155,9 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				active:Permissions.check("writing")?true:false,
 				mode:"remote",
 				url:function(line){
-					return jsRoutes.controllers.processes.api.ProcessesOld.delete(line.code).url;
+					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
 					}
-			},
-			otherButtons :{
-	        	 active:true,
-	        	 template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
-	        	 +'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})'
-	         }
+			}
 	};
 
 	$scope.reset = function(){

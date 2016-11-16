@@ -15,10 +15,8 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 
@@ -35,10 +33,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
-import play.mvc.Results;
 import validation.ContextValidation;
-import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
 import workflows.experiment.ExpWorkflows;
 
 import com.mongodb.BasicDBObject;
@@ -47,7 +42,6 @@ import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Experiments extends DocumentController<Experiment>{
 	
@@ -55,16 +49,28 @@ public class Experiments extends DocumentController<Experiment>{
 	
 	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
-	final List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 	
 	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
 	
 	public static final String calculationsRules ="calculations";
 	
 	public Experiments() {
-		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);	
+		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);	
 	}
 	
+	
+	@Permission(value={"reading"})
+	public Result list(){
+		ExperimentSearchForm searchForm = filledFormQueryString(ExperimentSearchForm.class);
+		if(searchForm.reporting){
+			return nativeMongoDBQuery(searchForm);
+		}else{
+			DBQuery.Query query = getQuery(searchForm);
+			return mongoJackQuery(searchForm, query);			
+		}
+	}
+	/*
 	@Permission(value={"reading"})
 	public Result list(){
 		//Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
@@ -107,7 +113,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		return form;
 	}
-	
+	*/
 	/**
 	 * Construct the experiment query
 	 * @param experimentSearch
