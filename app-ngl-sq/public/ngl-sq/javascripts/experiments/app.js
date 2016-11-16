@@ -23,11 +23,6 @@ angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 
 		controller : 'DetailsCtrl'
 	});
 	
-	$routeProvider.when('/experiments/new/list-containers', {
-		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.listContainers().url},
-		controller : 'ListContainersCtrl'
-	});
-	
 	$routeProvider.when('/experiments/:code/:typeCode', {
 		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.details().url},
 		controller : 'DetailsCtrl'
