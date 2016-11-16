@@ -2,7 +2,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
-				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
+				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
 			pagination:{
@@ -69,7 +69,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
-				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
+				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
 			pagination:{
@@ -133,7 +133,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
-				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
+				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
 			pagination:{

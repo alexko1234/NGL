@@ -26,16 +26,19 @@ PUT		/api/containers/:code/state										controllers.containers.api.Containers.
 GET		/api/container-categories										controllers.containers.api.ContainerCategories.list()
 
 #processes api
-POST	/api/processes													controllers.processes.api.ProcessesOld.save()
-POST	/api/processes/batch											controllers.processes.api.ProcessesOld.saveBatch()
-PUT		/api/processes/:code											controllers.processes.api.ProcessesOld.update(code:java.lang.String)
-PUT		/api/processes/batch/state										controllers.processes.api.ProcessesOld.updateStateBatch()
-PUT		/api/processes/:code/state										controllers.processes.api.ProcessesOld.updateState(code:java.lang.String)
+GET		/api/processes													@controllers.processes.api.Processes.list()
 
-DELETE	/api/processes/:code											controllers.processes.api.ProcessesOld.delete(code:java.lang.String)
-HEAD	/api/processes/:code               								controllers.processes.api.ProcessesOld.head(code: java.lang.String)
-GET		/api/processes													controllers.processes.api.ProcessesOld.list()
-GET		/api/processes/:code											controllers.processes.api.ProcessesOld.get(code:java.lang.String)
+
+POST	/api-old/processes													controllers.processes.api.ProcessesOld.save()
+POST	/api-old/processes/batch											controllers.processes.api.ProcessesOld.saveBatch()
+PUT		/api-old/processes/:code											controllers.processes.api.ProcessesOld.update(code:java.lang.String)
+PUT		/api-old/processes/batch/state										controllers.processes.api.ProcessesOld.updateStateBatch()
+PUT		/api-old/processes/:code/state										controllers.processes.api.ProcessesOld.updateState(code:java.lang.String)
+
+DELETE	/api-old/processes/:code											controllers.processes.api.ProcessesOld.delete(code:java.lang.String)
+HEAD	/api-old/processes/:code               								controllers.processes.api.ProcessesOld.head(code: java.lang.String)
+GET		/api-old/processes													controllers.processes.api.ProcessesOld.list()
+GET		/api-old/processes/:code											controllers.processes.api.ProcessesOld.get(code:java.lang.String)
 
 #PUT		/api-old/processes/:code/state									controllers.processes.api.ProcessesOld.updateStateCode(code:java.lang.String)
 

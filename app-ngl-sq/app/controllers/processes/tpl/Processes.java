@@ -63,7 +63,7 @@ public class Processes extends CommonController{
 						//controllers.processes.api.routes.javascript.ProcessesOld.updateStateCode(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
-						controllers.processes.api.routes.javascript.ProcessesOld.list(),
+						controllers.processes.api.routes.javascript.Processes.list(),
 						controllers.processes.api.routes.javascript.ProcessCategories.list(),
 						controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 						controllers.commons.api.routes.javascript.Values.list(),

@@ -89,7 +89,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 	var datatableProcessIPConfig = {
 			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},			
 			search:{
-				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
+				url:jsRoutes.controllers.processes.api.Processes.list()
 			},
 			pagination:{
 				mode:'local',
@@ -167,7 +167,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 	var datatableProcessNConfig = {
 			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},
 			search:{
-				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
+				url:jsRoutes.controllers.processes.api.Processes.list()
 			},
 			pagination:{
 				mode:'local',

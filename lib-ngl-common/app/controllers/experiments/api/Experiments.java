@@ -46,7 +46,6 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
-import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
