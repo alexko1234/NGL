@@ -3,6 +3,7 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
@@ -21,11 +23,17 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.i18n.Lang;
+import play.libs.Json;
+import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
+import views.components.datatable.DatatableBatchResponseElement;
+import workflows.process.ProcWorkflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -40,6 +48,9 @@ public class Processes extends DocumentController<Process> {
 
 	final static Form<State> stateForm = form(State.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
+	final static Form<ProcessesBatchElement> batchElementForm = form(ProcessesBatchElement.class);
+	
+	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
 	
 	public Processes() {
 		super(InstanceConstants.PROCESS_COLL_NAME, Process.class);		
@@ -183,6 +194,55 @@ public class Processes extends DocumentController<Process> {
 		return query;
 	}
 	
+	
+	
+	@Permission(value={"writing"})
+	public Result updateState(String code){
+		Process objectInDB = getObject(code);
+		if(objectInDB == null) {
+			return notFound();
+		}
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		workflows.setState(ctxVal, objectInDB, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(getObject(code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+	
+	
+	@Permission(value={"writing"})
+	public Result updateStateBatch(){
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
+		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+		.map(filledForm -> {
+			ProcessesBatchElement element = filledForm.get();
+			Process process = getObject(element.data.code);
+			if(null != process){
+				State state = element.data.state;
+				state.date = new Date();
+				state.user = user;
+				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				workflows.setState(ctxVal, process, state);
+				if (!ctxVal.hasErrors()) {
+					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
+				}else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+				}
+			}else {
+				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+			}
+		}).collect(Collectors.toList());
+		
+		return ok(Json.toJson(response));
+	}
 	
 	@Permission(value={"writing"})
 	public Result delete(String code) throws DAOException{

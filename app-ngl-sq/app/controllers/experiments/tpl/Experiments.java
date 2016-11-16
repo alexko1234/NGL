@@ -154,8 +154,8 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateState(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
   	    		
-  	    		controllers.processes.api.routes.javascript.ProcessesOld.updateState(),
-  	    		controllers.processes.api.routes.javascript.ProcessesOld.updateStateBatch(),
+  	    		controllers.processes.api.routes.javascript.Processes.updateState(),
+  	    		controllers.processes.api.routes.javascript.Processes.updateStateBatch(),
   	    		
   	    		controllers.instruments.io.routes.javascript.IO.generateFile(),
   	    		controllers.instruments.io.routes.javascript.IO.importFile(),
