@@ -903,7 +903,7 @@ var	datatableConfig = {
 			$scope.datatable.config.spinner.start = true;
 			var i=0;
 			for(i=0;i<data.length;i++){
-				url =  jsRoutes.controllers.processes.api.Processes.save().url;
+				url =  jsRoutes.controllers.processes.api.ProcessesOld.save().url;
 				var processData = data[i];
 				var process = {
 						projectCodes: [processData.projectCodes[0]],
@@ -922,7 +922,7 @@ var	datatableConfig = {
 			$scope.datatable.config.spinner.start = true;
 			var i=0;
 			for(i=0;i<data.length;i++){
-				url =  jsRoutes.controllers.processes.api.Processes.save().url;
+				url =  jsRoutes.controllers.processes.api.ProcessesOld.save().url;
 				var processData = data[i];
 				var process = {
 						projectCodes: [processData.projectCodes[0]],

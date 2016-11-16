@@ -1615,7 +1615,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						})
 						
 						if(processes.length > 0){
-							$http.put(jsRoutes.controllers.processes.api.Processes.updateStateBatch().url,processes)
+							$http.put(jsRoutes.controllers.processes.api.ProcessesOld.updateStateBatch().url,processes)
 								.then(function(result){
 									var data = result.data;
 									

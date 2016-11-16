@@ -154,8 +154,8 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateState(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
   	    		
-  	    		controllers.processes.api.routes.javascript.Processes.updateState(),
-  	    		controllers.processes.api.routes.javascript.Processes.updateStateBatch(),
+  	    		controllers.processes.api.routes.javascript.ProcessesOld.updateState(),
+  	    		controllers.processes.api.routes.javascript.ProcessesOld.updateStateBatch(),
   	    		
   	    		controllers.instruments.io.routes.javascript.IO.generateFile(),
   	    		controllers.instruments.io.routes.javascript.IO.importFile(),
@@ -163,7 +163,7 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
-  	    		controllers.processes.api.routes.javascript.Processes.list(),
+  	    		controllers.processes.api.routes.javascript.ProcessesOld.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.get(),
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),

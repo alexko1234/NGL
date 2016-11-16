@@ -2,7 +2,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
-				url:jsRoutes.controllers.processes.api.Processes.list()
+				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
 				
 			},
 			pagination:{
@@ -25,7 +25,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			},
 			save:{
 				active:Permissions.check("writing")?true:false,
-				url:function(line){return jsRoutes.controllers.processes.api.Processes.update(line.code).url;},
+				url:function(line){return jsRoutes.controllers.processes.api.ProcessesOld.update(line.code).url;},
 				mode:'remote',
 				method:'put',
 			},
@@ -69,7 +69,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
-				url:jsRoutes.controllers.processes.api.Processes.list()
+				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
 				
 			},
 			pagination:{
@@ -86,7 +86,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 			},
 			save:{
 				active:Permissions.check("writing")?true:false,
-				url:function(line){return jsRoutes.controllers.processes.api.Processes.updateStateCode(line.code).url;},
+				url:function(line){return jsRoutes.controllers.processes.api.ProcessesOld.updateStateCode(line.code).url;},
 				mode:'remote',
 				method:'put',
 				value:function(process){
@@ -133,7 +133,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
-				url:jsRoutes.controllers.processes.api.Processes.list()
+				url:jsRoutes.controllers.processes.api.ProcessesOld.list()
 				
 			},
 			pagination:{
@@ -155,7 +155,7 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				active:Permissions.check("writing")?true:false,
 				mode:"remote",
 				url:function(line){
-					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
+					return jsRoutes.controllers.processes.api.ProcessesOld.delete(line.code).url;
 					}
 			},
 			otherButtons :{

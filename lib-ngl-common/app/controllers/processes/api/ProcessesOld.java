@@ -74,7 +74,7 @@ import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
-public class Processes extends CommonController{
+public class ProcessesOld extends CommonController{
 
 	final static Form<ProcessesSaveQueryForm> processSaveQueryForm = form(ProcessesSaveQueryForm.class);
 	final static Form<Process> processForm = form(Process.class);
