@@ -27,7 +27,7 @@
 				<td>
 					 {{obj.nbSeq | number}}													
 				</td>
-				<td ng-class='@("highLight(treatments.{{treatments.getTreatment().code."+read+".taxonBilan.value|filter:obj.taxon|sum:percent}})")'>
+				<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.@read'+'.taxonBilan.value|filter:\''+obj.taxon+'\'|sum:\'percent\'')">
 					{{ obj.percent | number:2}} @Messages("unit.percent")												
 				</td>
 			</tr>

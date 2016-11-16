@@ -169,6 +169,17 @@
 		return '';
 	}
 	
+	$scope.isDataExistsForRead = function(read) {
+		var b = true;
+		if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)) {
+			var treatment = $scope.readset.treatments["sortingRibo"];
+			if ( (!angular.isDefined($parse(read)(treatment))) || (!angular.isDefined($parse(read + ".taxonBilan")(treatment))) ||
+					( angular.isDefined($parse(read + ".taxonBilan")(treatment)) && ($parse(read + ".taxonBilan")(treatment) === null) ))  {
+				b = false;
+			}
+		}
+		return b;
+	}
 	
 	
 	var init = function(){
@@ -409,18 +420,3 @@
 	 	}
 }]);
 
- angular.module('home').controller('SortingRiboCtrl', ['$scope', '$parse', function($scope, $parse) {
-	 
-		$scope.isDataExistsForRead = function(read) {
-			var b = true;
-			if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)) {
-				var treatment = $scope.readset.treatments["sortingRibo"];
-				if ( (!angular.isDefined($parse(read)(treatment))) || (!angular.isDefined($parse(read + ".taxonBilan")(treatment))) ||
-						( angular.isDefined($parse(read + ".taxonBilan")(treatment)) && ($parse(read + ".taxonBilan")(treatment) === null) ))  {
-					b = false;
-				}
-			}
-			return b;
-		}
-		
-}]);
