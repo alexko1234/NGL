@@ -21,5 +21,6 @@ GET		/migration-taxonomy-software				controllers.migration.MigrationUpdateSoftwa
 GET		/migration-mapping-software					controllers.migration.MigrationUpdateSoftwareMapping.migration()
 GET		/migration-update-kraken					controllers.migration.MigrationUpdateKraken.migration()
 GET		/migration-readSet-tara-invalid				controllers.migration.MigrationUpdateReadSetTaraInvalid.migration()
+GET		/migration-sortRibo-software				controllers.migration.MigrationUpdateSortRibo.migration()
 
 
