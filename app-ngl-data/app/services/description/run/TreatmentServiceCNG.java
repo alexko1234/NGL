@@ -58,6 +58,12 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "20"));		
 
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			l.add(DescriptionFactory.newTreatmentType("Top Index","topIndex", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "topIndex", 
+					getTopIndexPropertyDefinitions(), 
+					Arrays.asList(getTreatmentTypeContext("default",Boolean.TRUE)), 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "25"));	
+		}
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
@@ -98,6 +104,8 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "35,36,60"));		
 
 
+		
+		
 		//specific CNG 
 		l.add(DescriptionFactory.newTreatmentType("alignSingleRead BLAT","alignsingleread-blat", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadBLATRaw", 
 				getASRBPropertyDefinitions(), 
@@ -737,6 +745,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		return propertyDefinitions;		
 	}
 
+	
 
 
 
