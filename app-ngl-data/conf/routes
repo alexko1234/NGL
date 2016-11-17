@@ -71,6 +71,7 @@ GET		/cns/migration-experiment-instrument-properties	controllers.migration.cns.M
 GET		/cns/migration-experiment-protocol-properties	controllers.migration.cns.MigrationExperimentProtocolProperties.migration(experimentTypeCode: java.lang.String, keyProperty:java.lang.String)
 GET		/cns/migration-experiment-flowcellChemistry		controllers.migration.cns.MigrationExperimentFlowcellChemistry.migration()
 GET		/cns/migration-readSet-minknowMetrichor	controllers.migration.cns.MigrationReadSetMinknowMetrichor.migration()
+GET 	/cns/migration-experiment-input-tree-properties		controllers.migration.cns.MigrationInputExperimentPropertiesTreeOfLife.migration(experimentTypeCode: java.lang.String, keyProperty: java.lang.String ?=null, newKeyProperty: java.lang.String)
 
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()

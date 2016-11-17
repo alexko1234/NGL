@@ -18,6 +18,7 @@ import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
@@ -30,30 +31,53 @@ public class MigrationExperimentProperties extends CommonController{
 
 	protected static List<Experiment> getListExperiments(Query query)
 	{
-		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).limit(1).toList();
+		return MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, query).toList();
 	}
 
 	protected static void checkATMExperiment(Experiment experiment)
 	{
 		experiment.atomicTransfertMethods.stream().filter(atm->!atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
-			Logger.debug("Experiment "+experiment.code+" ATM not one to one ");
+			Logger.error("Experiment "+experiment.code+" ATM not one to one ");
 		});
+
 	}
 
 	protected static void checkInputExperimentProperties(Experiment experiment, String keyProperty)
 	{
 		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
 			atm.inputContainerUseds.stream().filter(input->input.experimentProperties==null).forEach(input->{
-				Logger.debug("Experiment "+experiment.code+" inputContainer "+input.code+" no experiment property");
+				Logger.error("Experiment "+experiment.code+" inputContainer "+input.code+" no experiment property");
 			});
 		});
 		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
 			atm.inputContainerUseds.stream().filter(input->input.experimentProperties!=null && !input.experimentProperties.containsKey(keyProperty)).forEach(input->{
-				Logger.debug("Experiment "+experiment.code+" inputContainer "+input.code+" no property "+keyProperty);
+				Logger.error("Experiment "+experiment.code+" inputContainer "+input.code+" no property "+keyProperty);
 			});
 		});
 	}
-	
+
+	protected static void checkOneContentForATM(Experiment experiment)
+	{
+		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
+			if(atm.inputContainerUseds.size()>1)
+				Logger.error("Not one container input "+experiment.code);
+			atm.inputContainerUseds.stream().filter(input->input.contents.size()!=1).forEach(input->{
+				Logger.error("Experiment "+experiment.code+" inputContainer "+input.code+" multiple content");
+			});
+			if(atm.outputContainerUseds.size()>1)
+				Logger.error("Not one container output "+experiment.code);
+			atm.outputContainerUseds.stream().filter(output->output.contents.size()!=1).forEach(output->{
+				Logger.error("Experiment "+experiment.code+" outputContainer "+output.code+" multiple content");
+			});
+
+			atm.outputContainerUseds.stream().filter(output->output.contents.size()==1).forEach(output->{
+				if(output.contents.iterator().next().sampleCode==null || output.contents.iterator().next().properties.get("tag")==null){
+					Logger.error("Experiment "+experiment.code+" outputContainer "+output.code+" no sample code or tag");
+				}
+			});
+		});
+	}
+
 	protected static void checkOutputExperimentProperties(Experiment experiment, String keyProperty)
 	{
 		experiment.atomicTransfertMethods.stream().filter(atm->atm.getClass().getName().equals(OneToOneContainer.class.getName())).forEach(atm->{
@@ -83,28 +107,27 @@ public class MigrationExperimentProperties extends CommonController{
 			}
 		});
 	}
-	
-	protected static void updateOutputContainerTreeOfLife(AtomicTransfertMethod atm, String keyProperty, PropertyValue propValue, boolean addToRun)
+
+	protected static void updateOutputContainerTreeOfLife(OutputContainerUsed output, String sampleCode, String tag, String keyProperty, PropertyValue propValue, boolean addToRun)
 	{
 		//Get outputContainer
-		atm.outputContainerUseds.stream().forEach(output->{
-			Logger.debug("Get outputContainerCode "+output.code);
-			updateContainer(output.code, keyProperty, propValue, addToRun);
-			//Get list of all Container in process
-			List<Container> containerOuts = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.regex("treeOfLife.paths", Pattern.compile(","+output.code))).toList();
-			for(Container container : containerOuts){
-				Logger.debug("Update container code "+container.code);
-				updateContainer(container.code, keyProperty, propValue, addToRun);
-			}
-		});
+
+		Logger.debug("Get outputContainerCode "+output.code);
+		updateContainer(output.code, sampleCode, tag, keyProperty, propValue, addToRun);
+		//Get list of all Container in process
+		List<Container> containerOuts = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.regex("treeOfLife.paths", Pattern.compile(","+output.code))).toList();
+		for(Container container : containerOuts){
+			Logger.debug("Update container code "+container.code+" size content "+container.contents.size());
+			updateContainer(container.code, sampleCode, tag, keyProperty, propValue, addToRun);
+		}
 	}
 
 	protected static void updateContainerContents(AbstractContainerUsed container, String keyProperty, PropertyValue propValue)
 	{
 		if(container.contents!=null){
 			if(container.contents.size()>1)
-				Logger.error("Multiple contents ");
-			if(container.contents.size()>0){
+				Logger.error("Multiple contents for "+container.code);
+			if(container.contents.size()==1){
 				container.contents.stream().filter(content->!content.properties.containsKey(keyProperty)).forEach(content->{
 					Logger.debug("add property to content "+content.sampleCode);
 					content.properties.put(keyProperty, propValue);
@@ -136,6 +159,7 @@ public class MigrationExperimentProperties extends CommonController{
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, codeContainer);
 		if(container!=null){
 			//add property to container
+			Logger.debug("Size content to update "+container.contents.size());
 			container.contents.stream().forEach(c->{
 				Logger.debug("Update container "+codeContainer+" for content "+c.sampleCode);
 				c.properties.put(newKeyProperty, propValue);
@@ -155,7 +179,40 @@ public class MigrationExperimentProperties extends CommonController{
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, r);
 			});
 
-			
+
+		}
+	}
+
+	protected static void updateContainer(String codeContainer, String sampleCode, String tag, String newKeyProperty, PropertyValue propValue, boolean addToRun)
+	{
+		//Get container
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, codeContainer);
+		Logger.debug("Update container "+codeContainer);
+		if(container!=null){
+			//add property to container
+			Logger.debug("Size content to update "+container.contents.size());
+			container.contents.stream().filter(content->content.sampleCode.equals(sampleCode) && ((String)content.properties.get("tag").getValue()).equals(tag)).forEach(c->{
+				Logger.debug("Update container "+codeContainer+" for content "+c.sampleCode);
+				c.properties.put(newKeyProperty, propValue);
+			});
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
+
+			//Get ReadSet to update
+			List<ReadSet> readSetsToTal = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", container.code)).toList();
+			Logger.debug("ReadSet total "+readSetsToTal.size());
+			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", container.code).is("sampleOnContainer.sampleCode", sampleCode).is("sampleOnContainer.properties.tag.value", tag)).toList();
+			readSets.stream().forEach(r->{
+				Logger.debug("Update ReadSet"+r.code);
+				r.sampleOnContainer.properties.put(newKeyProperty, propValue);
+				if(addToRun){
+					Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, r.runCode);
+					run.properties.put(newKeyProperty, propValue);
+					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);
+				}
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, r);
+			});
+
+
 		}
 	}
 

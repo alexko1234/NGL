@@ -29,8 +29,9 @@ public class MigrationInputExperimentProperties extends MigrationExperimentPrope
 		//backupReadSetCollection();
 
 		//Get list experiment
-		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode));
+		List<Experiment> experiments = getListExperiments(DBQuery.is("typeCode", experimentTypeCode).notExists("atomicTransfertMethods.inputContainerUseds.contents.properties.loadingReport"));
 
+		
 		//Get list experiment with no experiment properties
 		for(Experiment exp : experiments){
 			checkATMExperiment(exp);
@@ -50,6 +51,8 @@ public class MigrationInputExperimentProperties extends MigrationExperimentPrope
 						input.experimentProperties.remove(keyProperty);
 					}
 					PropertyValue propValue = input.experimentProperties.get(newKeyProperty);
+					
+					
 					//add property to contents properties to inputContainerUsed
 					updateContainerContents(input, newKeyProperty, propValue);
 
