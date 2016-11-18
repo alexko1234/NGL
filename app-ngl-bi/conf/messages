@@ -503,7 +503,9 @@ readsets.treatments.sortingRibo.tabs.krona = Krona
 
 readsets.treatments.sorting_ribo.taxon = Taxon
 readsets.treatments.sorting_ribo.nbSeq = Nb Seq.
-readsets.treatments.sorting_ribo.Percent = %
+readsets.treatments.sorting_ribo.Percent = % (vs rRNA tot.)
+readsets.treatments.sorting_ribo.PercentAssigned = % (vs assigned)
+
 
 readsets.treatments.sorting_ribo.software = Version logiciel
 readsets.treatments.sorting_ribo.readsInput = Reads input
