@@ -30,21 +30,6 @@ public class Processes extends CommonController{
 	public static Result newProcesses(String processTypeCode){
 		return ok(newProcesses.render());
 	}
-	
-
-	public static Result getPropertiesDefinitions(String processTypeCode){
-		ProcessType processType;
-		try {
-			processType = ProcessType.find.findByCode(processTypeCode);
-			if(processType != null && processType.propertiesDefinitions != null) {
-				return ok(Json.toJson(processType.propertiesDefinitions));
-			}
-		} catch (DAOException e) {
-			Logger.error("DAO error: "+e.getMessage(),e);
-		}
-
-		return badRequest();
-	}	
 
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
@@ -56,11 +41,11 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
 						controllers.processes.api.routes.javascript.Processes.update(),
-						controllers.processes.tpl.routes.javascript.Processes.getPropertiesDefinitions(),
 						controllers.processes.api.routes.javascript.Processes.save(),
 						controllers.processes.api.routes.javascript.Processes.delete(),
 						controllers.processes.api.routes.javascript.Processes.updateState(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
+						controllers.processes.api.routes.javascript.ProcessTypes.get(),
 						controllers.containers.api.routes.javascript.Containers.list(),
 						controllers.processes.api.routes.javascript.Processes.list(),
 						controllers.processes.api.routes.javascript.ProcessCategories.list(),

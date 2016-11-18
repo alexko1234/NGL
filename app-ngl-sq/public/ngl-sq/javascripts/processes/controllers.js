@@ -28,6 +28,22 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "position":2,
 			 			 "groupMethod":"unique"
 			         },
+			        {
+			 			"header":Messages("containers.table.support.line"),
+			 			"property":"support.line",
+			 			"order":true,
+			 			"hide":true,
+			 			"position":3,
+			 			"type":"text"
+			 		},
+			 		{
+			 			"header":Messages("containers.table.support.column"),
+			 			"property":"support.column*1",
+			 			"order":true,
+			 			"hide":true,
+			 			"position":4,
+			 			"type":"number"
+			 		},	
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
@@ -418,69 +434,26 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};	
 	
 
-	$scope.addToBasket = function(containers){
-		
-		var cleanContainer=function(container){
-			var _container = $.extend(true,{},container);
-			_container.properties = undefined;
-			_container.comments=[];
-			return  _container;
-		};
-		
-		$scope.errors.processType = {};
-		$scope.errors.processCategory = {};
-		var supportCodes = [];
-		if($scope.searchService.form.nextProcessTypeCode){
-			for(var i = 0; i < containers.length; i++){
-				var alreadyOnBasket = false;
-				for(var j=0;j<this.basket.get().length;j++){
-					if(this.basket.get()[j].code === containers[i].code){
-						alreadyOnBasket = true;
-					}else{
-						var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
-						if($scope.datatable.getGroupColumnValue(containers[i], "code")!=undefined && $scope.datatable.getGroupColumnValue(containers[i], "code")[0] === this.basket.get()[j].code){
-							alreadyOnBasket = true;
-						}
-					}
-				}
-				if(!alreadyOnBasket){
-					
-					if(containers[i].group === undefined){
-						//TODO GA to test angular !!!
-						this.basket.add(cleanContainer(containers[i]));
-					}else {
-						var basket = this.basket;
-						supportCodes.push($scope.datatable.getGroupColumnValue(containers[i], "support.code"));												
-					}
-				}
+	$scope.addToBasket  = function(containers){
+		containers.forEach(function(container){
+			var codes = [];
+			if(container.group){
+				codes = $scope.datatable.getGroupColumnValue(container, "code")				
+			}else if($scope.basket.get().indexOf(container.code) === -1){
+				codes[0] = container.code;												
+			}	
 			
-				if(($scope.searchService.form.nextProcessTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-					tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
-				}
-
-			}
-			if(supportCodes.length > 0){
-				$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCodes":supportCodes,"stateCode":"IW-P"}})
-				.success(function(data, status, headers, config) {
-					if(data!=null){
-						angular.forEach(data, function(container){
-							basket.add(cleanContainer(container));
-						});
-					}
-				}).error(function(data, status, headers, config) {
-					alert("error");
-				});
-			}
-			
+			codes.forEach(function(code){
+				if($scope.basket.get().indexOf(code) === -1){
+					$scope.basket.add(code);	
+				}	
+			});
+		});	
+		if(($scope.searchService.form.nextProcessTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
 			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
-		}else{
-			if(!$scope.searchService.form.processCategory){
-				$scope.errors.processCategory = "has-error";
-			}
-
-			$scope.errors.processType = "has-error";
 		}
-	};	
+	};
+	
 	
 	$scope.searchService.getDefaultColumns = function(){ return datatableConfig.columns;};
 
@@ -535,7 +508,51 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 }]);
 
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','$filter', 'mainService','tabService','$q', 
+
+angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter','$routeParams', 'mainService','tabService', 'datatable', 
+                                                     function($scope,$http,$q,$filter,$routeParams,mainService,tabService,datatable) {
+
+	
+	
+	
+	
+	var init = function(){
+		
+		if($routeParams.processTypeCode){
+			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get($routeParams.processTypeCode).url)
+				.success(function(data, status,headers,config){
+					var processType = data;
+					//load containers by codes
+					var containerCodes = [];
+					containerCodes = containerCodes.concat(mainService.getBasket().get());
+					
+					if(containerCodes.length > 0){
+						var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+			            var queries = [];
+			            for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+			                var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+			                queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
+			            }
+						
+			            $q.all(queries).then(function(results) {
+							var allData = [];
+							results.forEach(function(result){
+								allData = allData.concat(result.data);
+							});
+							
+							
+							
+			            });		
+					}
+				});
+		}
+		
+	};
+	
+	init();
+	
+}]);
+angular.module('home').controller('ListNewCtrlOld', ['$scope', 'datatable','$http','$filter', 'mainService','tabService','$q', 
                                                   function($scope, datatable,$http,$filter,mainService,tabService,$q) {
 
 var	datatableConfig = {
