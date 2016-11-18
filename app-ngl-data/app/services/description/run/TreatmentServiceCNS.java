@@ -342,6 +342,30 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Quality Distribution","readQualityDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Kmers Distribution","KmersDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, false, "img"));
 
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 1D forward","1DForward.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 1D forward","1DForward.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 1D forward","1DForward.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
+			
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 1D reverse","1DReverse.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 1D reverse","1DReverse.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 1D reverse","1DReverse.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 2D all","2DAll.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 2D all","2DAll.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 2D all","2DAll.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 2D pass","2DPass.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 2D pass","2DPass.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 2D pass","2DPass.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb","useful.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb","useful.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb","useful.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+			
+			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution des bases cumulées","basesCumulativeDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+		}
+		
 		return propertyDefinitions;
 	}
 
