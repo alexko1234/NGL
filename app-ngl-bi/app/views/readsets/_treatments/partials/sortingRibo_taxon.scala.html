@@ -1,9 +1,15 @@
 @(read: String)
-
+@import views.html.helper._
 	<div class="row">	
-	<div class="col-md-6 col-lg-6">	
+	
+	<div class="col-md-5 col-lg-5">	
 		<div class="panel panel-default">
 		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.taxonBilan")</strong></div>	
+		
+		<div class="form-group">
+		<label for="inputFilter">@Messages("filterTaxonBilan") </label>
+			<input type="text" ng-model="filterTaxonBilan" placeholder='@Messages("filterTaxonBilan")' title='@Messages("filterTaxonBilan")' ng-value="filterTaxonBilan" id="inputFilter">
+		</div>
 		  <div class="treatmentOverflow">
 		 	<table class="table table-condensed table-hover table-bordered">
 			<thead>							
@@ -20,7 +26,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat='@("obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".taxonBilan.value")'>
+			<tr ng-repeat='@("obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".taxonBilan.value")' ng-if="obj.percent>filterTaxonBilan">
 				<td>									
 					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
 				</td>
@@ -36,11 +42,12 @@
 		</div>
 		</div>														
 	</div>
-	</div>
 	
-	<div class="col-md-6 col-lg-6">	
+	
+	<div class="col-md-5 col-lg-5">	
 		<div class="panel panel-default">
 		  <div class="panel-heading"><strong>@Messages("readsets.treatments.sortingRibo.tabs.krona")</strong></div>	
 		 <iframe id='@(read+".krona")' class="col-md-12 col-lg-12" ng-bind-src="'data:text/html;base64,'+readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].@(read).krona.value" style="border:0;height:1500px"></iframe>
 		</div>
+	</div>
 	</div>

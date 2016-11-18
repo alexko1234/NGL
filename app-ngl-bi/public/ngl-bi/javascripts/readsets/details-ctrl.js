@@ -187,6 +187,8 @@
 		$scope.lists = lists;
 		$scope.treatments = treatments;
 		$scope.valuationService = valuationService();
+		$scope.filterTaxonBilan=5;
+		
 		mainService.stopEditMode();
 		if(isValuationMode()){
 			mainService.startEditMode();			
