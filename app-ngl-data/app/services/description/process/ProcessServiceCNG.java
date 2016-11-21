@@ -55,7 +55,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	/**
 	 * Save all Process types
 	 * @param errors
-	 * @throws DAOException 
+	 * @throws DAOException 		
+	 * warning "codes" must not have uppercase letters
 	 */
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
@@ -96,14 +97,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 
 		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
-		// 26/09/2016 bug manquait ("pcr-and-purification",-1), 
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				11,
 				null,  // pas de propriétés ??
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
-						getPET("prep-pcr-free",-1),
-						getPET("pcr-and-purification",-1), 
-						getPET("lib-normalization",0), 
+						getPET("prep-pcr-free",-1), getPET("pcr-and-purification",-1), 
+						getPET("lib-normalization",0), getPET("normalization-and-pooling",0), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en 0
 						getPET("prepa-fc-ordered",1), 
 						getPET("illumina-depot",2) ),           
 				getExperimentTypes("lib-normalization").get(0),            //first experiment type
@@ -116,7 +115,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				51,
             	getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
-            			getPET("lib-normalization",-1), 
+            			getPET("lib-normalization",-1), getPET("normalization-and-pooling",-1), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en -1
             			getPET("denat-dil-lib",0),
             			getPET("prepa-flowcell",1),
             			getPET("illumina-depot",2)),        
@@ -126,7 +125,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	   
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Prep FC, dépôt"
-		// !!! majuscules pas supportee dans le codes
 		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
 				52,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
@@ -139,12 +137,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-		// !!! majuscules pas supportee dans le codes
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				53,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
-						getPET("lib-normalization",-1),
+						getPET("lib-normalization",-1),  getPET("normalization-and-pooling",-1), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en -1
 						getPET("prepa-fc-ordered",0),
 						getPET("illumina-depot",1) ),        
 				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
@@ -157,60 +154,26 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"
-            // FDS modif 28/10/2016 JIRA NGL-1025: modif label + modif code + suppression des experiences d'ordre 3 et 4;
-			//  !! label pas definitif...
-			
-            //code  "rna-seq" deja utilsé pour un traitement !!!
-			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm+pool)", "rna-sequencing", ProcessCategory.find.findByCode("library"),
+			// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"; !!! code  "rna-seq" deja utilsé pour un traitement !!      
+			l.add(DescriptionFactory.newProcessType("Prep lib RNAseq", "rna-sequencing", ProcessCategory.find.findByCode("library"),
 					3,
 					getPropertyDefinitionsRNAseq(), 
 					Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
 							getPET("library-prep",0),
 							getPET("pcr-and-purification",1),
-							getPET("normalization-and-pooling",2) ),          
+							getPET("normalization-and-pooling",2) , getPET("lib-normalization",2) ), // FDS 16/11/2016 ajout d'une 2eme exp de niveau 2 
 					getExperimentTypes("library-prep").get(0),              //first experiment type
-					getExperimentTypes("normalization-and-pooling").get(0), //last  experiment type
+					getExperimentTypes("normalization-and-pooling").get(0), //last  experiment type ( 1 des 2 qui sont de niveau le + élevé)
 					getExperimentTypes("ext-to-rna-sequencing").get(0),     //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-            // FDS ajout 28/10/2016 JIRA NGL-1025: duplication a partir du precedent mais last experiment est different
-			// !! label pas definitifs...
-		
-			l.add(DescriptionFactory.newProcessType("prep lib RNAseq (norm puis pool)", "rna-sequencing-2", ProcessCategory.find.findByCode("library"),
-					4,
-					getPropertyDefinitionsRNAseq(), 
-					Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
-							getPET("library-prep",0),
-							getPET("pcr-and-purification",1), 
-							getPET("lib-normalization",2) ),            
-					getExperimentTypes("library-prep").get(0),           //first experiment type       
-					getExperimentTypes("lib-normalization").get(0),      //last  experiment type
-					getExperimentTypes("ext-to-rna-sequencing").get(0),  //void  experiment type
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-			
-			
-			// FDS ajout 31/05/2016 JIRA NGL-1025: processus court type "normalization"; chgt label 28/10/2016
-			l.add(DescriptionFactory.newProcessType("RNA Norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
-					5,   
-					null, // pas de propriétés ??
-					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1), //ordered list of experiment type in process type
-							getPET("pcr-and-purification",-1), // ???
-							getPET("normalization-and-pooling",0), 
-							getPET("prepa-fc-ordered",1), 
-							getPET("illumina-depot",2) ),          
-					getExperimentTypes("normalization-and-pooling").get(0),         //first experiment type         
-					getExperimentTypes("illumina-depot").get(0),                    //last  experiment type
-					getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0), //void  experiment type
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
-            //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
-			l.add(DescriptionFactory.newProcessType("RNA Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
+            //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modi du label=> supprimer RNA
+			l.add(DescriptionFactory.newProcessType("Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 					6,   
 					null, // pas de propriétés ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-denat-fc-depot",-1), //ordered list of experiment type in process type
-							getPET("lib-normalization", -1), //???
-							getPET("normalization-and-pooling",0),  
+							getPET("pcr-and-purification", -1),
+							getPET("normalization-and-pooling",0), getPET("lib-normalization",0), // FDS 16/11/2016 ajout "lib-normalization" en 0
 							getPET("denat-dil-lib",1),
 							getPET("prepa-flowcell",2),
 							getPET("illumina-depot",3) ),          
@@ -219,7 +182,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("ext-to-norm-and-pool-denat-fc-depot").get(0), //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
-			
+		
+				
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	

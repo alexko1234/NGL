@@ -83,6 +83,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			         { // libProcessType ajout 08/11/2016
 					 		"header":Messages("containers.table.libProcessType"),
 					 		"property": "inputContainer.contents",
+					 		//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
 					 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
 					 		"order":false,
 					 		"hide":true,
@@ -102,15 +103,16 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
-			         { // TEST expected Coverage.. a voir avec Guillaume
-				        	"header":Messages("containers.table.expectedCoverage"),
-				 			"property": "inputContainer.TODO",
-				 			"order":true,
-				 			"hide":true,
-				 			"type":"text",
-				 			"position":7.5,
-				 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        	 "extraHeaders":{0: inputExtraHeaders}
+			         { // 17/11/2016 expected Coverage
+				        "header":Messages("containers.table.expectedCoverage"),
+				 		"property": "inputContainer.contents",
+				 		"filter": "getArray:'properties.expectedCoverage.value'| unique",
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":7.5,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        "extraHeaders":{0: inputExtraHeaders}
 					 },
 					 { //Concentration; 12/09/2016 ne pas inclure l'unité dans le label; 08/11/2016 label court
 			        	 "header":Messages("containers.table.concentration.shortLabel"), 
