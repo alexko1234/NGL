@@ -509,41 +509,337 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 }]);
 
 
-angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter','$routeParams', 'mainService','tabService', 'datatable', 
-                                                     function($scope,$http,$q,$filter,$routeParams,mainService,tabService,datatable) {
+angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter','$parse','$routeParams', 'mainService','tabService', 'datatable', 
+                                                     function($scope,$http,$q,$filter,$parse,$routeParams,mainService,tabService,datatable) {
 
 	
+	var	datatableConfig = {
+			 columns: [],
+	         pagination:{
+	        	 active:false
+	         },		
+	         search:{
+	        	 active:false
+	         },
+	         order:{
+	        	 mode:'local',
+	        	 active:true
+	         },
+	         edit:{  		
+	        	 active:true,
+	        	 columnMode:true,
+	        	 byDefault : true,
+	        	 showButton:false
+	         },
+	         save:{
+	        	 active: true,
+	        	 withoutEdit:true,
+	        	 showButton : true,
+	        	 mode:"local",
+	        	 changeClass : false,
+	        	 callback : function(datatable){
+	        		 save(datatable.getData());
+	        	 }
+	         },
+	         remove:{
+	        	 active:true,
+	        	 mode:'local',
+	        	 withEdit:true,
+	        	 callback : function(datatable){
+	        		 mainService.getBasket().reset();
+	        		 datatable.getData().forEach(function(elt){
+	        			 mainService.getBasket().add(elt.code);
+	        		 });
+	        		 computeData();
+	        	 }
+	         },
+	         messages:{
+	        	 active:false,
+	        	 transformKey: function(key, args) {
+		             return Messages(key, args);
+	        	 }
+	         },
+	         otherButtons :{
+	        	 active:true,
+	        	 template:''
+	        	 +' <button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+	        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
+	        	 Messages("baskets.switchView.containers")+'</b>'+
+	        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
+	         }
+	};
+
+	var getProcessCreationColumns = function(view){
+		var columns = [];
+		
+		
+		if("container" === view){
+			
+			columns.push({
+		       	 "header":Messages("processes.table.supportCode"),
+		       	 "property":"support.code",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":1,
+		       	 "type":"text"
+			});
+			
+			columns.push({
+		       	 "header":Messages("processes.table.line"),
+		       	 "property":"support.line",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":2,
+		       	 "type":"text"
+			});
+			columns.push({
+		       	 "header":Messages("processes.table.columns"),
+		       	 "property":"support.column*1",
+		       	 "order":true,
+		       	 "hide":true,
+		       	 "position":3,
+		       	 "type":"number"
+			});			
+			
+		}else{
+			columns.push({
+	       	 "header":Messages("processes.table.supportCode"),
+	       	 "property":"support.code",
+	       	 "order":true,
+	       	 "hide":true,
+	       	 "position":1,
+	       	 "type":"text"
+			});
+			
+		}
+		
+		columns.push({
+       	 "header":Messages("processes.table.projectCode"),
+       	 "property":"projectCodes",
+       	 "order":true,
+       	 "hide":true,
+       	 "position":4,
+       	 "render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+       	 "type":"text"
+		});
+		columns.push({
+       	 "header":Messages("processes.table.sampleCode"),
+       	 "property":"sampleCodes",
+       	 "order":true,
+       	 "hide":true,
+       	 "position":5,
+       	 "render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+       	 "type":"text"
+		});
+		columns.push({
+		"header":Messages("containers.table.contents.length"),
+		"property":"contents.length",
+		"order":true,
+		"hide":true,
+		"position":5.01,
+		"type":"number"
+		});
+		columns.push({
+       	 "header":Messages("containers.table.stateCode"),
+       	 "property":"state.code",
+       	 "order":true,
+       	 "hide":true,
+       	 "position":6,
+       	 "filter": "codes:'state'",
+       	 "type":"text"
+		});
+		columns.push({
+       	"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
 	
 	
 	
+	
+	var getDisplayUnitFromProperty = function(propertyDefinition){
+		var unit = $parse("displayMeasureValue.value")(propertyDefinition);
+		if(undefined !== unit && null !== unit) return " ("+unit+")";
+		else return "";
+	};
+	var getPropertyColumnType = function(type){
+		if(type === "java.lang.String"){
+			return "text";
+		}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
+			return "number";
+		}else if(type === "java.util.Date"){
+			return "date";
+		}else if(type ==="java.io.File"){
+			return "file";
+		}else if(type ==="java.awt.Image"){
+			return "img";
+		}else if(type ==="java.lang.Boolean"){
+			return "boolean";	
+		}else{
+			throw 'not manage : '+type;
+		}
+
+		return type;
+	};
+	
+	var processPropertyColumns = [];
+	var computeProcessColumns = function(properties){
+		
+		if(properties){
+			properties.forEach(function(propertyDefinition){
+				
+				var column = {};
+				column.watch=true;
+				column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
+				column.required=propertyDefinition.required;
+				    				
+				column.property = "properties."+propertyDefinition.code+".value";
+				column.edit = propertyDefinition.editable;
+				column.type = getPropertyColumnType(propertyDefinition.valueType);
+				column.choiceInList = propertyDefinition.choiceInList;
+				column.position = (9+(propertyDefinition.displayOrder/1000));
+				column.defaultValues = propertyDefinition.defaultValue;
+				column.format = propertyDefinition.displayFormat;
+				
+				if(column.choiceInList){
+					if(propertyDefinition.possibleValues.length > 100){
+						column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
+					}else{
+						column.listStyle = "bt-select";
+					}
+					column.possibleValues = propertyDefinition.possibleValues; 
+					column.filter = "codes:'value."+propertyDefinition.code+"'";    					
+				}
+				
+				if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
+					column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
+							"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
+				}
+				
+				processPropertyColumns.push(column);					
+			});
+		}
+		
+	};
+	
+	$scope.swithView = function(){		
+		if($scope.supportView){
+			swithToContainerView();
+		}else{
+			swithToSupportView()
+		}
+	};
+	
+	var containerViewData = {};
+	var supportViewData = {};
+	
+	var swithToContainerView = function(){
+		var containers = [];
+		for(var key in containerViewData){
+			containers.push(containerViewData[key]);
+		}
+		containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+		$scope.datatable.setColumnsConfig(getProcessCreationColumns("container").concat(processPropertyColumns));
+		$scope.datatable.setData(containers);	
+		$scope.supportView = false;
+		
+	};
+
+	var swithToSupportView = function(){
+		var supports = [];
+		for(var key in supportViewData){
+			supports.push(supportViewData[key]);
+		}
+		supports = $filter('orderBy')(supports, 'support.code');
+		$scope.datatable.setColumnsConfig(getProcessCreationColumns("support").concat(processPropertyColumns));
+		$scope.datatable.setData(supports);	
+		$scope.supportView = true;
+	};
+	
+	
+	var computeData = function(){
+		containerViewData = {};
+		supportViewData = {};
+		
+		var containerCodes = [];
+		containerCodes = containerCodes.concat(mainService.getBasket().get());
+		
+		if(containerCodes.length > 0){
+			var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+            var queries = [];
+            for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+                var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+                queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
+            }
+			
+            $q.all(queries).then(function(results) {
+				var allData = [];
+				results.forEach(function(result){
+					allData = allData.concat(result.data);
+				});
+				
+				allData.forEach(function(data){
+					data.properties = null;
+					containerViewData[data.code]=data;
+					containerViewData[data.code].code = [data.code];
+					if(supportViewData[data.support.code]){
+						supportViewData[data.support.code].code = supportViewData[data.support.code].code.concat(data.code);
+						supportViewData[data.support.code].projectCodes = supportViewData[data.support.code].projectCodes.concat(data.projectCodes);
+						supportViewData[data.support.code].sampleCodes = supportViewData[data.support.code].sampleCodes.concat(data.sampleCodes);
+						supportViewData[data.support.code].contents = supportViewData[data.support.code].contents.concat(data.contents);
+					}else{
+						supportViewData[data.support.code] = $.extend(true,{},data);						
+					}	
+				});
+				
+				$scope.datatable = datatable(datatableConfig);
+				if(!$scope.supportView){
+					swithToContainerView();
+				}else{
+					swithToSupportView()
+				}
+            });		
+		}
+	};
+	
+	var save = function(data){
+		var queries = [];
+		data.forEach(function(value){
+			var process = {};
+			process.typeCode = processType.code;
+			process.categoryCode = processType.category.code;
+			process.properties = value.properties;
+			process.inputContainerSupportCode = value.support.code;
+			value.code.forEach(function(containerCode){
+				var processContainer =  $.extend(true,{},process);
+				processContainer.inputContainerCode = containerCode;
+				queries.push($http.post(jsRoutes.controllers.processes.api.Processes.save().url,processContainer,{viewData:value}));				
+			})
+			
+		});
+		 
+		 
+		$q.all(queries).then(function(results) {
+			 console.log("done");
+		});
+	};
+	var processType = undefined;
 	var init = function(){
 		
 		if($routeParams.processTypeCode){
 			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get($routeParams.processTypeCode).url)
 				.success(function(data, status,headers,config){
-					var processType = data;
+					processType = data;
+					computeProcessColumns(processType.propertiesDefinitions);
 					//load containers by codes
-					var containerCodes = [];
-					containerCodes = containerCodes.concat(mainService.getBasket().get());
-					
-					if(containerCodes.length > 0){
-						var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
-			            var queries = [];
-			            for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
-			                var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
-			                queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
-			            }
-						
-			            $q.all(queries).then(function(results) {
-							var allData = [];
-							results.forEach(function(result){
-								allData = allData.concat(result.data);
-							});
-							
-							
-							
-			            });		
-					}
+					$scope.supportView = false;
+					computeData();
 				});
 		}
 		

@@ -22,8 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import fr.cea.ig.DBObject;
 
 
-
-
 @MongoCollection(name="Process")
 public class Process extends DBObject implements IValidation{
 
