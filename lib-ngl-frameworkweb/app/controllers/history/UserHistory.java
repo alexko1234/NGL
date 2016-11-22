@@ -29,28 +29,27 @@ public class UserHistory extends Action.Simple{
 	//function called by play
 	public  F.Promise<Result> call(Http.Context context) throws Throwable {
 		if(Play.application().configuration().getBoolean("useraction.trace") != null && Play.application().configuration().getBoolean("useraction.trace") != false){
-			String params = "";
-			String action = "";
-			String login = "";
 			
-			login = context.request().username();
 			
-			String body = "{}";
-			RequestBody rb = context.request().body();
-			if(rb != null && rb.asJson() != null){
-				body = rb.asJson().toString();
-			}
 			
-			params = Json.toJson(context.request().queryString()).toString();
-			
-			action = context.request().toString();
-			 F.Promise<Result> res = null;
+			F.Promise<Result> res = null;
 			
 			if(context.request().uri().startsWith("/api/") && !context.request().uri().contains("/authentication")){
+				String login = context.request().username();
+				String params = Json.toJson(context.request().queryString()).toString();
+				String action = context.request().toString();
+				
+				String body = "{}";
+				RequestBody rb = context.request().body();
+				if(rb != null && rb.asJson() != null){
+					body = rb.asJson().toString();
+				}
+				
+				
 				long start = System.currentTimeMillis();
 				res = delegate.call(context);
 				long timeRequest = (System.currentTimeMillis() - start);
-				Logger.debug(action + " -> " + (System.currentTimeMillis() - start) + " ms.");
+				Logger.debug("("+login+") - " +action+ " -> " + (System.currentTimeMillis() - start) + " ms.");
 				
 				//after request
 				//ecriture de l'info
