@@ -55,7 +55,7 @@ public class MigrationContainerProperties  extends CommonController{
 	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
 
 	public static Result migration() {
-				updateDateCreationTube();
+				//updateDateCreationTube();
 				updateAmplificationExt();
 				return ok("Migration update container Finish");
 	}
@@ -90,7 +90,7 @@ public class MigrationContainerProperties  extends CommonController{
 
 
 	private static void updateAmplificationExt() {
-		String sql="select matmanom, matmadc from Materielmanip m where proco in (168,480) and emnco=18 and matmaInNGL!=null";
+		String sql="select matmanom, matmadc from Materielmanip m where proco in (163,480) and emnco=18 and matmaInNGL!=null";
 		List<Container> results =  limsServices.jdbcTemplate.query(sql 
 				,new RowMapper<Container>() {
 
