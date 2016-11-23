@@ -932,7 +932,7 @@ readsets.treatments.taxonomy.read1.krona.fungi = % Fungi
 readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
-filterTaxonBilan=Seuil % Taxon
+filterTaxonBilan=Seuil Taxon (% vs rRNA tot.)
 ###############
 #
 #authorisation users
