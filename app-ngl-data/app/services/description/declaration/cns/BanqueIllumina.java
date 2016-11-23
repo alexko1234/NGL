@@ -105,6 +105,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						,getPET("dna-illumina-indexed-library",0)
 						,getPET("pcr-amplification-and-purification",1)
 						,getPET("sizing",2)
+						,getPET("spri-select",2)
 						,getPET("solution-stock",3)
 						,getPET("prepa-flowcell",4)
 						,getPET("prepa-fc-ordered",4)
@@ -132,6 +133,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						,getPET("dna-illumina-indexed-library",-1)
 						,getPET("pcr-amplification-and-purification",0)
 						,getPET("sizing",1)
+						,getPET("spri-select",1)
 						,getPET("solution-stock",2)
 						,getPET("prepa-flowcell",3)
 						,getPET("prepa-fc-ordered",3)
@@ -163,6 +165,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 				Arrays.asList(getPET("ext-to-sizing-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
 						,getPET("sizing",0)
+						,getPET("spri-select",0)
 						,getPET("solution-stock",1)
 						,getPET("prepa-flowcell",2)
 						,getPET("prepa-fc-ordered",2)
@@ -210,7 +213,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("500-650"), 											
+				DescriptionFactory.newValues("280-310 (F300)","450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)", "650-750 (W700)","650-800", "750-800 (W800)"), 											
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
 				DescriptionFactory.newValues("650-800"), 
