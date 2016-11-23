@@ -212,13 +212,13 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Covaris E220", "covaris-e220", InstrumentCategory.find.findByCode("covaris"), null, 
 				getInstruments(
 						createInstrument("covarisE220_1", "CovarisE220_1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) , 
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Covaris E220 extérieur", "covaris-e220-ext", InstrumentCategory.find.findByCode("covaris"), null, 
 				getInstruments(
 						createInstrument("covarisE220CNG", "CovarisE220_CNG", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) , 
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
