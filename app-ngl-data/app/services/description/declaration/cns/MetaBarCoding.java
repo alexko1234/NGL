@@ -65,7 +65,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		
-		l.add(newExperimentType("Spri Select","spri-select","SIZ",951,
+		l.add(newExperimentType("Spri Select","spri-select","SS",951,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
 				getInstrumentUsedTypes("hand", "biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
