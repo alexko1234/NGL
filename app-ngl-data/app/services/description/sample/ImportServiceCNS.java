@@ -304,6 +304,20 @@ public class ImportServiceCNS extends AbstractImportService {
 		}
 		
 		/*
+		values.add(DescriptionFactory.newValue("100000100", "I00S00M00"));	
+		for(int i = 1; i <= 20; i++){
+			String ile = (i < 10)?"0"+i:""+i;
+			for(int j = 1; j <= 4; j++){
+				String site = "0"+j;
+				for(int k = 1; k <= 5; k++){
+					String fish = (k < 10)?"0"+k:""+k;
+					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"1"+fish, "I"+ile+"S"+site+"M"+fish));					
+				}
+			}
+		}
+		*/
+		
+		/*
 		values.add(DescriptionFactory.newValue("102001", "I02S01"));
 		values.add(DescriptionFactory.newValue("102001001", "I02S01C01"));
 		values.add(DescriptionFactory.newValue("102001011", "I02S01C11"));

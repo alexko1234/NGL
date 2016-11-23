@@ -28,13 +28,15 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 						experimentProperties.insertSize = {value:inputContainerUsed.size.value, unit:inputContainerUsed.size.unit};
 						experimentProperties.insertSize.value = inputContainerUsed.size.value - 121;
 						experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;
-						/*
-						if(inputContainerUsed.properties.libProcessTypeCode === 'N'
-								|| inputContainerUsed.properties.libProcessTypeCode === 'A'
-									|| inputContainerUsed.properties.libProcessTypeCode === 'C'){
+						
+						var firstContent = inputContainerUsed.contents[0]; 
+						
+						if(firstContent.properties.libProcessTypeCode === 'N'
+								|| firstContent.properties.libProcessTypeCode === 'A'
+									|| firstContent.properties.libProcessTypeCode === 'C'){
 							experimentProperties.libLayoutNominalLength = -1;							
 						}
-						*/
+						
 					}
 				}
 			

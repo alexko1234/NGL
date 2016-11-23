@@ -262,11 +262,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
 						, getX5WgPcrFreeLibProcessTypeCodeValues(), "single" ,100, null, null, null));
 
-		// FDS 27/10/2016 NGL-1025:  ajout expectedCoverage: optionnel, editable, defaut "30X"
+		// FDS 27/10/2016 NGL-1025:  ajout expectedCoverage: optionnel, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
-						, null, "single" ,101, true, "30X", null));
+						, null, "single" ,101, true, null, null));
 		
 		return propertyDefinitions;
 	}
