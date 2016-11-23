@@ -59,7 +59,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Sizing (gel)","sizing","SIZ",950,
+		l.add(newExperimentType("Sizing","sizing","SIZ",950,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
 				getInstrumentUsedTypes("hand"),"OneToMany", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));

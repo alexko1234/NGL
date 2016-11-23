@@ -213,7 +213,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("500-650"), 											
+				DescriptionFactory.newValues("280-310 (F300)","450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)", "650-750 (W700)","650-800", "750-800 (W800)"), 											
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
 				DescriptionFactory.newValues("650-800"), 
