@@ -81,6 +81,7 @@ public class MetaGenomique extends AbstractDeclaration {
 						, getPET("dna-illumina-indexed-library",1)
 						, getPET("pcr-amplification-and-purification",2)
 						, getPET("sizing",3)
+						, getPET("spri-select",3)
 						, getPET("solution-stock",4)
 						, getPET("prepa-flowcell",5)
 						, getPET("prepa-fc-ordered",5)

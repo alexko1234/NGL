@@ -59,11 +59,18 @@ public class MetaBarCoding extends AbstractDeclaration {
 				getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Sizing (gel / spri select)","sizing","SIZ",950,
+		l.add(newExperimentType("Sizing","sizing","SIZ",950,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
 				getInstrumentUsedTypes("hand"),"OneToMany", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		
+		l.add(newExperimentType("Spri Select","spri-select","SS",951,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
+				getInstrumentUsedTypes("hand", "biomek-fx"),"OneToOne", null,true,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
 		return l;
 	}
 	
@@ -150,6 +157,9 @@ public class MetaBarCoding extends AbstractDeclaration {
 				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
+				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+		
+		newExperimentTypeNode("spri-select",getExperimentTypes("spri-select").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
 				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 	
 	}
