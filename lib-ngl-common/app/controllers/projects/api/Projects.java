@@ -105,6 +105,12 @@ public class Projects extends DocumentController<Project> {
 			queries.add(DBQuery.in("typeCode", form.typeCodes));
 		}
 		
+		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
+			for(String field : form.existingFields){
+				queries.add(DBQuery.exists(field));
+			}		
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
