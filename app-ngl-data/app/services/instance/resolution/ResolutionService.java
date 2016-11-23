@@ -50,6 +50,7 @@ public class ResolutionService {
 	
 	// FDS 15/01: fusion en 1 seule methode avec parametre inst
 	// FDS 20/01: ajout creation des categories
+	// FDS 23/11/2016 methodes distinctes par institut pour ProcessResolution
 	public static void saveResolutions(ContextValidation ctx, String inst) {	
 		if ( inst.equals("CNG") ){
 			resolutionCategories = createResolutionCategoriesCNG();
@@ -61,7 +62,7 @@ public class ResolutionService {
 			createPrepPcrFreeResolutionCNG(ctx);
 			createQCMiseqResolutionCNG(ctx);
 			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
-			createProcessResolution(ctx);
+			createProcessResolutionCNG(ctx);
 		}
 		else if ( inst.equals("CNS") ){			
 			resolutionCategories = createResolutionCategoriesCNS();
@@ -76,12 +77,13 @@ public class ResolutionService {
 			createSamplePrepResolutionCNS(ctx);
 			createGelMigrationResolutionCNS(ctx);
 			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
-			createProcessResolution(ctx);
+			createProcessResolutionCNS(ctx);
 		}
 		else if ( inst.equals("TEST") ){		
 			resolutionCategories = createResolutionCategoriesCNS();
+			
 			createExperimentResolution(ctx); 
-			createProcessResolution(ctx);
+			createProcessResolutionCNS(ctx); // on met CNG ou CNS???
 		}
 	}
 
@@ -792,8 +794,8 @@ public class ResolutionService {
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
 	
-	
-	public static void createProcessResolution(ContextValidation ctx) {
+	// FDS 23/11/2016 NGL-1158: renommage pour separation des resolutions de Processus entre CNG et CNS
+	public static void createProcessResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 
 		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
@@ -803,6 +805,42 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
 		l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
 		l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "processReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Process";
+		ArrayList<String> al = new ArrayList<String>();
+		
+		try {
+			List<ProcessType> processTypes=ProcessType.find.findAll();
+			for(ProcessType processType:processTypes){
+					Logger.debug("Add processType default resolution "+ processType.code);
+					al.add(processType.code);
+			}
+		} catch (DAOException e) {
+			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+		}
+		
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
+	
+	// FDS 23/11/2016 NGL-1158: creation pour separation des resolutions de Processus entre CNG et CNS
+	public static void createProcessResolutionCNG(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+
+		// pour l'instant les 2 premieres ne sont pas demandees...
+		//l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
+		//l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
+		
+		l.add(InstanceFactory.newResolution("REDO","stop-redo", resolutionCategories.get("Default"), (short) 3));
+		l.add(InstanceFactory.newResolution("concentration insuffisante","stop-conc-insuffisante", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("problème profil","stop-pb-profil", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("problème technique","stop-pb-technique", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("contamination","stop-contamination", resolutionCategories.get("Default"), (short) 7));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";

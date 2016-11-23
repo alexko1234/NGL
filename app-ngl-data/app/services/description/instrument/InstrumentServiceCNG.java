@@ -456,11 +456,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// => les séparer au moins a la declaration..	
 		ArrayList<String> progList = new ArrayList<String>();
 		
-		// prep lib (sans frag)
+		// RNA
+		/* 23/11/2016 mettre en production uniquement quand les processus RNA seront eux aussi en production...
 		progList.add("Stranded_TotalRNA_Avril2016");
 		progList.add("Stranded_TotalRNA_Avril2016_RAP_Plate");
 		progList.add("Stranded_mRNA_Avril2016");
 		progList.add("Stranded_mRNA_Avril2016_RAP_Plate");
+		*/
 		
         //Nano
 		progList.add("TruSEQ_DNA_Nano");

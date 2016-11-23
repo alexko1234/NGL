@@ -15,7 +15,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
-import models.laboratory.processes.description.ProcessExperimentType; ///TEST FDS !!!
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
@@ -96,7 +96,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-x5-wg-nano").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 
-		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
+		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){  //TEST-UAT 16/11/2016 !!!!	
+			// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				11,
 				null,  // pas de propriétés ??
@@ -108,14 +109,44 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("lib-normalization").get(0),            //first experiment type
 				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
+		} else {
+		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
+		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+				11,
+				null,  // pas de propriétés ??
+				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
+						getPET("prep-pcr-free",-1), getPET("pcr-and-purification",-1), 
+						getPET("lib-normalization",0),
+						getPET("prepa-fc-ordered",1), 
+						getPET("illumina-depot",2) ),           
+				getExperimentTypes("lib-normalization").get(0),            //first experiment type
+				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
+				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		}
 		
+		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){  //TEST-UAT 16/11/2016 !!!!
+		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Dénat, prep FC, dépôt"
+		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
+				51,
+		           getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
+				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
+		            	getPET("lib-normalization",-1), getPET("normalization-and-pooling",-1), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en -1
+		            	getPET("denat-dil-lib",0),
+		            	getPET("prepa-flowcell",1),
+		            	getPET("illumina-depot",2)),        
+				getExperimentTypes("denat-dil-lib").get(0),         //first experiment type
+				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
+				getExperimentTypes("ext-to-denat-dil-lib").get(0),  //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));						
+		} else {
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Dénat, prep FC, dépôt"
 		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				51,
             	getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
-            			getPET("lib-normalization",-1), getPET("normalization-and-pooling",-1), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en -1
+            			getPET("lib-normalization",-1),
             			getPET("denat-dil-lib",0),
             			getPET("prepa-flowcell",1),
             			getPET("illumina-depot",2)),        
@@ -123,6 +154,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
 				getExperimentTypes("ext-to-denat-dil-lib").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		} 
 	   
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Prep FC, dépôt"
 		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
@@ -137,6 +169,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
+		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){  //TEST-UAT 16/11/2016 !!!!
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				53,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
@@ -148,7 +181,19 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
+		} else {
+		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
+				53,
+				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
+				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
+						getPET("lib-normalization",-1),
+						getPET("prepa-fc-ordered",0),
+						getPET("illumina-depot",1) ),        
+				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
+				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
+				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
+		}
 		
 
 		/************************************ DEV / UAT ONLY **********************************************/
@@ -262,11 +307,17 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
 						, getX5WgPcrFreeLibProcessTypeCodeValues(), "single" ,100, null, null, null));
 
-		// FDS 27/10/2016 NGL-1025:  ajout expectedCoverage: optionnel, editable, pas de defaut
+		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: optionnel, editable, pas de defaut, de niveau content pour quelle soit propagee
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
 						, null, "single" ,101, true, null, null));
+		
+		// FDS 23/11/2016 SUPSQCNG-424 : ajout sequencingType optionnelle avec liste de choix,  niveau process uniquement
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type de séquencage","sequencingType"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, getX5WgPcrFreeSequencingTypes(), "single" ,102, null, null, null));
 		
 		return propertyDefinitions;
 	}
@@ -282,6 +333,16 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
+	// FDS 23/11/2016 SUPSQCNG-424
+	private static List<Value> getX5WgPcrFreeSequencingTypes(){
+        List<Value> values = new ArrayList<Value>();
+        
+         values.add(DescriptionFactory.newValue("RHS4000","Hiseq 4000"));
+         values.add(DescriptionFactory.newValue("RHSX","Hiseq X"));
+         
+        return values;
+	}
+	
 	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq
 	private static List<PropertyDefinition> getPropertyDefinitionsRNAseq() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -291,11 +352,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
 						, getRNALibProcessTypeCodeValues(), "single" ,100, null, null, null));
 
-		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: optionnel, editable, defaut "30X"
+		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: : optionnel, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
-						, null, "single" ,101, true, "30X", null));
+						, null, "single" ,101, true, null, null));
 		
 		return propertyDefinitions;
 	}
@@ -321,11 +382,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
 						, getX5WgNanoLibProcessTypeCodeValues(), "single" ,100, null, null, null));
 		
-		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: optionnel, editable, defaut "30X"
+		// FDS 27/10/2016 NGL-1025: ajout expectedCoverage: : optionnel, editable, pas de defaut
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
-						, null, "single" ,101, true, "30X", null));
+						, null, "single" ,101, true, null, null));
 		
 		return propertyDefinitions;
 	}
