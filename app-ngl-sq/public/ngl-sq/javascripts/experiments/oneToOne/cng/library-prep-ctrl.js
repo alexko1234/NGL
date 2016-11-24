@@ -224,6 +224,15 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 			"extraHeaders":{
 				"number":2,
 				"dynamic":true,
+			},
+			"otherButtons": {
+                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+                complex:true,
+                template:''
+                	+'<div class="btn-group" style="margin-left:5px">'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie'
+                	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
+                	+'</div>'
 			}
 	}; // fin struct datatableConfig
 	
@@ -289,6 +298,21 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+	
+    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
+	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
+	$scope.copyVolumeInToExp = function(){
+		console.log("copyVolumeInToExp");
+		
+		var data = $scope.atmService.data.displayResult;		
+		data.forEach(function(value){
+			
+			if ( !value.data.inputContainerUsed.experimentProperties ){
+				value.data.inputContainerUsed.experimentProperties = {};
+			}
+			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
+		})		
+	};
 		
 	//Init
 	

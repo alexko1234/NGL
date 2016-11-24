@@ -227,6 +227,15 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			"extraHeaders":{
 				"number":2,
 				"dynamic":true,
+			},
+			"otherButtons": {
+                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+                complex:true,
+                template:''
+                	+'<div class="btn-group" style="margin-left:5px">'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie ET vol. eng. fragmentation'
+                	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
+                	+'</div>'
 			}
 	}; // fin struct datatableConfig
 	
@@ -291,9 +300,23 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 		console.log("call event activeEditMode");
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
-		   // test FDS copier le volume IN container dans le volume Engagé Lib et Volume engagé Frag ???
-		   $scope.calculQuantities();
 	});
+	
+    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie ET volume Engagé Frag...
+	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
+	$scope.copyVolumeInToExp = function(){
+		console.log("copyVolumeInToExp");
+		
+		var data = $scope.atmService.data.displayResult;		
+		data.forEach(function(value){
+			
+			if ( !value.data.inputContainerUsed.experimentProperties ){
+				value.data.inputContainerUsed.experimentProperties = {};
+			}
+			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
+			value.data.inputContainerUsed.experimentProperties.inputVolumeFrag=value.data.inputContainerUsed.volume;	
+		})		
+	};
 		
 	//Init
 	
@@ -316,28 +339,7 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	//////////// TEST FDS EN COURS....marche pas
-	//if($scope.isCreationMode()){
-	//    //  recopier le volume container dans experimentProperties.volume Lib et experimentProperties.volume Frag
-	//    //  avant l'envoi a l'affichage...
-	//    // !!! creer experiment properties car n'existent pas encore ??????
-	//	var dataMain = atmService.data.getData();
-	//	for(var i = 0; i < dataMain.length; i++){
-	//	    // console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
-	//		
-	//	    var udtData = dataMain[i];
-	//	    var icu=udtData.inputContainerUsed;
-	//	    console.log("copier container.volume... "+ icu.volume.value);
-	//	    //icu.experimentProperties["inputVolumeLib"]={"_type":"single","value": "999"};
-	//		//icu.experimentProperties["inputVolumeFrag"]={"_type":"single","value": "999"};
-	//		
-	//	    //console.log("copier container.volume  --> experimentProperties.volume Lib et experimentProperties.volume Frag...TODO!!!");
-	//	}
-	//}
-	//////////////////////////
-	
 	$scope.atmService = atmService;
-	
 	
 	var importData = function(){
 		$scope.messages.clear();

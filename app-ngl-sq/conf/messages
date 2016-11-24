@@ -428,6 +428,7 @@ experiments.button.plate.computeLineMode.advanced = Choix de la colonne max.
 experiments.button.plate.computeColumnMode.advanced = Choix de la ligne max.
 
 experiments.button.plate.copyVolume = Copy volume container en entrée vers container en sortie
+experiments.button.plate.copyVolumeTo = Copy volume container en entrée vers
 experiments.chooseNextExperimentCategory=Tous les containers de sortie poursuivent vers la même expérience
 experiments.chooseOputContainerState=L''expérience suivante est différente selon les containers de sortie
 
