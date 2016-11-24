@@ -42,10 +42,6 @@ public class MetaTProcess extends AbstractDeclaration {
 				AbstractExperimentService.getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
 		l.add(newExperimentType("Ext to MetaT bq RNA","ext-to-rna-lib-transcriptomic-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -63,14 +59,24 @@ public class MetaTProcess extends AbstractDeclaration {
 	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		return null;
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
+				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and-covaris-e220"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+		return l;
+		
 	}
 
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
+				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+		return l;
 	}
 
 	@Override

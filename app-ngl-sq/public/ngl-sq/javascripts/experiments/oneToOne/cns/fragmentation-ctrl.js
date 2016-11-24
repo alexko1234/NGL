@@ -1,5 +1,5 @@
-angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmToSingleDatatable','lists','mainService',
-                                                    function($scope, $parse, atmToSingleDatatable,lists,mainService){
+angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse', 'atmToSingleDatatable','lists','mainService',
+                                                    function($scope, $http, $parse, atmToSingleDatatable,lists,mainService){
                                                     
 	var datatableConfig = {
 					name: $scope.experiment.typeCode.toUpperCase(),
@@ -196,15 +196,32 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 					extraHeaders:{
 						number:1,
 						dynamic:true,
-					}
+					},
+					otherButtons: {
+		                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+		                complex:true,
+		                template:  ''
+		                	+$scope.plateUtils.templates.buttonLineMode
+		                	+$scope.plateUtils.templates.buttonColumnMode                	   
+		            }
 
 			};	
 	
+	
+	var updateATM = function(experiment){
+		if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
+			experiment.atomicTransfertMethods.forEach(function(atm){
+				atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
+				atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column;
+			});
+		}		
+	}
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -451,7 +468,10 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			// Ligne
 			"header" : Messages("containers.table.support.line"),
 			"property" : "outputContainerUsed.locationOnContainerSupport.line",
-			"edit" : false,
+			"edit" : true,
+			"choiceInList":true,
+			"possibleValues":[{"name":'A',"code":"A"},{"name":'B',"code":"B"},{"name":'C',"code":"C"},{"name":'D',"code":"D"},
+			                  {"name":'E',"code":"E"},{"name":'F',"code":"F"},{"name":'G',"code":"G"},{"name":'H',"code":"H"}],
 			"order" : true,
 			"hide" : true,
 			"type" : "text",
@@ -465,7 +485,11 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
 			// forcer a numerique.=> type:number, property: *1
 			"property" : "outputContainerUsed.locationOnContainerSupport.column",
-			"edit" : false,
+			"edit" : true,
+			"choiceInList":true,
+			"possibleValues":[{"name":'1',"code":"1"},{"name":'2',"code":"2"},{"name":'3',"code":"3"},{"name":'4',"code":"4"},
+			                  {"name":'5',"code":"5"},{"name":'6',"code":"6"},{"name":'7',"code":"7"},{"name":'8',"code":"8"},
+			                  {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"12"}], 
 			"order" : true,
 			"hide" : true,
 			"type" : "number",
@@ -489,19 +513,24 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			}
 		});
 	}
+	
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(line, column){
+	atmService.newAtomicTransfertMethod =  function(line, column){
 		var getLine = function(line){
-			if($scope.experiment.instrument.outContainerSupportCategoryCode === 'tube'){
-				return "1";
-			}else{
+			if($scope.experiment.instrument.outContainerSupportCategoryCode 
+					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
 				return line;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
+				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
+				return undefined;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode === "tube"){
+				return "1";
 			}
 			
 		}
 		var getColumn=getLine;
-				
 		
 		return {
 			class:"OneToOne",
@@ -516,15 +545,58 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			volume : "µL"
 	}
 	
-	
-	
-	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-
-	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+	
+	if($scope.experiment.instrument.typeCode !== "biomek-fx-and-covaris-e220"){
+		if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+			$scope.messages.clear();
+			$scope.atmService = atmService;
+		}else{
+			$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
+		}
+	}else{
 		$scope.messages.clear();
 		$scope.atmService = atmService;
-	}else{
-		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
 	}
+	
+	
+	var generateSampleSheetNormalisation = function(){
+		generateSampleSheet("normalisation");
+	};
+	
+	
+	var generateSampleSheet = function(type){
+		$scope.messages.clear();
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
+		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filepath = header.split("filename=")[1];
+			
+			var filename = filepath.split(/\/|\\/);
+			filename = filename[filename.length-1];
+			if(data!=null){
+				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;							
+		});
+	};
+	if($scope.experiment.instrument.typeCode === "biomek-fx-and-covaris-e220"){
+		
+		$scope.setAdditionnalButtons([{
+			isDisabled : function(){return $scope.isNewState();} ,
+			isShow:function(){return !$scope.isNewState();},
+			click:generateSampleSheetNormalisation,
+			label:Messages("experiments.sampleSheet")+" normalisation"
+		}]);
+	}
+	
+	
+	
+	
 }]);
