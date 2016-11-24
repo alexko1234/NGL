@@ -226,6 +226,15 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			"extraHeaders":{
 				"number":2,
 				"dynamic":true,
+			},
+			"otherButtons": {
+                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+                complex:true,
+                template:''
+                	+'<div class="btn-group" style="margin-left:5px">'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie ET vol. eng. fragmentation'
+                	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
+                	+'</div>'
 			}
 	}; // fin struct datatableConfig
 	
@@ -291,6 +300,22 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+	
+    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie ET volume Engagé Frag...
+	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
+	$scope.copyVolumeInToExp = function(){
+		console.log("copyVolumeInToExp");
+		
+		var data = $scope.atmService.data.displayResult;		
+		data.forEach(function(value){
+			
+			if ( !value.data.inputContainerUsed.experimentProperties ){
+				value.data.inputContainerUsed.experimentProperties = {};
+			}
+			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
+			value.data.inputContainerUsed.experimentProperties.inputVolumeFrag=value.data.inputContainerUsed.volume;	
+		})		
+	};
 		
 	//Init
 	
@@ -449,7 +474,88 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		select:setTags,
 	};
 	
-	// 27/09/2016  en attendant un mécanisme pour automatiquement copier dans  vol engagé Frag et vol engagé Lib
+	// 24/11/2016  ajouté comme dans prep-wg-nano pour remplacer les valeurs par defaut dans la definition de l'experience
+	// calculer les qtés inputQuantityFrag et inputQuantityLib a partir de inputVolumeFrag et inputVolumeLib
+	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
+	$scope.updatePropertyFromUDT = function(value, col){
+		//console.log("update from property : "+col.property);
+
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeFrag.value'){
+			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
+			// TODO...?? plus tard
+			computeQuantityFrag(value.data);
+		}
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
+			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
+			// TODO...?? plus tard
+			computeQuantityLib(value.data);
+		}
+	}
+
+	//inputQuantity=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	var computeQuantityFrag = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityFrag.value");
+		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeFrag.value")(udtData),		
+				isReady:function(){
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0  && this.inputVolume >= 0);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			//console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				//inputQuantity = undefined;
+				inputQuantity = 0;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+			//copie inputVolumeLib--> inputVolumeFrag
+			getter2.assign(udtData, $parse("inputVolume")(compute));
+			
+		}else{
+			console.log("Missing values to exec computeQuantityFrag");
+		}
+	}
+	
+	/// TODO: faire une seule fonction mais avec un parametre Lib ou Frag
+	var computeQuantityLib = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
+
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
+				isReady:function(){
+					// traiter le cas ou il y a 1 des 2 valeurs (en general c'est la conc) est a 0
+					return (this.inputConc >= 0 && this.inputVolume >= 0 );
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputConc * inputVolume")(compute);
+			console.log("result = "+result);
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				///inputQuantity = undefined;\\
+				inputQuantity = 0;
+			}	
+			getter.assign(udtData, inputQuantity);
+			
+		}else{
+			console.log("Missing values to exec computeQuantityLib");
+		}
+	}	
 
     
 }]);

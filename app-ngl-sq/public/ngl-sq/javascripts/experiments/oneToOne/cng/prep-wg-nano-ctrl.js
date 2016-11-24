@@ -475,24 +475,20 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 		select:setTags,
 	};
 	
-	// 27/09/2016  en attendant un mécanisme pour automatiquement copier dans  vol engagé Frag et vol engagé Lib
-	// L'utilisateur saisi un volume puis calculer les qtés inputQuantityFrag et inputQuantityLib
+	// 27/09/2016 calculer les qtés inputQuantityFrag et inputQuantityLib a partir de inputVolumeFrag et inputVolumeLib
 	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
 	$scope.updatePropertyFromUDT = function(value, col){
 		//console.log("update from property : "+col.property);
 
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeFrag.value'){
 			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
-			// TODO...?? pas le temps
-			
-			// marche pas !!
-			//var inputVolumeFrag =$parse("inputContainerUsed.experimentProperties.inputVolumeFrag.value")(value);
-			//console.log("LIB="+inputVolumeFrag); 
-			
+			// TODO...?? plus tard
 			computeQuantityFrag(value.data);
 		}
 		
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
+			// verifier si le volume saisi est > au volume IN:  si oui ecraser le volume saisi par volume IN
+			// TODO...?? plus tard
 			computeQuantityLib(value.data);
 		}
 	}
