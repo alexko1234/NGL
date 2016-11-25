@@ -303,7 +303,7 @@ public class ImportServiceCNS extends AbstractImportService {
 			}
 		}
 		
-		/*
+		
 		values.add(DescriptionFactory.newValue("100000100", "I00S00M00"));	
 		for(int i = 1; i <= 20; i++){
 			String ile = (i < 10)?"0"+i:""+i;
@@ -315,7 +315,6 @@ public class ImportServiceCNS extends AbstractImportService {
 				}
 			}
 		}
-		*/
 		
 		/*
 		values.add(DescriptionFactory.newValue("102001", "I02S01"));
