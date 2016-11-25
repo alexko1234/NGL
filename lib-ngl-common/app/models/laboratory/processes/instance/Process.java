@@ -15,6 +15,7 @@ import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,22 +55,56 @@ public class Process extends DBObject implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		ProcessValidationHelper.validateId(this, contextValidation);
-		ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
-		ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
-		ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
-		ProcessValidationHelper.validateState(typeCode,state, contextValidation);
-		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		
-		ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
-		ProcessValidationHelper.validateContainerSupportCode(inputContainerSupportCode, contextValidation, "inputContainerSupportCode");
-		ProcessValidationHelper.validateProjectCodes(projectCodes, contextValidation);
-		ProcessValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
-		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		
-		ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
+		if(contextValidation.isCreationMode() 
+				&& contextValidation.getObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT).equals(CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON)){
+			ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
+			ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
+			ProcessValidationHelper.validateState(typeCode,state, contextValidation);
+			ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+			ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
+			ProcessValidationHelper.validateContainerSupportCode(inputContainerSupportCode, contextValidation, "inputContainerSupportCode");
+			
+		}else if(contextValidation.isCreationMode() 
+				&& contextValidation.getObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT).equals(CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC)){
+			ProcessValidationHelper.validateId(this, contextValidation);
+			ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
+			ProcessValidationHelper.validateProjectCodes(projectCodes, contextValidation);
+			ProcessValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
+			ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
+		}else{
+			ProcessValidationHelper.validateId(this, contextValidation);
+			ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
+			
+					
+			ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
+			ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
+			ProcessValidationHelper.validateState(typeCode,state, contextValidation);
+			ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+			ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
+			ProcessValidationHelper.validateContainerSupportCode(inputContainerSupportCode, contextValidation, "inputContainerSupportCode");
+			
+			ProcessValidationHelper.validateProjectCodes(projectCodes, contextValidation);
+			ProcessValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
+			ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		
+			ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
 
+		}
+		
+		
 
 		//ProcessValidationHelper.validateExperimentCodes(experimentCodes, contextValidation);
+	}
+	@JsonIgnore
+	public Process cloneCommon() {
+		Process p = new Process();
+		p.typeCode = this.typeCode;
+		p.categoryCode = this.categoryCode;
+		p.properties = this.properties;
+		p.traceInformation = this.traceInformation;
+		p.inputContainerSupportCode = this.inputContainerSupportCode;
+		p.inputContainerCode = this.inputContainerCode;
+		p.state = this.state;
+		return p;
 	}
 
 }

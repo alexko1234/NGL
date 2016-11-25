@@ -50,6 +50,10 @@ public class CommonValidationHelper {
 	public static final String FIELD_UPDATE_CONTAINER_SUPPORT_STATE = "updateContainerSupportState";
 	public static final String FIELD_UPDATE_CONTAINER_STATE = "updateContainerState";
 	
+	public static final String FIELD_PROCESS_CREATION_CONTEXT = "processCreationContext"; //value : COMMON, SPECIFIC
+	public static final String VALUE_PROCESS_CREATION_CONTEXT_COMMON ="COMMON";
+	public static final String VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC ="SPECIFIC";
+	
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation

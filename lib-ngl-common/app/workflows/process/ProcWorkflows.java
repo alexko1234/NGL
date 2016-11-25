@@ -23,8 +23,9 @@ public class ProcWorkflows extends Workflows<Process> {
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
-			Process exp, State nextState) {
-		// TODO Auto-generated method stub
+			Process process, State nextState) {
+		process.traceInformation = updateTraceInformation(process.traceInformation, nextState); 			
+		
 		
 	}
 

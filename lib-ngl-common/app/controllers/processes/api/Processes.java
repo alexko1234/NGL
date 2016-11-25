@@ -2,11 +2,17 @@ package controllers.processes.api;
 
 import static play.data.Form.form;
 
+
+
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+
+
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -15,14 +21,22 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
+
+
+import models.utils.instance.ProcessHelper;
+import models.utils.instance.SampleHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
+
+
+
 
 import play.Logger;
 import play.api.modules.spring.Spring;
@@ -33,12 +47,20 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.WebSocket.In;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.process.ProcWorkflows;
 
+
+
+
 import com.mongodb.BasicDBObject;
+
+
+
 
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
@@ -202,7 +224,7 @@ public class Processes extends DocumentController<Process> {
 	public Result save(){	
 		Form<Process> filledForm = getMainFilledForm();
 		Process input = filledForm.get();		
-		List<Process> processes = new ArrayList<Process>();	
+		
 
 		if (null == input._id) {			//init state
 			//the trace
@@ -217,19 +239,37 @@ public class Processes extends DocumentController<Process> {
 		}else {
 			return badRequest("use PUT method to update the process");
 		}
-
+		
+		
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 		contextValidation.setCreationMode();
+		contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON);
+		input.validate(contextValidation);
 		
-
-		if(contextValidation.hasErrors())
-		{
-			return badRequest(filledForm.errorsAsJson());
-		}else {
+		if(!contextValidation.hasErrors()){
+			List<Process> processes = getNewProcessList(contextValidation, input);
+			if(processes.size()>0){
+				processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
+			}
+			
+			
 			return ok(Json.toJson(processes));
+			
 		}
+		return badRequest(filledForm.errorsAsJson());		
 	}
 	
+	private List<Process> getNewProcessList(ContextValidation contextValidation, Process input) {
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, input.inputContainerCode);
+		return container.contents.parallelStream().map(content ->{
+				Process process = input.cloneCommon();
+				process.sampleCodes = SampleHelper.getSampleParent(content.sampleCode);
+				process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
+				process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
+				return process;
+			}).collect(Collectors.toList());		
+	}
+
 	@Permission(value={"writing"})
 	public Result update(String code){
 		Process objectInDB = getObject(code);

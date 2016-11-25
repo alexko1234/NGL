@@ -19,7 +19,7 @@ rule "Calculation of estimatedPercent property of pool process "
         $contextValidation : ContextValidation()      
      	eval ($contextValidation.isCreationMode()==true && $estimatedPercentPerLane.value !=null && Double.class.isInstance($estimatedPercentPerLane.value) && $percentage!=null) 
     then
-    	//Logger.debug("Run estimatedPercentCalculations rules ok");  
+    	Logger.debug("Run estimatedPercentCalculations rules ok");  
         Double val = (Double) $estimatedPercentPerLane.value;
         Logger.debug($process.code+" estimatedPercentPerLane before calculation : "+ val+" $percentage : "+$percentage);
         Double newValue = roundValue(val*$percentage/100.0);
