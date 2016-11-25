@@ -130,11 +130,13 @@ public class RunIllumina extends AbstractDeclaration {
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
+		
 		List<ProcessType> l=new ArrayList<ProcessType>();
+		/*
 		l.add(DescriptionFactory.newProcessType("qPCR-norm, FC, dépôt Illumina", "qpcr-norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), null,
 				getPropertyDefinitionsQPCRQuantification(), 
 				Arrays.asList(getPET("ext-to-qpcr-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), getExperimentTypes("qpcr-quantification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
+		 */
 		return l;
 	}
 
