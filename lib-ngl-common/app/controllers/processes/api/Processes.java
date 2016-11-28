@@ -251,6 +251,7 @@ public class Processes extends DocumentController<Process> {
 			if(processes.size()>0){
 				processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
 			}
+			contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC);
 			
 			
 			return ok(Json.toJson(processes));
