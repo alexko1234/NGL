@@ -40,7 +40,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Ext to MetaBarcoding avec sizing","ext-to-tag-pcr-and-dna-library-with-sizing",null,-1,
+		l.add(newExperimentType("Ext to MetaBarcoding avec sizing (gel)","ext-to-tag-pcr-and-dna-library-with-sizing",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -59,14 +59,14 @@ public class MetaBarCoding extends AbstractDeclaration {
 				getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Sizing","sizing","SIZ",950,
+		l.add(newExperimentType("Sizing (gel)","sizing","SIZ",950,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
 				getInstrumentUsedTypes("hand"),"OneToMany", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		
 		l.add(newExperimentType("Spri Select","spri-select","SS",951,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSpriSelect(),
 				getInstrumentUsedTypes("hand", "biomek-fx"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -95,7 +95,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
+		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing (gel)", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
 				getPropertyMetaBarCodingSizing(), 
 				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1)
 						,getPET("dna-rna-extraction",-1)
@@ -192,7 +192,23 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","280-310 (F300)","450-550 (W500)","550-650 (W600)", "500-650","600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+				DescriptionFactory.newValues("450-550 (W500)","550-650 (W600)", "500-650","600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
+				"single", 100, true, null,null));
+		
+		return propertyDefinitions;
+	}
+	
+	
+	private List<PropertyDefinition> getPropertyDefinitionsSpriSelect() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
+				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
 				"single", 100, true, null,null));

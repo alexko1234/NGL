@@ -26,11 +26,11 @@ public class BanqueIllumina extends AbstractDeclaration {
 	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		l.add(newExperimentType("Ext to Bq DNA Illumina (non sizée)","ext-to-dna-illumina-indexed-library-process",null,-1,
+		l.add(newExperimentType("Ext to Bq DNA à partir frg ou amplicon","ext-to-dna-illumina-indexed-library-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Ext to Bq DNA Illumina sizée","ext-to-dna-illumina-indexed-lib-sizing-process",null,-1,
+		l.add(newExperimentType("Ext to Bq DNA sizing (gel) à partir frg ou amplicon","ext-to-dna-illumina-indexed-lib-sizing-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -42,7 +42,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Ext to Sizing, stk, dépôt","ext-to-sizing-stk-illumina-depot",null,-1,
+		l.add(newExperimentType("Ext to Sizing (gel), stk, dépôt","ext-to-sizing-stk-illumina-depot",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -58,7 +58,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Ext to Bq DNA Illumina spri select","ext-to-dna-illumina-indexed-lib-spri-select-process",null,-1,
+		l.add(newExperimentType("Ext to Bq DNA spri select à partir frg ou amplicon","ext-to-dna-illumina-indexed-lib-spri-select-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -216,7 +216,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeDEV() {
 List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
+		l.add(DescriptionFactory.newProcessType("Bq DNA à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
 				ProcessCategory.find.findByCode("library"), 41,
 			getPropertyBanqueIlluminaWithoutSizing(), 
 			Arrays.asList(getPET("ext-to-dna-illumina-indexed-library-process",-1)
@@ -232,7 +232,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 
-		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina sizée à partir de frg ou amplicon", "dna-illumina-indexed-lib-sizing-process", 
+		l.add(DescriptionFactory.newProcessType("Bq DNA sizing (gel) à partir de frg ou amplicon", "dna-illumina-indexed-lib-sizing-process", 
 				ProcessCategory.find.findByCode("library"), 42,
 				getPropertyBanqueIlluminaSizing(), 
 				Arrays.asList(getPET("ext-to-dna-illumina-indexed-lib-sizing-process",-1)
@@ -248,7 +248,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-lib-sizing-process").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina spri select à partir de frg ou amplicon", "dna-illumina-indexed-lib-spri-select-process", 
+		l.add(DescriptionFactory.newProcessType("Bq DNA spri select à partir de frg ou amplicon", "dna-illumina-indexed-lib-spri-select-process", 
 				ProcessCategory.find.findByCode("library"), 42,
 				getPropertyBanqueIlluminaSpriSelect(), 
 				Arrays.asList(getPET("ext-to-dna-illumina-indexed-lib-spri-select-process",-1)
@@ -321,7 +321,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		
 		
-		l.add(DescriptionFactory.newProcessType("Sizing, STK, Dépôt", "sizing-stk-illumina-depot",
+		l.add(DescriptionFactory.newProcessType("Sizing (gel), STK, Dépôt", "sizing-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 46,
 				getSizingProperties(), 
 				Arrays.asList(getPET("ext-to-sizing-stk-illumina-depot",-1)
@@ -417,7 +417,6 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 
 	private List<PropertyDefinition> getPropertyBanqueIlluminaSpriSelect() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.addAll(getPropertyBanqueIllumina());		
 		propertyDefinitions.addAll(getSpriSelectProperties());
 		return propertyDefinitions;
 }
