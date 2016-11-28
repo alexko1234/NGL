@@ -68,7 +68,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 					Arrays.asList(getTreatmentTypeContext("default",Boolean.TRUE)), 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS), "25"));	
 		}
-		
+
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
@@ -192,9 +192,9 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% clusters filtrés (Illumina)","percentClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.Default), Double.class, false, "single"));        
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases (total)","nbBase", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mismatch autorisé pour le démultiplexage","mismatch", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Boolean.class, true, "single"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb mismatch","nbMismatch", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, false, "single"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version RTA","rtaVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters (total)","nbClusterTotal", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
@@ -284,7 +284,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases 2D pass","2DPass.basesPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases utiles","useful.basesPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences 1D forward","1DForward.readsPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences 1D reverse","1DReverse.readsPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences 2D all","2DAll.readsPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
@@ -298,13 +298,13 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D fail","nbBases2DFail", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D pass","2DPass.nbBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases utiles","useful.nbBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D forward","1DForward.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D reverse","1DReverse.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 2D all","2DAll.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 2D pass","2DPass.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences utiles","useful.nbReads", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-		
+
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D forward (MOYENNE)","1DForward.avgSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D forward (MAX)","1DForward.maxSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object"));
@@ -348,30 +348,28 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Quality Distribution","readQualityDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Kmers Distribution","KmersDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, false, "img"));
 
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 1D forward","1DForward.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 1D forward","1DForward.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 1D forward","1DForward.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
-			
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 1D reverse","1DReverse.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 1D reverse","1DReverse.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 1D reverse","1DReverse.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 2D all","2DAll.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 2D all","2DAll.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 2D all","2DAll.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 2D pass","2DPass.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 2D pass","2DPass.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 2D pass","2DPass.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb","useful.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb","useful.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb","useful.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
-			
-			propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution des bases cumulées","basesCumulativeDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
-		}
-		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 1D forward","1DForward.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 1D forward","1DForward.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 1D forward","1DForward.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 1D reverse","1DReverse.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 1D reverse","1DReverse.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 1D reverse","1DReverse.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 2D all","2DAll.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 2D all","2DAll.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 2D all","2DAll.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb 2D pass","2DPass.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb 2D pass","2DPass.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb 2D pass","2DPass.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >30kb","useful.nbReadsOver30kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >50kb","useful.nbReadsOver50kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences >100kb","useful.nbReadsOver100kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, false, "object"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution des bases cumulées","basesCumulativeDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+
 		return propertyDefinitions;
 	}
 
@@ -384,7 +382,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;
 	}
 
-	
+
 	private static List<PropertyDefinition> getSAVPropertyDefinitionsV2() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Density","clusterDensity",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
@@ -584,7 +582,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan rRNA (%)","rRNABilan.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Double.class, true, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful sequences","usefulSequences",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful bases","usefulBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par taxon (taxon)","taxonBilan.taxon",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), String.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par taxon (nb seq)","taxonBilan.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2, Level.CODE.Single), Long.class, false, "object_list"));
@@ -632,7 +630,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences prises aléatoirement","inputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases","inputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% paires de bases alignées 1D forward","1DForward.percentAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences alignées 1D forward","1DForward.percentAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% séquences alignées sur 100% de leur longueur 1D forward","1DForward.percentAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
@@ -857,5 +855,5 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;
 	}
 
-	
+
 }
