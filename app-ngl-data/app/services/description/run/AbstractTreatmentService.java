@@ -34,15 +34,15 @@ public abstract class AbstractTreatmentService {
 	public static List<PropertyDefinition> getTopIndexPropertyDefinitions()
 	{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index inconnu","unknownIndex.sequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("pourcentage index inconnu","unknownIndex.percent",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index inconnu","unknownIndex.sequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("pourcentage index inconnu","unknownIndex.percent",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Double.class, false, "object_list"));
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index inconnu","varIndex.unknownIndexSequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index connu","varIndex.expectedIndexSequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nom index connu","varIndex.expectedIndexName",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("distance entre séquence inconnu et séquence index connu","varIndex.distanceFromExpectedIndex",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index inconnu","varIndex.unknownIndexSequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("sequence index connu","varIndex.expectedIndexSequence",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("nom index connu","varIndex.expectedIndexName",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("distance entre séquence inconnu et séquence index connu","varIndex.distanceFromExpectedIndex",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, false, "object_list"));
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Stats tiles FC","tilesStats",LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Stats tiles FC","tilesStats",LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, false, "img"));
 		
 		return propertyDefinitions;
 	}

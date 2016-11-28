@@ -27,7 +27,11 @@ public class MetaGenomique extends AbstractDeclaration {
 	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
-		l.add(newExperimentType("Ext to  MetaGénomique (bq sizée)","ext-to-metagenomic-process-with-sizing",null,-1,
+		l.add(newExperimentType("Ext to  MetaGénomique avec sizing (gel)","ext-to-metagenomic-process-with-sizing",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to  MetaGénomique avec spri-select","ext-to-metagenomic-process-with-spri-select",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -81,7 +85,7 @@ public class MetaGenomique extends AbstractDeclaration {
 
 		l.add(DescriptionFactory.newProcessType("(Meta)Génomique (spri select)", "metagenomic-process-with-spri-select", ProcessCategory.find.findByCode("library"), 32,
 				getPropertiesMetaGenomiqueWithSpriSelect(), 
-				Arrays.asList(getPET("ext-to-metagenomic-process-with-sizing",-1)
+				Arrays.asList(getPET("ext-to-metagenomic-process-with-spri-select",-1)
 						,getPET("dna-rna-extraction",-1)
 						, getPET("fragmentation",0)
 						, getPET("dna-illumina-indexed-library",1)
@@ -91,11 +95,11 @@ public class MetaGenomique extends AbstractDeclaration {
 						, getPET("prepa-flowcell",5)
 						, getPET("prepa-fc-ordered",5)
 						, getPET("illumina-depot",6)), 
-						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), 
+						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-spri-select").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		
-		l.add(DescriptionFactory.newProcessType("(Meta)Génomique (bq sizée)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 33,
+		l.add(DescriptionFactory.newProcessType("(Meta)Génomique avec sizing (gel)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 33,
 				getPropertiesMetaGenomiqueWithSizing(), 
 				Arrays.asList(getPET("ext-to-metagenomic-process-with-sizing",-1)
 						,getPET("dna-rna-extraction",-1)
@@ -115,7 +119,7 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getPropertiesMetaGenomiqueWithSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDC(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDB(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"), 
 				null,null,null,"single", 14, true, null, null));
@@ -133,12 +137,10 @@ public class MetaGenomique extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertiesMetaGenomiqueWithSpriSelect() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDB(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDC(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"), 
 				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
-				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"),
 				null,null,null,"single", 16, true, null, null));
@@ -208,6 +210,8 @@ public class MetaGenomique extends AbstractDeclaration {
 	protected void getExperimentTypeNodeCommon() {
 		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-metagenomic-process-with-spri-select", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-spri-select").get(0), false, false, false, null, null, null, null).save();
+
 		
 	}
 
@@ -238,13 +242,13 @@ public class MetaGenomique extends AbstractDeclaration {
 	
 	private List<Value> getLibProcessDB() {
 		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("DB", "DB - DNAseq avec sizing spri select"));
+		values.add(DescriptionFactory.newValue("DB", "DB - DNAseq avec sizing (gel)"));
 		return values;
 	}
 	
 	private List<Value> getLibProcessDC() {
 		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("DC", "DC - DNAseq avec sizing sur gel"));
+		values.add(DescriptionFactory.newValue("DC", "DC - DNAseq avec spri select"));
 		return values;
 	}
 
