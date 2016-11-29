@@ -32,7 +32,7 @@ import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessHelper {
-
+	@Deprecated
 	public static void updateContainer(Container container, String typeCode, Set<String> codes,ContextValidation contextValidation){
 		if(container.fromTransformationTypeCodes == null || container.fromTransformationTypeCodes.size() == 0){
 			container.fromTransformationTypeCodes = new HashSet<String>();
@@ -60,7 +60,7 @@ public class ProcessHelper {
 		}
 	}
 
-
+	@Deprecated
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
 		if(null != containerSupport){
@@ -81,23 +81,6 @@ public class ProcessHelper {
 	}
 
 
-	public static void updateNewContainerSupportCodes(OutputContainerUsed outputContainerUsed,
-			List<InputContainerUsed> inputContainerUseds,Experiment experiment) {
-		List<Query> queryOr = new ArrayList<Query>();
-		queryOr.add(DBQuery.in("inputContainerCode",ContainerUsedHelper.getContainerCodes(inputContainerUseds)));
-		queryOr.add(DBQuery.in("outputContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodes(inputContainerUseds)));
-		Query query=null;
-		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));
-		if(queryOr.size()!=0){
-			query=query.and(DBQuery.or(queryOr.toArray(new Query[queryOr.size()])));
-		}
-
-		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
-				DBUpdate.push("outputContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
-
-
-	}
-	
 	public static Process applyRules(Process proc, ContextValidation ctx ,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(proc);
@@ -119,13 +102,5 @@ public class ProcessHelper {
 
 	}	
 	
-	public static HashMap<String, PropertyValue> cloneProcessProperties(Process process){		
-		HashMap<String, PropertyValue> hmap = null;
-		if(process.properties!=null && !process.properties.isEmpty()){
-			hmap = new HashMap<String, PropertyValue>(process.properties);
-		}
-		return hmap;
-
-	}
 
 }

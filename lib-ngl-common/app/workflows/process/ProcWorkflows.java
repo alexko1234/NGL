@@ -30,21 +30,23 @@ public class ProcWorkflows extends Workflows<Process> {
 	}
 
 	@Override
-	public void applyCurrentStateRules(ContextValidation validation,
-			Process object) {
+	public void applyCurrentStateRules(ContextValidation validation, Process process) {
 		// TODO Auto-generated method stub
 		//TODO Update container properties
 	}
 	
 	@Override
-	public void applySuccessPostStateRules(ContextValidation validation,
-			Process container) {
-				
+	public void applySuccessPostStateRules(ContextValidation validation, Process process) {
+		if("N".equals(process.state.code)){
+			//change container state
+			//change support state
+			//assign process properties to content
+			
+		}
 	}
 
 	@Override
-	public void applyErrorPostStateRules(ContextValidation validation,
-			Process container, State nextState) {
+	public void applyErrorPostStateRules(ContextValidation validation, Process process, State nextState) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -60,7 +62,7 @@ public class ProcWorkflows extends Workflows<Process> {
 			applyPreStateRules(currentCtxValidation, process, nextState);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
 			//TODO GA improve performance to validate only field impacted by state
-			//process.validate(contextValidation); //in comment because no field are state dependant			
+			//process.validate(contextValidation); //in comment because no field are state dependant maybe state of container			
 			if(!currentCtxValidation.hasErrors()){
 				boolean goBack = goBack(process.state, nextState);
 				if(goBack)Logger.debug(process.code+" : back to the workflow. "+process.state.code +" -> "+nextState.code);		
@@ -83,7 +85,7 @@ public class ProcWorkflows extends Workflows<Process> {
 	}
 
 	@Override
-	public void nextState(ContextValidation contextValidation, Process object) {
+	public void nextState(ContextValidation contextValidation, Process process) {
 		// TODO Auto-generated method stub
 		
 	}

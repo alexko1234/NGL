@@ -2,30 +2,21 @@ package controllers.processes.api;
 
 import static play.data.Form.form;
 
-
-
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
-
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import models.utils.instance.ExperimentHelper;
-
-
 import models.utils.instance.ProcessHelper;
 import models.utils.instance.SampleHelper;
 
@@ -35,32 +26,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-
-
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
-import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.WebSocket.In;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.process.ProcWorkflows;
 
-
-
-
 import com.mongodb.BasicDBObject;
-
-
-
 
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
@@ -252,10 +232,14 @@ public class Processes extends DocumentController<Process> {
 				processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
 			}
 			contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC);
-			
-			
-			return ok(Json.toJson(processes));
-			
+			processes.stream().forEach(p -> p.validate(contextValidation));
+			if(!contextValidation.hasErrors()){
+				processes = processes.parallelStream()
+						.map(p -> saveObject(p))
+						.collect(Collectors.toList());
+				workflows.applySuccessPostStateRules(contextValidation, input);
+				return ok(Json.toJson(processes));
+			}				
 		}
 		return badRequest(filledForm.errorsAsJson());		
 	}
@@ -267,6 +251,8 @@ public class Processes extends DocumentController<Process> {
 				process.sampleCodes = SampleHelper.getSampleParent(content.sampleCode);
 				process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
 				process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
+				//need sampleOnInputContainer to generate code
+				process.code = CodeHelper.getInstance().generateProcessCode(process);
 				return process;
 			}).collect(Collectors.toList());		
 	}

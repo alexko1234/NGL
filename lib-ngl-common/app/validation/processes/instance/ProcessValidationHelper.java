@@ -5,16 +5,19 @@ import java.util.Map;
 
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.SampleOnInputContainer;
+import models.utils.InstanceConstants;
 
 import org.apache.commons.collections.CollectionUtils;
 
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
+import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
 public class ProcessValidationHelper extends CommonValidationHelper {
@@ -64,4 +67,17 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 		}
 	}
 
+	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
+		
+		Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
+		
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		if("N".equals(stateCode)){
+			if(null != c && !"IW-P".equals(c.state.code)){
+				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
+			}
+		}
+	}
+	
+	
 }

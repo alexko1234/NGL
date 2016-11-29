@@ -30,7 +30,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ProcessWorkflows {
 
-
+	@Deprecated
 	public static void setProcessState(String processCode, State nextState, ContextValidation contextValidation) {
 		Process process = MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 				DBQuery.is("code", processCode));
@@ -49,7 +49,8 @@ public class ProcessWorkflows {
 		}
 
 	}
-
+	
+	@Deprecated
 	public static void nextContainerStateFromNewProcesses(List<Process> processes,
 			String processTypeCode, ContextValidation contextValidation) {
 
@@ -85,7 +86,7 @@ public class ProcessWorkflows {
 		containers.forEach(c -> Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, c, nextState));		
 	}
 
-
+	/*
 	public static boolean setProcessState(List<Process> processes, String nextStateProcesses, Set<String> resolutions,
 			ContextValidation ctxValidation) {
 
@@ -151,5 +152,6 @@ public class ProcessWorkflows {
 
 		return true;
 	}
+	*/
 
 }

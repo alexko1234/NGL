@@ -177,27 +177,6 @@ public class ProcessesTest extends AbstractTests{
 		
 	}
 	
-	@Test
-	public void validateCloneProcessProperties(){
-		Process process = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("typeCode","illumina-run")).toList().get(0);
-		Process p =  new Process();
-		p.properties = new HashMap<String, PropertyValue>();
-		p.properties = ProcessHelper.cloneProcessProperties(process);
-		Iterator<String> i = process.properties.keySet().iterator();
-		while(i.hasNext()){
-			String s = i.next();
-			assertThat(process.properties.get(s)).isEqualTo(p.properties.get(s));
-			assertThat(process.properties.get(s).value).isEqualTo(p.properties.get(s).value);
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 		
