@@ -552,7 +552,8 @@ valuation.value.FALSE = Non
 valuation.value.UNSET = -
 
 #import fichier
-experiments.msg.import.error = Problème lors de l'import :
+experiments.msg.import.error = Problème lors de l''import :
+experiments.msg.import.data.notmatching= Pas de données correspondantes
 experiments.msg.import.success = Import réussi, merci de vérifier puis de sauvegarder.
 experiments.msg.import.sheet.missing = L''onglet ''{0}'' est manquant
 experiments.msg.import.header-label.missing = ligne {0}: Champ d''entête ou label ''{1}'' manquant

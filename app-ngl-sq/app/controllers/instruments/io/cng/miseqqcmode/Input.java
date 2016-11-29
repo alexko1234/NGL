@@ -19,6 +19,11 @@ import controllers.instruments.io.utils.AbstractInput;
 
 public class Input extends AbstractInput {
 	
+	private int icuCodeFound=0;	//FDS ajouter un compteur (propre a chaque instance de classe Input) 
+	
+	/* Description du fichier a traiter: CSV généré par logiciel du Miseq 
+	 * 1 ligne d'entete, colonne 2 ="sample name"
+	 * */
 	
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
@@ -32,12 +37,16 @@ public class Input extends AbstractInput {
 		
 		all.forEach(array -> {
 			//Logger.debug(Arrays.asList(array).toString());
-			allMap.put(array[2], array);
+			allMap.put(array[2], array);   //colonne 2 de la ligne=>clé du hash, toute ligne=> value du hash
 		});
 		reader.close();
 		
+		// reinitialiser le compteur a chaque import
+		icuCodeFound=0;
+		
 		experiment.atomicTransfertMethods.forEach(atm ->{
 			InputContainerUsed icu = atm.inputContainerUseds.get(0);
+			
 			if(allMap.containsKey(icu.code)){
 				String[] data = allMap.get(icu.code);
 				
@@ -80,12 +89,15 @@ public class Input extends AbstractInput {
 				observedDiversity.value = Double.parseDouble(data[11]);
 				
 				PropertySingleValue estimatedDiversity = getPSV(icu, "estimatedDiversity");
-				estimatedDiversity.value = Double.parseDouble(data[12]);			
-			}			
-		});
+				estimatedDiversity.value = Double.parseDouble(data[12]);
 				
+				icuCodeFound ++; // compile pas...
+			}
+		});
+
+		if (icuCodeFound == 0){ contextValidation.addErrors("Erreurs fichier","experiments.msg.import.data.notmatching");}
+
 		return experiment;
 	}
-	
 	
 }
