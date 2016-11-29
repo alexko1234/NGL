@@ -33,7 +33,7 @@ import fr.cea.ig.MongoDBDAO;
 public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeCommon() {
+	protected List<ExperimentType> getExperimentTypePROD() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
@@ -74,16 +74,55 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return l;
 	}
 	
+	 @Override
+     protected List<ExperimentType> getExperimentTypeDEV() {
+             List<ExperimentType> l = new ArrayList<ExperimentType>();
+
+             l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             l.add(newExperimentType("Ext to MetaBarcoding avec sizing (gel)","ext-to-tag-pcr-and-dna-library-with-sizing",null,-1,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             l.add(newExperimentType("Tags-PCR","tag-pcr","TAG",750,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsTagPCR(),
+                             getInstrumentUsedTypes("thermocycler"),"OneToOne", getSampleTypes("amplicon"),true,
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             l.add(newExperimentType("Bq DNA Illumina indexée","dna-illumina-indexed-library","LIB",850,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsBqDNAIlluminaIndexedLibrary(),
+                             getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", null,true,
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             l.add(newExperimentType("Amplification/PCR","pcr-amplification-and-purification","PCR",900,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsAmpliPurif(),
+                             getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             l.add(newExperimentType("Sizing (gel)","sizing","SIZ",950,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizingDEV(),
+                             getInstrumentUsedTypes("hand"),"OneToMany", null,true,
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+
+             l.add(newExperimentType("Spri Select","spri-select","SS",951,
+                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSpriSelect(),
+                             getInstrumentUsedTypes("hand", "biomek-fx"),"OneToOne", null,true,
+                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+
+             return l;
+     }
+
+	
+	
 	@Override
-	public List<ExperimentType> getExperimentTypeDEV() {
+	public List<ExperimentType> getExperimentTypeCommon() {
 		return null;
 	}
 
-	@Override
-	public List<ExperimentType> getExperimentTypePROD() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<ExperimentType> getExperimentTypeUAT() {
@@ -92,7 +131,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 	@Override
-	protected List<ProcessType> getProcessTypeCommon() {
+	protected List<ProcessType> getProcessTypePROD() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
@@ -127,17 +166,50 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return l;
 	}
 	
+	
+    @Override
+    protected List<ProcessType> getProcessTypeDEV() {
+            List<ProcessType> l = new ArrayList<ProcessType>();
+
+            l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing (gel)", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
+                            getPropertyMetaBarCodingSizing(),
+                            Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1)
+                                            ,getPET("dna-rna-extraction",-1)
+                                            ,getPET("tag-pcr",0)
+                                            ,getPET("dna-illumina-indexed-library",1)
+                                            ,getPET("pcr-amplification-and-purification",2)
+                                            ,getPET("sizing",3)
+                                            ,getPET("solution-stock",4)
+                                            ,getPET("prepa-flowcell",5)
+                                            ,getPET("prepa-fc-ordered",5)
+                                            ,getPET("illumina-depot",6)),
+                                            getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0),
+                                            DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+            l.add(DescriptionFactory.newProcessType("MetaBarcoding (sans sizing)", "tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), 12,
+                            getPropertyMetaBarCodingWithoutSizing(),
+                            Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1)
+                                            ,getPET("dna-rna-extraction",-1)
+                                            ,getPET("tag-pcr",0)
+                                            ,getPET("dna-illumina-indexed-library",1)
+                                            ,getPET("pcr-amplification-and-purification",2)
+                                            ,getPET("solution-stock",3)
+                                            ,getPET("prepa-flowcell",4)
+                                            ,getPET("prepa-fc-ordered",4)
+                                            ,getPET("illumina-depot",5)),
+                                            getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0),
+                                            DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+            return l;
+    }
+
+	
 	@Override
-	public List<ProcessType> getProcessTypeDEV() {
+	public List<ProcessType> getProcessTypeCommon() {
 		return null;
 	}
 
 
-	@Override
-	public List<ProcessType> getProcessTypePROD() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<ProcessType> getProcessTypeUAT() {
@@ -199,6 +271,39 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 		return propertyDefinitions;
 	}
+	
+	
+	 private List<PropertyDefinition> getPropertyDefinitionsSpriSelect() {
+         List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+         propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+                         null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+
+         propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null,
+                         DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+
+         propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null,
+                         "single", 100, true, null,null));
+
+         return propertyDefinitions;
+ }
+
+	
+	private List<PropertyDefinition> getPropertyDefinitionsSizingDEV() {
+        List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+                        null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+
+        propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null,
+                        DescriptionFactory.newValues("450-550 (W500)","550-650 (W600)", "500-650","600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+
+        propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null,
+                        "single", 100, true, null,null));
+
+        return propertyDefinitions;
+}
+
 
 	private List<PropertyDefinition> getPropertyDefinitionsAmpliPurif() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
