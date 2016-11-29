@@ -102,7 +102,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO; mise en prod 01/09/2016
+			//FDS 10/08/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO;
 			l.add(newExperimentType("Ext to X5_WG NANO","ext-to-x5-wg-nano",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -129,17 +129,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				// TEST FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
+				//FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
 				l.add(newExperimentType("Ext to RNA norm+pool, dénat, FC, dépôt","ext-to-norm-and-pool-denat-fc-depot",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, 
 						null ,
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+				
+				//FDS 28/11/2016 JIRA NGL-1164
+				l.add(newExperimentType("Ext to QC / TF / purif","ext-to-qc-transfert-purif",null,-1,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
 			}
 				
-
-			
 			
 			/** Transformation, ordered by display order **/
 			
@@ -170,7 +174,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// 25/10/2016 ajout epmotion; 27/10/2016 ajout main
+			//FDS 25/10/2016 ajout epmotion; 27/10/2016 ajout main
 			l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsNormalizationAndPooling(), 
@@ -179,7 +183,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		}
 		
-		    // FDS dupliquer experience prep-pcr-free en prep-wg-nano; prod 26/09/206; separer les proprietes de celles de prep-pcr-free ...
+		    //FDS dupliquer experience prep-pcr-free en prep-wg-nano; prod 26/09/206; separer les proprietes de celles de prep-pcr-free ...
 		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
 				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				   getPropertyDefinitionsPrepWgNano(), 
@@ -290,8 +294,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
 			
-
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 	}
 
@@ -375,11 +379,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();	
+		
+		
+		// FDS 28/11/2016 JIRA NGL-1164
+		newExperimentTypeNode("ext-to-qc-transfert-purif", getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
+				false, false, false, 
+				null, // previous
+				null, // purif (aucune au CNG !!!)
+				getExperimentTypes("labchip-migration-profile","qpcr-quantification","miseq-qc"), //qc
+				getExperimentTypes("aliquoting","pool","tubes-to-plate","plate-to-tubes", "plates-to-plate","x-to-plate"   ) // transfert CNG
+				).save();		
+		
 	}
 		
-	
-	    // 26/09/2016 duplication du node prep-pcr-free en prod
-
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),

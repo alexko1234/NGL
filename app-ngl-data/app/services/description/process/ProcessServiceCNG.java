@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;// ajout FDS
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -44,9 +45,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			// 09/03/2016 N'existent pas encore au CNG...
-			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
-			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
+			// 28/11/2016 fdsanto JIRA NGL-1164; processus ne contenant aucune transformation mais uniquement des QC ou transferts...
+			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));
 		}
 		
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
@@ -226,6 +226,17 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("illumina-depot").get(0),                      //last  experiment type
 					getExperimentTypes("ext-to-norm-and-pool-denat-fc-depot").get(0), //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+			
+			
+			// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans tranformation)
+			l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", 
+					ProcessCategory.find.findByCode("satellites"), 1020,
+					null, 
+					getPETForQCTransfertPurif(), 
+					getExperimentTypes("pool").get(0),                       // 
+					getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type
+					getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		}
 		
 				
@@ -323,7 +334,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 
 	//FDS 10/08/2016 renommer en getX5WgPcrFreeLibProcessTypeCodeValues
-	//               suppression de la valeur DD qui appartient au processus NANO)
 	private static List<Value> getX5WgPcrFreeLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
@@ -368,7 +378,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing
-        values.add(DescriptionFactory.newValue("RG","RG - mRNASeq")); // messenger RNA sequencing
+        values.add(DescriptionFactory.newValue("RG","RG - mRNASeq"));         // messenger RNA sequencing
         
         return values;
 	}
@@ -399,4 +409,19 @@ public class ProcessServiceCNG  extends AbstractProcessService{
          
         return values;
 	}
+	
+	// FDS ajout 28/11/2016 NGL-1164
+	// toutes les transformatins en -1
+	// ext-to-qc-transfert-purif" en -1
+	// premiere exp qc en 0 ???????
+	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
+		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getPET(et.code, -1))
+			.collect(Collectors.toList());
+		pets.add(getPET("ext-to-qc-transfert-purif",-1));
+		pets.add(getPET("pool",0));
+		return pets;		
+	}
+	
 }

@@ -475,10 +475,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		String progList2[] = new String[progList.size()];
 		progList2 = progList.toArray(progList2);
        
-		//prop obligatoire 
-		// propertyValueType pas verifiee !!!!!!!!!!!!!!!!!!!!! et n'a aucun effet ???
+		//prop obligatoire ; bug=> single et pas XXXX
 		l.add(newPropertiesDefinition("Programme Sciclone NGSX", "programScicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				                       newValues(progList2), "XXXX",null,false, null,null));
+				                       newValues(progList2), "single",null,false, null,null));
 		
 		return l;
 	}
