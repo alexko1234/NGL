@@ -22,7 +22,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 					
 					if(experiment.typeCode === "chip-migration" && 
 							(inputContainerUsed.fromTransformationTypeCodes.indexOf("pcr-amplification-and-purification") > -1
-									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("sizing")  > -1)){
+									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("sizing")  > -1 
+									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("spri-select")  > -1)){
 						var experimentProperties = $parse("experimentProperties")(inputContainerUsed);
 						
 						experimentProperties.insertSize = {value:inputContainerUsed.size.value, unit:inputContainerUsed.size.unit};
