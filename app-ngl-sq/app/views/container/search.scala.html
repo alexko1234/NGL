@@ -43,13 +43,20 @@
 		}						
 	}
 	@columnSearchForm{		
-		@formGroup{
+		
 			@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>					
+		
 		}
+		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.fromTransformationTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromTransformationTypeCodes")" 
 				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation',true)">
 			</div>
+		}
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.fromPurificationTypeCode" multiple="true"  placeholder="@Messages("containers.select.fromPurificationCode")"
+									bt-options="expType.code as expType.name for expType in searchService.lists.get('purification',true)">
+			</div>				
 		}
 		}
 	@columnSearchForm{	
@@ -59,6 +66,11 @@
 		}
 		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.table.createUser")' title='@Messages("containers.placeholder.user")'>	
+		}
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.fromTransfertTypeCode" multiple="true" placeholder="@Messages("containers.select.fromTransfertCode")" 
+							bt-options="expType.code as expType.name for expType in searchService.lists.get('transfert',true)">
+			</div>
 		}	
 	}
 			
