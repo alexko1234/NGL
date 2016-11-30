@@ -264,7 +264,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","280-310 (F300)","450-550 (W500)","550-650 (W600)", "500-650","600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","280-310 (F300)", "400-550 (ITS2)", "450-550 (W500)","550-650 (W600)", "500-650","550-700 (ITS2)", "600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
 				"single", 100, true, null,null));
@@ -296,7 +296,7 @@ public class MetaBarCoding extends AbstractDeclaration {
                         null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
         propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null,
-                        DescriptionFactory.newValues("450-550 (W500)","550-650 (W600)", "500-650","600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+                        DescriptionFactory.newValues("280-310 (F300)", "400-550 (ITS2)", "450-550 (W500)","550-650 (W600)", "500-650","550-700 (ITS2)", "600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
 
         propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null,
                         "single", 100, true, null,null));
@@ -390,9 +390,9 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTB(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.addAll(getPropertyMetaB());
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("500-650"), 
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("400-550 (ITS2)", "500-650"), 
 				null,null,null,"single", 17, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("650-800"), 
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("550-700 (ITS2)", "650-800"), 
 				null,null,null,"single", 18, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 19, true, null, null));
