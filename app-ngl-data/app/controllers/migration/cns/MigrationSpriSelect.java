@@ -56,9 +56,9 @@ public class MigrationSpriSelect extends CommonController{
 					content.properties.get("libProcessTypeCode").value="DC";
 				});
 				Logger.debug("Container "+c.code+" udpate");
-				if(c.code.equals("1BEF51LNZ")){
-						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,c);
-				}
+				
+				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,c);
+				
 			}else {
 				logger.error("Particular container "+c.code+" typeCodes"+c.fromTransformationTypeCodes+ ", codes "+c.fromTransformationCodes);
 			}
@@ -69,15 +69,14 @@ public class MigrationSpriSelect extends CommonController{
 			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,exp)){
 				String newCode=exp.replace("SIZING", "SPRI-SELECT");
 				Logger.debug("Experiment "+exp+" replace by new code "+newCode);
-				if(exp.equals("SIZING-20161114_155225GDA")){
-					
+				
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code",exp),DBUpdate.set("typeCode","spri-select").set("code", newCode).set("protocolCode","spri_select"));
 				
 				List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("experimentCodes",exp)).toList();
 				List<String> processCodes=processes.stream().map(p->p.code).collect(Collectors.toList());
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",processCodes),DBUpdate.push("experimentCodes", newCode),true);
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",processCodes),DBUpdate.pull("experimentCodes", exp),true);
-				}
+				
 			}else {
 				logger.error("Experiment "+exp+" not exists");
 			}
