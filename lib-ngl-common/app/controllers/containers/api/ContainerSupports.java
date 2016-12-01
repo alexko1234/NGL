@@ -23,6 +23,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -404,7 +405,7 @@ public class ContainerSupports extends CommonController {
 		}
 
 		if(null != supportsSearch.toDate){
-			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", supportsSearch.toDate));
+			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(supportsSearch.toDate, 1))));
 		}
 		
 		if(StringUtils.isNotBlank(supportsSearch.createUser)){   
