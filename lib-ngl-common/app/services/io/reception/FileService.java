@@ -169,8 +169,12 @@ public abstract class FileService {
 			lastSampleCodeForProjects.put(projectCode, project);
 		}
 		Project project = lastSampleCodeForProjects.get(projectCode);
-		project.lastSampleCode = CodeHelper.getInstance().generateSampleCode(project, false);
-		return project.lastSampleCode;
+		if(null != project){
+			project.lastSampleCode = CodeHelper.getInstance().generateSampleCode(project, false);
+			return project.lastSampleCode;
+		}else{
+			return null;
+		}
 	}
 
 	private String getContainerCode(ContainerSupport support,

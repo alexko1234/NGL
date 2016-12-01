@@ -204,24 +204,29 @@ public class Processes extends DocumentController<Process> {
 	public Result save(){	
 		Form<Process> filledForm = getMainFilledForm();
 		Process input = filledForm.get();		
-		
-
-		if (null == input._id) {			//init state
-			//the trace
-			input.traceInformation = new TraceInformation();
-			input.traceInformation.setTraceInformation(getCurrentUser());
-			if(null == input.state){
-				input.state = new State();
-			}
-			input.state.code = "N";
-			input.state.user = getCurrentUser();
-			input.state.date = new Date();
-		}else {
+		if (null != input._id) {
 			return badRequest("use PUT method to update the process");
 		}
 		
-		
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
+		List<Process> processes = saveOneElement(contextValidation, input);
+		if(!contextValidation.hasErrors()){
+			return ok(Json.toJson(processes));
+		}
+		return badRequest(filledForm.errorsAsJson());		
+	}
+
+	private List<Process> saveOneElement(ContextValidation contextValidation, Process input) {
+		//the trace
+		input.traceInformation = new TraceInformation();
+		input.traceInformation.setTraceInformation(contextValidation.getUser());
+		if(null == input.state){
+			input.state = new State();
+		}
+		input.state.code = "N";
+		input.state.user = contextValidation.getUser();
+		input.state.date = new Date();
+		
 		contextValidation.setCreationMode();
 		contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON);
 		input.validate(contextValidation);
@@ -235,13 +240,18 @@ public class Processes extends DocumentController<Process> {
 			processes.stream().forEach(p -> p.validate(contextValidation));
 			if(!contextValidation.hasErrors()){
 				processes = processes.parallelStream()
-						.map(p -> saveObject(p))
+						.map(p -> {
+							//Process newP = saveObject(p);
+							//workflows.applySuccessPostStateRules(contextValidation, newP);
+							//return newP;
+							return p;
+						})
 						.collect(Collectors.toList());
-				workflows.applySuccessPostStateRules(contextValidation, input);
-				return ok(Json.toJson(processes));
-			}				
+				
+			}	
+			return processes;
 		}
-		return badRequest(filledForm.errorsAsJson());		
+		return null;
 	}
 	
 	private List<Process> getNewProcessList(ContextValidation contextValidation, Process input) {
@@ -256,7 +266,32 @@ public class Processes extends DocumentController<Process> {
 				return process;
 			}).collect(Collectors.toList());		
 	}
-
+	
+	@Permission(value={"writing"})
+	public Result saveBatch(){	
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
+		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+		.map(filledForm -> {
+			ProcessesBatchElement element = filledForm.get();
+			Process process = element.data;
+			if (null == process._id) {
+				ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
+				List<Process> processes = saveOneElement(contextValidation, process);
+				if(!contextValidation.hasErrors()){
+					return new DatatableBatchResponseElement(OK,  processes, element.index);
+				}else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+				}
+			}else{
+				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+			}
+			
+		}).collect(Collectors.toList());
+		
+		return ok(Json.toJson(response));
+	}
 	@Permission(value={"writing"})
 	public Result update(String code){
 		Process objectInDB = getObject(code);

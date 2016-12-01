@@ -72,7 +72,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 		Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
 		
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if("N".equals(stateCode)){
+		if("N".equals(stateCode) && contextValidation.isCreationMode()){
 			if(null != c && !"IW-P".equals(c.state.code)){
 				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
 			}

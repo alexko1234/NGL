@@ -550,8 +550,19 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 	        		 datatable.getData().forEach(function(elt){
 	        			 mainService.getBasket().add(elt.code);
 	        		 });
-	        		 computeData();
+	        		 computeData();	        		 
 	        	 }
+	         },
+	         lines:{
+	        	trClass:function(data, line){
+	        		if($scope.supportView && supportViewData[data.support.code]){
+	        			return supportViewData[data.support.code].trClass
+	        		}else if(containerViewData[data.code[0]]){	        			
+	        			return containerViewData[data.code[0]].trClass	        			
+	        		}else{
+	        			return '';
+	        		}	        		
+	        	} 
 	         },
 	         messages:{
 	        	 active:false,
@@ -562,7 +573,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 	         otherButtons :{
 	        	 active:true,
 	        	 template:''
-	        	 +' <button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+	        	 +' <button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView" ng-if="!containerErroView">'+Messages("baskets.switchView")+
 	        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
 	        	 Messages("baskets.switchView.containers")+'</b>'+
 	        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
@@ -660,7 +671,126 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 		return columns;
 	};
 	
+	var	datatableConfigProcessOK = {
+			 columns: [],
+	         pagination:{
+	        	 active:true,
+	        	 mode:'local',
+	        	 numberRecordsPerPage:50
+	         },		
+	         search:{
+	        	 active:false
+	         },
+	         order:{
+	        	 mode:'local',
+	        	 active:true
+	         },
+	         lines:{
+	        	trClass:function(data, line){
+	        		if(containerViewData[data.inputContainerCode]){	        			
+	        			return containerViewData[data.inputContainerCode].trClass	        			
+	        		}else{
+	        			return '';
+	        		}	        		
+	        	} 
+	         }
+	};
 	
+	
+	var getProcessOKColumns = function(){
+		var columns = [
+		         {
+		        	 "header":Messages("processes.table.inputContainerCode"),
+		        	 "property":"inputContainerCode",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":1,
+		        	 "type":"text"
+		         },
+		         {
+		 			"header":Messages("containers.table.contents.length"),
+		 			"property":"contents.length",
+		 			"url":"'/api/containers/'+inputContainerCode",
+		 			"order":true,
+		 			"hide":true,
+		 			"position":2,
+		 			"type":"number"
+			 	},
+		         {
+		        	 "header":Messages("processes.table.sampleCode"),
+		        	 "property":"sampleCodes",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":2.01,
+		        	 "type":"text"
+		         },	
+		         {
+		        	"header" : Messages("containers.table.tags"),
+		 			"property" : "sampleOnInputContainer.properties.tag.value",
+		 			"type" : "text",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position":4,
+		 			"groupMethod" : "collect",
+		 			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",		        	
+		         },		         
+		         {
+		        	 "header" : Messages("processes.table.typeCode"),
+		 			"property" : "typeCode",
+		 			"filter" : "codes:'type'",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position" : 9,
+		 			"type" : "text"		        	
+		         },
+		         {
+		        	 "header":Messages("processes.table.stateCode"),
+		        	 "property":"state.code",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "filter": "codes:'state'",
+		        	 "position":30,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.code"),
+		        	 "property":"code",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":33,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.creationDate"),
+		        	 "property":"traceInformation.creationDate",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":34,
+		        	 "type":"date"
+		         },
+		         {
+		        	 "header":Messages("processes.table.projectCode"),
+		        	 "property":"projectCodes",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":37,
+		        	 "type":"text"
+		         },
+		         {
+		         "header" : Messages("processes.table.comments"),
+					"property" : "comments[0].comment",
+					"position" : 500,
+					"order" : false,
+					"edit" : true,
+					"hide" : true,
+					"type" : "text"
+			        }
+		 ];
+		
+		columns = columns.concat(processPropertyColumns);
+	
+		return columns;
+	};
 	
 	
 	var getDisplayUnitFromProperty = function(propertyDefinition){
@@ -739,6 +869,19 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 	var containerViewData = {};
 	var supportViewData = {};
 	
+	
+	var swithToContainerErrorView = function(){
+		var containers = [];
+		for(var key in containerViewData){
+			if(containerViewData[key].onError)containers.push(containerViewData[key]);
+		}
+		containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+		$scope.datatable.setColumnsConfig(getProcessCreationColumns("container").concat(processPropertyColumns));
+		$scope.datatable.setData(containers);
+		$scope.containerErroView = true;
+	};
+	
+	
 	var swithToContainerView = function(){
 		var containers = [];
 		for(var key in containerViewData){
@@ -758,7 +901,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 		}
 		supports = $filter('orderBy')(supports, 'support.code');
 		$scope.datatable.setColumnsConfig(getProcessCreationColumns("support").concat(processPropertyColumns));
-		$scope.datatable.setData(supports);	
+		$scope.datatable.setData(supports);			
 		$scope.supportView = true;
 	};
 	
@@ -778,7 +921,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
                 queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
             }
 			
-            $q.all(queries).then(function(results) {
+            return $q.all(queries).then(function(results) {
 				var allData = [];
 				results.forEach(function(result){
 					allData = allData.concat(result.data);
@@ -786,6 +929,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 				
 				allData.forEach(function(data){
 					data.properties = null;
+					data.comments = [];
 					containerViewData[data.code]=data;
 					containerViewData[data.code].code = [data.code];
 					if(supportViewData[data.support.code]){
@@ -798,38 +942,74 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 					}	
 				});
 				
-				$scope.datatable = datatable(datatableConfig);
-				if(!$scope.supportView){
-					swithToContainerView();
-				}else{
-					swithToSupportView()
-				}
+				
             });		
 		}
 	};
 	
 	var save = function(data){
-		var queries = [];
-		data.forEach(function(value){
+		var allProcesses = [];
+		data.forEach(function(value, index){
 			var process = {};
 			process.typeCode = processType.code;
 			process.categoryCode = processType.category.code;
 			process.properties = value.properties;
 			process.inputContainerSupportCode = value.support.code;
+			process.comments = value.comments;
 			value.code.forEach(function(containerCode){
 				var processContainer =  $.extend(true,{},process);
 				processContainer.inputContainerCode = containerCode;
-				queries.push($http.post(jsRoutes.controllers.processes.api.Processes.save().url,processContainer,{viewData:value}));				
-			})
+				allProcesses.push({data:processContainer, index:index});
+			})			
+		});
+		
+		var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+		var queries = [];
+        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch().url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+        }
+		
+		$q.all(queries).then(function(results) {
+			$scope.containerErroView = false;
+			var atLeastOneError = false;
+			
+			results.forEach(function(result){
+				if (result.status !== 200) {
+					console.log("Batch in error");					
+	            } else {
+	            	result.data.forEach(function(data){
+	            		
+	            		if (data.status === 200) {
+	            			containerViewData[data.data[0].inputContainerCode].trClass = "success";
+	            			if(supportViewData[data.data[0].inputContainerSupportCode].trClass !== "danger"){
+	            				supportViewData[data.data[0].inputContainerSupportCode].trClass = "success";
+	            			}
+	            			processesDoneWithSuccess = processesDoneWithSuccess.concat(data.data);
+	            		}else{
+	            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+	            			containerViewData[process.data.inputContainerCode].trClass = "danger";
+	            			containerViewData[process.data.inputContainerCode].onError = true;
+	            			supportViewData[process.data.inputContainerSupportCode].trClass = "danger";
+	            			atLeastOneError = true;
+	            		}	            		
+	            	});	            	
+	            }
+			});
+			
+			if(atLeastOneError){
+    			swithToContainerErrorView();
+    		}else{
+    			datatableConfigProcessOK.columns = getProcessOKColumns();
+    			$scope.datatable = datatable(datatableConfigProcessOK);
+    			$scope.datatable.setData(processesDoneWithSuccess);
+    		}
 			
 		});
-		 
-		 
-		$q.all(queries).then(function(results) {
-			 console.log("done");
-		});
 	};
+		
 	var processType = undefined;
+	var processesDoneWithSuccess = [];
 	var init = function(){
 		
 		if($routeParams.processTypeCode){
@@ -839,7 +1019,14 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 					computeProcessColumns(processType.propertiesDefinitions);
 					//load containers by codes
 					$scope.supportView = false;
-					computeData();
+					computeData().then(function(){
+						$scope.datatable = datatable(datatableConfig);
+						if(!$scope.supportView){
+							swithToContainerView();
+						}else{
+							swithToSupportView()
+						}
+					});					
 				});
 		}
 		

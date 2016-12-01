@@ -182,7 +182,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 	}
 
-	
+	/*
 	public static void createProcessFromContainers(List<Container> containers, String processTypeCode, String sql, ContextValidation contextError) {
 		for(Container container:containers){
 			List<Process> processes=limsServices.findProcessToCreate(sql, container,processTypeCode, contextError);
@@ -204,7 +204,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 	
 	}
-
+	 */
 	private static void deleteContainerAndContainerSupport(
 			List<Container> containers) {
 		for(Container container : containers){

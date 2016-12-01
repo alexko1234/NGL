@@ -1,31 +1,33 @@
 package workflows.process;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.instance.State;
+import models.laboratory.processes.instance.Process;
+import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import play.Logger;
-import fr.cea.ig.MongoDBDAO;
-import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.Container;
-import models.laboratory.processes.instance.Process;
-import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
+import fr.cea.ig.MongoDBDAO;
 @Service
 public class ProcWorkflows extends Workflows<Process> {
 
 	//public static ProcWorkflows instance = new ProcWorkflows();
 	
+	@Autowired
+	ProcWorkflowHelper procWorkflowsHelper;
+	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Process process, State nextState) {
 		process.traceInformation = updateTraceInformation(process.traceInformation, nextState); 			
-		
 		
 	}
 
@@ -38,10 +40,7 @@ public class ProcWorkflows extends Workflows<Process> {
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Process process) {
 		if("N".equals(process.state.code)){
-			//change container state
-			//change support state
-			//assign process properties to content
-			
+			procWorkflowsHelper.updateContainerToStartProcess(validation, process);			
 		}
 	}
 

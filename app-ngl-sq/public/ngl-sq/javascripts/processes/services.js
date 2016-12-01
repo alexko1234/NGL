@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('ngl-sq.processesServices', []).factory('processesSearchService', [ '$http', '$filter', 'mainService', 'lists', 'datatable', 
-                                                                                   function($http, $filter, mainService, lists, datatable) {
+angular.module('ngl-sq.processesServices', []).factory('processesSearchService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 
+                                                                                   function($http, $parse, $filter, mainService, lists, datatable) {
 	var isInit = false;
 
 	var initListService = function() {
@@ -262,33 +262,63 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1) {
 				var typeCode = this.form.typeCodes[0];
 			
-				$http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url).success(function(data, status, headers, config) {
+				$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(typeCode).url).success(function(data, status, headers, config) {
 					if (data != null) {
-						angular.forEach(data, function(property) {
+						angular.forEach(data.propertiesDefinitions, function(propertyDefinition) {
+							
+							var getDisplayUnitFromProperty = function(propertyDefinition){
+								var unit = $parse("displayMeasureValue.value")(propertyDefinition);
+								if(undefined !== unit && null !== unit) return " ("+unit+")";
+								else return "";
+							};
+							var getPropertyColumnType = function(type){
+								if(type === "java.lang.String"){
+									return "text";
+								}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
+									return "number";
+								}else if(type === "java.util.Date"){
+									return "date";
+								}else if(type ==="java.io.File"){
+									return "file";
+								}else if(type ==="java.awt.Image"){
+									return "img";
+								}else if(type ==="java.lang.Boolean"){
+									return "boolean";	
+								}else{
+									throw 'not manage : '+type;
+								}
+
+								return type;
+							};
+							
 							var column = {};
-							var unit = "";
-							if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
-								unit = " (" + property.displayMeasureValue.value + ")";
+							column.watch=true;
+							column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
+							column.required=propertyDefinition.required;
+							    				
+							column.property = "properties."+propertyDefinition.code+".value";
+							column.edit = (mainService.getHomePage() === 'state')?false:propertyDefinition.editable;
+							column.type = getPropertyColumnType(propertyDefinition.valueType);
+							column.choiceInList = propertyDefinition.choiceInList;
+							column.position = (5+(propertyDefinition.displayOrder/1000));
+							column.defaultValues = propertyDefinition.defaultValue;
+							column.format = propertyDefinition.displayFormat;
+							
+							if(column.choiceInList){
+								if(propertyDefinition.possibleValues.length > 100){
+									column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
+								}else{
+									column.listStyle = "bt-select";
+								}
+								column.possibleValues = propertyDefinition.possibleValues; 
+								column.filter = "codes:'value."+propertyDefinition.code+"'";    					
 							}
-	
-							column = datatable.newColumn(property.name+unit, "properties." + property.code + ".value", property.editable, false, true, getPropertyColumnType(property.valueType), property.choiceInList, property.possibleValues, {});
-							column.hide=true;
-							column.listStyle = "bt-select";
-							column.defaultValues = property.defaultValue;
-							if (property.displayMeasureValue != undefined && property.displayMeasureValue != null) {
-								column.convertValue = {
-									"active" : true,
-									"displayMeasureValue" : property.displayMeasureValue.value,
-									"saveMeasureValue" : property.saveMeasureValue.value
-								};
+							
+							if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
+								column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
+										"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
 							}
-							if(property.choiceInList){
-		    					column.filter = "codes:'value."+property.code+"'";
-		    				}
-							column.position = (5 + (property.displayOrder / 1000));
-							if (mainService.getHomePage() === 'state') {
-								column.edit = false;
-							}
+							
 							columns.push(column);
 						});
 						columns = columnsDefault.concat(columns);

@@ -11,16 +11,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-
-
-
-
-
-
-
-
-
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
@@ -55,32 +45,18 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ExperimentHelper;
-import models.utils.instance.SampleHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
-
-
-
-
-
-
-
-
-import com.mongodb.ErrorCategory;
 
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
-import scala.collection.mutable.FlatHashTable.Contents;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;

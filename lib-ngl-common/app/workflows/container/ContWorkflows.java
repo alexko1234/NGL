@@ -49,16 +49,24 @@ public class ContWorkflows extends Workflows<Container> {
 			Container container) {
 		//purg when pass to IS, UA or IW-P
 		if("IS".equals(container.state.code) || "UA".equals(container.state.code) || "IW-P".equals(container.state.code)){
-			//TODO GA improve the extraction of fromTransformationTypeCodes
-			 
-			 boolean unsetFromExperimentTypeCodes = false;
-			 if(null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() == 1){
-				 String code = container.fromTransformationTypeCodes.iterator().next();
-				 if(code.startsWith("ext"))unsetFromExperimentTypeCodes=true;
-			 }else if(null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() > 1){
-				 Logger.error("several fromTransformationTypeCodes not managed");
-			 }
 			
+			//TODO GA improve the extraction of fromTransformationTypeCodes
+
+			if (null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() == 1) {
+				String code = container.fromTransformationTypeCodes.iterator().next();
+				if (code.startsWith("ext")){
+					container.fromTransformationTypeCodes = null;
+				}
+			} else if (null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() > 1) {
+				Logger.error("several fromTransformationTypeCodes not managed");
+			}
+
+			container.processCodes = null;
+			container.processTypeCodes = null;
+			container.contents.parallelStream().forEach(c -> c.processProperties = null);
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
+			
+			/*
 			if(unsetFromExperimentTypeCodes){
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
@@ -68,7 +76,8 @@ public class ContWorkflows extends Workflows<Container> {
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
 																.unset("processTypeCodes"));
-			}		
+			}
+			*/		
 		}
 		
 		if(Boolean.TRUE.equals(validation.getObject(FIELD_UPDATE_CONTAINER_SUPPORT_STATE))){
