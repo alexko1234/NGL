@@ -126,6 +126,8 @@ public class ContainerHelper {
 		finalContent.properties.putAll(content.properties);
 		finalContent.taxonCode=content.taxonCode;
 		finalContent.ncbiScientificName=content.ncbiScientificName;
+		finalContent.processProperties = content.processProperties;
+		
 		return finalContent;
 	}
 	
@@ -146,6 +148,12 @@ public class ContainerHelper {
 				PropertyValue<?> pv = c.properties.get(key);
 				finalContent.properties.computeIfAbsent(key, k -> pv);
 				finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+			}
+			
+			for(String key : c.processProperties.keySet()){
+				PropertyValue<?> pv = c.processProperties.get(key);
+				finalContent.processProperties.computeIfAbsent(key, k -> pv);
+				finalContent.processProperties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
 			}
 		}
 		

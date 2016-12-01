@@ -445,6 +445,9 @@ public class ExpWorkflowsHelper {
 						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 								DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
 								DBUpdate.push("outputContainerSupportCodes",container.support.code));
+						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+								DBQuery.in("code", container.processCodes).notIn("outputContainerCodes", container.code),
+								DBUpdate.push("outputContainerCodes",container.code));
 						
 						if(experimentType.newSample){
 							boolean projectCodeNotExist = MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
@@ -472,8 +475,6 @@ public class ExpWorkflowsHelper {
 					 */
 				});
 			}	
-
-
 		});
 		
 		long t2 = System.currentTimeMillis();
@@ -487,22 +488,27 @@ public class ExpWorkflowsHelper {
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
 				
-				//Retract sampleCode/projectCode of new container from a new sample
-				if(experimentType.newSample){
-					List<Container> containers = entry.getValue();
-					containers.parallelStream()
-					.forEach(container -> {
-						 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-								DBQuery.in("code", container.processCodes),
-								DBUpdate.pull("sampleCodes",container.sampleCodes.iterator().next()));
+				List<Container> containers = entry.getValue();
+				containers.parallelStream()
+				.forEach(container -> {
+					//remove outputContainerCodes from Process
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+							DBQuery.in("code", container.processCodes).in("outputContainerCodes",container.code),
+							DBUpdate.pull("outputContainerCodes",container.code));
+					//Retract sampleCode/projectCode of new container from a new sample
+					if(experimentType.newSample){
+				 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+						DBQuery.in("code", container.processCodes),
+						DBUpdate.pull("sampleCodes",container.sampleCodes.iterator().next()));
 						if(processusWithNewProjectCode.contains(container.code)){
 							Logger.debug("Pull container "+container.code+", projectCodes "+container.projectCodes.iterator().next());
 							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 									DBQuery.in("code", container.processCodes),
 									DBUpdate.pull("projectCodes",container.projectCodes.iterator().next()));
 						}
-					});
-				}
+					}
+				});
+				
 			});
 			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
 			if(null != newProcessCodes){
@@ -532,6 +538,13 @@ public class ExpWorkflowsHelper {
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", code));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", code));
 			});
+			
+			exp.outputContainerCodes.forEach(code -> {
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+						DBQuery.in("outputContainerCodes", code),
+						DBUpdate.pull("outputContainerCodes",code));				
+			});
+			
 			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
 			if(null != newProcessCodes  && newProcessCodes.size() > 0){
 				MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", newProcessCodes));

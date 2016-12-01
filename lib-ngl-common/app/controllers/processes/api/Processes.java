@@ -241,10 +241,9 @@ public class Processes extends DocumentController<Process> {
 			if(!contextValidation.hasErrors()){
 				processes = processes.parallelStream()
 						.map(p -> {
-							//Process newP = saveObject(p);
-							//workflows.applySuccessPostStateRules(contextValidation, newP);
-							//return newP;
-							return p;
+							Process newP = saveObject(p);
+							workflows.applySuccessPostStateRules(contextValidation, newP);
+							return newP;							
 						})
 						.collect(Collectors.toList());
 				
