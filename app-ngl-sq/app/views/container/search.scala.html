@@ -54,7 +54,7 @@
 			</div>
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.fromPurificationTypeCode" multiple="true"  placeholder="@Messages("containers.select.fromPurificationCode")"
+			<div class="form-control" bt-select ng-model="searchService.form.fromPurificationTypeCodes" multiple="true"  placeholder="@Messages("containers.select.fromPurificationCode")"
 									bt-options="expType.code as expType.name for expType in searchService.lists.get('purification',true)">
 			</div>				
 		}
@@ -68,7 +68,7 @@
 			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.table.createUser")' title='@Messages("containers.placeholder.user")'>	
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.fromTransfertTypeCode" multiple="true" placeholder="@Messages("containers.select.fromTransfertCode")" 
+			<div class="form-control" bt-select ng-model="searchService.form.fromTransfertTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromTransfertCode")" 
 							bt-options="expType.code as expType.name for expType in searchService.lists.get('transfert',true)">
 			</div>
 		}	

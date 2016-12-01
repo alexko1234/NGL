@@ -326,22 +326,25 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.regex("support.storageCode", Pattern.compile(containersSearch.supportStorageCodeRegex)));
 		}
 		
-		if(StringUtils.isNotBlank(containersSearch.fromPurificationTypeCode)){
-			if("none".equals(containersSearch.fromPurificationTypeCode)){
-				queryElts.add(DBQuery.notExists("fromPurificationTypeCode"));
+		if(CollectionUtils.isNotEmpty(containersSearch.fromPurificationTypeCodes)){
+			if(containersSearch.fromPurificationTypeCodes.contains("none")){
+				queryElts.add(DBQuery.or(DBQuery.size("fromPurificationTypeCode", 0),DBQuery.notExists("fromPurificationTypeCode")
+						,DBQuery.in("fromPurificationTypeCode", containersSearch.fromPurificationTypeCodes)));
 			}else{
-				queryElts.add(DBQuery.is("fromPurificationTypeCode", containersSearch.fromPurificationTypeCode));
-			}			
+				queryElts.add(DBQuery.in("fromPurificationTypeCode", containersSearch.fromPurificationTypeCodes));
+
+			}
 		}
 		
-		if(StringUtils.isNotBlank(containersSearch.fromTransfertTypeCode)){
-			if("none".equals(containersSearch.fromTransfertTypeCode)){
-				queryElts.add(DBQuery.notExists("fromTransfertTypeCode"));
-			}else{
-				queryElts.add(DBQuery.is("fromTransfertTypeCode", containersSearch.fromTransfertTypeCode));
-			}			
+		if(CollectionUtils.isNotEmpty(containersSearch.fromTransfertTypeCodes)){ 
+				if(containersSearch.fromTransfertTypeCodes.contains("none")){
+					queryElts.add(DBQuery.or(DBQuery.size("fromTransfertTypeCode", 0),DBQuery.notExists("fromTransfertTypeCode")
+							,DBQuery.in("fromTransfertTypeCode", containersSearch.fromTransfertTypeCodes)));
+				}else{
+					queryElts.add(DBQuery.in("fromTransfertTypeCode", containersSearch.fromTransfertTypeCodes));
+				}			
 		}
-		
+				
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){
 			queryElts.add(DBQuery.in("support.categoryCode", containersSearch.containerSupportCategories));
 		}else if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
