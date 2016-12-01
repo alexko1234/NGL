@@ -91,7 +91,7 @@ public class Input extends AbstractInput {
 				PropertySingleValue estimatedDiversity = getPSV(icu, "estimatedDiversity");
 				estimatedDiversity.value = Double.parseDouble(data[12]);
 				
-				icuCodeFound ++; // compile pas...
+				icuCodeFound ++;
 			}
 		});
 

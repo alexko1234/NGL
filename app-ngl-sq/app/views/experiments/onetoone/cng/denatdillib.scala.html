@@ -1,5 +1,11 @@
 @()
-
-<div class="row" ng-controller="DenatDilLibCtrl">
-	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
+<!-- 01/12/2016 FDS NGL-66 denaturation en plaque (copie du code de Libnormalization) -->
+  
+<div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode">
+<div ng-switch-when="tube" >
+    @views.html.experiments.onetoone.defaults.partials.denatdillibtubes()
+</div>
+<div ng-switch-when="96-well-plate" >
+    @views.html.experiments.onetoone.defaults.partials.denatdillibplates()
+</div>
 </div>

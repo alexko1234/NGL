@@ -201,7 +201,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
-					getInstrumentUsedTypes("hand"),
+					getInstrumentUsedTypes("hand","janus"), // 30/11/2016 ajout Janus
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 					

@@ -1,27 +1,29 @@
-// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
-angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
-                                                     function($scope, $parse, $http, atmToSingleDatatable){
+// FDS 01/12/2016 -- JIRA NGL-166 : denaturation en plaques     copie de denat-dil-lib-ctrl.js
+
+angular.module('home').controller('DenatDilLibCtrlPlates',['$scope', '$parse', 'atmToSingleDatatable',
+                                                     function($scope, $parse, atmToSingleDatatable){
 
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
+	// JIRA-781 rendre editable quand experience est en cours=> supprimer:  && !$scope.Inprogress 
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
 			         //--------------------- INPUT containers section -----------------------
-			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
-					  {
+					  /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column{
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
+			        	 "property":"inputContainer.support.code",
 			        	 "order":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0: inputExtraHeaders }
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },	
-			         */				
+			         */
 			         { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -51,13 +53,13 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			         },	
 			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
-			 			"property":"inputContainer.projectCodes",
+			 			"property": "inputContainer.projectCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0: inputExtraHeaders}
+			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
 				     { // Echantillon(s) 
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -70,101 +72,62 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
 				     { //sample Aliquots
-				        "header":Messages("containers.table.codeAliquot"),
-				 		"property": "inputContainer.contents", 
-				 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
-				 		"order":true,
-				 		"hide":true,
-				 		"type":"text",
-				 		"position":6,
-				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        "extraHeaders":{0: inputExtraHeaders}
-					 },
-			         { // libProcessType ajout 08/11/2016
-					 		"header":Messages("containers.table.libProcessType"),
-					 		"property": "inputContainer.contents",
-					 		//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
-					 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
-					 		"order":false,
-					 		"hide":true,
-					 		"type":"text",
-					 		"position":6.5,
-					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					 		"extraHeaders": {0: inputExtraHeaders}	 						 			
-					 },
-					 { //Tags
-					    "header":Messages("containers.table.tags"),
+			        	"header":"Code aliquot",
+			 			"property": "inputContainer.contents",
+			 			"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":6,
+			 			"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	"extraHeaders":{0: inputExtraHeaders}
+				     },
+				     // faudrait il ici le libProcessType comme pour exp normalisation ??
+			         { //Tags
+			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
 			 			"filter": "getArray:'properties.tag.value'| unique",
-					 	"order":true,
-					 	"hide":true,
-					 	"type":"text",
-					 	"position":7,
-					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					    "extraHeaders":{0:inputExtraHeaders}
-					 },
-			         { // 17/11/2016 expected Coverage
-				        "header":Messages("containers.table.expectedCoverage"),
-				 		"property": "inputContainer.contents",
-				 		"filter": "getArray:'properties.expectedCoverage.value'| unique",
-				 		"order":true,
-				 		"hide":true,
-				 		"type":"text",
-				 		"position":7.5,
-				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        "extraHeaders":{0: inputExtraHeaders}
-					 },
-					 { //Concentration; 12/09/2016 ne pas inclure l'unité dans le label; 08/11/2016 label court
-			        	 "header":Messages("containers.table.concentration.shortLabel"), 
-			        	 "property":"inputContainer.concentration.value",  
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":7,
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	"extraHeaders":{0: inputExtraHeaders}
+			         },				 
+					 {  //Concentration en nM;
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":8,
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         { // 12/09/2016 afficher l'unité concentration dans une colonne séparée pour récupérer la vraie valeur
-			        	 "header":Messages("containers.table.concentration.unit.shortLabel"),
-			        	 "property":"inputContainer.concentration.unit",  
+			        /* { // volume pas necessaire ????
+			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "property":"volume.value",
 			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":8.5,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         { //Volume 
-			        	 "header":Messages("containers.table.volume") + " (µL)", 
-			        	 "property":"inputContainer.volume.value",
-			        	 "order":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":9,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         { // Etat input Container
+			        	 "position":5,
+			        	 "extraHeaders":{0: inputExtraHeaders}
+			         },*/
+			         {  // Etat input Container
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code | codes:'state'",
+			        	 "property":"inputContainer.state.code",
+						 "filter":"codes:'state'",
 			        	 "order":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":10,
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	 "position":7,
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         // colonnes specifiques experience viennent ici.. Volume engagé, Volume tampon
+			         // colonnes specifiques experience viennent s'insererer ici s'il y en a
 			          
 			         //------------------------ OUTPUT containers section -------------------
-
-		            /* ne pas aficher les containercodes sauf pour DEBUG 
-			         {
-			        	 "header":"[["+Messages("containers.table.code")+"]]",
-			        	 "property":"outputContainerUsed.code",
-			        	 "order":true,
-						 "hide":true,
-						 "edit":false,
-			        	 "type":"text",
-			        	 "position":100,
-			        	 "extraHeaders":{0:"outputExtraHeaders"}
-			         },*/
 			         { // barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
@@ -190,37 +153,41 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":111,
-			        	 "extraHeaders":{0:outputExtraHeaders}
-			         },	
-			         { // Concentration; 08/11/2016 shortLabel
-			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
-			        	 "property":"outputContainerUsed.concentration.value",
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "defaultValues":4,
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
-			         },
-			         { // Volume  avec valeur par defaut
-			        	 "header":Messages("containers.table.volume")+ " (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
+			         },	
+			         { // Concentration shortLabel en pM;
+			        	 "header":Messages("containers.table.concentration.shortLabel") + " (pM)",
+			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "convertValue": {"active":true, "displayMeasureValue":"pM", "saveMeasureValue":"nM"},			        	 
+			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-						 "defaultValues":15,
+			        	 //"defaultValues":10,
 			        	 "position":130,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         { // Etat outpout container 
-			        	 "header":Messages("containers.table.state.code"),
+			         { // volume en uL
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":140,
+			        	 "extraHeaders":{0:outputExtraHeaders}
+			         },
+			         { 
+			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
+			        	 "order":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":160,
+			        	 "position":500,
 			        	 "extraHeaders":{0:outputExtraHeaders}
-			         }
+			         }       
 			         ],
 			compact:true,
 			pagination:{
@@ -230,10 +197,9 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				active:false
 			},
 			order:{
-				mode:'local',
+				mode:'local', //or 
 				active:true,
-				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
-				//by:"inputContainer.support.column*1"
+				by:'inputContainer.code'
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -253,9 +219,9 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			hide:{
 				active:true
 			},
-			edit:{ // editable si mode=Finished ?????????????????????
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+			edit:{
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -282,6 +248,35 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
+	$scope.$on('refresh', function(e) {
+		console.log("call event refresh");		
+		var dtConfig = $scope.atmService.data.getConfig();
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		$scope.atmService.data.setConfig(dtConfig);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
+		$scope.$emit('viewRefeshed');
+	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.cancel();
+		
+		if($scope.isCreationMode()){
+			var dtConfig = $scope.atmService.data.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.atmService.data.setConfig(dtConfig);
+		}
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
+	});
+	
+	// recuperation du code de lib-normalization
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
 		var dataMain = datatable.getData();
@@ -306,51 +301,22 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		
 	    datatable.setData(dataMain);
 	}
-	
-	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");		
-		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
-		dtConfig.edit.byDefault = false;
-		dtConfig.edit.start = false;
-		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
-		$scope.atmService.data.setConfig(dtConfig);
-		$scope.atmService.refreshViewFromExperiment($scope.experiment);
-		$scope.$emit('viewRefeshed');
-	});
-	
-	$scope.$on('cancel', function(e) {
-		console.log("call event cancel");
-		$scope.atmService.data.cancel();
-		
-		if($scope.isCreationMode()){
-			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.byDefault = false;
-			$scope.atmService.data.setConfig(dtConfig);
-		}
-	});
-	
-	$scope.$on('activeEditMode', function(e) {
-		console.log("call event activeEditMode");
-		$scope.atmService.data.selectAll(true);
-		$scope.atmService.data.setEdit();
-	});
 		
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	// FDS ajout variables pour ligne et colonne
-	atmService.newAtomicTransfertMethod = function(l, c){
+	atmService.newAtomicTransfertMethod = function(l,c){
 		return {
 			class:"OneToOne",
-			line: l, 
-			column: c, 				
+			line:l, 
+			column:c, 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
 	};
 	
+	///  A VERIFIER..........FAUT il pM  plutot ?????????????????
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
@@ -360,15 +326,16 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	
 	$scope.atmService = atmService;
 	
+	// recuperation du code de lib-normalization
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
-		 //console.log("previous code: "+ $scope.outputContainerSupport.code);
+		 console.log("previous code: "+ $scope.outputContainerSupport.code);
 	}
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
-		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
+		console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
 	var generateSampleSheet = function(){
@@ -405,5 +372,6 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
+	
 	
 }]);
