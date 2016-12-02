@@ -483,7 +483,7 @@ public class Containers extends CommonController {
 		}
 
 		if(null != containersSearch.toDate){
-			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(containersSearch.toDate, 1))));
+			queryElts.add(DBQuery.lessThan("traceInformation.creationDate", (DateUtils.addDays(containersSearch.toDate, 1))));
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.valuations)){

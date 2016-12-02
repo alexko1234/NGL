@@ -405,7 +405,7 @@ public class ContainerSupports extends CommonController {
 		}
 
 		if(null != supportsSearch.toDate){
-			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(supportsSearch.toDate, 1))));
+			queryElts.add(DBQuery.lessThan("traceInformation.creationDate", (DateUtils.addDays(supportsSearch.toDate, 1))));
 		}
 		
 		if(StringUtils.isNotBlank(supportsSearch.createUser)){   
