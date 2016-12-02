@@ -129,18 +129,18 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), getTecanProperties(), 
 				getInstruments(
-						createInstrument("wolverine", "Wolverine", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("arrow", "Arrow", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						createInstrument("wolverine", "Wolverine", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("arrow", "Arrow", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 						getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newInstrumentUsedType("TECAN Evo 100 / qPCR Stratagene", "tecan-evo-100-and-stratagene-qPCR-system", InstrumentCategory.find.findByCode("liquid-handling-robot-and-qPCR-system"),
 				getTecanStrategeneProperties(), 
 				getInstruments(
-						createInstrument("wolverine-stratagene1", "Arrow / Stratagene 1", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("wolverine-stratagene2", "Arrow / Stratagene 2", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("arrow-stratagene1", "Wolwerine / Stratagene 1", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("arrow-stratagene2", "Wolwerine / Stratagene 2", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),						
+						createInstrument("wolverine-stratagene1", "Arrow / Stratagene 1", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("wolverine-stratagene2", "Arrow / Stratagene 2", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("arrow-stratagene1", "Wolwerine / Stratagene 1", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("arrow-stratagene2", "Wolwerine / Stratagene 2", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),						
 						getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
