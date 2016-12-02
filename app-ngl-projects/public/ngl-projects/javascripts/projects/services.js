@@ -21,7 +21,14 @@
 			columns.push({	property:"bioinformaticParameters.fgGroup",
 				header: "projects.bioinformaticParameters.fgGroup",
 				type :"String",
-				order:false,
+				order:true,
+				edit:false,
+				choiceInList:false
+			});
+			columns.push({	property:"bioinformaticParameters.fgPriority",
+				header: "projects.bioinformaticParameters.fgPriority",
+				type :"String",
+				order:true,
 				edit:false,
 				choiceInList:false
 			});

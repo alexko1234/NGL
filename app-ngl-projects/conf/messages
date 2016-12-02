@@ -24,15 +24,16 @@ menu.projects = Projets
 #search
 search.form = Formulaire
 search.config = Configuration
-search.placeholder.projects = Sélect. des projets
-search.placeholder.project = Sélect. un projet
-search.placeholder.run = Sélect. un projet
-search.placeholder.runtypes = Sélect. des types de run
-search.placeholder.states = Sélect. des états
-search.placeholder.types = Sélect. des types
-search.placeholder.valid = Sélect. une évaluation
+search.placeholder.projects = Projets
+search.placeholder.project = Projet
+search.placeholder.run = Projet
+search.placeholder.runtypes = Types de run
+search.placeholder.states = Etats
+search.placeholder.types = Types
+search.placeholder.valid = Evaluation
 search.placeholder.regexCode = Regex pour le code
-search.placeholder.umbrellaProject = Sélect. un projet maître
+search.placeholder.umbrellaProject = Projet maître
+search.placeholder.fgGroup = Projet FG
 
 
 #projects
@@ -70,6 +71,7 @@ umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés
 projects.bioinformaticParameters.biologicalAnalysis = Analyse biologique ?
+
 
 
 #button

@@ -57,6 +57,7 @@ public class Projects extends DocumentController<Project> {
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
+			keys.put("bioinformaticParameters", 1);
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);			
