@@ -108,6 +108,19 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 	});
 	
+	columns.push({
+		"header" : Messages("containers.table.volume") + " (µL)",
+		"property" : "inputContainer.volume.value",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "number",
+		"position" : 10.2,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
+	
 	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
 		columns.push({
 			"header" : Messages("containers.table.workName"),
