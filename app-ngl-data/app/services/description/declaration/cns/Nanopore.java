@@ -51,7 +51,7 @@ public class Nanopore extends AbstractDeclaration{
 
 		l.add(newExperimentType("Fragm-Réparation Nanopore","nanopore-fragmentation","FRG",2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus","hand"),"OneToOne",
+				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("megaruptor2","eppendorf-mini-spin-plus","hand"),"OneToOne",
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 

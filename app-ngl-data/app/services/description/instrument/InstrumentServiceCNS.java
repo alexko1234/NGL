@@ -59,6 +59,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Robot pipetage + Thermocycleur", "liquid-handling-robot-and-thermocycler"));
 		l.add(newInstrumentCategory("Thermocycleur + Robot pipetage", "thermocycler-and-liquid-handling-robot"));
 		l.add(newInstrumentCategory("Robot pipetage + Covaris", "liquid-handling-robot-and-covaris"));
+		l.add(newInstrumentCategory("Hydroshear","hydroshear"));
+		
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -246,6 +248,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeMiniSpinProperties(),  getInstrumentEppendorfMiniSpinPlus()
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Megaruptor 2", "megaruptor2", InstrumentCategory.find.findByCode("hydroshear"), getNanoporeMegaruptor2Properties(),  getInstrumentMegaruptor2()
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		//DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 		
 		
@@ -283,6 +289,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
+
+
+
+
 
 
 
@@ -406,6 +416,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         // unite s
         propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
         		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getNanoporeMegaruptor2Properties() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		 propertyDefinitions.add(newPropertiesDefinition("Taille hydropores", "hydroporeSize", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("short","long"), "single",100));
 		return propertyDefinitions;
 	}
 
@@ -749,6 +765,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return instruments;
 	}
 	
+	
+	private List<Instrument> getInstrumentMegaruptor2() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("Megaruptor2_1", "megaruptor2-1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return instruments;
+	}
 
 	private List<Instrument> getInstrumentIRYS() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
