@@ -187,6 +187,7 @@ public class MetaGenomique extends AbstractDeclaration {
 				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58", "280-310 (F300)", "450-550 (W500)", "550-650 (W600)", "500-650","600-700 (W700)","650-700 (W700)", "650-750 (W700)", "650-800", "750-800 (W800)"),
+				
 				null,null,null,"single", 16, true, null, null));
 		
 
@@ -247,6 +248,9 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
+		
+		newExperimentTypeNode("ext-to-metagenomic-process-with-spri-select", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-spri-select").get(0), false, false, false, null, null, null, null).save();
+		
 		
 		
 	}
