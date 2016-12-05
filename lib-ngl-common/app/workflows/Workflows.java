@@ -12,7 +12,11 @@ public abstract class Workflows<T> {
 	
 	public abstract void applyPreStateRules(ContextValidation validation, T exp, State nextState);
 	
-	public abstract void applyCurrentStateRules(ContextValidation validation, T object);
+	//public abstract void applyCurrentStateRules(ContextValidation validation, T object);
+	
+	public abstract void applyPreValidateCurrentStateRules(ContextValidation validation, T object);
+	
+	public abstract void applyPostValidateCurrentStateRules(ContextValidation validation, T object);
 	
 	public abstract void applySuccessPostStateRules(ContextValidation validation, T exp);
 	

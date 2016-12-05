@@ -34,10 +34,13 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	}
 
 	@Override
-	public void applyCurrentStateRules(ContextValidation validation,
-			Submission object) {
-		// TODO Auto-generated method stub
-		
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Submission object) {
+		// TODO Auto-generated method stub		
+	}
+	
+	@Override
+	public void applyPostValidateCurrentStateRules(ContextValidation validation, Submission object) {
+		// TODO Auto-generated method stub		
 	}
 
 	@Override

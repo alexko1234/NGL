@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
@@ -34,10 +35,13 @@ public class ConfigurationWorkflows extends Workflows<Configuration>{
 	}
 
 	@Override
-	public void applyCurrentStateRules(ContextValidation validation,
-			Configuration object) {
-		// TODO Auto-generated method stub
-		
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Configuration object) {
+		// TODO Auto-generated method stub		
+	}
+	
+	@Override
+	public void applyPostValidateCurrentStateRules(ContextValidation validation, Configuration object) {
+		// TODO Auto-generated method stub		
 	}
 
 	@Override

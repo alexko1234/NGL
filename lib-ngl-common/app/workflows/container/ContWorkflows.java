@@ -38,10 +38,13 @@ public class ContWorkflows extends Workflows<Container> {
 	}
 
 	@Override
-	public void applyCurrentStateRules(ContextValidation validation,
-			Container object) {
-		// TODO Auto-generated method stub
-		
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Container object) {
+		// TODO Auto-generated method stub		
+	}
+	
+	@Override
+	public void applyPostValidateCurrentStateRules(ContextValidation validation, Container object) {
+		// TODO Auto-generated method stub		
 	}
 	
 	@Override

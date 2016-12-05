@@ -38,6 +38,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
+import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
 
 import com.mongodb.BasicDBObject;
@@ -56,7 +57,7 @@ public class Processes extends DocumentController<Process> {
 	final static Form<ProcessesBatchElement> batchElementForm = form(ProcessesBatchElement.class);
 	
 	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
-	
+	final static ProcWorkflowHelper workflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
 	public Processes() {
 		super(InstanceConstants.PROCESS_COLL_NAME, Process.class);		
 	}
@@ -313,10 +314,11 @@ public class Processes extends DocumentController<Process> {
 
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
-			workflows.applyCurrentStateRules(ctxVal, input);
+			workflows.applyPreValidateCurrentStateRules(ctxVal, input);
 			input.validate(ctxVal);			
-			if (!ctxVal.hasErrors()) {									
-				updateObject(input);	
+			if (!ctxVal.hasErrors()) {	
+				updateObject(input);
+				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
 				return ok(Json.toJson(input));
 			}else {
 				return badRequest(filledForm.errorsAsJson());			

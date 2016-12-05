@@ -4,6 +4,7 @@ import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.processes.instance.Process;
+import models.sra.submit.common.instance.Submission;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -32,15 +33,20 @@ public class ProcWorkflows extends Workflows<Process> {
 	}
 
 	@Override
-	public void applyCurrentStateRules(ContextValidation validation, Process process) {
-		// TODO Auto-generated method stub
-		//TODO Update container properties
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Process object) {
+		// TODO Auto-generated method stub		
+	}
+	
+	@Override
+	public void applyPostValidateCurrentStateRules(ContextValidation validation, Process process) {
+		procWorkflowsHelper.updateContentProcessPropertiesAttribute(process);
+		procWorkflowsHelper.updateContentPropertiesWithContentProcessProperties(process);
 	}
 	
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Process process) {
 		if("N".equals(process.state.code)){
-			procWorkflowsHelper.updateContainerToStartProcess(validation, process);			
+			procWorkflowsHelper.updateInputContainerToStartProcess(validation, process);			
 		}
 	}
 

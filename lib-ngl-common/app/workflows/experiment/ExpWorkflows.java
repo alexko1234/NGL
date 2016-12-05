@@ -4,6 +4,7 @@ import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -27,8 +28,11 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	ContWorkflows contWorkflows;
 	
 	
+	
+	
+	
 	@Override
-	public void applyCurrentStateRules(ContextValidation validation, Experiment exp) {
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Experiment exp) {
 		if("N".equals(exp.state.code)){
 			expWorkflowsHelper.updateXCodes(exp);
 			if(validation.isUpdateMode()){
@@ -41,15 +45,22 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 			expWorkflowsHelper.updateOutputContainerContents(exp);		
 			expWorkflowsHelper.updateWithNewSampleCodesIfNeeded(exp);
-		}else if("F".equals(exp.state.code)){
-			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
-				expWorkflowsHelper.updateQCResultInInputContainers(exp, validation);
-			}
-		}
+		} 
 		expWorkflowsHelper.updateStatus(exp, validation);
 		expWorkflowsHelper.updateComments(exp, validation);		
 	}
 
+	
+	@Override
+	public void applyPostValidateCurrentStateRules(ContextValidation validation, Experiment exp) {
+		if("F".equals(exp.state.code)){
+			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+				expWorkflowsHelper.updateQCResultInInputContainers(exp, validation);
+			}
+		}	
+	}
+	
+	
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {		
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
 		expWorkflowsHelper.updateStatus(exp, validation);
