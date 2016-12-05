@@ -70,6 +70,10 @@ public class ExperimentType extends CommonInfoType{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCode(categoryCode);
 		}
 		
+		public List<ExperimentType> findActiveByCategoryCode(String categoryCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findActiveByCategoryCode(categoryCode);
+		}
+		
 		public List<ExperimentType> findByCategoryCodes(List<String> categoryCode) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodes(categoryCode);
 		}

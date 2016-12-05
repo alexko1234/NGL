@@ -99,7 +99,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":400,
+			        	 "position":10,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -143,8 +143,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: false,
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -267,7 +267,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		var dataMain = datatable.getData();
 		var dataQCFlowcell = $scope.datatableQcFlowcell.getData();
 		var dataLoadingReport = $scope.datatableLoadingReport.getData();
-		
+	
 		$parse('outputContainerUsed.experimentProperties.qcFlowcell._type').assign(dataMain[0], "object_list");
 		$parse('outputContainerUsed.experimentProperties.qcFlowcell.value').assign(dataMain[0], dataQCFlowcell);
 		
@@ -280,6 +280,23 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			$parse('outputContainerUsed.code').assign(dataMain[0],codeFlowcell);
 			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[0],codeFlowcell);
 		}
+		
+		//calcul automatique = concentration IN * (somme des loadingReport.volume)
+		var concIN = dataMain[0].inputContainer.concentration.value;
+		
+			var reportingList = dataLoadingReport ;
+		var reportingVolSum=0;	
+		for(var j=0; j < reportingList.length; j++){
+			reportingVolSum +=reportingList[j].volume;
+		}
+		
+		$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
+		
+		//Copie d'attribut dans des propriétés
+		var quantOut = dataMain[0].outputContainer.quantity.value;
+		$parse('outputContainerUsed.experimentProperties.postFrgQuantity.value').assign(dataMain[0],quantOut);
+		
+		
 		//datatable.setData(dataMain);
 	}
 	
@@ -287,9 +304,17 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		console.log("call event save");
 		$scope.datatableQcFlowcell.save();
 		$scope.datatableLoadingReport.save();
-		$scope.atmService.data.save();		
+		
+		//save =>copyOtherDTToMainDatatable
+		$scope.atmService.data.save();	
+		
+		console.log("call event save2");
+		
+				
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
+		console.log("call event save3");
+		
 	});
 	
 	

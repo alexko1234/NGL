@@ -67,7 +67,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.addAll(new Opgen().getExperimentType());
-		l.addAll(new Nanopore().getExperimentType());
+	//	l.addAll(new Nanopore().getExperimentType());
 		l.addAll(new Bionano().getExperimentType());
 		l.addAll(new Purif().getExperimentType());
 		l.addAll(new Transfert().getExperimentType());
@@ -78,7 +78,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new MetaTProcess().getExperimentType());
 		l.addAll(new BanqueIllumina().getExperimentType());
 		l.addAll(new RunIllumina().getExperimentType());
-		
+		l.addAll(new Nanopore().getExperimentType());
 		
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
