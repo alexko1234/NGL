@@ -415,6 +415,7 @@
 		 sequencerMap.set("RHS2000", "HiSeq 2000");
 		 sequencerMap.set("RHS2500", "Hi2500");
 		 sequencerMap.set("RHS2500R", "Hi2500 Fast");
+		 sequencerMap.set("RHS4000", "HiSeq 4000");
 		 sequencerMap.set("RMISEQ", "MiSeq");
 		 sequencerMap.set("RGAIIx", "GA IIx");
 		 sequencerMap.set("RNEXTSEQ500", "NextSeq 500");
