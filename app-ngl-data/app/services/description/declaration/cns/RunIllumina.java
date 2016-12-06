@@ -116,6 +116,7 @@ public class RunIllumina extends AbstractDeclaration {
 				getPropertyDefinitionsQPCRQuantification(), 
 				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),
 						getPET("sizing",-1),
+						getPET("spri-select",-1),
 						getPET("pcr-amplification-and-purification",-1),
 						getPET("solution-stock",0),
 						getPET("prepa-flowcell",1),
