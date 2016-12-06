@@ -16,6 +16,10 @@ public class ProjectsSearchForm extends ListForm {
 
 	public List<String> typeCodes;
 	
+	public List<String> fgGroups;
+	
+	public Boolean isFgGroup;
+	
 	 public Set<String> existingFields, notExistingFields;
 
 }

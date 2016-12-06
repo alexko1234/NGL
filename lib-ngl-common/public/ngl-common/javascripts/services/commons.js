@@ -145,6 +145,9 @@ angular.module('commonsServices', []).
     				umbrellaProjects : function(params, key){
     					load(jsRoutes.controllers.projects.api.UmbrellaProjects.list().url,params,(key)?key:'umbrellaProjects');
     				},
+    				bioinformaticParameters : function(params, key){
+    					load(jsRoutes.controllers.projects.api.ProjectBioinformaticParameters.list().url,params,(key)?key:'bioinformaticParameters');
+    				},
     				valuationCriterias: function(params, key){
     					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,(key)?key:'valuationCriterias');    					
     				},
@@ -238,6 +241,7 @@ angular.module('commonsServices', []).
     					this.processCategories(params);
     					this.valuationCriterias(params);
     					this.projects(params);
+    					this.bioinformaticParameters(params);
     					this.samples(params);
     					this.states(params);
     					this.types(params);
@@ -311,6 +315,7 @@ angular.module('commonsServices', []).
     			getProjectCategories : function(){return results['projectCategories'];},
     			getProjectTypes : function(){return results['projectTypes'];},
     			getUmbrellaProjects : function(){return results['umbrellaProjects'];},
+    			getBioinformaticParameters : function(){return results['bioinformaticParameters'];},
     			getSamples : function(){return results['samples'];},
     			getUsers : function(){return results['users'];},
     			getRoles : function(){return results['roles'];},

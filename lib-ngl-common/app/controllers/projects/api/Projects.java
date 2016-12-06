@@ -95,6 +95,18 @@ public class Projects extends DocumentController<Project> {
 			queries.add(DBQuery.is("code", form.projectCode));
 		}
 		
+		if(CollectionUtils.isNotEmpty(form.fgGroups)){
+			queries.add(DBQuery.in("bioinformaticParameters.fgGroup", form.fgGroups));
+		}
+		
+		if (null != form.isFgGroup) {
+			if(form.isFgGroup){
+				queries.add(DBQuery.exists("bioinformaticParameters.fgGroup"));
+			}else{
+				queries.add(DBQuery.notExists("bioinformaticParameters.fgGroup"));
+			}
+		}
+		
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
 			queries.add(DBQuery.is("state.code", form.stateCode));
 		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all

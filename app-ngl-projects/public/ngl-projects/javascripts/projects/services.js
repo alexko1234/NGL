@@ -54,6 +54,7 @@
 		var initListService = function(){
 			if(!isInit){
 				searchService.lists.refresh.projects();
+				searchService.lists.refresh.bioinformaticParameters();
 				searchService.lists.refresh.states({objectTypeCode:"Project", display:true},'statetrue');				
 				searchService.lists.refresh.states({objectTypeCode:"Project"});							
 				searchService.lists.refresh.types({objectTypeCode:"Project"});
