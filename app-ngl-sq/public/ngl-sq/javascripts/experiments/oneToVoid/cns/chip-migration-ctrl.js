@@ -32,9 +32,9 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 						
 						var firstContent = inputContainerUsed.contents[0]; 
 						
-						if(firstContent.properties.libProcessTypeCode === 'N'
-								|| firstContent.properties.libProcessTypeCode === 'A'
-									|| firstContent.properties.libProcessTypeCode === 'C'){
+						if(firstContent.properties.libProcessTypeCode.value === 'N'
+								|| firstContent.properties.libProcessTypeCode.value === 'A'
+									|| firstContent.properties.libProcessTypeCode.value === 'C'){
 							experimentProperties.libLayoutNominalLength = -1;							
 						}
 						

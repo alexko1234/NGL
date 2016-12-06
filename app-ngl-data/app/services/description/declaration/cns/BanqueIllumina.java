@@ -172,7 +172,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampli-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Ampli, sizing, STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
+		l.add(DescriptionFactory.newProcessType("Ampli, Sizing (gel), STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
 				ProcessCategory.find.findByCode("library"), 44,
 				getPropertyBanqueIlluminaSizingPROD(),
 				Arrays.asList(getPET("ext-to-ampli-sizing-stk-illumina-depot",-1)
@@ -189,7 +189,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		
 		
-		l.add(DescriptionFactory.newProcessType("Ampure, Sizing, STK, Dépôt", "ampure-sizing-stk-illumina-depot",
+		l.add(DescriptionFactory.newProcessType("Ampure, Sizing (gel), STK, Dépôt", "ampure-sizing-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 45,
 				getPropertyAmpureSizingSTKDepot(), 
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
@@ -205,7 +205,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		
 		
-		l.add(DescriptionFactory.newProcessType("Sizing, STK, Dépôt", "sizing-stk-illumina-depot",
+		l.add(DescriptionFactory.newProcessType("Sizing (gel), STK, Dépôt", "sizing-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 46,
 				getSizingPropertiesPROD(), 
 				Arrays.asList(getPET("ext-to-sizing-stk-illumina-depot",-1)
