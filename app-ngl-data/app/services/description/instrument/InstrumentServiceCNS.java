@@ -768,7 +768,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private List<Instrument> getInstrumentMegaruptor2() {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("Megaruptor2_1", "megaruptor2-1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("megaruptor2-1","Megaruptor2_1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
