@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.typesafe.config.ConfigFactory;
+
 import akka.util.Collections;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -179,7 +181,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("cov2", "Cov2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); //ok	
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
+		
+		// covaris 3 supprimé, manquant???? 
+		// ajouté 05/12/2016
+		l.add(newInstrumentUsedType("Covaris E220", "covaris-e220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
+				getInstruments(
+						createInstrument("cov3", "Cov3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		
 		/** quality **/
@@ -232,15 +242,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		
-		l.add(newInstrumentUsedType("Covaris LE210 + Sciclone NGSX", "covaris-le220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
+		// 05/12/2016 SUPSQCNG-429 erreur label : LE220 et pas E220
+		l.add(newInstrumentUsedType("Covaris LE220 + Sciclone NGSX", "covaris-le220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
 						createInstrument("covaris2-and-ngs1", "Covaris2 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("covaris2-and-ngs2", "Covaris2 / NGS-2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-
 		l.add(newInstrumentUsedType("Covaris E220 + Sciclone NGSX", "covaris-e220-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
 						createInstrument("covaris3-and-ngs1", "Covaris3 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -254,7 +263,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						// 4/10/2016 les cBots de  type 1 sont remplacee par les cBot type 2
 						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						/** 
-						Question faut-il laisser les anciens instrument pour afficher les donnees anicenne ??
+						Question faut-il laisser les anciens instrument pour afficher les donnees anciennes ??
 						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -457,12 +466,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		ArrayList<String> progList = new ArrayList<String>();
 		
 		// RNA
-		/* 23/11/2016 mettre en production uniquement quand les processus RNA seront eux aussi en production...
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		// 23/11/2016 mettre en production uniquement quand les processus RNA seront eux aussi en production...
 		progList.add("Stranded_TotalRNA_Avril2016");
 		progList.add("Stranded_TotalRNA_Avril2016_RAP_Plate");
 		progList.add("Stranded_mRNA_Avril2016");
 		progList.add("Stranded_mRNA_Avril2016_RAP_Plate");
-		*/
+		}
 		
         //Nano
 		progList.add("TruSEQ_DNA_Nano");

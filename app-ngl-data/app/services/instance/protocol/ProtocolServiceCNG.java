@@ -29,33 +29,6 @@ public class ProtocolServiceCNG {
 		saveProtocols(ctx);
 		Logger.info(institute+" Protocols collection creation is done!");
 	}
-
-	// FDS 10/02/2016 vieux code obsolete ????
-	/*
-	public static void saveProtocolsCNG(ContextValidation ctx){
-		
-		try {
-			List<models.laboratory.experiment.description.Protocol> lpOld = models.laboratory.experiment.description.Protocol.find.findByInstituteCode(institute);
-			for(int i=0; i<lpOld.size();i++ ){
-				Protocol protocole = new Protocol();				
-				protocole.code = lpOld.get(i).code;
-				protocole.name = lpOld.get(i).name;
-				protocole.filePath = lpOld.get(i).filePath;
-				protocole.version = lpOld.get(i).version;
-				protocole.categoryCode = lpOld.get(i).category.code;					
-				List<CommonInfoType> lCommonInfoType = CommonInfoType.find.findByProtocolCode(lpOld.get(i).code);
-				for(CommonInfoType cit:lCommonInfoType){
-					protocole.experimentTypeCodes.add(cit.code);
-				}				
-				InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
-				Logger.debug("");
-			}
-		} catch (DAOException e) {
-			Logger.error("Protocol importation error from SQL: "+e.getMessage());
-		}
-		
-
-	} */
 	
 	private static void removeProtocols(ContextValidation ctx) {
 		MongoDBDAO.delete(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.empty());
@@ -89,30 +62,43 @@ public class ProtocolServiceCNG {
 													   "pcr-and-purification",
 													   "labchip-migration-profile")));
 		
-		// protocoles communs a plusieurs Experiment Types.....=> en attente....
+		
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		
 		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			/** DEV / UAT only**/
-			// "normalization-and-pooling", "library-prep",	toujours en DEV
-			
+			// normalization-and-pooling	toujours en DEV
+	
 			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes("normalization-and-pooling",
-														   "library-prep",														   
+					InstanceFactory.setExperimentTypeCodes("normalization-and-pooling",														   
 														   "aliquoting",
 														   "tubes-to-plate",
 														   "plate-to-tubes",
 														   "plates-to-plate",
 														   "x-to-plate")));
-		}else {
-			
+
+		}else {	
 			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
 					InstanceFactory.setExperimentTypeCodes("aliquoting",
 														   "tubes-to-plate",
 														   "plate-to-tubes",
 														   "plates-to-plate",
 														   "x-to-plate")));
+		}
+		
+		// 05/12/2016 protocoles pour RNA
+		//       aussi pour "labchip-migration-profile" ??? voir avec JG ...
+		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ) {
+			// library-prep	toujours en DEV
+			lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
+					InstanceFactory.setExperimentTypeCodes( "library-prep",
+							                                "pcr-and-purification")));
+			
+			// 05/12/2016 library-prep	toujours en DEV
+			lp.add(newProtocol("2a-ill-sstotalrna-170816","2A_ILL_ssTotalRNA_170816","?","1","production", 
+					InstanceFactory.setExperimentTypeCodes( "library-prep",
+															"pcr-and-purification")));						
 		}
 		
 		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"
