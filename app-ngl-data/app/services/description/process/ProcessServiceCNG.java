@@ -1,5 +1,7 @@
 package services.description.process;
 
+import static services.description.DescriptionFactory.newExperimentTypeNode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,6 +16,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.Instrument;
+import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.description.ProcessExperimentType;
@@ -45,7 +48,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			// 28/11/2016 fdsanto JIRA NGL-1164; processus ne contenant aucune transformation mais uniquement des QC ou transferts...
+			// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));
 		}
 		
@@ -228,13 +231,22 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
 			
-			// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans tranformation)
-			l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", 
-					ProcessCategory.find.findByCode("satellites"), 1020,
-					null, 
-					getPETForQCTransfertPurif(), 
-					getExperimentTypes("pool").get(0),                       // 
-					getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type
+			// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans transformation)
+			l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
+					1020,
+					null, // pas de propriétés ??
+					////   getPETForQCTransfertPurif
+					Arrays.asList(getPET("ext-to-qc-transfert-purif",-1), //ordered list of experiment type in process type  (liste donnee par JG)
+							getPET("prep-pcr-free",-1),
+							getPET("prep-wg-nano",-1),
+							getPET("pcr-and-purification",-1),
+							getPET("lib-normalization",-1),
+							getPET("library-prep",-1),
+							getPET("denat-dil-lib",-1),
+							getPET("normalization-and-pooling",-1),
+							getPET("pool",0) ),	
+					getExperimentTypes("pool").get(0),                       //first experiment type
+					getExperimentTypes("pool").get(0),                       //last  experiment type
 					getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		}
@@ -410,18 +422,23 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	// FDS ajout 28/11/2016 NGL-1164
-	// toutes les transformatins en -1
+	// FDS ajout 28/11/2016 NGL-1164  PLUS UTILISE ???.....
+	// toutes les transformation en -1
 	// ext-to-qc-transfert-purif" en -1
-	// premiere exp qc en 0 ???????
+	// pool en 0 
 	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
 		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
 			.stream()
 			.map(et -> getPET(et.code, -1))
 			.collect(Collectors.toList());
+
 		pets.add(getPET("ext-to-qc-transfert-purif",-1));
 		pets.add(getPET("pool",0));
+
 		return pets;		
 	}
+	
+
+
 	
 }
