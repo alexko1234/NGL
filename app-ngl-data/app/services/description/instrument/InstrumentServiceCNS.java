@@ -319,8 +319,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("r2d2-and-covarise220-1","R2D2 / covarisE220_1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add(createInstrument("r2d2-and-covarise220-cng","R2D2 / covarise220 CNG", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		instruments.add(createInstrument("nono-and-covarise220-1","NONO / covarisE220_1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("nono-and-covarise220-cng","NONO / covarise220 CNG", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("maya-and-covarise220-1","MAYA / covarisE220_1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("maya-and-covarise220-cng","MAYA / covarise220 CNG", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return instruments;
 	}
