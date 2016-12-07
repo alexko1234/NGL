@@ -67,7 +67,7 @@ public class ReadSets extends ReadSetsController{
 	final static Form<ReadSetBatchElement> batchElementForm = form(ReadSetBatchElement.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location");
-	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties");
+	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
 	@Permission(value={"reading"})
 	public static Result list() {
