@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import play.Logger;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
@@ -43,13 +45,13 @@ public class Output extends AbstractOutput {
 			content = OutputHelper.format(normalisation_post_pcr_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 
 		}else if ("tubes-to-plate".equals(type)) {
-			// feuille de route specifique pour les pools de plaques -> plaque
+			// feuille de route specifique pour les pools de tubes -> plaque
 			content = OutputHelper.format(tubes_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
+			
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
 		}
-		Logger.debug("Content "+content);
 		File file = new File(getFileName(experiment)+".csv", content);
 		return file;
 	}
@@ -71,15 +73,19 @@ public class Output extends AbstractOutput {
 	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory) {
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
-		
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
 		
 		pssl.inputContainerCode = icu.code;
 		pssl.outputContainerCode = ocu.code;
-		
-		pssl.inputVolume = (Double)icu.experimentProperties.get("inputVolume").value;
-		pssl.bufferVolume = (Double)icu.experimentProperties.get("bufferVolume").value;
-		
+
+		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("inputVolume")){
+			pssl.inputVolume = (Double)icu.experimentProperties.get("inputVolume").value;
+		}else if(ocu.volume!=null && ocu.volume.value!=null){
+			pssl.inputVolume = (Double)ocu.volume.value;
+		}
+		if(icu.experimentProperties!=null && icu.experimentProperties.containsKey("bufferVolume")){
+			pssl.bufferVolume = (Double)icu.experimentProperties.get("bufferVolume").value;
+		}
 		pssl.dwell = OutputHelper.getNumberPositionInPlateByLine(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
 		
 		if("tube".equals(inputContainerCategory)){
