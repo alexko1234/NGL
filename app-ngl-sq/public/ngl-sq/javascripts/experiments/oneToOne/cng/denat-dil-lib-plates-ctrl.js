@@ -366,12 +366,14 @@ angular.module('home').controller('DenatDilLibCtrlPlates',['$scope', '$parse', '
 		});
 	};
 	
+	/* 08/12/2016 pas de sample sheet... pour l'instant
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
 		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')}, // FDS pourquoi ce forcage ???
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
+	*/
 	
 	
 }]);

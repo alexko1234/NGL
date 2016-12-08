@@ -335,12 +335,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	$scope.columns = ["1","2","3","4","5","6","7","8","9","10","11","12"]; 
 	$scope.lines=["A","B","C","D","E","F","G","H"];  
 	
-    // rootWorkName= préfixe par defaut pour génération automatique des labels de travail
+    // experimenRootWorkName= préfixe par defaut pour génération automatique des labels de travail
     $scope.outputContainer = { supportCode: null, supportStorageCode: null, experimentRootWorkName:"pool", concentration: null, conc_unit: null, volume: null};
     
     // 01/10/2016--------------------------- pooling "automatique"--------------------------------------------------------------------
-    //           ne pas encore tout mettre en service...
-    // 10/11/2016 ajout mode 'MOUSE' et modification du mode fonctionnement=> passer par le bouton "=>]" pour lancer la creation des pools
     // 08/12/2016 commencer avec un tableau contenant une valeu par defaut pour le cas "hand"
     $scope.poolingModes=[ {code: 'MOUSE', name:'libre'}];   // default value 
     

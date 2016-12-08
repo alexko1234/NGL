@@ -22,11 +22,11 @@
 			<th>
 				@Messages("containers.table.code")
 			</th>
-		    <!--  08/12/2016 allegement 				
+			<!--  08/12/2016 allegement 			
 			<th>
 				@Messages("containers.table.project_sample")
-			</th>
-			-->						
+			</th>	
+			-->					
 			<th>
 				@Messages("containers.table.tags")
 			</th>
@@ -178,11 +178,11 @@
 				<td>
 					<div list-resize='inputContainerUsed.fromTransformationTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
 				</td>
-				     08/12/2016 re-allegement!!
+				    08/12/2016 re-allegement!!
 				<td>
 					<div list-resize="inputContainerUsed.contents | collect:'projectCode+&quot; / &quot;+sampleCode'" list-resize-min-size="5" vertical>																					
-				</td>	
-				-->					
+				</td>
+				-->						
 				<td>
 					<div list-resize='inputContainerUsed.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>															
 				</td>

@@ -1,10 +1,9 @@
-<!--  cree 01/12/2016 test fds -->
 
 <div class="col-sm-12 col-lg-12" ng-controller="DenatDilLibCtrlPlates">  
   <form class="form-group" role="form">
   	  <!-- premiere ligne -->
       <div class="row margin-bottom-3">
-         <div class="form-group col-lg-6">          
+         <div class="form-group col-lg-3">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
@@ -19,7 +18,7 @@
 			  </div>   
 	     </div>
 	 
-         <div class="form-group col-lg-6">
+         <div class="form-group col-lg-3">
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>

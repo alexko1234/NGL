@@ -41,15 +41,15 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		//Attention l'ordre de déclaration sera l'ordre de présentation dans les menus
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
+
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));      //display 1...
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));  //display 20...
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		   //display 40...
 		
 		/************************************ DEV / UAT ONLY **********************************************/
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
 			// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
-			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));
+			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));  //display 60...
 		}
 		
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
@@ -102,7 +102,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){  //TEST-UAT 16/11/2016 !!!!	
 			// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
-				11,
+				20,
 				null,  // pas de propriétés ??
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
 						getPET("prep-pcr-free",-1), getPET("pcr-and-purification",-1), 
@@ -116,7 +116,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		} else {
 		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
-				11,
+				20,
 				null,  // pas de propriétés ??
 				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
 						getPET("prep-pcr-free",-1), getPET("pcr-and-purification",-1), 
@@ -132,8 +132,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){  //TEST-UAT 16/11/2016 !!!!
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Dénat, prep FC, dépôt"
 		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
-				51,
-		           getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
+				40,
+		        getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
 		            	getPET("lib-normalization",-1), getPET("normalization-and-pooling",-1), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en -1
 		            	getPET("denat-dil-lib",0),
@@ -146,7 +146,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		} else {
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Dénat, prep FC, dépôt"
 		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
-				51,
+				40,
             	getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
             			getPET("lib-normalization",-1),
@@ -158,10 +158,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-denat-dil-lib").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		} 
-	   
+		
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Prep FC, dépôt"
-		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
-				52,
+				l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
+				41,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-prepa-flowcell",-1), //ordered list of experiment type in process type
 						getPET("denat-dil-lib",-1),
@@ -170,11 +170,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("prepa-flowcell").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 
 		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){  //TEST-UAT 16/11/2016 !!!!
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
-				53,
+				42,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
 						getPET("lib-normalization",-1),  getPET("normalization-and-pooling",-1), //FDS 16/11/2016 : ajouter "normalization-and-pooling" en -1
@@ -184,9 +184,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		} else {
+		} else {	
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
-				53,
+				42,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
 						getPET("lib-normalization",-1),
@@ -217,7 +217,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			
             //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modi du label=> supprimer RNA
 			l.add(DescriptionFactory.newProcessType("Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
-					6,   
+					21,   
 					null, // pas de propriétés ??
 					Arrays.asList(getPET("ext-to-norm-and-pool-denat-fc-depot",-1), //ordered list of experiment type in process type
 							getPET("pcr-and-purification", -1),
@@ -233,10 +233,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			
 			// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans transformation)
 			l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
-					1020,
-					null, // pas de propriétés ??
-					////   getPETForQCTransfertPurif
-					Arrays.asList(getPET("ext-to-qc-transfert-purif",-1), //ordered list of experiment type in process type  (liste donnee par JG)
+					60,
+					null, // pas de propriétés ??  
+					Arrays.asList(getPET("ext-to-qc-transfert-purif",-1), //ordered list of experiment type in process type  (liste donnee par JG) ou utiliser getPETForQCTransfertPurif
 							getPET("prep-pcr-free",-1),
 							getPET("prep-wg-nano",-1),
 							getPET("pcr-and-purification",-1),
@@ -246,7 +245,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 							getPET("normalization-and-pooling",-1),
 							getPET("pool",0) ),	
 					getExperimentTypes("pool").get(0),                       //first experiment type
-					getExperimentTypes("pool").get(0),                       //last  experiment type
+					getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
 					getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		}

@@ -384,14 +384,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		
 		// FDS ajout 28/11/2016 JIRA NGL-1164
-		//  .....pas sur s'il faut lister ici les experiences QC et les transfert....
 		newExperimentTypeNode("ext-to-qc-transfert-purif", getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
 				false, false, false, 
 				null, // no previous nodes
-				null, // purif (aucune au CNG !!!)
-				//getExperimentTypes("labchip-migration-profile","qpcr-quantification","miseq-qc"), // qc
-				//getExperimentTypes("aliquoting","pool","tubes-to-plate","plate-to-tubes", "plates-to-plate","x-to-plate"   ) // transfert
-				// essai supression
+				null,
 				null,
 				null
 				).save();		
@@ -464,16 +460,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("miseq-qc"), // qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();
-			
+		
+		/************************************ DEV / UAT ONLY **********************************************/
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
-		//FDS bug manquait "normalization-and-pooling" previous
+		//FDS 08/12/2016 bug manquait "normalization-and-pooling" en previous pour le dev
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization", "normalization-and-pooling"), // previous nodes
+				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization","normalization-and-pooling"), // previous nodes
 				null,
 				null, // pas qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();
+		} else {
+		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"), // previous nodes
+				null,
+				null, // pas qc 
+				getExperimentTypes("aliquoting","pool") // tranfert
+				).save();
+		}
 		
 		// il doit etre cree APRES les nodes qu'il prend en previous !! 
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
@@ -483,8 +490,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				///getETNForPool(),  // previous nodes... marche pas ????
 				getExperimentTypeNodes("prep-pcr-free","prep-wg-nano","pcr-and-purification","lib-normalization","library-prep","denat-dil-lib","normalization-and-pooling"),// previous nodes
 				null,
-				null, 
-				null 
+				null,
+				null
 				).save();
 		}	
 		
