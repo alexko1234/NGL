@@ -1,5 +1,7 @@
 package controllers.migration.cns;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,15 +10,22 @@ import java.util.Map;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.jdbc.core.RowMapper;
 
+import lims.cns.services.LimsServiceCNS;
+import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.Logger.ALogger;
+import play.api.modules.spring.Spring;
 import play.mvc.Result;
+import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.migration.models.ContainerSupportLocation;
@@ -25,13 +34,49 @@ import fr.cea.ig.MongoDBDAO;
 public class MigrationUpdateSupportPlaque extends CommonController{
 
 	protected static ALogger logger=Logger.of("MigrationUpdateSupportPlaque");
-
+	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
 
 	public static Result migration() {
 		//updateSupportContainerBanqueAmpli();
 		//updateSupportContainerSolutionStock();
-		updateSupportContainerBanqueAmpliPlaqueToTube();
+		//updateSupportContainerBanqueAmpliPlaqueToTube();
+		updateSupportContainerTubeLimsToPlaque();
 		return ok("Migration Support Container Finish");
+	}
+
+	private static void updateSupportContainerTubeLimsToPlaque() {
+
+		List<Container> results = limsServices.jdbcTemplate.query("select m.plaqueId, m.plaqueX, m.plaqueY, code=tubnom from Materielmanip m, Tubeident t where m.matmaco=t.matmaco and matmaInNGL!=null and m.plaqueId!=null ",new Object[]{} 
+		,new RowMapper<Container>() {
+
+			@SuppressWarnings("rawtypes")
+			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Container container = new Container();
+
+				container.code=rs.getString("code");
+				container.support=new LocationOnContainerSupport();
+				container.support.code=rs.getString("plaqueId");
+				container.support.line=rs.getString("plaqueY");
+				container.support.column=rs.getString("plaqueX");
+				container.support.categoryCode="96-well-plate";
+				return container;
+			}
+
+		});
+
+		List<Container> updatedContainers=new ArrayList<Container>();
+		//delete container support
+		for(Container container : results){
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("support",container.support).set("categoryCode","well"));
+			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
+			updatedContainers.add(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code));
+		}
+		
+		//Create support container
+		ContextValidation contextError=new ContextValidation("ngl");
+		ContainerHelper.createSupportFromContainers(updatedContainers,null, contextError);
+
 	}
 
 	// TO FINISH and TEST
@@ -68,6 +113,7 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 				container.support.column=c.column;
 				container.support.categoryCode="96-well-plate";
 				container.categoryCode="well";
+				
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),
 						DBUpdate.set("support",container.support).set("categoryCode", container.categoryCode)
 						);
@@ -75,7 +121,7 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 				updateContainers.add(container);
 			}
 			Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
-
+			
 			ContainerHelper.createSupportFromContainers(updateContainers, propertiesContainerSupports, contextValidation);
 
 		}

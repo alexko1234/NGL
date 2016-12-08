@@ -347,7 +347,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			}
 		});
 		
-		datatableConfig.order.by = 'inputContainer.sampleCodes';
+		datatableConfig.order.by = 'inputContainer.support.code';
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
