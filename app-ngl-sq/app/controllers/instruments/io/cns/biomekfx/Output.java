@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import play.Logger;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
@@ -41,11 +42,14 @@ public class Output extends AbstractOutput {
 			// feuille de route specifique pour les pools de plaques -> plaque
 			content = OutputHelper.format(normalisation_post_pcr_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 
+		}else if ("tubes-to-plate".equals(type)) {
+			// feuille de route specifique pour les pools de plaques -> plaque
+			content = OutputHelper.format(tubes_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
 		}
-		
+		Logger.debug("Content "+content);
 		File file = new File(getFileName(experiment)+".csv", content);
 		return file;
 	}
