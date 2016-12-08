@@ -466,9 +466,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();
 			
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
+		//FDS bug manquait "normalization-and-pooling" previous
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"), // previous nodes
+				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization", "normalization-and-pooling"), // previous nodes
 				null,
 				null, // pas qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
@@ -482,11 +483,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				///getETNForPool(),  // previous nodes... marche pas ????
 				getExperimentTypeNodes("prep-pcr-free","prep-wg-nano","pcr-and-purification","lib-normalization","library-prep","denat-dil-lib","normalization-and-pooling"),// previous nodes
 				null,
-				// essai ajout...
-				getExperimentTypes("labchip-migration-profile","qpcr-quantification","miseq-qc"), // qc
-				getExperimentTypes("aliquoting","pool","tubes-to-plate","plate-to-tubes", "plates-to-plate","x-to-plate"   ) // transfert
-				//null, // pas de QC
-				//null  // pas de transfert
+				null, 
+				null 
 				).save();
 		}	
 		
