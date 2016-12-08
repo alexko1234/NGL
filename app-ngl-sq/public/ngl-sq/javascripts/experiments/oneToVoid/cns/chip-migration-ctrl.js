@@ -35,7 +35,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 						if(firstContent.properties.libProcessTypeCode.value === 'N'
 								|| firstContent.properties.libProcessTypeCode.value === 'A'
 									|| firstContent.properties.libProcessTypeCode.value === 'C'){
-							experimentProperties.libLayoutNominalLength = -1;							
+							experimentProperties.libLayoutNominalLength = {value:-1, unit:"pb"};						
 						}
 						
 					}
@@ -113,6 +113,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
+	
 	columns.push({
 			"header" : Messages("containers.table.concentration"),
 			"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
@@ -153,19 +154,19 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
-/*	columns.push({
+	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",
 			"order" : false,
 			"hide" : true,
 			"type" : "text",
-			"position" : 9.1,
+			"position" : 7.1,
 			"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
 		});
-	
+	/*	
 	columns.push({
 			"header" : Messages("containers.table.tags"),
 			"property" : "inputContainer.contents",
