@@ -4,6 +4,9 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
 	config.name = $scope.experiment.typeCode.toUpperCase();
+	if($scope.experiment.instrument.inContainerSupportCategoryCode==="tube"){
+		config.order.by = "inputContainer.support.code";		
+	}
 	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
