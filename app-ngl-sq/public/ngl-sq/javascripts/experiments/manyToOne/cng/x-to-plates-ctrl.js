@@ -341,22 +341,21 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
     // 01/10/2016--------------------------- pooling "automatique"--------------------------------------------------------------------
     //           ne pas encore tout mettre en service...
     // 10/11/2016 ajout mode 'MOUSE' et modification du mode fonctionnement=> passer par le bouton "=>]" pour lancer la creation des pools
+    // 08/12/2016 commencer avec un tableau contenant une valeu par defaut pour le cas "hand"
+    $scope.poolingModes=[ {code: 'MOUSE', name:'libre'}];   // default value 
+    
     if ( $scope.experiment.instrument.typeCode === "janus") {	
-    	$scope.poolingModes=[ 
-    	                     {code: 'MOUSE', name:'libre'},
-                           //{code: 'L4',  name:'Ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}, 
-                           //{code: 'L6',  name:'Ligne 6-p',    poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
-                           //{code: 'IS4', name:'Ill Sing 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
-                           //{code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'},
-                             {code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
-                             {code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
-                            ];
-    } else if ( $scope.experiment.instrument.typeCode === "epmotion") {	
-    	$scope.poolingModes=[ 
-    	                     {code: 'MOUSE', name:'libre'},
-    	                     {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'},
-    	                     {code: 'C6',  name:'Col 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'}
-    	                    ];
+         //      ne pas encore mettre tous les modes en service...
+        //$scope.poolingModes.push({code: 'L4',  name:'Ligne 4-p',    poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'}); 
+        //$scope.poolingModes.push({code: 'L6',  name:'Ligne 6-p',    poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'});
+        //$scope.poolingModes.push({code: 'IS4', name:'Ill Sing 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'});
+        //$scope.poolingModes.push({code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'});
+    	$scope.poolingModes.push({code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	$scope.poolingModes.push({code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+
+    } else if ( $scope.experiment.instrument.typeCode === "epmotion") {	 	
+    	$scope.poolingModes.push ( {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	$scope.poolingModes.push ( {code: 'C6',  name:'Col 6-p',  poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
     } 
 
     // 10/11/2016 ajout doPooling pour remplacer l'ancien fonctionnement

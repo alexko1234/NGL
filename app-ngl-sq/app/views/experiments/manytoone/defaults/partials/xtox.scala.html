@@ -66,12 +66,13 @@
 			          ng-click="doPooling()"
 			          ng-disabled="(!atmService.data.isSelectInputContainers() && (poolingMode.code ==='MOUSE'))||(atmService.data.isSelectInputContainers() && (poolingMode.code !=='MOUSE')) || (poolingMode === null)">
 			  <i class="fa fa-sign-in fa-2x"></i>
-			  </button>		
-			  <select class="form-control input-sm"
+			  </button>	
+			  <label for="selectPoolMode">Pool Mode</label>
+			  <select class="form-control input-sm" id="selectPoolMode"
 	  					ng-model="poolingMode"	
 	  					ng-change="setPoolingMode(poolingMode)"		
 						ng-options="mode as mode.name for mode in poolingModes track by mode.code">  	
-						<option value="">pool mode</option>  			    							     	 
+						<option value="">---</option>  			    							     	 
 	          </select>	
 	        </div>
 			<button class="btn btn-default btn-sm btn-block" 
