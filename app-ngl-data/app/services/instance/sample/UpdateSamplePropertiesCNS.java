@@ -139,7 +139,7 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 						content.properties.putAll(updatedProperties);
 					});;
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
-			});;
+			});
 		
 		// ReadSet update sampleOnContainer.properties
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
