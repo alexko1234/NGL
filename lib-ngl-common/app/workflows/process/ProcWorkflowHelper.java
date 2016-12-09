@@ -86,7 +86,7 @@ public class ProcWorkflowHelper {
 						&& process.projectCodes.contains(content.projectCode))
 				.forEach(content -> {
 					content.properties.putAll(updatedProperties);
-				});;
+				});
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 		});
 	
@@ -101,7 +101,7 @@ public class ProcWorkflowHelper {
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
 				}
 			});			
-		}
+	}
 	
 	
 	private List<String> getProcessesPropertyDefinitionCodes(Process process, Level.CODE level) {		
