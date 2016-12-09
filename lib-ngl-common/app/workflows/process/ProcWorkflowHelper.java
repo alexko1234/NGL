@@ -82,8 +82,8 @@ public class ProcWorkflowHelper {
 		.cursor.forEach(container -> {
 			container.traceInformation.setTraceInformation(validation.getUser());
 			container.contents.stream()
-				.filter(content -> content.sampleCode.equals(process.sampleOnInputContainer.sampleCode) 
-						&& content.projectCode.equals(process.sampleOnInputContainer.projectCode))
+				.filter(content -> process.sampleCodes.contains(content.sampleCode) 
+						&& process.projectCodes.contains(content.projectCode))
 				.forEach(content -> {
 					content.properties.putAll(updatedProperties);
 				});;
@@ -94,8 +94,8 @@ public class ProcWorkflowHelper {
 		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes))
 			.getCursor()
 			.forEach(readset -> {
-				if(process.sampleOnInputContainer.sampleCode.equals(readset.sampleCode) 
-						&& process.sampleOnInputContainer.projectCode.equals(readset.projectCode)){
+				if(process.sampleCodes.contains(readset.sampleCode) 
+						&& process.projectCodes.contains(readset.projectCode)){
 					readset.traceInformation.setTraceInformation(validation.getUser());
 					readset.sampleOnContainer.properties.putAll(updatedProperties);
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
@@ -124,14 +124,14 @@ public class ProcWorkflowHelper {
 		
 		DBQuery.Query query = DBQuery.in("code",containerCodes);
 		if(process.sampleOnInputContainer.properties.containsKey("tag")){
-			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode)
-												.is("projectCode",  process.sampleOnInputContainer.projectCode)
+			query.elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes)
+												.in("projectCode",  process.projectCodes)
 												.is("properties.tag.value", process.sampleOnInputContainer.properties.get("tag").value)
 												.exists("processProperties"));
 			
 		}else{
-			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode)
-												.is("projectCode",  process.sampleOnInputContainer.projectCode)
+			query.elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes)
+												.in("projectCode",  process.projectCodes)
 												.exists("processProperties"));			
 		}
 		
