@@ -339,7 +339,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
     $scope.outputContainer = { supportCode: null, supportStorageCode: null, experimentRootWorkName:"pool", concentration: null, conc_unit: null, volume: null};
     
     // 01/10/2016--------------------------- pooling "automatique"--------------------------------------------------------------------
-    // 08/12/2016 commencer avec un tableau contenant une valeu par defaut pour le cas "hand"
+    // 08/12/2016 commencer avec un tableau contenant une valeur par defaut pour le cas "hand"
     $scope.poolingModes=[ {code: 'MOUSE', name:'libre'}];   // default value 
     
     if ( $scope.experiment.instrument.typeCode === "janus") {	
@@ -350,6 +350,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
         //$scope.poolingModes.push({code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'});
     	$scope.poolingModes.push({code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
     	$scope.poolingModes.push({code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	$scope.poolingModes.push({code: 'ID8', name:'Ill Dual 8-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
 
     } else if ( $scope.experiment.instrument.typeCode === "epmotion") {	 	
     	$scope.poolingModes.push ( {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
@@ -405,7 +406,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
         	if (( poolingMode.code === "L4")||( poolingMode.code === "L6")||( poolingMode.code === "C4")||( poolingMode.code === "C6")){ 
         		poolContigu( poolingMode.poolPlex, startPos, endPos, poolingMode.numtype ); 
         	}
-        	else if ((poolingMode.code === "ID4")||(poolingMode.code === "ID6")){ 
+        	else if ((poolingMode.code === "ID4")||(poolingMode.code === "ID6")||(poolingMode.code === "ID8")){ 
         		poolIlluminaDual( poolingMode.poolPlex, startPos, endPos );
         	}
         	else if ((poolingMode.code === "IS4")||(poolingMode.code === "IS6")){ 
