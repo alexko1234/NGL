@@ -44,10 +44,12 @@ public class Output extends AbstractOutput {
 			// feuille de route specifique pour les pools de plaques -> plaque
 			content = OutputHelper.format(normalisation_post_pcr_x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 
-		}else if ("tubes-to-plate".equals(type) || "plates-to-plate".equals(type)) {
+		}else if ("tubes-to-plate".equals(type)) {
 			// feuille de route specifique pour les pools de tubes -> plaque
 			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
 			
+		} else if ("plates-to-plate".equals(type)){
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
