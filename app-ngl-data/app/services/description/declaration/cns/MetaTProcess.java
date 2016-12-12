@@ -52,6 +52,10 @@ public class MetaTProcess extends AbstractDeclaration {
 				AbstractExperimentService.getInstrumentUsedTypes("thermocycler-and-biomek-fx","thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
+				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and-covaris-e220"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
 		
 		return l;
@@ -60,10 +64,6 @@ public class MetaTProcess extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and-covaris-e220"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		return l;
 		
 	}
@@ -72,10 +72,6 @@ public class MetaTProcess extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		return l;
 	}
 
