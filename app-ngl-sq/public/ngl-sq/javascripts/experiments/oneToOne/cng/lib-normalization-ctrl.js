@@ -253,7 +253,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			hide:{
 				active:true
 			},
-			edit:{ // editable si mode=Finished ?????????????????????
+			edit:{ 
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),

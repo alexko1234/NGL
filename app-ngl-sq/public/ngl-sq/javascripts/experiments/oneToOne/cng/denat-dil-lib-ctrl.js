@@ -1,5 +1,3 @@
-// FDS 30/11/2016 -- JIRA NGL-166 : denaturation en plaques=> modif TODO.....OU FAIRE autre controleur ?????
-
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
 

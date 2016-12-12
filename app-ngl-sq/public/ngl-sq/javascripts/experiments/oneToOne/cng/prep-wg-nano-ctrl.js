@@ -272,12 +272,13 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	    datatable.setData(dataMain);
 	}
 	
+	// ajout showButton + suppression start = false;
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
-		dtConfig.edit.start = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);

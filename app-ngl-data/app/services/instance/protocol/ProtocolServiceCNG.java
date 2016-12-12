@@ -66,40 +66,25 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		
-		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			/** DEV / UAT only**/
-			// normalization-and-pooling	toujours en DEV
 	
-			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes("normalization-and-pooling",														   
-														   "aliquoting",
-														   "tubes-to-plate",
-														   "plate-to-tubes",
-														   "plates-to-plate",
-														   "x-to-plate")));
+		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("normalization-and-pooling",														   
+													   "aliquoting",
+													   "tubes-to-plate",
+													   "plate-to-tubes",
+													   "plates-to-plate",
+													   "x-to-plate")));
 
-		}else {	
-			lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes("aliquoting",
-														   "tubes-to-plate",
-														   "plate-to-tubes",
-														   "plates-to-plate",
-														   "x-to-plate")));
-		}
-		
-		// 05/12/2016 protocoles pour RNA
-		//       aussi pour "labchip-migration-profile" ??? voir avec JG ...
-		if (!ConfigFactory.load().getString("ngl.env").equals("PROD") ) {
-			// library-prep	toujours en DEV
-			lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes( "library-prep",
-							                                "pcr-and-purification")));
+		// 12/12/2016 protocoles pour RNA
+		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes( "library-prep",
+							                            "pcr-and-purification")));
 			
-			// 05/12/2016 library-prep	toujours en DEV
-			lp.add(newProtocol("2a-ill-sstotalrna-170816","2A_ILL_ssTotalRNA_170816","?","1","production", 
-					InstanceFactory.setExperimentTypeCodes( "library-prep",
-															"pcr-and-purification")));						
-		}
+		// 05/12/2016 library-prep	toujours en DEV
+		lp.add(newProtocol("2a-ill-sstotalrna-170816","2A_ILL_ssTotalRNA_170816","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes( "library-prep",
+													    "pcr-and-purification")));						
+
 		
 		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"
 		lp.add(newProtocol("normalization","normalisation","?","1","production", 
