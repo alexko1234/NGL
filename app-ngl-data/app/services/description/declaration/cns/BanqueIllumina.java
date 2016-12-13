@@ -306,7 +306,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampli-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Ampli, sizing, STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
+		l.add(DescriptionFactory.newProcessType("Ampli, sizing (gel), STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
 				ProcessCategory.find.findByCode("library"), 44,
 				getPropertyBanqueIlluminaSizingDEV(),
 				Arrays.asList(getPET("ext-to-ampli-sizing-stk-illumina-depot",-1)
@@ -334,7 +334,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampli-spri-select-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Ampure, Sizing, STK, Dépôt", "ampure-sizing-stk-illumina-depot",
+		l.add(DescriptionFactory.newProcessType("Ampure, Sizing (gel), STK, Dépôt", "ampure-sizing-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 45,
 				getPropertyAmpureSizingSTKDepot(), 
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
@@ -373,7 +373,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						,getPET("prepa-flowcell",2)
 						,getPET("prepa-fc-ordered",2)
 						,getPET("illumina-depot",3)), 
-						getExperimentTypes("sizing").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-spri-select-stk-illumina-depot").get(0), 
+						getExperimentTypes("spri-select").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-spri-select-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampure, STK, Dépôt", "ampure-stk-illumina-depot",
