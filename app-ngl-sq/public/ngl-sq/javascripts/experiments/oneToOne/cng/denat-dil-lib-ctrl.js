@@ -1,3 +1,4 @@
+// FDS 12/12/2016 -- JIRA NGL-166 : denaturation en tubes: modification pour imposer categorie in=categorie out
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
 
@@ -236,6 +237,16 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+	
+	// la gestion des plaques n'est pas encore en plaque.. forcer en mode tube
+	// passer par un watch est trop tard!!!
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
+	
+	if ( $scope.experiment.instrument.outContainerSupportCategoryCode === "96-well-plate") {
+	      $scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+    }
 		
 	//Init
 	
@@ -256,8 +267,28 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			volume : "µL",
 			concentration : "nM"
 	}
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	
+	console.log("in="+$scope.experiment.instrument.inContainerSupportCategoryCode);	
+	console.log("out="+$scope.experiment.instrument.outContainerSupportCategoryCode);	
+	
+	// 13/12/2016
+	// verifier que inContainerSupportCategoryCode == outContainerSupportCategoryCode
+	// meme pour la main ???
+	//if($scope.experiment.instrument.typeCode !== "hand"){
+
+		if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+			console.log("?????????????????");
+			$scope.messages.clear();
+			$scope.atmService = atmService;
+		}else{
+			$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
+		}
+	//}else{
+	//	$scope.messages.clear();
+	//	$scope.atmService = atmService;
+	//}
 	
 }]);

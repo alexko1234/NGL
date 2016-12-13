@@ -322,9 +322,17 @@ angular.module('home').controller('DenatDilLibCtrlPlates',['$scope', '$parse', '
 			volume : "µL",
 			concentration : "nM"
 	}
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// 13/12/2016
+	// verifier que inContainerSupportCategoryCode == outContainerSupportCategoryCode
+	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+			$scope.messages.clear();
+			$scope.atmService = atmService;
+	}else{
+			$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
+	}
 	
 	// recuperation du code de lib-normalization
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
