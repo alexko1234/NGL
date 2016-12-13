@@ -56,7 +56,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"group":true,
 			"position":6,					
-			"render":"<div list-resize='cellValue' ' list-resize-min-size='2'>",
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
 			"groupMethod":"collect"
 		});			

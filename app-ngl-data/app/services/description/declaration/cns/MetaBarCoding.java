@@ -34,7 +34,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		/*List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -71,11 +71,12 @@ public class MetaBarCoding extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		
-		return l;
+		return l;*/
+		return null;
 	}
 	
 	 @Override
-     protected List<ExperimentType> getExperimentTypeDEV() {
+     protected List<ExperimentType> getExperimentTypeCommon() {
              List<ExperimentType> l = new ArrayList<ExperimentType>();
 
              l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
@@ -119,7 +120,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	
 	
 	@Override
-	public List<ExperimentType> getExperimentTypeCommon() {
+	public List<ExperimentType> getExperimentTypeDEV() {
 		return null;
 	}
 
@@ -132,7 +133,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		/*List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
 				getPropertyMetaBarCodingSizing(), 
@@ -163,12 +164,13 @@ public class MetaBarCoding extends AbstractDeclaration {
 						getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		return l;
+		return l;*/
+		return null;
 	}
 	
 	
     @Override
-    protected List<ProcessType> getProcessTypeDEV() {
+    protected List<ProcessType> getProcessTypeCommon() {
             List<ProcessType> l = new ArrayList<ProcessType>();
 
             l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing (gel)", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
@@ -205,7 +207,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	
 	@Override
-	public List<ProcessType> getProcessTypeCommon() {
+	public List<ProcessType> getProcessTypeDEV() {
 		return null;
 	}
 
@@ -219,6 +221,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
+		/*
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
@@ -233,11 +236,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 		newExperimentTypeNode("spri-select",getExperimentTypes("spri-select").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
 				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	
+	*/
 	}
 	
 	@Override
-	public void getExperimentTypeNodeDEV() {
+	public void getExperimentTypeNodeCommon() {
 		
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
@@ -258,7 +261,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	}
 
 	@Override
-	public void getExperimentTypeNodeCommon() {
+	public void getExperimentTypeNodeDEV() {
 		/*
 		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("pcr-amplification-and-purification")
 				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();

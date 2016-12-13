@@ -23,7 +23,7 @@ import services.description.declaration.AbstractDeclaration;
 public class BanqueIllumina extends AbstractDeclaration {
 
 	protected List<ExperimentType> getExperimentTypePROD() {
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		/*List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		l.add(newExperimentType("Ext to Bq DNA Illumina (non sizée)","ext-to-dna-illumina-indexed-library-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -53,12 +53,13 @@ public class BanqueIllumina extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		return l;
+		return l;*/
+		return null;
 	}
 	
 	
 	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
+	protected List<ExperimentType> getExperimentTypeCommon() {
 		  List<ExperimentType> l = new ArrayList<ExperimentType>();
 
           l.add(newExperimentType("Ext to Bq DNA à partir frg ou amplicon","ext-to-dna-illumina-indexed-library-process",null,-1,
@@ -106,7 +107,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	}
 
 	@Override
-	protected List<ExperimentType> getExperimentTypeCommon() {
+	protected List<ExperimentType> getExperimentTypeDEV() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -118,13 +119,13 @@ public class BanqueIllumina extends AbstractDeclaration {
 	}
 
 	@Override
-	protected List<ProcessType> getProcessTypeCommon() {
+	protected List<ProcessType> getProcessTypeDEV() {
 		return null;
 	}
 	
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		List<ProcessType> l = new ArrayList<ProcessType>();
+		/*List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
 				ProcessCategory.find.findByCode("library"), 41,
@@ -235,14 +236,14 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		
 		
-		return l;
-
+		return l;*/
+		return null;
 	}
 
 	
 
 	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
+	protected List<ProcessType> getProcessTypeCommon() {
 List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("Bq DNA à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
@@ -306,7 +307,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampli-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Ampli, sizing, STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
+		l.add(DescriptionFactory.newProcessType("Ampli, sizing (gel), STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
 				ProcessCategory.find.findByCode("library"), 44,
 				getPropertyBanqueIlluminaSizingDEV(),
 				Arrays.asList(getPET("ext-to-ampli-sizing-stk-illumina-depot",-1)
@@ -334,7 +335,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						getExperimentTypes("pcr-amplification-and-purification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-ampli-spri-select-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Ampure, Sizing, STK, Dépôt", "ampure-sizing-stk-illumina-depot",
+		l.add(DescriptionFactory.newProcessType("Ampure, Sizing (gel), STK, Dépôt", "ampure-sizing-stk-illumina-depot",
 				ProcessCategory.find.findByCode("library"), 45,
 				getPropertyAmpureSizingSTKDepot(), 
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
@@ -373,7 +374,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						,getPET("prepa-flowcell",2)
 						,getPET("prepa-fc-ordered",2)
 						,getPET("illumina-depot",3)), 
-						getExperimentTypes("sizing").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-spri-select-stk-illumina-depot").get(0), 
+						getExperimentTypes("spri-select").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-spri-select-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampure, STK, Dépôt", "ampure-stk-illumina-depot",
@@ -516,14 +517,15 @@ private List<PropertyDefinition> getSpriSelectProperties(){
 
 
 		newExperimentTypeNode("ext-to-ampure-stk-illumina-depot", getExperimentTypes("ext-to-ampure-stk-illumina-depot").get(0), false, false, false, null, null, null, null).save();
-	}
-
-	@Override
-	protected void getExperimentTypeNodeDEV() {
 		newExperimentTypeNode("ext-to-dna-illumina-indexed-lib-spri-select-process", getExperimentTypes("ext-to-dna-illumina-indexed-lib-spri-select-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-ampli-spri-select-stk-illumina-depot", getExperimentTypes("ext-to-ampli-spri-select-stk-illumina-depot").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-spri-select-stk-illumina-depot", getExperimentTypes("ext-to-spri-select-stk-illumina-depot").get(0), false, false, false, null, null, null, null).save();
 
+	}
+
+	@Override
+	protected void getExperimentTypeNodeDEV() {
+		
 		
 	}
 
