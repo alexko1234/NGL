@@ -281,21 +281,22 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[0],codeFlowcell);
 		}
 		
-		//calcul automatique = concentration IN * (somme des loadingReport.volume)
-		var concIN = dataMain[0].inputContainer.concentration.value;
+	//	var loadingQtty= $parse('outputContainerUsed.loadingQuantity.value');
 		
-			var reportingList = dataLoadingReport ;
+		var concIN = dataMain[0].inputContainer.concentration.value;
+		var reportingList = dataLoadingReport ;
 		var reportingVolSum=0;	
-		for(var j=0; j < reportingList.length; j++){
-			reportingVolSum +=reportingList[j].volume;
+		if (null != reportingList){
+			for(var j=0; j < reportingList.length; j++){
+				reportingVolSum +=reportingList[j].volume;
+			}
 		}
 		
-		$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
-		
-		//Copie d'attribut dans des propriétés
-		var quantOut = dataMain[0].outputContainer.quantity.value;
-		$parse('outputContainerUsed.experimentProperties.postFrgQuantity.value').assign(dataMain[0],quantOut);
-		
+		if(reportingVolSum){
+			$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
+		}else{
+			$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN);
+		}
 		
 		//datatable.setData(dataMain);
 	}
@@ -305,7 +306,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		$scope.datatableQcFlowcell.save();
 		$scope.datatableLoadingReport.save();
 		
-		//save =>copyOtherDTToMainDatatable
+		//save entraine appel copyOtherDTToMainDatatable
 		$scope.atmService.data.save();	
 		
 		console.log("call event save2");
@@ -313,7 +314,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
-		console.log("call event save3");
+		
 		
 	});
 	
