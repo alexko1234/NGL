@@ -156,7 +156,7 @@ public class Experiments extends DocumentController<Experiment>{
 		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
 			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
 			
-			Query containerQuery = DBQuery.and(listContainerQuery.toArray(new DBQuery.Query[queryElts.size()]));
+			Query containerQuery = DBQuery.and(listContainerQuery.toArray(new DBQuery.Query[listContainerQuery.size()]));
 			BasicDBObject keys = new BasicDBObject();
 			keys.append("code", 1);
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerQuery,keys).toList();
