@@ -153,18 +153,18 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	@Override
-	protected void getExperimentTypeNodeCommon() {
-		
-		
+	protected void getExperimentTypeNodeDEV() {
+		newExperimentTypeNode("ext-to-qpcr-norm-fc-depot-illumina", getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();		
+		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
+
 	}
 	
 	@Override
-	protected void getExperimentTypeNodeDEV() {
+	protected void getExperimentTypeNodeCommon() {
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
 		
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-qpcr-norm-fc-depot-illumina", getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
+		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
 		
 		//newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false, getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot", "sizing","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
 		
@@ -178,6 +178,8 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected void getExperimentTypeNodePROD() {
 		//newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+		
+		/*
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot", "sizing","spri-select", "pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
@@ -186,7 +188,7 @@ public class RunIllumina extends AbstractDeclaration {
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false, false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),	null,null,null).save();
 
-		
+		*/
 	}
 
 	@Override

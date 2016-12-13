@@ -130,6 +130,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
+		/*
 		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -140,12 +141,12 @@ public class MetaTProcess extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
 				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-
+		 */
 		
 	}
 	
 	@Override
-	protected void getExperimentTypeNodeDEV() {
+	protected void getExperimentTypeNodeCommon() {
 		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -159,7 +160,7 @@ public class MetaTProcess extends AbstractDeclaration {
 	}
 
 	@Override
-	protected void getExperimentTypeNodeCommon() {
+	protected void getExperimentTypeNodeDEV() {
 		
 	}
 

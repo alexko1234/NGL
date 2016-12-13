@@ -159,12 +159,13 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Amplif_ptr_Sox_144-4newProtocol","Amplif ptr Sox 144-4newProtocol","path2","1","production",InstanceFactory.setExperimentTypeCodes("sizing")));
 		lp.add(newProtocol("Decoupe_sur_gel","Découpe sur gel","path2","1","production",InstanceFactory.setExperimentTypeCodes("sizing")));
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		
+		/*if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			lp.add(newProtocol("Spri_select","Spri select","path2","1","production",InstanceFactory.setExperimentTypeCodes("sizing","spri-select")));		
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
 			lp.add(newProtocol("Spri_select","Spri select","path2","1","production",InstanceFactory.setExperimentTypeCodes("spri-select")));
-		}
-
+		}*/
+		lp.add(newProtocol("Spri_select","Spri select","path2","1","production",InstanceFactory.setExperimentTypeCodes("spri-select")));
 		
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
