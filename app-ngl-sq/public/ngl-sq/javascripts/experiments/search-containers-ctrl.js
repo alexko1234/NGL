@@ -544,12 +544,15 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 					}
 				}else{
 					var basket = this.basket;
+					var codes = $scope.datatable.getGroupColumnValue(containers[i], "code");
 					var supportCode = $scope.datatable.getGroupColumnValue(containers[i], "support.code");
 					$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":supportCode,"stateCode":$scope.getContainerStateCode($scope.experimentCategory)}})
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							angular.forEach(data, function(container){
-								basket.add(container);
+								if(codes.indexOf(container.code) > -1){
+									basket.add(container);
+								}
 							});
 							if(($scope.searchService.form.nextExperimentTypeCode) && basket.length() > 0 && tabService.getTabs().length === 1){
 								//tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
@@ -561,6 +564,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 						alert("error");
 					});
 					//var container = {"code": $scope.datatable.getGroupColumnValue(containers[i], "support.code"), "projectCodes": $scope.datatable.getGroupColumnValue(containers[i], "projectCodes"), "sampleCodes": $scope.datatable.getGroupColumnValue(containers[i], "sampleCodes")}
+					
 				}
 			}
 		}
