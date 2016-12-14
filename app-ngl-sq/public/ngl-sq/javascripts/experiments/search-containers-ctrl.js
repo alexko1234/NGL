@@ -545,11 +545,11 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 					var basket = this.basket;
 					var codes = $scope.datatable.getGroupColumnValue(containers[i], "code");
 					var supportCode = $scope.datatable.getGroupColumnValue(containers[i], "support.code");
-					$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":supportCode,"stateCode":$scope.getContainerStateCode($scope.experimentCategory)}})
+					$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":supportCode,"stateCode":$scope.getContainerStateCode($scope.experimentCategory)}, "codes":codes})
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							angular.forEach(data, function(container){
-								if(codes.indexOf(container.code) > -1){
+								if(config.codes.indexOf(container.code) > -1){
 									basket.add(container);
 								}
 							});
