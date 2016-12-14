@@ -210,10 +210,26 @@ public class XmlServices {
 				chaine = chaine + ">\n";
 				// Les champs title et libraryName sont considerés comme obligatoires
 				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
-				chaine = chaine + "    <STUDY_REF refname=\"" + experiment.studyCode +"\">" +"</STUDY_REF>\n";
+				chaine = chaine + "    <STUDY_REF ";
+				if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
+					chaine = chaine + "    <STUDY_REF refname=\"" + experiment.studyCode +"\"";
+				}
+				if (StringUtils.isNotBlank(experiment.studyAccession)){
+					chaine = chaine + " accession=\""+experiment.studyAccession + "\"";
+				}
+				chaine = chaine + ">" +"</STUDY_REF>\n";
+				
 				chaine = chaine + "      <DESIGN>\n";
 				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
-				chaine = chaine + "          <SAMPLE_DESCRIPTOR  refname=\"" + experiment.sampleCode + "\"/>\n";
+				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
+				if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) { 
+					chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
+				}
+				if (StringUtils.isNotBlank(experiment.sampleAccession)){
+					chaine = chaine + " accession=\""+experiment.sampleAccession + "\"";
+				}
+				chaine = chaine + "/>\n";
+				
 				chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
 				chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
 				chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy.get(experiment.libraryStrategy) + "</LIBRARY_STRATEGY>\n";
