@@ -39,10 +39,15 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","AN",700,
+		l.add(newExperimentType("Extraction ADN / ARN","dna-rna-extraction","AN",700,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
 				getInstrumentUsedTypes("cryobroyeur","hand"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		
+		
+		
 		return l;
 	}
 
@@ -53,8 +58,24 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+
+		//LBIOMEG ADRI PROCESS
+		l.add(newExperimentType("Ext to Extraction ARN (17-200 et >200nt)","ext-to-small-and-large-rna-extraction",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Extraction ARN total","total-rna-extraction","??",710,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionARNtotal(),
+				getInstrumentUsedTypes("hand"),"OneToOne", getSampleTypes("total-RNA"),true,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Séparation ARN 17-200 et > 200nt","small-and-large-rna-isolation","??",720,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionARNSmallLarge(),
+				getInstrumentUsedTypes("hand"),"OneToMany", getSampleTypes("RNA"),true,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		//END LBIOMEG
+		return l;
 	}
 
 	@Override
@@ -91,8 +112,19 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProcessType> l=new ArrayList<ProcessType>();
+
+		l.add(DescriptionFactory.newProcessType("Extraction ARN (17-200  et  >200nt)", "small-and-large-rna-extraction", 
+				ProcessCategory.find.findByCode("sample-prep"), 1,
+				null, 
+				Arrays.asList(
+						getPET("ext-to-small-and-large-rna-extraction",-1),
+						getPET("total-rna-extraction",1),
+						getPET("small-and-large-rna-isolation",2)), 
+						getExperimentTypes("total-rna-extraction").get(0), getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		return l;	
 	}
 
 	@Override
@@ -112,14 +144,18 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,null).save();
 		newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
-
+		newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),
+				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
 	}
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		// TODO Auto-generated method stub
-
+		newExperimentTypeNode("ext-to-small-and-large-rna-extraction", getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("total-rna-extraction",getExperimentTypes("total-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-small-and-large-rna-extraction"),
+				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"),null).save();
+		newExperimentTypeNode("small-and-large-rna-isolation", getExperimentTypes("small-and-large-rna-isolation").get(0), false, false, false, getExperimentTypeNodes("total-rna-extraction"), 
+				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"), null).save();
+		
 	}
 
 	@Override
@@ -148,7 +184,37 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 	}
 
 	
+	private List<PropertyDefinition> getPropertyDefinitionsExtractionARNtotal() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
 
+		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", null, 
+				"single", 15, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+				null, null ,null ,null ,"single", 20, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+				null, null, null, null,"single", 25, false, null,null));
+
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getPropertyDefinitionsExtractionARNSmallLarge() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+
+		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", 
+				null, "single", 15, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+				null, "single", 20, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+				null, "single", 25, false, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("taille ARN", "rnaSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "N", 
+				DescriptionFactory.newValues("17-200nt",">200nt"), "single", 26, false, null,null));
+
+		
+		return propertyDefinitions;
+	}
 
 
 }

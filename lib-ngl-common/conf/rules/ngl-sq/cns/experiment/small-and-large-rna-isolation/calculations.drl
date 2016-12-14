@@ -1,0 +1,63 @@
+//created on: May 5, 2015
+package rules
+
+
+rule "Set good project code for 17-200nt"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="small-and-large-rna-extraction", state.code == "N")
+		$atomicTransfert: OneToManyContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
+		$inputContainerUsed: InputContainerUsed($inputProjectCode:contents.get(0).projectCode, $inputProjectCode != null) from $inputContainerUseds
+		$outputContainerUsed: OutputContainerUsed($outputRNASize:experimentProperties.get("rnaSize"), $outputRNASize != null) from $outputContainerUseds		
+    	eval("17-200nt".equals($outputRNASize.value))
+    then
+        Logger.debug("Set good project code for 17-200nt calculation");
+		
+		PropertySingleValue outputProjectCode = (PropertySingleValue)$outputContainerUsed.experimentProperties.get("projectCode");
+		if(null == outputProjectCode){
+			outputProjectCode=new PropertySingleValue();
+			$outputContainerUsed.experimentProperties.put("projectCode",outputProjectCode);
+		}
+		
+		if("BWN".equals($inputProjectCode)){
+			outputProjectCode.value = "BYE";
+		}else{
+			outputProjectCode.value = null;
+		}
+		
+		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
+		
+end
+
+rule "Set good project code for >200nt"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="small-and-large-rna-extraction", state.code == "N")
+		$atomicTransfert: OneToManyContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
+		$inputContainerUsed: InputContainerUsed($inputProjectCode:contents.get(0).projectCode, $inputProjectCode != null) from $inputContainerUseds
+		$outputContainerUsed: OutputContainerUsed($outputRNASize:experimentProperties.get("rnaSize"), $outputRNASize != null) from $outputContainerUseds		
+    	eval(">200nt".equals($outputRNASize.value))
+    then
+        Logger.debug("Set good project code for >200nt calculation");
+		
+		PropertySingleValue outputProjectCode = (PropertySingleValue)$outputContainerUsed.experimentProperties.get("projectCode");
+		if(null == outputProjectCode){
+			outputProjectCode=new PropertySingleValue();
+			$outputContainerUsed.experimentProperties.put("projectCode",outputProjectCode);
+		}
+		
+		if("BWN".equals($inputProjectCode)){
+			outputProjectCode.value = "BYF";
+		}else{
+			outputProjectCode.value = null;
+		}
+		
+		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
+		
+end
