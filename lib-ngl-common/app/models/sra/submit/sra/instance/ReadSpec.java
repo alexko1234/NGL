@@ -1,5 +1,6 @@
 package models.sra.submit.sra.instance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.instance.TraceInformation;
@@ -12,9 +13,9 @@ public class ReadSpec implements IValidation {
 	public int readIndex;
 	public String readClass;
 	public String readType;
-	public Integer lastBaseCoord;
+	public Integer baseCoord;
 	public String readLabel;
-	public List<String> expectedBaseCallTable;
+	public List<String> expectedBaseCallTable = new ArrayList<String>(); 
 	
 
 	@Override
@@ -23,9 +24,10 @@ public class ReadSpec implements IValidation {
 		ValidationHelper.required(contextValidation, this.readIndex, "readIndex");
 		ValidationHelper.required(contextValidation, this.readClass, "readClass");
 		ValidationHelper.required(contextValidation, this.readType, "readType");
-		ValidationHelper.required(contextValidation, this.lastBaseCoord, "lastBaseCoord");
+		if (this.expectedBaseCallTable.size() == 0 ) {
+			ValidationHelper.required(contextValidation, this.baseCoord, "baseCoord");
+		}
 		contextValidation.removeKeyFromRootKeyName("readSpec");
 	}
-
 
 }

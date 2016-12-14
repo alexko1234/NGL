@@ -35,7 +35,7 @@ public class Sample extends AbstractSample {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		Logger.info("Validate sample");
-		Logger.info("ok dans Sample.validate\n");
+		//Logger.info("ok dans Sample.validate\n");
 		contextValidation.addKeyToRootKeyName("sample");
 		SraValidationHelper.validateId(this, contextValidation);
 		
@@ -57,6 +57,7 @@ public class Sample extends AbstractSample {
 			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("sample");
+		//System.out.println("sortie de sample.validate pour " + this.code);
 	}
 
 

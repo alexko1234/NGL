@@ -9,7 +9,7 @@ import validation.sra.SraValidationHelper;
 import play.Logger;
 
 public class ExternalSample extends AbstractSample {
-	
+
 	public ExternalSample() {
 		super(AbstractSample.externalSampleType);	
 		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"

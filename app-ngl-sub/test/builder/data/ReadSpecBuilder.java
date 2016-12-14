@@ -14,7 +14,7 @@ public class ReadSpecBuilder {
 	
 	public ReadSpecBuilder withLastBaseCoord(Integer lastBaseCoord)
 	{
-		readSpec.lastBaseCoord=lastBaseCoord;
+		readSpec.baseCoord=lastBaseCoord;
 		return this;
 	}
 	

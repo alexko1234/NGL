@@ -44,21 +44,25 @@ public class Experiment extends DBObject implements IValidation {
 	//Projects ref
 	public String sampleCode = null;
 	public String studyCode = null;
+	public String sampleAccession = null;
+	public String studyAccession = null;
 	public String readSetCode = null;
 	public List<ReadSpec> readSpecs = new ArrayList<ReadSpec>();
 	public Run run = null; // le run est rattache à l'experiment
 	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 							 // pour gerer les differents etats de l'objet.
-							
+	
+	public String adminComment; // commentaire privé "reprise historique"				
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 
 	// ajouter instrumentModel et libraryName.
-	@Override
-	public void validate(ContextValidation contextValidation) {
+
+	// Verifie validite de l'experiment sans verifier validite du run associé :
+	public void validateLight(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("experiment");
 		// Verifier que status est bien rensigne, et si != new alors libraryName renseigné :
-		System.out.println("Dans exp.validate, stateCode =" +state.code);
+		//System.out.println("Dans exp.validate, stateCode =" +state.code);
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 		ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :
@@ -69,43 +73,60 @@ public class Experiment extends DBObject implements IValidation {
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout");
-		// Verifer que lastBaseCoord est bien renseigné ssi paired:
-		if (StringUtils.isNotBlank(this.libraryLayout) && libraryLayout.equalsIgnoreCase("paired")){
-			if (this.lastBaseCoord == null) {
-				contextValidation.addErrors("lastBaseCoord", " aucune valeur et donnée pairée");
-			}	
-		}
-		ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
+
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		//ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform, "typePlatform");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
-		ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
-		ValidationHelper.required(contextValidation, this.sampleCode , "sampleCode");
-		ValidationHelper.required(contextValidation, this.studyCode , "studyCode");
-		ValidationHelper.required(contextValidation, this.readSetCode , "readSetCode");
-		// Verifier les readSpec :
-		SraValidationHelper.validateReadSpecs(contextValidation, this);
-		// Verifier le run :
-		if (this.run == null) {
-			contextValidation.addErrors("run", " aucune valeur");
-		} else {
-			this.run.validate(contextValidation);
+		if (this.sampleAccession == null) {
+			ValidationHelper.required(contextValidation, this.sampleCode , "sampleCode");
 		}
+		if (this.studyAccession == null) {
+			ValidationHelper.required(contextValidation, this.studyCode , "studyCode");
+		}
+		ValidationHelper.required(contextValidation, this.readSetCode , "readSetCode");
+		// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
+		if ( ! ("OXFORD_NANOPORE".equalsIgnoreCase(this.typePlatform)||"LS454".equalsIgnoreCase(this.typePlatform))) {
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
+			ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
+		}
+		if ("ILLUMINA".equalsIgnoreCase(this.typePlatform)) {
+			if (StringUtils.isNotBlank(this.libraryLayout) && libraryLayout.equalsIgnoreCase("paired")){
+				if (this.lastBaseCoord == null) {
+					contextValidation.addErrors("lastBaseCoord", " aucune valeur et donnée pairée");
+				}	
+			}
+		}
+		if ("PAIRED".equalsIgnoreCase(this.libraryLayout)){
+			ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
+		}		// Verifier les readSpec :
+		SraValidationHelper.validateReadSpecs(contextValidation, this);
+		
 		// verifier que code est bien renseigné
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_EXPERIMENT_COLL_NAME, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("experiment");
 
 		// todo :
 		//if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "readSetCode", this.readSetCode)) {
 			//throw new SraException("le readSetcode "+ experiment.run.code + " existe deja dans la collection Experiment de la base");
 			//mess += "le readSetcode "+ this.run.code + " existe deja dans la collection Experiment de la base";
 		//}
-		
-		contextValidation.removeKeyFromRootKeyName("experiment");
 
+	}
+	
+	@Override
+	public void validate(ContextValidation contextValidation) {
+		this.validateLight(contextValidation);
+		contextValidation.addKeyToRootKeyName("experiment");
+		// Verifier le run :
+		if (this.run == null) {
+			contextValidation.addErrors("run", " aucune valeur");
+		} else {
+			this.run.validate(contextValidation);
+		}
+		contextValidation.removeKeyFromRootKeyName("experiment");
 	}
 
 	

@@ -36,6 +36,7 @@ public class Study extends AbstractStudy {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("study");
+		System.out.println("dans validate");
 		// verifier que projectCode est bien renseigné et existe dans lims:
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		// Attention on peut vouloir regrouper dans un project_code virtuel ?? 

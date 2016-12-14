@@ -20,17 +20,17 @@ public class Run implements IValidation {
 	public Date runDate;           
 	public String runCenter;       // required pour nos stats valeur fixee à GSC 
 	public String accession;       // numeros d'accession attribué par ebi 
+	public String expCode;
 	public List <RawData> listRawData = new ArrayList<RawData>();
+	public String adminComment; // commentaire privé "reprise historique"				
 
-	@Override
-	public void validate(ContextValidation contextValidation) {
+	
+	public void validateLight(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("run");
 		// Verifier que runDate est bien renseigné :
 		ValidationHelper.required(contextValidation, this.runDate , "runDate");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName, "runCenter");
-		for(RawData rawData : listRawData) {
-			rawData.validate(contextValidation);
-		}
+		
 		// verifier que code est bien renseigné
 		if(StringUtils.isBlank(this.code)) {
 			contextValidation.addErrors("run.code", " aucune valeur");
@@ -47,6 +47,16 @@ public class Run implements IValidation {
 					contextValidation.addErrors("run.code",this.code + " n'existe pas dans la base de données et MODE UPDATE");
 				}
 			}
+		}
+		contextValidation.removeKeyFromRootKeyName("run");
+	}
+	
+	@Override
+	public void validate(ContextValidation contextValidation) {
+		validateLight(contextValidation);
+		contextValidation.addKeyToRootKeyName("run");
+		for(RawData rawData : listRawData) {
+			rawData.validate(contextValidation);
 		}
 		contextValidation.removeKeyFromRootKeyName("run");
 	}

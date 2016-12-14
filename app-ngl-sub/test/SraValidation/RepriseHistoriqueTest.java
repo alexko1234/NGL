@@ -1,0 +1,624 @@
+package SraValidation;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.StringUtil;
+import org.junit.Test;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.MongoDBDAO;
+import play.Logger;
+import models.laboratory.common.instance.State;
+import models.laboratory.run.instance.ReadSet;
+import models.sra.submit.common.instance.AbstractSample;
+import models.sra.submit.common.instance.AbstractStudy;
+import models.sra.submit.common.instance.ExternalSample;
+import models.sra.submit.common.instance.ExternalStudy;
+import models.sra.submit.common.instance.Readset;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraCodeHelper;
+import models.sra.submit.util.SraException;
+import models.utils.InstanceConstants;
+import services.RepriseHistorique;
+import services.SubmissionServices;
+import utils.AbstractTestsSRA;
+import validation.ContextValidation;
+
+/* Pour chaque projet charger d'abord les study et samples puis les experiment et runs. 
+ * Si des samples ou study sont utilisés par des experiments et qu'ils n'existent pas dans ngl_sub, 
+ * ils seront declarés comme sample ou study externes.
+ */
+public class RepriseHistoriqueTest extends AbstractTestsSRA {
+	public static String adminComment = "Creation dans le cadre d'une reprise d'historique"; 
+
+	//@Test
+	public void repriseHistoriqueSamplesTest() throws IOException, SraException {
+		//File xmlSample = new File("/env/cns/submit_traces/SRA/NGL_test/test_xml/sample.xml");
+		//File acSampleFile = new File("/env/cns/submit_traces/SRA/NGL_test/test_xml/acFile.xml");
+		File xmlSample = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_samples_AC_cns.xml");
+		String user = "william";
+		RepriseHistorique repriseHistorique = new RepriseHistorique();
+		try{
+			List<Sample> listSamples = repriseHistorique.forSamples(xmlSample, user);
+			System.out.println("retour dans repriseHistoriqueSamplesTest avec " + listSamples.size() + " samples");
+			List<Sample> listSamplesToSave = new ArrayList<Sample>();
+
+			// Verifier la validité des samples
+			for (Sample sample : listSamples) {
+
+				// enlever les samples nanopores du projet BCM qui ont un status cancelled à l'EBI :
+				if ( sample.code.equals("sample_ABH")||sample.code.equals("sample_ADM")||sample.code.equals("sample_ADQ")||
+					 sample.code.equals("sample_ADS")||sample.code.equals("sample_AEG")||sample.code.equals("sample_AKR")||
+					 sample.code.equals("sample_ANE")||sample.code.equals("sample_ASN")||sample.code.equals("sample_AVB")||
+					 sample.code.equals("sample_BAH")||sample.code.equals("sample_BAL")||sample.code.equals("sample_BAM")||
+					 sample.code.equals("sample_BCN")||sample.code.equals("sample_BDF")||sample.code.equals("sample_BHH")||
+					 sample.code.equals("sample_CBM")||sample.code.equals("sample_CEI")||sample.code.equals("sample_CFA")||
+					 sample.code.equals("sample_CFF")||sample.code.equals("sample_CIC")||sample.code.equals("sample_CNT")||
+					 sample.code.equals("sample_CRV")){
+					System.out.println("**************************abandon du sampleCode = "+ sample.code);
+					continue;
+					 } else {
+						 if (! listSamplesToSave.contains(sample)){
+							 listSamplesToSave.add(sample);
+						 }
+					 }
+				if (sample.code.equals("AQS_1")){
+					sample.projectCode = "AQS";
+				}
+				if (sample.code.equals("AQG_1")){
+					sample.projectCode = "AQG";
+				}
+				if (sample.code.equals("AGR_1")){
+					sample.projectCode = "AGR";
+				}
+				if (sample.code.equals("AEQ_203904")){
+					sample.projectCode = "AEQ";
+				}
+				if (sample.code.equals("SY_39416")){
+					sample.projectCode = "SY";
+				}
+				
+				if (sample.code.startsWith("AEI_")){
+					sample.projectCode = "AEI";
+				}
+				if (sample.code.startsWith("AHH_1")){
+					sample.projectCode = "AHH";
+				}
+				if (sample.code.equals("AFR_3055")){
+					sample.projectCode = "AFR";
+				}
+				if (sample.code.equals("LQ_2880")){
+					sample.projectCode = "LQ";
+				}
+				if (sample.code.equals("ASI_5888")){
+					sample.projectCode = "ASI";
+				}
+				if (sample.code.equals("ABK_5888")){
+					sample.projectCode = "ABK";
+				}
+				if (sample.code.equals("AKN_4875")){
+					sample.projectCode = "AKN";
+				}				
+				if (sample.code.equals("Prokaryotic RNA MIX")){
+					sample.projectCode = "BDP";
+				}
+				if (sample.code.startsWith("Acinetobacter sp. ADP1")){
+					sample.projectCode = "AWK";
+				}
+				if (sample.code.startsWith("Lactococcus lactis MG1363")){
+					sample.projectCode = "BCZ";
+				}
+				if (sample.code.equals("Escherichia coli str. K-12 substr. MG1655 RNA sequencing")){
+					sample.projectCode = "BDC";
+				}
+				if (sample.code.equals("Bacillus subtilis subsp. subtilis str. 168 RNA sequencing")){
+					sample.projectCode = "BDD";
+				}
+				System.out.println("dans repriseHistoriqueSamplesTest => sample : " + sample.code);
+				ContextValidation contextValidation = new ContextValidation(user);
+				contextValidation.setCreationMode();
+				contextValidation.getContextObjects().put("type", "sra");
+				sample.validate(contextValidation);
+				System.out.println("\ndisplayErrors pour validationSample:" + sample.code);
+				if (contextValidation.errors.size()==0) {
+					//System.out.println("Sample "+ sample.code + " valide ");
+				} else {
+					contextValidation.displayErrors(Logger.of("SRA"));
+					throw new SraException("Sample " + sample.code + " non valide");
+				}
+			}
+			// Sauver tous les samples
+			for (Sample sample : listSamplesToSave) {
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "code", sample.code)){	
+					MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sample);
+					System.out.println ("ok pour sauvegarde dans la base du sample " + sample.code);
+				}
+			}
+		}catch (IOException e) {
+			System.out.println("Exception de type IO: " + e.getMessage());
+			throw e;
+		} catch (SraException e) {
+			System.out.println("Exception de type SRA: " +e.getMessage());
+			throw e;
+		} 
+	}
+	
+	//@Test
+	public void repriseHistoriqueStudiesTest() throws IOException, SraException {
+		File xmlStudy = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_studies_AC.xml");
+		String user = "william";
+		RepriseHistorique repriseHistorique = new RepriseHistorique();
+		try {
+			List<Study> listStudies = repriseHistorique.forStudies(xmlStudy, user);
+			System.out.println("retour dans repriseHistoriqueStudiesTest");
+			// Verifier la validité des samples
+			for (Study study: listStudies) {
+				System.out.println("dans repriseHistoriqueStudiesTest => study : " + study.code);
+				if (study.code.startsWith("ena-STUDY-GSC-")){
+					continue;
+				}
+				if (study.code.equals("SY")){
+					study.projectCode = "SY";
+				}
+				if (study.code.equals("project_BIK")){
+					study.projectCode = "BIK";
+				}
+				if (study.code.equals("ASI")){
+					study.projectCode = "ASI";
+				}
+				if (study.code.equals("AQS")){
+					study.projectCode = "AQS";
+				}
+				if (study.code.equals("LQ")){
+					study.projectCode = "LQ";
+				}
+				if (study.code.equals("AFR")){
+					study.projectCode = "AFR";
+				}
+				if (study.code.equals("AEI")){
+					study.projectCode = "AEI";
+				}
+				if (study.code.equals("AKN")){
+					study.projectCode = "AKN";
+				}
+				if (study.code.equals("AGR")){
+					study.projectCode = "AGR";
+				}			
+				if (study.code.equals("project_BNA")){
+					study.projectCode = "BNA";
+				}
+				if (study.code.equals("AEQ")){
+					study.projectCode = "AEQ";
+				}
+				if (study.code.equals("AHH")){
+					study.projectCode = "AHH";
+				}
+				if (study.code.equals("ABK")){
+					study.projectCode = "ABK";
+				}
+				if (study.code.equals("AQG")){
+					study.projectCode = "AQG";
+				}
+				if (study.code.equals("project_BMI")){
+					study.projectCode = "BMI";
+				}				
+				if (study.code.equals("project_BHQ")){
+					study.projectCode = "BHQ";
+				}
+				if (study.code.equals("project_BMR")){
+					study.projectCode = "BMR";
+				}
+				if (study.code.equals("project_BII")){
+					study.projectCode = "BII";
+				}
+				ContextValidation contextValidation = new ContextValidation(user);
+				contextValidation.setCreationMode();
+				contextValidation.getContextObjects().put("type", "sra");
+				study.validate(contextValidation);
+				System.out.println("\ndisplayErrors pour validationStudy:" + study.code);
+				if (contextValidation.errors.size()==0) {
+					System.out.println("Study "+ study.code + " valide ");
+				} else {
+					contextValidation.displayErrors(Logger.of("SRA"));
+					if (!study.code.equals("AEI")){
+						throw new SraException("Study " + study.code + " non valide");
+					}
+				}
+			}
+		
+			// Sauver tous les study
+			for (Study study : listStudies) {
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "code", study.code)){	
+					MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+					System.out.println ("ok pour sauvegarde dans la base du study " + study.code);
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Exception de type IO: " + e.getMessage());
+			throw e;
+		} catch (SraException e) {
+			System.out.println("Exception de type SRA: " +e.getMessage());
+			throw e;
+		} 
+	}
+	
+	//@Test
+	public void repriseHistoriqueExperimentsTest() throws IOException, SraException {
+
+		File xmlExperiment = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_u_experiments_AC.xml");
+		String user = "william";
+		RepriseHistorique repriseHistorique = new RepriseHistorique();
+		try {
+			List<Experiment> listExperiments = repriseHistorique.forExperiments(xmlExperiment, user);
+			System.out.println("retour dans repriseHistoriqueExperimentsTest");
+			// Verifier la validité des experiments sans les runs:
+			ContextValidation contextValidation = new ContextValidation(user);
+			contextValidation.setCreationMode();
+			contextValidation.getContextObjects().put("type", "sra");
+			int count = listExperiments.size();
+			int cp = 0;
+			for (Experiment experiment : listExperiments) {
+				cp ++;
+				
+				/*System.out.println("dans repriseHistoriqueExperimentsTest => experiment : " + experiment.code);
+				System.out.println("cp / count = " + cp + "/" + count);
+				System.out.println("experiment.accession : " + experiment.accession);
+				System.out.println("experiment.studyCode : " + experiment.studyCode);
+				System.out.println("experiment.sampleCode : " + experiment.sampleCode);
+				System.out.println("experiment.readSetCode : " + experiment.readSetCode);
+				*/
+			
+				if (experiment.code.equals("exp_1.TCA.FO740SW01")||experiment.code.equals("exp_3.TCA.FL8POTV03")){
+					experiment.projectCode = "YK";
+				}
+				if (experiment.code.equals("exp_1.TCA.FG5FMAE01") || experiment.code.equals("exp_1.TCA.FGFGJ1101")){
+					experiment.projectCode = "AAZ";
+				}
+				
+				if (experiment.code.endsWith("_ONT_R7")){
+					experiment.projectCode = "BCM";
+				}
+				
+				if (experiment.code.startsWith("AKN") && experiment.studyCode.equals("AKN")){
+					experiment.projectCode = "AKN";
+				}
+				if (experiment.code.startsWith("AEI") && experiment.studyCode.equals("AEI")){
+					experiment.projectCode = "AEI";
+				}
+				if (experiment.code.equals("AEIBSAOSS")){
+					experiment.readSetCode = "AEI_BSAOSS_5_30WHCAAXX";
+				}				
+				if (experiment.code.equals("AEIFPAOSS")){
+					experiment.readSetCode = "AEI_FPAOSS_6_305RRAAXX";
+				}				
+				if (experiment.code.equals("AEIDQAOSS")){
+					experiment.readSetCode = "AEI_DQAOSS_4_313J7AAXX";
+				}				
+				if (experiment.code.equals("AEIABAOSS")){
+					experiment.readSetCode = "AEI_ABAOSS_2_20F54AAXX";
+				}				
+				if (experiment.code.equals("AEIADAOSS")){
+					experiment.readSetCode = "AEI_ADAOSS_4_20F54AAXX";
+				}				
+				if (experiment.code.equals("AEIDRAOSS")){
+					experiment.readSetCode = "AEI_DRAOSS_5_313J7AAXX";
+				}				
+				if (experiment.code.equals("AEIACAOSS")){
+					experiment.readSetCode = "AEI_ACAOSS_3_20F54AAXX";
+				}				
+				if (experiment.code.equals("AEIBTAOSS")){
+					experiment.readSetCode = "AEI_BTAOSS_6_30WHCAAXX";
+				}				
+				if (experiment.code.equals("AEIAEAOSS")){
+					experiment.readSetCode = "AEI_AEAOSS_5_20F54AAXX";
+				}				
+				if (experiment.code.equals("AEIHBAOSS")){
+					experiment.readSetCode = "AEI_HBAOSS_6_62F0BAAXX";
+				}				
+				if (experiment.code.equals("AEICAAOSS")){
+					experiment.readSetCode = "AEI_CAAOSS_5_30WH4AAXX";
+				}				
+				if (experiment.code.equals("AEIBVAOSS")){
+					experiment.readSetCode = "AEI_BVAOSS_7_30WHCAAXX";
+				}				
+																																															
+				if (experiment.code.equals("AEIBRAOSS")){
+					experiment.readSetCode = "AEI_BRAOSS_4_30WHCAAXX";
+				}				
+				if (experiment.code.equals("AEIBQAOSS")){
+					experiment.readSetCode = "AEI_BQAOSS_3_30WHCAAXX";
+				}				
+				if (experiment.code.equals("AEIFQAOSS")){
+					experiment.readSetCode = "AEI_FQAOSS_3_42DP4AAXX";
+				}				
+				if (experiment.code.equals("AEIHAAOSS")){
+					experiment.readSetCode = "AEI_HAAOSS_5_62F0BAAXX";
+				}
+				if (experiment.code.equals("LQHOSS")){
+					experiment.readSetCode = "LQ_HOSS_8_20EG4AAXX";
+				}				
+				if (experiment.code.equals("LQIOSS")){
+					experiment.readSetCode = "LQ_IOSS_720EG4AAXX";
+				}	
+				
+				// problemes :
+				if (experiment.code.equals("SYBOSS")){
+					experiment.readSetCode = "SY_BOSS_1_305E0AAXX";
+					// 1 readset correspondant à la partie BOSS du run bio 090422_HELIUM_305E0AAXX
+				}				
+				if (experiment.code.equals("SYCOSS")){
+					experiment.readSetCode = "SY_COSS_2_4_5_6_305E0AAXX"; 
+					// 4 readsets correspondant à la partie COSS du run bio 090422_HELIUM_305E0AAXX
+				}				
+				if (experiment.code.equals("SYDOSS")){
+					experiment.readSetCode = "SY_DOSS_3_305E0AAXX";
+					// 1 readset correspondant à la partie DOSS du run bio 090422_HELIUM_305E0AAXX
+				}	
+				if (experiment.code.equals("AQGAOSS")){  
+					experiment.readSetCode = "AQG_AOSS_5_61LFRAAXX";
+				}
+				if (experiment.code.equals("AHHAOSS")){
+					experiment.readSetCode = "AHH_AOSS_1_2_3_4_42L9WAAXX";
+					// 4 readset correspondant au run 090724_AZOTE_42L9WAAXX_AHHAOSS
+				}	
+				if (experiment.code.equals("AHHBOSS")){
+					experiment.readSetCode = "AHH_BOSS_5_6_42L9WAAXX";  
+					// 2 readset correspondant au run 090724_AZOTE_42L9WAAXX_AHHBOSS 
+				}
+				if (experiment.code.equals("AHHCOSS")){
+					experiment.readSetCode = "AHH_COSS_7_8_42L9WAAXX";
+					// 2 readset correspondant au run 090724_AZOTE_42L9WAAXX_AHHCOSS
+				}
+				if (experiment.code.equals("AWK_ONT_20Kb_R7")){
+					experiment.readSetCode = "AWK_K_ONT_1_MN2064006_A";
+				}
+				if (experiment.code.equals("AWK_ONT_20Kb_R7.3")){
+					experiment.readSetCode = "AWK_M_ONT_1_FAA43210_A_AWK_H_ONT_1_FAA43204_A_AWK_H_ONT_1_FAA17573_A";
+					//3 readset correspondant à 3 runs rattachés au meme experiment.
+				}				
+				if (experiment.code.equals("AWK_ONT_8Kb_R7")){ 
+					experiment.readSetCode = "AWK_G_ONT_1_MN2064525_A";
+				}
+				
+				// end probleme
+					
+				if (experiment.code.equals("BAT_EIOSW_6_C1CRCACXX.IND8_replacement")){
+					experiment.readSetCode = "BAT_EIOSW_6_C1CRCACXX.IND8";
+				}																												
+				if (experiment.code.startsWith("AQS") && experiment.studyCode.equals("AQS")){
+					experiment.projectCode = "AQS";
+				}
+				if (experiment.code.startsWith("LQ") && experiment.studyCode.equals("LQ")){
+					experiment.projectCode = "LQ";
+				}
+				if (experiment.code.startsWith("SY") && experiment.studyCode.equals("SY")){
+					experiment.projectCode = "SY";
+				}
+				if (experiment.code.startsWith("AHH") && experiment.studyCode.equals("AHH")){
+					experiment.projectCode = "AHH";
+				}
+				if (experiment.code.startsWith("AGR") && experiment.studyCode.equals("AGR")){
+					experiment.projectCode = "AGR";
+				}
+				if (experiment.code.startsWith("AQG") && experiment.studyCode.equals("AQG")){
+					experiment.projectCode = "AQG";
+				}
+				if (experiment.code.startsWith("AFR") && experiment.studyCode.equals("AFR")){
+					experiment.projectCode = "AFR";
+				}
+				if (! experiment.code.equals("exp_4.GAC.AEH_NOTM_GDU6DPD04.RLMID5") && !experiment.code.equals("exp_4.GAC.AEH_DOTS_GE62K7O04")
+					&& !experiment.code.equals("exp_3.TCA.AEH_BOTS_FYX1OO003") && !experiment.code.equals("exp_1.TCA.AEH_HOTS_GFWZGIZ01")
+					&& !experiment.code.equals("exp_1.TCA.AEH_DOTS_F7I4VNB01") && !experiment.code.equals("exp_1.TCA.AEH_BOTS_FXW012U01")
+					&& !experiment.code.equals("AKNDOTS_TCA") && !experiment.code.equals("AKNCOTS_TCA")
+					&& !experiment.code.equals("exp_2.TCA.AEH_IOTS_GDH4XDG02")&& !experiment.code.equals("exp_1.TCA.AEH_COTS_F27IL3E01")
+					&& !experiment.code.equals("exp_2.TCA.AEH_COTS_F2Z3HNU02") && !experiment.code.equals("exp_2.TCA.AEH_BOTS_F1GT3LX02")
+					&& !experiment.code.equals("exp_4.TCA.AEH_BOTS_FQU3J4004") && !experiment.code.equals("exp_4.TCA.AEH_BOTS_FQU3J4004")
+					&& !experiment.code.equals("AQSAOTS_GAC") && !experiment.code.equals("AQSBOTS_GAC") 
+					&& !experiment.code.equals("AKNAOTS_TCA") && !experiment.code.equals("AKNBOTS_TCA") 
+					&& !experiment.code.equals("AGRAOTS_TCA") && !experiment.code.equals("AGRBOTS_TCA")
+					&& !experiment.code.equals("AGRGOTS_TCA") && !experiment.code.equals("AGRFOTS_TCA")
+					&& !experiment.code.equals("AGRCOTS_TCA") 
+					&& !experiment.code.equals("AFRCOTS_TCA") && !experiment.code.equals("AFRBOTS_TCA")
+					&& !experiment.code.equals("AFRAOTS_TCA") && !experiment.code.equals("AFRDOTS_TCA")
+					&&!experiment.code.equals("exp_2.TCA.AEQ_AOTS_FQ8SXUV02")){
+
+					experiment.validateLight(contextValidation);
+					//System.out.println("\ndisplayErrors pour validationExperiment:" + experiment.code);
+				}
+				if (contextValidation.errors.size()==0) {
+					//System.out.println("Experiment "+ experiment.code + " valide ");
+				} else {
+					contextValidation.displayErrors(Logger.of("SRA"));
+					throw new SraException("Experiment " + experiment.code + " non valide");
+				}
+			}
+			
+			
+			// Sauver tous les experiments et les samples et study externes et mettre à jour readset pour soumission en distinguant illumina, LS454 et nanopore
+			int cp_pb = 0;
+			System.out.println("#########Nbre d'exp = " + listExperiments.size());
+			for (Experiment experiment : listExperiments) {
+				//System.out.println("experiment = " + experiment.code);
+				if (StringUtils.isNotBlank(experiment.sampleAccession)) {
+					//System.out.println("experiment.sampleAccession = " + experiment.sampleAccession);
+					if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "accession", experiment.sampleAccession)){
+						//System.out.println("sample existe bien dans base");
+						AbstractSample absSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.AbstractSample.class, DBQuery.in("accession", experiment.sampleAccession));
+						//System.out.println("absSample = " + absSample.code);
+
+						if(StringUtils.isBlank(experiment.sampleCode)){
+							experiment.sampleCode = absSample.code;
+						} else {
+							if (! experiment.sampleCode.equals(absSample.code)){
+								System.out.println("exp.sampleCode="+experiment.sampleCode+" et exp.sampleAC="+experiment.sampleAccession +" alors que dans database sample.code= "+ absSample.code +" sample.AC = "+absSample.accession);
+								System.out.println("######Remplacement dans l'experiment de "+experiment.sampleCode+" par "+ absSample.code);								experiment.sampleCode = absSample.code;
+							}
+						}
+					} else {
+						// creation de l'externalSample et sauvegarde dans database :
+						//System.out.println("creation d'un externalSample" + experiment.sampleCode);
+						ExternalSample externalSample = new ExternalSample(); // objet avec state.code = submitted
+						externalSample.accession = experiment.sampleAccession;
+						externalSample.code = SraCodeHelper.getInstance().generateExternalSampleCode(externalSample.accession);
+						experiment.sampleCode = externalSample.code;
+						externalSample.state = new State("F-SUB", user);			
+						externalSample.traceInformation.setTraceInformation(user);							
+						externalSample.adminComment = adminComment;
+						MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, externalSample);
+					}	
+				} else {
+					if (StringUtils.isNotBlank(experiment.sampleCode)) {
+						if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "code", experiment.sampleCode)){	
+							AbstractSample absSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.AbstractSample.class, DBQuery.in("code", experiment.sampleCode));
+							experiment.sampleAccession = absSample.accession;
+						}
+					}
+				}
+				
+				if (StringUtils.isNotBlank(experiment.studyAccession)) {
+					if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "accession", experiment.studyAccession)){	
+						//System.out.println("study existe bien dans base pour '" + experiment.studyAccession +"'");
+						AbstractStudy absStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.AbstractStudy.class, DBQuery.in("accession", experiment.studyAccession));
+						//System.out.println("absStudy = " + absStudy.code);
+						if(StringUtils.isBlank(experiment.studyCode)){
+							experiment.studyCode = absStudy.code;
+						} else {
+							if (! experiment.studyCode.equals(absStudy.code)){
+								System.out.println("!!!***Remplacement dans l'experiment de "+experiment.studyCode+" par "+ absStudy.code);
+							}
+						}
+					} else {
+						// creation de l'externalStudy et sauvegarde dans database :
+						//System.out.println("creation d'un externalStudy" + experiment.studyCode);
+						ExternalStudy externalStudy = new ExternalStudy(); // objet avec state.code = submitted
+						externalStudy.accession = experiment.studyAccession;
+						externalStudy.code = SraCodeHelper.getInstance().generateExternalStudyCode(externalStudy.accession);
+						experiment.studyCode = externalStudy.code;
+						externalStudy.state = new State("F-SUB", user);			
+						externalStudy.traceInformation.setTraceInformation(user);							
+						externalStudy.adminComment = adminComment;
+						MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, externalStudy);
+					}	
+				} else {
+					if (StringUtils.isNotBlank(experiment.studyCode)) {
+						if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "code", experiment.studyCode)){	
+							AbstractStudy absStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.AbstractStudy.class, DBQuery.in("code", experiment.studyCode));
+							experiment.studyAccession = absStudy.accession;
+						}
+					}
+				}	
+				
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", experiment.code)){	
+					MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
+					//System.out.println ("ok pour sauvegarde dans la base de l'experiment " + experiment.code);
+				}
+				String typeReadset = "";
+				//System.out.println("experiment.typePlatform = " + experiment.typePlatform);
+				//System.out.println("experiment.readSetCode = " + experiment.readSetCode);
+				//System.out.println("experiment.projectCode = " + experiment.projectCode);
+
+				if (experiment.typePlatform.equalsIgnoreCase("ls454")){
+					typeReadset = "ls454";
+				} else {
+					if (experiment.typePlatform.equalsIgnoreCase("illumina")) {
+						typeReadset = "illumina";
+					}  
+					if (experiment.typePlatform.equalsIgnoreCase("nanopore")) {
+						typeReadset = "nanopore";
+					}
+					// Mettre à jour la collection de readSet de ngl_seq dans le cas d'illumina et nanopore
+					if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "code", experiment.readSetCode)){	
+						//throw new SraException("ReadSet " + experiment.readSetCode + " absent de la collection des readset de ngl_seq ???");
+						cp_pb++; 
+						System.out.println("************pb ReadSet " + cp_pb + " pour :" +  experiment.readSetCode + " absent de la collection des readset de ngl_seq ???");					
+						continue;
+					}
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+							DBQuery.is("code", experiment.readSetCode),
+							DBUpdate.set("submissionState.code", "F-SUB").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
+					//System.out.println("Mise à jour des readSet de ngl");
+				}
+				// Inserer dans la collection des readSet de ngl-sub (readset non gerés dans ng_seq)
+				Readset readset = new Readset();
+				//System.out.println("Creation du readset dans ngl_sub" + experiment.readSetCode);
+				readset.code = experiment.readSetCode;
+				readset.type= typeReadset;
+				readset.experimentCode = experiment.code;
+				//System.out.println("dans ngl_sub :readsetCode = " + readset.code + ", readset_type = " + readset.type +", readsetExpCode = " + readset.experimentCode );
+				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_READSET_COLL_NAME, Readset.class, "code", experiment.readSetCode)){	
+					try {
+						MongoDBDAO.save(InstanceConstants.SRA_READSET_COLL_NAME, readset);	
+					} catch (Exception e) {
+						System.out.println("Exception : " + e.getMessage());
+						throw e;
+					}
+				}
+				//System.out.println(" ok Creation du readset " + readset.code);
+
+			}
+		
+		} catch (IOException e) {
+			System.out.println("Exception de type IO: " + e.getMessage());
+			throw e;
+		} catch (SraException e) {
+			System.out.println("Exception de type SRA: " +e.getMessage());
+			throw e;
+		} 
+	}
+	
+	@Test
+	public void repriseHistoriqueRunsTest() throws IOException, SraException {
+		File xmlRun = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_runs.xml");
+		String user = "william";
+		RepriseHistorique repriseHistorique = new RepriseHistorique();
+		try {
+			List<Run> listRuns = repriseHistorique.forRuns(xmlRun, user);
+			System.out.println("retour dans repriseHistoriqueRunsTest  avec nbre runs = " + listRuns.size());
+			// Verifier la validité des runs :
+			for (Run run : listRuns) {
+				//System.out.println("dans repriseHistoriqueRunsTest => run : " + run.code);
+				//System.out.println("run.accession : " + run.accession);
+				//System.out.println("run.experimentCode : " + run.expCode);
+				
+				ContextValidation contextValidation = new ContextValidation(user);
+				contextValidation.setCreationMode();
+				contextValidation.getContextObjects().put("type", "sra");
+				run.validateLight(contextValidation);
+				System.out.println("\ndisplayErrors pour validationRun:" + run.code);
+				if (contextValidation.errors.size()==0) {
+					//System.out.println("Run "+ run.code + " valide ");
+				} else {
+					contextValidation.displayErrors(Logger.of("SRA"));
+					throw new SraException("Run " + run.code + " non valide");
+				}
+			}
+			// Ajouter run à son experiment et sauver l'experiment
+			for (Run run : listRuns) {		
+				if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", run.expCode)){
+					//System.out.println("Recuperation de l'experiment "+ run.expCode);
+					Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, run.expCode);			
+					experiment.run = run;
+					MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);	
+					//System.out.println ("ok pour sauvegarde dans la base de l'experiment " + experiment.code + " avec son run "+ run.code);
+				} else {
+					System.out.println ("Probleme pour sauvegarde dans la base de l'experiment " + run.expCode +" avec son run " + run.code);
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Exception de type IO: " + e.getMessage());
+			throw e;
+		} catch (SraException e) {
+			System.out.println("Exception de type SRA: " +e.getMessage());
+			throw e;
+		} 
+	}
+}

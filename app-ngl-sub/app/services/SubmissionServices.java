@@ -533,11 +533,11 @@ public class SubmissionServices {
 
 
 	
-	private ExternalStudy fetchExternalStudy(String studyAc, String user) throws SraException {
+	public ExternalStudy fetchExternalStudy(String studyAc, String user) throws SraException {
 		String externalStudyCode = SraCodeHelper.getInstance().generateExternalStudyCode(studyAc);
 		ExternalStudy externalStudy;
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "code", externalStudyCode)){
-			System.out.println("Recuperation du study "+ externalStudyCode);
+			//System.out.println("Recuperation du study "+ externalStudyCode);
 			externalStudy = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.ExternalStudy.class, externalStudyCode);
 		} else {
 			externalStudy = new ExternalStudy(); // objet avec state.code = submitted
@@ -754,13 +754,13 @@ public class SubmissionServices {
 		// Si sample existe, prendre l'existant, sinon en creer un nouveau
 		//if (services.SraDbServices.checkCodeSampleExistInSampleCollection(codeSample)) {
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", codeSample)){
-			System.out.println("Recuperation du sample "+ codeSample);
+			//System.out.println("Recuperation du sample "+ codeSample);
 			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, codeSample);			
 			//System.out.println(sample.clone);
 			//System.out.println(sample.taxonId);
 			//System.out.println(sample.title);
 		} else {
-			System.out.println("Creation du sample '"+ codeSample + "'");
+			//System.out.println("Creation du sample '"+ codeSample + "'");
 			// creation du sample :
 			sample = new Sample();
 			sample.code = codeSample;
@@ -783,11 +783,11 @@ public class SubmissionServices {
 	
 	
 	
-	private ExternalSample fetchExternalSample(String sampleAc, String user) throws SraException {
+	public ExternalSample fetchExternalSample(String sampleAc, String user) throws SraException {
 		String externalSampleCode = SraCodeHelper.getInstance().generateExternalSampleCode(sampleAc);
 		ExternalSample externalSample;
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, ExternalSample.class, "code", externalSampleCode)){
-			System.out.println("Recuperation du sample "+ externalSampleCode);
+			//System.out.println("Recuperation du sample "+ externalSampleCode);
 			externalSample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.ExternalSample.class, externalSampleCode);
 		} else {
 			externalSample = new ExternalSample(); // objet avec state.code = submitted
@@ -1020,7 +1020,7 @@ public class SubmissionServices {
 			readSpec_1.readLabel = "F";
 			readSpec_1.readClass = "Application Read";
 			readSpec_1.readType = "forward";
-			readSpec_1.lastBaseCoord = (Integer) 1;
+			readSpec_1.baseCoord = (Integer) 1;
 			experiment.readSpecs.add(readSpec_1);
 		}
 
@@ -1032,7 +1032,7 @@ public class SubmissionServices {
 			readSpec_1.readLabel = "F";
 			readSpec_1.readClass = "Application Read";
 			readSpec_1.readType = "Forward";
-			readSpec_1.lastBaseCoord = (Integer) 1;
+			readSpec_1.baseCoord = (Integer) 1;
 			experiment.readSpecs.add(readSpec_1);
 
 			ReadSpec readSpec_2 = new ReadSpec();
@@ -1040,7 +1040,7 @@ public class SubmissionServices {
 			readSpec_2.readLabel = "R";
 			readSpec_2.readClass = "Application Read";
 			readSpec_2.readType = "Reverse";
-			readSpec_2.lastBaseCoord = experiment.lastBaseCoord;
+			readSpec_2.baseCoord = experiment.lastBaseCoord;
 			experiment.readSpecs.add(readSpec_2);
 
 		}
@@ -1052,7 +1052,7 @@ public class SubmissionServices {
 			readSpec_1.readLabel = "R";
 			readSpec_1.readClass = "Application Read";
 			readSpec_1.readType = "Reverse";
-			readSpec_1.lastBaseCoord = (Integer) 1;
+			readSpec_1.baseCoord = (Integer) 1;
 			experiment.readSpecs.add(readSpec_1);
 
 			ReadSpec readSpec_2 = new ReadSpec();
@@ -1060,7 +1060,7 @@ public class SubmissionServices {
 			readSpec_2.readLabel ="F";
 			readSpec_2.readClass = "Application Read";
 			readSpec_2.readType = "Forward";
-			readSpec_2.lastBaseCoord = experiment.lastBaseCoord;
+			readSpec_2.baseCoord = experiment.lastBaseCoord;
 			experiment.readSpecs.add(readSpec_2);
 		}
 		return experiment;

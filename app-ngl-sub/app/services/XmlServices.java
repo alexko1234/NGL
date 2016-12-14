@@ -233,7 +233,7 @@ public class XmlServices {
 					chaine = chaine + "                <READ_LABEL>"+readSpec.readLabel+"</READ_LABEL>\n";
 					chaine = chaine + "                <READ_CLASS>"+readSpec.readClass+"</READ_CLASS>\n";
 					chaine = chaine + "                <READ_TYPE>"+readSpec.readType+"</READ_TYPE>\n";
-					chaine = chaine + "                <BASE_COORD>" + readSpec.lastBaseCoord + "</BASE_COORD>\n";
+					chaine = chaine + "                <BASE_COORD>" + readSpec.baseCoord + "</BASE_COORD>\n";
 					chaine = chaine + "              </READ_SPEC>\n";
 				}
 				chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
@@ -286,7 +286,13 @@ public class XmlServices {
 				chaine = chaine + "    <DATABLOCK>\n";
 				chaine = chaine + "      <FILES>\n";
 				for (RawData rawData: run.listRawData) {
-					chaine = chaine + "        <FILE>filename=\"" + rawData.relatifName + "\" "+"filetype=\"" + rawData.extention + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\"</FILE>\n";
+					String fileType = rawData.extention;
+					if (fileType.equalsIgnoreCase("fastq.gz")){
+						fileType = "fastq";
+					} else {
+						fileType.replace(".gz", "");
+					}
+					chaine = chaine + "        <FILE>filename=\"" + rawData.relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\"</FILE>\n";
 					if ( run.listRawData.size() == 2 ) {
 						chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
 						chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";

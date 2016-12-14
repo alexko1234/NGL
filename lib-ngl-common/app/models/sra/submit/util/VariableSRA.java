@@ -31,6 +31,15 @@ public interface VariableSRA {
 			put("genoscope - cea", "Genoscope - CEA"); 
 		}
 	};
+	
+	static final Map<String, String> mapTypeReadset =  new HashMap<String, String>() {
+		{
+			put("illumina", "illumina"); // Si pas de sample à creer parce que fournis par les collaborateurs
+			put("nanopore", "nanopore"); // si sample specifique par code_projet et taxon
+			put("ls454", "ls454"); // si sample specifique par code_projet et clone
+		}
+	};
+	
 	static final Map<String, String> mapStrategySample =  new HashMap<String, String>() {
 		{
 			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
@@ -170,7 +179,9 @@ public interface VariableSRA {
 		{
 			put("forward", "Forward"); 
 			put("forward-reverse", "Forward-Reverse");
-			put("reverse-forward", "Reverse-Forward");		
+			put("reverse-forward", "Reverse-Forward");	
+			put("forward-forward", "Forward-Forward");	
+
 		}
 	};  
 	
@@ -178,10 +189,16 @@ public interface VariableSRA {
 	static final Map<String, String> mapTypePlatform = new HashMap<String, String>() {
 		{
 			put("illumina", "ILLUMINA"); 
+			put("ls454","LS454");
+			put("oxford_nanopore","OXFORD_NANOPORE");
 		}
 	};  
 	static final Map<String, String> mapInstrumentModel = new HashMap<String, String>() {
 		{
+			// instrument model pour oxford_nanopore
+			put("minion","MinION");
+			
+			// instrument model pour L454
 			put("454 gs 20", "454 GS 20"); 
 			put("454 gs flx", "454 GS FLX");
 			put("454 gs flx titanium", "454 GS FLX Titanium");
@@ -189,8 +206,8 @@ public interface VariableSRA {
 			
 			// type instrument model pour illumina dans sra version 1.5 : 
 			put("illumina genome analyzer","Illumina Genome Analyzer");
-			put("illumina genome analyzer II","Illumina Genome Analyzer II");
-			put("illumina genome analyzer IIx","Illumina Genome Analyzer IIx");
+			put("illumina genome analyzer ii","Illumina Genome Analyzer II");
+			put("illumina genome analyzer iix","Illumina Genome Analyzer IIx");
 			put("illumina hiseq 2500","Illumina HiSeq 2500");
 			put("illumina hiseq 2000","Illumina HiSeq 2000");
 			put("illumina hiseq 1500","Illumina HiSeq 1500");
@@ -206,6 +223,7 @@ public interface VariableSRA {
 			put("rhs2500","Illumina HiSeq 2500");
 			put("rhs2500r","Illumina HiSeq 2500");
 			put("rmiseq","Illumina MiSeq");
+			put ("unspecified", "unspecified");  // ajout pour repriseHistorique.
 		}
 	};  
 	
