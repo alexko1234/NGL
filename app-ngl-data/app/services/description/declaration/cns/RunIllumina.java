@@ -78,9 +78,6 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return l;
 	}
@@ -133,11 +130,7 @@ public class RunIllumina extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeDEV() {
 		
 		List<ProcessType> l=new ArrayList<ProcessType>();
-		/*
-		l.add(DescriptionFactory.newProcessType("qPCR-norm, FC, dépôt Illumina", "qpcr-norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), null,
-				getPropertyDefinitionsQPCRQuantification(), 
-				Arrays.asList(getPET("ext-to-qpcr-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), getExperimentTypes("qpcr-quantification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		 */
+		
 		return l;
 	}
 
@@ -154,9 +147,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		newExperimentTypeNode("ext-to-qpcr-norm-fc-depot-illumina", getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();		
-		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
-
+		
 	}
 	
 	@Override
@@ -165,9 +156,6 @@ public class RunIllumina extends AbstractDeclaration {
 		
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
-		
-		//newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false, getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot", "sizing","pcr-amplification-and-purification"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
-		
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
