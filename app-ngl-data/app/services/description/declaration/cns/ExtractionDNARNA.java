@@ -115,7 +115,7 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		List<ProcessType> l=new ArrayList<ProcessType>();
 
 		l.add(DescriptionFactory.newProcessType("Extraction ARN (17-200  et  >200nt)", "small-and-large-rna-extraction", 
-				ProcessCategory.find.findByCode("sample-prep"), 1,
+				ProcessCategory.find.findByCode("sample-prep"), 3,
 				null, 
 				Arrays.asList(
 						getPET("ext-to-small-and-large-rna-extraction",-1),
