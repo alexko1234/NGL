@@ -144,16 +144,19 @@ public class ContainerHelper {
 		
 		
 		for(Content c : contents){
-			for(String key : c.properties.keySet()){
-				PropertyValue<?> pv = c.properties.get(key);
-				finalContent.properties.computeIfAbsent(key, k -> pv);
-				finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+			if(null != c.properties){
+				for(String key : c.properties.keySet()){
+					PropertyValue<?> pv = c.properties.get(key);
+					finalContent.properties.computeIfAbsent(key, k -> pv);
+					finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+				}
 			}
-			
-			for(String key : c.processProperties.keySet()){
-				PropertyValue<?> pv = c.processProperties.get(key);
-				finalContent.processProperties.computeIfAbsent(key, k -> pv);
-				finalContent.processProperties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+			if(null != c.processProperties){
+				for(String key : c.processProperties.keySet()){
+					PropertyValue<?> pv = c.processProperties.get(key);
+					finalContent.processProperties.computeIfAbsent(key, k -> pv);
+					finalContent.processProperties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+				}
 			}
 		}
 		

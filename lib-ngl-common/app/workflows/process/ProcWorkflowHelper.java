@@ -40,11 +40,20 @@ public class ProcWorkflowHelper {
 		
 		DBQuery.Query query = getInputContainerQuery(process);
 		
-		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				query,
-				DBUpdate.addToSet("processCodes", process.code)
-					.addToSet("processTypeCodes", process.typeCode)
-					.set("contents.$.processProperties", process.properties));
+		if(process.properties != null){
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+					query,
+					DBUpdate.addToSet("processCodes", process.code)
+						.addToSet("processTypeCodes", process.typeCode)
+						.set("contents.$.processProperties", process.properties));
+			
+		}else{
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+					query,
+					DBUpdate.addToSet("processCodes", process.code)
+						.addToSet("processTypeCodes", process.typeCode));			
+		}
+		
 		
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 				DBQuery.is("code",process.inputContainerCode).notExists("fromTransformationTypeCodes"),
@@ -64,10 +73,11 @@ public class ProcWorkflowHelper {
 
 	
 	public void updateContentProcessPropertiesAttribute(ContextValidation validation, Process process) {
-		DBQuery.Query query = getChildContainerQuery(process);
-		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				query,DBUpdate.set("contents.$.processProperties", process.properties));
-		
+		if(process.properties != null){
+			DBQuery.Query query = getChildContainerQuery(process);
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+					query,DBUpdate.set("contents.$.processProperties", process.properties));
+		}
 	}
 	
 	public void updateContentPropertiesWithContentProcessProperties(ContextValidation validation, Process process) {
