@@ -1,5 +1,5 @@
-angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToSingleDatatable',
-                                                               function($scope, atmToSingleDatatable) {
+angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSingleDatatable','datatable',
+                                                               function($scope,$parse, atmToSingleDatatable, datatable) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render	
@@ -19,7 +19,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":2,
@@ -29,7 +29,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3,
@@ -151,7 +151,10 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 	        	withoutEdit: true,
 	        	changeClass:false,
 	        	showButton:false,
-	        	mode:'local'
+	        	mode:'local',
+	        		callback:function(datatable){
+						copyAttribute(datatable);
+					}
 			},
 			hide:{
 				active:true
@@ -178,8 +181,17 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			}
 	};
 	
+	var copyAttribute = function(datatable){
+		var dataMain = datatable.getData();
+		console.log("call event save2");
+		var qtty = dataMain[0].outputContainerUsed.quantity.value;
+		$parse('outputContainerUsed.experimentProperties.postFrgQuantity.value').assign(dataMain[0],qtty);
+		
+	}
+	
+	
 	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save");
+		console.log("call event save1");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);

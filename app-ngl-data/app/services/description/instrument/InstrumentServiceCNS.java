@@ -148,9 +148,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 		
 		//TODO : verify getContainerSupportCategories parameters
-		l.add(newInstrumentUsedType("Blue pippin", "blue-pippin", InstrumentCategory.find.findByCode("sizing-system"), null, 
-				getInstruments(
-						createInstrument("BluePippin1", "BluePippin1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+		l.add(newInstrumentUsedType("Blue pippin", "blue-pippin", InstrumentCategory.find.findByCode("sizing-system"), getBluePippinProperties(), 
+				getInstrumentBluePippin(),
 						getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -372,8 +371,27 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Programme corail"), 
 				"single", 10, true, null,null));
 		return l;
+	}	
+	
+	private List<Instrument> getInstrumentBluePippin() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+	//	instruments.add(createInstrument("blue-pippin","Blue Pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		createInstrument("BluePippin1", "BluePippin1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS));
+		
+		return instruments;
 	}
 
+	private List<PropertyDefinition> getBluePippinProperties() {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Marqueur-utilisé", "marker", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
+				"object_list", 10, true, null,null));
+		l.add(newPropertiesDefinition("Cassette", "cassette", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
+				"object_list", 11, true, null,null));
+		
+		return l;
+	}
+		
 	private List<Instrument> getInstrumentHand() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("irys-hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -429,7 +447,21 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.4-spot-on"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9-spot-on"));
+       
+        //Liste a definir
+        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
+       // propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",400));
+	//	propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",500));
+	//	propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
+
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getNanoporeSequencerPropertiesUAT() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"R9-spot-on"));
        
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));

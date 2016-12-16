@@ -199,7 +199,7 @@ public class QualityControl extends AbstractDeclaration {
 	}
 	
 	private List<ExperimentTypeNode> getETForFluoQuantification(){
-		List<ExperimentTypeNode> pets = ExperimentType.find.findByCategoryCode("transformation")
+		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
 			.stream()
 			.filter(e -> !e.code.contains("depot"))
 			.map(et -> getExperimentTypeNodes(et.code).get(0))

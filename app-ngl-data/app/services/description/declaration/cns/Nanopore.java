@@ -4,6 +4,7 @@ import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
+import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,124 @@ import services.description.declaration.AbstractDeclaration;
 
 public class Nanopore extends AbstractDeclaration{
 
+	protected List<ProcessType> getProcessTypeCommon() {
+		List<ProcessType> l=new ArrayList<ProcessType>();
+				
+		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", 
+				ProcessCategory.find.findByCode("nanopore-library"),52, 
+				getPropertyDefinitionsNanoporeLibrary(),
+				Arrays.asList(getPET("ext-to-nanopore-process-library-no-frg",-1),
+						getPET("nanopore-fragmentation",-1), 
+						getPET("dna-rna-extraction",-1), 						
+						getPET("nanopore-library",0),
+						getPET("nanopore-depot",1)), 
+				getExperimentTypes("nanopore-library").get(0),
+				getExperimentTypes("nanopore-depot").get(0), 
+				getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0),
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+				
+		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", 
+				ProcessCategory.find.findByCode("sequencing"),61 , 
+				null,
+				Arrays.asList(getPET("ext-to-nanopore-run",-1), 
+						getPET("nanopore-library",-1), 
+						getPET("nanopore-depot",0)), 
+				getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("nanopore-depot").get(0), 
+				getExperimentTypes("ext-to-nanopore-run").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		return l;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypePROD() {
+		List<ProcessType> l=new ArrayList<ProcessType>();
+		
+		
+		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", 
+				ProcessCategory.find.findByCode("nanopore-library"),52, 
+				getPropertyDefinitionsNanoporeLibrary(),
+				Arrays.asList(getPET("ext-to-nanopore-process-library-no-frg",-1),
+						getPET("nanopore-fragmentation",-1), 
+						getPET("nanopore-library",0),
+						getPET("nanopore-depot",1)), 
+				getExperimentTypes("nanopore-library").get(0),
+				getExperimentTypes("nanopore-depot").get(0), 
+				getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0),
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Frg-rep, Lib ONT, Dépôt", "nanopore-process-library", 
+				ProcessCategory.find.findByCode("nanopore-library"),51, 
+				getPropertyDefinitionsNanoporeFragmentation(), 
+				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),
+						getPET("dna-rna-extraction",-1),
+						getPET("nanopore-fragmentation",0),
+						getPET("nanopore-library",1),
+						getPET("nanopore-depot",2)), 
+				getExperimentTypes("nanopore-fragmentation").get(0),
+				getExperimentTypes("nanopore-depot").get(0), 
+				getExperimentTypes("ext-to-nanopore-process-library").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+	
+		return null;
+	}
+	@Override
+	protected List<ProcessType> getProcessTypeUAT() {
+		
+		// TODO Auto-generated method stub
+		return null;
+	}	
+
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		//GS 3 nouveaux processus
+		List<ProcessType> l=new ArrayList<ProcessType>();
+
+		l.add(DescriptionFactory.newProcessType("Frg, Rep ADN, Lib, Dépôt", "nanopore-frg-rep-lib-depot", 
+		ProcessCategory.find.findByCode("nanopore-library"),53, 
+				getPropertyDefinitionsNanoporeFragmentation(), 
+				Arrays.asList(getPET("ext-to-nanopore-frg-rep-lib-depot",-1),
+						getPET("dna-rna-extraction",-1),
+						getPET("nanopore-frg",0),
+						getPET("nanopore-dna-reparation",1),
+						getPET("nanopore-library",2),
+						getPET("nanopore-depot",3)), 
+				getExperimentTypes("nanopore-frg").get(0),
+				getExperimentTypes("nanopore-depot").get(0),
+				getExperimentTypes("ext-to-nanopore-frg-rep-lib-depot").get(0),
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+	
+		l.add(DescriptionFactory.newProcessType("Frg (sans rep), Lib, Dépôt", "nanopore-frg-lib-depot", 
+				ProcessCategory.find.findByCode("nanopore-library"),54, 
+				getPropertyDefinitionsNanoporeFragmentation(), 
+				Arrays.asList(getPET("dna-rna-extraction",-1),
+						getPET("ext-to-nanopore-frg-lib-depot",-1),
+						getPET("nanopore-frg",0),
+						getPET("nanopore-library",1),
+						getPET("nanopore-depot",2)),
+				getExperimentTypes("nanopore-frg").get(0),
+				getExperimentTypes("nanopore-depot").get(0),
+				getExperimentTypes("ext-to-nanopore-frg-lib-depot").get(0),
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+	
+		
+		l.add(DescriptionFactory.newProcessType("Rep ADN, Lib, Dépôt", "nanopore-rep-lib-depot", 
+				ProcessCategory.find.findByCode("nanopore-library"),55, 
+				getPropertyDefinitionsNanoporeFragmentation(), 
+				Arrays.asList(getPET("ext-to-nanopore-rep-lib-depot",-1),
+						getPET("dna-rna-extraction",-1),
+						getPET("nanopore-dna-reparation",0),
+						getPET("nanopore-library",1),
+						getPET("nanopore-depot",2)),
+				getExperimentTypes("nanopore-dna-reparation").get(0),
+				getExperimentTypes("nanopore-depot").get(0), 
+				getExperimentTypes("ext-to-nanopore-rep-lib-depot").get(0),
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		return l;
+	}
+	
 	@Override
 	protected List<ExperimentType> getExperimentTypeCommon() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
@@ -48,38 +167,12 @@ public class Nanopore extends AbstractDeclaration{
 		l.add(newExperimentType("Ext to Run Nanopore","ext-to-nanopore-run",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Fragm-Réparation Nanopore","nanopore-fragmentation","FRG",2100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("megaruptor2","eppendorf-mini-spin-plus","hand"),"OneToOne",
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-
-		l.add(newExperimentType("Librairie ONT","nanopore-library","LIB",2200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyLibrairieNanopore(), getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,2300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDepotNanopore(),
-				getInstrumentUsedTypes("minion","mk1", "mk1b"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
-
+	
+		
 		return l;
 
 	}
 	
-	@Override
-	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ExperimentType> getExperimentTypePROD() {
-		return null;
-	}
-
 	@Override
 	protected List<ExperimentType> getExperimentTypeUAT() {
 		// TODO Auto-generated method stub
@@ -87,79 +180,162 @@ public class Nanopore extends AbstractDeclaration{
 	}
 
 	@Override
-	protected List<ProcessType> getProcessTypeCommon() {
-		List<ProcessType> l=new ArrayList<ProcessType>();
-		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", 
-				ProcessCategory.find.findByCode("nanopore-library"),51, 
-				getPropertyDefinitionsNanoporeFragmentation(), 
-				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),getPET("dna-rna-extraction",-1),getPET("nanopore-fragmentation",0),getPET("nanopore-library",1),getPET("nanopore-depot",2)), getExperimentTypes("nanopore-fragmentation").get(0),getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("ext-to-nanopore-process-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+	protected List<ExperimentType> getExperimentTypePROD() {
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		l.add(newExperimentType("Fragm-Réparation Nanopore","nanopore-fragmentation","FRG",2100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyFragmentationNanoporeOld(), getInstrumentUsedTypes("megaruptor2","eppendorf-mini-spin-plus","hand"),"OneToOne",false,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+		l.add(newExperimentType("Librairie ONT","nanopore-library","LIB",2200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyLibrairieNanoporeOld(), getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,2300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+				getPropertyDepotNanoporeOld(),	getInstrumentUsedTypes("minion","mk1", "mk1b"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
-		
-		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", 
-				ProcessCategory.find.findByCode("nanopore-library"),52, 
-				getPropertyDefinitionsNanoporeLibrary(),
-				Arrays.asList(getPET("ext-to-nanopore-process-library-no-frg",-1),getPET("nanopore-fragmentation",-1), getPET("nanopore-library",0),getPET("nanopore-depot",1)), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-				
-		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", 
-				ProcessCategory.find.findByCode("sequencing"),61 , 
-				null,
-				Arrays.asList(getPET("ext-to-nanopore-run",-1), getPET("nanopore-library",-1), getPET("nanopore-depot",0)), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("ext-to-nanopore-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return l;
 	}
 
-	
 	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+	protected List<ExperimentType> getExperimentTypeDEV() {
+		//GS 
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+	
+		l.add(newExperimentType("Ext to Frg (sans rep), Lib, Dépôt","ext-to-nanopore-frg-lib-depot",null, -1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to Frg, Rep ADN, Lib, Dépôt","ext-to-nanopore-frg-rep-lib-depot",null, -1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to Rep ADN, Lib, Dépôt","ext-to-nanopore-rep-lib-depot",null, -1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Fragm-Réparation Nanopore","nanopore-fragmentation","FRG",2100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyFragmentationNanopore(), 
+				getInstrumentUsedTypes("megaruptor2","eppendorf-mini-spin-plus","hand"),"OneToOne",false, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Fragmentation Nanopore","nanopore-frg","FRG",2150,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyFragmentationNanopore(), 
+				getInstrumentUsedTypes("megaruptor2","eppendorf-mini-spin-plus","hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+	
+		l.add(newExperimentType("Réparation ADN","nanopore-dna-reparation","FFP",2200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyReparationNanopore(), 
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Librairie ONT","nanopore-library","LIB",2300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyLibrairieNanopore(),
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Sizing nanopore","nanopore-sizing","SIZ",2400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), 
+				getPropertySizingNanopore(),
+				getInstrumentUsedTypes("blue-pippin"),"OneToMany", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+	
+		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,2500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+				getPropertyDepotNanopore(),	
+				getInstrumentUsedTypes("minion","mk1", "mk1b"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+		
+		return l;
 	}
 
-	@Override
-	protected List<ProcessType> getProcessTypePROD() {
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeUAT() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 	@Override
 	protected void getExperimentTypeNodeCommon() {
 		//Nanopore
-		newExperimentTypeNode("ext-to-nanopore-run", getExperimentTypes("ext-to-nanopore-run").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-nanopore-process-library", getExperimentTypes("ext-to-nanopore-process-library").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-nanopore-process-library-no-frg", getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-nanopore-run", 
+				getExperimentTypes("ext-to-nanopore-run").get(0), false, false, false, 
+				null, null, null, 
+				null).save();
+		newExperimentTypeNode("ext-to-nanopore-process-library", 
+				getExperimentTypes("ext-to-nanopore-process-library").get(0), false, false, false, 
+				null, null, null, 
+				null).save();
+		newExperimentTypeNode("ext-to-nanopore-process-library-no-frg", 
+				getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), false, false, false, 
+				null, null, null, 
+				null).save();	
 		
-		newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,
-				getExperimentTypeNodes("dna-rna-extraction", "ext-to-nanopore-process-library"),null,null,getExperimentTypes("aliquoting")).save();
-		newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false, false,false,
-				getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,getExperimentTypes("pool-tube")).save();
-		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false, false,false,
-				getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,null).save();
+	
 		
 	}
 
 	@Override
-	protected void getExperimentTypeNodeDEV() {
+	protected void getExperimentTypeNodeUAT() {
 		//newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("aliquoting")).save();
 	}
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
+		
+		newExperimentTypeNode("nanopore-fragmentation",
+				getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,
+				getExperimentTypeNodes("dna-rna-extraction", "ext-to-nanopore-process-library"),null,null,
+				getExperimentTypes("aliquoting")).save();
+				
+		newExperimentTypeNode("nanopore-library",
+				getExperimentTypes("nanopore-library").get(0),false, false,false,
+				getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,
+				getExperimentTypes("pool-tube")).save();
 	
 	}
 
 	@Override
-	protected void getExperimentTypeNodeUAT() {
-		// TODO Auto-generated method stub
-
+	protected void getExperimentTypeNodeDEV() {
+		
+		newExperimentTypeNode("ext-to-nanopore-frg-lib-depot", 
+				getExperimentTypes("ext-to-nanopore-frg-lib-depot").get(0), false, false, false, 
+				null, null, null, null).save();
+		
+		newExperimentTypeNode("ext-to-nanopore-frg-rep-lib-depot",
+				getExperimentTypes("ext-to-nanopore-frg-rep-lib-depot").get(0), false, false, false, 
+				null, null, null, null).save();
+		
+		newExperimentTypeNode("ext-to-nanopore-rep-lib-depot", 
+				getExperimentTypes("ext-to-nanopore-rep-lib-depot").get(0), false, false, false, 
+				null, null, null, null).save();
+		
+		newExperimentTypeNode("nanopore-frg",
+				getExperimentTypes("nanopore-frg").get(0),false, false,false,
+				getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot"),null,getExperimentTypes("fluo-quantification"),
+				getExperimentTypes("aliquoting","pool-tube")).save();	
+		
+		newExperimentTypeNode("nanopore-dna-reparation",
+				getExperimentTypes("nanopore-dna-reparation").get(0),false, false,false,
+				getExperimentTypeNodes("ext-to-nanopore-rep-lib-depot","nanopore-frg","dna-rna-extraction"),null,getExperimentTypes("fluo-quantification"),
+				getExperimentTypes("aliquoting","pool-tube")).save();
+		
+		newExperimentTypeNode("nanopore-library",
+				getExperimentTypes("nanopore-library").get(0),false, false,false,
+				getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","dna-rna-extraction","nanopore-frg","nanopore-dna-reparation"),null,getExperimentTypes("fluo-quantification"),
+				getExperimentTypes("aliquoting","pool-tube")).save();	
+				
+		newExperimentTypeNode("nanopore-depot",
+				getExperimentTypes("nanopore-depot").get(0),false, false,false,
+			getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,
+			null).save();
+	
 	}
 
-	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
+	//NE PAS MODIFIER NI SUPPRIMER (historique)
+	private static List<PropertyDefinition> getPropertyFragmentationNanoporeOld() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null
 				, null ,null,null, "single",11));
@@ -193,7 +369,154 @@ public class Nanopore extends AbstractDeclaration{
 
 	}
 
+
+
+	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Containers
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Nb fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class,
+				true, null, null , "single",11,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté totale dans frg","inputFrgQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class,
+				true,  null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode("ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",12,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Conc. finale FRG","postFrgConcentration",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
+				false, null, null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
+				"single",130,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté finale FRG","postFrgQuantity",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",140,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Profil ou gel","migrationProfile",LevelService.getLevels(Level.CODE.ContainerOut), Image.class,
+				false, null, null ,"img",150,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Taille réelle","measuredLibrarySize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, 
+				true, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),
+				"single",160,true,null,null));	
+		/*propertyDefinitions.add(newPropertiesDefinition(
+				"Volume final","measuredVolume",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), 
+				"single",10,true,null,null));*/
+		propertyDefinitions.add(newPropertiesDefinition("Nb réparations","preCRNumber",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class,
+				 false ,null,null,"single",170,true,null,null));
+	
+		//Experiments
+		propertyDefinitions.add(newPropertiesDefinition(
+				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
+				false, null, null , "image",16,true,null,null));
+
+		
+		return propertyDefinitions;
+
+	}
+	
+	
+	private static List<PropertyDefinition> getPropertyReparationNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Containers
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté engagée","inputQuantity",LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
+				false, null, null ,"single",11,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Nb réparation","reparationNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class,
+				false, null, null ,"single",12,true,null,null));
+		
+		//Experiments
+		propertyDefinitions.add(newPropertiesDefinition(
+				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+				false, null, null ,"image",15,true,null,null));
+
+		return propertyDefinitions;
+
+	}
+	
+	private static List<PropertyDefinition> getPropertySizingNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Containers
+
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Intervalle de taille ciblé","expectedSize",LevelService.getLevels(Level.CODE.Content), String.class,
+				false, null ,null, "single",11,true,null,null));
+		
+
+		propertyDefinitions.add(newPropertiesDefinition("Conc. finale","ligationConcentration",LevelService.getLevels(Level.CODE.Content), Double.class,
+				true, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
+				"single",13,true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Qté finale","ligationQuantity",LevelService.getLevels(Level.CODE.Content), Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",15,true, null, null));
+	
+		//Experiments
+				propertyDefinitions.add(newPropertiesDefinition("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+						false, null, null, "image",16,true,null,null));
+
+		return propertyDefinitions;
+
+	}
 	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Experiments
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class,
+				true, null,null,"single",300,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"PDF Report","report",LevelService.getLevels(Level.CODE.Experiment), File.class,
+				false,null,null, "file", 310,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition
+				("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+						false, null ,null,"image",320,true,null,null));
+		//Containers
+		// Unite a verifier
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Date creation","loadingReport.creationDate",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Date.class,
+				false, null,null, "object_list",600,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Heure dépot","loadingReport.hour",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), String.class,
+				false, null,null,"object_list",601,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Temps","loadingReport.time",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Long.class,
+				false,null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "h"),MeasureUnit.find.findByCode( "h"),
+				"object_list",602,true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Volume","loadingReport.volume",LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Double.class,
+				false, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
+				"object_list",603,true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Quantité déposée","loadingQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class,
+				true, null, null,  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",100,true, null,null));
+		
+			
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+				"Groupe","qcFlowcell.group",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class,
+				false, null,null, "object_list",700,true,null,null));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+				"Nb total pores actifs à réception","qcFlowcell.preLoadingNbActivePores",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class
+				, false,null,null, "object_list",701,true, null,null));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+				"Nb total pores actifs lors du dépôt","qcFlowcell.postLoadingNbActivePores",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class,
+				false,null,null, "object_list",702,true, null,null));
+
+		//propertyDefinitions.add(newPropertiesDefinition("Channels with Reads", "minknowChannelsWithReads", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, "single",301));
+		//propertyDefinitions.add(newPropertiesDefinition("Events in Reads", "minknowEvents", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, "single",302));
+		//propertyDefinitions.add(newPropertiesDefinition("Complete reads", "minknowCompleteReads", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, "single",303));
+		//propertyDefinitions.add(newPropertiesDefinition("Read count", "metrichorReadCount", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, "single",304));
+		//propertyDefinitions.add(newPropertiesDefinition("Total 2D yield", "metrichor2DReadsYield", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, null
+				//, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"), "single",305));
+		//propertyDefinitions.add(newPropertiesDefinition("Longest 2D read", "metrichorMax2DRead", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, null
+				//, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single",306));
+		//propertyDefinitions.add(newPropertiesDefinition("Peak 2D quality score", "metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, "single",307));
+
+		
+		
+		return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getPropertyDepotNanoporeOld() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single",300));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("PDF Report","report",LevelService.getLevels(Level.CODE.Experiment), File.class, false, "file", 400));
@@ -223,7 +546,69 @@ public class Nanopore extends AbstractDeclaration{
 		return propertyDefinitions;
 	}
 
+	
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Containers
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",
+				10,true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté engagée dans bq","libraryInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content),Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",
+				11,true, null, null));
+	
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Tag","tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class,
+				false,null, getTagNanopore(),"single",13,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Catégorie tag","tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class,
+				false, null, getTagCategoriesNanopore(), "single",14,true,"SINGLE-INDEX",null));
+
+
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Conc. finale End Repair","postEndRepairConcentration", LevelService.getLevels(Level.CODE.ContainerOut),Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
+				"single",15,true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté finale End Repair","postEndRepairQuantity", LevelService.getLevels(Level.CODE.ContainerOut),Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",20,true, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Conc. finale dA tailing","postTailingConcentration", LevelService.getLevels(Level.CODE.ContainerOut),Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
+				"single",30,true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté finale dA tailing","postTailingQuantity", LevelService.getLevels(Level.CODE.ContainerOut),Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",40,true, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Profil ou gel","migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),Image.class,
+				 false, null,null, "image",50,true,null,null));		
+
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Conc. finale Ligation","ligationConcentration", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class,
+				true, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"), 
+				"single",50,true, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté finale Ligation","ligationQuantity", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class,
+				false, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",60,true, null, null)); 
+
+		//Experiments
+		propertyDefinitions.add(newPropertiesDefinition(
+				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+				false, null, null,  "image",70,true,null,null));
+
+		
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getPropertyLibrairieNanoporeOld() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",10));
@@ -273,19 +658,28 @@ public class Nanopore extends AbstractDeclaration{
 		return values;	
 	}
 
-
+	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",2));
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
+				true,null, getLibProcessTypeCodeValues(),"single" ,1,true, "ONT",null));
+		
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,
+				true,null, DescriptionFactory.newValues("8","20"), MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
+				"single",2,true,null,null));
+		
+		
 		
 		return propertyDefinitions;
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeLibrary() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true, getLibProcessTypeCodeValues(), "ONT","single" ,1));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
+				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
+				true, null,getLibProcessTypeCodeValues(),"single",1, true,"ONT",null));
 		
 		return propertyDefinitions;
 	}
