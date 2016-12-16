@@ -374,7 +374,7 @@ public class Containers extends CommonController {
 				
 				boolean onlyEx = true;
 				for(ExperimentType e:experimentTypes){
-					Logger.info(e.code);
+					//Logger.info(e.code);
 					if(!e.code.startsWith("ex")){
 						onlyEx = false;
 					}
@@ -443,7 +443,7 @@ public class Containers extends CommonController {
 			if(CollectionUtils.isNotEmpty(processTypes)){
 				for(ProcessType processType:processTypes){
 					List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
-					Logger.debug("NB Previous exp : "+previousExpType.size());
+					//Logger.debug("NB Previous exp : "+previousExpType.size());
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
 					
 					if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
