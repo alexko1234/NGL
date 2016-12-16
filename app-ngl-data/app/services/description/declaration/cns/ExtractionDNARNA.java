@@ -6,9 +6,12 @@ import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -18,6 +21,7 @@ import play.Logger;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
 
 public class ExtractionDNARNA extends AbstractDeclaration{
@@ -65,12 +69,12 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Extraction ARN total","total-rna-extraction","??",710,
+		l.add(newExperimentType("Extraction ARN total","total-rna-extraction","RNA",710,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionARNtotal(),
 				getInstrumentUsedTypes("hand"),"OneToOne", getSampleTypes("total-RNA"),true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Séparation ARN 17-200 et > 200nt","small-and-large-rna-isolation","??",720,
+		l.add(newExperimentType("Séparation ARN 17-200 et > 200nt","small-and-large-rna-isolation","RNA",720,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionARNSmallLarge(),
 				getInstrumentUsedTypes("hand"),"OneToMany", getSampleTypes("RNA"),true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -119,8 +123,8 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 				null, 
 				Arrays.asList(
 						getPET("ext-to-small-and-large-rna-extraction",-1),
-						getPET("total-rna-extraction",1),
-						getPET("small-and-large-rna-isolation",2)), 
+						getPET("total-rna-extraction",0),
+						getPET("small-and-large-rna-isolation",1)), 
 						getExperimentTypes("total-rna-extraction").get(0), getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -188,8 +192,8 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
 
-		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", null, 
-				"single", 15, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", 
+				Collections.singletonList(DescriptionFactory.newValue("total-RNA","ARN total")),"single", 15, true, "total-RNA",null));
 		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, null ,null ,null ,"single", 20, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
@@ -202,8 +206,11 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
 
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,"1"));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", 
-				null, "single", 15, false, null,null));
+				Collections.singletonList(DescriptionFactory.newValue("RNA","ARN")), "single", 15, true, "ARN",null));
 		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, "single", 20, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 

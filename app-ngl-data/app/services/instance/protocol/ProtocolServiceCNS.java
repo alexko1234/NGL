@@ -213,7 +213,7 @@ public class ProtocolServiceCNS {
 			//fin mise en prod
 			
         	//lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes()));
-			
+			lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction","small-and-large-rna-isolation")));
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));
 		}

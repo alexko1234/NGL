@@ -28,7 +28,7 @@ rule "Set good project code for 17-200nt"
 			outputProjectCode.value = null;
 		}
 		
-		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
+		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputRNASize.value+" => Output project code ="+outputProjectCode.value);
 		
 end
 
@@ -58,6 +58,6 @@ rule "Set good project code for >200nt"
 			outputProjectCode.value = null;
 		}
 		
-		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
+		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputRNASize.value+" => Output project code ="+outputProjectCode.value);
 		
 end
