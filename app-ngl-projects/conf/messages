@@ -72,6 +72,7 @@ umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés
 projects.bioinformaticParameters.biologicalAnalysis = Analyse biologique ?
+projects.bioinformaticParameters.localDataDelete = Suppression des données locales ?
 
 
 

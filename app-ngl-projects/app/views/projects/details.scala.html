@@ -172,7 +172,18 @@
 										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.fgPriority}}</p>
 										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.fgPriority">										
 									</div>
-								}								
+								}	
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.localDataDelete")){
+									<div class="checkbox" ng-if="mainService.isEditMode()">
+					 					<label>
+											<input type="checkbox"  ng-model="project.bioinformaticParameters.localDataDelete">&nbsp;	
+										</label>
+									</div>				
+									<p class="form-control-static" ng-if="!mainService.isEditMode()" ng-switch on="project.bioinformaticParameters.localDataDelete">
+										<i ng-switch-when="true" class="fa fa-check-square-o  fa-lg"></i>
+										<i ng-switch-default class="fa fa-square-o  fa-lg"></i>
+									</p>					
+								}							
 							}
 						</div>
 						
