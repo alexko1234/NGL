@@ -565,7 +565,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	            buttonCopyPosition : function(udtName){
 	            	if(!udtName)udtName='atmService.data';
 	            	return ''
-	            	+'<div class="btn-group" ng-if="plateUtils.isPlateToPlate()">'
+	            	+'<div class="btn-group" ng-if="plateUtils.isPlate()">'
 	            	+'<button class="btn btn-default" ng-click="plateUtils.copyMode(atmService, '+udtName+')" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyMode.title")+'" ng-disabled="!isEditMode()">'
 	            	+'	<i class="fa fa-copy"></i> '+Messages("experiments.button.plate.copyMode")
 	            	+'</button>'
