@@ -303,7 +303,8 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
                 complex:true,
                 template:''
                 	+$scope.plateUtils.templates.buttonLineMode()
-                	+$scope.plateUtils.templates.buttonColumnMode()  
+                	+$scope.plateUtils.templates.buttonColumnMode() 
+                	+$scope.plateUtils.templates.buttonCopyPosition() 
                 	+'<div class="btn-group" style="margin-left:5px">'
                 	+'<button class="btn btn-default" ng-click="copyVolumeInToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolume")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
                 	+'</div>'

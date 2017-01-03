@@ -206,8 +206,8 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$parse', 'atmToGe
 				active:true 
 			},			
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),	
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
