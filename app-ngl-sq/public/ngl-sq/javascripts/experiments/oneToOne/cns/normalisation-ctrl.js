@@ -212,8 +212,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
                 complex:true,
                 template:  ''
-                	+$scope.plateUtils.templates.buttonLineMode
-                	+$scope.plateUtils.templates.buttonColumnMode                	   
+                	+$scope.plateUtils.templates.buttonLineMode()
+                	+$scope.plateUtils.templates.buttonColumnMode()                	   
             }
 			
 	};
