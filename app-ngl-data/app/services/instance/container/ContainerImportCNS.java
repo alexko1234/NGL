@@ -264,7 +264,14 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			container.valuation.valid=TBoolean.UNSET;
 		}
 		
-		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
+		String storageCode=null;
+		try{
+			storageCode=rs.getString("storageCode");
+		}catch(SQLException e){
+			
+		}
+		
+		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"),storageCode);
 
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
