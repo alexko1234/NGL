@@ -450,10 +450,7 @@ public class DataMappingCNS {
 */	
 	public static String getStateFromStateTubeLims(int etatTubeLimsCode){
 		
-		if(etatTubeLimsCode==4){
-			return "IW-P";
-		}
-		else if(etatTubeLimsCode==8){
+		if(etatTubeLimsCode==8 || etatTubeLimsCode==4 ){
 			return "IS";
 		}
 		else {
