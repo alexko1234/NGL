@@ -24,6 +24,17 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
+				     {
+				        	"header":"Code aliquot",
+				 			"property": "inputContainer.contents",
+				 			"filter": "get:'properties.sampleAliquoteCode.value'| unique",
+				 			"order":false,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":3.5,
+				 			"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
+				        	 "extraHeaders":{0:Messages("experiments.inputs")}
+					 },
 				     // render avec "|" !!
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),

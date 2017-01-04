@@ -8,7 +8,7 @@ rule "Set good project code for 17-200nt"
 	salience 900
 	no-loop
     when
-		$experiment:Experiment($typeCode:typeCode,$typeCode=="small-and-large-rna-extraction", state.code == "N")
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="small-and-large-rna-isolation", state.code == "N")
 		$atomicTransfert: OneToManyContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
 		$inputContainerUsed: InputContainerUsed($inputProjectCode:contents.get(0).projectCode, $inputProjectCode != null) from $inputContainerUseds
 		$outputContainerUsed: OutputContainerUsed($outputRNASize:experimentProperties.get("rnaSize"), $outputRNASize != null) from $outputContainerUseds		
@@ -38,7 +38,7 @@ rule "Set good project code for >200nt"
 	salience 900
 	no-loop
     when
-		$experiment:Experiment($typeCode:typeCode,$typeCode=="small-and-large-rna-extraction", state.code == "N")
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="small-and-large-rna-isolation", state.code == "N")
 		$atomicTransfert: OneToManyContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
 		$inputContainerUsed: InputContainerUsed($inputProjectCode:contents.get(0).projectCode, $inputProjectCode != null) from $inputContainerUseds
 		$outputContainerUsed: OutputContainerUsed($outputRNASize:experimentProperties.get("rnaSize"), $outputRNASize != null) from $outputContainerUseds		

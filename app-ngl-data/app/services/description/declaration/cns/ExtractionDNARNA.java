@@ -205,12 +205,12 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 	private List<PropertyDefinition> getPropertyDefinitionsExtractionARNSmallLarge() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
-
+		/*
 		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,"1"));
-		
+		*/
 		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "N", 
-				Collections.singletonList(DescriptionFactory.newValue("RNA","ARN")), "single", 15, true, "ARN",null));
+				Collections.singletonList(DescriptionFactory.newValue("RNA","ARN")), "single", 15, false, "RNA",null));
 		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, "single", 20, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
