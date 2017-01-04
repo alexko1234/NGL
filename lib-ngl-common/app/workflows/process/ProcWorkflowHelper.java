@@ -56,7 +56,7 @@ public class ProcWorkflowHelper {
 		
 		
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				DBQuery.is("code",process.inputContainerCode).notExists("fromTransformationTypeCodes"),
+				DBQuery.is("code",process.inputContainerCode).or(DBQuery.notExists("fromTransformationTypeCodes"),DBQuery.size("fromTransformationTypeCodes", 0)),
 				DBUpdate.addToSet("fromTransformationTypeCodes", voidExpTypeCode));
 		
 		
