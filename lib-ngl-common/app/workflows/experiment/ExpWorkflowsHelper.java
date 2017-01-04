@@ -379,9 +379,16 @@ public class ExpWorkflowsHelper {
 	
 
 	private List<Content> getContents(Experiment exp, AtomicTransfertMethod atm, OutputContainerUsed ocu) {
-		List<Content> contents =  atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> ContainerHelper.calculPercentageContent(icu.contents, icu.percentage)).flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
+		List<Content> contents =  atm.inputContainerUseds.stream()
+				.map((InputContainerUsed icu) -> {
+					Map<String, PropertyValue> contentProperties = getInputPropertiesForALevel(exp, icu, CODE.Content);
+					List<Content> newContents = ContainerHelper.calculPercentageContent(icu.contents, icu.percentage);
+					newContents.forEach(c -> c.properties.putAll(contentProperties));
+					return newContents;
+					})
+				.flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
 		contents = ContainerHelper.fusionContents(contents);
-		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithATM(exp, atm, CODE.Content);
+		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithATM(exp, null, CODE.Content);
 		newContentProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Content));
 		contents.forEach((Content c) ->{
 			c.properties.putAll(newContentProperties);
@@ -650,7 +657,7 @@ public class ExpWorkflowsHelper {
 		String fromTransfertTypeCode =  getFromSatTypeCode(exp, ExperimentCategory.CODE.transfert);
 		String fromTransfertCode = getFromSatCode(exp, ExperimentCategory.CODE.transfert);
 		
-		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevelWithATM(exp, atm, CODE.Container);
+		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevelWithATM(exp, null, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
 		Set<String> processTypeCodes =new HashSet<String>();
@@ -859,9 +866,46 @@ public class ExpWorkflowsHelper {
 		return propertiesForALevel;
 	}
 	
-	private Map<String, PropertyValue> getCommonPropertiesForALevel(Experiment exp, Level.CODE level) {
-		return null;
+	private Map<String, PropertyValue> getInputPropertiesForALevel(Experiment exp, InputContainerUsed icu, Level.CODE level) {
+		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
+
+		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, level);
+
+		if(null != icu && icu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(icu.experimentProperties.entrySet().stream()
+						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
+		}
+		
+		//extract instrument content properties
+		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, level);
+
+		if(null != icu && icu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0){			
+			propertiesForALevel.putAll(icu.instrumentProperties.entrySet().stream()
+						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));								
+		}
+		
+		//extract process content properties for only the inputContainer of the process
+		Set<String> processesPropertyDefinitionCodes = getProcessesPropertyDefinitionCodes(icu, level)
+				.stream()
+				.collect(Collectors.toList()).stream().map(s->{
+					return getKeyPropertiesInstance(s);
+				}).collect(Collectors.toSet());
+		
+		if(processesPropertyDefinitionCodes.size() >0){
+			propertiesForALevel.putAll(getProcessesProperties(icu)
+					.stream()
+					.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()))
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
+		}
+		
+		
+		return propertiesForALevel;
 	}
+	
 	
 	/**
 	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
@@ -962,7 +1006,7 @@ public class ExpWorkflowsHelper {
 			propertiesForALevel.putAll(protocol.properties);
 		}
 		
-
+		/*
 		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.experimentProperties != null)
@@ -972,7 +1016,8 @@ public class ExpWorkflowsHelper {
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 					
 		}
-
+		*/
+		
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
 		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, level);
@@ -983,6 +1028,8 @@ public class ExpWorkflowsHelper {
 					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
+		
+		/*
 		if(null != atm && instrumentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.instrumentProperties != null)
@@ -992,8 +1039,11 @@ public class ExpWorkflowsHelper {
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 							
 		}
+		*/
+		
 		/* Do not extract property from process because the risk to have the same property on several process is very big
 		 * To put process property in container used rules*/
+		/*
 		if(null != atm){
 			//extract process content properties for only the inputContainer of the process
 			Set<String> processesPropertyDefinitionCodes = atm.inputContainerUseds.stream()
@@ -1011,7 +1061,7 @@ public class ExpWorkflowsHelper {
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
 			}
 		}
-
+		*/
 		return propertiesForALevel;
 	}
 
