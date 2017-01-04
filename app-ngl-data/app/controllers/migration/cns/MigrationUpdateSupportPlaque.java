@@ -41,7 +41,41 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 		//updateSupportContainerSolutionStock();
 		//updateSupportContainerBanqueAmpliPlaqueToTube();
 		updateSupportContainerTubeLimsToPlaque();
+		updateStateContainerTubeInIWP();
+		updateStorageContainerTube();
 		return ok("Migration Support Container Finish");
+	}
+
+	private static void updateStorageContainerTube() {
+		List<Container> results = limsServices.jdbcTemplate.query("select storageCode= case when convert(varchar,t.numboite)= null or t.lig= null or convert(varchar,t.col)=null then null else 'Bt'+convert(varchar,t.numboite)+'_'+t.lig+convert(varchar,t.col) end, code=tubnom from Materielmanip m, Tubeident t where m.matmaco=t.matmaco and matmaInNGL!=null and numboite!=null",new Object[]{} 
+		,new RowMapper<Container>() {
+
+			@SuppressWarnings("rawtypes")
+			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Container container = new Container();
+
+				container.code=rs.getString("code");
+				container.support=new LocationOnContainerSupport();
+				container.support.storageCode=rs.getString("storageCode");
+				return container;
+			}
+
+		});
+		Logger.debug("Nb containers tubeu update Storage :"+results.size());
+		for(Container container : results){
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code).notExists("support.storageCode"), DBUpdate.set("support.storageCode",container.support.storageCode));
+			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.is("code", container.code).notExists("storageCode"),DBUpdate.set("storageCode",container.support.storageCode));
+		}
+	}
+
+	private static void updateStateContainerTubeInIWP() {
+		List<Container> containers =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.notExists("state.historical").size("fromTransformationTypeCodes",0).exists("properties.limsCode").is("state.code", "IW-P")).toList();
+		Logger.debug("Nb containers tube à IW-P :"+containers.size());
+		for(Container container:containers){
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("state.code","IS"));
+			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code",container.support.code), DBUpdate.set("state.code","IS"));
+		}
 	}
 
 	private static void updateSupportContainerTubeLimsToPlaque() {
