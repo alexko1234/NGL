@@ -426,6 +426,8 @@ experiments.button.plate.computeLineMode = Calcul position plaque en mode ligne
 experiments.button.plate.computeColumnMode = Calcul position plaque en mode colonne
 experiments.button.plate.computeLineMode.advanced = Choix de la colonne max.
 experiments.button.plate.computeColumnMode.advanced = Choix de la ligne max.
+experiments.button.plate.copyMode = X/Y
+experiments.button.plate.copyMode.title = Copy position container en entrée vers container en sortie
 
 experiments.button.plate.copyVolume = Copy volume container en entrée vers container en sortie
 experiments.button.plate.copyVolumeTo = Copy volume container en entrée vers

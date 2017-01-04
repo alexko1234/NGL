@@ -403,8 +403,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			/**
 			 * Compute A1, B1, C1, etc.
 			 */
-			computeColumnMode : function(atmService, maxLine){
-				var wells = atmService.data.displayResult;
+			computeColumnMode : function(atmService, udt, maxLine){
+				var wells = udt.displayResult;
 				var nbCol = 12;
 				var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 				var x = 0;
@@ -422,8 +422,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			/**
 			 * Compute A1, A2, A3, etc.
 			 */
-			computeLineMode : function(atmService, maxColumn){
-				var wells = atmService.data.displayResult;
+			computeLineMode : function(atmService, udt, maxColumn){
+				var wells = udt.displayResult;
 				var nbCol = 12;
 				var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 				var x = 0;
@@ -437,7 +437,16 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				}		
 			},
-			
+			copyMode : function(atmService, udt){
+				var wells = udt.displayResult;
+				for(var j = 0; j < wells.length; j++){
+					if(wells[j].data.inputContainerUsed.categoryCode ==='well'){
+						wells[j].data.outputContainerUsed.locationOnContainerSupport.line = wells[j].data.inputContainerUsed.locationOnContainerSupport.line
+						wells[j].data.outputContainerUsed.locationOnContainerSupport.column = wells[j].data.inputContainerUsed.locationOnContainerSupport.column
+					}
+				}
+				
+			},
 			plateCells : undefined,
 			computePlateCells : function(atmService){
 				var plateCells = [];
@@ -481,9 +490,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					return ($scope.experiment.instrument.inContainerSupportCategoryCode === '96-well-plate');	
 				}else{
 					return ($scope.experiment.instrument.outContainerSupportCategoryCode === '96-well-plate');
-				}
-				
-								
+				}								
+			},
+			isPlateToPlate:function(){
+				return ($scope.experiment.instrument.inContainerSupportCategoryCode === '96-well-plate' 
+						&& $scope.experiment.instrument.outContainerSupportCategoryCode === '96-well-plate');								
 			},
 			getPlateCode:function(){
 				if($scope.experimentType.atomicTransfertMethod === 'OneToVoid'){
@@ -503,48 +514,63 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 			},
 			templates : {
-				buttonLineMode : ''
+				buttonLineMode : function(udtName){
+					if(!udtName)udtName='atmService.data';
+					return ''
 					+'<div class="btn-group" style="margin-left:5px" ng-if="plateUtils.isPlate()">'
-	            	+'<button class="btn btn-default" ng-click="plateUtils.computeLineMode(atmService, 11)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i></button>'
+	            	+'<button class="btn btn-default" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 11)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeLineMode")+'"  ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-right"></i></button>'
 	            	+'<div class="btn-group" role="group">'
 	            	+'<button type="button" title="'+Messages("experiments.button.plate.computeLineMode.advanced")+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
 	            	+'  <span class="caret"></span>'
 	            	+'</button>'
 	            	+' <ul class="dropdown-menu">'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 0)" >1</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 1)" >2</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 2)" >3</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 3)" >4</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 4)" >5</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 5)" >6</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 6)" >7</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 7)" >8</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 8)" >9</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 9)" >10</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 10)" >11</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, 11)" >12</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 0)" >1</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 1)" >2</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 2)" >3</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 3)" >4</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 4)" >5</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 5)" >6</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 6)" >7</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 7)" >8</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 8)" >9</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 9)" >10</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 10)" >11</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeLineMode(atmService, '+udtName+', 11)" >12</a></li>'
 	            	+'</ul>'
 	            	+'</div>'
-	            	+'</div>',
-				buttonColumnMode : ''
+	            	+'</div>'
+	            },
+				buttonColumnMode : function(udtName){
+					if(!udtName)udtName='atmService.data';
+					return ''
 					+'<div class="btn-group" ng-if="plateUtils.isPlate()">'
-	            	+'<button class="btn btn-default" ng-click="plateUtils.computeColumnMode(atmService, 7)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i></button>'
+	            	+'<button class="btn btn-default" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 7)" data-toggle="tooltip" title="'+Messages("experiments.button.plate.computeColumnMode")+'" ng-disabled="!isEditMode()"><i class="fa fa-magic"></i><i class="fa fa-arrow-down"></i></button>'
 	            	+'<div class="btn-group" role="group">'
 	            	+'<button type="button"  title="'+Messages("experiments.button.plate.computeColumnMode.advanced")+'" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-disabled="!isEditMode()">'
 	            	+'  <span class="caret"></span>'
 	            	+'</button>'
 	            	+' <ul class="dropdown-menu">'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 0)" >A</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 1)" >B</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 2)" >C</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 3)" >D</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 4)" >E</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 5)" >F</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 6)" >G</a></li>'
-	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, 7)" >H</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 0)" >A</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 1)" >B</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 2)" >C</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 3)" >D</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 4)" >E</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 5)" >F</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 6)" >G</a></li>'
+	            	+'  <li><a href="#" ng-click="plateUtils.computeColumnMode(atmService, '+udtName+', 7)" >H</a></li>'
 	            	+'</ul>'
 	            	+'</div>'
 	            	+'</div>'
+	            },
+	            buttonCopyPosition : function(udtName){
+	            	if(!udtName)udtName='atmService.data';
+	            	return ''
+	            	+'<div class="btn-group" ng-if="plateUtils.isPlate()">'
+	            	+'<button class="btn btn-default" ng-click="plateUtils.copyMode(atmService, '+udtName+')" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyMode.title")+'" ng-disabled="!isEditMode()">'
+	            	+'	<i class="fa fa-copy"></i> '+Messages("experiments.button.plate.copyMode")
+	            	+'</button>'
+	            	+'</div>'
+	            }
 			}
 	};
 	

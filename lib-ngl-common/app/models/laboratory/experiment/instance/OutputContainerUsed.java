@@ -1,12 +1,16 @@
 package models.laboratory.experiment.instance;
 
-import play.Logger;
+import java.util.List;
+
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.Comment;
 import validation.ContextValidation;
 import validation.experiment.instance.ContainerUsedValidationHelper;
 
 public class OutputContainerUsed extends AbstractContainerUsed{
 		
+	public Comment comment;
+	
 	public OutputContainerUsed() {
 		super();
 		

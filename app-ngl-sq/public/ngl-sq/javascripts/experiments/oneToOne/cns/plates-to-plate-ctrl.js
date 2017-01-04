@@ -301,8 +301,8 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
                 complex:true,
                 template:''
-                	+$scope.plateUtils.templates.buttonLineMode
-                	+$scope.plateUtils.templates.buttonColumnMode  
+                	+$scope.plateUtils.templates.buttonLineMode()
+                	+$scope.plateUtils.templates.buttonColumnMode()  
                 	+'<div class="btn-group" style="margin-left:5px">'
                 	+'<button class="btn btn-default" ng-click="copyVolumeInToOut()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolume")+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
                 	+'</div>'

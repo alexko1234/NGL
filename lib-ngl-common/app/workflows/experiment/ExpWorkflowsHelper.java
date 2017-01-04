@@ -1,6 +1,7 @@
 package workflows.experiment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,9 +12,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -688,6 +692,9 @@ public class ExpWorkflowsHelper {
 			c.state = state;
 			c.traceInformation = traceInformation;
 			c.treeOfLife=tree;
+			if(null != ocu.comment){
+				c.comments = Collections.singletonList(updateComment(ocu.comment, validation));
+			}
 			newContainers.add(c);
 		}
 		
@@ -723,12 +730,23 @@ public class ExpWorkflowsHelper {
 				c.state = state;
 				c.traceInformation = traceInformation;
 				c.treeOfLife=tree;
+				if(null != ocu.comment){
+					c.comments = Collections.singletonList(ocu.comment);
+				}
 				newContainers.add(c);
 			});			
 		}
 
 		return newContainers;
 	}
+
+	private Comment updateComment(Comment comment, ContextValidation validation) {
+		comment.createUser = validation.getUser();
+		comment.creationDate = new Date();
+		comment.code = CodeHelper.getInstance().generateExperimentCommentCode(comment);
+		return comment;
+	}
+
 
 	private Set<String> getSamplesFromContents(List<Content> contents) {
 		return contents.stream().map(c-> c.sampleCode).collect(Collectors.toSet());

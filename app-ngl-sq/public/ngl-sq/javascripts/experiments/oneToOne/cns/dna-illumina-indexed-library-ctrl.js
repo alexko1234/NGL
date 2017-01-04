@@ -111,6 +111,16 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
+			        	 "header":Messages("containers.table.comments"),
+			        	 "property":"outputContainerUsed.comment.comment",
+			        	 "order":false,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"textarea",
+			        	 "position":590,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.storageCode"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
 			        	 "order":true,
