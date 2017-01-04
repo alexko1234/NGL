@@ -1,13 +1,12 @@
 @()
 <!-- 2 cas * Hiseq2000/4000 => import fichier
 	       * X5 => selection 1 colonne de départ pour plaque DAP
-
 -->
-<div class="col-sm-12 col-lg-12" ng-controller="LibraryPrepCtrl">
-  <form class="form-group" role="form">
+<div class="col-md-12 col-lg-12" ng-controller="LibraryPrepCtrl">
+  <form class="form-inline" role="form">
   	  <!-- premiere ligne -->
-      <div class="row margin-bottom-3">
-         <div class="form-group col-lg-6">          
+      <div class="row margin-bottom-7">
+         <div class="form-group col-lg-4">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
@@ -20,8 +19,7 @@
 			  							                ng-model="outputContainerSupport.code" />	
 			  </div>
 			  </div>   
-	     </div>
-	 
+	     </div> 
          <div class="form-group col-lg-6">
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -30,7 +28,7 @@
               </div>
               <div ng-switch-when="true">
                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
-                  <input class="form-control input-sm" type="text" id="plateStorage"
+                  <input class="form-control input-sm" type="text" id="plateStorage" style="width:65%"
 									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
 			 						                   ng-model="outputContainerSupport.storageCode" />	
 			  </div>
@@ -38,7 +36,7 @@
 	     </div>
 	  </div>
 	  <!-- 2eme ligne -->
-	  <div class="row margin-bottom-3">
+	  <div class="row margin-bottom-4">
          <div class="form-group col-lg-6"  ng-show="button.isShow()">
              <label for="importFile" class="control-label">Fichier Workbook</label>
              <div class="input-group" style="width:50%">
@@ -54,7 +52,6 @@
                 </span> 
             </div>                         				  
           </div>
-          <!-- TODO ?? select pour choisir la plaque d'index; pour l'instant une seule possible -->
           <div class="form-group col-lg-6"  ng-show="selectCol.isShow()">
              <label class="control-label">@Messages("experiments.startColumnTagPlate")</label>
              <select ng-model="tagPlateColumn" ng-options="column.name for column in columns"  

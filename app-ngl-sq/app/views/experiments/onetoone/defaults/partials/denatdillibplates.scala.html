@@ -1,9 +1,9 @@
 
-<div class="col-sm-12 col-lg-12" ng-controller="DenatDilLibCtrlPlates">  
-  <form class="form-group" role="form">
+<div class="col-md-12 col-lg-12" ng-controller="DenatDilLibCtrlPlates">  
+  <form class="form-inline" role="form">
   	  <!-- premiere ligne -->
-      <div class="row margin-bottom-3">
-         <div class="form-group col-lg-3">          
+      <div class="row margin-bottom-7">
+         <div class="form-group col-lg-4">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
@@ -16,9 +16,8 @@
 			  							                ng-model="outputContainerSupport.code" />	
 			  </div>
 			  </div>   
-	     </div>
-	 
-         <div class="form-group col-lg-3">
+	     </div> 
+         <div class="form-group col-lg-6">
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
@@ -26,7 +25,7 @@
               </div>
               <div ng-switch-when="true">
                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
-                  <input class="form-control input-sm" type="text" id="plateStorage"
+                  <input class="form-control input-sm" type="text" id="plateStorage" style="width:65%"
 									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
 			 						                   ng-model="outputContainerSupport.storageCode" />	
 			  </div>
@@ -35,6 +34,7 @@
 	  </div>
   </form>	
 
- <div class="row">
+  <div class="row">
 	  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>	
-  </div>		
+  </div>	
+</div>	
