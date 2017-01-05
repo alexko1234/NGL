@@ -162,11 +162,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitFluoroskanProperties(), 
 				getInstruments(
-						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit2", "QuBit2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit3", "QuBit3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit4", "QuBit4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("QuBit5", "QuBit5", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))						
+						createInstrument("quBit1", "QuBit1 ARN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit2", "QuBit2 EVAL", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit3", "QuBit3 ADN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit4", "QuBit4 AMPLI", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit5", "QuBit5 CDNA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("QuBit6", "QuBit6 NANOPORE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))						
 						), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); //ok
@@ -233,16 +234,16 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("LabChip_GX", "labchip-gx", InstrumentCategory.find.findByCode("chip-electrophoresis"), getLabChipGXProperties(), 
 				getInstruments(
-						createInstrument("labChip_GX1", "LabChip_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("labChip_GX2", "LabChip_GX2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) ,
+						createInstrument("labChip_GX1", "LabChip_GX1 ADN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("labChip_GX2", "LabChip_GX2 AMPLI", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) ,
 				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getBioanalyzerProperties(), 
 				getInstruments(
-						createInstrument("bioanalyzer1", "Bioanalyzer 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("bioanalyzer2", "Bioanalyzer 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
-						createInstrument("bioanalyzer3", "Bioanalyzer 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						createInstrument("bioanalyzer1", "Bioanalyzer 1 ADN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("bioanalyzer2", "Bioanalyzer 2 ARN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("bioanalyzer3", "Bioanalyzer 3 AMPLI", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
