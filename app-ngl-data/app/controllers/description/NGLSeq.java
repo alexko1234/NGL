@@ -48,6 +48,7 @@ public class NGLSeq extends CommonController {
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));
 			} else {
+				Logger.info("NGLSeq description is loaded!");
 				return ok();
 			}
 		} catch (Exception e) {

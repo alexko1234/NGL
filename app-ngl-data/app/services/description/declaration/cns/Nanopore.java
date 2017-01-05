@@ -667,7 +667,7 @@ public class Nanopore extends AbstractDeclaration{
 		
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,
-				true,null, DescriptionFactory.newValues("8","20"), MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
+				true,null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
 				"single",2,true,null,null));
 		
 		

@@ -40,6 +40,7 @@ public class ResolutionService {
 			Logger.info("Create and save "+inst+ " resolution categories ...");
 			
 			saveResolutions(ctx, inst);
+			Logger.info(inst+" Resolution collection creation is done!");
 		}
 		else {
 			Logger.error("You need to specify only one institute !");
