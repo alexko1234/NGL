@@ -141,7 +141,7 @@ public class ContainerHelper {
 		finalContent.sampleTypeCode = contents.get(0).sampleTypeCode;
 		finalContent.referenceCollab = contents.get(0).referenceCollab;
 		finalContent.percentage = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-		
+		finalContent.processProperties = new HashMap<String, PropertyValue>();
 		
 		for(Content c : contents){
 			if(null != c.properties){
