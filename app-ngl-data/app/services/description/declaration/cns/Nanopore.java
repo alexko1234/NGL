@@ -406,7 +406,7 @@ public class Nanopore extends AbstractDeclaration{
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
 				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
-				false, null, null , "image",16,true,null,null));
+				false, null, null , "img",16,true,null,null));
 
 		
 		return propertyDefinitions;
@@ -427,7 +427,7 @@ public class Nanopore extends AbstractDeclaration{
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
 				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
-				false, null, null ,"image",15,true,null,null));
+				false, null, null ,"img",15,true,null,null));
 
 		return propertyDefinitions;
 
@@ -452,7 +452,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 		//Experiments
 				propertyDefinitions.add(newPropertiesDefinition("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
-						false, null, null, "image",16,true,null,null));
+						false, null, null, "img",16,true,null,null));
 
 		return propertyDefinitions;
 
@@ -468,7 +468,7 @@ public class Nanopore extends AbstractDeclaration{
 				false,null,null, "file", 310,true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition
 				("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
-						false, null ,null,"image",320,true,null,null));
+						false, null ,null,"img",320,true,null,null));
 		//Containers
 		// Unite a verifier
 		propertyDefinitions.add(newPropertiesDefinition(
@@ -587,7 +587,7 @@ public class Nanopore extends AbstractDeclaration{
 
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Profil ou gel","migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),Image.class,
-				 false, null,null, "image",50,true,null,null));		
+				 false, null,null, "img",50,true,null,null));		
 
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Conc. finale Ligation","ligationConcentration", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class,
@@ -602,7 +602,7 @@ public class Nanopore extends AbstractDeclaration{
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
 				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
-				false, null, null,  "image",70,true,null,null));
+				false, null, null,  "img",70,true,null,null));
 
 		
 		return propertyDefinitions;
