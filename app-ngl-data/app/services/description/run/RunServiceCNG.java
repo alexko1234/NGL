@@ -62,6 +62,7 @@ public class RunServiceCNG  extends AbstractRunService{
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCCRT","isSentCCRT",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCollaborator","isSentCollaborator",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("localDataDeleted","localDataDeleted",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		
 		//use only for dynamic filters and dynamic properties
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
