@@ -83,23 +83,25 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		return null;
+List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
+				getPropertiesMetaTRNA(), 
+				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
+						,getPET("dna-rna-extraction",-1)
+						,getPET("small-and-large-rna-isolation",-1)
+						, getPET("rna-illumina-indexed-library",0)
+						, getPET("pcr-amplification-and-purification",1)
+						, getPET("solution-stock",2)
+						, getPET("prepa-flowcell",3)
+						, getPET("prepa-fc-ordered",3)
+						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		return l;
 	}
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeUAT() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
@@ -112,6 +114,19 @@ public class MetaTProcess extends AbstractDeclaration {
 						, getPET("prepa-flowcell",3)
 						, getPET("prepa-fc-ordered",3)
 						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		lreturn l;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypeUAT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypeCommon() {
+		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("MetaT cDNA + FRG", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), 22,
 				getPropertiesMetaTcDNA(), 
