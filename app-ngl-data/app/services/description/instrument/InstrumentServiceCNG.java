@@ -85,7 +85,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot4", "cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
-						// 19/09/20167 ajout 6 cbots de type 2: possibilité de lire des codes barres...
+						// 19/09/20167 ajout 6 cbots de type II: possibilité de lire le code barre du strip...
 						createInstrument("cBotA", "cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBotB", "cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBotC", "cBotC", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -311,6 +311,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
         		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
+        // ajout 10/01/2017 pour cbot-II
+        propertyDefinitions.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
        
         return propertyDefinitions;
 	}
