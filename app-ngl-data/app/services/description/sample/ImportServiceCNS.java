@@ -170,6 +170,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("Villefranche", "Villefranche"));
 		values.add(DescriptionFactory.newValue("Ohio", "Ohio"));
 		values.add(DescriptionFactory.newValue("Weizmann", "Weizmann"));
+		values.add(DescriptionFactory.newValue("LSCE", "LSCE"));
 		
 		return values;	
 	}

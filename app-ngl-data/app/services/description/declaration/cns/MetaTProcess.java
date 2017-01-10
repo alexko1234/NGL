@@ -115,7 +115,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 						, getPET("prepa-fc-ordered",3)
 						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		lreturn l;
+		return l;
 	}
 
 	@Override
