@@ -21,6 +21,7 @@ public class Run implements IValidation {
 	public String runCenter;       // required pour nos stats valeur fixee à GSC 
 	public String accession;       // numeros d'accession attribué par ebi 
 	public String expCode;
+	public String expAccession;
 	public List <RawData> listRawData = new ArrayList<RawData>();
 	public String adminComment; // commentaire privé "reprise historique"				
 
@@ -28,16 +29,24 @@ public class Run implements IValidation {
 	public void validateLight(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("run");
 		// Verifier que runDate est bien renseigné :
+		System.out.println("this.runDate: " + this.runDate);
 		ValidationHelper.required(contextValidation, this.runDate , "runDate");
+		System.out.println("this.runCenter: " + this.runCenter);
+
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName, "runCenter");
 		
 		// verifier que code est bien renseigné
 		if(StringUtils.isBlank(this.code)) {
+			System.out.println("this.runCode: " + this.code);
+
 			contextValidation.addErrors("run.code", " aucune valeur");
 		} else {
 			// Verifier si on est dans un contexte de creation d'objet, que run.code n'existe pas dans la database (dans collection Experiment)
 			if(contextValidation.isCreationMode()){
+				System.out.println("contexte creationMode: ");
+
 				if(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "run.code", this.code)) {
+					System.out.println("En mode creation et run exitstant dans base pour " + this.code);
 					contextValidation.addErrors("run.code ", this.code + " existe deja dans la base de données et MODE CREATION");
 				}	
 			}

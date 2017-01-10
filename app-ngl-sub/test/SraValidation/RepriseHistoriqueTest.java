@@ -251,7 +251,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		} 
 	}
 	
-	//@Test
+	@Test
 	public void repriseHistoriqueExperimentsTest() throws IOException, SraException {
 
 		File xmlExperiment = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_u_experiments_AC.xml");
@@ -259,7 +259,6 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
 			List<Experiment> listExperiments = repriseHistorique.forExperiments(xmlExperiment, user);
-			System.out.println("retour dans repriseHistoriqueExperimentsTest");
 			// Verifier la validité des experiments sans les runs:
 			ContextValidation contextValidation = new ContextValidation(user);
 			contextValidation.setCreationMode();
@@ -347,7 +346,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					experiment.readSetCode = "LQ_HOSS_8_20EG4AAXX";
 				}				
 				if (experiment.code.equals("LQIOSS")){
-					experiment.readSetCode = "LQ_IOSS_720EG4AAXX";
+					experiment.readSetCode = "LQ_IOSS_7_20EG4AAXX";
 				}	
 				
 				// problemes :
@@ -356,7 +355,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					// 1 readset correspondant à la partie BOSS du run bio 090422_HELIUM_305E0AAXX
 				}				
 				if (experiment.code.equals("SYCOSS")){
-					experiment.readSetCode = "SY_COSS_2_4_5_6_305E0AAXX"; 
+					experiment.readSetCode = "SY_COSS_2_305E0AAXX|SY_COSS_4_305E0AAXX|SY_COSS_5_305E0AAXX|SY_COSS_6_305E0AAXX"; 
 					// 4 readsets correspondant à la partie COSS du run bio 090422_HELIUM_305E0AAXX
 				}				
 				if (experiment.code.equals("SYDOSS")){
@@ -367,28 +366,115 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					experiment.readSetCode = "AQG_AOSS_5_61LFRAAXX";
 				}
 				if (experiment.code.equals("AHHAOSS")){
-					experiment.readSetCode = "AHH_AOSS_1_2_3_4_42L9WAAXX";
+					//experiment.readSetCode = "AHH_AOSS_1_2_3_4_42L9WAAXX";
+					experiment.readSetCode = "AHH_AOSS_1_42L9WAAXX|AHH_AOSS_2_42L9WAAXX|AHH_AOSS_3_42L9WAAXX|AHH_AOSS_4_42L9WAAXX";
 					// 4 readset correspondant au run 090724_AZOTE_42L9WAAXX_AHHAOSS
 				}	
 				if (experiment.code.equals("AHHBOSS")){
-					experiment.readSetCode = "AHH_BOSS_5_6_42L9WAAXX";  
+					experiment.readSetCode = "AHH_BOSS_5_42L9WAAXX|AHH_BOSS_6_42L9WAAXX";  
 					// 2 readset correspondant au run 090724_AZOTE_42L9WAAXX_AHHBOSS 
 				}
 				if (experiment.code.equals("AHHCOSS")){
-					experiment.readSetCode = "AHH_COSS_7_8_42L9WAAXX";
+					experiment.readSetCode = "AHH_COSS_8_42L9WAAXX|AHH_COSS_8_42L9WAAXX";
 					// 2 readset correspondant au run 090724_AZOTE_42L9WAAXX_AHHCOSS
 				}
-				if (experiment.code.equals("AWK_ONT_20Kb_R7")){
+				
+				// Ex de données nanopore avec readspec :
+				if (experiment.code.equals("exp_AWK_ONT_20Kb_R7")){
 					experiment.readSetCode = "AWK_K_ONT_1_MN2064006_A";
 				}
-				if (experiment.code.equals("AWK_ONT_20Kb_R7.3")){
-					experiment.readSetCode = "AWK_M_ONT_1_FAA43210_A_AWK_H_ONT_1_FAA43204_A_AWK_H_ONT_1_FAA17573_A";
+				if (experiment.code.equals("exp_AWK_ONT_20Kb_R7.3")){
+					experiment.readSetCode = "AWK_M_ONT_1_FAA43210_A|AWK_H_ONT_1_FAA43204_A|AWK_H_ONT_1_FAA17573_A";
 					//3 readset correspondant à 3 runs rattachés au meme experiment.
 				}				
-				if (experiment.code.equals("AWK_ONT_8Kb_R7")){ 
+				if (experiment.code.equals("exp_AWK_ONT_8Kb_R7")){ 
 					experiment.readSetCode = "AWK_G_ONT_1_MN2064525_A";
 				}
 				
+				
+				// Dans le cadre du projet BCM, 85 run soumis avec probleme : plusieurs runs associés au meme exp
+				
+				// projetBCM , 3 readsets associés à meme exp avec en plus erreur sur nom de run avec MK au lieu de MN
+				if (experiment.code.equals("exp_ABH_ONT_R7")){ 
+					experiment.readSetCode = "BCM_ABH_ONT_1_FAA54955_A|BCM_ABH_ONT_1_FAA56049_A|BCM_ABH_ONT_1_FAA61302_A";
+				}
+				// projet BCM, 5 readsets associés à meme exp avec en plus erreur sur nom de run avec MK au lieu de MN
+				if (experiment.code.equals("exp_ADM_ONT_R7")){ 
+					experiment.readSetCode = "BCM_ADM_ONT_1_FAA62005_A|BCM_ADM_ONT_1_FAA83469_A|BCM_ADM_ONT_1_FAA84613_A|BCM_ADM_ONT_1_FAA84613_B|BCM_ADM_ONT_1_FAA84655_B";
+				}
+				// projet BCM, 2 readsets associés à meme exp avec en plus erreur sur nom de run avec MK au lieu de MN
+				if (experiment.code.equals("exp_ADQ_ONT_R7")){ 
+					experiment.readSetCode = "BCM_ADQ_ONT_1_FAA61996_A|BCM_ADQ_ONT_1_FAA62118_A";
+				}				
+				// projet BCM, 5 readsets associés à meme exp avec en plus erreur sur nom de run avec MK au lieu de MN
+				if (experiment.code.equals("exp_ADS_ONT_R7")){ 
+					experiment.readSetCode = "BCM_ADS_ONT_1_FAA63405_A|BCM_ADS_ONT_1_FAA85313_A|BCM_ADS_ONT_1_FAA85374_A|BCM_ADS_ONT_1_FAA85374_B|BCM_ADS_ONT_1_FAA85382_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_AEG_ONT_R7")){ 
+					experiment.readSetCode = "BCM_AEG_ONT_1_FAA61303_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_AKR_ONT_R7")){ 
+					experiment.readSetCode = "BCM_AKR_ONT_1_FAA62042_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_ANE_ONT_R7")){ 
+					experiment.readSetCode = "BCM_ANE_ONT_1_FAA63738_A|BCM_ANE_ONT_1_FAA85663_A|BCM_ANE_ONT_1_FAA85828_A|BCM_ANE_ONT_1_FAA86381_A|BCM_ANE_ONT_1_FAA87212_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_ASN_ONT_R7")){ 
+					experiment.readSetCode = "BCM_ASN_ONT_1_FAA62151_A|BCM_ASN_ONT_1_FAA63407_A|BCM_ASN_ONT_1_FAA63910_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_AVB_ONT_R7")){ 
+					experiment.readSetCode = "BCM_AVB_ONT_1_FAA70272_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_BAH_ONT_R7")){ 
+					experiment.readSetCode = "BCM_BAH_ONT_1_FAA64493_A|BCM_BAH_ONT_1_FAA67952_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_BAL_ONT_R7")){ 
+					experiment.readSetCode = "BCM_BAL_ONT_1_FAA62115_A";
+				}
+				// projet BCM, 10 readset associés au meme experiment
+				if (experiment.code.equals("exp_BAM_ONT_R7")){ 
+					experiment.readSetCode = "BCM_BAM_ONT_1_FAA46213_A|BCM_BAM_ONT_1_FAA46235_A|BCM_BAM_ONT_1_FAA46504_A|BCM_BAM_ONT_1_FAA47108_A|BCM_BAM_ONT_1_FAA47108_B|BCM_BAM_ONT_1_FAA47137_A|BCM_BAM_ONT_1_FAA47137_B|BCM_BAM_ONT_1_FAA47138_A|BCM_BAM_ONT_1_FAA57509_A|BCM_BAM_ONT_1_FAA57511_A|BCM_BAM_ONT_1_FAA59903_A|BCM_BAM_ONT_1_FAA60062_A|BCM_BAM_ONT_1_FAA60062_B|BCM_BAM_ONT_1_FAA61618_A";
+				}
+				// projet BCM,
+				if (experiment.code.equals("exp_BCN_ONT_R7")){ 
+					experiment.readSetCode = "BCM_BCN_ONT_1_FAA65515_A|BCM_BCN_ONT_1_FAA70264_A|BCM_BCN_ONT_1_FAA70841_A";
+				}
+				if (experiment.code.equals("exp_BDF_ONT_R7")){ 
+					experiment.readSetCode = "BCM_BDF_ONT_1_FAA63782_A|BCM_BDF_ONT_1_FAA64638_A";
+				}
+				if (experiment.code.equals("exp_BHH_ONT_R7")){ 
+					experiment.readSetCode = "BCM_BHH_ONT_1_FAA62099_A|BCM_BHH_ONT_1_FAA64754_A";
+				}
+				if (experiment.code.equals("exp_CBM_ONT_R7")){ 
+					experiment.readSetCode = "BCM_CBM_ONT_1_FAA68545_A|BCM_CBM_ONT_1_FAA69054_A|BCM_CBM_ONT_1_FAA70265_A";
+				}
+				if (experiment.code.equals("exp_CEI_ONT_R7")){ 
+					experiment.readSetCode = "BCM_CEI_ONT_1_FAA68110_A|BCM_CEI_ONT_1_FAA68413_A|BCM_CEI_ONT_1_FAA68413_B";
+				}
+				if (experiment.code.equals("exp_CFA_ONT_R7")){ 
+					experiment.readSetCode = "BCM_CFA_ONT_1_FAA52002_A|BCM_CFA_ONT_1_FAA54985_A|BCM_CFA_ONT_1_FAA56751_A|BCM_CFA_ONT_1_FAA56757_A|BCM_CFA_ONT_1_FAA57368_A";
+				}
+				if (experiment.code.equals("exp_CFF_ONT_R7")){ 
+					experiment.readSetCode = "BCM_CFF_ONT_1_FAA61280_A";
+				}
+				if (experiment.code.equals("exp_CIC_ONT_R7")){ 
+					experiment.readSetCode = "BCM_CIC_ONT_1_FAA62158_B|BCM_CIC_ONT_1_FAA81239_A|BCM_CIC_ONT_1_FAA83576_B|BCM_CIC_ONT_1_FAA83642_A|BCM_CIC_ONT_1_FAA83642_B";
+				}
+				if (experiment.code.equals("exp_CNT_ONT_R7")){ 
+					experiment.readSetCode = "BCM_CNT_ONT_1_FAA62083_A";
+				}
+				if (experiment.code.equals("exp_CRV_ONT_R7")){
+					experiment.readSetCode = "BCM_CRV_ONT_1_FAA76621_A|BCM_CRV_ONT_1_FAA81631_A|BCM_CRV_ONT_1_FAA86951_A|BCM_CRV_ONT_1_FAA87932_A|BCM_CRV_ONT_1_FAA88037_A|BCM_CRV_ONT_1_FAA89620_A|BCM_CRV_ONT_1_FAA95819_A|BCM_CRV_ONT_1_FAA99560_A|BCM_CRV_ONT_1_FAA99566_A|BCM_CRV_ONT_1_FAA99616_A|BCM_CRV_ONT_1_FAA99643_A|BCM_CRV_ONT_1_FAA99955_A|BCM_CRV_ONT_1_FAD07097_A|BCM_CRV_ONT_1_FAD07097_B|BCM_CRV_ONT_1_FAD07266_A|BCM_CRV_ONT_1_FAD14584_A|BCM_CRV_ONT_1_FAD14737_A";
+				}
+				//....
+				// end projet BCM
 				// end probleme
 					
 				if (experiment.code.equals("BAT_EIOSW_6_C1CRCACXX.IND8_replacement")){
@@ -459,8 +545,9 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 							experiment.sampleCode = absSample.code;
 						} else {
 							if (! experiment.sampleCode.equals(absSample.code)){
-								System.out.println("exp.sampleCode="+experiment.sampleCode+" et exp.sampleAC="+experiment.sampleAccession +" alors que dans database sample.code= "+ absSample.code +" sample.AC = "+absSample.accession);
-								System.out.println("######Remplacement dans l'experiment de "+experiment.sampleCode+" par "+ absSample.code);								experiment.sampleCode = absSample.code;
+								//System.out.println("exp.sampleCode="+experiment.sampleCode+" et exp.sampleAC="+experiment.sampleAccession +" alors que dans database sample.code= "+ absSample.code +" sample.AC = "+absSample.accession);
+								//System.out.println("######Remplacement dans l'experiment de "+experiment.sampleCode+" par "+ absSample.code);
+								experiment.sampleCode = absSample.code;
 							}
 						}
 					} else {
@@ -493,7 +580,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 							experiment.studyCode = absStudy.code;
 						} else {
 							if (! experiment.studyCode.equals(absStudy.code)){
-								System.out.println("!!!***Remplacement dans l'experiment de "+experiment.studyCode+" par "+ absStudy.code);
+								//System.out.println("!!!***Remplacement dans l'experiment de "+experiment.studyCode+" par "+ absStudy.code);
 							}
 						}
 					} else {
@@ -531,27 +618,49 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 				} else {
 					if (experiment.typePlatform.equalsIgnoreCase("illumina")) {
 						typeReadset = "illumina";
-					}  
-					if (experiment.typePlatform.equalsIgnoreCase("nanopore")) {
-						typeReadset = "nanopore";
+					} else if (experiment.typePlatform.equalsIgnoreCase("oxford_nanopore")) {
+						System.out.println("platform nanopore pour experiment=" + experiment.code+ " et readset=" + experiment.readSetCode);
+						typeReadset = "oxford_nanopore";
+					} else {
+						throw new SraException("experiment.typePlatform non gere : " + experiment.typePlatform);
 					}
 					// Mettre à jour la collection de readSet de ngl_seq dans le cas d'illumina et nanopore
 					if (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "code", experiment.readSetCode)){	
 						//throw new SraException("ReadSet " + experiment.readSetCode + " absent de la collection des readset de ngl_seq ???");
 						cp_pb++; 
-						System.out.println("************pb ReadSet " + cp_pb + " pour :" +  experiment.readSetCode + " absent de la collection des readset de ngl_seq ???");					
-						continue;
-					}
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+						System.out.println("##############pb ReadSet " + cp_pb + " pour experiment.studyCode = "+experiment.studyCode +" experiment.code=" +  experiment.code + ", experiment.readSetCode="+ experiment.readSetCode + " absent de la collection des readset de ngl_seq ???");					
+
+						// Traiter le cas des concatenation de readset
+						String separator= "\\|";
+						String [] nameReadSet = experiment.readSetCode.split(separator);
+						for(int i =0; i < nameReadSet.length ; i++) {			
+							if (! MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "code", nameReadSet[i])){	
+								System.out.println(nameReadSet[i] + " absent de la database ??????");
+							} else {
+								MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+								DBQuery.is("code", nameReadSet[i]),
+								DBUpdate.set("submissionState.code", "F-SUB").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
+							}
+
+						}
+					
+						
+						
+
+						
+					} else {
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 							DBQuery.is("code", experiment.readSetCode),
 							DBUpdate.set("submissionState.code", "F-SUB").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
-					//System.out.println("Mise à jour des readSet de ngl");
+						//System.out.println("Mise à jour des readSet de ngl");
+					}
 				}
+				
 				// Inserer dans la collection des readSet de ngl-sub (readset non gerés dans ng_seq)
 				Readset readset = new Readset();
 				//System.out.println("Creation du readset dans ngl_sub" + experiment.readSetCode);
 				readset.code = experiment.readSetCode;
-				readset.type= typeReadset;
+				readset.type = typeReadset;
 				readset.experimentCode = experiment.code;
 				//System.out.println("dans ngl_sub :readsetCode = " + readset.code + ", readset_type = " + readset.type +", readsetExpCode = " + readset.experimentCode );
 				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_READSET_COLL_NAME, Readset.class, "code", experiment.readSetCode)){	
@@ -575,7 +684,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		} 
 	}
 	
-	@Test
+	//@Test
 	public void repriseHistoriqueRunsTest() throws IOException, SraException {
 		File xmlRun = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_runs.xml");
 		String user = "william";
@@ -585,26 +694,28 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 			System.out.println("retour dans repriseHistoriqueRunsTest  avec nbre runs = " + listRuns.size());
 			// Verifier la validité des runs :
 			for (Run run : listRuns) {
-				//System.out.println("dans repriseHistoriqueRunsTest => run : " + run.code);
+				System.out.println("dans repriseHistoriqueRunsTest => run : " + run.code);
 				//System.out.println("run.accession : " + run.accession);
-				//System.out.println("run.experimentCode : " + run.expCode);
+				//system.out.println("run.experimentCode : " + run.expCode);
 				
 				ContextValidation contextValidation = new ContextValidation(user);
 				contextValidation.setCreationMode();
+				System.out.println("run.accession : " + run.accession);
+
 				contextValidation.getContextObjects().put("type", "sra");
+				System.out.println("run.experimentCode : " + run.expCode);
+
 				run.validateLight(contextValidation);
 				System.out.println("\ndisplayErrors pour validationRun:" + run.code);
 				if (contextValidation.errors.size()==0) {
-					//System.out.println("Run "+ run.code + " valide ");
+					System.out.println("Run "+ run.code + " valide ");
 				} else {
+					System.out.println("Run " + run.code + " abandon, non valide");
 					contextValidation.displayErrors(Logger.of("SRA"));
-					throw new SraException("Run " + run.code + " non valide");
+					continue;
 				}
-			}
-			// Ajouter run à son experiment et sauver l'experiment
-			for (Run run : listRuns) {		
 				if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", run.expCode)){
-					//System.out.println("Recuperation de l'experiment "+ run.expCode);
+					System.out.println("Recuperation de l'experiment "+ run.expCode);
 					Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, run.expCode);			
 					experiment.run = run;
 					MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);	

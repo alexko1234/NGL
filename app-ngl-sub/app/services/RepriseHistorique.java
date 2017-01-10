@@ -30,7 +30,9 @@ import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
+import models.utils.InstanceConstants;
 
+import org.mongojack.DBQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,6 +42,10 @@ import org.apache.commons.lang3.StringUtils;
 
 //import com.sun.xml.internal.ws.api.pipe.NextAction;
 
+
+
+
+import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import validation.ContextValidation;
 
@@ -707,11 +713,29 @@ public class RepriseHistorique {
 					}
 					
 					final Element eltExpRef = (Element) eltRun.getElementsByTagName("EXPERIMENT_REF").item(0);
+					String exp_accession = eltExpRef.getAttribute("accession");
+					
 					String exp_refname = eltExpRef.getAttribute("refname");
+					if (StringUtils.isNotBlank(exp_accession)) {
+						run.expAccession = exp_accession;
+					}
 					if (StringUtils.isNotBlank(exp_refname)) {
 						run.expCode = exp_refname;
 						//System.out.println("experiment_refname : " + exp_refname);
+					} else {
+						if (StringUtils.isNotBlank(exp_accession)) {
+							Experiment experiment = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME,
+									Experiment.class, DBQuery.and(DBQuery.is("accession", exp_accession)));
+							if (experiment != null) {
+								run.expCode = experiment.code; 
+							} else {
+								run.expCode = run.code;
+								run.expCode = run.expCode.replaceFirst("run_", "exp_");
+							}
+						}
 					}
+					
+					
 					final Element eltDataBlock = (Element) eltRun.getElementsByTagName("DATA_BLOCK").item(0);
 					final Element eltFiles = (Element) eltDataBlock.getElementsByTagName("FILES").item(0);
 
