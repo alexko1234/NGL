@@ -166,7 +166,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var form = {};
 			form.typeCode = $scope.experimentType.code;
-			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.categoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
 		}			
@@ -257,7 +257,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var form = {};
 			form.typeCode = $scope.experimentType.code;
-			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.categoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
 		}
@@ -1256,6 +1256,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			"edit":true,
 			"hide":false,
 	    	"type":"text",
+	    	"required":true,
 	    	"choiceInList":true,
 		    "listStyle":"radio",
 		    "possibleValues":"getDispatchValues()",
