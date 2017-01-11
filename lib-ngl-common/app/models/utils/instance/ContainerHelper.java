@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -162,6 +163,17 @@ public class ContainerHelper {
 			}
 		}
 		
+		//remove properties with #NOT_COMMON_VALUE#
+		finalContent.properties = finalContent.properties.entrySet()
+										.stream()
+										.filter(e -> !e.getValue().value.equals("#NOT_COMMON_VALUE#"))
+										.collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue()));
+		
+		finalContent.processProperties = finalContent.processProperties.entrySet()
+				.stream()
+				.filter(e -> !e.getValue().value.equals("#NOT_COMMON_VALUE#"))
+				.collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue()));
+
 		return finalContent;
 	}
 
@@ -169,7 +181,7 @@ public class ContainerHelper {
 		if(currentPv.value.equals(newPv.value)){
 			return currentPv;
 		}else{
-			return null;
+			return new PropertySingleValue("#NOT_COMMON_VALUE#");
 		}		
 	}
 
