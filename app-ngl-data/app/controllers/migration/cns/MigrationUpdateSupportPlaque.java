@@ -43,27 +43,15 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 		//updateSupportContainerSolutionStock();
 		//updateSupportContainerBanqueAmpliPlaqueToTube();
 		
-		//updateSupportContainerTubeLimsToPlaque();
-		//updateStateContainerTubeInIWP();
-		//updateStorageContainerTube();
+		//MEP 11/07/2016
+		updateSupportContainerTubeLimsToPlaque();
+		updateStateContainerTubeInIWP();
+		updateStorageContainerTube();
 		updateValidateConcentrationContainerTupe();
-		
-		//rechercheJulie();
+				
 		return ok("Migration Support Container Finish");
 	}
 
-	private static void rechercheJulie() {
-		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("categoryCode","well").or(DBQuery.notExists("fromTransformationTypeCodes"),DBQuery.size("fromTransformationTypeCodes",0)).exists("properties.limsCode")).toList();
-		Logger.debug("Nb containers"+containers.size());
-		List<String> lst=new ArrayList<String>();
-		for(Container c:containers){
-			lst.add(c.code);
-		}
-		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.in("inputContainerSupportCodes", lst)).toList();
-		for(Experiment e:experiments){
-			Logger.debug("Experiment "+e.code);
-		}
-	}
 
 	private static void updateValidateConcentrationContainerTupe() {
 		List<Container> results = limsServices.jdbcTemplate.query("select code=tubnom,measuredConcentration=round(tubconcr,2),measuredVolume=tubvolr,measuredQuantity=tubqtr, t.etubco, valide=case when t.etubco=4 then 'TRUE' when t.etubco=5 then 'FALSE' else 'UNSET' end from Materielmanip m, Tubeident t where m.matmaco=t.matmaco and matmaInNGL!=null",new Object[]{} 
@@ -176,8 +164,10 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 		//delete container support
 		for(Container container : results){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("support",container.support).set("categoryCode","well"));
-			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
-			updatedContainers.add(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code));
+			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.code);
+			Container searchContainer =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, container.code);
+			if(searchContainer!=null){updatedContainers.add(searchContainer);}
+			else { Logger.error("Container "+container.code +"n existe pas dans NGL"); }
 		}
 		
 		//Create support container
