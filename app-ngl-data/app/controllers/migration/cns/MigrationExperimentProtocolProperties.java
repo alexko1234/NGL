@@ -56,10 +56,10 @@ public class MigrationExperimentProtocolProperties extends MigrationExperimentPr
 					//Get property
 					Logger.debug("Update property for container out "+input.code);
 
-					updateContainerContents(input, keyProperty, propValue);
+					//updateContainerContents(input, keyProperty, propValue);
 					
 					//Get container from input
-					updateContainer(input.code, keyProperty, propValue, false);
+					//updateContainer(input.code, keyProperty, propValue, false);
 
 					updateOutputContainer(atm, keyProperty, propValue, false);
 
