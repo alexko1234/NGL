@@ -88,29 +88,31 @@ public class ProcWorkflowHelper {
 													.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));		
 		
 		//update output container with new process property values
-		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", process.outputContainerCodes))
-		.cursor.forEach(container -> {
-			container.traceInformation.setTraceInformation(validation.getUser());
-			container.contents.stream()
-				.filter(content -> process.sampleCodes.contains(content.sampleCode) 
-						&& process.projectCodes.contains(content.projectCode))
-				.forEach(content -> {
-					content.properties.putAll(updatedProperties);
-				});
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
-		});
-	
-		//update readsets with new process property values
-		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes))
-			.getCursor()
-			.forEach(readset -> {
-				if(process.sampleCodes.contains(readset.sampleCode) 
-						&& process.projectCodes.contains(readset.projectCode)){
-					readset.traceInformation.setTraceInformation(validation.getUser());
-					readset.sampleOnContainer.properties.putAll(updatedProperties);
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
-				}
+		if(null != process.outputContainerCodes && process.outputContainerCodes.size() > 0){
+			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", process.outputContainerCodes))
+			.cursor.forEach(container -> {
+				container.traceInformation.setTraceInformation(validation.getUser());
+				container.contents.stream()
+					.filter(content -> process.sampleCodes.contains(content.sampleCode) 
+							&& process.projectCodes.contains(content.projectCode))
+					.forEach(content -> {
+						content.properties.putAll(updatedProperties);
+					});
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+			});
+		
+			//update readsets with new process property values
+			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes))
+				.getCursor()
+				.forEach(readset -> {
+					if(process.sampleCodes.contains(readset.sampleCode) 
+							&& process.projectCodes.contains(readset.projectCode)){
+						readset.traceInformation.setTraceInformation(validation.getUser());
+						readset.sampleOnContainer.properties.putAll(updatedProperties);
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
+					}
 			});			
+		}
 	}
 	
 	
