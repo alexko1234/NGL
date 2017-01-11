@@ -44,7 +44,7 @@ public class ContainerMapping extends Mapping<Container> {
 		//TODO better management for state with a fieldConfiguration
 		if(null == container.state){
 			container.state = new State("IS", contextValidation.getUser());
-		} else{
+		} else if(container.state.user == null){
 			container.state.user = contextValidation.getUser();
 		}	
 	}

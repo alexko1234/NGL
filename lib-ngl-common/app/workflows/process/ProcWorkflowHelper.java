@@ -130,8 +130,9 @@ public class ProcWorkflowHelper {
 	private DBQuery.Query getChildContainerQuery(Process process) {
 		List<String> containerCodes = new ArrayList<String>();
 		containerCodes.add(process.inputContainerCode);
-		containerCodes.addAll(process.outputContainerCodes);
-		
+		if(null != process.outputContainerCodes){
+			containerCodes.addAll(process.outputContainerCodes);
+		}
 		DBQuery.Query query = DBQuery.in("code",containerCodes);
 		if(process.sampleOnInputContainer.properties.containsKey("tag")){
 			query.elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes)
