@@ -18,6 +18,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			lists.refresh.filterConfigs({
 				pageCodes : [ "processes-search-addfilters" ]
 			}, "processes-search-addfilters");
+			
+			lists.refresh.resolutions({"objectTypeCode":"Process"}, "processResolutions");
+			
 			isInit = true;
 		}
 	};
@@ -124,6 +127,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : true,
 			"edit" : true,
 			"hide" : true,
+			"choiceInList":true,
+		    "listStyle":"bt-select-multiple",
+		    "possibleValues":"searchService.lists.get('processResolutions')",
 			"type" : "text"
 		});
 		columns.push({
