@@ -39,6 +39,9 @@
 			<bt-input  class="form-control" input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>			
 			
 		}
+		@formGroup{
+			<bt-input  class="form-control"  input-ng-model="searchService.form.codeRegex" textarea-ng-model="searchService.form.codes" placeholder='@Messages("search.placeholder.container")' ></bt-input>									
+		}	
 	}
 	@columnSearchForm{
 		@formGroup{

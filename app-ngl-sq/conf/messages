@@ -276,6 +276,7 @@ processes.table.sampleCodes = Echantillon(s)
 processes.table.inputContainerCode = Container Initial
 processes.table.inputContainerSupportCode = Support Initial
 processes.table.outputContainerSupportCodes= Supports Containers enfants
+processes.table.outputContainerCodes= Containers enfants
 processes.table.experimentCodes= Expériences
 processes.table.stateCode = Etat processus
 processes.table.resolutionCode = Résolution
@@ -510,7 +511,7 @@ baskets.new = Créer un panier
 baskets.add = Ajouter au panier
 baskets.switchView = Voir
 baskets.switchView.containers = les containers
-baskets.switchView.supports = les supports-containers
+baskets.switchView.supports = les supports
 backet.view.containerSupport = Vue supports
 backet.view.containers = Vue containers
 
