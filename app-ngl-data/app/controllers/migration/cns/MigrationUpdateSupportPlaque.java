@@ -8,24 +8,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.LimsCNSDAO;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.laboratory.experiment.instance.Experiment;
+import models.utils.InstanceConstants;
+import models.utils.instance.ContainerHelper;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.jdbc.core.RowMapper;
 
-import lims.cns.services.LimsServiceCNS;
-import models.LimsCNSDAO;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
-import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
 import play.mvc.Result;
-import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.migration.models.ContainerSupportLocation;
@@ -40,10 +42,81 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 		//updateSupportContainerBanqueAmpli();
 		//updateSupportContainerSolutionStock();
 		//updateSupportContainerBanqueAmpliPlaqueToTube();
-		updateSupportContainerTubeLimsToPlaque();
-		updateStateContainerTubeInIWP();
-		updateStorageContainerTube();
+		
+		//updateSupportContainerTubeLimsToPlaque();
+		//updateStateContainerTubeInIWP();
+		//updateStorageContainerTube();
+		updateValidateConcentrationContainerTupe();
+		
+		//rechercheJulie();
 		return ok("Migration Support Container Finish");
+	}
+
+	private static void rechercheJulie() {
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("categoryCode","well").or(DBQuery.notExists("fromTransformationTypeCodes"),DBQuery.size("fromTransformationTypeCodes",0)).exists("properties.limsCode")).toList();
+		Logger.debug("Nb containers"+containers.size());
+		List<String> lst=new ArrayList<String>();
+		for(Container c:containers){
+			lst.add(c.code);
+		}
+		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.in("inputContainerSupportCodes", lst)).toList();
+		for(Experiment e:experiments){
+			Logger.debug("Experiment "+e.code);
+		}
+	}
+
+	private static void updateValidateConcentrationContainerTupe() {
+		List<Container> results = limsServices.jdbcTemplate.query("select code=tubnom,measuredConcentration=round(tubconcr,2),measuredVolume=tubvolr,measuredQuantity=tubqtr, t.etubco, valide=case when t.etubco=4 then 'TRUE' when t.etubco=5 then 'FALSE' else 'UNSET' end from Materielmanip m, Tubeident t where m.matmaco=t.matmaco and matmaInNGL!=null",new Object[]{} 
+		,new RowMapper<Container>() {
+
+			@SuppressWarnings("rawtypes")
+			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Container container = new Container();
+				container.code=rs.getString("code");
+
+				container.valuation=new Valuation();
+				container.valuation.valid=TBoolean.valueOf(rs.getString("valide"));
+				
+				String mesuredConcentrationUnit="ng/µl";
+				
+				if(rs.getString("measuredConcentration")!=null){
+					container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);}
+				if(rs.getString("measuredVolume")!=null){
+					container.volume=new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µL");}
+				if(rs.getString("measuredQuantity")!=null){
+					container.quantity=new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");}
+				
+				return container;
+			}
+
+		});
+		
+		for(Container container:results){
+			
+			Container containerNGL=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,container.code);
+			
+			if(containerNGL !=null && containerNGL.state.historical==null){
+				DBUpdate.Builder update = new DBUpdate.Builder();
+				update =DBUpdate.set("valuation",container.valuation);
+				if(containerNGL.concentration==null && containerNGL.volume==null && containerNGL.quantity==null ){
+					Logger.debug("Container QC update "+container.code);
+					if(container.concentration!=null){
+						update.set("concentration", container.concentration);}
+					if(container.quantity!=null){
+						update.set("quantity",container.quantity);}
+					if(container.volume!=null){
+						update.set("volume",container.volume);}
+				} else {
+					Logger.debug("Container valuation update "+container.code);
+				}
+				
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",container.code),update);
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.is("code",containerNGL.support.code),DBUpdate.set("valuation", container.valuation));
+			}else if(containerNGL==null){
+				Logger.error("Le container "+container.code+" n existe pas dans NGL");
+			}
+		}
 	}
 
 	private static void updateStorageContainerTube() {
@@ -70,7 +143,7 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 	}
 
 	private static void updateStateContainerTubeInIWP() {
-		List<Container> containers =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.notExists("state.historical").size("fromTransformationTypeCodes",0).exists("properties.limsCode").is("state.code", "IW-P")).toList();
+		List<Container> containers =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.notExists("state.historical").or(DBQuery.notExists("fromTransformationTypeCodes"),DBQuery.size("fromTransformationTypeCodes",0)).exists("properties.limsCode").is("state.code", "IW-P")).toList();
 		Logger.debug("Nb containers tube à IW-P :"+containers.size());
 		for(Container container:containers){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("state.code","IS"));
