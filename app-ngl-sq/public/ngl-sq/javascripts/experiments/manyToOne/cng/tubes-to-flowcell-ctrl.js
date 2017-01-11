@@ -1,8 +1,7 @@
-angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse', 'atmToDragNDrop',
-                                                               function($scope, $parse, atmToDragNDrop) {
+/* 06/2017 ajout $http pour l'import de fichier cbot-2 */
+angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','atmToDragNDrop','$http',
+                                                               function($scope, $parse, atmToDragNDrop, $http ) {
 	
-	
-
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
 	var columns = [  
@@ -126,4 +125,52 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse', 
 	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experimentType.propertiesDefinitions);
 	
 	
+   /*06/2017 FDS ajout pour l'import du fichier Cbot-2 */
+	var importData = function(){
+		
+		$scope.messages.clear();
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		.success(function(data, status, headers, config) {
+			
+			$scope.messages.clazz="alert alert-success";
+			$scope.messages.text=Messages('experiments.msg.import.success');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();	
+			// data est l'experience retournée par input.java
+			// recuperer instrumentProperties 
+			$scope.experiment.instrumentProperties= data.instrumentProperties;
+			
+			//et reagents TODO
+			//   $scope.experiment.reagents[0]=data.reagents;
+			
+			// reinit select File...
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+			
+			$scope.$emit('refresh');
+			
+		})
+		.error(function(data, status, headers, config) {
+			
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.open();	
+			
+			// reinit select File..
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+		});		
+	};
+	
+	$scope.button = {
+		isShow:function(){
+			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			},
+		isFileSet:function(){
+			return ($scope.file === undefined)?"disabled":"";
+		},
+		click:importData,		
+	};
+
 }]);

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -140,6 +141,8 @@ public class ContainerHelper {
 		finalContent.sampleCategoryCode = contents.get(0).sampleCategoryCode;
 		finalContent.sampleTypeCode = contents.get(0).sampleTypeCode;
 		finalContent.referenceCollab = contents.get(0).referenceCollab;
+		finalContent.taxonCode = contents.get(0).taxonCode;
+		finalContent.ncbiScientificName = contents.get(0).ncbiScientificName;
 		finalContent.percentage = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		finalContent.processProperties = new HashMap<String, PropertyValue>();
 		
@@ -148,7 +151,7 @@ public class ContainerHelper {
 				for(String key : c.properties.keySet()){
 					PropertyValue<?> pv = c.properties.get(key);
 					finalContent.properties.computeIfAbsent(key, k -> pv);
-					finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+					finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));					
 				}
 			}
 			if(null != c.processProperties){
@@ -160,6 +163,17 @@ public class ContainerHelper {
 			}
 		}
 		
+		//remove properties with #NOT_COMMON_VALUE#
+		finalContent.properties = finalContent.properties.entrySet()
+										.stream()
+										.filter(e -> !e.getValue().value.equals("#NOT_COMMON_VALUE#"))
+										.collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue()));
+		
+		finalContent.processProperties = finalContent.processProperties.entrySet()
+				.stream()
+				.filter(e -> !e.getValue().value.equals("#NOT_COMMON_VALUE#"))
+				.collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue()));
+
 		return finalContent;
 	}
 
@@ -167,7 +181,7 @@ public class ContainerHelper {
 		if(currentPv.value.equals(newPv.value)){
 			return currentPv;
 		}else{
-			return null;
+			return new PropertySingleValue("#NOT_COMMON_VALUE#");
 		}		
 	}
 

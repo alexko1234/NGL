@@ -38,7 +38,7 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		//TODO better management for state with a fieldConfiguration
 		if(null == support.state){
 			support.state = new State("IS", contextValidation.getUser());
-		}else{
+		}else if(support.state.user == null){
 			support.state.user = contextValidation.getUser();
 		}
 		
