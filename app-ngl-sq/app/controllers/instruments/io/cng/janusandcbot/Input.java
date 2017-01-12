@@ -1,4 +1,4 @@
-package controllers.instruments.io.cng.cbot;
+package controllers.instruments.io.cng.janusandcbot;
 
 import controllers.instruments.io.cng.cbotAlone.CbotAloneInput;
 

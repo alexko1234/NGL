@@ -144,16 +144,17 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		/** chip-electrophoresis **/
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
-						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG )), 
+						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("bioAnalyzer2", "BioAnalyzer2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// pas de properties ????
-		/* 01/09/2016 nom et code incorrects -/- specs!!! Laisser le code mais corriger le name*/
+		// FDS  01/09/2016 nom et code incorrects -/- specs!!! Laisser le code mais corriger le name; 12/01/2017 ajout LABCHIP_GX2
 		l.add(newInstrumentUsedType("LabChip GX", "labChipGX", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(
-						createInstrument("labGX", "LABCHIP_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))) ,
+						createInstrument("labGX", "LABCHIP_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ,
+						createInstrument("labGX", "LABCHIP_GX2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ) ,
 				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -300,20 +301,26 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 
 	/*** get properties methods ***/
-	
+	// L'ordre de déclaration est l'ordre d'affichage  si rien n'est précisé pour displayOrder!!
+
 	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-      //  propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
-       // 		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Paired End FC Hiseq-v3","Single FC Hiseq-v3","Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1"),"single"));
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+
+        // FDS 12/01/2017 NGL-1257 ajout de requiredState
+        // OLD propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "IP", null,"single", null,true,null,null));
+        
+        // FDS 11/01/2017 pour les Cbot de type 2, nouvelle propriété "stripCode" ( barcode du strip lu )
+        // FDS 12/01/2017 NGL-1257 ajout de requiredState
+        // 12/01/2017 OLD propertyDefinitions.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "IP", null, "single", null,true,null,null));
+        
         propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
         		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
-        // ajout 10/01/2017 pour cbot-II
-        propertyDefinitions.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-       
+
         return propertyDefinitions;
 	}
 
@@ -323,9 +330,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-     //   propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
-        //		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1",
-        	//			"FC Miseq-v2","FC Miseq-v3"),"single"));
+
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
         		"2"),"Pas de piste contrôle (auto-calibrage)","single"));

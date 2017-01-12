@@ -136,18 +136,20 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 			$scope.messages.text=Messages('experiments.msg.import.success');
 			$scope.messages.showDetails = false;
 			$scope.messages.open();	
+			
 			// data est l'experience retournée par input.java
 			// recuperer instrumentProperties 
 			$scope.experiment.instrumentProperties= data.instrumentProperties;
 			
-			//et reagents TODO
-			//   $scope.experiment.reagents[0]=data.reagents;
+			// et reagents ....
+			$scope.experiment.reagents=data.reagents;
 			
 			// reinit select File...
 			$scope.file = undefined;
 			angular.element('#importFile')[0].value = null;
 			
-			$scope.$emit('refresh');
+			// NGL-1256 refresh special pour les reagents !!!
+			$scope.$emit('askRefreshReagents');
 			
 		})
 		.error(function(data, status, headers, config) {
@@ -155,6 +157,7 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 			$scope.messages.clazz = "alert alert-danger";
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
 			$scope.messages.open();	
 			
 			// reinit select File..
@@ -165,7 +168,9 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 	
 	$scope.button = {
 		isShow:function(){
-			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			// activer le bouton en mode edition ( que l'etat soit New ou InProgress..)
+			//return ( $scope.isInProgressState() && $scope.mainService.isEditMode())
+			return ( $scope.mainService.isEditMode() )
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
