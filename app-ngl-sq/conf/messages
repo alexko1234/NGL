@@ -176,6 +176,8 @@ containers.table.taxonCode= Taxon Id
 containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
 containers.table.expectedCoverage= Couv. souhaitée
+containers.table.resolutionCodes = Résolutions
+
 
 container.from = issu de
 
