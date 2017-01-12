@@ -509,6 +509,11 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.is("traceInformation.createUser", containersSearch.createUser));
 		}
 		
+		
+		if (CollectionUtils.isNotEmpty(containersSearch.stateResolutionCodes)) { //all
+			queryElts.add(DBQuery.in("state.resolutionCodes", containersSearch.stateResolutionCodes));
+		}
+		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.properties,Level.CODE.Container, "properties"));
 

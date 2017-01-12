@@ -249,7 +249,7 @@ search.placeholder.pools = Pools
 search.placeholder.printing.printer = Imprimante
 search.placeholder.printing.barcode.position = Barre code position
 search.placeholder.readsets = ReadSets
-
+search.placeholder.resolutions = Résolutions
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
