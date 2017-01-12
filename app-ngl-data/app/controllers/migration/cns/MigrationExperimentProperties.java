@@ -191,7 +191,7 @@ public class MigrationExperimentProperties extends CommonController{
 		if(container!=null){
 			//add property to container
 			Logger.debug("Size content to update "+container.contents.size());
-			container.contents.stream().filter(content->content.sampleCode.equals(sampleCode) && ((String)content.properties.get("tag").getValue()).equals(tag)).forEach(c->{
+			container.contents.stream().filter(content->content.sampleCode.equals(sampleCode) && (tag==null || ((String)content.properties.get("tag").getValue()).equals(tag))).forEach(c->{
 				Logger.debug("Update container "+codeContainer+" for content "+c.sampleCode);
 				c.properties.put(newKeyProperty, propValue);
 			});
