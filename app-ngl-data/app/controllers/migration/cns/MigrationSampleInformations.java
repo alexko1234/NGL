@@ -3,6 +3,7 @@ package controllers.migration.cns;
 import java.util.List;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
@@ -19,8 +20,35 @@ public class MigrationSampleInformations extends CommonController {
 
 	public static Result migration() {
 	
-		updateSampleInformations();
+		//updateSampleInformations();
+		
+		//SUPSQ-2427
+		updateSampleBWX();
+		
 		return ok("Migration Sample properties finish");
+	}
+
+	private static void updateSampleBWX() {
+		List<Sample> samples=MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.in("projectCodes","BWX")).toList();
+		Logger.debug("Sample "+samples.size());
+		
+		for(Sample s:samples){
+			Integer taxonSize=Integer.valueOf(s.properties.get("taxonSize").value.toString())*1000;
+			s.properties.get("taxonSize").value=taxonSize;
+			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("code",s.code),DBUpdate.set("properties.taxonSize", s.properties.get("taxonSize")));
+			
+			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("contents.sampleCode", s.code))
+			.cursor.forEach(container -> {
+				container.contents.stream()
+					.filter(content -> content.sampleCode.equals(s.code))
+					.forEach(content -> {
+						content.properties.put("taxonSize",s.properties.get("taxonSize"));
+					});;
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+			});;
+			
+			
+		}
 	}
 
 	private static void updateSampleInformations() {
