@@ -70,7 +70,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processTypeCodes","processCodes", "valuation", "state", "support","concentration");
-	final static List<String> authorizedUpdateFields = Arrays.asList("valuation");
+	final static List<String> authorizedUpdateFields = Arrays.asList("valuation","state");
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
@@ -507,6 +507,11 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.in("traceInformation.createUser", containersSearch.createUsers));
 		}else if(StringUtils.isNotBlank(containersSearch.createUser)){
 			queryElts.add(DBQuery.is("traceInformation.createUser", containersSearch.createUser));
+		}
+		
+		
+		if (CollectionUtils.isNotEmpty(containersSearch.stateResolutionCodes)) { //all
+			queryElts.add(DBQuery.in("state.resolutionCodes", containersSearch.stateResolutionCodes));
 		}
 		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));

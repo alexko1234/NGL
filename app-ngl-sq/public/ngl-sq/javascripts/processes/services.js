@@ -120,7 +120,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			});
 		}
 		columns.push({
-			"header" : Messages("processes.table.resolutionCode"),
+			"header" : Messages("processes.table.resolutionCodes"),
 			"property" : "state.resolutionCodes",
 			"filter":"codes:'resolution'",
 			"position" : 7,

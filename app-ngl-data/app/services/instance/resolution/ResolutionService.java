@@ -79,6 +79,7 @@ public class ResolutionService {
 			createGelMigrationResolutionCNS(ctx);
 			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
 			createProcessResolutionCNS(ctx);
+			createContainerResolutionCNS(ctx);
 		}
 		else if ( inst.equals("TEST") ){		
 			resolutionCategories = createResolutionCategoriesCNS();
@@ -88,11 +89,6 @@ public class ResolutionService {
 		}
 	}
 
-
-	
-
-	
-	
 
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
@@ -873,5 +869,22 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Echec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 3));	
 
 		return l;
+	}
+	
+	
+	public static void createContainerResolutionCNS(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+
+		l.add(InstanceFactory.newResolution("Sauvegarde prod","prod-backup", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "containerReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Container";
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 }

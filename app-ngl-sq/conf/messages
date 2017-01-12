@@ -176,6 +176,8 @@ containers.table.taxonCode= Taxon Id
 containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
 containers.table.expectedCoverage= Couv. souhaitée
+containers.table.resolutionCodes = Résolutions
+
 
 container.from = issu de
 
@@ -247,7 +249,7 @@ search.placeholder.pools = Pools
 search.placeholder.printing.printer = Imprimante
 search.placeholder.printing.barcode.position = Barre code position
 search.placeholder.readsets = ReadSets
-
+search.placeholder.resolutions = Résolutions
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres

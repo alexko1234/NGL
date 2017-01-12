@@ -196,6 +196,22 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"filter":"codes:'state'",
 			"groupMethod":"unique"					
 		});
+		
+		
+		columns.push({
+			"header" : Messages("containers.table.resolutionCodes"),
+			"property" : "state.resolutionCodes",
+			"filter":"codes:'resolution'",
+			"position" : 12.5,
+			"order" : true,
+			"edit" : true,
+			"hide" : true,
+			"choiceInList":true,
+		    "listStyle":"bt-select-multiple",
+		    "possibleValues":"searchService.lists.get('containerResolutions')",
+			"type" : "text"
+		});
+		
 		columns.push({
 			"header":Messages("containers.table.valid"),
 			"property":"valuation.valid",
@@ -231,6 +247,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			lists.refresh.reportConfigs({pageCodes:["containers"+"-"+mainService.getHomePage()]});
 			lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
 			lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
+			lists.refresh.resolutions({"objectTypeCode":"Container"}, "containerResolutions");
 			isInit=true;
 		}
 	};
