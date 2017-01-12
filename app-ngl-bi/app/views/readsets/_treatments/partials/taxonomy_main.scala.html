@@ -155,6 +155,8 @@
 		<div class="panel panel-info">
 		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.taxonBilanMitochondrion")</strong></div>	
 		  <div class="treatmentOverflow">
+		  	<label for="inputFilter">@Messages("filterTaxonBilanMitochondrion") </label>
+			<input type="text" ng-model="filterTaxonBilanMitochondrion" placeholder='@Messages("filterTaxonBilanMitochondrion")' title='@Messages("filterTaxonBilanMitochondrion")' ng-value="filterTaxonBilanMitochondrion" id="inputFilter">
 		 	<table class="table table-condensed table-hover table-bordered">
 			<thead>							
 			<tr>
@@ -170,7 +172,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilanMitochondrion.value">
+			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilanMitochondrion.value" ng-if="obj.percent>filterTaxonBilanMitochondrion">
 				<td>									
 					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
 				</td>
@@ -188,6 +190,8 @@
 		<div class="panel panel-info">
 		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.taxonBilanPlastid")</strong></div>	
 		  <div class="treatmentOverflow">
+		  	<label for="inputFilter">@Messages("filterTaxonBilanPlastid") </label>
+			<input type="text" ng-model="filterTaxonBilanPlastid" placeholder='@Messages("filterTaxonBilanPlastid")' title='@Messages("filterTaxonBilanPlastid")' ng-value="filterTaxonBilanPlastid" id="inputFilter">
 		 	<table class="table table-condensed table-hover table-bordered">
 			<thead>							
 			<tr>
@@ -203,7 +207,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilanPlastid.value">
+			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilanPlastid.value" ng-if="obj.percent>filterTaxonBilanPlastid">
 				<td>									
 					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
 				</td>
