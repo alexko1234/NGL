@@ -265,6 +265,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
 	}
 	
+	$scope.$on('askRefreshReagents',function(){
+		$scope.$broadcast('refreshReagents');
+	}); 
+	
 	$scope.$on('childSaved', function(e, callbackFunction) {
 		
 		updatePropertyUnit($scope.experiment);
@@ -1048,6 +1052,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			}
 		}
 	
+	});
+	
+	$scope.$on('refreshReagents', function(e, callbackFunction) {	
+		console.log("call refresh reagents");
+		if (angular.isDefined($scope.experiment)){
+			if($scope.experiment.reagents === null || $scope.experiment.reagents === undefined || $scope.experiment.reagents.length === 0){
+				$scope.datatableReagent.setData([]);				
+			}else{
+				$scope.datatableReagent.setData($scope.experiment.reagents);
+			}
+		}
 	});
 
 	$scope.$on('saveReagents', function(e, callbackFunction) {	
