@@ -935,6 +935,8 @@ readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
 filterTaxonBilan=Seuil Taxon (% vs rRNA tot.)
+filterTaxonBilanMitochondrion=Seuil Taxon (% vs mitochondrion)
+filterTaxonBilanPlastid=Seuil Taxon (% vs plastid)
 ###############
 #
 #authorisation users

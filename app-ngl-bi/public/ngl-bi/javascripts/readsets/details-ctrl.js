@@ -188,6 +188,8 @@
 		$scope.treatments = treatments;
 		$scope.valuationService = valuationService();
 		$scope.filterTaxonBilan=5;
+		$scope.filterTaxonBilanMitochondrion=1;
+		$scope.filterTaxonBilanPlastid=1;
 		
 		mainService.stopEditMode();
 		if(isValuationMode()){
