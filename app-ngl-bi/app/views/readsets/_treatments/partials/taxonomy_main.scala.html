@@ -50,7 +50,7 @@
 </div>
 		
 <div class="row">
-	<div class="col-md-6 col-lg-6">	
+	<div class="col-md-5 col-lg-5">	
 		<div class="panel panel-default">
 		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.taxonBilan")</strong></div>	
 		  <div class="treatmentOverflow">
@@ -117,8 +117,7 @@
 				</tbody>
 			</table>
 		</div>				
-	</div>
-	<div class="col-md-3 col-lg-3">
+	
 		<div class="panel panel-default">
 		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.keywordBilan")</strong></div>
 		  <table class="table table-condensed table-hover table-bordered">
@@ -151,5 +150,73 @@
 		</table>
 		</div>
 						
+	</div>
+	<div class="col-md-4 col-lg-4">	
+		<div class="panel panel-info">
+		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.taxonBilanMitochondrion")</strong></div>	
+		  <div class="treatmentOverflow">
+		 	<table class="table table-condensed table-hover table-bordered">
+			<thead>							
+			<tr>
+				<th>
+					@Messages("readsets.treatments.taxonomy.taxonBilan.taxon")
+				</th>
+				<th>
+					@Messages("readsets.treatments.taxonomy.taxonBilan.nbSeq")
+				</th>
+				<th>
+					@Messages("readsets.treatments.taxonomy.taxonBilan.percent")
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilanMitochondrion.value">
+				<td>									
+					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
+				</td>
+				<td>
+					 {{obj.nbSeq | number}}													
+				</td>
+				<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.read1.taxonBilanMitochondrion.value|filter:\''+obj.taxon+'\'|sum:\'percent\'')">
+					{{ obj.percent | number:2}} @Messages("unit.percent")												
+				</td>
+			</tr>
+			</tbody>				
+		</table>
+		</div>
+		</div>	
+		<div class="panel panel-info">
+		  <div class="panel-heading"><strong>@Messages("readsets.treatments.taxonomy.taxonBilanPlastid")</strong></div>	
+		  <div class="treatmentOverflow">
+		 	<table class="table table-condensed table-hover table-bordered">
+			<thead>							
+			<tr>
+				<th>
+					@Messages("readsets.treatments.taxonomy.taxonBilan.taxon")
+				</th>
+				<th>
+					@Messages("readsets.treatments.taxonomy.taxonBilan.nbSeq")
+				</th>
+				<th>
+					@Messages("readsets.treatments.taxonomy.taxonBilan.percent")
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="obj in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1.taxonBilanPlastid.value">
+				<td>									
+					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
+				</td>
+				<td>
+					 {{obj.nbSeq | number}}													
+				</td>
+				<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.read1.taxonBilanPlastid.value|filter:\''+obj.taxon+'\'|sum:\'percent\'')">
+					{{ obj.percent | number:2}} @Messages("unit.percent")												
+				</td>
+			</tr>
+			</tbody>				
+		</table>
+		</div>
+		</div>														
 	</div>
 </div>
