@@ -15,6 +15,7 @@ public class BioinformaticParameters implements IValidation {
 	public String mappingReference;
 	public String fgGroup;
 	public Integer fgPriority;
+	public Boolean localDataDelete = Boolean.FALSE;
 	
 	
 	@Override
@@ -24,6 +25,7 @@ public class BioinformaticParameters implements IValidation {
 				+ ", mappingReference=" + mappingReference 
 				+ ", fgGroup=" + fgGroup
 				+ ", fgPriority="+ fgPriority
+				+ ", localDataDelete="+ localDataDelete
 				+ "]";
 	}
 
