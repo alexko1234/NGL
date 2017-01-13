@@ -168,9 +168,8 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 	
 	$scope.button = {
 		isShow:function(){
-			// activer le bouton en mode edition ( que l'etat soit New ou InProgress..)
-			//return ( $scope.isInProgressState() && $scope.mainService.isEditMode())
-			return ( $scope.mainService.isEditMode() )
+			// activer le bouton en mode edition ( que l'etat soit New ou InProgress..) mais pas en mode creation car l'experience n'existe pas encore
+			return ( $scope.isEditMode() && ! $scope.isCreationMode() )
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
