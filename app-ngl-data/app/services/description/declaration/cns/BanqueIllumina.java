@@ -421,7 +421,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyDNAIlluminaIndexedLibraryProcess() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, null, getBanqueProcessTypeDNAIlluminaIndexedLibraryProcess(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeDNAIlluminaIndexedLibraryProcess(), 
 				null,null,null,"single", 13, true, null, null));
 		
 		propertyDefinitions.addAll(getPropertyBanqueIlluminaWithoutSizing());
