@@ -47,7 +47,7 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			        			 
+			        	/*		 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
@@ -58,6 +58,7 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			        	 "position":6,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         */
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainer.volume.value",
@@ -68,6 +69,7 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			        	 "position":5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         /*
 			         {
 			        	 "header":Messages("containers.table.quantity") + " (ng)",
 			        	 "property":"inputContainer.quantity.value",
@@ -78,6 +80,7 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			        	 "position":6.5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         */
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -130,7 +133,8 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:"inputContainer.support.code"
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
