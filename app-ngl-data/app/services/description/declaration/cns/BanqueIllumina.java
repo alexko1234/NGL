@@ -120,11 +120,50 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		return null;
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		l.add(DescriptionFactory.newProcessType("Bq DNA à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
+				ProcessCategory.find.findByCode("library"), 41,
+			getPropertyDNAIlluminaIndexedLibraryProcess(),
+			Arrays.asList(getPET("ext-to-dna-illumina-indexed-library-process",-1)
+					,getPET("fragmentation",-1)
+					,getPET("tag-pcr",-1)
+					,getPET("dna-illumina-indexed-library",0)
+					,getPET("pcr-amplification-and-purification",1)
+					,getPET("solution-stock",2)
+					,getPET("prepa-flowcell",3)
+					,getPET("prepa-fc-ordered",3)
+					,getPET("illumina-depot",4)), 
+					getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-library-process").get(0), 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+
+		
+		
+		return l;
 	}
 	
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
+		
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		l.add(DescriptionFactory.newProcessType("Bq DNA à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
+				ProcessCategory.find.findByCode("library"), 41,
+			getPropertyBanqueIlluminaWithoutSizing(), 
+			Arrays.asList(getPET("ext-to-dna-illumina-indexed-library-process",-1)
+					,getPET("fragmentation",-1)
+					,getPET("tag-pcr",-1)
+					,getPET("dna-illumina-indexed-library",0)
+					,getPET("pcr-amplification-and-purification",1)
+					,getPET("solution-stock",2)
+					,getPET("prepa-flowcell",3)
+					,getPET("prepa-fc-ordered",3)
+					,getPET("illumina-depot",4)), 
+					getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-library-process").get(0), 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+
+		
+		
 		/*List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		l.add(DescriptionFactory.newProcessType("Bq DNA Illumina à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
@@ -237,31 +276,16 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		
 		return l;*/
-		return null;
+		return l;
 	}
 
 	
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
-List<ProcessType> l = new ArrayList<ProcessType>();
+		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("Bq DNA à partir de frg ou amplicon", "dna-illumina-indexed-library-process", 
-				ProcessCategory.find.findByCode("library"), 41,
-			getPropertyBanqueIlluminaWithoutSizing(), 
-			Arrays.asList(getPET("ext-to-dna-illumina-indexed-library-process",-1)
-					,getPET("fragmentation",-1)
-					,getPET("tag-pcr",-1)
-					,getPET("dna-illumina-indexed-library",0)
-					,getPET("pcr-amplification-and-purification",1)
-					,getPET("solution-stock",2)
-					,getPET("prepa-flowcell",3)
-					,getPET("prepa-fc-ordered",3)
-					,getPET("illumina-depot",4)), 
-					getExperimentTypes("dna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-dna-illumina-indexed-library-process").get(0), 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-
+		
 		l.add(DescriptionFactory.newProcessType("Bq DNA sizing (gel) à partir de frg ou amplicon", "dna-illumina-indexed-lib-sizing-process", 
 				ProcessCategory.find.findByCode("library"), 42,
 				getPropertyBanqueIlluminaSizingDEV(), 
@@ -392,7 +416,25 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		
 		
-		return l;	}
+		return l;	
+	}
+	
+	private List<PropertyDefinition> getPropertyDNAIlluminaIndexedLibraryProcess() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, null, getBanqueProcessTypeDNAIlluminaIndexedLibraryProcess(), 
+				null,null,null,"single", 13, true, null, null));
+		
+		propertyDefinitions.addAll(getPropertyBanqueIlluminaWithoutSizing());
+		return propertyDefinitions;
+	}
+	
+	private List<Value> getBanqueProcessTypeDNAIlluminaIndexedLibraryProcess() {
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("DA", "DA - DNAseq"));
+		values.add(DescriptionFactory.newValue("DD", "DD - Chromium 10x"));
+		values.add(DescriptionFactory.newValue("TA", "TA - Targeted DNAseq"));
+		return values;
+	}
 	
 	private List<PropertyDefinition> getPropertyBanqueIlluminaWithoutSizing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
@@ -415,7 +457,7 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
 		
 		return propertyDefinitions;
-}
+	}
 
 	
 	private List<PropertyDefinition> getPropertyBanqueIllumina() {
@@ -423,15 +465,8 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 				return propertyDefinitions;
-}
-	
-	private List<PropertyDefinition> getPropertyBanqueIlluminaSizingPROD() {
-			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-			
-			propertyDefinitions.addAll(getPropertyBanqueIllumina());
-			propertyDefinitions.addAll(getSizingPropertiesPROD());
-			return propertyDefinitions;
 	}
+	
 	
 	private List<PropertyDefinition> getPropertyBanqueIlluminaSizingDEV() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
@@ -470,31 +505,18 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.addAll(getSpriSelectProperties());
 		return propertyDefinitions;
-}
-
-private List<PropertyDefinition> getSpriSelectProperties(){
-	List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-	propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-			DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"), 											
-			null,null,null,"single", 17, true, null, null));
-//	propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
-	//		DescriptionFactory.newValues("650-800"), 
-		//	null,null,null,"single", 18, true, null, null));
-	propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
-	return propertyDefinitions;
-}
-	
-	
-	private List<Value> getBanqueIlluminaDA() {
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("DA", "DA - DNAseq"));
-		return values;
 	}
-	
-	private List<Value> getBanqueIlluminaDB(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("DB", "DB - DNAseq avec sizing"));
-		return values;
+
+	private List<PropertyDefinition> getSpriSelectProperties(){
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
+				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"), 											
+				null,null,null,"single", 17, true, null, null));
+	//	propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
+		//		DescriptionFactory.newValues("650-800"), 
+			//	null,null,null,"single", 18, true, null, null));
+		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		return propertyDefinitions;
 	}
 	
 
