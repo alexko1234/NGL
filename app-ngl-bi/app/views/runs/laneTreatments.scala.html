@@ -40,9 +40,17 @@
 
 }
 @if(code == "topindex"){
-<div class="col-md-6 col-lg-7">
-	<div ng-repeat="lane in run.lanes" class="row">
-		<h4><span class="label label-info">Lane {{lane.number}}</span></h4>
+
+<div class=row>
+<ul class="nav nav-tabs margin-bottom-5">
+	<li class="active"><a href="#" data-target="#topIndex" data-toggle="tab">@Messages("runs.treatments.topIndex")</a></li>
+	<li><a href="#" data-target="#tilesStats" data-toggle="tab">@Messages("runs.treatments.tilesStats")</a></li>    
+</ul>
+<div class="tab-content">
+	<div class="tab-pane active" id="topIndex">
+		<div class="col-md-6 col-lg-7">
+			<div ng-repeat="lane in run.lanes" class="row">
+				<h4><span class="label label-info">Lane {{lane.number}}</span></h4>
 				<table class="table table-condensed table-hover table-bordered">
 					<thead>
 						<tr>
@@ -63,7 +71,18 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
 	</div>
+	<div class="tab-pane" id="tilesStats">
+		<div class="col-md-14 col-lg-14">
+		    <img id="default_tilesStats" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/>
+	    </div>
+	 </div>
+	</div>
+		
+		 	<!-- <img id="tilesStatsId" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/> -->
+</div>
 
 }
 
