@@ -133,8 +133,7 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:"inputContainer.support.code"
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -265,7 +264,7 @@ angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 
 				0 : Messages("experiments.inputs")
 			}
 		});
-		datatableConfig.order.by = 'inputContainer.sampleCodes';
+		datatableConfig.order.by="inputContainer.support.code";
 	}
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {

@@ -163,9 +163,7 @@ public class Experiments extends DocumentController<Experiment>{
 			
 			for(Container p : containers){
 				containerCodes.add(p.code);
-			}
-			
-			
+			}			
 		}
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerCode)){			
