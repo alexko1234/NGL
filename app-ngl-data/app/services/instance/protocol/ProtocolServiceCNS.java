@@ -199,10 +199,15 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate")));
+				InstanceFactory.setExperimentTypeCodes("small-and-large-rna-isolation", "chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate")));
 
 		lp.add(newProtocol("Ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure")));
 
+		lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
+		
+		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));
+		
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
 			//lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
@@ -213,8 +218,7 @@ public class ProtocolServiceCNS {
 			//fin mise en prod
 			
         	//lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes()));
-			lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction","small-and-large-rna-isolation")));
-			lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
+			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));
 		}

@@ -83,19 +83,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-List<ProcessType> l = new ArrayList<ProcessType>();
-		
-		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
-				getPropertiesMetaTRNA(), 
-				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
-						,getPET("dna-rna-extraction",-1)
-						,getPET("small-and-large-rna-isolation",-1)
-						, getPET("rna-illumina-indexed-library",0)
-						, getPET("pcr-amplification-and-purification",1)
-						, getPET("solution-stock",2)
-						, getPET("prepa-flowcell",3)
-						, getPET("prepa-fc-ordered",3)
-						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		return l;
 	}
@@ -104,16 +92,6 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 	protected List<ProcessType> getProcessTypePROD() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
-				getPropertiesMetaTRNA(), 
-				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
-						,getPET("dna-rna-extraction",-1)
-						, getPET("rna-illumina-indexed-library",0)
-						, getPET("pcr-amplification-and-purification",1)
-						, getPET("solution-stock",2)
-						, getPET("prepa-flowcell",3)
-						, getPET("prepa-fc-ordered",3)
-						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return l;
 	}
@@ -127,6 +105,18 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), 21,
+				getPropertiesMetaTRNA(), 
+				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
+						,getPET("dna-rna-extraction",-1)
+						,getPET("small-and-large-rna-isolation",-1)
+						, getPET("rna-illumina-indexed-library",0)
+						, getPET("pcr-amplification-and-purification",1)
+						, getPET("solution-stock",2)
+						, getPET("prepa-flowcell",3)
+						, getPET("prepa-fc-ordered",3)
+						, getPET("illumina-depot",4)), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("MetaT cDNA + FRG", "cDNA-frg-transcriptomic-process", ProcessCategory.find.findByCode("library"), 22,
 				getPropertiesMetaTcDNA(), 
@@ -157,13 +147,13 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
 				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		 */
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
-				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 	
 	}
 	
 	@Override
 	protected void getExperimentTypeNodeCommon() {
+		
+		
 		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -172,13 +162,14 @@ List<ProcessType> l = new ArrayList<ProcessType>();
 				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
+				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+	
 	}
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
-				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	
+		
 	}
 
 	@Override
