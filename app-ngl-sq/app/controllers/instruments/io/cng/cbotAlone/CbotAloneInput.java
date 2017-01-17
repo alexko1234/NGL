@@ -28,14 +28,16 @@ import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.index.Index;
+//import models.laboratory.parameter.index.Index;
+import models.laboratory.reagent.instance.ReagentUsed;
+
 import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.InputHelper;
 
-import models.laboratory.reagent.instance.ReagentUsed;;
+
 
 public class CbotAloneInput extends AbstractInput {
 	
@@ -43,13 +45,14 @@ public class CbotAloneInput extends AbstractInput {
     <?xml version="1.0" encoding="utf-16"?>
     <RunData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     ....
+    <ProtocolName>C:\Illumina\cBot\bin\Recipes\XXXXXXXXXXXXXXXXX </ProtocolName>
     <ExperimentType>PairedEnd</ExperimentType>
     <FlowCellID>FCBARCODE</FlowCellID>
     <RunFolderName>161004_CBOT-C_0003</RunFolderName>
     <TemplateID>STRIPBARCODE</TemplateID>
     <ReagentID>XXXXXXXXXX3</ReagentID>
     ....
-    <UsedOnBoardScanner>false</UsedOnBoardScanner>
+
 	*/
 	
 	@Override
@@ -89,17 +92,31 @@ public class CbotAloneInput extends AbstractInput {
 	         // barcode du strip
 	         expression="TemplateID";
 	         String stripId = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, stripId);
-	         
-	         // expression="ExperimentType"
-	         // peut contenir "rehyb" => ne peut pas etre utilisé pour fixer "Types lectures" !!!!      
+	         checkMandatoryXMLTag (contextValidation, expression, stripId);            
 	         
 	         // nom du rum
 	         expression="RunFolderName";
 	         String runFolder = (String)xpath.evaluate(expression, root);
 	         checkMandatoryXMLTag (contextValidation, expression, runFolder );
 	         
-	         // vérifier s'il s'agit d'un fichier produit par la cbot choisie
+	         // nom du Protocol
+	         expression="ProtocolName";
+	         String protocol = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, protocol );
+	         
+	         // pour commentaire
+	         expression="RecipeVersion";
+	         String recipeVersion = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, recipeVersion );
+	         
+	         // pour commentaire
+	         expression="ReagentVersion";
+	         String reagentVersion = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, reagentVersion );
+	         
+	         //--------------------verifications   ----------------------
+	         
+	         //-1- vérifier s'il s'agit d'un fichier produit par la cbot choisie
 		     // runFolder est de la forme :  DATE_CBOT_NUM
 	         if ( runFolder.length() > 1 ) {
 	        	 String[] runf = runFolder.split("_");  
@@ -115,15 +132,15 @@ public class CbotAloneInput extends AbstractInput {
 	        		 cbot = sb.toString();
 	        		 //System.out.println("(2) cbot:" + cbot);
 	        		 
-	        		 // !! a l'etat NEW experiment.instrument.code n'est pas encore definie !!??? A TESTER
-	        		 
-	        		 if (experiment.instrument.typeCode.equals("cBot"))
-	        		 {
+	        		 // 16/01/2016 reunion Prod=> uniquement pour "janus-and-cBot"
+	        		 //if (experiment.instrument.typeCode.equals("cBot"))
+	        		 //{
 	        			 // l'instrument est une cbot seule
-	        			 if ( ! cbot.toUpperCase().equals(experiment.instrument.code.toUpperCase()) ) {
-	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas a la cBot sélectionnée");
-	        			 }
-	        		 } else if (experiment.instrument.typeCode.equals("janus-and-cBot")) {
+	        			// if ( ! cbot.toUpperCase().equals(experiment.instrument.code.toUpperCase()) ) {
+	        			//	 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas a la cBot sélectionnée");
+	        			// }
+	        		 //} else 
+	        		 if (experiment.instrument.typeCode.equals("janus-and-cBot")) {
 	        			 
 	        			 //l'instrument code  est 'janus-and-cbotX' 
 	        			 String[] janusAndCbot=experiment.instrument.code.split("-");
@@ -138,32 +155,61 @@ public class CbotAloneInput extends AbstractInput {
 	        		 contextValidation.addErrors("Erreurs fichier", "'RunFolderName' incorrect");
 	        	 }   
 	         }
+	         
+	         //-2- s'il existe, verifier le barcode Flowcell 
+	         if (flowcellId.length() > 0 ) {
+	        	 if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
+	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier ne correspond pas");
+	        	 }
+			 }
+	         
+	         //-3- s'il existe, vérifier le barcode Strip
+	         if (stripId.length() > 0 ){
+		         if ( ! experiment.instrumentProperties.get("stripCode").value.equals(stripId))  {
+					 contextValidation.addErrors("Erreurs fichier", "Le barcode strip du fichier ne correspond pas");
+				 }
+	         }
 		      
 		     if (contextValidation.hasErrors()){
 		    	  return experiment;
-		     }
+		     }      
+
+		     // récupérer le nom du fichier importé
+		     experiment.instrumentProperties.put("cbotFile", new PropertySingleValue(runFolder)); 
 		      
-		     //System.out.println("setting containerSupportCode to:"+ flowcellId);
-		     experiment.instrumentProperties.put("containerSupportCode", new PropertySingleValue(flowcellId));
-		      
-		     //System.out.println("setting containerSupportCode to:"+ stripId);
-		     experiment.instrumentProperties.put("stripCode", new PropertySingleValue(stripId));
-		      
+		     // récupérer le barcode de la plaque de réactifs et déterminer les autres info reliées
 		     //System.out.println("setting Reagent ?? to:"+ reagentId);
 		     ReagentUsed reagent=new ReagentUsed();
 		     
-		     /* 12/01  HARDCODED   
-		      * kitCatalogCode     OB4B1ILET=TruSeq PE Cluster Kit V3 cBot Box 2 of 2
-		      * boxCode            0B4B1Q3LW=TruSeq PE Cluster Kit V3 cBot Box 2 of 2
-		      * reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
+		     /* 16/01/2017 Reunion prod=> le kit doit etre deduit du ProtocolName
+		      * si "4000"=> HARDCODER le kit 4000
+		      * si "X"=> HARDCODER le kit  X 
+		      * sinon => ??????
 		      */
-		    
-		     reagent.kitCatalogCode="0B4B1ILET"; 
-		     reagent.boxCatalogCode="0B4B1Q3LW";
-		     reagent.boxCode="???";
-		     reagent.reagentCatalogCode="0B4B1Q3N8";
-		     reagent.code=reagentId;  
-		     reagent.description="Imported from Cbot-II XML file";
+		     String runType = "4000";//TEST......
+		     
+		     if  (runType.equals("4000")) {
+		    	 reagent.kitCatalogCode="TEST4000"; 
+		    	 reagent.boxCatalogCode="TEST4000";
+		    	 reagent.boxCode="";
+		     
+		    	 reagent.reagentCatalogCode="0B4B1Q3N8";// ????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
+		    	 reagent.code=reagentId;  
+		    	 
+		     } else if (runType.equals("X")) {	
+		    	 reagent.kitCatalogCode="TESTX"; 
+		    	 reagent.boxCatalogCode="TESTX";
+		    	 reagent.boxCode="";
+		     
+		    	 reagent.reagentCatalogCode="0B4B1Q3N8";// ???????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
+		    	 reagent.code=reagentId;  
+		     } else {
+		    	 // on fait quoi ???
+		    	 contextValidation.addErrors("Erreurs fichier","protocole non géré....");
+		     }
+		     
+		     reagent.description="Recipe version: "+ recipeVersion+"; Reagent version: " + reagentVersion;
+		     
 		     experiment.reagents.add(reagent);
 		     
 	      } catch (SAXException e) {
