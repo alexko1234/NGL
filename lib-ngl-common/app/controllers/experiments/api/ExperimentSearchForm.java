@@ -21,6 +21,7 @@ public class ExperimentSearchForm extends ListForm{
 	public Date toDate;
 	public String stateCode;
 	public Set<String> stateCodes;
+	public List<String> stateResolutionCodes;
 	public Set<String> users;
 	public String containerSupportCode;
 	public Set<String> containerSupportCodes;

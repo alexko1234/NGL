@@ -249,6 +249,10 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));
 		}
 		
+		if (CollectionUtils.isNotEmpty(experimentSearch.stateResolutionCodes)) { //all
+			queryElts.add(DBQuery.in("state.resolutionCodes", experimentSearch.stateResolutionCodes));
+		}
+		
 		//queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.experimentProperties, Level.CODE.Experiment, "experimentProperties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.instrumentProperties, Level.CODE.Instrument, "instrumentProperties"));
