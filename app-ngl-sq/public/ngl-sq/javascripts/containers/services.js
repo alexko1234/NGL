@@ -319,10 +319,15 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				}
 			},
 			getStates : function(value){
+				/*
 				this.initAuthorizedStates();
 				if(value && value.data){
 					return this.authorizedStates[value.data.state.code];
+				}else{
+					return this.lists.getStates();
 				}
+				*/
+				return this.lists.getStates();
 			},
 			updateForm : function(){
 				this.form.includes = [];
