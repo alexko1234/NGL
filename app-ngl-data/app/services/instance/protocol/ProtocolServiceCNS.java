@@ -200,7 +200,7 @@ public class ProtocolServiceCNS {
 
 		lp.add(newProtocol("Ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure")));
 
-		lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
+		lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","pcr-amplification-and-purification")));
 		
 		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));
 		
