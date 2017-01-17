@@ -38,7 +38,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 	public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCodes){	
 		try {
 			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_category as pc WHERE c.fk_process_category=pc.id "
-						+"AND pc.code in ("+listToParameters(Arrays.asList(processCategoryCodes))+") ";
+						+"AND pc.code in ("+listToParameters(Arrays.asList(processCategoryCodes))+") order by display_order";
 			
 			//Logger.debug(sql);
 			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<ProcessType>(entityClass);

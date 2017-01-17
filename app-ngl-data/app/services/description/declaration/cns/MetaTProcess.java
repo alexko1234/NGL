@@ -83,13 +83,17 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
-		return null;
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		return l;
 	}
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		
+		return l;
 	}
 
 	@Override
@@ -106,6 +110,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				getPropertiesMetaTRNA(), 
 				Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1)
 						,getPET("dna-rna-extraction",-1)
+						,getPET("small-and-large-rna-isolation",-1)
 						, getPET("rna-illumina-indexed-library",0)
 						, getPET("pcr-amplification-and-purification",1)
 						, getPET("solution-stock",2)
@@ -142,11 +147,13 @@ public class MetaTProcess extends AbstractDeclaration {
 		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
 				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		 */
-		
+	
 	}
 	
 	@Override
 	protected void getExperimentTypeNodeCommon() {
+		
+		
 		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -155,8 +162,9 @@ public class MetaTProcess extends AbstractDeclaration {
 				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
+		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
 				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+	
 	}
 
 	@Override

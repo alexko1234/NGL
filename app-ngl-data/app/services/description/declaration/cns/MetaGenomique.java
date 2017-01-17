@@ -272,7 +272,7 @@ public class MetaGenomique extends AbstractDeclaration {
 	
 	private List<Value> getLibProcessDA() {
 		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("DA", "DA - DNAseq "));
+		values.add(DescriptionFactory.newValue("DA", "DA - DNAseq"));
 		return values;
 	}
 	

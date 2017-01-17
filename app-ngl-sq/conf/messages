@@ -222,6 +222,7 @@ containers.dispatch.value.3 = Exp. Purification
 containers.dispatch.value.4 = Terminer
 containers.dispatch.value.5 = Recommencer
 containers.dispatch.value.6 = Arrêt Processus
+containers.dispatch.value.7 = Attente décision
 
 containers.table.processResolutions = Processus résolutions
 containers.dispatch.value.mandatory = L''orientation du container est obligatoire

@@ -173,6 +173,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 					instrument.instrumentUsedType = instrumentUsedType;
 					instrumentDAO.save(instrument);
 				}else{
+					instrumentDAO.updateByCode(instrument);
 					updateFKInstrumentUsedType(instrument.code, instrumentUsedType.id);
 				}
 			}

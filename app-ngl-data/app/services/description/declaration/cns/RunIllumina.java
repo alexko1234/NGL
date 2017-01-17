@@ -78,7 +78,11 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
+		/*
+		l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		*/
 		return l;
 	}
 

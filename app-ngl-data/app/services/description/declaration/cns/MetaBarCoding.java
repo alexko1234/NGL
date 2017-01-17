@@ -177,6 +177,7 @@ public class MetaBarCoding extends AbstractDeclaration {
                             getPropertyMetaBarCodingSizing(),
                             Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1)
                                             ,getPET("dna-rna-extraction",-1)
+                                            ,getPET("cdna-synthesis",-1)
                                             ,getPET("tag-pcr",0)
                                             ,getPET("dna-illumina-indexed-library",1)
                                             ,getPET("pcr-amplification-and-purification",2)
@@ -192,6 +193,7 @@ public class MetaBarCoding extends AbstractDeclaration {
                             getPropertyMetaBarCodingWithoutSizing(),
                             Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1)
                                             ,getPET("dna-rna-extraction",-1)
+                                            ,getPET("cdna-synthesis",-1)
                                             ,getPET("tag-pcr",0)
                                             ,getPET("dna-illumina-indexed-library",1)
                                             ,getPET("pcr-amplification-and-purification",2)
@@ -244,7 +246,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
+		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction", "cdna-synthesis", "ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
 				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("ext-to-dna-illumina-indexed-library-process","ext-to-dna-illumina-indexed-lib-sizing-process","ext-to-dna-illumina-indexed-lib-spri-select-process","tag-pcr","fragmentation")
 				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
