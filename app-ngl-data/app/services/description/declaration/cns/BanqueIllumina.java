@@ -121,8 +121,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
-		
-		
+	
 		
 		return l;
 	}
@@ -287,7 +286,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Bq DNA spri select à partir de frg ou amplicon", "dna-illumina-indexed-lib-spri-select-process", 
-				ProcessCategory.find.findByCode("library"), 42,
+				ProcessCategory.find.findByCode("library"), 43,
 				getPropertyBanqueIlluminaSpriSelect(), 
 				Arrays.asList(getPET("ext-to-dna-illumina-indexed-lib-spri-select-process",-1)
 						,getPET("fragmentation",-1)
@@ -303,7 +302,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampli, STK, Dépôt", "ampli-stk-illumina-depot", 
-				ProcessCategory.find.findByCode("library"),43,
+				ProcessCategory.find.findByCode("library"),45,
 				getPropertyBanqueIlluminaWithoutSizing(), 
 				Arrays.asList(getPET("ext-to-ampli-stk-illumina-depot",-1)
 						,getPET("dna-illumina-indexed-library",-1)
@@ -316,7 +315,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampli, sizing (gel), STK, Dépôt", "ampli-sizing-stk-illumina-depot", 
-				ProcessCategory.find.findByCode("library"), 44,
+				ProcessCategory.find.findByCode("library"), 46,
 				getPropertyBanqueIlluminaSizingDEV(),
 				Arrays.asList(getPET("ext-to-ampli-sizing-stk-illumina-depot",-1)
 						,getPET("dna-illumina-indexed-library",-1)
@@ -330,7 +329,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampli, Spri select, STK, Dépôt", "ampli-spri-select-stk-illumina-depot", 
-				ProcessCategory.find.findByCode("library"), 44,
+				ProcessCategory.find.findByCode("library"), 47,
 				getPropertyBanqueIlluminaSpriSelect(),
 				Arrays.asList(getPET("ext-to-ampli-spri-select-stk-illumina-depot",-1)//TODO
 						,getPET("dna-illumina-indexed-library",-1)
@@ -344,7 +343,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampure, Sizing (gel), STK, Dépôt", "ampure-sizing-stk-illumina-depot",
-				ProcessCategory.find.findByCode("library"), 45,
+				ProcessCategory.find.findByCode("library"), 48,
 				getPropertyAmpureSizingSTKDepot(), 
 				Arrays.asList(getPET("ext-to-ampure-sizing-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
@@ -360,7 +359,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		
 		l.add(DescriptionFactory.newProcessType("Sizing (gel), STK, Dépôt", "sizing-stk-illumina-depot",
-				ProcessCategory.find.findByCode("library"), 46,
+				ProcessCategory.find.findByCode("library"), 49,
 				getSizingPropertiesDEV(), 
 				Arrays.asList(getPET("ext-to-sizing-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
@@ -373,7 +372,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Spri select, STK, Dépôt", "spri-select-stk-illumina-depot",
-				ProcessCategory.find.findByCode("library"), 46,
+				ProcessCategory.find.findByCode("library"), 50,
 				getSpriSelectProperties(), 
 				Arrays.asList(getPET("ext-to-spri-select-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
@@ -386,7 +385,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Ampure, STK, Dépôt", "ampure-stk-illumina-depot",
-				ProcessCategory.find.findByCode("library"), 47,
+				ProcessCategory.find.findByCode("library"), 51,
 				getPropertyBanqueIlluminaWithoutSizing(), 
 				Arrays.asList(getPET("ext-to-ampure-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
