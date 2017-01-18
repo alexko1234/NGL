@@ -152,17 +152,17 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 
-		// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"; !!! code  "rna-seq" deja utilsé pour un traitement !!      
-		l.add(DescriptionFactory.newProcessType("Prep lib RNAseq", "rna-sequencing", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"; 18/01/2017 JIRA NGL-1259 renommer en rna-lib-process
+		l.add(DescriptionFactory.newProcessType("Prep lib RNAseq", "rna-lib-process", ProcessCategory.find.findByCode("library"),
 				3,
-				getPropertyDefinitionsRNAseq(), 
-				Arrays.asList(getPET("ext-to-rna-sequencing",-1), //ordered list of experiment type in process type
+				getPropertyDefinitionsRNAlib(), 
+				Arrays.asList(getPET("ext-to-rna-lib-process",-1), //ordered list of experiment type in process type
 						getPET("library-prep",0),
 						getPET("pcr-and-purification",1),
 						getPET("normalization-and-pooling",2) , getPET("lib-normalization",2) ), // FDS 16/11/2016 ajout d'une 2eme exp de niveau 2 
 				getExperimentTypes("library-prep").get(0),              //first experiment type
 				getExperimentTypes("normalization-and-pooling").get(0), //last  experiment type ( 1 des 2 qui sont de niveau le + élevé)
-				getExperimentTypes("ext-to-rna-sequencing").get(0),     //void  experiment type
+				getExperimentTypes("ext-to-rna-lib-process").get(0),     //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
         //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modi du label=> supprimer RNA
@@ -291,6 +291,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
 						, getX5WgPcrFreeSequencingTypes(), "single" ,102, null, null, null));
 		
+		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail plaque","plateWorkLabel"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,103, true, null, null));
+		
+		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel,niveau process uniquement
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,104, true, null, null));
+		
 		return propertyDefinitions;
 	}
 
@@ -314,8 +326,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq
-	private static List<PropertyDefinition> getPropertyDefinitionsRNAseq() throws DAOException {
+	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq; 18/01/2017 remommer en getPropertyDefinitionsRNAseq=> getPropertyDefinitionsRNAlib
+	private static List<PropertyDefinition> getPropertyDefinitionsRNAlib() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
 		propertyDefinitions.add(
@@ -328,6 +340,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
 						, null, "single" ,101, true, null, null));
+		
+		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail plaque","plateWorkLabel"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,102, true, null, null));
+		
+		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel: optionnel,niveau process uniquement
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,103, true, null, null));
 		
 		return propertyDefinitions;
 	}
@@ -358,6 +382,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.newPropertiesDefinition("Couverture souhaitée","expectedCoverage"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, false, "F"
 						, null, "single" ,101, true, null, null));
+		
+		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail plaque","plateWorkLabel"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,102, true, null, null));
+		
+		// FDS 18/01/2017 JIRA NGL-1259 ajout ngsRunWorkLabel
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel"
+						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
+						, null, "single" ,103, true, null, null));
 		
 		return propertyDefinitions;
 	}

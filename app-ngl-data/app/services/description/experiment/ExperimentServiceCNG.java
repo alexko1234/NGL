@@ -112,8 +112,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			
 
-			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
-			l.add(newExperimentType("Ext to RNASeq","ext-to-rna-sequencing",null,-1,
+			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq ; JIRA NGL-1259 renommage rna-sequencing=> rna-lib-process
+			l.add(newExperimentType("Ext to RNASeq","ext-to-rna-lib-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null ,
@@ -367,7 +367,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();	
 		
 		//FDS ajout 12/12/2016 -- JIRA NGL-1025 RNA_Seq; processus court
-		newExperimentTypeNode("ext-to-rna-sequencing",getExperimentTypes("ext-to-rna-sequencing").get(0),
+		newExperimentTypeNode("ext-to-rna-lib-process",getExperimentTypes("ext-to-rna-lib-process").get(0),
 				false,false,false,
 				null,  // no previous nodes
 				null,
@@ -403,7 +403,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		// FDS mise en prod 12/12/2016
 		newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
 				true,false,false,
-				getExperimentTypeNodes("ext-to-rna-sequencing"), // previous nodes
+				getExperimentTypeNodes("ext-to-rna-lib-process"), // previous nodes
 				null,
 				null, // pas de QC ??
 				null  // pas de transfert ??
