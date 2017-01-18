@@ -29,6 +29,8 @@
 				
 				 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
 				 	
+				 	
+				 	
 				 	<div class="btn-group" ng-switch on="mainService.isEditMode()" ng-if="isEditModeAvailable()">
 				 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
 				 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
@@ -46,7 +48,8 @@
 			 		</div>
 			 	
 			 		<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
-			 	
+			 		<button class="btn btn-danger" ng-if="isWorkflowModeAvailable('F')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
+				 	
 			 	}
 			 				 					
 			</div>	

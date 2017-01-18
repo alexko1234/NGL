@@ -172,6 +172,34 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}			
 	};
 	
+	$scope.askDeleteExperiment = function(){
+		
+		angular.element('#deleteModal').modal('show');
+		
+	};
+	
+	$scope.deleteExperiment = function(){
+		$scope.messages.clear();
+		$http.delete(jsRoutes.controllers.experiments.api.Experiments.delete($scope.experiment.code).url)
+			.success(function(data, status, headers, config) {
+				//$scope.messages.setSuccess("remove");	
+				angular.element('#deleteModal').on('hidden.bs.modal', function (e) {
+					console.log("call when hide ok");
+					$scope.$apply(function(scope){
+						tabService.activeTab(tabService.getTab(0),true);
+						tabService.removeTab(1);
+					});
+				});
+				angular.element('#deleteModal').modal('hide');
+				
+			}).error(function(data, status, headers, config) {
+				$scope.messages.setError("remove");
+				$scope.messages.setDetails(data);
+				angular.element('#deleteModal').modal('hide');						
+		});
+			
+	};
+	
 	$scope.save = function(callbackFunction){
 		
 		$scope.messages.clear();

@@ -217,32 +217,38 @@ public class ExpWorkflowsHelper {
 		}
 	}
 
-	public void updateRemoveContainersFromExperiment(Experiment expFromUser,	ContextValidation ctxVal, State nextState) {
+	public void updateRemoveContainersFromExperiment(Experiment expFromUser,	ContextValidation ctxVal, State containerNextState) {
 		Experiment expFromDB = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, expFromUser.code);
 
-		List<String> removeContainerCodes = getRemoveContainerCodes(expFromDB, expFromUser);
+		Set<String> removeContainerCodes = getRemoveContainerCodes(expFromDB, expFromUser);
 		if(removeContainerCodes.size() > 0){
-			Set<String> removeContainerSupportCodes = new TreeSet<String>();
-			Set<String> removeProcessCodes = new TreeSet<String>();
-			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
-			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", removeContainerCodes)).cursor
-			.forEach(c -> {
-				removeContainerSupportCodes.add(c.support.code);
-				removeProcessCodes.addAll(c.processCodes);
-				containerWorkflows.setState(ctxVal, c, nextState);
-			});
-
-			MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
-			.forEach(c -> {
-				containerSupportWorkflows
-				.setStateFromContainers(ctxVal, c);
-			});
-
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-					DBQuery.in("code", removeProcessCodes).notEquals("state.code", "F"), 
-					DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", expFromDB.code));
-			ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
+			rollbackOnContainers(ctxVal, containerNextState, expFromDB.code,	removeContainerCodes);
 		}
+	}
+
+
+	public void rollbackOnContainers(ContextValidation ctxVal,
+			State containerNextState, String expCode, Set<String> removeContainerCodes) {
+		Set<String> removeContainerSupportCodes = new TreeSet<String>();
+		Set<String> removeProcessCodes = new TreeSet<String>();
+		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
+		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", removeContainerCodes)).cursor
+		.forEach(c -> {
+			removeContainerSupportCodes.add(c.support.code);
+			removeProcessCodes.addAll(c.processCodes);
+			containerWorkflows.setState(ctxVal, c, containerNextState);
+		});
+
+		MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
+		.forEach(c -> {
+			containerSupportWorkflows
+			.setStateFromContainers(ctxVal, c);
+		});
+
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+				DBQuery.in("code", removeProcessCodes).notEquals("state.code", "F"), 
+				DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", expCode));
+		ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 	}
 
 	private List<String> getNewContainerCodes(Experiment expFromDB, Experiment expFromUser) {
@@ -262,11 +268,11 @@ public class ExpWorkflowsHelper {
 
 
 
-	private List<String> getRemoveContainerCodes(Experiment expFromDB, Experiment expFromUser) {
+	private Set<String> getRemoveContainerCodes(Experiment expFromDB, Experiment expFromUser) {
 		List<String> containerCodesFromDB = ExperimentHelper.getAllInputContainers(expFromDB).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		List<String> containerCodesFromUser = ExperimentHelper.getAllInputContainers(expFromUser).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 
-		List<String> removeContainersCodes = new ArrayList<String>();
+		Set<String> removeContainersCodes = new TreeSet<String>();
 		for(String codeFromDB:containerCodesFromDB){
 			if(!containerCodesFromUser.contains(codeFromDB)){
 				removeContainersCodes.add(codeFromDB);

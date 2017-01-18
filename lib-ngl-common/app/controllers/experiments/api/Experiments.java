@@ -29,6 +29,7 @@ import org.mongojack.DBQuery.Query;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -360,5 +361,24 @@ public class Experiments extends DocumentController<Experiment>{
 		}else {
 			return badRequest(filledForm.errorsAsJson());
 		}
+	}
+	
+	
+	@Permission(value={"writing"})
+	public Result delete(String code){
+		Experiment objectInDB =  getObject(code);
+		if(objectInDB == null) {
+			return notFound();
+		}
+		DynamicForm deleteForm = form();
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
+		workflows.delete(contextValidation, objectInDB);
+		if (!contextValidation.hasErrors()) {
+			return ok();
+		}else {
+			return badRequest(deleteForm.errorsAsJson());
+		}
+		
+		
 	}
 }

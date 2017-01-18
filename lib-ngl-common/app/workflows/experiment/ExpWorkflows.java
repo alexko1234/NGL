@@ -1,6 +1,10 @@
 package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+
+import java.util.List;
+import java.util.Set;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.utils.ValidationConstants;
 import workflows.Workflows;
 import workflows.container.ContWorkflows;
 import fr.cea.ig.MongoDBDAO;
@@ -163,5 +168,15 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		//in case of experiment nothing to do !	
 	}
 
-	
+	public void delete(ContextValidation contextValidation,	Experiment exp){
+		if("N".equals(exp.state.code) || "IP".equals(exp.state.code)){
+			Set<String> containerCodes = exp.inputContainerCodes;
+			expWorkflowsHelper.rollbackOnContainers(contextValidation, getNewState(contWorkflows.getContainerStateFromExperimentCategory(exp.categoryCode), contextValidation.getUser()), exp.code, containerCodes);
+			if(!contextValidation.hasErrors()){
+				MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+			}
+		}else{
+			contextValidation.addErrors("state.code", ValidationConstants.ERROR_BADSTATE_MSG, exp.state.code);
+		}
+	}
 }
