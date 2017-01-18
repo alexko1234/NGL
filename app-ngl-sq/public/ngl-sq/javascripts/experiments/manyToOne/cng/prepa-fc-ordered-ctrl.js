@@ -188,7 +188,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		label:Messages("experiments.sampleSheet")
 	}]);
 	
-	/*06/2017 FDS ajout pour l'import du fichier Cbot-2 */
+	/* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2 */
 	var importData = function(){
 		
 		$scope.messages.clear();
@@ -201,7 +201,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.messages.open();	
 			
 			// data est l'experience retournée par input.java
-			// recuperer instrumentProperties 
+			
+			// 16/01/2017 recuperer instrumentProperties 
 			$scope.experiment.instrumentProperties= data.instrumentProperties;
 			
 			// et reagents ....
@@ -231,7 +232,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	$scope.button = {
 		isShow:function(){
-			// activer le bouton en mode edition ( que l'etat soit New ou InProgress..) mais pas en mode creation car l'experience n'existe pas encore
+			// activer le bouton en mode edition mais pas en mode creation car l'experience n'existe pas encore
 			return ( $scope.isEditMode() && ! $scope.isCreationMode() )
 			},
 		isFileSet:function(){

@@ -12,6 +12,9 @@
 			@formGroup{
 				<div bt-select placeholder="@Messages("experiments.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()">
 				</div>
+			}
+			@formGroup{	
+				<input class="form-control" type="text" ng-model="searchService.form.reagentOrBoxCode" placeholder='@Messages("experiment.placeholder.reagentOrBoxCode")' title='@Messages("experiment.placeholder.reagentOrBoxCode")'>		
 			}	
 			
 		}
@@ -28,7 +31,9 @@
 				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" multiple="true" ng-model="searchService.form.instruments" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name group by instrument.active|codes:'active' for instrument in searchService.lists.get('instruments-search-list')|orderBy:['-active','+name']" ng-disabled="!searchService.form.typeCode" >
 				</div>
 			}
-			
+			@formGroup{	
+				<div  class="form-control" bt-select ng-model="searchService.form.stateResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.resolutions")" bt-options="valid.code as valid.name for valid in searchService.lists.getResolutions()"></div>														
+			}			
 		}
 		@columnSearchForm{
 			@formGroup{	
@@ -38,9 +43,10 @@
 			@formGroup{
 				<bt-input  class="form-control" input-ng-model="searchService.form.containerSupportCodeRegex" textarea-ng-model="searchService.form.containerSupportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>						
 			}
-			@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.code" placeholder='@Messages("experiment.placeholder.code")' title='@Messages("experiment.placeholder.code")'>				
-			}		
+			@formGroup{
+				<bt-input  class="form-control" input-ng-model="searchService.form.containerCodeRegex" textarea-ng-model="searchService.form.containerCodes" placeholder='@Messages("search.placeholder.container")' ></bt-input>						
+			}
+					
 		}
 		@columnSearchForm{
 			@formGroup{	
@@ -50,10 +56,10 @@
 			@formGroup{			
 				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")' title='@Messages("experiment.placeholder.fromDate")'>
 			}
-			@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.reagentOrBoxCode" placeholder='@Messages("experiment.placeholder.reagentOrBoxCode")' title='@Messages("experiment.placeholder.reagentOrBoxCode")'>		
-			}
 			
+			@formGroup{	
+				<input class="form-control" type="text" ng-model="searchService.form.code" placeholder='@Messages("experiment.placeholder.code")' title='@Messages("experiment.placeholder.code")'>				
+			}
 		}
 		@columnSearchForm{
 			@formGroup{		

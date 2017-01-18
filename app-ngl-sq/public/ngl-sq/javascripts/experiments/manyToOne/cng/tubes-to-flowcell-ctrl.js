@@ -1,4 +1,4 @@
-/* 06/2017 ajout $http pour l'import de fichier cbot-2 */
+/* 06/01/2017 ajout $http pour l'import de fichier cbot-V2 */
 angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','atmToDragNDrop','$http',
                                                                function($scope, $parse, atmToDragNDrop, $http ) {
 	
@@ -125,7 +125,8 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experimentType.propertiesDefinitions);
 	
 	
-   /*06/2017 FDS ajout pour l'import du fichier Cbot-2 */
+   /* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2
+      16/01/2017 FDS reunion Prod=> NON pas pour les prep Flowcell 2000, ce n'est vrai que pour prep-flowcell-ordered pour l'instant....
 	var importData = function(){
 		
 		$scope.messages.clear();
@@ -176,5 +177,6 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 		},
 		click:importData,		
 	};
+	*/
 
 }]);

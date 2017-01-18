@@ -157,7 +157,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 
 		
-
+		Set<String> containerCodes = new TreeSet<String>();
 		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
 			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
 			
@@ -166,16 +166,26 @@ public class Experiments extends DocumentController<Experiment>{
 			keys.append("code", 1);
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerQuery,keys).toList();
 			
-			Set<String> containerCodes = new TreeSet<String>();
 			for(Container p : containers){
 				containerCodes.add(p.code);
-			}
-			
+			}			
+		}
+		
+		if(StringUtils.isNotBlank(experimentSearch.containerCode)){			
+			containerCodes.add(experimentSearch.containerCode);
+		}else if(CollectionUtils.isNotEmpty(experimentSearch.containerCodes)){			
+			containerCodes.addAll(experimentSearch.containerCodes);
+		}
+		
+		if(containerCodes.size() > 0){
 			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
-
 			qs.add(DBQuery.in("inputContainerCodes",containerCodes));
 			qs.add(DBQuery.in("outputContainerCodes",containerCodes));
-			
+			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
+		}else if(StringUtils.isNotBlank(experimentSearch.containerCodeRegex)){			
+			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			qs.add(DBQuery.regex("inputContainerCodes",Pattern.compile(experimentSearch.containerCodeRegex)));
+			qs.add(DBQuery.regex("outputContainerCodes",Pattern.compile(experimentSearch.containerCodeRegex)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}
 		
@@ -198,7 +208,9 @@ public class Experiments extends DocumentController<Experiment>{
 			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
 			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
-		}	
+		}
+		
+		
 
 		if(StringUtils.isNotBlank(experimentSearch.sampleCode)){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
@@ -235,6 +247,10 @@ public class Experiments extends DocumentController<Experiment>{
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerFromTransformationTypeCode)){
 			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));
+		}
+		
+		if (CollectionUtils.isNotEmpty(experimentSearch.stateResolutionCodes)) { //all
+			queryElts.add(DBQuery.in("state.resolutionCodes", experimentSearch.stateResolutionCodes));
 		}
 		
 		//queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));

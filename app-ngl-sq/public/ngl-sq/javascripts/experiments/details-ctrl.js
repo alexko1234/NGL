@@ -166,7 +166,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var form = {};
 			form.typeCode = $scope.experimentType.code;
-			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.categoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
 		}			
@@ -257,7 +257,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var form = {};
 			form.typeCode = $scope.experimentType.code;
-			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.categoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
 		}
@@ -1257,6 +1257,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			"edit":true,
 			"hide":false,
 			"type":"text",
+			"required":true,
 			"filter":"codes:'valuation'",
 			"choiceInList":true,
 			"listStyle":"bt-select",
@@ -1271,6 +1272,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			"edit":true,
 			"hide":false,
 	    	"type":"text",
+	    	"required":true,
 	    	"choiceInList":true,
 		    "listStyle":"radio",
 		    "possibleValues":"getDispatchValues()",
@@ -1717,7 +1719,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			if(dispatchValues === undefined){
 				dispatchValues = [];
-				for(var i = 0; i <= 6 ; i++){
+				for(var i = 0; i <= 7 ; i++){
 					if($scope.experimentType.atomicTransfertMethod !== "OneToMany" || 
 							($scope.experimentType.atomicTransfertMethod === "OneToMany" && i !== 5)){
 						dispatchValues.push({"code":i,"name":Messages("containers.dispatch.value."+i)});
@@ -1739,7 +1741,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							//extract the node to have their configuration
 							$http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.get(fromTransformationTypeCode).url)
 								.success(function(data, status,headers,config){
-									for(var i = 0; i <= 6 ; i++){
+									for(var i = 0; i <= 7 ; i++){
 										if((i === 1 && data.doTransfert) || 
 												(i === 2 && data.doQualityControl) || 
 													(i === 3 && data.doPurification) ||

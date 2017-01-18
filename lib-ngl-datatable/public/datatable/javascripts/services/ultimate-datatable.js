@@ -2554,6 +2554,9 @@ angular.module('ultimateDataTableServices')
 	    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
 		    	  }				    	  
 		      });
+		      elem.on('click', function() {
+    			  elem[0].value=null;
+    		  });
 		 }
 		};
 		}]).directive('udtBase64File', [function () {
@@ -2625,7 +2628,9 @@ angular.module('ultimateDataTableServices')
 	    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
 		    	  }				    	  
 		      });
-		      
+    		  elem.on('click', function() {
+    			  elem[0].value=null;
+    		  });
 		      
 		 }
 		};
@@ -2953,7 +2958,7 @@ directive("udtCell", function(){
 	    					editElement = "Edit Not Defined for col.type !";
 	    				}
 	    				//return '<div class="form-group"  ng-class="{\'has-error\': value.line.errors[\''+col.property+'\'] !== undefined}">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
-	    				return '<div class="form-group"  ng-class="udtTableFunctions.getValidationClass(\'subForm\'+value.line.id, col)">'+editElement+'</div>';
+	    				return '<div class="form-group"  ng-class="udtTableFunctions.getValidationClass(\'subForm\'+value.line.id, col)">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
 		    			
 	    			};
 
@@ -3451,6 +3456,15 @@ directive('udtTable', function(){
   		    		if(scope.udtTable && scope["datatableForm"]){
   		    			scope.udtTable.formController = scope["datatableForm"];
   		    		}
+  		    		
+  		    		scope.$watch("udtTable", function(newValue, oldValue) {
+  		    			if(newValue && newValue !== oldValue && scope["datatableForm"]){
+  		    				scope.udtTable.formController = scope["datatableForm"];
+  		    			}
+		            });
+  		    		
+  		    		
+  		    		
   		    		scope.udtTableFunctions.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
   		    			scope.udtModalImage = {};
   		    			scope.udtModalImage.modalImage = imageData;
@@ -3629,8 +3643,8 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
   		    		if(!attr.ultimateDatatable) return;
   		    		
   		    		scope.$watch(attr.ultimateDatatable, function(newValue, oldValue) {
-  		    			if(newValue && (newValue !== oldValue || !scope.udtTable)){
-  		    				scope.udtTable = $parse(attr.ultimateDatatable)(scope);
+  		    			if(newValue && newValue !== oldValue){
+  		    				scope.udtTable = newValue;
   		    			}
 		            });
   		    		

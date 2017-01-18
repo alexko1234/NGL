@@ -24,6 +24,7 @@ public class ProcessesSearchForm extends ListForm{
 	
 	public String stateCode;
 	public Set<String> stateCodes;
+	public List<String> stateResolutionCodes;
 	public String containerSupportCategory;
 	public Date fromDate;
 	public Date toDate;

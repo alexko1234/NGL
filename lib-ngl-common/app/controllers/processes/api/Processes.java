@@ -190,6 +190,10 @@ public class Processes extends DocumentController<Process> {
 			Logger.debug("Nb containers find"+containers.size());
 		}
 
+		if (CollectionUtils.isNotEmpty(processesSearch.stateResolutionCodes)) { //all
+			queryElts.add(DBQuery.in("state.resolutionCodes", processesSearch.stateResolutionCodes));
+		}
+		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(processesSearch.properties, Level.CODE.Process, "properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(processesSearch.sampleOnInputContainerProperties, Level.CODE.Content, "sampleOnInputContainer.properties"));
 
