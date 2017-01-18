@@ -107,6 +107,7 @@ public class Process extends DBObject implements IValidation{
 		p.inputContainerSupportCode = this.inputContainerSupportCode;
 		p.inputContainerCode = this.inputContainerCode;
 		p.state = this.state;
+		p.comments = this.comments;
 		return p;
 	}
 
