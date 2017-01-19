@@ -119,6 +119,7 @@ public class MetaGenomique extends AbstractDeclaration {
 		l.add(DescriptionFactory.newProcessType("PCR Free", "pcr-free-process", ProcessCategory.find.findByCode("library"), 34,
                 getPropertiesPCRFree(),
                 Arrays.asList(getPET("ext-to-pcr-free-process",-1)
+                				,getPET("dna-rna-extraction",-1)
                                 , getPET("fragmentation",0)
                                 , getPET("dna-illumina-indexed-library",1)
                                 , getPET("solution-stock",2)
