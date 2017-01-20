@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
@@ -40,21 +42,41 @@ import validation.ContextValidation;
 public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	public static String adminComment = "Creation dans le cadre d'une reprise d'historique"; 
 
+	
 	//@Test
-	public void repriseHistoriqueSamplesTest() throws IOException, SraException {
-		//File xmlSample = new File("/env/cns/submit_traces/SRA/NGL_test/test_xml/sample.xml");
-		//File acSampleFile = new File("/env/cns/submit_traces/SRA/NGL_test/test_xml/acFile.xml");
-		File xmlSample = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_samples_AC_cns.xml");
+	public void repriseHistoSamplesTest() throws IOException, SraException {
+		/*File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_extract_samples_1.xml");
+		_repriseHistoriqueSamplesTest(xmlSample);
+		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_extract_samples_2.xml");
+		_repriseHistoriqueSamplesTest(xmlSample);
+		*/
+		//File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/list_samples_AXD_BDZ.xml");
+		//_repriseHistoriqueSamplesTest(xmlSample);
+
+	}
+	
+	private void _repriseHistoriqueSamplesTest(File xmlSample) throws IOException, SraException {
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try{
 			List<Sample> listSamples = repriseHistorique.forSamples(xmlSample, user);
 			System.out.println("retour dans repriseHistoriqueSamplesTest avec " + listSamples.size() + " samples");
 			List<Sample> listSamplesToSave = new ArrayList<Sample>();
-
+			String pattern = "TARA_([A-Z]{2,3})(_|-)";
+			java.util.regex.Pattern p = Pattern.compile(pattern);
 			// Verifier la validité des samples
 			for (Sample sample : listSamples) {
-
+				// enlever les samples TARA soumis par Pesant. Attention nous avons soumis des samples TARA dans le projet BCM et ALP
+				// samples Pesant de la forme TARA_Y110001358
+				// samples Tara soumis par CNS de la forme TARA_BCB_ABBI ou TARA_ALP_KC
+				if (sample.code.startsWith("TARA")){
+					Matcher m = p.matcher(sample.code);
+					if ( !m.find() ) {
+						//System.out.println("#### abandon du sampleCode = "+ sample.code);
+						continue;
+					} 
+				}
+						
 				// enlever les samples nanopores du projet BCM qui ont un status cancelled à l'EBI :
 				if ( sample.code.equals("sample_ABH")||sample.code.equals("sample_ADM")||sample.code.equals("sample_ADQ")||
 					 sample.code.equals("sample_ADS")||sample.code.equals("sample_AEG")||sample.code.equals("sample_AKR")||
@@ -64,13 +86,14 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					 sample.code.equals("sample_CBM")||sample.code.equals("sample_CEI")||sample.code.equals("sample_CFA")||
 					 sample.code.equals("sample_CFF")||sample.code.equals("sample_CIC")||sample.code.equals("sample_CNT")||
 					 sample.code.equals("sample_CRV")){
-					System.out.println("**************************abandon du sampleCode = "+ sample.code);
+					//System.out.println("#### abandon du sampleCode = "+ sample.code);
 					continue;
-					 } else {
-						 if (! listSamplesToSave.contains(sample)){
-							 listSamplesToSave.add(sample);
-						 }
-					 }
+					 } 
+						
+				if (! listSamplesToSave.contains(sample)){
+					listSamplesToSave.add(sample);
+				}
+			
 				if (sample.code.equals("AQS_1")){
 					sample.projectCode = "AQS";
 				}
@@ -140,7 +163,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 			for (Sample sample : listSamplesToSave) {
 				if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "code", sample.code)){	
 					MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sample);
-					System.out.println ("ok pour sauvegarde dans la base du sample " + sample.code);
+					//System.out.println ("ok pour sauvegarde dans la base du sample " + sample.code);
 				}
 			}
 		}catch (IOException e) {
@@ -154,7 +177,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	
 	//@Test
 	public void repriseHistoriqueStudiesTest() throws IOException, SraException {
-		File xmlStudy = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_studies_AC.xml");
+		File xmlStudy = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_studies.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
@@ -251,10 +274,11 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		} 
 	}
 	
-	@Test
+	//@Test
 	public void repriseHistoriqueExperimentsTest() throws IOException, SraException {
 
-		File xmlExperiment = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_u_experiments_AC.xml");
+		//File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_experiments.xml");
+		File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/list_experiments_AXD_BDZ.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
@@ -266,6 +290,13 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 			int count = listExperiments.size();
 			int cp = 0;
 			for (Experiment experiment : listExperiments) {
+				// Ecarter l'experiment exp_KY_LOSU_2_81DHTABXX qui a ete soumis et a recu le numeros d'accession ERX240825 sans que le run
+				// correspondant ait recu un numeros d'accession. => on considere que le readset KY_LOSU_2_81DHTABXX n'a pas ete soumis puisqu'aucune
+				// donnée brute (fichiers associés au run n'a ete soumis).
+				if (experiment.code.equals("exp_KY_LOSU_2_81DHTABXX")){
+					System.out.println("experiment exp_KY_LOSU_2_81DHTABXX du projet KY ignore");
+					continue;
+				}
 				cp ++;
 				
 				/*System.out.println("dans repriseHistoriqueExperimentsTest => experiment : " + experiment.code);
@@ -643,11 +674,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 							}
 
 						}
-					
-						
-						
-
-						
+											
 					} else {
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 							DBQuery.is("code", experiment.readSetCode),
@@ -686,7 +713,8 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	
 	//@Test
 	public void repriseHistoriqueRunsTest() throws IOException, SraException {
-		File xmlRun = new File("/env/cns/submit_traces/SRA/repriseHistorique/database/ebi_runs.xml");
+		//File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_runs.xml");
+		File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/list_runs_AXD_BDZ.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
