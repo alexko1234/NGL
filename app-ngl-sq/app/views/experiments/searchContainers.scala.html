@@ -14,6 +14,11 @@
 			@formGroup{
 				<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true"  textarea="true" filter="true" textarea="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="resetSampleCodes()"></div>
 			}
+			@formGroup{
+				<div class="form-control" bt-select ng-model="searchService.form.fromPurificationTypeCodes" multiple="true"  placeholder="@Messages("containers.select.fromPurificationCode")"
+										bt-options="expType.code as expType.name for expType in searchService.lists.get('purification',true)">
+				</div>				
+			}
 					
 		}
 		@columnSearchForm{
@@ -29,6 +34,11 @@
 			@formGroup{		
 				<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true"   textarea="true"filter="true" textarea="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="refreshSamples()"></div>			
 			}
+			@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.fromTransfertTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromTransfertCode")" 
+							bt-options="expType.code as expType.name for expType in searchService.lists.get('transfert',true)">
+			</div>
+		}	
 		}
 		@columnSearchForm{
 			@formGroup{	
