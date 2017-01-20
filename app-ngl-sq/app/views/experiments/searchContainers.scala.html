@@ -46,6 +46,7 @@
 				<bt-input  class="form-control" input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")'></bt-input>	
 				
 			}
+			
 		}
 		@columnSearchForm{
 			@formGroup{	
@@ -57,10 +58,9 @@
 				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containerSupports.placeholder.toDate")' title='@Messages("containerSupports.placeholder.toDate")'>
 			}
 			@formGroup{
-				<div class="form-control" bt-select ng-model="searchService.form.fromTransformationTypeCodes" multiple="true" placeholder="@Messages("containerSupports.table.fromTransformationTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in searchService.lists.get('fromTransformation')">
-				</div>	
-		}
+				<bt-input  class="form-control"  input-ng-model="searchService.form.codeRegex" textarea-ng-model="searchService.form.codes" placeholder='@Messages("search.placeholder.container")' ></bt-input>									
+			}
+			
 						
 		}
 		@columnSearchForm{
@@ -74,9 +74,10 @@
 									
 			}
 			@formGroup{
-				
-			
-		}
+				<div class="form-control" bt-select ng-model="searchService.form.fromTransformationTypeCodes" multiple="true" placeholder="@Messages("containerSupports.table.fromTransformationTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in searchService.lists.get('fromTransformation')">
+				</div>	
+			}
 		}
 }
 @buttons() = {
