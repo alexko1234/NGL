@@ -68,8 +68,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
-		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();
-System.out.println(">>>>SAVING INSTRUMENT USED TYPES");		
+		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();		
 		
 		// 27/07/2016 la main peut traiter deas plaques en entree ET en sortie
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
@@ -82,12 +81,17 @@ System.out.println(">>>>SAVING INSTRUMENT USED TYPES");
 	    /** cBots and sequencers **/	
 		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
 				getInstruments(
-						// 16/01/2017cbot type V-1 desactivées (plus sur site)
+						// 16/01/2017 cbot ancienne version desactivées (plus aucune sur site)
 						createInstrument("cBot1", "cBot1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot2", "cBot2", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot3", "cBot3", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot4", "cBot4", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
-						
+						createInstrument("cBot4", "cBot4", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		// 23/01/2017 separation des cbot-V2 pour mieux gerer leur proprietes	
+		l.add(newInstrumentUsedType("cBot-V2", "cBotV2", InstrumentCategory.find.findByCode("cbot"), getCBotV2Properties(), 
+				getInstruments(
 						// 19/09/20167 ajout 6 cbots V-2: possibilité de lire le code barre du strip...
 						createInstrument("cBotA", "cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBotB", "cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -261,10 +265,20 @@ System.out.println(">>>>SAVING INSTRUMENT USED TYPES");
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
-		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot  **/
+		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot ; **/
+		
 		l.add(newInstrumentUsedType("Janus + cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
 				getInstruments(
-						// 4/10/2016 les cBots V-1 sont remplacées par les cBot V-2
+						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		/** FDS 23/01/2017 ajout Janus + cBot-V2 **/
+		l.add(newInstrumentUsedType("Janus + cBot-V2", "janus-and-cBotV2", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotV2Properties(), 
+				getInstruments(
 						createInstrument("janus1-and-cBotA", "Janus1 / cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBotB", "Janus1 / cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBotC", "Janus1 / cBotC", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -298,29 +312,50 @@ System.out.println(">>>>SAVING INSTRUMENT USED TYPES");
 	/*** get properties methods ***/
 
 	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		// 17/01/2017 numérotation des propriétés (voir aussi  getJanusAndCBotProperties)
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true, null, DescriptionFactory.newValues("SR","PE"),"single", 70,true,null,null));
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true,null, null,"single", 80,true,null,null));         
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null, DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+		// 17/01/2017 numérotation des propriétés
+        l.add(newPropertiesDefinition("Type lectures","sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true, null, DescriptionFactory.newValues("SR","PE"),"single", 70,true,null,null));
+        l.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true,null, null,"single", 80,true,null,null));         
+        l.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null, DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
         		"2","3","4","5","6","7","8"),"single", 90,true,"Pas de piste contrôle (auto-calibrage)", null));     
 
-        return propertyDefinitions;
+        return l;
 	}
 
 	
 	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		// strictement la meme liste que cBot standard!!
-        propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+		/* 23/01/2017 strictement la meme liste que cBot standard!! simplification...
+		 
+        l.add(newPropertiesDefinition("Type lectures","sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+        l.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+        l.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
         		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
+        */
         
-        return propertyDefinitions;
+		l.addAll(getCBotProperties());
+		
+        return l;
 	}
+	
+	// 23/01/2017 creation methode distincte...
+	private static List<PropertyDefinition> getCBotV2Properties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		// propriete des V1
+		l.addAll(getCBotProperties());
+		
+		// proprietes specifiques V2
+		
+        l.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null, null, "single", 60, true, null,null));
+    	// fichier generé cbotRunFile" (NON editable, obligatoire a l'état Terminé)
+        l.add(newPropertiesDefinition("Fichier cBot", "cbotFile", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "F", null, "single", 150, false ,null,null));
+       
+        return l;
+	}
+	
 
 	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -522,7 +557,7 @@ System.out.println(">>>>SAVING INSTRUMENT USED TYPES");
 	
 	
 	//FDS 22/03/2016 ajout Janus+cbot --JIRA NGL-982
-	//    17/01/2017 numérotation des propriétés
+	//    17/01/2017 numérotation des propriétés;
 	 private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
@@ -531,22 +566,34 @@ System.out.println(">>>>SAVING INSTRUMENT USED TYPES");
 		
 		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				newValues("1","2","3","4"), "single", 50, true ,null, null));
-				
-		// FDS 16/01/2017 uniquement pour la combinaison Janus+Cbot= > strip barcode scanné : "stripCode"
-        l.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null, null, "single", 60, true, null,null));
-        
-    	// FDS 16/01/2017 uniquement pour la combinaison Janus+Cbot= >  fichier generé par la cbot-V2 : "cbotRunFile" (NON editable, obligatoire a l'état Terminé)
-        l.add(newPropertiesDefinition("Fichier cBot", "cbotFile", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "F", null, "single", 150, false ,null,null));
-        
+		
         // propriété de container in !!!
         l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
 				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true , null, null));
-		
-        // ajouter les propriétés des cBots
+				
 		l.addAll(getCBotProperties());
 		
 		return l;
 	}
+	 
+	//FDS 23/01/2017 ajout Janus+cbot-V2
+	private static List<PropertyDefinition> getJanusAndCBotV2Properties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+			
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				 newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
+			
+		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				newValues("1","2","3","4"), "single", 50, true ,null, null));
+			
+	    // propriété de container in !!!
+	    l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
+				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true , null, null));
+					
+	    l.addAll(getCBotV2Properties());
+			
+		return l;
+	} 
 	 
 	//FDS 04/10/2016 ajout EpMotion
 	private static List<PropertyDefinition> getEpMotionProperties() throws DAOException {
