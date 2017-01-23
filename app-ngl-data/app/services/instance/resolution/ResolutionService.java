@@ -827,7 +827,9 @@ public class ResolutionService {
 			l.add(InstanceFactory.newResolution("Arrêt - échec run","stop-pb-run", resolutionCategories.get("Default"), (short) 16));
 			
 			l.add(InstanceFactory.newResolution("Processus partiel (=> Standby)","processus-partiel", resolutionCategories.get("Default"), (short) 17));
-			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser (MUST BE REPLACE)","stop-resynthétiser", resolutionCategories.get("Default"), (short) 18));
+			l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier  (MUST BE REPLACE)","stop-reamplifier", resolutionCategories.get("Default"), (short) 18));
+			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser (MUST BE REPLACE)","stop-resynthétiser", resolutionCategories.get("Default"), (short) 19));
+			
 		}
 		
 		
