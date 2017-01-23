@@ -202,19 +202,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),   // Pas encore en PROD... 30/11/2016 ajout janus...getInstrumentUsedTypes("hand","janus"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-					
+			
+			// il n'y a plus de Cbot non V2...
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellCNG(),
-					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
+					getInstrumentUsedTypes("cBotV2", "cBot-onboard"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard
-			//FDS modif 29/03/2016 -- JIRA NGL-893: ajout instrument janus-and-cBot
+			//FDS modif 29/03/2016 -- JIRA NGL-893: ajout instrument janus-and-cBot; 
+			//FDS modif 23/01/2017 modif janus-and-cBot=>  janus-and-cBotV2, il n'y a lus de Cbot non V2...
 			l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellOrderedCNG(),
-					getInstrumentUsedTypes("cBot","janus-and-cBot"),
+					getInstrumentUsedTypes("cBotV2","janus-and-cBotV2"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	

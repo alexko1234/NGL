@@ -1,4 +1,4 @@
-package controllers.instruments.io.cng.cbotAlone;
+package controllers.instruments.io.cng.cbotV2Alone;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,7 +39,7 @@ import controllers.instruments.io.utils.InputHelper;
 
 
 
-public class CbotAloneInput extends AbstractInput {
+public class CbotV2AloneInput extends AbstractInput {
 	
    /* FDS 06/01/207 Description du fichier a traiter: XML généré par Cbot II:
     <?xml version="1.0" encoding="utf-16"?>
@@ -63,7 +63,6 @@ public class CbotAloneInput extends AbstractInput {
 	     
 	      try {
 	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
-	    	 
 	    	 // le fichier produit par Illumina n'est PAS en UTF-16 malgré l'entete <?xml version="1.0" encoding="utf-16"?>
 	    	 // mais en UTF-8 !!! il faut donc remettre la valeur correcte
 	    	 InputSource is = new InputSource(inputStream);
@@ -132,15 +131,13 @@ public class CbotAloneInput extends AbstractInput {
 	        		 cbot = sb.toString();
 	        		 //System.out.println("(2) cbot:" + cbot);
 	        		 
-	        		 // 16/01/2016 reunion Prod=> uniquement pour "janus-and-cBot"
-	        		 //if (experiment.instrument.typeCode.equals("cBot"))
-	        		 //{
-	        			 // l'instrument est une cbot seule
-	        			// if ( ! cbot.toUpperCase().equals(experiment.instrument.code.toUpperCase()) ) {
-	        			//	 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas a la cBot sélectionnée");
-	        			// }
-	        		 //} else 
-	        		 if (experiment.instrument.typeCode.equals("janus-and-cBot")) {
+	        		 if (experiment.instrument.typeCode.equals("cBotV2"))
+	        		 {
+	        			// l'instrument est une cbot seule
+	        			 if ( ! cbot.toUpperCase().equals(experiment.instrument.code.toUpperCase()) ) {
+	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas a la cBot sélectionnée");
+	        			 }
+	        		 } else if (experiment.instrument.typeCode.equals("janus-and-cBotV2")) {
 	        			 
 	        			 //l'instrument code  est 'janus-and-cbotX' 
 	        			 String[] janusAndCbot=experiment.instrument.code.split("-");
@@ -159,14 +156,14 @@ public class CbotAloneInput extends AbstractInput {
 	         //-2- s'il existe, verifier le barcode Flowcell 
 	         if (flowcellId.length() > 0 ) {
 	        	 if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
-	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier ne correspond pas");
+	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier ne correspond pas à ce qui est déclaré");
 	        	 }
 			 }
 	         
 	         //-3- s'il existe, vérifier le barcode Strip
 	         if (stripId.length() > 0 ){
 		         if ( ! experiment.instrumentProperties.get("stripCode").value.equals(stripId))  {
-					 contextValidation.addErrors("Erreurs fichier", "Le barcode strip du fichier ne correspond pas");
+					 contextValidation.addErrors("Erreurs fichier", "Le barcode strip du fichier ne correspond pas à ce qui est déclaré");
 				 }
 	         }
 		      

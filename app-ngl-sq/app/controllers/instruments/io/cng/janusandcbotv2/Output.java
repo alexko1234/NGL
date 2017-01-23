@@ -1,4 +1,4 @@
-package controllers.instruments.io.cng.janusandcbot;
+package controllers.instruments.io.cng.janusandcbotv2;
 
 
 
@@ -7,7 +7,7 @@ import java.util.Date;
 
 import models.laboratory.experiment.instance.Experiment;
 import validation.ContextValidation;
-import controllers.instruments.io.cng.janusandcbot.tpl.txt.sampleSheet_1;
+import controllers.instruments.io.cng.janusandcbotv2.tpl.txt.sampleSheet_1;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
