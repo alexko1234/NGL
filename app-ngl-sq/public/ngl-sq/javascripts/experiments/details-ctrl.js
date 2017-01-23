@@ -166,10 +166,38 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var form = {};
 			form.typeCode = $scope.experimentType.code;
-			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.categoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
 		}			
+	};
+	
+	$scope.askDeleteExperiment = function(){
+		
+		angular.element('#deleteModal').modal('show');
+		
+	};
+	
+	$scope.deleteExperiment = function(){
+		$scope.messages.clear();
+		$http.delete(jsRoutes.controllers.experiments.api.Experiments.delete($scope.experiment.code).url)
+			.success(function(data, status, headers, config) {
+				//$scope.messages.setSuccess("remove");	
+				angular.element('#deleteModal').on('hidden.bs.modal', function (e) {
+					console.log("call when hide ok");
+					$scope.$apply(function(scope){
+						tabService.activeTab(tabService.getTab(0),true);
+						tabService.removeTab(1);
+					});
+				});
+				angular.element('#deleteModal').modal('hide');
+				
+			}).error(function(data, status, headers, config) {
+				$scope.messages.setError("remove");
+				$scope.messages.setDetails(data);
+				angular.element('#deleteModal').modal('hide');						
+		});
+			
 	};
 	
 	$scope.save = function(callbackFunction){
@@ -257,13 +285,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var form = {};
 			form.typeCode = $scope.experimentType.code;
-			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.categoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
 		}
 		
 		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
 	}
+	
+	$scope.$on('askRefreshReagents',function(){
+		$scope.$broadcast('refreshReagents');
+	}); 
 	
 	$scope.$on('childSaved', function(e, callbackFunction) {
 		
@@ -1049,6 +1081,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}
 	
 	});
+	
+	$scope.$on('refreshReagents', function(e, callbackFunction) {	
+		console.log("call refresh reagents");
+		if (angular.isDefined($scope.experiment)){
+			if($scope.experiment.reagents === null || $scope.experiment.reagents === undefined || $scope.experiment.reagents.length === 0){
+				$scope.datatableReagent.setData([]);				
+			}else{
+				$scope.datatableReagent.setData($scope.experiment.reagents);
+			}
+		}
+	});
 
 	$scope.$on('saveReagents', function(e, callbackFunction) {	
 		$scope.datatableReagent.save()
@@ -1242,6 +1285,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			"edit":true,
 			"hide":false,
 			"type":"text",
+			"required":true,
 			"filter":"codes:'valuation'",
 			"choiceInList":true,
 			"listStyle":"bt-select",
@@ -1256,6 +1300,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			"edit":true,
 			"hide":false,
 	    	"type":"text",
+	    	"required":true,
 	    	"choiceInList":true,
 		    "listStyle":"radio",
 		    "possibleValues":"getDispatchValues()",
@@ -1702,7 +1747,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			if(dispatchValues === undefined){
 				dispatchValues = [];
-				for(var i = 0; i <= 6 ; i++){
+				for(var i = 0; i <= 7 ; i++){
 					if($scope.experimentType.atomicTransfertMethod !== "OneToMany" || 
 							($scope.experimentType.atomicTransfertMethod === "OneToMany" && i !== 5)){
 						dispatchValues.push({"code":i,"name":Messages("containers.dispatch.value."+i)});
@@ -1724,7 +1769,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							//extract the node to have their configuration
 							$http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.get(fromTransformationTypeCode).url)
 								.success(function(data, status,headers,config){
-									for(var i = 0; i <= 6 ; i++){
+									for(var i = 0; i <= 7 ; i++){
 										if((i === 1 && data.doTransfert) || 
 												(i === 2 && data.doQualityControl) || 
 													(i === 3 && data.doPurification) ||

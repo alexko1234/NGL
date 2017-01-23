@@ -350,7 +350,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
         //$scope.poolingModes.push({code: 'IS6', name:'Ill Sing 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'L'});
     	$scope.poolingModes.push({code: 'ID4', name:'Ill Dual 4-p', poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
     	$scope.poolingModes.push({code: 'ID6', name:'Ill Dual 6-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
-    	$scope.poolingModes.push({code: 'ID8', name:'Ill Dual 8-p', poolPlex: 6, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
+    	$scope.poolingModes.push({code: 'ID8', name:'Ill Dual 8-p', poolPlex: 8, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});
 
     } else if ( $scope.experiment.instrument.typeCode === "epmotion") {	 	
     	$scope.poolingModes.push ( {code: 'C4',  name:'Col 4-p',  poolPlex: 4, startLine:'A', startColumn: 1, endLine:'H', endColumn:12, numtype:'C'});

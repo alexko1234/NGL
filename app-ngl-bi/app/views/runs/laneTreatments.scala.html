@@ -1,8 +1,11 @@
-@(code: String) @if(code == "ngsrg-illumina") {
+@(code: String) 
+
+@if(code == "ngsrg-illumina") {
 <div ng-controller="LanesNGSRGIlluminaCtrl" ng-init="init()">
 	<div ultimate-datatable="lanesNGSRG"></div>
 </div>
-} @if(code == "sav") {
+} 
+@if(code == "sav") {
 
 
 <div ng-controller="LanesSAVCtrl" ng-init="init()">
@@ -34,6 +37,53 @@
 	<div ultimate-datatable="lanesSAVR1" style="overflow-x: auto"></div>
 	<div ultimate-datatable="lanesSAVR2" style="overflow-x: auto"></div>
 </div>
+
+}
+@if(code == "topindex"){
+
+<div class=row>
+<ul class="nav nav-tabs margin-bottom-5">
+	<li class="active"><a href="#" data-target="#topIndex" data-toggle="tab">@Messages("runs.treatments.topIndex")</a></li>
+	<li><a href="#" data-target="#tilesStats" data-toggle="tab">@Messages("runs.treatments.tilesStats")</a></li>    
+</ul>
+<div class="tab-content">
+	<div class="tab-pane active" id="topIndex" >
+		<div class="col-md-10 col-lg-10">
+			<div ng-repeat="lane in run.lanes" class="row" style="overflow-x: auto">
+				<h4><span class="label label-info">Lane {{lane.number}}</span></h4>
+				<table class="table table-condensed table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>@Messages("runs.treatments.topIndex.unknownIndex.sequence")</th>
+							<th>@Messages("runs.treatments.topIndex.unknownIndex.percent")</th>
+							<th ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | unique:'expectedIndexName' | orderBy:'expectedIndexName'">
+								@Messages("runs.treatments.topIndex.distance") / {{value.expectedIndexName}}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="unknownIndex in lane.treatments.topIndex.default.unknownIndex.value">
+							<td>{{unknownIndex.sequence}}</td>
+							<td>{{unknownIndex.percent | number:2}}</td>
+							<td ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | filter:{unknownIndexSequence:unknownIndex.sequence} | orderBy:'expectedIndexName'">
+								{{value.distanceFromExpectedIndex | number}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="tab-pane" id="tilesStats">
+		<div class="col-md-14 col-lg-14">
+		    <img id="default_tilesStats" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/>
+	    </div>
+	 </div>
+	</div>
+		
+		 	<!-- <img id="tilesStatsId" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/> -->
+</div>
+
 }
 
 @column()(value: Html) = {

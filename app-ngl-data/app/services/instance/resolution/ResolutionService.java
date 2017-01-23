@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.typesafe.config.ConfigFactory;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.resolutions.instance.Resolution;
@@ -79,6 +81,7 @@ public class ResolutionService {
 			createGelMigrationResolutionCNS(ctx);
 			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
 			createProcessResolutionCNS(ctx);
+			createContainerResolutionCNS(ctx);
 		}
 		else if ( inst.equals("TEST") ){		
 			resolutionCategories = createResolutionCategoriesCNS();
@@ -88,11 +91,6 @@ public class ResolutionService {
 		}
 	}
 
-
-	
-
-	
-	
 
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
@@ -798,14 +796,40 @@ public class ResolutionService {
 	// FDS 23/11/2016 NGL-1158: renommage pour separation des resolutions de Processus entre CNG et CNS
 	public static void createProcessResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
-
-		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
-		l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
-		l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
-		l.add(InstanceFactory.newResolution("Arrêt - à ré-extraire","stop-reextraire", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
-		l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
-		l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+			/* OLD*/
+			l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
+			l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
+			l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
+			l.add(InstanceFactory.newResolution("Arrêt - à ré-extraire","stop-reextraire", resolutionCategories.get("Default"), (short) 4));
+			l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
+			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
+			l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
+			
+		
+		} else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
+			//NEW 17/01/2017
+			l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
+			l.add(InstanceFactory.newResolution("Standby","standby", resolutionCategories.get("Default"), (short) 2));
+			l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
+			l.add(InstanceFactory.newResolution("Arrêt - pb broyage","stop-pb-broyage", resolutionCategories.get("Default"), (short) 4));
+			l.add(InstanceFactory.newResolution("Arrêt - pb cryobroyeur","stop-pb-cryobroyeur", resolutionCategories.get("Default"), (short) 5));
+			l.add(InstanceFactory.newResolution("Arrêt - pb extraction ADN/ARN","stop-pb-extraction", resolutionCategories.get("Default"), (short) 6));
+			l.add(InstanceFactory.newResolution("Arrêt - pb bq RNA","stop-pb-bq-rna", resolutionCategories.get("Default"), (short) 7));
+			l.add(InstanceFactory.newResolution("Arrêt - pb synthèse cDNA","stop-pb-synthese-cdna", resolutionCategories.get("Default"), (short) 8));
+			l.add(InstanceFactory.newResolution("Arrêt - pb fragmentation","stop-pb-fragmentation", resolutionCategories.get("Default"), (short) 9));
+			l.add(InstanceFactory.newResolution("Arrêt - pb prep Tag","stop-pb-prep-tag", resolutionCategories.get("Default"), (short) 10));
+			l.add(InstanceFactory.newResolution("Arrêt - pb bq DNA","stop-pb-bq-dna", resolutionCategories.get("Default"), (short) 11));
+			l.add(InstanceFactory.newResolution("Arrêt - pb PCR amplif","stop-pb-pcr-ampli", resolutionCategories.get("Default"), (short) 12));
+			l.add(InstanceFactory.newResolution("Arrêt - pb sizing sur gel","stop-pb-sizing-gel", resolutionCategories.get("Default"), (short) 13));
+			l.add(InstanceFactory.newResolution("Arrêt - pb Ampure/SpriSelect","stop-pb-ampure-spriselect", resolutionCategories.get("Default"), (short) 14));
+			l.add(InstanceFactory.newResolution("Arrêt - pb sol stock","stop-pb-sol-stock", resolutionCategories.get("Default"), (short) 15));
+			l.add(InstanceFactory.newResolution("Arrêt - échec run","stop-pb-run", resolutionCategories.get("Default"), (short) 16));
+			
+			l.add(InstanceFactory.newResolution("Processus partiel (=> Standby)","processus-partiel", resolutionCategories.get("Default"), (short) 17));
+			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser (MUST BE REPLACE)","stop-resynthétiser", resolutionCategories.get("Default"), (short) 18));
+		}
+		
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";
@@ -873,5 +897,22 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Echec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 3));	
 
 		return l;
+	}
+	
+	
+	public static void createContainerResolutionCNS(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+
+		l.add(InstanceFactory.newResolution("Sauvegarde prod","prod-backup", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "containerReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Container";
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 }

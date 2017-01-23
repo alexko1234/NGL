@@ -170,6 +170,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("Villefranche", "Villefranche"));
 		values.add(DescriptionFactory.newValue("Ohio", "Ohio"));
 		values.add(DescriptionFactory.newValue("Weizmann", "Weizmann"));
+		values.add(DescriptionFactory.newValue("LSCE", "LSCE"));
 		
 		return values;	
 	}
@@ -226,6 +227,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("AI", "IMG-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
+		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
 		return values;	
 	}
 	

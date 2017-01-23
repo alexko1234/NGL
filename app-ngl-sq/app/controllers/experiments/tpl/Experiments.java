@@ -140,6 +140,7 @@ public class Experiments extends CommonController{
 	      		controllers.experiments.api.routes.javascript.Experiments.list(),
 	      		controllers.experiments.api.routes.javascript.Experiments.get(),
 	      		controllers.experiments.api.routes.javascript.Experiments.save(),
+	      		controllers.experiments.api.routes.javascript.Experiments.delete(),
 	      		controllers.experiments.api.routes.javascript.Experiments.update(),
 	      		controllers.experiments.api.routes.javascript.Experiments.updateState(),
 	      		controllers.experiments.api.routes.javascript.ExperimentComments.save(),

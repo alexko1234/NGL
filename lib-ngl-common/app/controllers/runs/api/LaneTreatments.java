@@ -13,6 +13,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import play.data.Form;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.CommonController;
@@ -65,6 +66,7 @@ public class LaneTreatments extends RunsController{
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result save(String runCode, Integer laneNumber){
 		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
@@ -96,6 +98,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result update(String runCode, Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 

@@ -61,9 +61,9 @@ public class MigrationInputExperimentPropertiesTreeOfLife extends MigrationExper
 				
 				PropertyValue propValue = input.experimentProperties.get(newKeyProperty);
 				//add property to contents properties to inputContainerUsed
-				updateContainerContents(input, newKeyProperty, propValue);
+				//updateContainerContents(input, newKeyProperty, propValue);
 				
-				updateContainer(input.code, newKeyProperty, propValue, false);
+				//updateContainer(input.code, newKeyProperty, propValue, false);
 				
 				updateOutputContainerTreeOfLife(output, sampleCode, tag, newKeyProperty, propValue, false);
 				

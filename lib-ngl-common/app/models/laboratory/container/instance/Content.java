@@ -32,8 +32,8 @@ public class Content implements IValidation{
 	public Map<String,PropertyValue> properties;
 
 	/* Put process properties to analyse container*/
-	public String processTypeCode;
-	public String processCode;
+	//public String processTypeCode;
+	//public String processCode;
 	public Map<String,PropertyValue> processProperties;
 
 

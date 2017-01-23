@@ -13,7 +13,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="qc in container.qualityControlResults">
-					<td ng-bind="qc.typeCode|codes:'type'" />
+					<td ><a ng-bind="qc.typeCode|codes:'type'" ng-href="/experiments/{{qc.code}}" target="experiment"></a></td>
 					<td>
 						<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'" class="row">
 							<div class="col-md-12 col-lg-12" ng-switch-when="true">

@@ -192,10 +192,26 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"position":12,
 			"choiceInList": true,
 			"listStyle":"bt-select",
-			"possibleValues":"searchService.lists.getStates()", 
+			"possibleValues":"searchService.getStates(value)", 
 			"filter":"codes:'state'",
 			"groupMethod":"unique"					
 		});
+		
+		
+		columns.push({
+			"header" : Messages("containers.table.resolutionCodes"),
+			"property" : "state.resolutionCodes",
+			"filter":"codes:'resolution'",
+			"position" : 12.5,
+			"order" : true,
+			"edit" : true,
+			"hide" : true,
+			"choiceInList":true,
+		    "listStyle":"bt-select-multiple",
+		    "possibleValues":"searchService.lists.get('containerResolutions')",
+			"type" : "text"
+		});
+		
 		columns.push({
 			"header":Messages("containers.table.valid"),
 			"property":"valuation.valid",
@@ -231,6 +247,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			lists.refresh.reportConfigs({pageCodes:["containers"+"-"+mainService.getHomePage()]});
 			lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
 			lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
+			lists.refresh.resolutions({"objectTypeCode":"Container"}, "containerResolutions");
 			isInit=true;
 		}
 	};
@@ -245,6 +262,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			additionalFilters:[],
 			additionalColumns:[],
 			selectedAddColumns:[],
+			authorizedStates : null,
 			setRouteParams:function($routeParams){
 				var count = 0;
 				for(var p in $routeParams){
@@ -256,7 +274,61 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					this.form = $routeParams;
 				}
 			},
-
+			initAuthorizedStates:function(){
+				if(null === this.authorizedStates){
+					var states = this.lists.getStates();
+					if(null !== states && undefined !== states){
+						this.authorizedStates = {'IW-P':[],'IS':[],'UA':[],'A-QC':[],'A-TM':[],'A-TF':[],'A-PF':[]};
+						states.forEach(function(state){
+							if(state.code === 'IS'){
+								this['IW-P'].push(state);
+								this['UA'].push(state);
+								this['A-QC'].push(state);
+								this['A-TM'].push(state);
+								this['A-TF'].push(state);
+								this['A-PF'].push(state);
+							}else if(state.code === 'UA'){
+								this['IW-P'].push(state);
+								this['IS'].push(state);
+								this['A-QC'].push(state);
+								this['A-TM'].push(state);
+								this['A-TF'].push(state);
+								this['A-PF'].push(state);
+							}else if(state.code === 'IW-P'){
+								this['UA'].push(state);
+								this['IS'].push(state);								
+							}else if(state.code === 'A-TF'){
+								this['A-QC'].push(state);
+								this['A-TM'].push(state);
+								this['A-PF'].push(state);								
+							}else if(state.code === 'A-QC'){
+								this['A-TF'].push(state);
+								this['A-TM'].push(state);
+								this['A-PF'].push(state);								
+							}else if(state.code === 'A-TM'){
+								this['A-TF'].push(state);
+								this['A-QC'].push(state);
+								this['A-PF'].push(state);								
+							}else if(state.code === 'A-PF'){
+								this['A-TF'].push(state);
+								this['A-QC'].push(state);
+								this['A-TM'].push(state);								
+							}
+						}, this.authorizedStates);
+					}
+				}
+			},
+			getStates : function(value){
+				/*
+				this.initAuthorizedStates();
+				if(value && value.data){
+					return this.authorizedStates[value.data.state.code];
+				}else{
+					return this.lists.getStates();
+				}
+				*/
+				return this.lists.getStates();
+			},
 			updateForm : function(){
 				this.form.includes = [];
 				if(this.reportingConfiguration){

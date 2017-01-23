@@ -188,4 +188,57 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		label:Messages("experiments.sampleSheet")
 	}]);
 	
+	/* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2 */
+	var importData = function(){
+		
+		$scope.messages.clear();
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		.success(function(data, status, headers, config) {
+			
+			$scope.messages.clazz="alert alert-success";
+			$scope.messages.text=Messages('experiments.msg.import.success');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();	
+			
+			// data est l'experience retournée par input.java
+			
+			// 16/01/2017 recuperer instrumentProperties 
+			$scope.experiment.instrumentProperties= data.instrumentProperties;
+			
+			// et reagents ....
+			$scope.experiment.reagents=data.reagents;
+			
+			// reinit select File...
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+			
+			// NGL-1256 refresh special pour les reagents !!!
+			$scope.$emit('askRefreshReagents');
+			
+		})
+		.error(function(data, status, headers, config) {
+			
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();	
+			
+			// reinit select File..
+			$scope.file = undefined;
+			angular.element('#importFile')[0].value = null;
+		});		
+	};
+	
+	$scope.button = {
+		isShow:function(){
+			// activer le bouton en mode edition mais pas en mode creation car l'experience n'existe pas encore
+			return ( $scope.isEditMode() && ! $scope.isCreationMode() )
+			},
+		isFileSet:function(){
+			return ($scope.file === undefined)?"disabled":"";
+		},
+		click:importData,		
+	};
+	
 }]);

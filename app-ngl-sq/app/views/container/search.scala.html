@@ -13,15 +13,19 @@
 		@formGroup{
 			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select></div>								
 			}
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.valuations" multiple="true" placeholder="@Messages("containers.table.valid")" 
+				bt-options="valuation.code as valuation.name for valuation in searchService.lists.getValuations()"></div>
+		}	
+		
 	}
 	@columnSearchForm{
 		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
 		}
-		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.valuations" multiple="true" placeholder="@Messages("containers.table.valid")" 
-				bt-options="valuation.code as valuation.name for valuation in searchService.lists.getValuations()"></div>
-		}		
+		@formGroup{	
+			<div  class="form-control" bt-select ng-model="searchService.form.stateResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.resolutions")" bt-options="valid.code as valid.name for valid in searchService.lists.get('containerResolutions')"></div>														
+		}	
 		@formGroup{
 			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="searchService.form.processTypeCode" bt-options="processType.code as processType.name for processType in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessType()" auto-select></div>					
 		}

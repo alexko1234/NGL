@@ -678,7 +678,7 @@ angular.module('commonsServices', []).
 	        		  };
 	        		  
 	        		  elem.on('change', function() {
-				    	  nbFiles = 0, counter = 0;
+	        			  nbFiles = 0, counter = 0;
 				    	  files = [];
 				    	  if(attrs.multiple){
 				    		  scope.base64File = [];
@@ -701,7 +701,9 @@ angular.module('commonsServices', []).
 				    	  }				    	  
 				      });
 				      
-				      
+	        		  elem.on('click', function() {
+	        			  elem[0].value=null;
+	        		  });
         		 }
         		};
         }]).directive('base64Img', [function () {
@@ -785,6 +787,10 @@ angular.module('commonsServices', []).
 			    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
 				    	  }				    	  
 				      });
+				      
+				      elem.on('click', function() {
+	        			  elem[0].value=null;
+	        		  });
         		 }
         		};
         		}])

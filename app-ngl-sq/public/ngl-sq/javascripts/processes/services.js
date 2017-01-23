@@ -18,6 +18,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			lists.refresh.filterConfigs({
 				pageCodes : [ "processes-search-addfilters" ]
 			}, "processes-search-addfilters");
+			
+			lists.refresh.resolutions({"objectTypeCode":"Process"}, "processResolutions");
+			
 			isInit = true;
 		}
 	};
@@ -117,12 +120,16 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			});
 		}
 		columns.push({
-			"header" : Messages("processes.table.resolutionCode"),
+			"header" : Messages("processes.table.resolutionCodes"),
 			"property" : "state.resolutionCodes",
 			"filter":"codes:'resolution'",
 			"position" : 7,
 			"order" : true,
+			"edit" : true,
 			"hide" : true,
+			"choiceInList":true,
+		    "listStyle":"bt-select-multiple",
+		    "possibleValues":"searchService.lists.get('processResolutions')",
 			"type" : "text"
 		});
 		columns.push({
@@ -135,6 +142,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 8,
 			"type" : "text"
 		});
+		/*
 		columns.push({
 			"header" : Messages("processes.table.outputContainerSupportCodes"),
 			"property" : "outputContainerSupportCodes",
@@ -147,6 +155,20 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
 		});
+		*/
+		columns.push({
+			"header" : Messages("processes.table.outputContainerCodes"),
+			"property" : "outputContainerCodes",
+			"order" : false,
+			"hide" : false,
+			"position" : 9,
+			"filter":"unique",
+			"groupMethod" : "unique",
+			"filter":"orderBy",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
+			"type" : "text"
+		});
+		
 		columns.push({
 			"header" : Messages("processes.table.experimentCodes"),
 			"property" : "experimentCodes",

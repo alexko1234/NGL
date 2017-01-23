@@ -50,10 +50,10 @@ public class MigrationExperimentInstrumentProperties extends MigrationExperiment
 					//Get property
 					Logger.debug("Update property for container out "+input.code);
 
-					updateContainerContents(input, keyProperty, propValue);
+					//updateContainerContents(input, keyProperty, propValue);
 					
 					//Get container from input
-					updateContainer(input.code, keyProperty, propValue, addToRun);
+					//updateContainer(input.code, keyProperty, propValue, addToRun);
 
 					updateOutputContainer(atm, keyProperty, propValue, addToRun);
 

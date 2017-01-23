@@ -251,6 +251,8 @@ runs.modal.header.text = Run status flow
 runs.treatments.sav = SAV
 runs.treatments.ngsrg = NGS-RG
 runs.treatments.minknowMetrichor = MinKnow-Metrichor
+runs.treatments.topIndex = Top Index
+runs.treatments.tilesStats = Stats FC
 
 runs.treatments.minknow-metrichor.minKnowVersion = Version MinKNOW
 runs.treatments.minknow-metrichor.metrichorVersion = Version Metrichor
@@ -270,6 +272,9 @@ run.treatments.sav.default.nonIndexedYieldTotal=Rendement total non indexé (Gb)
 run.treatments.sav.default.Q30PercTotal=% Q30 total
 run.treatments.sav.default.nonIndexedQ30PercTotal=% Q30 total non indexé
 
+runs.treatments.topIndex.unknownIndex.sequence = Séquence index inconnu
+runs.treatments.topIndex.unknownIndex.percent = % séquence
+runs.treatments.topIndex.distance = Distance
 #search
 sequencingProgramType.value.PE = Pair End
 sequencingProgramType.value.SR = Single Read
@@ -534,6 +539,8 @@ readsets.treatments.taxonomy.keywordBilan.keyword = Mot-clé
 readsets.treatments.taxonomy.keywordBilan.percent = %
 readsets.treatments.taxonomy.keywordBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.taxonBilan = Bilan par taxon
+readsets.treatments.taxonomy.taxonBilanMitochondrion = Bilan par taxon (Vs mitochondrion database)
+readsets.treatments.taxonomy.taxonBilanPlastid = Bilan par taxon (Vs plastid database)
 readsets.treatments.taxonomy.taxonBilan.taxon = Taxon
 readsets.treatments.taxonomy.taxonBilan.percent = %
 readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
@@ -933,6 +940,8 @@ readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
 filterTaxonBilan=Seuil Taxon (% vs rRNA tot.)
+filterTaxonBilanMitochondrion=Seuil Taxon (% vs mitochondrion)
+filterTaxonBilanPlastid=Seuil Taxon (% vs plastid)
 ###############
 #
 #authorisation users

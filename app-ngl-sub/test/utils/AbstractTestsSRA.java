@@ -42,19 +42,23 @@ public abstract class AbstractTestsSRA {
 		
 		config.put("evolutionplugin", "disabled");
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
+		// pour charger l'historique en dev
+		
+		// pour charger l'historique en dev :
 		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
 		config.put("db.default.user", "NGL_user");
 		config.put("db.default.password", "NGL_passwd");
+		config.put("mongodb.database","CNS-NGL");
+		config.put("mongodb.credentials","ngl:ngl");
+		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
+		
+		
 		config.put("db.default.partitionCount", "1");
 		config.put("db.default.maxConnectionsPerPartition", "10");
 		config.put("db.default.minConnectionsPerPartition", "1");
 		config.put("db.default.logStatements", "true");
 		config.put("db.default.jndiName", "ngl");
-				
-		config.put("mongodb.database","CNS-NGL");
-		config.put("mongodb.credentials","ngl:ngl");
-		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
-		//config.put("mongodb.servers","mongouat.genoscope.cns.fr:27018");
+			
 		config.put("ehcacheplugin", "disabled");
 		config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 		config.put("accessionReporting.email.subject.success", "TEST ngl-sub : Ebi Accession Reporting success");		          

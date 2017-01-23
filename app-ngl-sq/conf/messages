@@ -176,6 +176,8 @@ containers.table.taxonCode= Taxon Id
 containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
 containers.table.expectedCoverage= Couv. souhaitée
+containers.table.resolutionCodes = Résolutions
+
 
 container.from = issu de
 
@@ -220,6 +222,7 @@ containers.dispatch.value.3 = Exp. Purification
 containers.dispatch.value.4 = Terminer
 containers.dispatch.value.5 = Recommencer
 containers.dispatch.value.6 = Arrêt Processus
+containers.dispatch.value.7 = Attente décision
 
 containers.table.processResolutions = Processus résolutions
 containers.dispatch.value.mandatory = L''orientation du container est obligatoire
@@ -247,7 +250,7 @@ search.placeholder.pools = Pools
 search.placeholder.printing.printer = Imprimante
 search.placeholder.printing.barcode.position = Barre code position
 search.placeholder.readsets = ReadSets
-
+search.placeholder.resolutions = Résolutions
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
@@ -276,6 +279,7 @@ processes.table.sampleCodes = Echantillon(s)
 processes.table.inputContainerCode = Container Initial
 processes.table.inputContainerSupportCode = Support Initial
 processes.table.outputContainerSupportCodes= Supports Containers enfants
+processes.table.outputContainerCodes= Containers enfants
 processes.table.experimentCodes= Expériences
 processes.table.stateCode = Etat processus
 processes.table.resolutionCode = Résolution
@@ -378,7 +382,10 @@ experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
-
+experiment.title.delete = Suppression de l''expérience
+experiment.question.delete = Etes vous certains de vouloir supprimer l''expérience ?
+experiment.question.delete.yes = Oui
+experiment.question.delete.no = Non
 experiments.inputs = Container(s) en entrée(s)
 experiments.outputs = Container(s) en sortie(s)
 
@@ -510,7 +517,7 @@ baskets.new = Créer un panier
 baskets.add = Ajouter au panier
 baskets.switchView = Voir
 baskets.switchView.containers = les containers
-baskets.switchView.supports = les supports-containers
+baskets.switchView.supports = les supports
 backet.view.containerSupport = Vue supports
 backet.view.containers = Vue containers
 
@@ -543,6 +550,7 @@ button.import.file = Import fichier
 button.printMode = Imprimer
 button.tag.printing = Etiquettes
 button.print = Imprimer
+button.delete = Supprimer
 #select
 select.wrongStartColumnTagPlate= Colonne de début de la plaque d''index incorrecte
 

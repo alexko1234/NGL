@@ -40,7 +40,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		save:{
 			active:Permissions.check("writing")?true:false,
-			url:function(value){return jsRoutes.controllers.containers.api.Containers.update(value.code).url+"?fields=valuation";},
+			url:function(value){return jsRoutes.controllers.containers.api.Containers.update(value.code).url+"?fields=valuation&fields=state";},
 			method:'put',
 			mode:'remote'
 		}

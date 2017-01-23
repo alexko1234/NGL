@@ -30,7 +30,9 @@ import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
+import models.utils.InstanceConstants;
 
+import org.mongojack.DBQuery;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,6 +42,10 @@ import org.apache.commons.lang3.StringUtils;
 
 //import com.sun.xml.internal.ws.api.pipe.NextAction;
 
+
+
+
+import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import validation.ContextValidation;
 
@@ -77,8 +83,8 @@ public class RepriseHistorique {
 			 */
 			final Element racine = document.getDocumentElement();
 			//Affichage de l'élément racine
-			System.out.println("\n*************RACINE************");
-			System.out.println(racine.getNodeName());
+			//System.out.println("\n*************RACINE************");
+			//System.out.println(racine.getNodeName());
 			/*
 			 * Etape 5 : récupération des samples
 			 */
@@ -89,8 +95,8 @@ public class RepriseHistorique {
 				if(racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					final Element eltSample = (Element) racineNoeuds.item(i);
 					//Affichage d'un sample
-					System.out.println("\n*************SAMPLE************");
-					System.out.println("alias : " + eltSample.getAttribute("alias"));
+					//System.out.println("\n*************SAMPLE************");
+					//System.out.println("alias : " + eltSample.getAttribute("alias"));
 					
 					String alias = eltSample.getAttribute("alias");
 					Sample sample = new Sample();
@@ -148,10 +154,9 @@ public class RepriseHistorique {
 						}
 					}
 					if (!listSamples.contains(sample)){
-						listSamples.add(sample);
-					}
-				} 
-				
+							listSamples.add(sample);
+					} 
+				}
 			} // end for  
 		} catch (final ParserConfigurationException e) {
 			e.printStackTrace();
@@ -707,11 +712,29 @@ public class RepriseHistorique {
 					}
 					
 					final Element eltExpRef = (Element) eltRun.getElementsByTagName("EXPERIMENT_REF").item(0);
+					String exp_accession = eltExpRef.getAttribute("accession");
+					
 					String exp_refname = eltExpRef.getAttribute("refname");
+					if (StringUtils.isNotBlank(exp_accession)) {
+						run.expAccession = exp_accession;
+					}
 					if (StringUtils.isNotBlank(exp_refname)) {
 						run.expCode = exp_refname;
 						//System.out.println("experiment_refname : " + exp_refname);
+					} else {
+						if (StringUtils.isNotBlank(exp_accession)) {
+							Experiment experiment = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME,
+									Experiment.class, DBQuery.and(DBQuery.is("accession", exp_accession)));
+							if (experiment != null) {
+								run.expCode = experiment.code; 
+							} else {
+								run.expCode = run.code;
+								run.expCode = run.expCode.replaceFirst("run_", "exp_");
+							}
+						}
 					}
+					
+					
 					final Element eltDataBlock = (Element) eltRun.getElementsByTagName("DATA_BLOCK").item(0);
 					final Element eltFiles = (Element) eltDataBlock.getElementsByTagName("FILES").item(0);
 
@@ -849,22 +872,23 @@ public class RepriseHistorique {
 		System.out.println("Recuperation des AC");
 
 		String pattern = "sample_([A-Z]{2,3})(_|-)";
-		String pattern2 = "TARA_([A-Z]{2,3})(_|-)";
+		String pattern2 = "TARA_([A-Z]{2,3})(_|-)"; // pour recuperer les samples du projet tara declare par nous dans le projet BCB ou ALP
 		
 		java.util.regex.Pattern p = Pattern.compile(pattern);
 		java.util.regex.Pattern p2 = Pattern.compile(pattern2);
-
+		
+		
 		for (Sample sample : listSamples) {
-			System.out.println("!!!!!!!!!!!!!!!!!!sample : '" + sample.code + "'");
+			//System.out.println("!!!!!!!!!!!!!!!!!!sample : '" + sample.code + "'");
 			//if ( ! mapAc.containsKey(sample.code)) {
 			//	throw new SraException("Absence de numeros d'accession pour le code '" + sample.code + "'");
 			//}
 			//System.out.println("Pour le sample : " + sample.code + " numeros d'accession = " + mapAc.get(sample.code));
 			// ajouter informations codeProject, accession , status et traceInformation et sauver dans base;
 			
-			
-			
 			Matcher m = p.matcher(sample.code);
+			
+			
 			// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
 			if ( m.find() ) {
 				sample.projectCode = m.group(1);
@@ -874,6 +898,7 @@ public class RepriseHistorique {
 					sample.projectCode = m.group(1);
 				}
 			}
+		
 			
 			//sample.accession = mapAc.get(sample.code);
 			sample.state = new State("F-SUB", user);
