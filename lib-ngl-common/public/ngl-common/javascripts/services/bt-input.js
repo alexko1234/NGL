@@ -11,7 +11,7 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 			+ '<div class="input-group-btn">'
 			//textarea mode
 			+ '<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">' 
-			+ '<i class="fa fa-list-ul"></i>' + '</button>' + '<ul class="dropdown-menu dropdown-menu-left"  role="menu">' 
+			+ '<i ng-if="textareaValue !== undefined" class="fa fa-list-ul fa-rotate-90"></i><i ng-if="textareaValue === undefined" class="fa fa-list-ul"></i>' + '</button>' + '<ul class="dropdown-menu dropdown-menu-left"  role="menu">' 
 			+ '<li>' 
 			+ '<textarea ng-class="inputClass" ng-model="textareaValue" ng-keydown="intercept($event)" ng-keyup="setTextareaNgModel()" rows="5" ></textarea>' 
 			+ '</li>' 
@@ -32,7 +32,11 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 
 			var textarea = false;
 			if(attr.textareaNgModel){
-				scope.textareaValue = undefined;
+				if(Array.isArray(scope.textareaNgModel)){
+					scope.textareaValue = scope.textareaNgModel.toString().replace(/,/g,",\n");
+				}else{
+					scope.textareaValue = undefined;					
+				}
 				textarea = true;
 				
 				scope.$parent.$watch(attr.textareaNgModel, function(newValue, oldValue){
