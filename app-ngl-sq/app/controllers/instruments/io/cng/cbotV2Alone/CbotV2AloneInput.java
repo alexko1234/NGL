@@ -67,6 +67,7 @@ public class CbotV2AloneInput extends AbstractInput {
 	    	 // mais en UTF-8 !!! il faut donc remettre la valeur correcte
 	    	 InputSource is = new InputSource(inputStream);
 	    	 is.setEncoding("UTF-8");
+	    	 //System.out.println("nom du fichier >>>" + pfv.fullname );
 	 		 
 	         Document xml = builder.parse(is);
 	         
@@ -172,7 +173,7 @@ public class CbotV2AloneInput extends AbstractInput {
 		     }      
 
 		     // récupérer le nom du fichier importé
-		     experiment.instrumentProperties.put("cbotFile", new PropertySingleValue(runFolder)); 
+		     experiment.instrumentProperties.put("cbotFile", new PropertySingleValue(pfv.fullname)); 
 		      
 		     // récupérer le barcode de la plaque de réactifs et déterminer les autres info reliées
 		     //System.out.println("setting Reagent ?? to:"+ reagentId);

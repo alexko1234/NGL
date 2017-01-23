@@ -81,11 +81,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	    /** cBots and sequencers **/	
 		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
 				getInstruments(
-						// 16/01/2017 cbot ancienne version desactivées (plus aucune sur site)
-						createInstrument("cBot1", "cBot1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot2", "cBot2", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot3", "cBot3", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot4", "cBot4", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						// 16/01/2017 cbot ancienne version plussur site => desactiver ???
+						createInstrument("cBot1", "cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot4", "cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -265,8 +265,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
-		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot ; **/
-		
+		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot  **/
+		//  23/01/2017 les cbots ancien modele n'existent plus => desactiver????
 		l.add(newInstrumentUsedType("Janus + cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
 				getInstruments(
 						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
