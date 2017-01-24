@@ -1,14 +1,14 @@
 @()
 
-<!-- FDS 06/01/2017 ajout bouton pour input file si instrument = janus+cbot
+<!-- FDS 06/01/2017 ajout bouton pour input file 
      ne pas utiliser ng-if qui a un comportement special: creation d'un scope fils => pose des problemes
      remplacer par ng-show 
-     FDS 23/01/2017  janus-and-cBotV2  || cBotV2
+     FDS 23/01/2017  janus-and-cBotV2 || cBotV2;   24/01/2107 funiquement pour prepa-fc-ordered
 -->
-<div class="col-md-12 col-lg-offset-7" ng-show="('janus-and-cBotV2' === experiment.instrument.typeCode)|| ('cBotV2' === experiment.instrument.typeCode)">
+<div class="col-md-12 col-lg-offset-7" ng-show="('prepa-fc-ordered'=== experiment.typeCode) && (('janus-and-cBotV2' === experiment.instrument.typeCode)||('cBotV2' === experiment.instrument.typeCode))"> 
   <form class="form-horizontal" role="form">
-   <div class="row margin-bottom-7"> 
-        <div class="form-group col-lg-6"  ng-show="button.isShow()"> 
+   <div class="row margin-bottom-7">
+        <div class="form-group col-lg-6"  ng-show="button.isShow()">
              <label for="importFile" class="control-label">Fichier CBot</label>
              <div class="input-group" style="width:50%">
                 <input class="form-control input-sm" type="file" 

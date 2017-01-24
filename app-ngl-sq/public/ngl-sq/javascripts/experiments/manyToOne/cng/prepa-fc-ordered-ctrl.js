@@ -183,7 +183,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus-and-cBot')},
+		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus-and-cBotV2')},
 		click:generateSampleSheet,
 		label:Messages("experiments.sampleSheet")
 	}]);
@@ -232,8 +232,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	$scope.button = {
 		isShow:function(){
-			// activer le bouton en mode edition mais pas en mode creation car l'experience n'existe pas encore
-			return ( $scope.isEditMode() && ! $scope.isCreationMode() )
+			//  activer le bouton d'import si l'experience est a NOUVEAU
+			return ($scope.isNewState());
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
