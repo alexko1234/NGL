@@ -72,7 +72,7 @@ public class MigrationProcessProperties extends CommonController {
 		
 		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  
 				DBQuery.in("support.code", containerSupportCodes).elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes).in("projectCode", process.projectCodes)))
-		.cursor.forEach(container -> {
+		.sort("code",Sort.ASC).cursor.forEach(container -> {
 			
 			
 			
@@ -126,7 +126,9 @@ public class MigrationProcessProperties extends CommonController {
 			
 			
 		});
-		if(process.outputContainerCodes.size() == process.outputContainerSupportCodes.size()){
+		if(process.outputContainerCodes.size() == process.outputContainerSupportCodes.size() 
+				|| "illumina-run".equals(process.typeCode) || "bionano-chip-process".equals(process.typeCode) 
+				|| "bionano-nlrs-process".equals(process.typeCode) || "norm-fc-depot-illumina".equals(process.typeCode) ){
 			//Logger.debug("save process "+process.code+" / "+process.state.code);			
 			process.traceInformation.setTraceInformation("ngl");
 			//MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
