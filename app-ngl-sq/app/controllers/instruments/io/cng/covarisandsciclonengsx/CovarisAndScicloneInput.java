@@ -10,7 +10,9 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.FormulaEvaluator; // BUG: ajout 25/01/2017
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -33,13 +35,15 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		InputStream is = new ByteArrayInputStream(pfv.value);
 		
 		// le barcode a checker doit etre dans experiment.ouputContainerSupportCodes......si l'experience a deja ete sauvegardee...	
-
 		String outputSupportContainerCode=experiment.outputContainerSupportCodes.iterator().next().toString();
 		Logger.info ("checking "+outputSupportContainerCode);
 		
 		// plusieurs erreurs possibles...si le fichier n'est pas de l'Excel, ou n'est pas lisible...
 		Workbook wb = WorkbookFactory.create(is);
 		
+		//BUG: ajout 25/01/2017 
+		FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
+
 		Sheet sheet = wb.getSheet("Indexing");//case sensitive??
 		if (sheet == null ){
 			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.sheet.missing","Indexing");
@@ -98,12 +102,21 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 						
 				//verifier l'index 
 				Double indexNum = getNumericValue(sheet.getRow(i).getCell(1));
+				//Logger.info ("getting index num from cell: "+ i +":"+ 1+" found :"+indexNum );
+				
 				// attention une plaque peut etre partielle donc toutes les positions ne sont pas indexees
 				if (indexNum != null ){
+					// si un numero est trouvé alors la cellule de droite contient la FORMULE qui donne le nom de l'index
+					
+					// BUG: ajout 25/01/2017=> evaluer la formule pour recuperer son resultat!!!
+					evaluator.evaluateFormulaCell( sheet.getRow(i).getCell(2));
+					
 					String indexName = getStringValue(sheet.getRow(i).getCell(2)); // !! c'est une formule
+					Logger.info ("index NAME from formula in cell: "+ i +":"+ 2+" => "+ indexName);
+					
 					// verifier que cet index existe (type fixe pour l'instant...)
 					Index idx = InputHelper.getIndexByName(indexName,"index-illumina-sequencing");
-					if ( idx != null) {
+					if ( null != idx ) {
 						results.put(platePosition,idx );
 					} else {
 						contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.tag.notexist", (i+1), indexName);
@@ -124,9 +137,8 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 				});
 		}
 		
-		
-		//update tag et tag Categorie ...
-		Logger.info ("update tag and tagCatgory");
+		// set tag et tag Categorie ...
+		Logger.info ("updating experimentProperties => set tag and tagCatgory");
 		if(!contextValidation.hasErrors()){
 			experiment.atomicTransfertMethods
 				.stream()
@@ -135,19 +147,20 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 					String icupos=getCodePosition(icu.code);
 					
-					///PropertySingleValue tag = getPSV(ocu, "tag");
+					// BUG: 25/01/2017 !! verifier d'abord si experimentProperties existe ! sinon la creer
+					if(null == ocu.experimentProperties) ocu.experimentProperties = new HashMap<String,PropertyValue>(0);
+					
 					PropertySingleValue tagPsv = new PropertySingleValue();
-					// !!! ce n'est pas le nom d l'index qu'il faut rammener mais son code !!!, le nom est ensuite correctement affiché par un transcodage...
+					// !!! ce n'est pas le nom de l'index qui est dans results mais le code.
 					tagPsv.value = results.get(icupos).code;
 					ocu.experimentProperties.put("tag", tagPsv);
+					//Logger.info ("icupos="+ icupos +" => " +tagPsv.value);
 					
-					//PropertySingleValue tagCategory = getPSV(ocu, "tagCategory");
 					PropertySingleValue tagCategoryPsv = new PropertySingleValue();
 					tagCategoryPsv.value = results.get(icupos).categoryCode;
 					ocu.experimentProperties.put("tagCategory", tagCategoryPsv);
 				});
 		}
-		
 		
 		return experiment;
     }
@@ -160,4 +173,3 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 	}
 
 }
-
