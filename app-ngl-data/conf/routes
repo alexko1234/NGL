@@ -89,6 +89,8 @@ GET     /cng/migration-lanes                    controllers.migration.cng.Migrat
 GET		/cns/migration-transfert-ccrt			controllers.migration.cns.MigrationTransfertCCRT.migration()
 GET		/cng/migration-transfert-ccrt			controllers.migration.cng.MigrationTransfertCCRT.migration()
 
+GET 	/migration-process-properties			controllers.migration.MigrationProcessProperties.migration()
+
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
 # Map static resources from the /public folder to the /assets URL path
