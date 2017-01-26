@@ -86,9 +86,17 @@ public class MigrationProcessProperties extends CommonController {
 									&& !"IS".equals(container.state.code)
 									&& !"IW-P".equals(container.state.code)
 									&& !"F".equals(container.state.code)){
-								content.processProperties = process.properties;	
-								content.processComments = process.comments;
-								return 1;	
+								int state = 0;
+								if(process.properties != null && process.properties.size() > 0){
+									content.processProperties = process.properties;	
+									state = 1;
+								}
+								if(process.comments != null && process.comments.size() > 0){
+									content.processComments = process.comments;
+									state = 1;
+								}
+								
+								return state;	
 							}	
 							return 0;
 						}).sum();
@@ -113,7 +121,7 @@ public class MigrationProcessProperties extends CommonController {
 					if(nbContentChange > 0){
 						Logger.debug("update container "+container.code+" "+container.state.code);
 						container.traceInformation.setTraceInformation("ngl");
-						//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 					}
 			}else if(contentFound.size() > 1){
 				Logger.error("found several contents "+container.code);
@@ -126,7 +134,7 @@ public class MigrationProcessProperties extends CommonController {
 				|| "bionano-nlrs-process".equals(process.typeCode) || "norm-fc-depot-illumina".equals(process.typeCode) ){
 			//Logger.debug("save process "+process.code+" / "+process.state.code);			
 			process.traceInformation.setTraceInformation("ngl");
-			//MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
+			MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
 		}else{
 			Logger.debug("process size cont !="+process.code+" / "+process.state.code+" "+process.outputContainerCodes.size()+" != "+process.outputContainerSupportCodes.size());
 		}
