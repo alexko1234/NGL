@@ -91,7 +91,7 @@ public class ProcWorkflowHelper {
 				containerCodes.addAll(process.outputContainerCodes);
 			}
 			
-			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", containerCodes).exists("processProperties"))
+			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", containerCodes).elemMatch("contents",DBQuery.exists("processProperties")))
 			.cursor.forEach(container -> {
 				container.traceInformation.setTraceInformation(validation.getUser());
 				container.contents.stream()
