@@ -612,7 +612,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             addGroup: function(displayResultTmp) {
                 var displayResult = [];
                 var propertyGroupGetter = this.config.group.by.property;
-                //properyGroupGetter=undefined if property=all
                 propertyGroupGetter += this.getFilter(this.config.group.by);
                 if(this.config.group.by=="all"){
                 	propertyGroupGetter = "all";
@@ -3462,8 +3461,6 @@ directive('udtTable', function(){
   		    				scope.udtTable.formController = scope["datatableForm"];
   		    			}
 		            });
-  		    		
-  		    		
   		    		
   		    		scope.udtTableFunctions.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
   		    			scope.udtModalImage = {};
