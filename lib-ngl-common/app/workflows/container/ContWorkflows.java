@@ -66,7 +66,7 @@ public class ContWorkflows extends Workflows<Container> {
 
 			container.processCodes = null;
 			container.processTypeCodes = null;
-			container.contents.parallelStream().forEach(c -> c.processProperties = null);
+			container.contents.parallelStream().forEach(c -> {c.processProperties = null;c.processComments = null;});
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
 			
 			/*

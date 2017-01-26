@@ -2,8 +2,10 @@ package models.laboratory.container.instance;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -35,7 +37,7 @@ public class Content implements IValidation{
 	//public String processTypeCode;
 	//public String processCode;
 	public Map<String,PropertyValue> processProperties;
-
+	public List<Comment> processComments;
 
 	
 	public Content(){

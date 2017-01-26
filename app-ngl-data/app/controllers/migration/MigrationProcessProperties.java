@@ -8,24 +8,18 @@ import java.util.stream.Collectors;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-import models.utils.instance.SampleHelper;
 
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 
 import play.Logger;
 import play.Logger.ALogger;
 import play.mvc.Result;
-import validation.ContextValidation;
-import validation.processes.instance.ProcessValidationHelper;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
-import models.laboratory.processes.instance.Process;
 
 public class MigrationProcessProperties extends CommonController {
 	
@@ -93,6 +87,7 @@ public class MigrationProcessProperties extends CommonController {
 									&& !"IW-P".equals(container.state.code)
 									&& !"F".equals(container.state.code)){
 								content.processProperties = process.properties;	
+								content.processComments = process.comments;
 								return 1;	
 							}	
 							return 0;
@@ -116,7 +111,7 @@ public class MigrationProcessProperties extends CommonController {
 					}
 					
 					if(nbContentChange > 0){
-						//Logger.debug("update container "+container.code);
+						Logger.debug("update container "+container.code+" "+container.state.code);
 						container.traceInformation.setTraceInformation("ngl");
 						//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 					}

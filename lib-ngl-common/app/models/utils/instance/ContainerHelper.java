@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -128,7 +129,7 @@ public class ContainerHelper {
 		finalContent.taxonCode=content.taxonCode;
 		finalContent.ncbiScientificName=content.ncbiScientificName;
 		finalContent.processProperties = content.processProperties;
-		
+		finalContent.processComments = content.processComments;
 		return finalContent;
 	}
 	
@@ -145,7 +146,8 @@ public class ContainerHelper {
 		finalContent.ncbiScientificName = contents.get(0).ncbiScientificName;
 		finalContent.percentage = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		finalContent.processProperties = new HashMap<String, PropertyValue>();
-		
+		finalContent.processComments = new ArrayList<Comment>();
+				
 		for(Content c : contents){
 			if(null != c.properties){
 				for(String key : c.properties.keySet()){
@@ -161,6 +163,11 @@ public class ContainerHelper {
 					finalContent.processProperties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
 				}
 			}
+			
+			if(c.processComments != null && c.processComments.size() > 0){
+				finalContent.processComments.addAll(c.processComments);
+			}
+			
 		}
 		
 		//remove properties with #NOT_COMMON_VALUE#
@@ -174,6 +181,10 @@ public class ContainerHelper {
 				.filter(e -> !e.getValue().value.equals("#NOT_COMMON_VALUE#"))
 				.collect(Collectors.toMap(e -> e.getKey(),e -> e.getValue()));
 
+		
+		if(finalContent.processComments == null || finalContent.processComments.size() == 0){
+			finalContent.processComments = null;
+		}
 		return finalContent;
 	}
 
