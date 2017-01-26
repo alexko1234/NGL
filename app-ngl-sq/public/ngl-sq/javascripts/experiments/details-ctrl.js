@@ -1502,7 +1502,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}
-				}else{
+				}else if(data[i].dispatch !== 7){
 				
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 					if(data[i].dispatch === 4 || data[i].dispatch === 6){
