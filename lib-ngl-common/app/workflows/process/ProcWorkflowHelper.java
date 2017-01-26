@@ -99,7 +99,10 @@ public class ProcWorkflowHelper {
 							|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
 									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
-						content.processProperties.replaceAll((k,v) -> process.properties.get(k));						
+						content.processProperties.replaceAll((k,v) -> process.properties.get(k));
+						if(process.comments != null && process.comments.size() > 0){
+							content.processComments = process.comments;
+						}
 					});
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 			});
