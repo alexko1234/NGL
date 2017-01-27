@@ -52,7 +52,12 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		l.add(newExperimentType("Ext to Extraction ARN (17-200 et >200nt)","ext-to-small-and-large-rna-extraction",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Extraction ARN (17-200 et >200nt) à partir d'ARN total","ext-to-small-and-large-isolation-process",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		
 		l.add(newExperimentType("Extraction ARN total","total-rna-extraction","RNA",710,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionARNtotal(),
 				getInstrumentUsedTypes("hand"),"OneToOne", getSampleTypes("total-RNA"),true,
@@ -122,6 +127,17 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 						getExperimentTypes("total-rna-extraction").get(0), getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+	
+		l.add(DescriptionFactory.newProcessType("Extraction ARN (17-200 et >200nt) à partir d'ARN total", "small-and-large-isolation-process", 
+				ProcessCategory.find.findByCode("sample-prep"), 3,
+				null, 
+				Arrays.asList(
+						getPET("ext-to-small-and-large-isolation-process",-1),
+						getPET("total-rna-extraction",-1),
+						getPET("small-and-large-rna-isolation",0)), 
+						getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("small-and-large-rna-isolation").get(0), getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
 		
 		return l;	
 	}
@@ -155,9 +171,11 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
 	
 		newExperimentTypeNode("ext-to-small-and-large-rna-extraction", getExperimentTypes("ext-to-small-and-large-rna-extraction").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-small-and-large-isolation-process", getExperimentTypes("ext-to-small-and-large-isolation-process").get(0), false, false, false, null, null, null, null).save();
+		
 		newExperimentTypeNode("total-rna-extraction",getExperimentTypes("total-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-small-and-large-rna-extraction"),
 				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"),null).save();
-		newExperimentTypeNode("small-and-large-rna-isolation", getExperimentTypes("small-and-large-rna-isolation").get(0), false, false, false, getExperimentTypeNodes("total-rna-extraction"), 
+		newExperimentTypeNode("small-and-large-rna-isolation", getExperimentTypes("small-and-large-rna-isolation").get(0), false, false, false, getExperimentTypeNodes("total-rna-extraction","ext-to-small-and-large-isolation-process"), 
 				getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"), null).save();
 		
 	
