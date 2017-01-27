@@ -5,10 +5,9 @@ import java.sql.SQLException;
 import com.mongodb.MongoException;
 
 import models.utils.dao.DAOException;
-import services.ncbi.TaxonomyServices;
-import play.i18n.Messages;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
+import services.ncbi.TaxonomyServices;
 
 public class UpdateSampleNCBITaxonCNS extends AbstractUpdateSampleNCBITaxon{
 
@@ -38,30 +37,12 @@ public class UpdateSampleNCBITaxonCNS extends AbstractUpdateSampleNCBITaxon{
 	
 	public static String getScientificNameCNS(String taxonCode)
 	{
-		if(taxonCode.equals("0"))
-			return Messages.get("cns.ncbiScientificName.taxon.zero");
-		else if(taxonCode.equals("1"))
-			return Messages.get("cns.ncbiScientificName.taxon.one");
-		else if(taxonCode.equals("2"))
-			return Messages.get("cns.ncbiScientificName.taxon.two");
-		else if(taxonCode.equals("3"))
-			return Messages.get("cns.ncbiScientificName.taxon.three");
-		else
-			return TaxonomyServices.getScientificName(taxonCode);
+		return TaxonomyServices.getScientificName(taxonCode);
 	}
 
 	public static String getLineageCNS(String taxonCode)
 	{
-		if(taxonCode.equals("0"))
-			return Messages.get("cns.ncbiLineage.taxon.zero");
-		else if(taxonCode.equals("1"))
-			return Messages.get("cns.ncbiLineage.taxon.one");
-		else if(taxonCode.equals("2"))
-			return Messages.get("cns.ncbiLineage.taxon.two");
-		else if(taxonCode.equals("3"))
-			return Messages.get("cns.ncbiLineage.taxon.three");
-		else
-			return TaxonomyServices.getLineage(taxonCode);
+		return TaxonomyServices.getLineage(taxonCode);
 	}
 
 

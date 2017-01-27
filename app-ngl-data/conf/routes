@@ -53,10 +53,12 @@ GET 	/migration/containers					controllers.migration.MigrationContainerFields.mi
 GET		/migration-sampleOnInputContainer-process 		 controllers.migration.AddSampleOnInputContainerInProcess.migration()
 GET		/migrationTaxonSample					controllers.migration.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
 
+GET		/cns/migration-taxonCode				controllers.migration.cns.MigrationUpdateNCBITaxonSample.migration(fileName: java.lang.String)
 
 GET		/cns/migration-sampleType				controllers.migration.cns.MigrationSampleType.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 GET		/cns/migration-spri-select				controllers.migration.cns.MigrationSpriSelect.migration()
+
 
 GET		/cns/migration-updatesample				controllers.migration.cns.MigrationUpdateSampleProperties.migration()
 GET		/cns/migration-properties-container		controllers.migration.cns.MigrationContainerProperties.migration()
