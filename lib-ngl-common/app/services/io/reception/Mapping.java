@@ -110,9 +110,18 @@ public abstract class Mapping<T extends DBObject> {
 	}
 	
 	public void validate(DBObject c){
-		contextValidation.addKeyToRootKeyName(c.code);
-		((IValidation)c).validate(contextValidation);
-		contextValidation.removeKeyFromRootKeyName(c.code);	
+		
+		ContextValidation cv = new ContextValidation(contextValidation.getUser());
+		cv.setRootKeyName(contextValidation.getRootKeyName());
+		cv.addKeyToRootKeyName(c.code);
+		cv.setMode(cv.getMode());
+		((IValidation)c).validate(cv);
+		
+		if(cv.hasErrors()){
+			contextValidation.addErrors(cv.errors);
+		}
+		
+		cv.removeKeyFromRootKeyName(c.code);	
 	}
 	
 	protected void populateField(Field field, DBObject dbObject, Map<Integer, String> rowMap) {
