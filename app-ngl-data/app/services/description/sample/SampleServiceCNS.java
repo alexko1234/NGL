@@ -91,7 +91,6 @@ public class SampleServiceCNS extends AbstractSampleService {
 
 		l.add(newSampleType("Plancton", "plankton", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("Aérosol", "aerosol", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
-		l.add(newSampleType("Vesiclome", "vesiclome", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("Corail", "coral", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("Poisson", "fish", SampleCategory.find.findByCode("environmental-samples"),getFishPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
