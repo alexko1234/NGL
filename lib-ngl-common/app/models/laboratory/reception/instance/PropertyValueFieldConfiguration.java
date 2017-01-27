@@ -28,8 +28,9 @@ public class PropertyValueFieldConfiguration extends AbstractFieldConfiguration 
 			value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation, action);
 		if(null != unit)
 			unit.populateField(psv.getClass().getField("unit"), psv, rowMap, contextValidation, action);	
-		
-		populateField(field, dbObject, psv);
+		if(value != null){ //only if value not unit
+			populateField(field, dbObject, psv);
+		}
 	}
 
 	
