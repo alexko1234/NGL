@@ -13,8 +13,8 @@ public class BalanceSheets extends CommonController{
 	public static Result year() {
 		return ok(year.render());
 	}
-	public static Result general() {
-		return ok(general.render());
+	public static Result general(String code) {
+		return ok(general.render(code));
 	}
 	public static Result javascriptRoutes(){
 		response().setContentType("text/javascript");

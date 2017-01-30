@@ -60,7 +60,7 @@ GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 #balance sheets tpl
 GET 	/balance-sheets/:year/home					controllers.balancesheets.tpl.BalanceSheets.home(year : java.lang.String)	
 GET		/tpl/balance-sheets/year					controllers.balancesheets.tpl.BalanceSheets.year()			
-GET		/tpl/balance-sheets/general					controllers.balancesheets.tpl.BalanceSheets.general()
+GET		/tpl/balance-sheets/general/:code			controllers.balancesheets.tpl.BalanceSheets.general(code : java.lang.String)
 GET		/tpl/balance-sheets/js-routes				controllers.balancesheets.tpl.BalanceSheets.javascriptRoutes()
 
 #users tpl

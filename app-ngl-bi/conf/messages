@@ -788,6 +788,10 @@ analyses.treatments.gapClosing_ba.percentOfN = % N
 balanceSheets.page.title = Bilan de production
 
 balanceSheets.menu = Bilans
+balanceSheets.menu.illumina = Bilans Illumina
+balanceSheets.menu.nanopore = Bilans Nanopore
+
+
 balanceSheets.year = Année run
 balanceSheets.nbBases = Nombre de bases Illumina
 balanceSheets.runTypeCode = Type séquençage

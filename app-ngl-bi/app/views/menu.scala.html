@@ -72,8 +72,12 @@
 					<a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("archives.menu")</a>
 				</li>	
 				
-				<li class="@("active".when(nav.startsWith("balance")))">
-					<a href="@controllers.balancesheets.tpl.routes.BalanceSheets.home("general")">@Messages("balanceSheets.menu")</a>
+				<li class="dropdown @("active".when(nav.startsWith("balance")))">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("balanceSheets.menu")<b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
+						<li class="@("active".when(nav == "balanceSheets.illumina"))"><a href="@controllers.balancesheets.tpl.routes.BalanceSheets.home("illumina")">@Messages("balanceSheets.menu.illumina")</a></li>
+						<li class="@("active".when(nav == "balanceSheets.nanopore"))"><a href="@controllers.balancesheets.tpl.routes.BalanceSheets.home("nanopore")">@Messages("balanceSheets.menu.nanopore")</a></li>																				
+					</ul>
 				</li>
 									
 				<li class="@("active".when(nav.startsWith("help")))">
