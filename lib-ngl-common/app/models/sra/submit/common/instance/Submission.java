@@ -139,16 +139,18 @@ public class Submission extends DBObject implements IValidation {
 				if (StringUtils.isBlank(config.strategyStudy)){
 					contextValidation.addErrors("strategy_study", "champs qui doit etre renseigne dans la configuration passee dans le contexte de validation");
 				} else if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
-					if (StringUtils.isBlank(this.studyCode)) {
+					// Le champs studyCode est rempli ssi le study est à soumettre (state = N)
+					/*if (StringUtils.isBlank(this.studyCode)) {
 						contextValidation.addErrors("strategy_study", "strategy_internal_study incompatible avec studyCode vide");
-					}
+					}*/
 				} else if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
 					if (StringUtils.isNotBlank(this.studyCode)){
 						contextValidation.addErrors("strategy_study", "strategy_external_study incompatible avec studyCode renseigne : '" + this.studyCode +"'");
 					}
-					if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
+					// On peut avoir donné un seul studyAc externe pour toute la soumission via l'interface
+					/*if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
 						contextValidation.addErrors("strategy_study", "strategy_external_study incompatible avec mapUserClone non renseigné");
-					}
+					}*/
 				} else {
 					contextValidation.addErrors("strategy_study", "valeur non attendue '" + config.strategyStudy + "'");
 				}
@@ -159,9 +161,10 @@ public class Submission extends DBObject implements IValidation {
 						if (this.sampleCodes.size() != 0) {
 							contextValidation.addErrors("strategy_external_sample incompatible avec samples à soumettre : ", "taille sampleCode = "  + this.sampleCodes.size());
 						}
-						if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
+						// On peut avoir donné un seul sampleAc externe pour toute la soumission via l'interface
+						/*if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
 							contextValidation.addErrors("strategy_sample", "strategy_external_sample incompatible avec mapUserClone non renseigné");
-						}
+						}*/
 					}
 				}
 			}

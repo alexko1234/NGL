@@ -34,8 +34,8 @@ public class SubmissionTest extends AbstractTestsSRA {
 	
 	}
 	*/
-	@Test
-	public void testSubmission() throws IOException, SraException
+	//@Test
+	/*public void testSubmission() throws IOException, SraException
 	{
 		SubmissionServices submissionServices = new SubmissionServices();
 		DbUtil sraDbServices = new DbUtil();
@@ -122,6 +122,6 @@ public class SubmissionTest extends AbstractTestsSRA {
 			System.out.println("Exception de type SRA: " +e.getMessage());
 		} 
 	}
-
+*/
 
 }

@@ -9,7 +9,6 @@
 			**@
 			<div class="form-control" bt-select  ng-model="createService.form.projCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required ng-change="createService.refreshSubmissions()"></div>	
 		}
-		
 		@** 
 		bt-options = createService.lists.getSraConfigurations() defini dans ngl-common/common.js
 		ng-focus = appelle refreshSraConfigurations de createService
@@ -37,14 +36,20 @@
 			<label>@Messages("userFileReadSet")</label> 
 			<input type="file" id="file" base64-file="createService.userFileReadSet"/>
 		</div>
-			
+		<div>
+			<label>@Messages("acStudy")</label> 
+			<input type="text" class="form-control" ng-model="createService.form.acStudy" placeholder='@Messages("create.placeholder.acStudy")' >
+		</div>	
+		<div>	
+			<label>@Messages("AcSample")</label> 
+			<input type="text" class="form-control" ng-model="createService.form.acSample" placeholder='@Messages("create.placeholder.acSample")' >
+		</div>					
 		@** utilisation d'une directive base-64 (Yann): nom , type et contenu en base 64 du fichier recupere en javascritp**@
 		@**<input type="file" base64-file="createService.file", ng-if="createService.externalStudies"/>**@
 		
 		@formGroup{
 			<div class="html"  placeholder='@Messages("fileCloneToAc-----------")' ></div>			
 		}
-		
 		<div>
 			<label>@Messages("userFileExperiments")</label> 
 			<input type="file" id="file" base64-file="createService.userFileExperiments"/>
@@ -59,9 +64,7 @@
 			<label>@Messages("userFileCloneToAc")</label> 
 			<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>
 		</div>	
-			
-		
-								
+					
 	}
 	
 }

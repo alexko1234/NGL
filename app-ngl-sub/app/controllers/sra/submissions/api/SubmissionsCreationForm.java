@@ -16,5 +16,7 @@ public class SubmissionsCreationForm  extends DatatableForm {
 	public String base64UserFileExperiments;
 	public String base64UserFileSamples;
 	public String base64UserFileReadSet;
+	public String acStudy;
+	public String acSample;
 
 }

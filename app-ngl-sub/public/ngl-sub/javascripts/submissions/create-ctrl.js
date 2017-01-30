@@ -67,7 +67,8 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 				$scope.createService.userFileSamples=null;
 				$scope.createService.userFileCloneToAc=null;
 				$scope.createService.userFileReadSet=null;
-				
+				$scope.createService.acStudy=null;
+		        $scope.createService.acSample=null;
 			}).error(function(data){
 				//$scope.messages.setDetails({"error":{"code":"value","code2":"value2"}});
 				$scope.messages.setDetails(data);
@@ -77,6 +78,8 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 				$scope.createService.userFileSamples=null;
 				$scope.createService.userFileCloneToAc=null;
 				$scope.createService.userFileReadSet=null;
+				$scope.createService.acStudy=null;
+				$scope.createService.acSample=null;
 			});
 	};
 	
@@ -86,9 +89,11 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 		$scope.createService.userFileSamples=null;
 		$scope.createService.userFileCloneToAc=null;
 		$scope.createService.userFileReadSet=null;
-		//$scope.messages.clear();
-	};
+		$scope.createService.acStudy=null;
+		$scope.createService.acSample=null;
 		
+		//$scope.messages.clear();
+	};	
 	
 }]);
 

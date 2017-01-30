@@ -82,6 +82,8 @@ public class SubmissionServices {
 	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
+	
+	
 	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
 		try {
 			String scientificName = getNcbiScientificName(new Integer(taxonCode));
@@ -97,7 +99,9 @@ public class SubmissionServices {
 			throw new SraException("impossible de recuperer le scientificName au ncbi pour le taxonId '" + taxonCode + "' : \n" + e.getMessage());
 		}
 	}
-	public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
+	
+	
+	public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, String acStudy, String acSample, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
 		//public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, ContextValidation contextValidation) throws SraException, IOException {
 		// Cree en base un objet submission avec state.code=N, met dans la base la configuration avec state.code='U-SUB'
 		// met les readSet avec state.code = 'N', les experiments avec state.code='N', les samples à soumettre 
@@ -112,52 +116,87 @@ public class SubmissionServices {
 		// Verifier config et initialiser objet submission avec release a false(private) state.code='N'et 
 		// pas de validation integrale de config qui a ete stocke dans la base donc valide mais verification
 		// de quelques contraintes en lien avec soumission.
-		
+		String user = contextValidation.getUser();
+		System.out.println("Dans init : acStudy = " + acStudy + " et acSample= " + acSample);
 		if (StringUtils.isBlank(configCode)) {
 			throw new SraException("la configuration a un code à null");
 		}
 		Configuration config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
 		
 		Study study = null;
+		ExternalStudy uniqExternalStudy = null;
 		
 		if (config == null) {
-			throw new SraException("Configuration " + config.code + " n'existe pas dans database");
+			throw new SraException("Configuration " + configCode + " n'existe pas dans database");
 		} 
 		if (StringUtils.isBlank(config.state.code)) {
 			throw new SraException("Configuration " + config.code + " avec champs state.code non renseigne");
 		}
 		System.out.println("dans init, config.state.code='"+config.state.code+"'");
-		if (!"N".equalsIgnoreCase(config.state.code) && !"U-SUB".equalsIgnoreCase(config.state.code)) {
+		
+		if (! "N".equalsIgnoreCase(config.state.code) && ! "U-SUB".equalsIgnoreCase(config.state.code)) {
 			throw new SraException("Configuration " + config.code + " avec state.code = '"+ config.state.code+"'");
 		}
-		System.out.println("dans init, config.state.code='"+config.state.code+"'");
+		System.out.println("dans init, config.state.code='" + config.state.code + "'");
 		if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
-			if (StringUtils.isBlank(studyCode)) {
-				throw new SraException("Configuration " + config.code + " avec strategy_study = 'strategy_internal_study' incompatible avec studyCode vide passé en parametre");
-			} else {
-				// Recuperer le study si studyCode renseigné et strategy_internal_study :
-				if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", studyCode)){
-					study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);			
+			if (StringUtils.isNotBlank(acStudy)) {
+				// Recuperer le study si acStudy renseigné et strategy_internal_study :
+				if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "accession", acStudy)){
+					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+							Study.class, DBQuery.and(DBQuery.is("accession", acStudy)));
 				} else {
-					throw new SraException("studyCode passé en parametre "+ studyCode + "n'existe pas database");	
+					throw new SraException("strategy_internal_study et acStudy passé en parametre "+ acStudy + "n'existe pas dans database");	
 				}	
+			} else {
+				if (StringUtils.isBlank(studyCode)) {
+					throw new SraException("Configuration " + config.code + " avec strategy_study = 'strategy_internal_study' incompatible avec studyCode et acStudy vides passés en parametre");
+				} else {
+					// Recuperer le study si studyCode renseigné et strategy_internal_study :
+					if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", studyCode)){
+						study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);			
+					} else {
+						throw new SraException("strategy_internal_study et studyCode passé en parametre "+ studyCode + "n'existe pas dans database");	
+					}	
+				}
 			}
 		} else if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
-			if (StringUtils.isNotBlank(studyCode)){
-				throw new SraException("Configuration " + config.code + " avec strategy_study = 'strategy_external_study' incompatible avec studyCode renseigne : '" + studyCode +"'");
-			}
-			if (mapUserClones == null || mapUserClones.isEmpty()){
-				throw new SraException("Configuration " + config.code + " avec strategy_study = 'strategy_external_study' incompatible avec mapUserClone non renseigné");
+			if (StringUtils.isNotBlank(acStudy)) {
+				uniqExternalStudy = fetchExternalStudy(acStudy, user);
+			} else {
+				if (StringUtils.isNotBlank(studyCode)){
+					throw new SraException("Configuration " + config.code + " avec strategy_external_study incompatible avec studyCode renseigne : '" + studyCode +"'");
+				}
+				if (mapUserClones == null || mapUserClones.isEmpty()){
+					throw new SraException("Configuration " + config.code + " avec strategy_study = 'strategy_external_study' incompatible avec acStudy et mapUserClone non renseignés");
+				}
 			}
 		} else {
 			throw new SraException("Configuration " + config.code + " avec strategy_study = '"+ config.strategyStudy + "' (valeur non attendue)");
 		}
+		
+		ExternalSample uniqExternalSample = null;
+		Sample uniqSample = null;
+
 		if (config.strategySample.equalsIgnoreCase("strategy_external_sample")) {
-			if (mapUserClones== null || mapUserClones.isEmpty()){
-				throw new SraException("Configuration " + config.code + "avec configuration.strategy_sample='strategy_external_sample' incompatible avec mapUserClone non renseigné");
+			if (StringUtils.isNotBlank(acSample)) {
+				uniqExternalSample = fetchExternalSample(acSample, user);
+			} else {
+				if (mapUserClones== null || mapUserClones.isEmpty()){
+					throw new SraException("Configuration " + config.code + "avec configuration.strategy_sample='strategy_external_sample' incompatible avec mapUserClone non renseigné");
+				}
 			}
 		} 
-
+		
+		if (config.strategySample.equalsIgnoreCase("strategy_internal_sample")) {
+			if (StringUtils.isNotBlank(acSample)) {
+				uniqSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
+						Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
+			} else {
+				if (mapUserClones== null || mapUserClones.isEmpty()){
+					throw new SraException("Configuration " + config.code + "avec configuration.strategy_sample='strategy_external_sample' incompatible avec mapUserClone non renseigné");
+				}
+			}
+		} 
 		// Verifier que tous les readSetCode passes en parametres correspondent bien a des objets en base avec
 		// submissionState='NONE' cad des readSets qui n'interviennent dans aucune soumission.
 		List <ReadSet> readSets = new ArrayList<ReadSet>();
@@ -181,10 +220,9 @@ public class SubmissionServices {
 		// et submission.studyCode renseigné (study à envoyer à l'EBI) si config.strategyStudy=strategy_internal_study et studyCode.state.code="N"
 		// submission.release = false si config.strategyStudy == strategy_external_study
 		// submission.release = studyCode.release si config.strategyStudy == strategy_internal_study
-		String user = contextValidation.getUser();
-		Submission submission = createSubmissionEntity(config, studyCode, user);
-		
-		
+		//String user = contextValidation.getUser();
+		Submission submission = createSubmissionEntity(config, studyCode, acStudy, user);
+				
 		// Liste des sous-objets utilisés dans submission
 		List <Experiment> listExperiments = new ArrayList<Experiment>(); // liste des experiments utilisés et crees dans soumission avec state.code='N' à sauver dans database
 		List <AbstractSample> listAbstractSamples = new ArrayList<AbstractSample>();//liste des AbstractSample(Sample ou ExternalSample) avec state.code='F-SUB' ou 'N' utilises dans soumission à sauver ou non dans database		
@@ -192,8 +230,6 @@ public class SubmissionServices {
 
 		int countError = 0;
 		String errorMessage = "";
-
-		
 	
 		for(ReadSet readSet : readSets) {
 			System.out.println("readSet :" + readSet.code);
@@ -249,50 +285,65 @@ public class SubmissionServices {
 			System.out.println("clone = '" + clone +"'");
 			// Creer le sample si besoin et ajouter dans submission.mapUserClone
 			if (config.strategySample.equalsIgnoreCase("strategy_external_sample")){
-				if (StringUtils.isBlank(clone)) {
-					countError++;
-					errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_sample et pas de nom de clone dans ngl \n";
-					continue;					
-				}
-							
-				if (! mapUserClones.containsKey(clone)){
-					countError++;
-					errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_sample et mapUserClone ne contient pas le clone '" + clone +"' \n";
-					continue;
-				}
-				String sampleAc = mapUserClones.get(clone).getSampleAc();
-				if (StringUtils.isBlank(sampleAc)){
-					countError++;
-					errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque mapUserClone pour clone '" + clone + "' ne contient pas de sampleAc";
-					continue;					
-				}
+				if (uniqExternalSample != null) {
+					// Mise à jour de l'objet submission pour les samples references :
+					if(!submission.refSampleCodes.contains(uniqExternalSample.code)){
+						submission.refSampleCodes.add(uniqExternalSample.code);
+					}
+					if(!listAbstractSamples.contains(uniqExternalSample.code)){
+						listAbstractSamples.add(uniqExternalSample);
+					}	
+					// mettre à jour l'experiment pour la reference sample :
+					experiment.sampleCode = uniqExternalSample.code;
+					experiment.sampleAccession = uniqExternalSample.accession;
+				} else {
+					
+					if (StringUtils.isBlank(clone)) {
+						countError++;
+						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_sample et pas de nom de clone dans ngl \n";
+						continue;					
+					}
+		
+					if (! mapUserClones.containsKey(clone)){
+						countError++;
+						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_sample et mapUserClone ne contient pas le clone '" + clone +"' \n";
+						continue;
+					}
+					String sampleAc = mapUserClones.get(clone).getSampleAc();
+					if (StringUtils.isBlank(sampleAc)){
+						countError++;
+						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque mapUserClone pour clone '" + clone + "' ne contient pas de sampleAc";
+						continue;					
+					}
 				
-				// creation ou recuperation dans base de externalSample avec status F-SUB
-				ExternalSample externalSample = fetchExternalSample(sampleAc, user);
-				if (!("F-SUB").equalsIgnoreCase(externalSample.state.code)){
-					throw new SraException("Tentative d'utilisation dans la soumission du sample "+ externalSample.code +" en cours de soumission avec state.code==" + externalSample.state.code);
+					// creation ou recuperation dans base de externalSample avec status F-SUB
+					ExternalSample externalSample = fetchExternalSample(sampleAc, user);
+					if (!("F-SUB").equalsIgnoreCase(externalSample.state.code)){
+						throw new SraException("Tentative d'utilisation dans la soumission du sample "+ externalSample.code +" en cours de soumission avec state.code==" + externalSample.state.code);
+					}
+					// Mise a jour de l'objet submission pour les samples referencés
+					if (!submission.refSampleCodes.contains(externalSample.code)){
+						submission.refSampleCodes.add(externalSample.code);
+					}
+					// Mise a jour de l'objet submission pour mapUserClone :
+				
+				
+					UserCloneType submission_userClone = new UserCloneType();
+					submission_userClone.setAlias(mapUserClones.get(clone).getAlias());
+					submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
+				    submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
+				    submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone);
+				
+				    // Aucune mise a jour de l'objet submission pour les samples à soumettre dans cas externalSample
+				    if(!listAbstractSamples.contains(externalSample.code)){
+				    	listAbstractSamples.add(externalSample);
+				    }	
+				    // mettre à jour l'experiment pour la reference sample :
+				    experiment.sampleCode = externalSample.code; 
+				    experiment.sampleAccession = externalSample.accession; 
 				}
-				// Mise a jour de l'objet submission pour les samples referencés
-				if(!submission.refSampleCodes.contains(externalSample.code)){
-					submission.refSampleCodes.add(externalSample.code);
-				}
-				// Mise a jour de l'objet submission pour mapUserClone :
-				
-				
-				UserCloneType submission_userClone = new UserCloneType();
-				submission_userClone.setAlias(mapUserClones.get(clone).getAlias());
-				submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
-				submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
-				submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone);
-				
-
-				// Aucune mise a jour de l'objet submission pour les samples à soumettre dans cas externalSample
-				if(!listAbstractSamples.contains(externalSample.code)){
-					listAbstractSamples.add(externalSample);
-				}	
-				// mettre à jour l'experiment pour la reference sample :
-				experiment.sampleCode = externalSample.code; 
 			} else {
+				
 				// Recuperer le sample existant avec son state.code ou bien en creer un nouveau avec state.code='N'
 				Sample sample = fetchSample(readSet, config.projectCode, config.strategySample, scientificName, user);
 				// Renseigner l'objet submission :
@@ -319,6 +370,10 @@ public class SubmissionServices {
 					}	
 					// Le champs scientificName est rempli automatiquement et n'est pas surchargeable.
 				}
+				
+				
+				
+				
 				// Mise a jour de l'objet submission pour les samples references
 				if(!submission.refSampleCodes.contains(sample.code)){
 					submission.refSampleCodes.add(sample.code);
@@ -333,48 +388,57 @@ public class SubmissionServices {
 				if(!listAbstractSamples.contains(sample.code)){
 					listAbstractSamples.add(sample);
 				}
-				
 				// mettre à jour l'experiment pour la reference sample :
 				experiment.sampleCode = sample.code;
-				
-				
-				
+				experiment.sampleAccession = sample.accession;
 			}
 			
 			if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")){
-				if (! mapUserClones.containsKey(clone)){
-					countError++;
-					errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_study et mapUserClone ne contient pas le clone '" + clone +"' \n";
-					continue;
+				if (uniqExternalStudy != null) {
+					// Mise à jour de l'objet submission pour les study references :
+					if(!submission.refStudyCodes.contains(uniqExternalStudy.code)){
+						submission.refStudyCodes.add(uniqExternalStudy.code);
+					}
+					if(!listAbstractStudies.contains(uniqExternalStudy.code)){
+						listAbstractStudies.add(uniqExternalStudy);
+					}	
+					// mettre à jour l'experiment pour la reference study :
+					experiment.studyCode = uniqExternalStudy.code;	
+					experiment.studyAccession = uniqExternalStudy.accession;	
+
 				} else {
-					// mettre a jour submission.mapUserClone :
-					UserCloneType submission_userClone = new UserCloneType();
-					submission_userClone.setAlias(mapUserClones.get(clone).getAlias());
-					submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
-					submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
-					submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone);
-				}
-				String studyAc = mapUserClones.get(clone).getStudyAc();
-				if (StringUtils.isBlank(studyAc)){
-					countError++;
-					errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_study et mapUserClone.get(clone).getStudyAc() non renseigne pour le clone '" + clone + "'\n";
-					continue;					
-				}
-				// creation ou recuperation dans base de externalStudy avec state.code = F-SUB
-				ExternalStudy externalStudy = fetchExternalStudy(studyAc, user);
+					if (! mapUserClones.containsKey(clone)){
+						countError++;
+						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_study et mapUserClone ne contient pas le clone '" + clone +"' \n";
+						continue;
+					} else {
+						// mettre a jour submission.mapUserClone :
+						UserCloneType submission_userClone = new UserCloneType();
+						submission_userClone.setAlias(mapUserClones.get(clone).getAlias());
+						submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
+						submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
+						submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone);
+					}
+					String studyAc = mapUserClones.get(clone).getStudyAc();
+					if (StringUtils.isBlank(studyAc)){
+						countError++;
+						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_external_study et mapUserClone.get(clone).getStudyAc() non renseigne pour le clone '" + clone + "'\n";
+						continue;					
+					}
+					// creation ou recuperation dans base de externalStudy avec state.code = F-SUB
+					ExternalStudy externalStudy = fetchExternalStudy(studyAc, user);
 				
-				if (! externalStudy.state.code.equalsIgnoreCase("F-SUB")) {
-					
+					// Mise à jour de l'objet submission pour les study references :
+					if(!submission.refStudyCodes.contains(externalStudy.code)){
+						submission.refStudyCodes.add(externalStudy.code);
+					}
+					if(!listAbstractStudies.contains(externalStudy.code)){
+						listAbstractStudies.add(externalStudy);
+					}	
+					// mettre à jour l'experiment pour la reference study :
+					experiment.studyCode = externalStudy.code;
+					experiment.studyAccession = externalStudy.accession;
 				}
-				// Mise à jour de l'objet submission pour les study references :
-				if(!submission.refStudyCodes.contains(externalStudy.code)){
-					submission.refStudyCodes.add(externalStudy.code);
-				}
-				if(!listAbstractStudies.contains(externalStudy.code)){
-					listAbstractStudies.add(externalStudy);
-				}	
-				// mettre à jour l'experiment pour la reference study :
-				experiment.studyCode = externalStudy.code;
 
 			} else {
 				// Renseigner l'objet submission :
@@ -383,16 +447,18 @@ public class SubmissionServices {
 				}
 				// Mise a jour de l'objet submission pour le study à soumettre :// normalement deja fait dans createSubmissionEntity
 				//--------------------------------------------------------------
-				if ("N".equalsIgnoreCase(study.state.code)){
+				if (StringUtils.isBlank(acStudy) && ("N").equalsIgnoreCase(study.state.code)) {
 					submission.studyCode = study.code;
 				}
 				// Mise à jour de l'objet submission pour les study references :
 				if(!listAbstractStudies.contains(study.code)){
 					listAbstractStudies.add(study);
-				}	
+				}
 				// mettre à jour l'experiment pour la reference study :
 				System.out.println("STUDY_CODE=" + study.code);
 				experiment.studyCode = study.code;
+				experiment.studyAccession = study.accession;
+
 			}
 			
 			// surcharger l'experiment avec valeurs de l'utilisateur si mapUserExperiments exist
@@ -531,15 +597,24 @@ public class SubmissionServices {
 
 	}
 
-
-	
 	public ExternalStudy fetchExternalStudy(String studyAc, String user) throws SraException {
-		String externalStudyCode = SraCodeHelper.getInstance().generateExternalStudyCode(studyAc);
 		ExternalStudy externalStudy;
-		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "code", externalStudyCode)){
-			//System.out.println("Recuperation du study "+ externalStudyCode);
-			externalStudy = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.ExternalStudy.class, externalStudyCode);
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "accession", studyAc)){
+			// verifier que si objet existe dans base avec cet AC c'est bien un type externalStudy et non un type study
+			AbstractStudy absStudy;
+			absStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+				AbstractStudy.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+			//if (! (absStudy instanceof ExternalStudy)) {
+			if ( ExternalStudy.class.isInstance(absStudy)) {
+				//System.out.println("Recuperation dans base du study avec Ac = " + studyAc +" qui est du type externalStudy ");
+			} else {
+				throw new SraException("Recuperation dans base du study avec Ac = " + studyAc +" qui n'est pas du type externalStudy ");
+			}
+			externalStudy = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+					ExternalStudy.class, DBQuery.and(DBQuery.is("accession", studyAc)));
 		} else {
+			// Creer objet externalStudy
+			String externalStudyCode = SraCodeHelper.getInstance().generateExternalStudyCode(studyAc);
 			externalStudy = new ExternalStudy(); // objet avec state.code = submitted
 			externalStudy.accession = studyAc;
 			externalStudy.code = externalStudyCode;
@@ -643,7 +718,7 @@ public class SubmissionServices {
 		
 	
 	//private Submission createSubmissionEntity(Configuration config, String studyCode, String user, Map<String, UserCloneType> mapUserClones) throws SraException{
-		private Submission createSubmissionEntity(Configuration config, String studyCode, String user) throws SraException{
+	private Submission createSubmissionEntity(Configuration config, String studyCode, String studyAc, String user) throws SraException{
 		if (config==null) {
 			throw new SraException("SubmissionServices::createSubmissionEntity::configuration : config null ???");
 		}
@@ -662,14 +737,22 @@ public class SubmissionServices {
 		// Creation de la map deportéé dans methode initNewSubmission pour ne mettre dans la map
 		// que les noms de clones utilisee par la soumission
 
-		if (StringUtils.isBlank(studyCode)){
-			if (StringUtils.isBlank(config.strategyStudy) || ! config.strategyStudy.equalsIgnoreCase("strategy_external_study")){
-				throw new SraException("Aucun studyCode et strategyStudy != 'strategy_external_study'");
+		
+		if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
+			// pas de study à soumettre et par defaut pas de release.
+			// ok submission.release == false et submission sans studyCode.
+		} else if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
+			
+			Study study = null;
+			
+			if (StringUtils.isNotBlank(studyAc)) {
+				study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+						Study.class, DBQuery.and(DBQuery.is("accession", studyAc)));
+			} else if (StringUtils.isNotBlank(studyCode)) {
+				study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 			} else {
-				// ok submission.release == false et submission sans studyCode.
+				throw new SraException("strategy_internal_study avec studyCode et studyAc vides ???");
 			}
-		} else {
-			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 			if (study==null){
 				throw new SraException("study " + study.code + " n'existe pas dans database");
 			} 
@@ -677,7 +760,7 @@ public class SubmissionServices {
 				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('N','F-SUB')");
 			}
 			
-			// mettre à jour l'objet submission pour le study et la release_date :
+			// mettre à jour l'objet submission pour le study  :
 			if (! submission.refStudyCodes.contains("study.code")){
 				submission.refStudyCodes.add(study.code);
 			}
@@ -693,7 +776,7 @@ public class SubmissionServices {
 			} else {
 				throw new SraException("study.state.code not in ('N', 'F-SUB') => utilisation pour cette soumission d'un study en cours de soumission ?");
 			}
-			
+			// mettre à jour l'objet submission pour la releaseDate  :
 			Date date = new Date();
 			if (study.releaseDate == null) {
 				submission.release = false;
@@ -704,7 +787,10 @@ public class SubmissionServices {
 					submission.release = false;
 				}
 			}
+		} else {
+			throw new SraException("config.strategyStudy inconnu : "+ config.strategyStudy);
 		}
+		
 		return submission;
 	}
 
@@ -783,7 +869,7 @@ public class SubmissionServices {
 	
 	
 	
-	public ExternalSample fetchExternalSample(String sampleAc, String user) throws SraException {
+	/*public ExternalSample fetchExternalSample(String sampleAc, String user) throws SraException {
 		String externalSampleCode = SraCodeHelper.getInstance().generateExternalSampleCode(sampleAc);
 		ExternalSample externalSample;
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, ExternalSample.class, "code", externalSampleCode)){
@@ -798,7 +884,37 @@ public class SubmissionServices {
 		}
 		return externalSample;
 	}
-	
+	*/
+	public ExternalSample fetchExternalSample(String sampleAc, String user) throws SraException {
+
+		ExternalSample externalSample;
+
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "accession", sampleAc)){
+			AbstractSample absSample;
+
+			absSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
+				AbstractSample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
+			
+			if (ExternalSample.class.isInstance(absSample)) {
+				//System.out.println("Recuperation dans base du sample avec Ac = " + sampleAc +" qui est du type externalSample ");
+			} else {
+				throw new SraException("Recuperation dans base du sample avec Ac = " + sampleAc +" qui n'est pas du type externalSample ");
+			}
+			
+			externalSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
+					ExternalSample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
+			
+
+		} else {
+			String externalSampleCode = SraCodeHelper.getInstance().generateExternalSampleCode(sampleAc);
+			externalSample = new ExternalSample(); // objet avec state.code = submitted
+			externalSample.accession = sampleAc;
+			externalSample.code = externalSampleCode;
+			externalSample.traceInformation.setTraceInformation(user);	
+			externalSample.state = new State("F-SUB", user);
+		}
+		return externalSample;
+	}
 	
 	
 	

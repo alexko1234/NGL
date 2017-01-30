@@ -316,7 +316,8 @@ public class Submissions extends DocumentController<Submission>{
 
 			SubmissionServices submissionServices = new SubmissionServices();
 				
-			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
+			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
+			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest(filledForm.errorsAsJson());
