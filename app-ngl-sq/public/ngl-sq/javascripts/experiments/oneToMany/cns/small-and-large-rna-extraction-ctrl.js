@@ -2,6 +2,8 @@ angular.module('home').controller('SmallAndLargeRNAIsolation',['$scope', '$parse
                                                                function($scope, $parse, $filter, atmToSingleDatatable,lists,mainService) {
 	
 
+	$scope.dispatchConfiguration.orderBy = "container.sampleCodes";
+	
 	var datatableConfig =  {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   

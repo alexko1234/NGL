@@ -1,6 +1,8 @@
 angular.module('home').controller('TotalRNAExtractionCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
-                                                    
+        
+	$scope.dispatchConfiguration.orderBy = "container.sampleCodes";
+	
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[	
