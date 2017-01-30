@@ -172,6 +172,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
 			"groupMethod":"collect"
 		});
+		/*
 		columns.push({
 				"header":Messages("containers.table.processCodes"),
 				"property":"processCodes",
@@ -182,6 +183,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
 				"groupMethod":"collect"
 			});
+		*/
 		columns.push({
 			"header":Messages("containers.table.state.code"),
 			"property":"state.code",
