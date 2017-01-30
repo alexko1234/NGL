@@ -58,12 +58,10 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "20"));		
 
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			l.add(DescriptionFactory.newTreatmentType("Top Index","topIndex", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "topIndex", 
-					getTopIndexPropertyDefinitions(), 
-					Arrays.asList(getTreatmentTypeContext("default",Boolean.TRUE)), 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "25"));	
-		}
+		l.add(DescriptionFactory.newTreatmentType("Top Index","topIndex", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "topIndex", 
+				getTopIndexPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("default",Boolean.TRUE)), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "25"));	
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
@@ -104,8 +102,8 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "35,36,60"));		
 
 
-		
-		
+
+
 		//specific CNG 
 		l.add(DescriptionFactory.newTreatmentType("alignSingleRead BLAT","alignsingleread-blat", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadBLATRaw", 
 				getASRBPropertyDefinitions(), 
@@ -368,9 +366,9 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% clusters filtrés (Illumina)","percentClusterIlluminaFilter", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.Default), Double.class, false, "single"));        
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases (total)","nbBase", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mismatch autorisé pour le démultiplexage","mismatch", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Boolean.class, true, "single"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb mismatch","nbMismatch", LevelService.getLevels(Level.CODE.Lane, Level.CODE.Default), Integer.class, false, "single"));
-		
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version RTA","rtaVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb clusters (total)","nbClusterTotal", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
@@ -745,7 +743,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		return propertyDefinitions;		
 	}
 
-	
+
 
 
 

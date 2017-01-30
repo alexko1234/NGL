@@ -62,12 +62,10 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "20"));		
 
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			l.add(DescriptionFactory.newTreatmentType("Top Index","topIndex", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "topIndex", 
-					getTopIndexPropertyDefinitions(), 
-					Arrays.asList(getTreatmentTypeContext("default",Boolean.TRUE)), 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS), "25"));	
-		}
+		l.add(DescriptionFactory.newTreatmentType("Top Index","topIndex", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "topIndex", 
+				getTopIndexPropertyDefinitions(), 
+				Arrays.asList(getTreatmentTypeContext("default",Boolean.TRUE)), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "25"));	
 
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
