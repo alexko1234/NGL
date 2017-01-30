@@ -1,6 +1,8 @@
 angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSingleDatatable','datatable',
                                                                function($scope,$parse, atmToSingleDatatable, datatable) {
 	
+	//Nouvelle fragmentation 
+	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render	
 	var datatableConfig = {
@@ -86,10 +88,11 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":50,
+			        	 "position":80,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
+			         //pass by copie of dynamic properties
+			       /*  {
 			        	 "header":"Qté finale (ng)",
 			        	 "property":"outputContainerUsed.quantity.value",
 			        	 "order":true,
@@ -98,7 +101,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 			        	 "type":"number",
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+			         },*/
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -106,7 +109,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":52,
+			        	 "position":90,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -184,9 +187,13 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 	var copyAttribute = function(datatable){
 		var dataMain = datatable.getData();
 		console.log("call event save2");
-		var qtty = dataMain[0].outputContainerUsed.quantity.value;
-		$parse('outputContainerUsed.experimentProperties.postFrgQuantity.value').assign(dataMain[0],qtty);
 		
+		var ligationConcentration = $parse("outputContainerUsed.experimentProperties.ligationConcentration.value")(value);
+		$parse("outputContainerUsed.concentration.value").assign(value, ligationConcentration);
+		
+		var qttProperty = $parse("outputContainerUsed.experimentProperties.postFrgQuantity.value")(value);
+		$parse("outputContainerUsed.quantity.value").assign(value,qttProperty); 
+				
 	}
 	
 	

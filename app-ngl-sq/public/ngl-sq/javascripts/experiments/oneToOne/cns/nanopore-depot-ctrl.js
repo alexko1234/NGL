@@ -109,7 +109,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":500,
+			        	 "position":20,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }
 			         ],
@@ -294,8 +294,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		
 		if(reportingVolSum){
 			$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
-		}else{
-			$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN);
 		}
 		
 		//datatable.setData(dataMain);

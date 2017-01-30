@@ -1,6 +1,8 @@
 angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToSingleDatatable',
                                                                function($scope, atmToSingleDatatable) {
 	
+	// ATTENTION ancienne version => REMPLACEE par frg
+	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render	
 	var datatableConfig = {

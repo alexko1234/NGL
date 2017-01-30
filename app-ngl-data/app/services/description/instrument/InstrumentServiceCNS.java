@@ -150,7 +150,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		//TODO : verify getContainerSupportCategories parameters
 		l.add(newInstrumentUsedType("Blue pippin", "blue-pippin", InstrumentCategory.find.findByCode("sizing-system"), getBluePippinProperties(), 
 				getInstrumentBluePippin(),
-						getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
+						getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
@@ -378,14 +378,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 	//	instruments.add(createInstrument("blue-pippin","Blue Pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		createInstrument("BluePippin1", "BluePippin1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS));
+		instruments.add(createInstrument("blue-pippin-1", "Blue pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return instruments;
 	}
 
 	private List<PropertyDefinition> getBluePippinProperties() {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Marqueur-utilisé", "marker", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
+		l.add(newPropertiesDefinition("Marqueur utilisé", "marker", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
 				"object_list", 10, true, null,null));
 		l.add(newPropertiesDefinition("Cassette", "cassette", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
 				"object_list", 11, true, null,null));
