@@ -117,7 +117,7 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 						getExperimentTypes("grinding").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Extraction ARN (17-200  et  >200nt)", "small-and-large-rna-extraction", 
+		l.add(DescriptionFactory.newProcessType("Extraction ARN (17-200 et >200nt) à partir de filtres", "small-and-large-rna-extraction", 
 				ProcessCategory.find.findByCode("sample-prep"), 3,
 				null, 
 				Arrays.asList(
@@ -128,7 +128,7 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 	
-		l.add(DescriptionFactory.newProcessType("Extraction ARN (17-200 et >200nt) à partir d'ARN total", "small-and-large-isolation-process", 
+		l.add(DescriptionFactory.newProcessType("Séparation ARN (17-200 et >200nt) à partir d'ARN total", "small-and-large-isolation-process", 
 				ProcessCategory.find.findByCode("sample-prep"), 3,
 				null, 
 				Arrays.asList(
