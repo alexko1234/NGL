@@ -10,4 +10,6 @@ public class ProcessTypesSearchForm extends ListForm{
 	public List<String> categoryCodes;
 	
 	public List<String> codes;
+	
+	public Boolean isActive;
 }

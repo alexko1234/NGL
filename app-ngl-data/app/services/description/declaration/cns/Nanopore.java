@@ -153,6 +153,19 @@ public class Nanopore extends AbstractDeclaration{
 				getExperimentTypes("ext-to-nanopore-rep-lib-depot").get(0),
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(DescriptionFactory.newProcessType("Frg-rep, Lib ONT, Dépôt", "nanopore-process-library", 
+				ProcessCategory.find.findByCode("nanopore-library"),50, 
+				getPropertyDefinitionsNanoporeFragmentation(), 
+				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),
+						getPET("dna-rna-extraction",-1),
+						getPET("nanopore-fragmentation",0),
+						getPET("nanopore-library",1),
+						getPET("nanopore-depot",2)), 
+				getExperimentTypes("nanopore-fragmentation").get(0),
+				getExperimentTypes("nanopore-depot").get(0), 
+				getExperimentTypes("ext-to-nanopore-process-library").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS),false));
+		
 		return l;
 	}
 	
@@ -224,7 +237,7 @@ public class Nanopore extends AbstractDeclaration{
 		
 		l.add(newExperimentType("Fragm-Réparation Nanopore","nanopore-fragmentation","FRG",2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyFragmentationNanopore(), 
+				getPropertyFragmentationNanoporeOld(), 
 				getInstrumentUsedTypes("megaruptor2","eppendorf-mini-spin-plus","hand"),"OneToOne",false, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		

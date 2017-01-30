@@ -49,7 +49,13 @@ public class ProcessTypes extends CommonController{
 			}else if(processTypesSearch.list){
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(ProcessType et:processTypes){
-					lop.add(new ListObject(et.code, et.name));
+					if(null == processTypesSearch.isActive){
+						lop.add(new ListObject(et.code, et.name));
+					}else if(processTypesSearch.isActive.equals(et.active)){
+						lop.add(new ListObject(et.code, et.name));
+					}
+					
+					
 				}
 				return Results.ok(Json.toJson(lop));
 			}else{
