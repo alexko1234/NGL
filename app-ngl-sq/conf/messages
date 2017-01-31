@@ -383,7 +383,7 @@ experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
 experiment.title.delete = Suppression de l''expérience
-experiment.question.delete = Etes vous certains de vouloir supprimer l''expérience ?
+experiment.question.delete = Êtes-vous certain de vouloir supprimer l''expérience ?
 experiment.question.delete.yes = Oui
 experiment.question.delete.no = Non
 experiments.inputs = Container(s) en entrée(s)
