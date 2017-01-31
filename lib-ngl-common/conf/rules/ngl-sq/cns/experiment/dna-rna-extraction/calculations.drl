@@ -36,6 +36,8 @@ rule "Set good project code for DNA"
 			outputProjectCode.value = "BUY";
 		}else if("BWB".equals($inputProjectCode)){
 			outputProjectCode.value = "BWC";
+		}else if("BYW".equals($inputProjectCode)){
+			outputProjectCode.value = "BYX";
 		}else{
 			outputProjectCode.value = null;
 		}
@@ -78,10 +80,11 @@ rule "Set good project code for RNA"
 			outputProjectCode.value = "BUZ";
 		}else if("BWB".equals($inputProjectCode)){
 			outputProjectCode.value = "BWD";
+		}else if("BYW".equals($inputProjectCode)){
+			outputProjectCode.value = "BYY";
 		}else{
 			outputProjectCode.value = null;
 		}
-		   
 		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
 		
 end

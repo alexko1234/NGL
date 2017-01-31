@@ -121,11 +121,22 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, "single", 1, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, null, "single", 1, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Destination finale", "finalDestination", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Destination finale", "finalDestination", LevelService.getLevels(Level.CODE.Container), String.class, true, null, 
 				getTaraPacificFinalDestination(), "single", 3, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
 				getTaraPacificProtocolValues(), "single", 4, true, null, null));
 		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
+				getTaraPacificStationValues(), "single", 4, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
+				null, "single", 5, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Environnement TARA Pacific", "taraEnvironment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificEnvironmentValues(), "single", 6, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Provenance", "origin", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
+				null, "single", 7, true, null, null));
 		return propertyDefinitions;
 	}
 	
@@ -171,6 +182,8 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("Ohio", "Ohio"));
 		values.add(DescriptionFactory.newValue("Weizmann", "Weizmann"));
 		values.add(DescriptionFactory.newValue("LSCE", "LSCE"));
+		values.add(DescriptionFactory.newValue("to-check", "to check"));
+		values.add(DescriptionFactory.newValue("Nice", "Nice"));
 		
 		return values;	
 	}
@@ -228,6 +241,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
+		values.add(DescriptionFactory.newValue("Undefined", "Undefined"));
 		return values;	
 	}
 	

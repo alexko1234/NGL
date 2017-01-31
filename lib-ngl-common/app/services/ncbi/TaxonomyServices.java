@@ -12,6 +12,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 
 import play.Logger;
 import play.libs.F.Promise;

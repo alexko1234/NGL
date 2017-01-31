@@ -307,7 +307,7 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		//dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
 		

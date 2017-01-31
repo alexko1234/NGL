@@ -1545,7 +1545,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}
-				}else{
+				}else if(data[i].dispatch !== 7){
 				
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 					if(data[i].dispatch === 4 || data[i].dispatch === 6){
@@ -1615,7 +1615,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			var codes = getXCodes(data[i].container);
 			
 			if(data[i].status === 'TRUE'){
-				containerPromises = containerPromises.concat(getContainerStateRequests(i, codes.inputContainerCodes, "IS"));
+				if(data[i].dispatch !== 7){
+					containerPromises = containerPromises.concat(getContainerStateRequests(i, codes.inputContainerCodes, "IS"));
+				}
 				//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, "IS"));
 				var outputStateCode = null;
 				if(data[i].dispatch === 0){
