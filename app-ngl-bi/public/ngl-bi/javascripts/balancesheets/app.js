@@ -3,8 +3,8 @@
 angular.module('home', ['ngRoute', 'ultimateDataTableServices','commonsServices', 'ui.bootstrap', 
                         'ngl-bi.BalanceSheetsService'], function($routeProvider, $locationProvider) {
 	
-	$routeProvider.when('/balance-sheets/illumina/home',{
-		templateUrl : '/tpl/balance-sheets/general/illumina',
+	$routeProvider.when('/balance-sheets/:typeCode/home',{
+		templateUrl : '/tpl/balance-sheets/general',
 		controller : 'BalanceSheetsGeneralCtrl'
 	});
 	

@@ -1241,15 +1241,17 @@
 			var isLoading = true;
 			var actualDay = new Date();
 			var actualYear = actualDay.getFullYear();
+			typeCode=undefined;
 			
 			var loadData = function(){
 				isLoading = true;
 				var form = {includes : [], typeCodes : []};
 				form.includes.push("default");
-				form.includes.push("treatments.ngsrg.default.nbBases");
-				form.includes.push("runSequencingStartDate");
-				form.typeCodes.push("default-readset");
-				form.typeCodes.push("rsillumina");
+				//form.includes.push("treatments.ngsrg.default.nbBases");
+				form.includes.push("treatments.ngsrg.default");
+				//form.includes.push("runSequencingStartDate");
+				form.typeCodes.push(typeCode);
+				//form.typeCodes.push("rsillumina");
 				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;
@@ -1450,8 +1452,13 @@
 					dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
 					dtSumYearly : function(){return dtSumYearly},
 					loadFromCache : function(){loadYearlyBalanceSheets()},
-					init : function(){loadData();}	
+					//init : function(){loadData();}	
 			};
+			
+			init : function($routeParams){
+				this.typeCode=$routeParams.typeCode;
+				loadData();
+			}
 			
 			return balanceSheetsGeneral;	
  

@@ -10,19 +10,21 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainSe
 	var actualYear = new Date().getFullYear();
 	
 	// Tabs
-	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home("general").url});
+	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode).url});
 	for(var i = actualYear; i >= 2008 ; i--){
 		tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
 	}
 	
 	tabService.activeTab(0);
 	
-	
+	//TODO generalBanlanceSheets+typeCode in mainService
 	if(!angular.isUndefined(mainService.get('generalBalanceSheets'))){
 		$scope.balanceSheetsGeneralService.loadFromCache();
 	}else{
-		$scope.balanceSheetsGeneralService.init();
+		$scope.balanceSheetsGeneralService.init($routeParams.typeCode);
 	}
+	
+	
 
 	
 }]);
