@@ -16,6 +16,7 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,19 +41,20 @@ public class ProcWorkflowHelper {
 		
 		DBQuery.Query query = getInputContainerQuery(process);
 		
-		if(process.properties != null){
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-					query,
-					DBUpdate.addToSet("processCodes", process.code)
-						.addToSet("processTypeCodes", process.typeCode)
-						.set("contents.$.processProperties", process.properties));
-			
-		}else{
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-					query,
-					DBUpdate.addToSet("processCodes", process.code)
-						.addToSet("processTypeCodes", process.typeCode));			
+		Builder builder = DBUpdate.addToSet("processCodes", process.code)
+				.addToSet("processTypeCodes", process.typeCode);
+				
+		if(process.properties != null && process.properties.size() > 0){
+			builder.set("contents.$.processProperties", process.properties);
 		}
+		
+		if(process.comments != null && process.comments.size() > 0){
+			builder.set("contents.$.processComments", process.comments);
+		}
+		
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+				query,
+				builder);	
 		
 		
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
@@ -99,10 +101,8 @@ public class ProcWorkflowHelper {
 							|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
 									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
-						content.processProperties.replaceAll((k,v) -> process.properties.get(k));
-						if(process.comments != null && process.comments.size() > 0){
-							content.processComments = process.comments;
-						}
+						content.processProperties = process.properties;
+						content.processComments = process.comments;						
 					});
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 			});
@@ -118,7 +118,7 @@ public class ProcWorkflowHelper {
 		
 		if(process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)){
 			return process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString();
-		}else{
+		}else if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 			
 			DBQuery.Query query = DBQuery.in("code",process.outputContainerCodes)
 						.size("contents", 1)
@@ -132,6 +132,8 @@ public class ProcWorkflowHelper {
 			}else{
 				return null;
 			}
+		}else{
+			return null;
 		}
 	}
 
