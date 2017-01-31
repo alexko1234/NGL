@@ -9,12 +9,14 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContWorkflows;
+import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -102,13 +105,28 @@ public class ProcWorkflowHelper {
 									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.processProperties = process.properties;
-						content.processComments = process.comments;						
+						content.processComments = process.comments;	
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+					
 			});
 			
 		}
 	}
+	private Query getContentQuery(Container container, Content content) {
+		Query query = DBQuery.is("code",container.code);
+		
+		Query contentQuery =  DBQuery.is("projectCode", content.projectCode).is("sampleCode", content.sampleCode);
+		
+		if(content.properties.containsKey(TAG_PROPERTY_NAME)){
+			contentQuery.is("properties.tag.value", content.properties.get(TAG_PROPERTY_NAME).value);
+		}
+		query.elemMatch("contents", contentQuery);
+		
+		return query;
+	}
+
+
 	/**
 	 * Find the tag assign during process or exsiting at the beginning of processe
 	 * @param process
@@ -163,9 +181,8 @@ public class ProcWorkflowHelper {
 									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
-						
-					});				
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));						
+					});								
 			});
 		
 			//update readsets with new process property values
