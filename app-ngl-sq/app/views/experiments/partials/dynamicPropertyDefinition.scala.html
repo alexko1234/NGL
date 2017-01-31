@@ -5,7 +5,7 @@
 						  	<div ng-switch on="mainService.isEditMode()">
 						  		<p class="form-control-static" ng-switch-when="false" ng-bind="experiment.@{name}[propertyDef.code].value | date:'@Messages("date.format")'" />
 						  		<input class="form-control" ng-switch-when="true" type="text" class="input-small"									
-									name="@{name}{{propertyDef.code}}" ng-required="isRequired(propertyDef)"
+									name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required"
 									placeholder="@Messages("date.format")" 
 									ng-model="experiment.@{name}[propertyDef.code].value" date-timestamp />
 						  	</div>
@@ -13,7 +13,7 @@
 						<div ng-switch-when="java.io.File" class="col-md-6 col-lg-6">
 							<div ng-switch on="mainService.isEditMode()">
 								<input 
-									name="@{name}{{propertyDef.code}}" ng-required="isRequired(propertyDef)" 
+									name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required" 
 									type="file" ng-switch-when="true" base64-file="experiment.@{name}[propertyDef.code]" />
 								<div ng-switch-when="false" ng-if="experiment.@{name}[propertyDef.code] !== undefined">
 							    <a target="_blank" ng-href="data:application/{{experiment.@{name}[propertyDef.code].extension}};base64,{{experiment.@{name}[expp.code].value}}">
@@ -28,7 +28,7 @@
 						<div ng-switch-when="java.awt.Image" class="col-md-6 col-lg-6">
 						  	<div ng-switch on="mainService.isEditMode()">
 						  		<input 
-						  			name="@{name}{{propertyDef.code}}" ng-required="isRequired(propertyDef)"
+						  			name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required"
 						  		 	type="file" ng-switch-when="true" base64-img="experiment.@{name}[propertyDef.code]" />
 								<div ng-switch-when="false" ng-click="setImage(experiment.@{name}[propertyDef.code].value,
 									experiment.@{name}[propertyDef.code].fullname,
@@ -64,14 +64,14 @@
 							<div ng-switch-when="false" ng-switch on="mainService.isEditMode() && propertyDef.editable">
 								<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.@{name}[propertyDef.code].value" />
 								<input 	ng-switch-when="true" class="form-control" type="text" title='{{propertyDef.name}}'  class="input-small"
-										name="@{name}{{propertyDef.code}}" ng-required="isRequired(propertyDef)"
+										name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required"
 										ng-model="experiment.@{name}[propertyDef.code].value"									
 										default-value="propertyDef.defaultValue"
 										ng-change="@{updateFunctionName}(propertyDef.code)"/>
 							
 							</div>
 								<div ng-switch-when="true" bt-select class="form-control" 
-									name="@{name}{{propertyDef.code}}" ng-required="isRequired(propertyDef)"
+									name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required"
 									ng-model="experiment.@{name}[propertyDef.code].value"
 									default-value="propertyDef.defaultValue" 									 
 			    					bt-options="opt.code as opt.name for opt in propertyDef.possibleValues" 
