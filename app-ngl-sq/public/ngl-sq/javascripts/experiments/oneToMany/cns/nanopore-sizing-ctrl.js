@@ -1,4 +1,4 @@
-angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenerateMany',
+angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience	
@@ -89,7 +89,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	
-			         {
+			        /* {
 			 			"header" : Messages("containers.table.workName"),
 			 			"property" : "inputContainer.properties.workName.value",
 			 			"order" : true,
@@ -98,7 +98,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			 			"type" : "text",
 			 			"position" : 1.1,
 			 			"extraHeaders" : {0 : Messages("experiments.inputs")}
-			 		},
+			 		},*/
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -144,6 +144,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			        	 "position":6,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -165,6 +166,36 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         {
+			        	 "header":Messages("containers.table.concentration")+" (ng/µL)",
+			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":52,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.quantity")+" (ng)",
+			        	 "property":"outputContainerUsed.quantity.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":53,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         }, 
+			         {
+			        	 "header":Messages("containers.table.size")+" (pb)",
+			        	 "property":"outputContainerUsed.size.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":54,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         }, 
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -211,13 +242,19 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 			remove:{
 				active:false,
 			},
+		
 			save:{
 				active:true,
-				withoutEdit: true,
-				mode:'local',
-				showButton:false,
-				changeClass:false
+	        	withoutEdit: true,
+	        	showButton:false,
+	        	changeClass:false,
+	        	mode:'local',
+	        	//callback:function(datatable){
+	        		//copyOutputContainerUsedAttributesToContentProperties(datatable);
+	        	//}
+	        		
 			},
+			
 			hide:{
 				active:true
 			},
@@ -247,47 +284,36 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 
 	};	
 	
-	
-	
-/*	$scope.updateInputVolume = function(experiment){
-		for(var i=0 ; i < experiment.atomicTransfertMethods.length ; i++){
+	var copyOutputContainerUsedAttributesToContentProperties = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
 			var atm = experiment.atomicTransfertMethods[i];
 			
-			var volume = {input:0};
+			//si from transfotype=nanolib
+			/*var concentration = atm.outputContainerUseds[0].concentration.value;
+			console.log("conc",concentration);	
+			$parse('outputContainerUseds.experimentProperties["ligationConcentration"]').assign(atm, {value:concentration, unit:"ng/µl"});
+			*/	
+			var concentration = atm.outputContainerUseds[0].concentration;
+			console.log("conc",concentration);	
+			$parse('outputContainerUseds[0].experimentProperties.ligationConcentrationPostSizing').assign(atm,concentration);
 			
-			angular.forEach(atm.outputContainerUseds, function(output){
-				this.input += Number(output.volume.value);
-			}, volume);
-			
-			if(angular.isNumber(volume.input)){
-				$parse('inputContainerUseds[0].experimentProperties["inputVolume"]').assign(atm, {value:volume.input, unit:"µL"});
-			}
-			//atm.inputContainerUseds[0].experimentProperties["inputVolume"] = {value:volume.input, unit:"µL"};
+				
+		var quantity = atm.outputContainerUseds[0].quantity.value;	
+		$parse('outputContainerUseds[0].experimentProperties["ligationQuantityPostSizing"]').assign(atm, {value:quantity, unit:"ng"});
+		
+	
+		//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
+		var size = atm.outputContainerUseds[0].size.value;	
+		$parse('outputContainerUseds[0].experimentProperties["measuredSizePostSizing"]').assign(atm, {value:size, unit:"pb"});
+		
 		}				
 	};
 	
-	*/
-	/**
-	 * Update concentration. Copy input concentration to all outputs
-	 */
-/*	$scope.updateConcentration = function(experiment){
-		
-		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
-			var atm = experiment.atomicTransfertMethods[j];
-			if(atm.inputContainerUseds[0].concentration !== null 
-					&& atm.inputContainerUseds[0].concentration !== undefined){
-				var concentration = atm.inputContainerUseds[0].concentration;				
-				for(var i = 0 ; i < atm.outputContainerUseds.length ; i++){
-					$parse("outputContainerUseds["+i+"].concentration").assign(atm, concentration);
-				}
-			}
-			
-		}		
-	};*/
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on sizing");
 		$scope.atmService.viewToExperiment($scope.experiment);
+		copyOutputContainerUsedAttributesToContentProperties($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -304,7 +330,7 @@ angular.module('home').controller('SizingCtrl',['$scope', '$parse', 'atmToGenera
 		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-		//dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
 		
