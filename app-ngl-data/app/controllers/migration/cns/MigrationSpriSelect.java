@@ -1,14 +1,17 @@
 package controllers.migration.cns;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.tree.ParentContainers;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.OneToManyContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
@@ -49,8 +52,20 @@ public class MigrationSpriSelect extends MigrationExperimentProperties{
 				c.fromTransformationCodes.add(newCode);
 				c.fromTransformationTypeCodes.clear();
 				c.fromTransformationTypeCodes.add("spri-select");
-				c.treeOfLife.from.experimentCode=newCode;
-				c.treeOfLife.from.experimentTypeCode="spri-select";
+				//issu de l'experience
+				if(c.fromPurificationCode==null && c.fromTransfertCode==null){
+					c.treeOfLife.from.experimentCode=newCode;
+					c.treeOfLife.from.experimentTypeCode="spri-select";
+					//issu de normalisation ou purification
+				}else {
+					for(ParentContainers pc: c.treeOfLife.from.containers){
+						pc.fromTransformationCodes.clear();
+						pc.fromTransformationTypeCodes.clear();
+						pc.fromTransformationCodes.add(newCode);
+						pc.fromTransformationTypeCodes.add("spri-select");
+					}
+			
+				}
 				Logger.debug("Container "+c.code+" udpate");
 				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,c);
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,DBQuery.is("code", c.support.code),DBUpdate.set("fromTransformationTypeCodes", c.fromTransformationTypeCodes));
@@ -97,28 +112,39 @@ public class MigrationSpriSelect extends MigrationExperimentProperties{
 				
 				Set<String> inputContainers=new HashSet<String>();
 				
+				//Update Experiment properties libProcessTypeCode if key comes from Process
+				List<String> processCodesUpdateExperiment=new ArrayList<String>();
 				for(Process p:processes){
 					//Search first experiment in process
-					inputContainers.add(p.inputContainerCode);
+					if(p.properties.containsKey(newKeyProperty)){
+						processCodesUpdateExperiment.add(p.code);
+						inputContainers.add(p.inputContainerCode);
+					}
+
 				}
 				
-				List<Experiment> firstExperimentProcess=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.in("inputProcessCodes",processCodes).in("inputContainerCodes", inputContainers)).toList();
+				List<Experiment> firstExperimentProcess=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.in("inputProcessCodes",processCodesUpdateExperiment).in("inputContainerCodes", inputContainers)).toList();
 
 				for(Experiment e:firstExperimentProcess){
 					Logger.debug("Experiment first process "+e.code);
 					
 					e.atomicTransfertMethods.stream().forEach(atm->{
-						Logger.debug("Exp atm");
+						
 						//Get inputContainer
 						OutputContainerUsed output = atm.outputContainerUseds.iterator().next();
 						
+						Logger.debug("Exp atm");
 						//Get sampleCode and tag
 						String sampleCode = output.contents.iterator().next().sampleCode;
 						
 						String tag = null;
-						try{tag=(String) output.contents.iterator().next().properties.get("tag").getValue();} catch(Exception ex){}
+						try{
+							tag=(String) output.contents.iterator().next().properties.get("tag").getValue();
+						} catch(Exception ex){
+						
+						}
+						
 						Logger.debug("Sample code "+sampleCode+" Tag "+tag+" property "+newKeyProperty+ " value "+propValue.value);
-								
 						updateOutputContainerTreeOfLife(output, sampleCode, tag, newKeyProperty, propValue, false);
 						
 					});

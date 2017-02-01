@@ -14,6 +14,7 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
@@ -111,12 +112,18 @@ public class MigrationExperimentProperties extends CommonController{
 	protected static void updateOutputContainerTreeOfLife(OutputContainerUsed output, String sampleCode, String tag, String keyProperty, PropertyValue propValue, boolean addToRun)
 	{
 		//Get outputContainer
-
 		Logger.debug("Get outputContainerCode "+output.code);
 		updateContainer(output.code, sampleCode, tag, keyProperty, propValue, addToRun);
 		//Get list of all Container in process
 		List<Container> containerOuts = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.regex("treeOfLife.paths", Pattern.compile(","+output.code))).toList();
 		for(Container container : containerOuts){
+			if(tag==null){
+			 for(Content c:container.contents){
+				 if(c.sampleCode.equals(sampleCode) && c.properties.containsKey("tag")){
+					 tag=c.properties.get("tag").value.toString();
+				 }
+			 }
+			}
 			Logger.debug("Update container code "+container.code+" size content "+container.contents.size());
 			updateContainer(container.code, sampleCode, tag, keyProperty, propValue, addToRun);
 		}
@@ -199,7 +206,7 @@ public class MigrationExperimentProperties extends CommonController{
 
 			//Get ReadSet to update
 			List<ReadSet> readSetsToTal = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", container.code)).toList();
-			Logger.debug("ReadSet total "+readSetsToTal.size());
+			Logger.debug("ReadSet total "+readSetsToTal.size()+", tag "+tag);
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("sampleOnContainer.containerCode", container.code).is("sampleOnContainer.sampleCode", sampleCode).is("sampleOnContainer.properties.tag.value", tag)).toList();
 			readSets.stream().forEach(r->{
 				Logger.debug("Update ReadSet"+r.code);
