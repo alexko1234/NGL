@@ -41,28 +41,34 @@ public class MetaGenomique extends AbstractDeclaration {
 	
 	 @Override
      protected List<ExperimentType> getExperimentTypeCommon() {
-             List<ExperimentType> l = new ArrayList<ExperimentType>();
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		
+		l.add(newExperimentType("Ext to  MetaGénomique avec sizing (gel)","ext-to-metagenomic-process-with-sizing",null,-1,
+		                 ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+		                 DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to  MetaGénomique avec spri-select","ext-to-metagenomic-process-with-spri-select",null,-1,
+		                 ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+		                 DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to MetaGénomique","ext-to-metagenomic-process",null,-1,
+		                 ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+		                 DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newExperimentType("Ext to PCR Free","ext-to-pcr-free-process",null,-1,
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-             l.add(newExperimentType("Ext to  MetaGénomique avec sizing (gel)","ext-to-metagenomic-process-with-sizing",null,-1,
-                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
-                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-             l.add(newExperimentType("Ext to  MetaGénomique avec spri-select","ext-to-metagenomic-process-with-spri-select",null,-1,
-                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
-                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-             l.add(newExperimentType("Ext to MetaGénomique","ext-to-metagenomic-process",null,-1,
-                             ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
-                             DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-             return l;
+		return l;
      }
 
 
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ExperimentType> l = new ArrayList<ExperimentType>();
+		
+		
+		return l;
 	}
 
 	@Override
@@ -108,7 +114,19 @@ public class MetaGenomique extends AbstractDeclaration {
 		return null;
 	}
 
-	
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+
+		return l;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypeUAT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	 @Override
      protected List<ProcessType> getProcessTypeCommon() {
@@ -159,6 +177,21 @@ public class MetaGenomique extends AbstractDeclaration {
                                              getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0),
                                              DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+             
+             l.add(DescriptionFactory.newProcessType("PCR Free", "pcr-free-process", ProcessCategory.find.findByCode("library"), 34,
+                     getPropertiesPCRFree(),
+                     Arrays.asList(getPET("ext-to-pcr-free-process",-1)
+                     				,getPET("dna-rna-extraction",-1)
+                                     , getPET("fragmentation",0)
+                                     , getPET("dna-illumina-indexed-library",1)
+                                     , getPET("solution-stock",2)
+                                     , getPET("prepa-flowcell",3)
+                                     , getPET("prepa-fc-ordered",4)
+                                     , getPET("illumina-depot",5)),
+                                     getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-pcr-free-process").get(0),
+                                     DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             
              return l;
      }
 
@@ -229,24 +262,23 @@ public class MetaGenomique extends AbstractDeclaration {
 	}
 
 
-	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
-		// TODO Auto-generated method stub
-		return null;
+	private List<PropertyDefinition> getPropertiesPCRFree() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDE(), 
+				null,null,null,"single", 13, true, null, null));
+		
+		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		return propertyDefinitions;
 	}
-
-	@Override
-	protected List<ProcessType> getProcessTypeUAT() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	protected void getExperimentTypeNodeCommon() {
 		newExperimentTypeNode("ext-to-metagenomic-process", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-metagenomic-process-with-sizing", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-metagenomic-process-with-spri-select", AbstractExperimentService.getExperimentTypes("ext-to-metagenomic-process-with-spri-select").get(0), false, false, false, null, null, null, null).save();
-
+		newExperimentTypeNode("ext-to-pcr-free-process", AbstractExperimentService.getExperimentTypes("ext-to-pcr-free-process").get(0), false, false, false, null, null, null, null).save();
+		
 	}
 
 	@Override
@@ -292,6 +324,12 @@ public class MetaGenomique extends AbstractDeclaration {
         List<Value> values = new ArrayList<Value>();
         values.add(DescriptionFactory.newValue("DC", "DC - DNAseq avec spri select"));
         return values;
+	}
+	
+	private List<Value> getLibProcessDE() {
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("DE", "DE - PCR Free"));
+		return values;
 	}
 
 }
