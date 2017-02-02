@@ -226,19 +226,27 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 			// reinit select File..
 			$scope.file = undefined;
+			// il faut aussi réinitaliser le bouton d'import
 			angular.element('#importFile')[0].value = null;
 		});		
 	};
 	
 	$scope.button = {
 		isShow:function(){
-			//  activer le bouton d'import si l'experience est a NOUVEAU
-			return ($scope.isNewState());
+			// 31/01/2017  activer le bouton d'import si l'experience est a InProgress
+			return ($scope.isInProgressState());
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
 		click:importData,		
 	};
+	
+    // 02/01/2017 si l'utilisateur modifie le codeStrip, il doit recharger le fichier pour qu'on puisse garantir la coherence !!
+	$scope.$watch("experiment.instrumentProperties.stripCode.value", function(newValue, OldValue){
+			if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
+				$scope.experiment.instrumentProperties.cbotFile.value = undefined;
+			}
+	});	
 	
 }]);

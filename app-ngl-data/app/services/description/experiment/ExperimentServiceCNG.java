@@ -113,7 +113,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			
 
 			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq ; JIRA NGL-1259 renommage rna-sequencing=> rna-lib-process
-			l.add(newExperimentType("Ext to RNASeq","ext-to-rna-lib-process",null,-1,
+			l.add(newExperimentType("Ext to Prep lib RNASeq","ext-to-rna-lib-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null ,

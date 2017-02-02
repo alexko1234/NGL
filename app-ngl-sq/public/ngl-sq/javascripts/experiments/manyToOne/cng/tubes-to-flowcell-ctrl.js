@@ -126,22 +126,8 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse','
 	
 	
     /* 16/01/2017 FDS reunion Prod=> NON pas d'import du fichier des cBotV2 pour les prep Flowcell 2000, ce n'est vrai que pour
-       prep-flowcell-ordered pour l'instant...==> 24/01/2017 forcer a "none" car les 2 propriétés d'instrument sont obligatoires...
-    */ 
-
-	if (! $scope.experiment.instrumentProperties.stripCode){
-		  $scope.experiment.instrumentProperties.stripCode = {};
-		  $scope.experiment.instrumentProperties.stripCode._type = "single";
-	}
-	$scope.experiment.instrumentProperties.stripCode.value = "none";
-			
-	if (! $scope.experiment.instrumentProperties.cbotFile){
-		  $scope.experiment.instrumentProperties.cbotFile = {};
-		  $scope.experiment.instrumentProperties.cbotFile._type = "single";
-	}
-	$scope.experiment.instrumentProperties.cbotFile.value = "none";
-	
-	/* 
+       prep-flowcell-ordered pour l'instant
+      
 	var importData = function(){
 		
 		$scope.messages.clear();

@@ -61,7 +61,7 @@ public class CbotV2AloneInput extends AbstractInput {
 		 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		 DocumentBuilder builder = factory.newDocumentBuilder();
 	     
-	      try {
+	     try {
 	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
 	    	 // le fichier produit par Illumina n'est PAS en UTF-16 malgré l'entete <?xml version="1.0" encoding="utf-16"?>
 	    	 // mais en UTF-8 !!! il faut donc remettre la valeur correcte
@@ -136,16 +136,16 @@ public class CbotV2AloneInput extends AbstractInput {
 	        		 {
 	        			// l'instrument est une cbot seule
 	        			 if ( ! cbot.toUpperCase().equals(experiment.instrument.code.toUpperCase()) ) {
-	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas a la cBot sélectionnée");
+	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas à la cBot sélectionnée");
 	        			 }
 	        		 } else if (experiment.instrument.typeCode.equals("janus-and-cBotV2")) {
 	        			 
 	        			 //l'instrument code  est 'janus-and-cbotX' 
 	        			 String[] janusAndCbot=experiment.instrument.code.split("-");
 	        			 String realCbot=janusAndCbot[2];
-	        			 System.out.println("realcbot:" + realCbot);
+	        			 //System.out.println("realcbot:" + realCbot);
 	        			 if ( ! cbot.toUpperCase().equals(realCbot.toUpperCase()) ) {
-	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas a la cBot sélectionnée");
+	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas à la cBot sélectionnée");
 	        			 }
 	        		 }
 	        		 
@@ -157,15 +157,17 @@ public class CbotV2AloneInput extends AbstractInput {
 	         //-2- s'il existe, verifier le barcode Flowcell 
 	         if (flowcellId.length() > 0 ) {
 	        	 if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
-	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier ne correspond pas à ce qui est déclaré");
+	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier ne correspond pas à celui qui est déclaré");
 	        	 }
 			 }
 	         
-	         //-3- s'il existe, vérifier le barcode Strip
-	         if (stripId.length() > 0 ){
-		         if ( ! experiment.instrumentProperties.get("stripCode").value.equals(stripId))  {
-					 contextValidation.addErrors("Erreurs fichier", "Le barcode strip du fichier ne correspond pas à ce qui est déclaré");
-				 }
+	         //-3- s'il existe, vérifier le barcode Strip 
+	         // NGL-1141 le barcode Strip de l'experience n'est plus obligatoire et peut etre manquant
+	         if ( null == experiment.instrumentProperties.get("stripCode").value ) {
+        		 contextValidation.addErrors("Erreurs fichier", "Veuillez entrer un barcode de strip avant d'importer le fichier");
+        		 
+	         } else if ( (stripId.length() > 0 ) && ( ! experiment.instrumentProperties.get("stripCode").value.equals(stripId)) ){
+				 contextValidation.addErrors("Erreurs fichier", "Le barcode strip du fichier ne correspond pas à celui qui est déclaré");
 	         }
 		      
 		     if (contextValidation.hasErrors()){
@@ -175,39 +177,56 @@ public class CbotV2AloneInput extends AbstractInput {
 		     // récupérer le nom du fichier importé
 		     experiment.instrumentProperties.put("cbotFile", new PropertySingleValue(pfv.fullname)); 
 		      
-		     // récupérer le barcode de la plaque de réactifs et déterminer les autres info reliées
-		     //System.out.println("setting Reagent ?? to:"+ reagentId);
-		     ReagentUsed reagent=new ReagentUsed();
+		     /* infos illumina 27/01/2017 :
+		     	L’identifiant d’une plaque cBot de clustering pour FC HiSeq4000 se termine par – PC6
+		     	L’identifiant d’une plaque cBot de clustering pour FC HiSeqX se termine par – PC2
+		     	L’identifiant d’une plaque cBot de rehyb pour une FC HiSeq 4000 se termine par -RH6
+		     	L’identifiant d’une plaque cBot de rehyb pour une FC HiSeqX se termine par -RH2
+		     */
 		     
-		     /* 16/01/2017 Reunion prod=> le kit doit etre deduit du ProtocolName
-		      * si "4000"=> HARDCODER le kit 4000
-		      * si "X"=> HARDCODER le kit  X 
-		      * sinon => ??????
-		      */
-		     String runType = "4000";//TEST......
-		     
-		     if  (runType.equals("4000")) {
-		    	 reagent.kitCatalogCode="TEST4000"; 
-		    	 reagent.boxCatalogCode="TEST4000";
-		    	 reagent.boxCode="";
-		     
-		    	 reagent.reagentCatalogCode="0B4B1Q3N8";// ????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
-		    	 reagent.code=reagentId;  
-		    	 
-		     } else if (runType.equals("X")) {	
-		    	 reagent.kitCatalogCode="TESTX"; 
-		    	 reagent.boxCatalogCode="TESTX";
-		    	 reagent.boxCode="";
-		     
-		    	 reagent.reagentCatalogCode="0B4B1Q3N8";// ???????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
-		    	 reagent.code=reagentId;  
+		     ReagentUsed reagent=new ReagentUsed();    
+		     String reag[] = reagentId.split("-");
+		     if ( reag.length != 2 ){
+		    	 contextValidation.addErrors("Erreurs fichier","Barcode réactif '"+reagentId+ "' incorrect!!");
 		     } else {
-		    	 // on fait quoi ???
-		    	 contextValidation.addErrors("Erreurs fichier","protocole non géré....");
+		    	 reagent.code=reagentId;  
+		     
+		    	 // TESTS !!!! modifier quand le catalogue sera correct !!
+		    	 if  (reag[1].equals("PC6")) {
+		    		 reagent.kitCatalogCode="TEST:HiSeq4000"; 
+		    		 reagent.boxCatalogCode="TEST:HiSeq4000";
+		    		 reagent.boxCode="";
+		     
+		    		 reagent.reagentCatalogCode="0B4B1Q3N8";// ????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
+
+		    	 } else if (reag[1].equals("PC2")) {	
+		    		 reagent.kitCatalogCode="TEST:HiSeqX"; 
+		    		 reagent.boxCatalogCode="TEST:HiSeqX";
+		    		 reagent.boxCode="";
+		     
+		    		 reagent.reagentCatalogCode="0B4B1Q3N8";// ???????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
+		    	 
+		    	 } else if (reag[1].equals("RH6")) {	
+		    		 reagent.kitCatalogCode="TEST:RehybHiSeq4000"; 
+		    		 reagent.boxCatalogCode="TEST:RehybHiSeq4000";
+		    		 reagent.boxCode="";
+		     
+		    		 reagent.reagentCatalogCode="0B4B1Q3N8";// ???????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3
+		    	 
+		    	 } else if (reag[1].equals("RH6")) {	
+		    		 reagent.kitCatalogCode="TEST:RehybHiSeqX"; 
+		    		 reagent.boxCatalogCode="TEST:RehybHiSeqX";
+		    		 reagent.boxCode="";
+		     
+		    		 reagent.reagentCatalogCode="0B4B1Q3N8";// ???????  HARDCODED reagentCatalogCode 0B4B1Q3N8= PE Cluster Plate V3 
+		    	 
+		    	 } else {
+		    		 // on fait quoi ???
+		    		 contextValidation.addErrors("Erreurs fichier","Réactif '-"+ reag[1]+ "' non géré !!");
+		    	 }
 		     }
 		     
 		     reagent.description="Recipe version: "+ recipeVersion+"; Reagent version: " + reagentVersion;
-		     
 		     experiment.reagents.add(reagent);
 		     
 	      } catch (SAXException e) {
