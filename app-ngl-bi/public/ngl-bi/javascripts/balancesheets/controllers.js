@@ -2,7 +2,7 @@
 
 angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainService', 'tabService', 'balanceSheetsGeneralSrv', '$routeParams',
                                                                function($scope, mainService, tabService, balanceSheetsGeneralSrv, $routeParams){
-	$scope.balanceSheetsGeneralService = balanceSheetsGeneralSrv;
+	$scope.balanceSheetsGeneral = balanceSheetsGeneralSrv;
 	
 	mainService.put('activeYear', 'general');
 	
@@ -19,9 +19,9 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainSe
 	
 	//TODO generalBanlanceSheets+typeCode in mainService
 	if(!angular.isUndefined(mainService.get('generalBalanceSheets'))){
-		$scope.balanceSheetsGeneralService.loadFromCache();
+		$scope.balanceSheetsGeneral.loadFromCache();
 	}else{
-		$scope.balanceSheetsGeneralService.init($routeParams.typeCode);
+		$scope.balanceSheetsGeneral.init($routeParams.typeCode);
 	}
 	
 	

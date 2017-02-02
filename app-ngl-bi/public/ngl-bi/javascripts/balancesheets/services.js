@@ -1241,17 +1241,18 @@
 			var isLoading = true;
 			var actualDay = new Date();
 			var actualYear = actualDay.getFullYear();
-			typeCode=undefined;
+			var typeCode;
 			
-			var loadData = function(){
+			var loadData = function(data){
+				typeCode=data;
 				isLoading = true;
 				var form = {includes : [], typeCodes : []};
 				form.includes.push("default");
-				//form.includes.push("treatments.ngsrg.default.nbBases");
 				form.includes.push("treatments.ngsrg.default");
-				//form.includes.push("runSequencingStartDate");
-				form.typeCodes.push(typeCode);
+				form.includes.push("runSequencingStartDate");
+				//form.typeCodes.push("default-readset");
 				//form.typeCodes.push("rsillumina");
+				form.typeCodes.push(typeCode);
 				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;
@@ -1315,7 +1316,8 @@
 				 // Calculating our bases for each year
 				 for(var i = 0; i < readsets.length; i++){
 					var readsetDate =  convertToDate(readsets[i].runSequencingStartDate);
-					balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
+					//balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
+					balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += getNbBases(readsets[i]);
 				 }
 
 				 // Creating chart
@@ -1329,6 +1331,15 @@
 				 
 				 // Initialize other datatable
 				 loadDtSumYearly();
+			}
+			
+			var getNbBases = function(data){
+				if(typeCode=="rsillumina"){
+					return data.treatments.ngsrg.default.nbBases.value;
+				}else if(typeCode=="rsnanopore"){
+					nbBases = data.treatments.ngsrg.default.1DForward.nbBases.value + data.treatments.ngsrg.default.1DReverse.nbBases.value;
+					return nbBases;
+				}
 			}
 			
 			var loadDtSumYearly = function(){
@@ -1452,13 +1463,10 @@
 					dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
 					dtSumYearly : function(){return dtSumYearly},
 					loadFromCache : function(){loadYearlyBalanceSheets()},
-					//init : function(){loadData();}	
+					init : function(typeCode){
+						loadData(typeCode);
+					}	
 			};
-			
-			init : function($routeParams){
-				this.typeCode=$routeParams.typeCode;
-				loadData();
-			}
 			
 			return balanceSheetsGeneral;	
  

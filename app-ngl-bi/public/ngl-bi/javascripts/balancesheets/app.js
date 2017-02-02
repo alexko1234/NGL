@@ -8,11 +8,6 @@ angular.module('home', ['ngRoute', 'ultimateDataTableServices','commonsServices'
 		controller : 'BalanceSheetsGeneralCtrl'
 	});
 	
-	$routeProvider.when('/balance-sheets/nanopore/home',{
-		templateUrl : '/tpl/balance-sheets/general/nanopore',
-		controller : 'BalanceSheetsGeneralCtrl'
-	});
-	
 	$routeProvider.when('/balance-sheets/:year/home',{
 		templateUrl : '/tpl/balance-sheets/year',
 		controller : 'BalanceSheetsYearCtrl'
