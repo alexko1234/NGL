@@ -1,15 +1,17 @@
 package models.laboratory.reception.instance;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-
 import models.laboratory.common.instance.Comment;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.utils.CodeHelper;
+
+import org.apache.commons.lang3.StringUtils;
+
 import validation.ContextValidation;
 
 public class CommentsFieldConfiguration extends ObjectFieldConfiguration<Comment> {
@@ -30,7 +32,12 @@ public class CommentsFieldConfiguration extends ObjectFieldConfiguration<Comment
 
 		populateSubFields(commentObject, rowMap, contextValidation, action);
 		if(StringUtils.isNotBlank(commentObject.comment)){
-			populateField(field, dbObject, Collections.singletonList(commentObject));
+			if(deleteFieldValue.equals(commentObject.comment)){
+				populateField(field, dbObject, new ArrayList<Comment>());
+			}else {
+				populateField(field, dbObject, Collections.singletonList(commentObject));
+			}
+			
 		}
 				
 	}

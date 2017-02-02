@@ -37,7 +37,9 @@ public abstract class AbstractFieldConfiguration {
 	public static final String commentsType = "comments";
 	public static final String contentsType = "contents";
 	public static final String qualityControlResultsType = "qualityControlResults";
-						
+	
+	public static final String deleteFieldValue="A_EFFACER";
+	
 	public String _type;
 	public Boolean required = Boolean.FALSE;
 	
