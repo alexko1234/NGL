@@ -150,7 +150,7 @@ public class Processes extends DocumentController<Process> {
 		if(null != processesSearch.toDate){
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
-
+		/* Old version
 		if(StringUtils.isNotBlank(processesSearch.supportCode) || 
 				StringUtils.isNotBlank(processesSearch.supportCodeRegex) ||
 					CollectionUtils.isNotEmpty(processesSearch.supportCodes) ||	
@@ -189,7 +189,27 @@ public class Processes extends DocumentController<Process> {
 
 			Logger.debug("Nb containers find"+containers.size());
 		}
-
+		 */
+		
+		if(StringUtils.isNotBlank(processesSearch.supportCode)){
+			queryElts.add(DBQuery.or(DBQuery.is("inputContainerSupportCode",processesSearch.supportCode), DBQuery.is("outputContainerSupportCodes",processesSearch.supportCode)));
+		} else if(StringUtils.isNotBlank(processesSearch.supportCodeRegex)){
+			queryElts.add(DBQuery.or(DBQuery.regex("inputContainerSupportCode",Pattern.compile(processesSearch.supportCodeRegex)), 
+					DBQuery.regex("outputContainerSupportCodes",Pattern.compile(processesSearch.supportCodeRegex))));			
+		} else if(CollectionUtils.isNotEmpty(processesSearch.supportCodes)){
+			queryElts.add(DBQuery.or(DBQuery.in("inputContainerSupportCode",processesSearch.supportCodes), DBQuery.in("outputContainerSupportCodes",processesSearch.supportCodes)));
+		}
+		
+		if(StringUtils.isNotBlank(processesSearch.containerCode)){
+			queryElts.add(DBQuery.or(DBQuery.is("inputContainerCode",processesSearch.containerCode), DBQuery.is("outputContainerCodes",processesSearch.containerCode)));
+		} else if(StringUtils.isNotBlank(processesSearch.containerCodeRegex)){
+			queryElts.add(DBQuery.or(DBQuery.regex("inputContainerCode",Pattern.compile(processesSearch.containerCodeRegex)), 
+					DBQuery.regex("outputContainerCodes",Pattern.compile(processesSearch.containerCodeRegex))));			
+		} else if(CollectionUtils.isNotEmpty(processesSearch.containerCodes)){
+			queryElts.add(DBQuery.or(DBQuery.in("inputContainerCode",processesSearch.containerCodes), DBQuery.in("outputContainerCodes",processesSearch.containerCodes)));
+		}
+		
+		
 		if (CollectionUtils.isNotEmpty(processesSearch.stateResolutionCodes)) { //all
 			queryElts.add(DBQuery.in("state.resolutionCodes", processesSearch.stateResolutionCodes));
 		}

@@ -39,12 +39,10 @@
 			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("processes.placeholder.fromDate")' title='@Messages("processes.placeholder.fromDate")' >
 		}
 		@formGroup{
-		@***
-			<input class="form-control" type="text" ng-model="searchService.form.supportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
-		***@
 			<bt-input  class="form-control"  input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>			
-			
-		
+		}
+		@formGroup{
+			<bt-input  class="form-control"  input-ng-model="searchService.form.containerCodeRegex" textarea-ng-model="searchService.form.containerCodes" placeholder='@Messages("search.placeholder.container")' ></bt-input>			
 		}	
 			
 	}

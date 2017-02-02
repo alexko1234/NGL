@@ -22,6 +22,11 @@ public class ProcessesSearchForm extends ListForm{
 	public String supportCodeRegex;
 	public Set<String> supportCodes;
 	
+	public String containerCode;
+	public String containerCodeRegex;
+	public Set<String> containerCodes;
+	
+	
 	public String stateCode;
 	public Set<String> stateCodes;
 	public List<String> stateResolutionCodes;
