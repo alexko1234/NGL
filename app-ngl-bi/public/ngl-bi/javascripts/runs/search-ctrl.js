@@ -3,6 +3,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'mainService', 'tabService', 'runSearchService', 'valuationService', 
                                                  function($scope, $routeParams, mainService, tabService, runSearchService, valuationService) {
 	var datatableConfig = {
+			group:{active:true},
 			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
 				url:jsRoutes.controllers.runs.api.Runs.list()

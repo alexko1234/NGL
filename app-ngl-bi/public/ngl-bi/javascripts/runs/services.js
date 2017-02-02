@@ -15,6 +15,7 @@
 									"header": Messages("runs.typeCode"),
 									"type" :"text",
 							    	"order":true,
+							    	"group":true,
 							    	"position":2
 								},
 								{	"property":"sequencingStartDate",
