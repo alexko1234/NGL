@@ -81,7 +81,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	    /** cBots and sequencers **/	
 		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
 				getInstruments(
-						// 16/01/2017 cbot ancienne version plussur site => desactiver ???
+						// 16/01/2017 cbot ancienne version plus sur site => desactiver ??? on ne plus faire de recherche !!!
 						createInstrument("cBot1", "cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -89,10 +89,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// 23/01/2017 separation des cbot-V2 pour mieux gerer leur proprietes	
-		l.add(newInstrumentUsedType("cBot-V2", "cBotV2", InstrumentCategory.find.findByCode("cbot"), getCBotV2Properties(), 
+		// 23/01/2017 separation des cbot-v2 pour mieux gerer leur proprietes	
+		l.add(newInstrumentUsedType("cBot-v2", "cBotV2", InstrumentCategory.find.findByCode("cbot"), getCBotV2Properties(), 
 				getInstruments(
-						// 19/09/20167 ajout 6 cbots V-2: possibilité de lire le code barre du strip...
+						// 19/09/20167 ajout 6 cbots V2: possibilité de lire le code barre du strip et d'importer un fichier XML...
 						createInstrument("cBotA", "cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBotB", "cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBotC", "cBotC", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -266,7 +266,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
 		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot  **/
-		//  23/01/2017 les cbots ancien modele n'existent plus => desactiver????
+		//  23/01/2017 les cbots ancien modele n'existent plus => desactiver ??? on ne peut plus faire de recherche !!!
 		l.add(newInstrumentUsedType("Janus + cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
 				getInstruments(
 						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -276,8 +276,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		/** FDS 23/01/2017 ajout Janus + cBot-V2 **/
-		l.add(newInstrumentUsedType("Janus + cBot-V2", "janus-and-cBotV2", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotV2Properties(), 
+		/** FDS 23/01/2017 ajout Janus + cBot-v2 **/
+		l.add(newInstrumentUsedType("Janus + cBot-v2", "janus-and-cBotV2", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotV2Properties(), 
 				getInstruments(
 						createInstrument("janus1-and-cBotA", "Janus1 / cBotA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBotB", "Janus1 / cBotB", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -347,11 +347,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// propriete des V1
 		l.addAll(getCBotProperties());
 		
-		// proprietes specifiques V2
+		// proprietes specifiques V2: NGL-1141: ne pas mettre ces proprietes en obligatoires=> pose probleme. Utiliser une regle drool pour l'experience prepa-flowcell
 		
-        l.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null, null, "single", 60, true, null,null));
-    	// fichier generé cbotRunFile" (NON editable, obligatoire a l'état Terminé)
-        l.add(newPropertiesDefinition("Fichier cBot", "cbotFile", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "F", null, "single", 150, false ,null,null));
+        l.add(newPropertiesDefinition("Code Strip", "stripCode", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null, null, "single", 60, true, null,null));
+    	// fichier generé cbotRunFile" (NON editable)
+        l.add(newPropertiesDefinition("Fichier cBot", "cbotFile", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null, null, "single", 150, false ,null,null));
        
         return l;
 	}
@@ -576,7 +576,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	 
-	//FDS 23/01/2017 ajout Janus+cbot-V2
+	//FDS 23/01/2017 ajout Janus + cbot-v2
 	private static List<PropertyDefinition> getJanusAndCBotV2Properties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 			
