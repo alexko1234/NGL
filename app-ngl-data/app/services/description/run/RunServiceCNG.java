@@ -137,6 +137,8 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));
          values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));
          values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));
+         values.add(DescriptionFactory.newValue("RG","RG - mRNASeq")); // 03/02/2017 missing !!
+         values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold")); // 03/02/2017 new
          values.add(DescriptionFactory.newValue("UN","UN - UKNOWN"));
         return values;
     } 
