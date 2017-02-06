@@ -20,7 +20,7 @@
 					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-disabled="button.isDisabled()" ng-bind="button.label"></button>
 				 	
 				 	
-				 	@if(play.Play.application().configuration().getBoolean("ngl.printing.cb", Boolean.FALSE)){
+				 	@if(play.Play.application().configuration().getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
 					<button class="btn btn-default" ng-click="openPrintTagsPage()" ng-if="isInProgressState() || isFinishState()" title="@Messages("button.tag.printing")"><i class="fa fa-tags" ></i></button>
 					}
 				
@@ -48,7 +48,8 @@
 			 		</div>
 			 	
 			 		<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
-			 		<button class="btn btn-danger" ng-if="isWorkflowModeAvailable('F')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
+			 		
+			 		<button class="btn btn-warning" ng-if="isExperimentDeleteAvailable('@Context.current().request().username()')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
 				 	
 			 	}
 			 				 					

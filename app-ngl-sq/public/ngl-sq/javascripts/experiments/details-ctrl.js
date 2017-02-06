@@ -33,10 +33,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		
 	$scope.updateInstrumentProperty = function(pName){
 		$scope.$broadcast('updateInstrumentProperty', pName);
-	}
+	};
+	
 	$scope.updateExperimentProperty = function(pName){
 		$scope.$broadcast('updateExperimentProperty', pName);
-	}
+	};
+	
+	
+	
 	
 	$scope.isCreationMode=function(){
 		return creationMode;
@@ -170,6 +174,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			mainService.setForm(form);								
 		}			
+	};
+	
+	
+	$scope.isExperimentDeleteAvailable = function(username){
+		return ($scope.isWorkflowModeAvailable('F') && (username === $scope.experiment.traceInformation.createUser || Permissions.check("admin")));
 	};
 	
 	$scope.askDeleteExperiment = function(){
