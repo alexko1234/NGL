@@ -41,6 +41,7 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.project.instance.Project;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -69,6 +70,7 @@ import workflows.process.ProcWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult.Sort;
 
 @Service
 public class ExpWorkflowsHelper {
@@ -1422,6 +1424,42 @@ public class ExpWorkflowsHelper {
 		}
 		
 		return lifeSample;
+	}
+
+
+	/**
+	 * Delete created sample and reset the last sampleCode on project
+	 * @param contextValidation
+	 * @param exp
+	 */
+	public void deleteNewSampleAndRollbackProject(ContextValidation contextValidation, Experiment exp) {
+		// TODO Auto-generated method stub
+		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+		if(experimentType.newSample){
+			Set<String> updateProjectCodes = exp.atomicTransfertMethods
+					.stream()
+					.map(atm -> atm.outputContainerUseds).flatMap(List::stream)
+					.map(ocu -> ocu.experimentProperties.get("projectCode").value.toString())
+					.collect(Collectors.toSet());
+			
+			Set<String> deleteSampleCodes = exp.atomicTransfertMethods
+				.stream()
+				.map(atm -> atm.outputContainerUseds).flatMap(List::stream)
+				.map(ocu -> ocu.experimentProperties.get("sampleCode").value.toString())
+				.collect(Collectors.toSet());
+			
+			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", deleteSampleCodes));
+			
+			updateProjectCodes.parallelStream().forEach(projectCode -> {
+				Sample sample = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
+					.sort("code", Sort.DESC).limit(1).toList().get(0);
+				
+				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
+						DBUpdate.set("lastSampleCode",sample.code));
+				
+			});
+			
+		}
 	}
 
 

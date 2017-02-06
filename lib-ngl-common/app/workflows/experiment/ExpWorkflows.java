@@ -172,6 +172,8 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		if("N".equals(exp.state.code) || "IP".equals(exp.state.code)){
 			Set<String> containerCodes = exp.inputContainerCodes;
 			expWorkflowsHelper.rollbackOnContainers(contextValidation, getNewState(contWorkflows.getContainerStateFromExperimentCategory(exp.categoryCode), contextValidation.getUser()), exp.code, containerCodes);
+			expWorkflowsHelper.deleteNewSampleAndRollbackProject(contextValidation, exp);
+			
 			if(!contextValidation.hasErrors()){
 				MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 			}
