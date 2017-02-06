@@ -87,7 +87,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		// Creer un study valide avec un status inWaiting (on ne prend pas status userValidate) et le sauver dans mongodb:
 		Study study = new Study();
 		study.centerName=VariableSRA.centerName;
-		study.projectCode = "AWK";
+		study.projectCodes.add("AWK");
 		study.centerProjectName = "AWK";
 		study.code = studyCode;
 		study.existingStudyType="Metagenomics";

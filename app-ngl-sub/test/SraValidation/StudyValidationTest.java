@@ -28,7 +28,7 @@ public class StudyValidationTest extends AbstractTestsSRA {
 		// Tests study avec infos obligatoires presentes et bonnes valeurs et mode
 		// creation ou update.		
 		study.centerName=VariableSRA.centerName;
-		study.projectCode = "AWK";
+		study.projectCodes.add("AWK");
 		study.centerProjectName = "AWK";
 		study.code = "study_AWK_test";
 		study.existingStudyType="Metagenomics";
@@ -52,7 +52,7 @@ public class StudyValidationTest extends AbstractTestsSRA {
 
 		Study study = new Study();
 		study.centerName="centerNameToto";
-		study.projectCode = "centerProjectCodeToto";
+		study.projectCodes.add("centerProjectCodeToto");
 		study.centerProjectName = "centerProjectNameToto";
 		study.code = "study_test_2";
 		study.existingStudyType="MetagenomicsToto";

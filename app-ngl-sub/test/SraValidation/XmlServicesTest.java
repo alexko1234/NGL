@@ -51,7 +51,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		// Creer un study validé par utilisateur et le sauver dans mongodb:
 		Study study = new Study();
 		study.centerName=VariableSRA.centerName;
-		study.projectCode = "AWK";
+		study.projectCodes.add("AWK");
 		study.centerProjectName = "AWK";
 		study.code = "study_AWK_test_xml";
 		study.existingStudyType="Metagenomics";

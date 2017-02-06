@@ -891,7 +891,6 @@ public class SubmissionServices {
 
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "accession", sampleAc)){
 			AbstractSample absSample;
-
 			absSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
 				AbstractSample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
 			
@@ -900,11 +899,8 @@ public class SubmissionServices {
 			} else {
 				throw new SraException("Recuperation dans base du sample avec Ac = " + sampleAc +" qui n'est pas du type externalSample ");
 			}
-			
 			externalSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
 					ExternalSample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
-			
-
 		} else {
 			String externalSampleCode = SraCodeHelper.getInstance().generateExternalSampleCode(sampleAc);
 			externalSample = new ExternalSample(); // objet avec state.code = submitted

@@ -1,4 +1,6 @@
 package models.sra.submit.util;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import fr.cea.ig.MongoDBDAO;
@@ -30,7 +32,8 @@ public class SraCodeHelper extends DefaultCodeImpl {
 	
 	public synchronized String generateStudyCode(String projectCode) {
 		// study_projectCode_YYYYMMDDHHMMSSSS
-		return ("study_" + projectCode + "_" + this.getInstance().generateBarCode()).toUpperCase();
+		return("study_" + projectCode + "_" + this.getInstance().generateBarCode().toUpperCase()); 
+		
 	}
 	
 	public synchronized String generateSubmissionCode(String projectCode) {
