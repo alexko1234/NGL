@@ -150,7 +150,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	@Override
-	protected void getExperimentTypeNodeDEV() {
+	protected void getExperimentTypeNodePROD() {
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
 		
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
@@ -168,7 +168,7 @@ public class RunIllumina extends AbstractDeclaration {
 	}
 
 	@Override
-	protected void getExperimentTypeNodePROD() {
+	protected void getExperimentTypeNodeDEV() {
 		
 	}
 
