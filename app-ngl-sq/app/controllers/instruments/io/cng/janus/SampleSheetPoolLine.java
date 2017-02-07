@@ -7,7 +7,7 @@ public class SampleSheetPoolLine implements Comparable<SampleSheetPoolLine>{
 	public Integer inputSupportContainerPosition;
 	public String inputSupportContainerVolume;
 	
-	public String outputSupportDest = "1";/// HARDCODED [ 1 seule plaque en sortie possible ? ]
+	public String outputSupportDest = "Poolplate";/// HARDCODED; correction SUPSQCNG-435 => Poolplate
 	public Integer outputSupportPosition;
 	
 	@Override

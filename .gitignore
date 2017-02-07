@@ -13,6 +13,6 @@
 /.settings
 .classpath
 .project
-
+**/.cache*
 /logs/
 /ejacoby@appdev.genoscope.cns.fr

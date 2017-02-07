@@ -204,6 +204,7 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));
 		
+		lp.add(newProtocol("Bq_PCR_free","Bq_PCR_free","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
