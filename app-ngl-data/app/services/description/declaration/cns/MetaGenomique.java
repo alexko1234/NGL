@@ -283,10 +283,7 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		newExperimentTypeNode("ext-to-pcr-free-process", AbstractExperimentService.getExperimentTypes("ext-to-pcr-free-process").get(0), false, false, false, null, null, null, null).save();
-		
-		
-		
+				
 		
 	}
 
