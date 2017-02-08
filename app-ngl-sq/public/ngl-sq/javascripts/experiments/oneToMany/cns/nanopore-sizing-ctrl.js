@@ -312,7 +312,7 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 					console.log("conc",concentration);	
 					$parse('experimentProperties.ligationConcentrationPostSizing').assign(ocu,concentration);
 				}else{
-					$parse('experimentProperties.ligationConcentrationPostSizing').assign(ocu, null);
+					$parse('experimentProperties.ligationConcentrationPostSizing').assign(ocu, undefined);
 				}
 				
 				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
@@ -320,7 +320,7 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 					var quantity = ocu.quantity.value;	
 					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, {value:quantity, unit:"ng"});
 				}else{
-					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, null);
+					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, undefined);
 				}
 		
 				//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
@@ -329,8 +329,8 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 					var size = ocu.size.value;	
 					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, {value:size, unit:"pb"});
 				}else{
-					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, null);
-				}
+					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, undefined);
+				}				
 			}
 		}				
 	};
