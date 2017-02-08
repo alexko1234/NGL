@@ -469,34 +469,37 @@ public class Nanopore extends AbstractDeclaration{
 		//Containers
 
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Intervalle de taille ciblé","expectedSize",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class,
+				"Taille théorique sizing","expectedSize",LevelService.getLevels(Level.CODE.ContainerIn), String.class,
 				false, null ,null, "single",12,true,null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Temps migration","migrationTime",LevelService.getLevels(Level.CODE.ContainerIn), String.class,
 				false, null ,null, "single",11,true,null,null));
 		
-
-		propertyDefinitions.add(newPropertiesDefinition("Conc. ligation (ap. sizing)","ligationConcentrationPostSizing",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
+		
+		 propertyDefinitions.add(newPropertiesDefinition(
+					"Profil","migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),Image.class,
+					 false, null,null,"img",51,true,null,null));	
+			
+		 propertyDefinitions.add(newPropertiesDefinition(
+					"Taille sizing (av. lib)","measuredSizePostSizing",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, 
+					false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),
+					"single",60,false,null,null));	
+			
+		 
+		 propertyDefinitions.add(newPropertiesDefinition("Conc. ligation (ap. sizing)","ligationConcentrationPostSizing",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
 				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
-				"single",13,false, null, null));
+				"single",61,false, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Qté ligation (ap. sizing)","ligationQuantityPostSizing",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
 				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
-				"single",15,false, null, null));
+				"single",62,false, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition(
-				"Profil","migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),Image.class,
-				 false, null,null,"img",59,true,null,null));	
 		
-		propertyDefinitions.add(newPropertiesDefinition(
-				"Taille sizing (av. lib)","measuredSizePostSizing",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, 
-				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),
-				"single",60,false,null,null));	
 		
 		//Experiments
-				propertyDefinitions.add(newPropertiesDefinition("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
-						false, null, null, "img",16,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+				false, null, null, "img",16,true,null,null));
 
 		return propertyDefinitions;
 

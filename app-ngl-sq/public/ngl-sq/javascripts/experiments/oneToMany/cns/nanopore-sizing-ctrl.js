@@ -156,16 +156,17 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },			        
+			         
 			         {
-			        	 "header":Messages("containers.table.volume")+" (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
+			        	 "header":Messages("containers.table.size")+" (pb)",
+			        	 "property":"outputContainerUsed.size.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 						 "type":"number",
-			        	 "position":51,
+			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+			         }, 
 			         {
 			        	 "header":Messages("containers.table.concentration")+" (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -173,7 +174,7 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 						 "edit":true,
 						 "hide":true,
 						 "type":"number",
-			        	 "position":52,
+			        	 "position":53,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -183,19 +184,19 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 						 "edit":true,
 						 "hide":true,
 						 "type":"number",
-			        	 "position":53,
+			        	 "position":54,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }, 
 			         {
-			        	 "header":Messages("containers.table.size")+" (pb)",
-			        	 "property":"outputContainerUsed.size.value",
+			        	 "header":Messages("containers.table.volume")+" (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 						 "type":"number",
-			        	 "position":54,
+			        	 "position":55,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }, 
+			         },
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -216,6 +217,16 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         } ,
+			         {
+			        	 "header":Messages("containers.table.comments"),
+			        	 "property":"outputContainerUsed.comment.comment",
+			        	 "order":false,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"textarea",
+			        	 "position":590,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
 			         {
 			        	 "header":Messages("containers.table.storageCode"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
@@ -287,25 +298,40 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 	var copyOutputContainerUsedAttributesToContentProperties = function(experiment){
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
 			var atm = experiment.atomicTransfertMethods[i];
-			
-			//si from transfotype=nanolib
-			/*var concentration = atm.outputContainerUseds[0].concentration.value;
-			console.log("conc",concentration);	
-			$parse('outputContainerUseds.experimentProperties["ligationConcentration"]').assign(atm, {value:concentration, unit:"ng/µl"});
-			*/	
-			var concentration = atm.outputContainerUseds[0].concentration;
-			console.log("conc",concentration);	
-			$parse('outputContainerUseds[0].experimentProperties.ligationConcentrationPostSizing').assign(atm,concentration);
-			
+			/*
+			copie de Taille dans propriété content measuredSizePostSizing A LA CONDITION du from transformation type = nanopore-frg ou ext-to-nanopore-rep-lib-depot
+			copie de Concentration dans propriété content ligationConcentrationPostSizing A LA CONDITION du from transformation type = nanopore-library
+			copie de Quantity dans propriété content ligationQuantityPostSizing A LA CONDITION du from transformation type = nanopore-library
+			*/
+			var icu = atm.inputContainerUseds[0]; //only one because oneToMany
+			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
+				var ocu = atm.outputContainerUseds[j];
+				if((icu.fromTransformationTypeCodes.indexOf('nanopore-frg') > -1 ||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1 )
+						&& ocu.concentration && ocu.concentration.value){
+					var concentration = ocu.concentration;
+					console.log("conc",concentration);	
+					$parse('experimentProperties.ligationConcentrationPostSizing').assign(ocu,concentration);
+				}else{
+					$parse('experimentProperties.ligationConcentrationPostSizing').assign(ocu, null);
+				}
 				
-		var quantity = atm.outputContainerUseds[0].quantity.value;	
-		$parse('outputContainerUseds[0].experimentProperties["ligationQuantityPostSizing"]').assign(atm, {value:quantity, unit:"ng"});
+				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+						&& ocu.quantity && ocu.quantity.value){
+					var quantity = ocu.quantity.value;	
+					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, {value:quantity, unit:"ng"});
+				}else{
+					$parse('experimentProperties.ligationQuantityPostSizing').assign(ocu, null);
+				}
 		
-	
-		//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
-		var size = atm.outputContainerUseds[0].size.value;	
-		$parse('outputContainerUseds[0].experimentProperties["measuredSizePostSizing"]').assign(atm, {value:size, unit:"pb"});
-		
+				//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
+				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+						&& ocu.size && ocu.size.value){
+					var size = ocu.size.value;	
+					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, {value:size, unit:"pb"});
+				}else{
+					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, null);
+				}
+			}
 		}				
 	};
 	
@@ -378,7 +404,10 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			quantity:"ng"
+			quantity:"ng",
+			size:"pb",
+			concentration:"ng/µl"
+			
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
