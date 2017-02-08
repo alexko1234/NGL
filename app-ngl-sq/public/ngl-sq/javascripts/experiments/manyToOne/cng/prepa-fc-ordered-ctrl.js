@@ -242,11 +242,26 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		click:importData,		
 	};
 	
-    // 02/01/2017 si l'utilisateur modifie le codeStrip, il doit recharger le fichier pour qu'on puisse garantir la coherence !!
+	// 07/02/2017 si l'utilisateur modifie le codeStrip OU le code Flowcell OU l'instrument  il doit recharger le fichier pour qu'on puisse garantir la coherence !!
+    //-1- stripCode.value
 	$scope.$watch("experiment.instrumentProperties.stripCode.value", function(newValue, OldValue){
 			if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 				$scope.experiment.instrumentProperties.cbotFile.value = undefined;
 			}
 	});	
 	
+	//-2- code Flowcell
+	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
+			$scope.experiment.instrumentProperties.cbotFile.value = undefined;
+		}
+	});	
+	
+	//-3- code cBot
+	$scope.$watch("experiment.instrument.code" , function(newValue, OldValue){
+		if ( newValue !== OldValue ) {
+			$scope.experiment.instrumentProperties.cbotFile.value = undefined;
+		}
+	});	
+
 }]);
