@@ -95,7 +95,7 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 		readSet.files = readSet.files.stream().filter(file->!file.typeCode.equals("CLEAN")).collect(Collectors.toList());
 		readSet.files.stream().forEach(file->{
 			file.fullname = file.fullname.replace(oldValue, newValue);
-			file.usable=true;
+			//file.usable=true;
 		});
 	}
 	
