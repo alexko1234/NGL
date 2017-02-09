@@ -120,7 +120,7 @@ rule "check cbotFile and strip"
 	no-loop
     when
     	State (code == 'F')
-    	Experiment(typeCode =="prepa-fc-ordered", instrument.typeCode == "janus-and-cBotV2", $instrumentProperties:instrumentProperties)
+    	Experiment(typeCode =="prepa-fc-ordered", (instrument.typeCode == "janus-and-cBotV2")||(instrument.typeCode == "cBotV2"), $instrumentProperties:instrumentProperties)
     	$contextValidation:ContextValidation() 
     then
         Logger.debug("rule: check cbotFile and stripCode...");
@@ -128,20 +128,22 @@ rule "check cbotFile and strip"
     	if ($instrumentProperties.containsKey("stripCode")){
     		PropertySingleValue stripCode = (PropertySingleValue) $instrumentProperties.get("stripCode");
     		if(StringUtils.isBlank((String)stripCode.value)){
-    		
+    		    //Logger.debug("CAS stripCode blank");
     			$contextValidation.addErrors("instrumentProperties.stripCode", "error.required"); 
     		}
     	}else{
+    	    //Logger.debug("CAS stripCode manquant !!!");
     		$contextValidation.addErrors("instrumentProperties.stripCode", "error.required");
     	}
     	
     	if ($instrumentProperties.containsKey("cbotFile")){
     		PropertySingleValue cbotFile = (PropertySingleValue) $instrumentProperties.get("cbotFile");
     		if (StringUtils.isBlank((String)cbotFile.value)){
-
+ 				//Logger.debug("CAS cbotFile blank");
     			$contextValidation.addErrors("instrumentProperties.cbotFile", "error.required"); 
     		}
     	}else{
+    	    //Logger.debug("CAS cbotFile manquant !!!");
     		$contextValidation.addErrors("instrumentProperties.cbotFile", "error.required");
     	}
     	
