@@ -122,6 +122,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
+         values.add(DescriptionFactory.newValue("DE","DE - Chromium")); // 09/02/2017 new
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
          values.add(DescriptionFactory.newValue("FB","FB - ChipSeq"));
          values.add(DescriptionFactory.newValue("FC","FC - MeDipSeq/Depl"));
@@ -131,12 +132,15 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("FG","FG - GROSeq"));
          values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
          values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
+         values.add(DescriptionFactory.newValue("HIC","HIC - HiC")); // 09/02/2017 new
          values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
          values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
          values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
          values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));
          values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));
          values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));
+         values.add(DescriptionFactory.newValue("RG","RG - mRNASeq")); // 09/02/2017 missing !!
+         values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold")); // 09/02/2017 new
          values.add(DescriptionFactory.newValue("UN","UN - UKNOWN"));
         return values;
     } 
