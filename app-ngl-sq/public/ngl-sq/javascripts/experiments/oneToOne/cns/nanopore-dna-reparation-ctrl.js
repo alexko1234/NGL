@@ -123,13 +123,23 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
+			        	 "header":Messages("containers.table.comments"),
+			        	 "property":"outputContainerUsed.comment.comment",
+			        	 "order":false,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"textarea",
+			        	 "position":590,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":500,
+			        	 "position":600,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }			        
 			         ],
