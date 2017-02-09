@@ -197,7 +197,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 			var icu = atm.inputContainerUseds[0]; //only one because oneToMany
 			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
 				var ocu = atm.outputContainerUseds[j];
-				if(ocu.experimentProperties.postFrgQuantity && ocu.experimentProperties.postFrgQuantity.value){
+				if(ocu.experimentProperties && ocu.experimentProperties.postFrgQuantity && ocu.experimentProperties.postFrgQuantity.value){
 					ocu.quantity = ocu.experimentProperties.postFrgQuantity;						
 				}else{
 					ocu.quantity = null;
