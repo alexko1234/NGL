@@ -436,7 +436,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
-				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
+				"Schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
 				false, null, null , "img",16,true,null,null));
 
 		
@@ -452,12 +452,12 @@ public class Nanopore extends AbstractDeclaration{
 				"Qté engagée","inputQuantity",LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
 				false, null, null ,"single",11,true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Nb réparation","reparationNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class,
+				"Nb réparations","reparationNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class,
 				false, null, null ,"single",12,true,null,null));
 		
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(
-				"schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+				"Schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
 				false, null, null ,"img",15,true,null,null));
 
 		return propertyDefinitions;
@@ -514,7 +514,7 @@ public class Nanopore extends AbstractDeclaration{
 				"PDF Report","report",LevelService.getLevels(Level.CODE.Experiment), File.class,
 				false,null,null, "file", 310,true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition
-				("schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
+				("Schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class,
 						false, null ,null,"img",320,true,null,null));
 		//Containers
 		// Unite a verifier
@@ -522,7 +522,7 @@ public class Nanopore extends AbstractDeclaration{
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Quantité déposée","loadingQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class,
 				true, "N", null,  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
-				"single",8,false, null,null));
+				"single",8,false, null,"1"));
 		
 		//2eme tableau
 		propertyDefinitions.add(newPropertiesDefinition(

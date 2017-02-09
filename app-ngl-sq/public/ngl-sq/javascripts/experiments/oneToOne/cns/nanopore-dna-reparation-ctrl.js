@@ -87,10 +87,21 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
+						 "required":true,
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         {
+			        	 "header":Messages("containers.table.quantity")+ " (ng)",
+			        	 "property":"outputContainerUsed.quantity.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":51,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         }, 
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µl)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -98,7 +109,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":51,
+			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -149,8 +160,8 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -179,7 +190,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
@@ -222,7 +233,8 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "nM"
+			concentration : "nM",
+			quantity : "ng"			
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
