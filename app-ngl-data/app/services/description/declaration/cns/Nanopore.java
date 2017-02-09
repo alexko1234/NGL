@@ -350,7 +350,7 @@ public class Nanopore extends AbstractDeclaration{
 		
 		newExperimentTypeNode("nanopore-dna-reparation",
 				getExperimentTypes("nanopore-dna-reparation").get(0),false, false,false,
-				getExperimentTypeNodes("ext-to-nanopore-rep-lib-depot","nanopore-frg","dna-rna-extraction"),null,getExperimentTypes("fluo-quantification"),
+				getExperimentTypeNodes("ext-to-nanopore-rep-lib-depot","nanopore-frg","nanopore-fragmentation","dna-rna-extraction"),null,getExperimentTypes("fluo-quantification"),
 				getExperimentTypes("aliquoting","pool-tube")).save();
 		
 		newExperimentTypeNode("nanopore-library",
@@ -714,12 +714,6 @@ public class Nanopore extends AbstractDeclaration{
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
 				true,null, getLibProcessTypeCodeValues(),"single" ,1,true, "ONT",null));
-		
-		propertyDefinitions.add(newPropertiesDefinition(
-				"Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,
-				true,null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
-				"single",2,true,null,null));
-		
 		
 		
 		return propertyDefinitions;
