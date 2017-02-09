@@ -143,9 +143,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-				byDefault:($scope.isCreationMode()),
+				active: false,
+				showButton: false,
+				byDefault:false,
 				columnMode:true
 			},
 			messages:{
@@ -283,33 +283,29 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		}
 		
 	//	var loadingQtty= $parse('outputContainerUsed.loadingQuantity.value');
-		
-		var concIN = dataMain[0].inputContainer.concentration.value;
-		var reportingList = dataLoadingReport ;
-		var reportingVolSum=0;	
-		if (null != reportingList){
-			for(var j=0; j < reportingList.length; j++){
-				reportingVolSum +=reportingList[j].volume;
+		if(dataMain[0].inputContainer.concentration){
+			var concIN = dataMain[0].inputContainer.concentration.value;
+			var reportingList = dataLoadingReport ;
+			var reportingVolSum=0;	
+			if (null != reportingList){
+				for(var j=0; j < reportingList.length; j++){
+					reportingVolSum +=reportingList[j].volume;
+				}
+			}
+			
+			if(reportingVolSum){
+				$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
 			}
 		}
-		
-		if(reportingVolSum){
-			$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
-		}
-		
 		//datatable.setData(dataMain);
 	}
 	
 	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save");
 		$scope.datatableQcFlowcell.save();
 		$scope.datatableLoadingReport.save();
 		
 		//save entraine appel copyOtherDTToMainDatatable
 		$scope.atmService.data.save();	
-		
-		console.log("call event save2");
-		
 				
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
@@ -322,7 +318,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		//dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		//dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		//dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		//dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
@@ -330,6 +327,13 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		dtConfig = $scope.datatableQcFlowcell.getConfig();
 		dtConfig.edit.byDefault = false;
 		$scope.datatableQcFlowcell.setConfig(dtConfig);
+		
+		
+		dtConfig = $scope.datatableLoadingReport.getConfig();
+		dtConfig.edit.byDefault = false;
+		dtConfig.edit.start = false; //BUG in UDT but not found //09/02/2017
+		$scope.datatableLoadingReport.setConfig(dtConfig);
+		
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
@@ -346,6 +350,11 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			//dtConfig.edit.byDefault = false;
 			//$scope.atmService.data.setConfig(dtConfig);
 			
+			var dtConfig = $scope.datatableLoadingReport.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.datatableLoadingReport.setConfig(dtConfig);
+			
+			
 			dtConfig = $scope.datatableQcFlowcell.getConfig();
 			dtConfig.edit.byDefault = false;
 			$scope.datatableQcFlowcell.setConfig(dtConfig);
@@ -355,8 +364,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	
 	$scope.$on('activeEditMode', function(e) {
 		console.log("call event activeEditMode");
-		$scope.atmService.data.selectAll(true);
-		$scope.atmService.data.setEdit();
+		//$scope.atmService.data.selectAll(true);
+		//$scope.atmService.data.setEdit();
 		
 		$scope.datatableQcFlowcell.selectAll(true);
 		$scope.datatableQcFlowcell.setEdit();

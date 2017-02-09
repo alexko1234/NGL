@@ -243,7 +243,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "nM",
+			concentration : "ng/µl",
 			quantity : "ng"			
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

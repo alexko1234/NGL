@@ -92,12 +92,12 @@
 		}
 		@columnFormGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.fromPurificationTypeCodes" multiple="true"  placeholder="@Messages("containers.select.fromPurificationCode")"
-									bt-options="expType.code as expType.name for expType in searchService.lists.get('purification',true)">
+									bt-options="expType.code as expType.name for expType in searchService.lists.get('fromPurification',true)">
 			</div>
 		}
 		@columnFormGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.fromTransfertTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromTransfertCode")" 
-							bt-options="expType.code as expType.name for expType in searchService.lists.get('transfert',true)">
+							bt-options="expType.code as expType.name for expType in searchService.lists.get('fromTransfert',true)">
 			</div>
 		}		
 		@columnFormGroup{

@@ -142,7 +142,7 @@ public class Nanopore extends AbstractDeclaration{
 		
 		l.add(DescriptionFactory.newProcessType("Rep ADN, Lib, Dépôt", "nanopore-rep-lib-depot", 
 				ProcessCategory.find.findByCode("nanopore-library"),53, 
-				getPropertyDefinitionsNanoporeFragmentation(), 
+				getPropertyDefinitionsNanoporeLibrary(), 
 				Arrays.asList(getPET("ext-to-nanopore-rep-lib-depot",-1),
 						getPET("nanopore-frg",-1),
 						getPET("nanopore-fragmentation",-1),
@@ -715,6 +715,10 @@ public class Nanopore extends AbstractDeclaration{
 				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
 				true,null, getLibProcessTypeCodeValues(),"single" ,1,true, "ONT",null));
 		
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,
+				true,null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
+				"single",2,true,null,null));
 		
 		return propertyDefinitions;
 	}

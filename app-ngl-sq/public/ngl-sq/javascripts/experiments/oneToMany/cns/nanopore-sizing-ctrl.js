@@ -325,7 +325,9 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 				}
 		
 				//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
-				if((icu.fromTransformationTypeCodes.indexOf('nanopore-frg') > -1 ||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1 )
+				if((icu.fromTransformationTypeCodes.indexOf('nanopore-frg') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('nanopore-fragmentation') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1 )
 						&& ocu.size && ocu.size.value){
 					var size = ocu.size.value;	
 					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, {value:size, unit:"pb"});
