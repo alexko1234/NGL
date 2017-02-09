@@ -417,16 +417,16 @@ public class Nanopore extends AbstractDeclaration{
 				false, null, null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
 				"single",130,true,null,null));*/
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Qté finale FRG","postFrgQuantity",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
-				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
-				"single",70,true,null,null));
-		propertyDefinitions.add(newPropertiesDefinition(
 				"Profil","migrationProfile",LevelService.getLevels(Level.CODE.ContainerOut), Image.class,
-				false, null, null ,"img",150,true,null,null));
+				false, null, null ,"img",50,true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Taille réelle","measuredLibrarySize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, 
 				true, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),
 				"single",60,true,null,null));	
+		propertyDefinitions.add(newPropertiesDefinition(
+				"Qté finale FRG","postFrgQuantity",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
+				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode("ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",70,true,null,null));
 		/*propertyDefinitions.add(newPropertiesDefinition(
 				"Volume final","measuredVolume",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
 				false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), 

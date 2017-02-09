@@ -123,13 +123,23 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
+			        	 "header":Messages("containers.table.comments"),
+			        	 "property":"outputContainerUsed.comment.comment",
+			        	 "order":false,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"textarea",
+			        	 "position":590,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":500,
+			        	 "position":600,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }
 			         ],
@@ -154,10 +164,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 	        	withoutEdit: true,
 	        	changeClass:false,
 	        	showButton:false,
-	        	mode:'local',
-	        		callback:function(datatable){
-						copyAttribute(datatable);
-					}
+	        	mode:'local'
 			},
 			hide:{
 				active:true
@@ -184,23 +191,27 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 			}
 	};
 	
-	var copyAttribute = function(datatable){
-		var dataMain = datatable.getData();
-		console.log("call event save2");
-		
-		var ligationConcentration = $parse("outputContainerUsed.experimentProperties.ligationConcentration.value")(value);
-		$parse("outputContainerUsed.concentration.value").assign(value, ligationConcentration);
-		
-		var qttProperty = $parse("outputContainerUsed.experimentProperties.postFrgQuantity.value")(value);
-		$parse("outputContainerUsed.quantity.value").assign(value,qttProperty); 
-				
-	}
+	var copyOutputContainerUsedAttributesToContentProperties = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			var icu = atm.inputContainerUseds[0]; //only one because oneToMany
+			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
+				var ocu = atm.outputContainerUseds[j];
+				if(ocu.experimentProperties.postFrgQuantity && ocu.experimentProperties.postFrgQuantity.value){
+					ocu.quantity = ocu.experimentProperties.postFrgQuantity;						
+				}else{
+					ocu.quantity = null;
+				}			
+			}
+		}				
+	};
 	
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save1");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		copyOutputContainerUsedAttributesToContentProperties($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
