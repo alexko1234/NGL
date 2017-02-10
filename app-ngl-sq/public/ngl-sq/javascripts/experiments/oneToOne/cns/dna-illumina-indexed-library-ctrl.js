@@ -68,6 +68,16 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
+			        	 "header":Messages("containers.table.quantity") + " (ng)",
+			        	 "property":"inputContainer.quantity.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":6.5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
 			        	 "order":true,

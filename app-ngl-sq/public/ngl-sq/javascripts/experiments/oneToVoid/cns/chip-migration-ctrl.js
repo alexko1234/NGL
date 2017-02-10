@@ -47,7 +47,12 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				}
 				
 				
-				
+				if(experiment.typeCode === "chip-migration-rna-evaluation"){
+					var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
+					if(concentration1){
+						inputContainerUsed.concentration = concentration1;
+					}
+				}
 			}
 			
 		});	

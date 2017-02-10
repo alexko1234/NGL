@@ -362,6 +362,45 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
+			computeInputQuantity(value.data);
+		}
+		
+	}
+	
+	var computeInputQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
+		var inputQuantity = getter(udtData);
+		
+		var compute = {
+				inputVol1 : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+				inputConc1 : $parse("inputContainerUsed.concentration.value")(udtData),
+				isReady:function(){
+					return (this.inputVol1 && this.inputConc1);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputVol1 * inputConc1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				inputQuantity = undefined;
+			}	
+			getter.assign(udtData, inputQuantity);
+		}else{
+			getter.assign(udtData, undefined);
+			console.log("not ready to inputQuantity");
+		}
+		
+	}
+	
+	
 	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
 		$scope.messages.clear();
 		$scope.atmService = atmService;
