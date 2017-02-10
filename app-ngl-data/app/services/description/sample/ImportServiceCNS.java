@@ -313,7 +313,7 @@ public class ImportServiceCNS extends AbstractImportService {
 			String ile = (i < 10)?"0"+i:""+i;
 			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
-				for(int k = 1; k <= 15; k++){
+				for(int k = 1; k <= 20; k++){
 					String fish = (k < 10)?"0"+k:""+k;
 					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"1"+fish, "I"+ile+"S"+site+"F"+fish));					
 				}

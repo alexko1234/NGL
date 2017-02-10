@@ -487,7 +487,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				}else{
 					this.reportingConfiguration = undefined;
 					this.datatable.setColumnsConfig(this.getDefaultColumns());
-					//this.search();
+					this.search();
 				}
 				
 			},

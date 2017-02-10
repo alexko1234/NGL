@@ -24,6 +24,20 @@ angular.module('home').controller('PostPCRAmpureCtrl',['$scope', '$parse', 'atmT
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
+				     {
+				 		"header" : Messages("containers.table.sampleTypes"),
+						"property" : "inputContainer.contents",
+						"filter" : "getArray:'sampleTypeCode' | unique | codes:'type'",
+						"order" : false,
+						"hide" : true,
+						"type" : "text",
+						"position" : 3.5,
+						"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+						"extraHeaders" : {
+							0 : Messages("experiments.inputs")
+						}
+
+					},
 				     // render avec "|" !!
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
