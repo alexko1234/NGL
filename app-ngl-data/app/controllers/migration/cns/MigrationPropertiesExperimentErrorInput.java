@@ -71,11 +71,11 @@ public class MigrationPropertiesExperimentErrorInput extends MigrationExperiment
 			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("fromTransformationTypeCodes", previousExperimentTypeCode).exists("fromTransfertCode")).toList();
 		else
 			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("fromTransfertCode").or(DBQuery.notExists("fromTransformationTypeCodes"),DBQuery.is("fromTransformationTypeCodes", null), DBQuery.size("fromTransformationTypeCodes", 0))).toList();
-		
+
 		Logger.debug("Size of child containers "+containers.size());
-		
+
 		for(Container container : containers){
-			List<Content> contents = container.contents.stream().filter(c-> c.properties!=null && c.properties.containsKey(keyProperty)).collect(Collectors.toList());
+			List<Content> contents = container.contents.stream().filter(c-> !(c.properties!=null && c.properties.containsKey(keyProperty))).collect(Collectors.toList());
 			if(contents!=null && contents.size()>0){
 				Logger.debug("Find satellite "+container.code);
 				updateContainerRemoveProperty(container, keyProperty,addToRun);
@@ -94,7 +94,7 @@ public class MigrationPropertiesExperimentErrorInput extends MigrationExperiment
 									Logger.debug("No contents for "+output.code);
 								}
 							});
-								
+
 						});
 						MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
 					}else{
@@ -103,9 +103,8 @@ public class MigrationPropertiesExperimentErrorInput extends MigrationExperiment
 				}else{
 					Logger.error("No Transfert Code "+container.code);
 				}
+
 			}
-			
-			
 		}
 
 		return ok();
