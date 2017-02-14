@@ -9,3 +9,8 @@ function Double roundValue(Double value)
 function Double convertPVToDouble(PropertyValue pv){
 	return Double.valueOf(pv.value.toString());
 }
+
+// E. Jacobi ????
+function String convertPVToString(PropertyValue pv){
+	return String.valueOf(pv.value.toString());
+}
