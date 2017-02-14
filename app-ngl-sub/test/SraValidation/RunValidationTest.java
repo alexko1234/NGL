@@ -26,7 +26,7 @@ public class RunValidationTest extends AbstractTestsSRA {
 		String codeReadSet = "AWK_EMOSW_1_H9YKWADXX.IND1"; // lotSeqName pairé et avec mapping
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
 		SubmissionServices submissionServices = new SubmissionServices();
-		Run run = submissionServices.createRunEntity(readSet, projectCode);
+		Run run = submissionServices.createRunEntity(readSet);
 		run.validate(contextValidation);
 		System.out.println("\ndisplayErrors pour validationRunSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));

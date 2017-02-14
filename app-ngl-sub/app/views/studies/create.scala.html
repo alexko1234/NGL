@@ -5,11 +5,10 @@
 
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="createService.form.title" placeholder='@Messages("create.placeholder.studiesTitle")' required>
-			
+			<input type="text" class="form-control" ng-model="createService.form.title" placeholder='@Messages("create.placeholder.studiesTitle")' required>	
 		}
 		@formGroup{
-			<div class="form-control" bt-select  ng-model="createService.form.projectCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required></div>			
+			<div class="form-control" bt-select  ng-model="createService.form.projectCodes" filter="true" multiple="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required></div>			
 		}
 		@formGroup{
 			<div class="form-control" bt-select ng-model="createService.form.existingStudyType" placeholder='@Messages("create.placeholder.existingStudyType")' bt-options="study.code as study.code for study in createService.sraVariables.existingStudyType" required></div>			

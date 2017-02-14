@@ -214,7 +214,7 @@ var getColumns = function(){
 			// methode appelee pour remplir le tableau des configurations 
 			// Recherche toutes les configurations pour projCode indiqué :
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode});
+				this.datatable.search({projCodes:this.form.projCodes});
 				console.log("consultationService: " + this.form);
 			},
 			

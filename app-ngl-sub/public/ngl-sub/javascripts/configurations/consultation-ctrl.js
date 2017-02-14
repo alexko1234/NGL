@@ -3,7 +3,6 @@
 angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$routeParams' , '$q', 'mainService', 'lists', 'tabService','messages','configurationsConsultationService',
 	                                                  function($http, $scope, $routeParams, $q, mainService, lists, tabService, messages, configurationsConsultationService) { 
 
-
 	
 	var configurationDTConfig = {
 			name:'configurationDT',

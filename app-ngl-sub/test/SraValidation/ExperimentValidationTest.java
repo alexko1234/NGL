@@ -38,7 +38,7 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 
 		SubmissionServices submissionServices = new SubmissionServices();
 		String scientificName = "nomScientific";
-		Experiment experiment = submissionServices.createExperimentEntity(readSet, projectCode, scientificName, userTest);
+		Experiment experiment = submissionServices.createExperimentEntity(readSet, scientificName, userTest);
 		experiment.librarySelection = "random";
 		experiment.librarySource = "genomic";
 		experiment.libraryStrategy = "wgs";

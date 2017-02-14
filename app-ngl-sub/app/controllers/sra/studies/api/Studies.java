@@ -10,8 +10,8 @@ import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.AbstractStudy;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.sra.instance.Experiment;
-//import models.sra.submit.common.instance.Study;
 import models.sra.submit.util.SraCodeHelper;
+import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
@@ -54,13 +54,22 @@ public class Studies extends DocumentController<AbstractStudy>{
 				userStudy.state = new State("N", getCurrentUser());
 				if (userStudy instanceof Study){
 					((Study)userStudy).centerName=VariableSRA.centerName;
+					
 					for (String projectCode: ((Study)userStudy).projectCodes) {
-						((Study)userStudy).centerProjectName += "_" + ((Study)userStudy).projectCodes;
+						if (StringUtils.isNotBlank(projectCode)) {
+							((Study)userStudy).centerProjectName += "_" + projectCode;
+						}
 					}
 					if (StringUtils.isNotBlank(((Study)userStudy).centerProjectName)){
-						((Study)userStudy).centerProjectName.replaceFirst("_", "");
+						((Study)userStudy).centerProjectName = ((Study)userStudy).centerProjectName.replaceFirst("_", "");
 					}
-					((Study)userStudy).code = SraCodeHelper.getInstance().generateStudyCode(((Study)userStudy).centerProjectName);	
+					
+					try {
+						((Study)userStudy).code = SraCodeHelper.getInstance().generateStudyCode(((Study)userStudy).projectCodes);
+					} catch (SraException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
 				}
 				contextValidation.getContextObjects().put("type", "sra");
 				userStudy.validate(contextValidation);
@@ -107,7 +116,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 		
 		
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
-			queries.add(DBQuery.in("projectCode", form.projCodes)); // doit pas marcher car pour state.code
+			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
 			// C'est une valeur qui peut prendre une valeur autorisee dans le formulaire. Ici on veut que 
 			// l'ensemble des valeurs correspondent à l'ensemble des valeurs du formulaire independamment de l'ordre.
 		}

@@ -19,7 +19,7 @@ public class SubmissionBuilder {
 	
 	public SubmissionBuilder withProjectCode(String projectCode)
 	{
-		submission.projectCode=projectCode;
+		submission.projectCodes.add(projectCode);
 		return this;
 	}
 	public SubmissionBuilder withConfigCode(String configCode)

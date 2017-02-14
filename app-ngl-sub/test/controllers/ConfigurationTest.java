@@ -61,7 +61,7 @@ public class ConfigurationTest extends AbstractTestController{
 	public void shouldSearchConfiguration()
 	{
 		ConfigurationsSearchForm confSearchForm = new ConfigurationsSearchForm();
-		confSearchForm.projCode=projectCode;
+		confSearchForm.projCodes.add(projectCode);
 		Result result = callAction(controllers.sra.configurations.api.routes.ref.Configurations.list(),fakeRequest().withJsonBody(Json.toJson(confSearchForm)));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
@@ -73,7 +73,7 @@ public class ConfigurationTest extends AbstractTestController{
 	{
 		Configuration configuration = new Configuration();
 		configuration.code=configCode;
-		configuration.projectCode=projectCode;
+		configuration.projectCodes.add(projectCode);
 		configuration.strategySample="STRATEGY_SAMPLE_CLONE";
 		configuration.librarySelection="size fractionation";
 		configuration.librarySource="synthetic";
