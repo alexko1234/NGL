@@ -67,43 +67,45 @@ public class MigrationPropertiesExperimentErrorInput extends MigrationExperiment
 		}
 		//Get all childs container from previousExperiment with key property
 		List<Container> containers = new ArrayList<Container>();
-		if(previousExperimentTypeCode!=null)
-			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("fromTransformationTypeCodes", previousExperimentTypeCode).exists("fromTransfertCode")).toList();
-		else
+		if(previousExperimentTypeCode!=null){
+			//containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("fromTransformationTypeCodes", previousExperimentTypeCode).exists("fromTransfertCode")).toList();
+			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("fromTransformationTypeCodes", previousExperimentTypeCode)).toList();
+		}else
 			containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("fromTransfertCode").or(DBQuery.notExists("fromTransformationTypeCodes"),DBQuery.is("fromTransformationTypeCodes", null), DBQuery.size("fromTransformationTypeCodes", 0))).toList();
 
 		Logger.debug("Size of child containers "+containers.size());
 
 		for(Container container : containers){
-			List<Content> contents = container.contents.stream().filter(c-> !(c.properties!=null && c.properties.containsKey(keyProperty))).collect(Collectors.toList());
-			if(contents!=null && contents.size()>0){
-				Logger.debug("Find satellite "+container.code);
-				updateContainerRemoveProperty(container, keyProperty,addToRun);
-				//Get experiment to remove property
-				if(container.fromTransfertCode!=null){
-					Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, container.fromTransfertCode);
-					if(experiment!=null){
-						Logger.debug("Update experiment satellite "+experiment.code);
-						experiment.atomicTransfertMethods.stream().forEach(atm->{
-							atm.outputContainerUseds.stream().filter(output-> output.code.equals(container.code)).forEach(output->{
-								if(output.contents!=null){
-									output.contents.stream().forEach(c->{
-										c.properties.remove(keyProperty);
-									});
-								}else{
-									Logger.debug("No contents for "+output.code);
-								}
+			if(!container.fromTransformationTypeCodes.contains(experimentTypeCode)){
+				List<Content> contents = container.contents.stream().filter(c-> c.properties!=null && c.properties.containsKey(keyProperty)).collect(Collectors.toList());
+				if(contents!=null && contents.size()>0){
+					Logger.debug("Find satellite "+container.code);
+					updateContainerRemoveProperty(container, keyProperty,addToRun);
+					//Get experiment to remove property
+					if(container.fromTransfertCode!=null){
+						Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, container.fromTransfertCode);
+						if(experiment!=null){
+							Logger.debug("Update experiment satellite "+experiment.code);
+							experiment.atomicTransfertMethods.stream().forEach(atm->{
+								atm.outputContainerUseds.stream().filter(output-> output.code.equals(container.code)).forEach(output->{
+									if(output.contents!=null){
+										output.contents.stream().forEach(c->{
+											c.properties.remove(keyProperty);
+										});
+									}else{
+										Logger.debug("No contents for "+output.code);
+									}
+								});
+
 							});
-
-						});
-						MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
+							MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
+						}else{
+							Logger.error("No experiment for "+container.code);
+						}
 					}else{
-						Logger.error("No experiment for "+container.code);
+						Logger.error("No Transfert Code "+container.code);
 					}
-				}else{
-					Logger.error("No Transfert Code "+container.code);
 				}
-
 			}
 		}
 
