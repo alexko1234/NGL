@@ -54,9 +54,10 @@ public class Studies extends DocumentController<AbstractStudy>{
 				userStudy.state = new State("N", getCurrentUser());
 				if (userStudy instanceof Study){
 					((Study)userStudy).centerName=VariableSRA.centerName;
-					
+					((Study)userStudy).centerProjectName = "";
 					for (String projectCode: ((Study)userStudy).projectCodes) {
 						if (StringUtils.isNotBlank(projectCode)) {
+							System.out.println("projectCode= '"+ projectCode +"'");
 							((Study)userStudy).centerProjectName += "_" + projectCode;
 						}
 					}

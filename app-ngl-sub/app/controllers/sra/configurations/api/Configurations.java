@@ -66,6 +66,7 @@ public class Configurations extends DocumentController<Configuration>{
 			} catch (SraException e) {
 				return badRequest(filledForm.errorsAsJson());
 			}
+			System.out.println (" !!!!!!!!!!! userConf.code = " + userConfiguration.code);
 			userConfiguration.validate(contextValidation);
 			if(contextValidation.errors.size()==0) {
 				MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);

@@ -36,7 +36,7 @@ public class SraCodeHelper extends DefaultCodeImpl {
 		if (StringUtils.isBlank(code)){
 			throw new SraException("generateConfigurationCode : argument sans aucune valeur ???");
 		}
-		return ("conf_" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
+		return ("conf" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
 	}	
 	
 	
@@ -51,7 +51,7 @@ public class SraCodeHelper extends DefaultCodeImpl {
 		if (StringUtils.isBlank(code)){
 			throw new SraException("generateStudyCode : argument sans aucune valeur ???");
 		}
-		return ("study_" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
+		return ("study" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
 	}	
 	
 	public synchronized String generateSubmissionCode(List<String> projectCodes) throws SraException {
@@ -65,7 +65,7 @@ public class SraCodeHelper extends DefaultCodeImpl {
 		if (StringUtils.isBlank(code)){
 			throw new SraException("generateSubmissionCode : argument sans aucune valeur ???");
 		}
-		return ("cns_" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
+		return ("cns" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
 	}
 	
 	public String generateExperimentCode(String readSetCode) {

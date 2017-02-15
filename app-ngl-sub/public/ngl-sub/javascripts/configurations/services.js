@@ -95,8 +95,8 @@ var getColumns = function(){
 			        	type :"text",		    	  	
 			        	order:true
 			        });	
-		columns.push({property:"projectCode",
-			        	header: Messages("configuration.projectCode"),
+		columns.push({property:"projectCodes",
+			        	header: Messages("configuration.projectCodes"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
