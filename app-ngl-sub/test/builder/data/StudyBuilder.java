@@ -21,7 +21,7 @@ public class StudyBuilder {
 	
 	public StudyBuilder withProjectCode(String projectCode)
 	{
-		study.projectCode=projectCode;
+		study.projectCodes.add(projectCode);
 		return this;
 	}
 	

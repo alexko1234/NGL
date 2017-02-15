@@ -1,6 +1,8 @@
 package models.sra.submit.sra.instance;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +21,7 @@ import play.Logger;
 public class Configuration  extends DBObject implements IValidation {
 
 		//public String alias;            // required mais remplacé par code herité de DBObject, et valeur = conf_projectCode_num
-		public String projectCode = null; // de type BAT, required pour nos stats
+		public List<String> projectCodes = new ArrayList<String>(); // de type BAT, required pour nos stats
 		//public String studyCode = null;
 		public String strategySample = null;  // required et constraint :
 		//("STRATEGY_SAMPLE_TAXON", "STRATEGY_SAMPLE_CLONE", "STRATEGY_NO_SAMPLE");
@@ -45,6 +47,7 @@ public class Configuration  extends DBObject implements IValidation {
 								
 		public TraceInformation traceInformation = new TraceInformation(); // Reference sur "models.laboratory.common.instance.TraceInformation" 
 			// pour loguer les dernieres modifications utilisateurs
+		
 
 		
 		@Override
@@ -55,7 +58,7 @@ public class Configuration  extends DBObject implements IValidation {
 	    	//contextValidation.putObject("configuration", this);	   
 			contextValidation.addKeyToRootKeyName("configuration");
 			// verifier que projectCode est bien renseigné et existe dans lims :
-			SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
+			SraValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
 			// verifier que champs contraints presents avec valeurs autorisees:
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");

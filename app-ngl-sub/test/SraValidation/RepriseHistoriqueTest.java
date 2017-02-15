@@ -190,58 +190,58 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					continue;
 				}
 				if (study.code.equals("SY")){
-					study.projectCode = "SY";
+					study.projectCodes.add("SY");
 				}
 				if (study.code.equals("project_BIK")){
-					study.projectCode = "BIK";
+					study.projectCodes.add("BIK");
 				}
 				if (study.code.equals("ASI")){
-					study.projectCode = "ASI";
+					study.projectCodes.add("ASI");
 				}
 				if (study.code.equals("AQS")){
-					study.projectCode = "AQS";
+					study.projectCodes.add("AQS");
 				}
 				if (study.code.equals("LQ")){
-					study.projectCode = "LQ";
+					study.projectCodes.add("LQ");
 				}
 				if (study.code.equals("AFR")){
-					study.projectCode = "AFR";
+					study.projectCodes.add("AFR");
 				}
 				if (study.code.equals("AEI")){
-					study.projectCode = "AEI";
+					study.projectCodes.add("AEI");
 				}
 				if (study.code.equals("AKN")){
-					study.projectCode = "AKN";
+					study.projectCodes.add("AKN");
 				}
 				if (study.code.equals("AGR")){
-					study.projectCode = "AGR";
+					study.projectCodes.add("AGR");
 				}			
 				if (study.code.equals("project_BNA")){
-					study.projectCode = "BNA";
+					study.projectCodes.add("BNA");
 				}
 				if (study.code.equals("AEQ")){
-					study.projectCode = "AEQ";
+					study.projectCodes.add("AEQ");
 				}
 				if (study.code.equals("AHH")){
-					study.projectCode = "AHH";
+					study.projectCodes.add("AHH");
 				}
 				if (study.code.equals("ABK")){
-					study.projectCode = "ABK";
+					study.projectCodes.add("ABK");
 				}
 				if (study.code.equals("AQG")){
-					study.projectCode = "AQG";
+					study.projectCodes.add("AQG");
 				}
 				if (study.code.equals("project_BMI")){
-					study.projectCode = "BMI";
+					study.projectCodes.add("BMI");
 				}				
 				if (study.code.equals("project_BHQ")){
-					study.projectCode = "BHQ";
+					study.projectCodes.add("BHQ");
 				}
 				if (study.code.equals("project_BMR")){
-					study.projectCode = "BMR";
+					study.projectCodes.add("BMR");
 				}
 				if (study.code.equals("project_BII")){
-					study.projectCode = "BII";
+					study.projectCodes.add("BII");
 				}
 				ContextValidation contextValidation = new ContextValidation(user);
 				contextValidation.setCreationMode();

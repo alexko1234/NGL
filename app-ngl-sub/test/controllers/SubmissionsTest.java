@@ -227,7 +227,7 @@ public class SubmissionsTest extends AbstractTestController{
 	public void shouldSaveSubmission()
 	{
 		SubmissionsCreationForm submissionsCreationForm = new SubmissionsCreationForm();
-		submissionsCreationForm.projCode = projectCode;
+		submissionsCreationForm.projCodes.add(projectCode);
 		submissionsCreationForm.readSetCodes = Arrays.asList(readCode1);
 		submissionsCreationForm.studyCode = studyCode1;
 		submissionsCreationForm.configurationCode = configCode1;

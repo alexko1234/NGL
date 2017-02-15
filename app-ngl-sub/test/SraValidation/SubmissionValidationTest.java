@@ -30,7 +30,7 @@ public class SubmissionValidationTest extends AbstractTestsSRA {
 		SubmissionServices submissionServices = new SubmissionServices();
 		Configuration config = new Configuration();
 		config.code = "conf_AWK_test";
-		config.projectCode = "AWK";
+		config.projectCodes.add("AWK");
 		config.strategySample = "strategy_sample_taxon";
 		config.librarySelection = "random";
 		config.librarySource = "genomic";

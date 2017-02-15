@@ -78,14 +78,15 @@ var getColumns = function(){
 			        	header: Messages("study.code"),
 			        	type :"text",		    	  	
 			        	order:true
-			        	});		
-			 columns.push({property:"projectCode",
-			        	header: Messages("study.projectCode"),
+			        	});	
+			        	// voir comment affichicher liste des codesProjets.	
+			 /*columns.push({property:"projectCodes",
+			        	header: Messages("study.projectCodes"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
-			        	});	
+			        	});*/ 	
 			columns.push({property:"accession",
 			        	header: Messages("study.accession"),
 			        	type :"text",		    	  	
@@ -183,8 +184,8 @@ var getColumns = function(){
 			//console.log("sraVariables :" + sraVariables); 
 			// Recherche l'ensemble de studies pour un projCode :
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode});
-				console.log("consultationService: " + this.form);
+				this.datatable.search({projCodes:this.form.projCodes});
+				//this.datatable.search({this.form});
 			},
 			
 			cancel : function(){

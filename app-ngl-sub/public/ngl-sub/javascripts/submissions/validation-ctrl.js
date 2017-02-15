@@ -44,7 +44,7 @@ angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeP
 	console.log("validation-ctrl:stateCode " + $scope.consultationService.form.stateCode);
 
 	$scope.search = function(){
-		if($scope.consultationService.form.projCode!==null){
+		if($scope.consultationService.form.projCodes!==null){
 			$scope.consultationService.search();
 		} else {
 			console.log("Cancel datatable");

@@ -1,4 +1,6 @@
 package models.sra.submit.util;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 import fr.cea.ig.MongoDBDAO;
@@ -23,19 +25,47 @@ public class SraCodeHelper extends DefaultCodeImpl {
 		return SingletonHolder.instance;
 	}
 
-	public synchronized String generateConfigurationCode(String projectCode) {
-		// conf_projectCode_YYYYMMDDHHMMSSSS
-		return ("conf_" + projectCode + "_" + this.getInstance().generateBarCode()).toUpperCase();
-	}
+	public synchronized String generateConfigurationCode(List<String> projectCodes) throws SraException {
+		// conf_projectCode1_projectCode_2_YYYYMMDDHHMMSSSS
+		String code = "";
+		for (String projectCode: projectCodes) {
+			if (StringUtils.isNotBlank(projectCode)) {
+				 code += "_" + projectCode;
+			}
+		}
+		if (StringUtils.isBlank(code)){
+			throw new SraException("generateConfigurationCode : argument sans aucune valeur ???");
+		}
+		return ("conf" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
+	}	
 	
-	public synchronized String generateStudyCode(String projectCode) {
-		// study_projectCode_YYYYMMDDHHMMSSSS
-		return ("study_" + projectCode + "_" + this.getInstance().generateBarCode()).toUpperCase();
-	}
 	
-	public synchronized String generateSubmissionCode(String projectCode) {
-		// cns_projectCode_YYYYMMDDHHMMSSSS
-		return ("sub_" + projectCode + "_" + this.getInstance().generateBarCode()).toUpperCase();
+	public synchronized String generateStudyCode(List<String> projectCodes) throws SraException {
+		// conf_projectCode1_projectCode_2_YYYYMMDDHHMMSSSS
+		String code = "";
+		for (String projectCode: projectCodes) {
+			if (StringUtils.isNotBlank(projectCode)) {
+				 code += "_" + projectCode;
+			}
+		}
+		if (StringUtils.isBlank(code)){
+			throw new SraException("generateStudyCode : argument sans aucune valeur ???");
+		}
+		return ("study" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
+	}	
+	
+	public synchronized String generateSubmissionCode(List<String> projectCodes) throws SraException {
+		// cns_projectCode1_projectCode_2_YYYYMMDDHHMMSSSS
+		String code = "";
+		for (String projectCode: projectCodes) {
+			if (StringUtils.isNotBlank(projectCode)) {
+				 code += "_" + projectCode;
+			}
+		}
+		if (StringUtils.isBlank(code)){
+			throw new SraException("generateSubmissionCode : argument sans aucune valeur ???");
+		}
+		return ("cns" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
 	}
 	
 	public String generateExperimentCode(String readSetCode) {

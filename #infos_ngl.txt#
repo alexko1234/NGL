@@ -1,0 +1,4 @@
+Obtenir les infos sur le repository distant:
+[sgas@vm-dev ngl]$ git remote -v
+origin	ssh://sgas@195.83.222.218/env/cns/genosphere/git/lis/dev/ngl.git (fetch)
+origin	ssh://sgas@195.83.222.218/env/cns/genosphere/git/lis/dev/ngl.git (push)

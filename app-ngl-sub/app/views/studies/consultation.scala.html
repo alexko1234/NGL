@@ -7,7 +7,7 @@
 		@formGroup{
 			@** ceci est un commentaire
 			**@
-			<div class="form-control" bt-select  ng-model="consultationService.form.projCode" filter="true" placeholder='@Messages("consultation.placeholder.projectCode")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()" required ng-change=search()></div>	
+			<div class="form-control" bt-select  ng-model="consultationService.form.projCodes" filter="true" multiple="true" placeholder='@Messages("consultation.placeholder.projectCodes")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()" required ng-change=search()></div>	
 		}													
 	}
 }

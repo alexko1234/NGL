@@ -61,7 +61,12 @@ public class Configurations extends DocumentController<Configuration>{
 			// Ne pas passer par configWorkflows ici car setState possible si mode update si object existe deja
 			//configWorkflows.setState(contextValidation, userConfiguration, state);
 			userConfiguration.state = state;
-			userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCode);
+			try {
+				userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCodes);
+			} catch (SraException e) {
+				return badRequest(filledForm.errorsAsJson());
+			}
+			System.out.println (" !!!!!!!!!!! userConf.code = " + userConfiguration.code);
 			userConfiguration.validate(contextValidation);
 			if(contextValidation.errors.size()==0) {
 				MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);
@@ -100,9 +105,13 @@ public class Configurations extends DocumentController<Configuration>{
 	private Query getQuery(ConfigurationsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		if (StringUtils.isNotBlank(form.projCode)) { 
+		/*if (StringUtils.isNotBlank(projCode)) { 
 			queries.add(DBQuery.in("projectCode", form.projCode));
-		}	
+		}*/
+		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
+			queries.add(DBQuery.in("projectCodes", form.projCodes));
+		}
+			
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

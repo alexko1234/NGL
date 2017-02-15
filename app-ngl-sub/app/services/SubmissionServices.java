@@ -265,7 +265,7 @@ public class SubmissionServices {
 			// Creer les objets avec leurs alias ou code, les instancier completement et les sauver.
 
 			// Creer l'experiment avec un state.code = 'N'
-			Experiment experiment = createExperimentEntity(readSet, config.projectCode, scientificName, user);
+			Experiment experiment = createExperimentEntity(readSet, scientificName, user);
 			experiment.librarySelection = config.librarySelection;
 			experiment.librarySource = config.librarySource;
 			experiment.libraryStrategy = config.libraryStrategy;
@@ -345,7 +345,7 @@ public class SubmissionServices {
 			} else {
 				
 				// Recuperer le sample existant avec son state.code ou bien en creer un nouveau avec state.code='N'
-				Sample sample = fetchSample(readSet, config.projectCode, config.strategySample, scientificName, user);
+				Sample sample = fetchSample(readSet, config.strategySample, scientificName, user);
 				// Renseigner l'objet submission :
 				// Verifier que l'objet sample n'a jamais ete soumis et n'est pas en cours de soumission
 				System.out.println("sample = " + sample + " et state="+ sample.state.code);
@@ -639,12 +639,19 @@ public class SubmissionServices {
 			DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 			Date courantDate = new java.util.Date();
 			String st_my_date = dateFormat.format(courantDate);
-			if (StringUtils.isBlank((submission.projectCode))){
-				throw new SraException("Dans activateSubmission: impossible de determiner le repertoire de soumission avec submission.projectCode à nul");
+			
+			String syntProjectCode = "";
+			for (String projectCode: submission.projectCodes) {
+				if (StringUtils.isNotBlank(projectCode)) {
+					syntProjectCode += "_" + projectCode;
+				}
+			}
+			if (StringUtils.isNotBlank(syntProjectCode)){
+				syntProjectCode = syntProjectCode.replaceFirst("_", "");
 			}
 			
-			submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.projectCode + File.separator + st_my_date;
-			submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.projectCode + File.separator + "tmp_" + st_my_date;
+			submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
+			submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
 			File dataRep = new File(submission.submissionDirectory);
 			System.out.println("Creation du repertoire de soumission et liens vers donnees brutes : " + submission.submissionDirectory);
 			Logger.of("SRA").info("Creation du repertoire de soumission" + submission.submissionDirectory);
@@ -726,14 +733,13 @@ public class SubmissionServices {
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
-		submission = new Submission(config.projectCode, user);
-		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(config.projectCode);
+		submission = new Submission(user, config.projectCodes);
+		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(config.projectCodes);
 		submission.submissionDate = courantDate;
 		System.out.println("submissionCode="+ submission.code);
 		submission.state = new State("N", user);
 		submission.release = false;
 		submission.configCode = config.code;
-		submission.projectCode = config.projectCode;
 		// Creation de la map deportéé dans methode initNewSubmission pour ne mettre dans la map
 		// que les noms de clones utilisee par la soumission
 
@@ -822,7 +828,7 @@ public class SubmissionServices {
 		
 
 
-	private Sample fetchSample(ReadSet readSet, String projectCode, String strategySample, String scientificName, String user) throws SraException {
+	private Sample fetchSample(ReadSet readSet, String strategySample, String scientificName, String user) throws SraException {
 		// Recuperer pour chaque readSet les objets de laboratory qui existent forcemment dans mongoDB, 
 		// et qui permettront de renseigner nos objets SRA :
 		String laboratorySampleCode = readSet.sampleCode;
@@ -835,7 +841,7 @@ public class SubmissionServices {
 		String laboratoryRunCode = readSet.runCode;
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 
-		String codeSample = SraCodeHelper.getInstance().generateSampleCode(readSet, projectCode, strategySample);
+		String codeSample = SraCodeHelper.getInstance().generateSampleCode(readSet, readSet.projectCode, strategySample);
 		Sample sample = null;
 		// Si sample existe, prendre l'existant, sinon en creer un nouveau
 		//if (services.SraDbServices.checkCodeSampleExistInSampleCollection(codeSample)) {
@@ -854,7 +860,7 @@ public class SubmissionServices {
 			// enrichir le sample avec scientific_name:
 			sample.scientificName = scientificName;
 			sample.clone = laboratorySample.referenceCollab;
-			sample.projectCode = projectCode;
+			sample.projectCode = readSet.projectCode;
 			sample.state = new State("N", user);
 			sample.traceInformation.setTraceInformation(user);			
 		}
@@ -891,7 +897,6 @@ public class SubmissionServices {
 
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "accession", sampleAc)){
 			AbstractSample absSample;
-
 			absSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
 				AbstractSample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
 			
@@ -900,11 +905,8 @@ public class SubmissionServices {
 			} else {
 				throw new SraException("Recuperation dans base du sample avec Ac = " + sampleAc +" qui n'est pas du type externalSample ");
 			}
-			
 			externalSample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
 					ExternalSample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
-			
-
 		} else {
 			String externalSampleCode = SraCodeHelper.getInstance().generateExternalSampleCode(sampleAc);
 			externalSample = new ExternalSample(); // objet avec state.code = submitted
@@ -920,7 +922,7 @@ public class SubmissionServices {
 	
 	
 	// methode mise en public car utilisee dans test mais devrait etre private
-	public Experiment createExperimentEntity(ReadSet readSet, String projectCode, String scientificName, String user) throws SraException {
+	public Experiment createExperimentEntity(ReadSet readSet, String scientificName, String user) throws SraException {
 		// On cree l'experiment pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
 
@@ -928,7 +930,8 @@ public class SubmissionServices {
 		
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);
 		experiment.readSetCode = readSet.code;
-		experiment.projectCode = projectCode;
+		
+		experiment.projectCode = readSet.projectCode;
 		experiment.traceInformation.setTraceInformation(user);
 		System.out.println("expCode =" + experiment.code);
 		String laboratoryRunCode = readSet.runCode;
@@ -1100,7 +1103,7 @@ public class SubmissionServices {
 		}
 
 		
-		experiment.run = createRunEntity(readSet, projectCode);
+		experiment.run = createRunEntity(readSet);
 
 		// Renseigner l'objet experiment pour lastBaseCoord : Recuperer les lanes associées au
 		// run associé au readSet et recuperer le lane contenant le readSet.code. C'est dans les
@@ -1186,7 +1189,7 @@ public class SubmissionServices {
 	
 
 
-	public Run createRunEntity(ReadSet readSet, String projectCode) {
+	public Run createRunEntity(ReadSet readSet) {
 		// On cree le run pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
 

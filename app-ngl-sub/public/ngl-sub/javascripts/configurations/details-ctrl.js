@@ -45,8 +45,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	type :"text",		    	  	
 			        	order:true
 			        },	
-			        {property:"projectCode",
-			        	header: "projectCode",
+			        {property:"projectCodes",
+			        	header: "projectCodes",
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,

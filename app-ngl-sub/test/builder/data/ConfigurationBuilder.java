@@ -15,7 +15,7 @@ public class ConfigurationBuilder {
 	
 	public ConfigurationBuilder withProjectCode(String projectCode)
 	{
-		configuration.projectCode=projectCode;
+		configuration.projectCodes.add(projectCode);
 		return this;
 	}
 	

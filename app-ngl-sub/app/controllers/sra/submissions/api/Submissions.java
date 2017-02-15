@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -93,8 +94,8 @@ public class Submissions extends DocumentController<Submission>{
 	private Query getQuery(SubmissionsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		if (StringUtils.isNotBlank(form.projCode)) { //all
-			queries.add(DBQuery.in("projectCode", form.projCode));
+		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
+			queries.add(DBQuery.in("projectCodes", form.projCodes));
 		}
 		//modif		if (StringUtils.isNotBlank(form.state)) { //all
 

@@ -63,7 +63,7 @@ public class StudiesTest extends AbstractTestController{
 	public void shouldSearchStudy()
 	{
 		StudiesSearchForm studiesSearchForm = new StudiesSearchForm();
-		studiesSearchForm.projCode=projectCode;
+		studiesSearchForm.projCodes.add(projectCode);
 		Result result = callAction(controllers.sra.studies.api.routes.ref.Studies.list(),fakeRequest().withJsonBody(Json.toJson(studiesSearchForm)));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
@@ -76,7 +76,7 @@ public class StudiesTest extends AbstractTestController{
 		Study study = new Study();
 		study.centerProjectName="CNS_Proj_1";
 		study.existingStudyType="pooled clone sequencing";
-		study.projectCode=projectCode;
+		study.projectCodes.add(projectCode);
 		
 		Result result = callAction(controllers.sra.studies.api.routes.ref.Studies.save(),fakeRequest().withJsonBody(Json.toJson(study)));
 		Logger.info(contentAsString(result));

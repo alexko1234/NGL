@@ -55,7 +55,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 	public static void createDataSetForFileAcServices()throws SraException {
 		// Creation d'une soumission complete en attente des numeros d'accession :
 		String status = "inprogress"; // a changer pour waitingAc ?
-		
+		String projectCode = "AWK";
 		String studyCode = "test_AC_study_AWK";
 		String configCode = "test_AC_conf_AWK";
 		String submissionCode="test_AC_cns_AWK";
@@ -72,7 +72,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		contextValidation.setCreationMode();		
 		Configuration config = new Configuration();
 		config.code = configCode;
-		config.projectCode = "AWK";
+		config.projectCodes.add(projectCode);
 		config.strategySample = "strategy_sample_taxon";
 		config.librarySelection = "random";
 		config.librarySource = "genomic";
@@ -87,8 +87,8 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		// Creer un study valide avec un status inWaiting (on ne prend pas status userValidate) et le sauver dans mongodb:
 		Study study = new Study();
 		study.centerName=VariableSRA.centerName;
-		study.projectCode = "AWK";
-		study.centerProjectName = "AWK";
+		study.projectCodes.add(projectCode);
+		study.centerProjectName = projectCode;
 		study.code = studyCode;
 		study.existingStudyType="Metagenomics";
 		study.traceInformation.setTraceInformation(user);
@@ -101,7 +101,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		// creer un objet Experiment (avec son run associé) valide avec un status "inWaiting" et le sauver dans mongodb :
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 		String scientificName = "scientificName bidon";
-		Experiment experiment = SubmissionServices.createExperimentEntity(readSet, config.projectCode, scientificName, "william");
+		Experiment experiment = SubmissionServices.createExperimentEntity(readSet, scientificName, "william");
 		// changer le code de experiment :
 		experiment.code = experimentCode;
 		experiment.sampleCode = sampleCode;
@@ -121,7 +121,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		sample.code = sampleCode;
 		sample.taxonId = new Integer(472);
 		sample.clone = "Acineto_cDNA_SMARTST_1ng_Ctrl";
-		sample.projectCode = config.projectCode;
+		sample.projectCode = projectCode;
 		sample.state = new State(status, user);
 		sample.traceInformation.setTraceInformation(user);		
 		contextValidation.getContextObjects().put("type", "sra");
@@ -131,7 +131,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 
 		// Creer un objet submission avec status inWaiting et le sauver dans mongodb :
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class,  submissionCode);
-		Submission submission = new Submission(config.projectCode, user);
+		Submission submission = new Submission(user, config.projectCodes);
 		submission.submissionDirectory = submissionDirectory;
 		submission.code = submissionCode;
 		//System.out.println("submissionCode="+ submissionCode);

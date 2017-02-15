@@ -28,7 +28,8 @@ import fr.cea.ig.MongoDBDAO;
 public class Submission extends DBObject implements IValidation {
 
 	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = CNS_projectCode_date_num
-	public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
+	//public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
+	public List<String> projectCodes = new ArrayList<String>();
  	public String accession = null;       // numeros d'accession attribué par ebi */
 	public Date submissionDate = null;
 	public List<String> refStudyCodes = new ArrayList<String>();  // Liste de tous les codes des AbstractStudy (ExternalStudy et Study) referencés par cette soumission, pas forcement à soumettre à l'EBI.
@@ -60,7 +61,7 @@ public class Submission extends DBObject implements IValidation {
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 
-	public Submission(String projectCode, String user) {
+	public Submission(String user, List<String>projectCodes) {
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
@@ -68,6 +69,11 @@ public class Submission extends DBObject implements IValidation {
 		this.submissionDate = courantDate;
 		this.traceInformation = new TraceInformation();
 		this.traceInformation.setTraceInformation(user);
+		for (String projectCode: projectCodes) {
+			if (StringUtils.isNotBlank(projectCode)) {
+				this.projectCodes.add(projectCode);
+			}
+		}
 	}
 
 	public Submission() {
@@ -81,7 +87,7 @@ public class Submission extends DBObject implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("submission");
 		// verifier que projectCode est bien renseigné et existe dans lims :
-		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
+		SraValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
 
 		// Verifier que status est bien renseigné avec valeurs autorisees et que submissionDirectory est bien renseigné une
 		// fois que l'objet est en status "inWaiting" (etape activate de la soumission)

@@ -899,7 +899,6 @@ public class RepriseHistorique {
 				}
 			}
 		
-			
 			//sample.accession = mapAc.get(sample.code);
 			sample.state = new State("F-SUB", user);
 			sample.traceInformation.setTraceInformation(user);
@@ -907,7 +906,6 @@ public class RepriseHistorique {
 			contextValidation.setCreationMode();
 			contextValidation.getContextObjects().put("type", "sra");
 			sample.adminComment = adminComment;
-			
 		}
 		System.out.println("sortie de forSamples");
 		
@@ -934,15 +932,15 @@ public class RepriseHistorique {
 			Matcher m = p1.matcher(study.code);
 			// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
 			if ( m.find() ) {
-				study.projectCode = m.group(1);
+				study.projectCodes.add(m.group(1));
 			} else {
 				m = p2.matcher(study.code);
 				if ( m.find() ) {
-					study.projectCode = m.group(1);
+					study.projectCodes.add(m.group(1));
 				} else {
 					m = p3.matcher(study.code);
 					if ( m.find() ) {
-						study.projectCode = m.group(1);
+						study.projectCodes.add(m.group(1));
 					}
 				}
 			}

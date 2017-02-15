@@ -33,10 +33,11 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		ContextValidation contextValidation = new ContextValidation(userTest);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
+		String projectCode = "AWK";
 		// Creer une config et la sauver dans mongodb :
 		Configuration config = new Configuration();
 		config.code = "conf_AWK_test_xml";
-		config.projectCode = "AWK";
+		config.projectCodes.add(projectCode);
 		config.strategySample = "strategy_sample_taxon";
 		config.librarySelection = "random";
 		config.librarySource = "genomic";
@@ -51,7 +52,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		// Creer un study validé par utilisateur et le sauver dans mongodb:
 		Study study = new Study();
 		study.centerName=VariableSRA.centerName;
-		study.projectCode = "AWK";
+		study.projectCodes.add("AWK");
 		study.centerProjectName = "AWK";
 		study.code = "study_AWK_test_xml";
 		study.existingStudyType="Metagenomics";

@@ -53,37 +53,40 @@
 				},
 				
 				refreshSubmissions : function(){
-					if(this.form.projCode!==null && this.form.projCode !== undefined){
-						this.datatable.search({projCode:this.form.projCode, stateCode:'N'});
+					if(this.form.projCodes && this.form.projCodes.length > 0){
+						//this.datatable.search(this.form);
+						this.datatable.search({projCodes:this.form.projCodes, stateCode:'N'});
 					}
 				},
 				
 				refreshSraStudies : function(){
-					if(this.form.projCode!==null && this.form.projCode !== undefined){
+					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.sraStudies dans lists de common.js
-						//this.lists.refresh.sraStudies({projCode:this.form.projCode});
-						this.lists.refresh.sraStudies({projCode:this.form.projCode, stateCodes:["N", "F-SUB"]});
+						this.lists.refresh.sraStudies({projCodes:this.form.projCodes, stateCodes:["N", "F-SUB"]});
 					}
 				},
 				
 				refreshSraConfigurations : function(){
-					if(this.form.projCode!==null && this.form.projCode !== undefined){
+					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.sraConfigurations dans lists de common.js
-						this.lists.refresh.sraConfigurations({projCode:this.form.projCode});
+						this.lists.refresh.sraConfigurations({projCodes:this.form.projCodes});
 					}
 				},
 				
 				refreshReadSets : function(){
-					if(this.form.projCode!==null && this.form.projCode !== undefined){
+					console.log
+					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.ReadSets dans lists de common.js
-						this.lists.refresh.readSets({projectCode:this.form.projCode, submissionStateCode:"NONE"});
+						// Dans ReadSetsSearchForm.java champs projectCodes et non projCodes !!!
+						this.lists.refresh.readSets({projectCodes:this.form.projCodes, submissionStateCode:"NONE"});
 					}
 				},
 				
 				// fonction qui recupere objet configuration dont le code est saisi par utilisateur et qui en fonction
 				// de config.strategy_internal_study determine si la variable internal_studies est à true ou false.
 				displayStudies : function(){
-					if(this.form.configurationCode !== null && this.form.configurationCode !== undefined){
+					//if(this.form.configurationCode !== null && this.form.configurationCode !== undefined){
+					if(this.form.projCodes && this.form.projCodes.length > 0){
 						//get configuration
 						$http.get(jsRoutes.controllers.sra.configurations.api.Configurations.get(this.form.configurationCode).url).success(function(data) {
 							if(data.strategyStudy === 'strategy_internal_study'){
@@ -100,7 +103,7 @@
 
 				// methode appelee pour remplir le tableau des soumissions 
 				search : function(){
-					this.datatable.search({projCode:this.form.projCode, stateCode:'N'});
+					this.datatable.search({projCodes:this.form.projCodes, stateCode:'N'});
 				},
 				/**
 				 * initialization of the service
@@ -114,9 +117,9 @@
 						mainService.setDatatable(createService.datatable);
 						createService.datatable.setColumnsConfig(getColumns());		
 					}else if(angular.isDefined(mainService.getDatatable())){
-						createService.datatable = mainService.getDatatable();		
-						if(this.form.projCode!==null && this.form.projCode !== undefined){
-							this.datatable.search({projCode:this.form.projCode, stateCode:'N'});
+						createService.datatable = mainService.getDatatable();	
+						if(this.form.projCodes && this.form.projCodes.length > 0){
+							this.datatable.search({projCodes:this.form.projCodes, stateCode:'N'});
 						}
 					}	
 					
@@ -190,8 +193,8 @@
 
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				console.log("activateService.search:projCode " + this.form.projCode);	
-				this.datatable.search({projCode:this.form.projCode, stateCode:'V-SUB'});
+				console.log("activateService.search:projCodes " + this.form.projCodes);	
+				this.datatable.search({projCodes:this.form.projCodes, stateCode:'V-SUB'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);
@@ -389,9 +392,9 @@
 				console.log("validationService:state " + this.form.state);
 				
 				if (this.form.state!==null && this.form.state !== undefined){
-					this.datatable.search({projCode:this.form.projCode, state : this.form.state});
+					this.datatable.search({projCodes:this.form.projCodes, state : this.form.state});
 				} else {
-					this.datatable.search({projCode:this.form.projCode});
+					this.datatable.search({projCodes:this.form.projCodes});
 				}
 				
 				//this.datatable.search(this.form);
@@ -476,7 +479,7 @@
 			
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode, state:'V-SUB'});
+				this.datatable.search({projCodes:this.form.projCodes, state:'V-SUB'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);
