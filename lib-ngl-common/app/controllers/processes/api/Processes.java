@@ -3,11 +3,22 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import controllers.DocumentController;
+import controllers.NGLControllerHelper;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -19,13 +30,6 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
 import models.utils.instance.SampleHelper;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
@@ -41,15 +45,6 @@ import views.components.datatable.DatatableBatchResponseElement;
 import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
 
-import com.mongodb.BasicDBObject;
-
-import controllers.DocumentController;
-import controllers.NGLControllerHelper;
-import controllers.authorisation.Permission;
-import controllers.containers.api.Containers;
-import controllers.containers.api.ContainersSearchForm;
-import fr.cea.ig.MongoDBDAO;
-
 public class Processes extends DocumentController<Process> {
 
 	final static Form<State> stateForm = form(State.class);
@@ -58,8 +53,13 @@ public class Processes extends DocumentController<Process> {
 	
 	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
 	final static ProcWorkflowHelper workflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
+	
+	
+	
 	public Processes() {
 		super(InstanceConstants.PROCESS_COLL_NAME, Process.class);		
+		defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","inputContainerSupportCode","sampleCodes", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCodes", "code", "traceInformation", "comments", "properties");
+		
 	}
 
 	@Permission(value={"reading"})
@@ -71,6 +71,7 @@ public class Processes extends DocumentController<Process> {
 			DBQuery.Query query = getQuery(searchForm);
 			return mongoJackQuery(searchForm, query);			
 		}
+		
 	}
 	
 	
