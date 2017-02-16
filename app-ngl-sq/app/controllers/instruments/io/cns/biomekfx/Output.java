@@ -5,7 +5,9 @@ package controllers.instruments.io.cns.biomekfx;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -46,10 +48,10 @@ public class Output extends AbstractOutput {
 
 		}else if ("tubes-to-plate".equals(type)) {
 			// feuille de route specifique pour les pools de tubes -> plaque
-			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube","plate")).body());
 			
 		} else if ("plates-to-plate".equals(type)){
-			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate","plate")).body());
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
@@ -64,15 +66,23 @@ public class Output extends AbstractOutput {
 	}
 
 	
-	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory) {
+	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory, String outputContainerCategory) {
 		
 		return experiment.atomicTransfertMethods
 			.parallelStream()
-			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory))
+			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory,outputContainerCategory, experiment))
 			.collect(Collectors.toList());		
 	}
+	
+	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory) {
+		
+		return getPlateSampleSheetLines(experiment, inputContainerCategory,null);	
+	}
 
-	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory) {
+	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,String outputContainerCategory,Experiment experiment) {
+		Map<String, String> sourceMapping = getSourceMapping(experiment);
+		Map<String, String> destPositionMapping = getDestMapping(experiment);
+		
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
@@ -96,6 +106,11 @@ public class Output extends AbstractOutput {
 		}else if("plate".equals(inputContainerCategory)){
 			pssl.sourceADN = "plaque IN";
 			pssl.swellADN = OutputHelper.getNumberPositionInPlateByLine(icu.locationOnContainerSupport.line, icu.locationOnContainerSupport.column);
+		}
+		
+		if("plate".equals(outputContainerCategory)){
+			pssl.sourceADN = sourceMapping.get(icu.locationOnContainerSupport.code);
+			Logger.debug("SourceADN :"+pssl.sourceADN+" pour in put "+icu.locationOnContainerSupport.code);
 		}
 		
 		return pssl;
@@ -137,5 +152,27 @@ public class Output extends AbstractOutput {
 		}
 		
 		return value;
+	}
+	
+	private Map<String, String> getSourceMapping(Experiment experiment) {
+		Map<String, String> sources = new HashMap<String, String>();
+		
+		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
+		Arrays.sort(inputContainerSupportCodes);
+		for(int i = 0; i < inputContainerSupportCodes.length ; i++){
+			sources.put(inputContainerSupportCodes[i], "Src"+(i+1));
+		}
+		return sources;
+	}
+	
+	private Map<String, String> getDestMapping(Experiment experiment) {
+		Map<String, String> dest = new HashMap<String, String>();
+		
+		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
+		Arrays.sort(outputContainerSupportCodes);
+		for(int i = 0; i < outputContainerSupportCodes.length ; i++){
+			dest.put(outputContainerSupportCodes[i], (i+1)+"");
+		}
+		return dest;
 	}
 }

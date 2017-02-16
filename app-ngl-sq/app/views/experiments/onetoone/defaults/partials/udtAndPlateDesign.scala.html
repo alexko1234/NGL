@@ -1,6 +1,7 @@
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist" ng-if="plateUtils.isPlate()">
 	  <li class="active"><a href="" role="tab" data-target="#udt" data-toggle="tab">@Messages("experiments.udt.design")</a></li>
 	  <li><a href="" role="tab"  data-target="#plate" data-toggle="tab" ng-click="plateUtils.computePlateCells(atmService)">@Messages("experiments.plate.design")</a></li>  
+	  <li><a href="" role="tab"  data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li>
 	</ul>
 	<div class="tab-content" ng-if="plateUtils.isPlate()">
 		<div class="tab-pane active" id="udt">
@@ -35,6 +36,67 @@
 			</div>
 		</div>
 		</div>
+		
+		<div class="tab-pane" id="src_dest">
+		<div class="row">
+		<div class="col-md-4 col-lg-4">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>
+							@Messages("experiments.src_dest.inputContainerSupportCode")
+						</th>
+						<th>
+							@Messages("experiments.src_dest.source")
+						</th>											
+					</tr>
+					</thead>	
+					<!--  containerSupport et pas container -->			
+					<tr ng-model="containerSupport" ng-repeat="containerSupport in getInputContainerSupports() | orderBy track by $index" >
+						<td>
+							{{containerSupport}}
+						</td>
+						<td>
+							{{$index+1}}
+						</td>									
+					</tr>				
+				</table>
+			</div>
+		<div class="col-md-4 col-lg-4">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>
+							@Messages("experiments.src_dest.outputContainerSupportCode")
+						</th>
+						<th>
+							@Messages("experiments.src_dest.dest")
+						</th>
+						<!-- pas necessaire pour 1 seule paque de sortie..
+						<th>
+							@Messages("experiments.src_dest.label")
+						</th>	
+						 -->										
+					</tr>
+					</thead>	
+					<!--  <tr ng-model="container" ng-repeat="container    in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >	-->			
+					<tr ng-model="containerSupport" ng-repeat="containerSupport in getDistinctOutputContainerSupports()  | orderBy track by $index" >
+						<td>
+							{{containerSupport.code}}
+						</td>
+						<td>
+							{{$index+1}}
+						</td>
+						<!-- pas necessaire pour 1 seule paque de sortie..
+						<td>
+							{{container.experimentProperties.workName.value}}
+						</td>		
+						-->							
+					</tr>				
+				</table>
+			</div>	
+		</div>
+	</div>
 	</div>
 	<div class="row" ng-if="!plateUtils.isPlate()">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data" ></div>
