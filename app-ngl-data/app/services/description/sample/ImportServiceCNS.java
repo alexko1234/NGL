@@ -165,6 +165,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, 
 				null, "single", 1, true, null, null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Provenance", "origin", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
+				null, "single", 7, true, null, null));
+		
 		return propertyDefinitions;
 	}
 	
