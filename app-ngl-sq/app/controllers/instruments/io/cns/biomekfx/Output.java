@@ -48,10 +48,10 @@ public class Output extends AbstractOutput {
 
 		}else if ("tubes-to-plate".equals(type)) {
 			// feuille de route specifique pour les pools de tubes -> plaque
-			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube","plate")).body());
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "tube")).body());
 			
 		} else if ("plates-to-plate".equals(type)){
-			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate","plate")).body());
+			content = OutputHelper.format(x_to_plate.render(getPlateSampleSheetLines(experiment, "plate")).body());
 		}else {
 			//rna-prep; pcr-purif; normalization-and-pooling a venir.....
 			throw new RuntimeException("Biomek-FX sampleSheet io combination not managed : "+experiment.instrument.inContainerSupportCategoryCode+" / "+experiment.instrument.outContainerSupportCategoryCode);
@@ -66,20 +66,15 @@ public class Output extends AbstractOutput {
 	}
 
 	
-	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory, String outputContainerCategory) {
+	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory) {
 		
 		return experiment.atomicTransfertMethods
 			.parallelStream()
-			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory,outputContainerCategory, experiment))
+			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory, experiment))
 			.collect(Collectors.toList());		
 	}
-	
-	private List<PlateSampleSheetLine> getPlateSampleSheetLines(Experiment experiment, String inputContainerCategory) {
-		
-		return getPlateSampleSheetLines(experiment, inputContainerCategory,null);	
-	}
 
-	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,String outputContainerCategory,Experiment experiment) {
+	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
 		Map<String, String> sourceMapping = getSourceMapping(experiment);
 		Map<String, String> destPositionMapping = getDestMapping(experiment);
 		
@@ -104,15 +99,10 @@ public class Output extends AbstractOutput {
 			pssl.sourceADN = getSourceADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
 			pssl.swellADN = getSwellADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
 		}else if("plate".equals(inputContainerCategory)){
-			pssl.sourceADN = "plaque IN";
+			pssl.sourceADN = sourceMapping.get(icu.locationOnContainerSupport.code);
 			pssl.swellADN = OutputHelper.getNumberPositionInPlateByLine(icu.locationOnContainerSupport.line, icu.locationOnContainerSupport.column);
 		}
-		
-		if("plate".equals(outputContainerCategory)){
-			pssl.sourceADN = sourceMapping.get(icu.locationOnContainerSupport.code);
-			Logger.debug("SourceADN :"+pssl.sourceADN+" pour in put "+icu.locationOnContainerSupport.code);
-		}
-		
+				
 		return pssl;
 	}
 
