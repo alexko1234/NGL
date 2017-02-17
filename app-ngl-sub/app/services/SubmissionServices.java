@@ -333,7 +333,7 @@ public class SubmissionServices {
 					submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
 				    submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
 				    submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone);
-				
+				    
 				    // Aucune mise a jour de l'objet submission pour les samples à soumettre dans cas externalSample
 				    if(!listAbstractSamples.contains(externalSample.code)){
 				    	listAbstractSamples.add(externalSample);
@@ -937,7 +937,7 @@ public class SubmissionServices {
 		String laboratoryRunCode = readSet.runCode;
 		
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-		Map<String, PropertyValue> sampleOnContainerProperties =readSet.sampleOnContainer.properties;
+		Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
 		Set <String> listKeysSampleOnContainerProperties = null;
 
 		if (sampleOnContainerProperties != null) {
@@ -1198,22 +1198,29 @@ public class SubmissionServices {
 		String laboratoryRunCode = readSet.runCode;
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+		System.out.println("tout va bien");
 		
 		List <models.laboratory.run.instance.File> list_files =  readSet.files;
-		System.out.println("nbre de fichiers = " + list_files.size());
-		
+		if (list_files == null) {
+			System.out.println("Aucun fichier pour le readSet " + readSet.code);
+		} else {
+			System.out.println("nbre de fichiers = " + list_files.size());
+		}
 		// Pour chaque readSet, creer un objet run 
 		Date runDate = readSet.runSequencingStartDate;
 		Run run = new Run();
 		run.code = SraCodeHelper.getInstance().generateRunCode(readSet.code);
 		run.runDate = runDate;
-		
+
 		//run.projectCode = projectCode;
 		run.runCenter = VariableSRA.centerName;
 		// Renseigner le run pour ces fichiers sur la base des fichiers associes au readSet :
 		// chemin des fichiers pour ce readset :
 		String dataDir = readSet.path;
+		System.out.println("tout va bien pour readSet.path");
+
 		for (models.laboratory.run.instance.File runInstanceFile: list_files) {
+			System.out.println("tout va bien dans list_files");
 			String runInstanceExtentionFileName = runInstanceFile.extension;
 			// conditions qui doivent etre suffisantes puisque verification préalable que le readSet
 			// est bien valide pour la bioinformatique.
@@ -1251,6 +1258,8 @@ public class SubmissionServices {
 					}
 			}
 		}
+		System.out.println("tout va bien avant retour run");
+
 		return run;
 	}
 	
