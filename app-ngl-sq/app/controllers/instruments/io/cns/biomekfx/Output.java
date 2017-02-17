@@ -5,7 +5,9 @@ package controllers.instruments.io.cns.biomekfx;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -68,11 +70,14 @@ public class Output extends AbstractOutput {
 		
 		return experiment.atomicTransfertMethods
 			.parallelStream()
-			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory))
+			.map(atm -> getPlateSampleSheetLine(atm,inputContainerCategory, experiment))
 			.collect(Collectors.toList());		
 	}
 
-	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory) {
+	private PlateSampleSheetLine getPlateSampleSheetLine(AtomicTransfertMethod atm, String inputContainerCategory,Experiment experiment) {
+		Map<String, String> sourceMapping = getSourceMapping(experiment);
+		Map<String, String> destPositionMapping = getDestMapping(experiment);
+		
 		InputContainerUsed icu = atm.inputContainerUseds.get(0);
 		OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
 		PlateSampleSheetLine pssl = new PlateSampleSheetLine();
@@ -94,10 +99,10 @@ public class Output extends AbstractOutput {
 			pssl.sourceADN = getSourceADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
 			pssl.swellADN = getSwellADN(ocu.locationOnContainerSupport.line, ocu.locationOnContainerSupport.column);
 		}else if("plate".equals(inputContainerCategory)){
-			pssl.sourceADN = "plaque IN";
+			pssl.sourceADN = sourceMapping.get(icu.locationOnContainerSupport.code);
 			pssl.swellADN = OutputHelper.getNumberPositionInPlateByLine(icu.locationOnContainerSupport.line, icu.locationOnContainerSupport.column);
 		}
-		
+				
 		return pssl;
 	}
 
@@ -137,5 +142,27 @@ public class Output extends AbstractOutput {
 		}
 		
 		return value;
+	}
+	
+	private Map<String, String> getSourceMapping(Experiment experiment) {
+		Map<String, String> sources = new HashMap<String, String>();
+		
+		String[] inputContainerSupportCodes = experiment.inputContainerSupportCodes.toArray(new String[0]);
+		Arrays.sort(inputContainerSupportCodes);
+		for(int i = 0; i < inputContainerSupportCodes.length ; i++){
+			sources.put(inputContainerSupportCodes[i], "Src"+(i+1));
+		}
+		return sources;
+	}
+	
+	private Map<String, String> getDestMapping(Experiment experiment) {
+		Map<String, String> dest = new HashMap<String, String>();
+		
+		String[] outputContainerSupportCodes = experiment.outputContainerSupportCodes.toArray(new String[0]);
+		Arrays.sort(outputContainerSupportCodes);
+		for(int i = 0; i < outputContainerSupportCodes.length ; i++){
+			dest.put(outputContainerSupportCodes[i], (i+1)+"");
+		}
+		return dest;
 	}
 }

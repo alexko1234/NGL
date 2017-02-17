@@ -43,6 +43,8 @@ rule "Set good project code for Amplicon"
 			outputProjectCode.value = "BZA";
 		}else if("BYX".equals($inputProjectCode)){
 			outputProjectCode.value = "BYZ";
+		}else if("AHX".equals($inputProjectCode)){
+			outputProjectCode.value = "BZM";
 		}else{
 			outputProjectCode.value = null;
 		}
