@@ -1,7 +1,7 @@
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist" ng-if="plateUtils.isPlate()">
 	  <li class="active"><a href="" role="tab" data-target="#udt" data-toggle="tab">@Messages("experiments.udt.design")</a></li>
 	  <li><a href="" role="tab"  data-target="#plate" data-toggle="tab" ng-click="plateUtils.computePlateCells(atmService)">@Messages("experiments.plate.design")</a></li>  
-	  <li><a href="" role="tab"  data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li>
+	  <li><a href="" role="tab" ng-if="isSource()" data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li>
 	</ul>
 	<div class="tab-content" ng-if="plateUtils.isPlate()">
 		<div class="tab-pane active" id="udt">
@@ -37,7 +37,7 @@
 		</div>
 		</div>
 		
-		<div class="tab-pane" id="src_dest">
+		<div class="tab-pane" id="src_dest" ng-if="isSource()">
 		<div class="row">
 		<div class="col-md-4 col-lg-4">
 			<table class="table table-bordered">

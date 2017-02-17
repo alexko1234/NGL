@@ -30,6 +30,9 @@ angular.module('home').controller('XToPlateCtrl',['$scope',
 		return outputContainerSupports;
 	}
 	
+	$scope.isSource = function(){
+		return true;
+	}
 	
 	
 	$scope.getInputContainerSupports = function(){
