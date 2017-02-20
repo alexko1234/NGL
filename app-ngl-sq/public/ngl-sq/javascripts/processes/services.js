@@ -142,20 +142,20 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 8,
 			"type" : "text"
 		});
-		/*
+		
 		columns.push({
 			"header" : Messages("processes.table.outputContainerSupportCodes"),
 			"property" : "outputContainerSupportCodes",
 			"order" : false,
 			"hide" : false,
-			"position" : 9,
+			"position" : 8.5,
 			"filter":"unique",
 			"groupMethod" : "unique",
 			"filter":"orderBy",
 			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
 		});
-		*/
+		
 		columns.push({
 			"header" : Messages("processes.table.outputContainerCodes"),
 			"property" : "outputContainerCodes",
