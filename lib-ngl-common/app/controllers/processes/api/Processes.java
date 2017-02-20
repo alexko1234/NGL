@@ -58,8 +58,8 @@ public class Processes extends DocumentController<Process> {
 	
 	public Processes() {
 		super(InstanceConstants.PROCESS_COLL_NAME, Process.class);		
-		defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","inputContainerSupportCode","sampleCodes", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCodes", "code", "traceInformation", "comments", "properties");
-		
+		defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","inputContainerSupportCode","sampleCodes", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes","outputContainerCodes", "experimentCodes","projectCodes", "code", "traceInformation", "comments", "properties");
+
 	}
 
 	@Permission(value={"reading"})
