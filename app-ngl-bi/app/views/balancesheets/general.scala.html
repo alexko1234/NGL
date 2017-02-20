@@ -2,7 +2,7 @@
 
 <div class="row">
 	<div class="col-md-12 col-lg-12">
-		<div ng-switch on="balanceSheetsGeneral.isLoading()">
+		<div ng-switch on="isLoading()">
 			<div ng-switch-when="true">
 				<div class="row">
 					<div class="col-md-12 col-lg-12 text-center">
@@ -12,14 +12,14 @@
 			</div>
 			<div ng-switch-when="false">
 				<div class="row">
-					<div class="col-md-12 col-lg-12" ultimate-datatable="balanceSheetsGeneral.dtYearlyBalanceSheets()"></div>
+					<div class="col-md-12 col-lg-12" ultimate-datatable="dtYearlyBalanceSheets"></div>
 				</div>
 				<div class="row">
-					<div class="col-md-12 col-lg-12" ultimate-datatable="balanceSheetsGeneral.dtSumYearly()"></div>
+					<!-- <div class="col-md-12 col-lg-12" ultimate-datatable="balanceSheetsGeneralService.dtSumYearly()"></div> -->
 				</div>
 				<div class="row">
 					<div class="col-ld-12 col-md-12">
-						<chart value="balanceSheetsGeneral.chartYearlyBalanceSheets()"></chart>
+						<!-- <chart value="balanceSheetsGeneralService.chartYearlyBalanceSheets()"></chart> -->
 					</div>
 				</div>
 			</div>

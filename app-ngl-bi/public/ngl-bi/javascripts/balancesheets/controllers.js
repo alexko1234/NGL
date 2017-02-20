@@ -1,28 +1,126 @@
 "use strict";
 
-angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainService', 'tabService', 'balanceSheetsGeneralSrv', '$routeParams',
-                                                               function($scope, mainService, tabService, balanceSheetsGeneralSrv, $routeParams){
-	$scope.balanceSheetsGeneral = balanceSheetsGeneralSrv;
+angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http', 'mainService', 'tabService', 'datatable', 'balanceSheetsGeneralSrv', '$routeParams',
+                                                               function($scope, $http, mainService, tabService, datatable, balanceSheetsGeneralSrv, $routeParams){
+	
+	 var configYearlyDT = {
+		name:'yearlyDT',
+		group : {
+			active : false
+		},
+		search : {
+			active:false
+		},
+		pagination:{
+			active : false
+		},
+		hide:{
+			active:false
+		},
+		select : {
+			active : false
+		},
+		columns : [
+		    {"property":"year",
+			 "header": Messages("balanceSheets.year"),
+			 "type" :"text",
+			 "position":1
+		   	},
+		   	{"property":"nbBases",
+			"header": Messages("balanceSheets.nbBases"),
+			"type" :"number",
+		  	"position":2
+		    }
+		  ]
+	};
+	var configYearlySumDT = {
+		name : 'yearlySumDT',
+		showTotalNumberRecords : false,
+		search : {
+			active:false
+		},
+		pagination:{
+			active : false
+		},
+		hide:{
+			active:false
+		},
+		select : {
+			active : false
+		},
+		callbackEndDisplayResult : function(){
+			 colorBlue(dtSumYearly, 0);	
+		},
+		columns : [
+		    {"property":"property",
+		    "header": Messages("balanceSheets.property"),
+		    "type" :"text",
+		    "position":1
+		    },
+		    {"property":"value",
+		    "header": Messages("balanceSheets.value"),
+		    "type" :"number",
+		    "position":2,
+		    }
+		]
+	};
+	
+	
+	$scope.balanceSheetsGeneralService = balanceSheetsGeneralSrv;
 	
 	mainService.put('activeYear', 'general');
 	
 	// Year managing
 	var actualYear = new Date().getFullYear();
 	
-	// Tabs
-	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode).url});
-	for(var i = actualYear; i >= 2008 ; i--){
-		tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
-	}
+	$scope.isLoading = function(){
+		return $scope.loading;
+	};
 	
-	tabService.activeTab(0);
+	var init = function(){
+		// Tabs
+		tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode).url});
+		for(var i = actualYear; i >= 2008 ; i--){
+			tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
+		}
+		
+		tabService.activeTab(0);
+		
+		$scope.loading=true;
+		
+		//loadData();
+		var form = {};
+		form.includes = [];
+		form.includes.push("default");
+		form.includes.push("runSequencingStartDate");
+		form.includes.push("typeCode");
+		form.typeCode=$routeParams.typeCode;
+		//For rsillumina
+		form.includes.push("treatments.ngsrg.default.nbBases");
+		//for rsnanopore
+		form.includes.push("treatments.ngsrg.default.1DReverse");
+		form.includes.push("treatments.ngsrg.default.1DForward");
+		form.limit = 100000;
+		
+		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
+			var dataByYear = $scope.balanceSheetsGeneralService.computeDataByYear(data);
+			
+			$scope.dtYearlyBalanceSheets = datatable(configYearlyDT);
+			$scope.dtYearlyBalanceSheets.setData(dataByYear, dataByYear.length);
+			
+			$scope.loading = false;
+		});
+	};
+	init();
 	
 	//TODO generalBanlanceSheets+typeCode in mainService
-	if(!angular.isUndefined(mainService.get('generalBalanceSheets'))){
-		$scope.balanceSheetsGeneral.loadFromCache();
+	/*if(!angular.isUndefined(mainService.get('generalBalanceSheets'))){
+		//$scope.balanceSheetsGeneralService.loadFromCache();
 	}else{
-		$scope.balanceSheetsGeneral.init($routeParams.typeCode);
-	}
+		$scope.balanceSheetsGeneralService.init($routeParams.typeCode,datatableConfigYearlySum,datatableConfigYearly);
+	}*/
+	
+	
 	
 	
 

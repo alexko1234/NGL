@@ -1241,18 +1241,15 @@
 			var isLoading = true;
 			var actualDay = new Date();
 			var actualYear = actualDay.getFullYear();
-			var typeCode;
 			
 			var loadData = function(data){
-				typeCode=data;
 				isLoading = true;
 				var form = {includes : [], typeCodes : []};
 				form.includes.push("default");
-				form.includes.push("treatments.ngsrg.default");
+				form.includes.push("treatments.ngsrg.default.nbBases");
 				form.includes.push("runSequencingStartDate");
-				//form.typeCodes.push("default-readset");
-				//form.typeCodes.push("rsillumina");
-				form.typeCodes.push(typeCode);
+				form.typeCodes.push("default-readset");
+				form.typeCodes.push("rsillumina");
 				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;
@@ -1316,8 +1313,7 @@
 				 // Calculating our bases for each year
 				 for(var i = 0; i < readsets.length; i++){
 					var readsetDate =  convertToDate(readsets[i].runSequencingStartDate);
-					//balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
-					balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += getNbBases(readsets[i]);
+					balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
 				 }
 
 				 // Creating chart
@@ -1331,15 +1327,6 @@
 				 
 				 // Initialize other datatable
 				 loadDtSumYearly();
-			}
-			
-			var getNbBases = function(data){
-				if(typeCode=="rsillumina"){
-					return data.treatments.ngsrg.default.nbBases.value;
-				}else if(typeCode=="rsnanopore"){
-					nbBases = data.treatments.ngsrg.default.1DForward.nbBases.value + data.treatments.ngsrg.default.1DReverse.nbBases.value;
-					return nbBases;
-				}
 			}
 			
 			var loadDtSumYearly = function(){
@@ -1457,17 +1444,63 @@
 				 datatable.displayResult[pos].line.trClass="text-primary";
 			}
 			
-			var balanceSheetsGeneral = {
-					isLoading : function(){return isLoading;},
-					chartYearlyBalanceSheets : function(){return chartYearlyBalanceSheets},
-					dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
-					dtSumYearly : function(){return dtSumYearly},
-					loadFromCache : function(){loadYearlyBalanceSheets()},
-					init : function(typeCode){
-						loadData(typeCode);
-					}	
-			};
+			var getDefaultColumnsYearly = function(){
+				var columns = [];
+				columns.push({"property":"year",
+				  	"header": Messages("balanceSheets.year"),
+				  	"type" :"text",
+				  	"position":1});
+				columns.push({"property":"nbBases",
+					"header": Messages("balanceSheets.nbBases"),
+					"type" :"number",
+				  	"position":2});
+			}
 			
-			return balanceSheetsGeneral;	
+			var balanceSheetsGeneralService = {
+					
+				//chartYearlyBalanceSheets : function(){return chartYearlyBalanceSheets},
+				//dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
+				//dtSumYearly : function(){return dtSumYearly},
+				//loadFromCache : function(){loadYearlyBalanceSheets()},
+					
+					
+			computeDataByYear : function(data){
+				var dataByYear = [];
+				 for (var i = 2008; i <= actualYear; i++){
+					 dataByYear[i-2008] = {
+							 nbBases : 0,
+							 year : i
+					 };
+				 }
+						 
+					 // Calculating our bases for each year
+				 for(var i = 0; i < data.length; i++){
+					var readsetDate =  convertToDate(data[i].runSequencingStartDate);
+					//dataByYear[readsetDate.getFullYear() - 2008].nbBases += data[i].treatments.ngsrg.default.nbBases.value;
+					dataByYear[readsetDate.getFullYear() - 2008].nbBases += balanceSheetsGeneralService.getProperty(data[i]);
+				 }
+				 return dataByYear;
+			},
+			
+			getProperty : function(data){
+				var value=0;
+				if(data.typeCode=="rsillumina"){
+					value=data.treatments.ngsrg.default.nbBases.value;
+				}
+				if(data.typeCode=="rsnanopore"){
+					if(data.treatments.ngsrg!=null){
+						value=data.treatments.ngsrg.default['1DForward'].value.nbBases;
+						if(data.treatments.ngsrg.default['1DReverse']!=null){
+							value+=data.treatments.ngsrg.default['1DReverse'].value.nbBases;
+						}
+					}
+				}
+				return value;
+			}
+					
+					
+	};
+			
+	return balanceSheetsGeneralService;	
  
  }]);
