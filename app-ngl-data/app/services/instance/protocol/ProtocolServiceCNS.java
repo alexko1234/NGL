@@ -207,28 +207,18 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("Bq_PCR_free","Bq_PCR_free","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		
+		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
+		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
+		
+		
+		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));	
+		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));
+	
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			//lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
-			//lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
-			//lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library")));
-			lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
-			lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
 					
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
-			// a mettre en PROD		
-			//fin mise en prod
-			
-        	//lp.add(newProtocol("prt_wait_dev","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes()));
-			lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
-			lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
-			
-			
-			lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));
-			
-			lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));
-		
 				
-			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));
 		
