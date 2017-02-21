@@ -39,7 +39,8 @@ public class MigrationProcessProperties extends CommonController {
 			
 			//backupContainerCollection();
 			
-			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("outputContainerSupportCodes").notExists("outputContainerCodes"))
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery/*.exists("outputContainerSupportCodes")*/.notExists("outputContainerCodes")
+					/*.is("code", "BYU_AABL_TAG-PCR-AND-DNA-LIBRARY_22385HMN7")*/)
 					.sort("code",Sort.DESC).getCursor().forEach(p -> migrationProcess(p));
 			
 			Logger.info("Migration process end");
@@ -68,19 +69,15 @@ public class MigrationProcessProperties extends CommonController {
 				DBQuery.in("support.code", containerSupportCodes).elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes).in("projectCode", process.projectCodes)))
 		.sort("code",Sort.ASC).cursor.forEach(container -> {
 			
-			
+			//Logger.error("cont code "+container.code);
 			
 			List<Content> contentFound = container.contents.stream()
-				.filter(content -> ((process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(TAG_PROPERTY_NAME))
-					|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
-							&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
+				.filter(content -> contentFiltering(content, process, tag))
 				.collect(Collectors.toList());
 			
 			if(contentFound.size() == 1){
 				Integer nbContentChange = contentFound.stream()
-						.filter(content -> ((process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(TAG_PROPERTY_NAME))
-								|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
-										&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
+						.filter(content -> contentFiltering(content, process, tag))
 						.mapToInt(content -> {
 							if(!"UA".equals(container.state.code) 
 									&& !"IS".equals(container.state.code)
@@ -101,7 +98,7 @@ public class MigrationProcessProperties extends CommonController {
 							return 0;
 						}).sum();
 					
-					if(!container.code.equals(process.inputContainerCode)){
+					if(!container.support.code.equals(process.inputContainerSupportCode)){
 						/*
 						Logger.debug("test "+container.code);
 						if(null != container.treeOfLife){
@@ -114,8 +111,15 @@ public class MigrationProcessProperties extends CommonController {
 							process.outputContainerCodes.add(container.code);
 						}
 						*/
-						process.outputContainerCodes.add(container.code);
 						
+						if(container.treeOfLife == null){
+							process.outputContainerCodes.add(container.code);
+						}else if(container.treeOfLife.paths.stream().anyMatch(path -> path.contains(process.inputContainerCode))){
+							process.outputContainerCodes.add(container.code);
+						}	
+						
+						
+											
 					}
 					
 					if(nbContentChange > 0){
@@ -125,28 +129,48 @@ public class MigrationProcessProperties extends CommonController {
 					}
 			}else if(contentFound.size() > 1){
 				Logger.error("found several contents "+container.code);
+			}else if(contentFound.size() == 0){
+				//Logger.error("found 0 contents "+container.code);
 			}
 			
 			
 		});
-		if(process.outputContainerCodes.size() == process.outputContainerSupportCodes.size() 
-				|| "illumina-run".equals(process.typeCode) || "bionano-chip-process".equals(process.typeCode) 
-				|| "bionano-nlrs-process".equals(process.typeCode) || "norm-fc-depot-illumina".equals(process.typeCode) ){
+		
+		if((process.outputContainerCodes != null && process.outputContainerSupportCodes != null) 
+				&& (process.outputContainerCodes.size() == process.outputContainerSupportCodes.size() 
+				|| (process.outputContainerCodes.size() > process.outputContainerSupportCodes.size()  
+						&& ("illumina-run".equals(process.typeCode) || "bionano-chip-process".equals(process.typeCode) 
+								|| "dna-illumina-indexed-library-process".equals(process.typeCode)
+								|| "bionano-nlrs-process".equals(process.typeCode) || "norm-fc-depot-illumina".equals(process.typeCode) 
+								|| "prepfc-depot".equals(process.typeCode) || "prepfcordered-depot".equals(process.typeCode)
+								|| "x5-wg-pcr-free".equals(process.typeCode))))){
+			
+		/*
+		if(process.outputContainerCodes != null && process.outputContainerSupportCodes != null && (process.outputContainerCodes.size() == process.outputContainerSupportCodes.size()
+				|| process.outputContainerCodes.size() == (process.outputContainerSupportCodes.size() +1))){*/
 			//Logger.debug("save process "+process.code+" / "+process.state.code);			
 			process.traceInformation.setTraceInformation("ngl");
 			MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
-		}else{
-			Logger.debug("process size cont !="+process.code+" / "+process.state.code+" "+process.outputContainerCodes.size()+" != "+process.outputContainerSupportCodes.size());
+		}else if(process.outputContainerCodes != null && process.outputContainerSupportCodes != null){
+			Logger.debug("process size cont !="+process.code+" / "+process.state.code+" "+process.outputContainerCodes.size()+" != "+process.outputContainerSupportCodes.size()+" : "+process.outputContainerCodes);
 		}
 		
+	}
+
+
+
+	private static boolean contentFiltering(Content content, Process process, String tag) {
+		return (process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(TAG_PROPERTY_NAME))
+			|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
+					&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value));
 	}
 
 
 	private static String getTagAssignFromProcessContainers(Process process) {
 		
 		if(process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)){
-			return process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString();
-		}else{
+			return process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString().trim();
+		}else if(process.outputContainerSupportCodes != null){
 			
 			DBQuery.Query query = DBQuery.in("support.code",process.outputContainerSupportCodes)
 						.size("contents", 1)
@@ -157,6 +181,7 @@ public class MigrationProcessProperties extends CommonController {
 			Set<String> tags = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query)
 					.toList()
 					.stream()
+					.filter(c -> filterWithPaths(c, process))
 					.map(c -> c.contents)
 					.flatMap(List::stream)
 					.map(c -> c.properties.get(TAG_PROPERTY_NAME).value.toString())
@@ -164,15 +189,27 @@ public class MigrationProcessProperties extends CommonController {
 			
 			
 			if(tags.size() == 1){
-				return tags.iterator().next();
+				return tags.iterator().next().trim();
 			}else if(tags.size() > 1){
 				Logger.warn("Found lot of tags for process "+process.code);
 				return null;
 			} else{
 				return null;
 			}
+		}else{
+			return null;
 		}
 	}
+	private static boolean filterWithPaths(Container c, Process process) {
+		if(c.treeOfLife == null){
+			return true;
+		}else{
+			return c.treeOfLife.paths.stream().anyMatch(path -> path.contains(process.inputContainerCode));			
+		}		
+	}
+
+
+
 	private static void backupContainerCollection() {
 		Logger.info("\tCopie "+InstanceConstants.PROCESS_COLL_NAME+" start");
 		MongoDBDAO.save(PROCESS_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class).toList());
