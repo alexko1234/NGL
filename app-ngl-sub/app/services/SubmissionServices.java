@@ -943,9 +943,9 @@ public class SubmissionServices {
 		if (sampleOnContainerProperties != null) {
 			listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 			for(String k: listKeysSampleOnContainerProperties) {
-				System.out.print("lulu cle = '" + k+"'  => ");
+				//System.out.print("lulu cle = '" + k+"'  => ");
 				PropertyValue propertyValue = sampleOnContainerProperties.get(k);
-				System.out.println(propertyValue.value);
+				//System.out.println(propertyValue.value);
 			}
 			if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {
 				String libProcessTypeCode = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
@@ -970,6 +970,7 @@ public class SubmissionServices {
 		System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
 		
 		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(laboratoryRun.typeCode.toLowerCase());
+		
 		experiment.libraryLayoutNominalLength = null;
 
 		// mettre la valeur calculée de libraryLayoutNominalLength
@@ -1026,16 +1027,17 @@ public class SubmissionServices {
 				}
 			}
 		}
+		experiment.libraryLayoutNominalLength=8000;
 		if (experiment.libraryLayoutNominalLength == null) {
 			throw new SraException("experiment sans libraryLayoutNominalLength : " + experiment.code);
 		}
-					
-		
+		System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
 		experiment.state = new State("N", user); 
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String taxonId = laboratorySample.taxonCode;
-		
+		System.out.println("sampleCode=" +laboratorySampleCode); 
+		System.out.println("taxonId=" +taxonId); 
 		//String laboratoryRunCode = readSet.runCode;
 		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		String technology = laboratoryRun.instrumentUsed.typeCode;
@@ -1096,6 +1098,8 @@ public class SubmissionServices {
 						}
 					}
 				} else {
+					System.out.println("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
+
 					throw new SraException("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
 				}
 			}

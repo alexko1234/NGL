@@ -57,7 +57,7 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 	$scope.activateService.init($routeParams, submissionDTConfig);
 
 	$scope.search = function(){
-		if($scope.activateService.form.projCodes!==null){
+		if($scope.activateService.form.projCodes && $scope.activateService.form.projCodes.length > 0){
 			$scope.activateService.search();
 		} else {
 			console.log("Cancel datatable");

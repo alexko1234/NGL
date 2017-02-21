@@ -23,7 +23,10 @@ public class nanoporeTest extends AbstractTestsSRA {
 	@Test
 	public void mon_test() throws IOException, SraException  {
 		List<String> readSetCodes = new ArrayList<String>();
-		String codeReadSet = "AWK_G_ONT_1_MN2064525_A";	
+		String codeReadSet = "BWW_B_ONT_1_FAB45991_B"; // pas de submissionState
+		codeReadSet = "AWK_D_ONT_1_FAA57595_B";
+		
+		
 		readSetCodes.add(codeReadSet);
 		get_infos(readSetCodes);
 	}
@@ -42,11 +45,13 @@ public class nanoporeTest extends AbstractTestsSRA {
 			if (readSet == null) {
 				System.out.println("Le readSet " + readSet.code + "n'existe pas dans la base ???");
 				continue;
-			}
+			} 
 			readSets.add(readSet);
 			// Verifier status de soumission :
-			System.out.println("Le readSet " + readSet.code + " a un status de soumission à " + readSet.submissionState.code);	
-
+			
+			if (readSet.submissionState != null ){
+				System.out.println("Le readSet " + readSet.code + " a un status de soumission à " + readSet.submissionState.code);	
+			}
 			// Recuperer scientificName via NCBI pour ce readSet. Le scientificName est utilisé dans la construction
 			// des samples et des experiments 
 			String laboratorySampleCode = readSet.sampleCode;
