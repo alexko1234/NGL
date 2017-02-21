@@ -7,8 +7,8 @@ import controllers.CommonController;
 
 
 public class BalanceSheets extends CommonController{
-	public static Result home(String homecode){
-		return ok(home.render(homecode));
+	public static Result home(String homecode, String year){
+		return ok(home.render(homecode, year));
 	}
 	public static Result year() {
 		return ok(year.render());

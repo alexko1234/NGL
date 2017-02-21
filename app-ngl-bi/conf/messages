@@ -793,7 +793,7 @@ balanceSheets.menu.nanopore = Bilans Nanopore
 
 
 balanceSheets.year = Année run
-balanceSheets.nbBases = Nombre de bases Illumina
+balanceSheets.nbBases = Nombre de bases
 balanceSheets.runTypeCode = Type séquençage
 balanceSheets.percentage = Pourcentage
 balanceSheets.projectCode = Code sous-projet
@@ -806,10 +806,10 @@ balanceSheets.sum = Somme :
 balanceSheets.totalSum = Somme totale de cette annee : 
 balanceSheets.totalTen = Total des 10 premiers projets
 balanceSheets.percentageTotalSum = Pourcentage de la somme totale de l''année
-balanceSheets.quarterBases = Nombre de bases Illumina par trimestre
-balanceSheets.yearlyBases = Nombre de bases Illumina par année
+balanceSheets.quarterBases = Nombre de bases par trimestre
+balanceSheets.yearlyBases = Nombre de bases par année
 balanceSheets.nbBases = Nombre de bases
-balanceSheets.nbSequencingType = Nombre de bases Illumina par type séquençage
+balanceSheets.nbSequencingType = Nombre de bases par type séquençage
 balanceSheets.sequencingType = Type séquençage
 balanceSheets.property = Propriété
 balanceSheets.value = Valeur

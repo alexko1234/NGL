@@ -1234,153 +1234,130 @@
  
  ]).factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse', '$filter',
                                         function($http, mainService, datatable, $parse, $filter){
-			var readsets = [];
-			var dtYearlyBalanceSheets;
-			var dtSumYearly;
-			var chartYearlyBalanceSheets;
-			var isLoading = true;
-			var actualDay = new Date();
-			var actualYear = actualDay.getFullYear();
 			
-			var loadData = function(data){
-				isLoading = true;
-				var form = {includes : [], typeCodes : []};
-				form.includes.push("default");
-				form.includes.push("treatments.ngsrg.default.nbBases");
-				form.includes.push("runSequencingStartDate");
-				form.typeCodes.push("default-readset");
-				form.typeCodes.push("rsillumina");
-				form.limit = 100000;
-				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
-					readsets = data;
-					/*
-					for(var i = 0; i < readsets.length; i++){
-						readsets[i].runSequencingStartDate = convertToDate(readsets[i].runSequencingStartDate);
-					}
-					*/	
-					loadYearlyBalanceSheets();
+		var balanceSheetsGeneralService = {
 					
-					mainService.put('generalBalanceSheets', readsets);
-					
-					isLoading = false;
-				});
-			}
-			
-			var loadYearlyBalanceSheets = function(){
-				// Initializing our components
-				 var datatableConfig = {
-							group : {
-								active : false
-							},
-							search : {
-								active:false
-							},
-							pagination:{
-								active : false
-							},
-							hide:{
-								active:false
-							},
-							select : {
-								active : false
-							}
-						 };
-						 var defaultDatatableColumns = [
-							{	"property":"year",
-							  	"header": Messages("balanceSheets.year"),
-							  	"type" :"text",
-							  	"position":1
-							},
-							{	"property":"nbBases",
-								"header": Messages("balanceSheets.nbBases"),
-								"type" :"number",
-							  	"position":2,
-							}
-						 ];	
-				 
-				 	 
-				 
-				 // Treatment
-				 // Initializing our main object
-				 var balanceSheetsByYearAndTechnology = [];
+			computeDataByYear : function(data){
+				var actualYear = new Date().getFullYear();
+				var dataByYear = [];
 				 for (var i = 2008; i <= actualYear; i++){
-					 balanceSheetsByYearAndTechnology[i-2008] = {
+					 dataByYear[i-2008] = {
 							 nbBases : 0,
 							 year : i
 					 };
 				 }
-				 
+						 
 				 // Calculating our bases for each year
-				 for(var i = 0; i < readsets.length; i++){
-					var readsetDate =  convertToDate(readsets[i].runSequencingStartDate);
-					balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
+				 for(var i = 0; i < data.length; i++){
+					var readsetDate =  balanceSheetsGeneralService.convertToDate(data[i].runSequencingStartDate);
+					dataByYear[readsetDate.getFullYear() - 2008].nbBases += balanceSheetsGeneralService.getProperty(data[i]);
 				 }
-
-				 // Creating chart
-				 computeChartYearlyBalanceSheets(balanceSheetsByYearAndTechnology);
-				 
-				 // Initialize datatable
-				 dtYearlyBalanceSheets = datatable(datatableConfig);
-				 dtYearlyBalanceSheets.setColumnsConfig(defaultDatatableColumns);	 
-				 dtYearlyBalanceSheets.setData(balanceSheetsByYearAndTechnology, balanceSheetsByYearAndTechnology.length);
-				
-				 
-				 // Initialize other datatable
-				 loadDtSumYearly();
-			}
+				 return dataByYear;
+			},
 			
-			var loadDtSumYearly = function(){
-				// Initializing our components
-				var datatableConfig = {
-				 	showTotalNumberRecords : false,
-					search : {
-						active:false
-					},
-					pagination:{
-						active : false
-					},
-					hide:{
-						active:false
-					},
-					select : {
-						active : false
-					},
-					callbackEndDisplayResult : function(){
-						 colorBlue(dtSumYearly, 0);	
+			computeDataForYear : function(data,year){
+				var dataReadSet = {
+						total : 0,
+						readsets : [],
+						months : [],
+						quarters :[],
+						dataQuarterDT:[]
+				};
+				
+				//initialize months
+				for(i = 0; i <12; i++){
+					dataReadSet.months[i] = {
+						quarter : balanceSheetsGeneralService.getQuarter(i),
+						month : balanceSheetsGeneralService.getMonthName(i),
+						nbBases : 0
+					 }
+				 }
+				//initialize quarters
+				for(i=1;i<=4;i++){
+					dataReadSet.quarters[i] = {
+						nbBases : 0
 					}
+				}
+				
+				for(var i = 0; i < data.length; i++){
+					data[i].runSequencingStartDate = balanceSheetsGeneralService.convertToDate(data[i].runSequencingStartDate);
+					 var fullYear = data[i].runSequencingStartDate.getFullYear();
+					 var monthValue = data[i].runSequencingStartDate.getMonth();
+					 
+					 if(data[i].runSequencingStartDate.getFullYear() == year){
+						 var valueNbBases = balanceSheetsGeneralService.getProperty(data[i]);
+						 dataReadSet.total += valueNbBases;
+						 dataReadSet.months[data[i].runSequencingStartDate.getMonth()].nbBases += valueNbBases;
+						 dataReadSet.quarters[balanceSheetsGeneralService.getQuarter(data[i].runSequencingStartDate.getMonth())].nbBases += valueNbBases;
+						 if(data[i].sampleOnContainer == null || data[i].sampleOnContainer == undefined){
+							 data[i].sampleOnContainer = {
+									 sampleTypeCode : 'not-defined',
+									 sampleCategoryCode : 'unknown'
+							 };
+						 }
+						 dataReadSet.readsets.push(data[i]);
+					 }
+				}
+				
+				var nbQuarter=0;
+				var previousQuarter=1;
+				var valueQuarter = 1;
+				for(i=0;i<12;i++){
+					valueQuarter=dataReadSet.months[i].quarter;
+					if(previousQuarter!=valueQuarter){
+						//Add somme quarter
+						var line = {
+								 quarter : '',
+								 month : Messages("balanceSheets.sum"),
+								 nbBases : dataReadSet.quarters[valueQuarter].nbBases
+						 };
+						dataReadSet.dataQuarterDT.push(line);
+					}
+					dataReadSet.dataQuarterDT.push(dataReadSet.months[i]);
+					previousQuarter=valueQuarter;
+				}
+				//Add somme total
+				var yearLine = {
+						quarter : '',
+						month : Messages("balanceSheets.totalSum"),
+				 		nbBases : dataReadSet.total
 				 };
-				 var defaultDatatableColumns = [
-					{	"property":"property",
-					  	"header": Messages("balanceSheets.property"),
-					  	"type" :"text",
-					  	"position":1
-					},
-					{	"property":"value",
-						"header": Messages("balanceSheets.value"),
-						"type" :"number",
-					  	"position":2,
+				dataReadSet.dataQuarterDT.push(yearLine);
+				return dataReadSet;
+			},
+				
+			
+			getProperty : function(data){
+				var value=0;
+				if(data.typeCode=="rsillumina"){
+					if(data.treatments.ngsrg!=null){
+						value=data.treatments.ngsrg.default.nbBases.value;
 					}
-				 ];	
-				 
-				 // Calculing sum
-				 var data = dtYearlyBalanceSheets.getData();
+				}
+				if(data.typeCode=="rsnanopore"){
+					if(data.treatments.ngsrg!=null){
+						value=data.treatments.ngsrg.default['1DForward'].value.nbBases;
+						if(data.treatments.ngsrg.default['1DReverse']!=null){
+							value+=data.treatments.ngsrg.default['1DReverse'].value.nbBases;
+						}
+					}
+				}
+				return value;
+			},
+			
+			computeSumData : function(data){
 				 var sum = [{
 						property : Messages('balanceSheets.sum'),
 						value : 0
 				 }];
+				// Calculing sum
 				 for(var i = 0; i < data.length; i++){
 					 sum[0].value += data[i].nbBases;
 				 }
-				 
-				 // Creating datatable
-				 
-				 dtSumYearly = datatable(datatableConfig);
-				 dtSumYearly.setColumnsConfig(defaultDatatableColumns);
-				 dtSumYearly.setData(sum, 1);
-			}
-			
-			
-			var computeChartYearlyBalanceSheets = function(data){
+				return sum;
+			},
+					
+			computeChartYearlyBalanceSheets : function(data){
 				 var years = [];
 				 var statData = [];
 				 for(var i = 0; i < data.length; i++){
@@ -1388,7 +1365,7 @@
 					 statData[i] = data[i].nbBases;
 				 }
 				 
-				 chartYearlyBalanceSheets = {
+				 var chartYearlyBalanceSheets = {
 						chart : {
 			                zoomType : 'x',
 							height : 770,	
@@ -1433,72 +1410,24 @@
 							turboThreshold : 0
 						}]
 				};
-			}
-			
-			
-			var convertToDate = function(dateInMilliSeconds){
-				 return new Date(dateInMilliSeconds);
-			}
-			
-			var colorBlue = function(datatable, pos){
-				 datatable.displayResult[pos].line.trClass="text-primary";
-			}
-			
-			var getDefaultColumnsYearly = function(){
-				var columns = [];
-				columns.push({"property":"year",
-				  	"header": Messages("balanceSheets.year"),
-				  	"type" :"text",
-				  	"position":1});
-				columns.push({"property":"nbBases",
-					"header": Messages("balanceSheets.nbBases"),
-					"type" :"number",
-				  	"position":2});
-			}
-			
-			var balanceSheetsGeneralService = {
-					
-				//chartYearlyBalanceSheets : function(){return chartYearlyBalanceSheets},
-				//dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
-				//dtSumYearly : function(){return dtSumYearly},
-				//loadFromCache : function(){loadYearlyBalanceSheets()},
-					
-					
-			computeDataByYear : function(data){
-				var dataByYear = [];
-				 for (var i = 2008; i <= actualYear; i++){
-					 dataByYear[i-2008] = {
-							 nbBases : 0,
-							 year : i
-					 };
-				 }
-						 
-					 // Calculating our bases for each year
-				 for(var i = 0; i < data.length; i++){
-					var readsetDate =  convertToDate(data[i].runSequencingStartDate);
-					//dataByYear[readsetDate.getFullYear() - 2008].nbBases += data[i].treatments.ngsrg.default.nbBases.value;
-					dataByYear[readsetDate.getFullYear() - 2008].nbBases += balanceSheetsGeneralService.getProperty(data[i]);
-				 }
-				 return dataByYear;
+				return chartYearlyBalanceSheets;
 			},
 			
-			getProperty : function(data){
-				var value=0;
-				if(data.typeCode=="rsillumina"){
-					value=data.treatments.ngsrg.default.nbBases.value;
-				}
-				if(data.typeCode=="rsnanopore"){
-					if(data.treatments.ngsrg!=null){
-						value=data.treatments.ngsrg.default['1DForward'].value.nbBases;
-						if(data.treatments.ngsrg.default['1DReverse']!=null){
-							value+=data.treatments.ngsrg.default['1DReverse'].value.nbBases;
-						}
-					}
-				}
-				return value;
-			}
+			convertToDate : function(dateInMilliSeconds){
+				 return new Date(dateInMilliSeconds);
+			},
 					
-					
+			 getQuarter : function(month){
+				 return parseInt(month/3) + 1;
+			 },
+			 
+			 getMonthName : function(month){
+				 var monthNames = [Messages("balanceSheets.january"), Messages("balanceSheets.february"), Messages("balanceSheets.march"),
+				                   Messages("balanceSheets.april"), Messages("balanceSheets.may"), Messages("balanceSheets.june"),
+				                   Messages("balanceSheets.july"),Messages("balanceSheets.august"), Messages("balanceSheets.september"),
+				                   Messages("balanceSheets.october"), Messages("balanceSheets.november"), Messages("balanceSheets.december")];
+				 return monthNames[month];
+			 }
 	};
 			
 	return balanceSheetsGeneralService;	
