@@ -497,9 +497,9 @@ public class SubmissionServices {
 				if(!submission.experimentCodes.contains(experiment.code)){
 					listExperiments.add(experiment);
 					submission.experimentCodes.add(experiment.code);
-					System.out.println ("Ajout dans submission du expCode : " + experiment.code);
+					//System.out.println ("Ajout dans submission du expCode : " + experiment.code);
 					if(experiment.run != null) {
-						System.out.println ("Ajout dans submission du runCode : " + experiment.run.code);
+						//System.out.println ("Ajout dans submission du runCode : " + experiment.run.code);
 						submission.runCodes.add(experiment.run.code);
 					}// end if
 				}// end if
@@ -933,7 +933,7 @@ public class SubmissionServices {
 		
 		experiment.projectCode = readSet.projectCode;
 		experiment.traceInformation.setTraceInformation(user);
-		System.out.println("expCode =" + experiment.code);
+		//System.out.println("expCode =" + experiment.code);
 		String laboratoryRunCode = readSet.runCode;
 		
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
@@ -964,10 +964,11 @@ public class SubmissionServices {
 		}
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
 		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
+
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
-		System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
-		System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
-		System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
+		//System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
+		//System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
+		//System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
 		
 		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(laboratoryRun.typeCode.toLowerCase());
 		
@@ -1010,10 +1011,10 @@ public class SubmissionServices {
 				//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 			
 				for(String k: listKeysSampleOnContainerProperties){
-					System.out.print("MA cle = '" + k +"'");
+					//System.out.print("MA cle = '" + k +"'");
 					PropertyValue propertyValue = sampleOnContainerProperties.get(k);
-					System.out.print(propertyValue.toString());
-					System.out.println(", MA value  => "+propertyValue.value);
+					//System.out.print(propertyValue.toString());
+					//System.out.println(", MA value  => "+propertyValue.value);
 				} 
 				
 				if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
@@ -1027,17 +1028,17 @@ public class SubmissionServices {
 				}
 			}
 		}
-		experiment.libraryLayoutNominalLength=8000;
+		
 		if (experiment.libraryLayoutNominalLength == null) {
 			throw new SraException("experiment sans libraryLayoutNominalLength : " + experiment.code);
 		}
-		System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
+		//System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
 		experiment.state = new State("N", user); 
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String taxonId = laboratorySample.taxonCode;
-		System.out.println("sampleCode=" +laboratorySampleCode); 
-		System.out.println("taxonId=" +taxonId); 
+		//System.out.println("sampleCode=" +laboratorySampleCode); 
+		//System.out.println("taxonId=" +taxonId); 
 		//String laboratoryRunCode = readSet.runCode;
 		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		String technology = laboratoryRun.instrumentUsed.typeCode;
@@ -1202,13 +1203,12 @@ public class SubmissionServices {
 		String laboratoryRunCode = readSet.runCode;
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
-		System.out.println("tout va bien");
 		
 		List <models.laboratory.run.instance.File> list_files =  readSet.files;
 		if (list_files == null) {
-			System.out.println("Aucun fichier pour le readSet " + readSet.code);
+			System.out.println("Aucun fichier pour le readSet " + readSet.code +"???");
 		} else {
-			System.out.println("nbre de fichiers = " + list_files.size());
+			//System.out.println("nbre de fichiers = " + list_files.size());
 		}
 		// Pour chaque readSet, creer un objet run 
 		Date runDate = readSet.runSequencingStartDate;
@@ -1221,10 +1221,8 @@ public class SubmissionServices {
 		// Renseigner le run pour ces fichiers sur la base des fichiers associes au readSet :
 		// chemin des fichiers pour ce readset :
 		String dataDir = readSet.path;
-		System.out.println("tout va bien pour readSet.path");
 
 		for (models.laboratory.run.instance.File runInstanceFile: list_files) {
-			System.out.println("tout va bien dans list_files");
 			String runInstanceExtentionFileName = runInstanceFile.extension;
 			// conditions qui doivent etre suffisantes puisque verification préalable que le readSet
 			// est bien valide pour la bioinformatique.
@@ -1233,15 +1231,15 @@ public class SubmissionServices {
 					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna.gz") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual.gz")) {
 					&&  (runInstanceExtentionFileName.equalsIgnoreCase("fastq.gz") || runInstanceExtentionFileName.equalsIgnoreCase("fastq"))) {
 					RawData rawData = new RawData();
-					System.out.println("fichier " + runInstanceFile.fullname);
+					//System.out.println("fichier " + runInstanceFile.fullname);
 					rawData.extention = runInstanceFile.extension;
 					rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
 					rawData.relatifName = runInstanceFile.fullname;
-					System.out.println ("rawData.relatifName = " +rawData.relatifName);
+					//System.out.println ("rawData.relatifName = " +rawData.relatifName);
 					rawData.location = readSet.location;
 					run.listRawData.add(rawData);
 					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
-						System.out.println("Recuperation du md5 pour" + rawData.relatifName + rawData.extention);
+						//System.out.println("Recuperation du md5 pour" + rawData.relatifName ");
 						rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
 					}
 					// Si donnée à compresser pour soumission, mettre boolean à true (et calculer submittedMd5 apres compression) 
@@ -1255,14 +1253,13 @@ public class SubmissionServices {
 					Set<String> listKeys = runInstanceFile.properties.keySet();
 					
 					for(String k: listKeys) {
-						System.out.println("attention cle = " + k);
+						//System.out.println("attention cle = " + k);
 						PropertyValue propertyValue = runInstanceFile.properties.get(k);
-						System.out.println(propertyValue.toString());
-						System.out.println(propertyValue.value);
+						//System.out.println(propertyValue.toString());
+						//System.out.println(propertyValue.value);
 					}
 			}
 		}
-		System.out.println("tout va bien avant retour run");
 
 		return run;
 	}
