@@ -111,7 +111,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			
-
 			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq ; JIRA NGL-1259 renommage rna-sequencing=> rna-lib-process
 			l.add(newExperimentType("Ext to Prep lib RNASeq","ext-to-rna-lib-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -143,6 +142,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null,
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS ajout 21/02/2017 NGL-1167: processus Chromium
+			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+				
+			l.add(newExperimentType("Ext to Prep Chromium WG","ext-to-wg-chromium-lib-process",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+			}
 				
 			
 			/** Transformation, ordered by display order **/
@@ -162,7 +172,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("mastercycler-epg-and-zephyr"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
 		
 			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
 			//FDS 12/12/2016 ajout -- JIRA NGL-1047: processus X5_WG NANO 	
@@ -193,13 +202,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsLibNormalization(),
 					getInstrumentUsedTypes("hand","janus"), 
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-			
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
 			
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
-					getInstrumentUsedTypes("hand"),   // Pas encore en PROD... 30/11/2016 ajout janus...getInstrumentUsedTypes("hand","janus"),
+					getInstrumentUsedTypes("hand"),   // Pas encore en PROD... getInstrumentUsedTypes("hand","janus"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -207,12 +215,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellCNG(),
-					getInstrumentUsedTypes("cBotV2", "cBot-onboard"),"ManyToOne", 
+					getInstrumentUsedTypes("cBotV2", "cBot-onboard"),
+					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard
-			//FDS modif 29/03/2016 -- JIRA NGL-893: ajout instrument janus-and-cBot; 
-			//FDS modif 23/01/2017 modif janus-and-cBot=>  janus-and-cBotV2, il n'y a lus de Cbot non V2...
+			//FDS modif 23/01/2017 modif janus-and-cBot=>  janus-and-cBotV2, il n'y a plus de Cbot non V2...
 			l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellOrderedCNG(),
@@ -227,7 +234,25 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-		
+			
+			//FDS ajout 21/02/2017 NGL-1167: Chromium
+			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+			l.add(newExperimentType("GEM generation (Chromium)","chromium-gem-generation",null,1500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionsChromiumGemGeneration(),
+					getInstrumentUsedTypes("chromium-controller"),
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			l.add(newExperimentType("Prep Lib & PCR indexing (Chromium)","wg-chromium-lib-prep",null,1600,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+					getPropertyDefinitionsWGChromiumLibPrep(),
+					getInstrumentUsedTypes("hand","sciclone-ngsx"), 
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+			}
 			
 			/** Quality Control, ordered by display order **/
 			
@@ -252,6 +277,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQCMiseq(), 
 					getInstrumentUsedTypes("MISEQ-QC-MODE"),
+					"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS 21/02/2017 ajout -- JIRA NGL-1167: experiments pour Chromium
+			l.add(newExperimentType("Bioanalyzer","bioanalyzer-chip-migration", null, 400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsBioanalyser(), 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer"),
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
@@ -385,6 +418,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();		
+	
+		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+		//FDS ajout 20/02/2017 JIRA NGL-1167
+		newExperimentTypeNode("ext-to-wg-chromium-lib-process", getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), 
+				false, false, false, 
+				null, // no previous nodes
+				null,
+				null,
+				null
+				).save();	
+		}	
 		
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
@@ -484,6 +530,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, // pas qc
 				null  // pas tranfert
 				).save();
+		
+		
+		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+		newExperimentTypeNode("chromium-gem-generation",getExperimentTypes("chromium-gem-generation").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
+				null, // pas purif
+				getExperimentTypes("labchip-migration-profile"), // qc 
+				getExperimentTypes("tubes-to-plate")
+				).save();
+			
+		newExperimentTypeNode("wg-chromium-lib-prep",getExperimentTypes("wg-chromium-lib-prep").get(0),
+				false,false,false,
+				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
+				null, // pas purif
+				getExperimentTypes("labchip-migration-profile"), // qc 
+				null  // pas transfert 
+				).save();
+		}
 		
 	}
 
@@ -827,6 +894,60 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	    */
 		return propertyDefinitions;
 	}
+	
+	//FDS ajout 21/02/2017 -- JIRA NGL-1167 experiences pour process Chromium
+	private List<PropertyDefinition> getPropertyDefinitionsChromiumGemGeneration() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution (ng/µl)","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),"single",22, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "positionOnChip", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", 
+				DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), null, null, null,"single",23, true, null, null));
+	
+		return propertyDefinitions;
+	}
+	
+	//FDS ajout 21/02/2017 -- JIRA NGL-1167 experiences pour process Chromium
+	private List<PropertyDefinition> getPropertyDefinitionsWGChromiumLibPrep() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//OuputContainer
+		// ces propriétés de containerOut doivent etre propagées au content; propriétés obligatoires a: Finished 
+
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
+				"single", 30, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
+				"single", 31, true, null,null));		
+		
+		return propertyDefinitions;
+	}
+	
+	// FDS ajout 21/02/2017 -- JIRA NGL-1167: QC bioanalyser pour process Chromium ( copie cproperties LabChipGX)
+	// TODO  changer 11,13,14 ?????????????
+	public static List<PropertyDefinition> getPropertyDefinitionsBioanalyser() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		//InputContainer (pas d'outputContainer sur une experience QC )
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl"),
+				"single", 11, true, null, null));
+		
+		// laiser la position 12 libre pour la colonne unit
+
+		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 13, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+				"img", 14, false, null, null));
+		
+		return propertyDefinitions;
+	}
+	
+	
 	
 	// 05/12/2016 NGL-1164: trouver toutes les experiences de transformation SAUF les depot
 	private List<ExperimentTypeNode> getETNForPool(){

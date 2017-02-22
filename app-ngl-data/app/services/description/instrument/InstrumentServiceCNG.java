@@ -61,6 +61,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.add(newInstrumentCategory("Robot pipetage","liquid-handling-robot"));
 		l.add(newInstrumentCategory("Appareil de sizing","sizing-system"));
+		
+		// FDS 20/02/2017 NGL-1167
+		l.add(newInstrumentCategory("10x Genomics Instrument","10x-genomics-instrument"));
 				
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
@@ -149,11 +152,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** chip-electrophoresis **/
+		// FDS 21/02/2017 ajout Strip-8 en input
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("bioAnalyzer2", "BioAnalyzer2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ), 
-				getContainerSupportCategories(new String[]{"tube"}),null, 
+				getContainerSupportCategories(new String[]{"tube","strip-8"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// pas de properties ????
@@ -303,6 +307,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("mastercycler5-and-zephyr1", "Mastercycler5 (Nexus SX1) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler6-and-zephyr1", "Mastercycler6 (Nexus SX1) / Zephyr1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		
+		/** FDS ajout 20/02/2017 NGL-1167 : Chromium  ( entree tubes / sortie ??? pour l'instant mettre tube **/
+		l.add(newInstrumentUsedType("Chromium controller", "chromium-controller", InstrumentCategory.find.findByCode("10x-genomics-instrument"), getChromiumControllerProperties(), 
+				getInstruments(
+						createInstrument("chromium1", "Chromium 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
@@ -641,6 +653,17 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//Zephyr
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
 				null, null, null , null, "single", null, true ,"0.8", null));
+		return l;
+	}
+	
+	//FDS 20/02/2017 NGL-1167: Chromium.. Y a-t-il des proprietes ou non?? si non supprimer !!!
+	private static List<PropertyDefinition> getChromiumControllerProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		// liste des programmes....
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
+				newValues("programme 1",  
+						  "---"),
+						  "single", null, false ,null, null));
 		return l;
 	}
 	

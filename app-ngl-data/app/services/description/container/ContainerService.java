@@ -54,6 +54,7 @@ public class ContainerService {
 	public static void saveContainerSupportCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();
 		l.add(newContainerSupportCategory("Tube", "tube", 1, 1, 1, ContainerCategory.find.findByCode("tube")));
+		l.add(newContainerSupportCategory("Strip 8", "strip-8", 1, 8, 8, ContainerCategory.find.findByCode("tube"))); // FDS ajout 21/02/2017 pour Chromium
 		l.add(newContainerSupportCategory("Bouteille", "bottle", 1, 1, 1, ContainerCategory.find.findByCode("bottle")));
 		l.add(newContainerSupportCategory("Sachet", "bag", 1, 1, 1, ContainerCategory.find.findByCode("bag")));
 		l.add(newContainerSupportCategory("Lame de pétri", "petrislide", 1, 1, 1, ContainerCategory.find.findByCode("petrislide")));		

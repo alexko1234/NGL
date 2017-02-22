@@ -64,6 +64,20 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimentType" des containers qui viendraient 
 		//       d'un collaborateur exterieur ex : ext-denat-dil-lib
 		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		// FDS ajout 20/02/2017 NGL-1167: processus Chromiun 10x WG
+		l.add(DescriptionFactory.newProcessType("Prep Chromium WG", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
+				4,
+				getPropertyDefinitionsWgChromium(), 
+				Arrays.asList(getPET("ext-to-wg-chromium-lib-process",-1), //ordered list of experiment type in process type
+						getPET("chromium-gem-generation",0),
+						getPET("wg-chromium-lib-prep",1) ), 
+				getExperimentTypes("chromium-gem-generation").get(0),         //first experiment type    
+				getExperimentTypes("wg-chromium-lib-prep").get(0),        //last  experiment type
+				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		}
+		
 		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5; chgt label 16/09/2016
 		l.add(DescriptionFactory.newProcessType("WG PCR free (FC ordonnée)", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				1,
@@ -181,7 +195,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
 			
-		// 12/12/2016 PROBLEME SUR DISPATCH A RESOUDRE PAR GA ==> pas mis en prod
 		// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans transformation)
 		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
 				60,
@@ -407,6 +420,29 @@ public class ProcessServiceCNG  extends AbstractProcessService{
          
         return values;
 	}
+	
+	// FDS ajout 20/02/2017 NGL-1167
+	private static List<PropertyDefinition> getPropertyDefinitionsWgChromium() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(
+					DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
+							, LevelService.getLevels(Level.CODE.Process, Level.CODE.Content), String.class, true, "F"
+							, getWgChromiumLibProcessTypeCodeValues(), "single" ,100, null, null, null));
+
+		 return propertyDefinitions;
+	}
+	
+	// FDS ajout 20/02/2017 NGL-1167
+	private static List<Value> getWgChromiumLibProcessTypeCodeValues(){
+        List<Value> values = new ArrayList<Value>();
+        
+        // dans RunServiceCNG le nom reprend le code...
+        values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));   
+         
+        return values;
+	}
+	
 	
 	// FDS ajout 28/11/2016 NGL-1164  PLUS UTILISE ???.....
 	// toutes les transformation en -1
