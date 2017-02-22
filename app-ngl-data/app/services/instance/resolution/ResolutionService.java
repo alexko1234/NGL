@@ -796,8 +796,33 @@ public class ResolutionService {
 	// FDS 23/11/2016 NGL-1158: renommage pour separation des resolutions de Processus entre CNG et CNS
 	public static void createProcessResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+		
+		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("Standby","standby", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Arrêt - réorientation manip","stop-reor-manip", resolutionCategories.get("Default"), (short) 3));
+		l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Arrêt - pb broyage","stop-pb-broyage", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Arrêt - pb cryobroyeur","stop-pb-cryobroyeur", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("Arrêt - pb extraction ADN/ARN","stop-pb-extraction", resolutionCategories.get("Default"), (short) 7));
+		l.add(InstanceFactory.newResolution("Arrêt - pb bq RNA","stop-pb-bq-rna", resolutionCategories.get("Default"), (short) 8));
+		l.add(InstanceFactory.newResolution("Arrêt - pb synthèse cDNA","stop-pb-synthese-cdna", resolutionCategories.get("Default"), (short) 9));
+		l.add(InstanceFactory.newResolution("Arrêt - pb fragmentation","stop-pb-fragmentation", resolutionCategories.get("Default"), (short) 10));
+		l.add(InstanceFactory.newResolution("Arrêt - pb prep Tag","stop-pb-prep-tag", resolutionCategories.get("Default"), (short) 11));
+		l.add(InstanceFactory.newResolution("Arrêt - pb bq DNA","stop-pb-bq-dna", resolutionCategories.get("Default"), (short) 12));
+		l.add(InstanceFactory.newResolution("Arrêt - pb PCR amplif","stop-pb-pcr-ampli", resolutionCategories.get("Default"), (short) 13));
+		l.add(InstanceFactory.newResolution("Arrêt - pb sizing sur gel","stop-pb-sizing-gel", resolutionCategories.get("Default"), (short) 14));
+		l.add(InstanceFactory.newResolution("Arrêt - pb Ampure/SpriSelect","stop-pb-ampure-spriselect", resolutionCategories.get("Default"), (short) 15));
+		l.add(InstanceFactory.newResolution("Arrêt - pb sol stock","stop-pb-sol-stock", resolutionCategories.get("Default"), (short) 16));
+		l.add(InstanceFactory.newResolution("Arrêt - échec run","stop-pb-run", resolutionCategories.get("Default"), (short) 17));
+		
+		l.add(InstanceFactory.newResolution("Processus partiel (MUST BE REPLACE)","processus-partiel", resolutionCategories.get("Default"), (short) 18));
+		l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier  (MUST BE REPLACE)","stop-reamplifier", resolutionCategories.get("Default"), (short) 19));
+		l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser (MUST BE REPLACE)","stop-resynthétiser", resolutionCategories.get("Default"), (short) 20));
+		
+		
+		
 			/* OLD*/
+			/*
 			l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
 			l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
 			l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
@@ -805,33 +830,7 @@ public class ResolutionService {
 			l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
 			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
 			l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
-			
-		
-		} else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
-			//NEW 17/01/2017
-			l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
-			l.add(InstanceFactory.newResolution("Standby","standby", resolutionCategories.get("Default"), (short) 2));
-			l.add(InstanceFactory.newResolution("Arrêt - réorientation manip","stop-reor-manip", resolutionCategories.get("Default"), (short) 3));
-			l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 4));
-			l.add(InstanceFactory.newResolution("Arrêt - pb broyage","stop-pb-broyage", resolutionCategories.get("Default"), (short) 5));
-			l.add(InstanceFactory.newResolution("Arrêt - pb cryobroyeur","stop-pb-cryobroyeur", resolutionCategories.get("Default"), (short) 6));
-			l.add(InstanceFactory.newResolution("Arrêt - pb extraction ADN/ARN","stop-pb-extraction", resolutionCategories.get("Default"), (short) 7));
-			l.add(InstanceFactory.newResolution("Arrêt - pb bq RNA","stop-pb-bq-rna", resolutionCategories.get("Default"), (short) 8));
-			l.add(InstanceFactory.newResolution("Arrêt - pb synthèse cDNA","stop-pb-synthese-cdna", resolutionCategories.get("Default"), (short) 9));
-			l.add(InstanceFactory.newResolution("Arrêt - pb fragmentation","stop-pb-fragmentation", resolutionCategories.get("Default"), (short) 10));
-			l.add(InstanceFactory.newResolution("Arrêt - pb prep Tag","stop-pb-prep-tag", resolutionCategories.get("Default"), (short) 11));
-			l.add(InstanceFactory.newResolution("Arrêt - pb bq DNA","stop-pb-bq-dna", resolutionCategories.get("Default"), (short) 12));
-			l.add(InstanceFactory.newResolution("Arrêt - pb PCR amplif","stop-pb-pcr-ampli", resolutionCategories.get("Default"), (short) 13));
-			l.add(InstanceFactory.newResolution("Arrêt - pb sizing sur gel","stop-pb-sizing-gel", resolutionCategories.get("Default"), (short) 14));
-			l.add(InstanceFactory.newResolution("Arrêt - pb Ampure/SpriSelect","stop-pb-ampure-spriselect", resolutionCategories.get("Default"), (short) 15));
-			l.add(InstanceFactory.newResolution("Arrêt - pb sol stock","stop-pb-sol-stock", resolutionCategories.get("Default"), (short) 16));
-			l.add(InstanceFactory.newResolution("Arrêt - échec run","stop-pb-run", resolutionCategories.get("Default"), (short) 17));
-			
-			l.add(InstanceFactory.newResolution("Processus partiel (=> Standby)","processus-partiel", resolutionCategories.get("Default"), (short) 18));
-			l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier  (MUST BE REPLACE)","stop-reamplifier", resolutionCategories.get("Default"), (short) 19));
-			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser (MUST BE REPLACE)","stop-resynthétiser", resolutionCategories.get("Default"), (short) 20));
-			
-		}
+			*/
 		
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
