@@ -203,7 +203,7 @@ public class XmlServices {
 				if (experiment == null){
 					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 				}
-				chaine = chaine + "  <EXPERIMENT alias=\""+ experimentCode + "\" ";
+				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + VariableSRA.centerName + "\"";
 				if (StringUtils.isNotBlank(experiment.accession)) {
 					chaine = chaine + "accession=\"" + experiment.accession + "\" ";	
 				}
