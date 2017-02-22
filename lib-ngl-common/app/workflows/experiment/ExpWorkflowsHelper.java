@@ -1439,16 +1439,20 @@ public class ExpWorkflowsHelper {
 			Set<String> updateProjectCodes = exp.atomicTransfertMethods
 					.stream()
 					.map(atm -> atm.outputContainerUseds).flatMap(List::stream)
+					.filter(ocu -> ocu.experimentProperties.containsKey("projectCode"))
 					.map(ocu -> ocu.experimentProperties.get("projectCode").value.toString())
 					.collect(Collectors.toSet());
 			
 			Set<String> deleteSampleCodes = exp.atomicTransfertMethods
 				.stream()
 				.map(atm -> atm.outputContainerUseds).flatMap(List::stream)
+				.filter(ocu -> ocu.experimentProperties.containsKey("sampleCode"))
 				.map(ocu -> ocu.experimentProperties.get("sampleCode").value.toString())
 				.collect(Collectors.toSet());
 			
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", deleteSampleCodes));
+			if(deleteSampleCodes != null && deleteSampleCodes.size() > 0){
+				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", deleteSampleCodes));
+			}
 			
 			updateProjectCodes.parallelStream().forEach(projectCode -> {
 				Sample sample = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
