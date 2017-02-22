@@ -175,7 +175,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		} 
 	}
 	
-	//@Test
+	@Test
 	public void repriseHistoriqueStudiesTest() throws IOException, SraException {
 		File xmlStudy = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_studies.xml");
 		String user = "william";
