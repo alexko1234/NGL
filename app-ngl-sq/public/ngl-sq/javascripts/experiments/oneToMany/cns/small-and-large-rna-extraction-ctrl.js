@@ -260,7 +260,7 @@ angular.module('home').controller('SmallAndLargeRNAIsolation',['$scope', '$parse
 					angular.forEach(containers, function(container){
 						var tmpLine = {};
 						tmpLine.atomicTransfertMethod = $that.newAtomicTransfertMethod(container.support.line, container.support.column);
-						tmpLine.atomicIndex=i/2;i++;
+						tmpLine.atomicIndex=i/2;i=i+2;
 							
 						tmpLine.inputContainer = container;
 						tmpLine.inputContainerUsed = $that.$commonATM.convertContainerToInputContainerUsed(tmpLine.inputContainer);
