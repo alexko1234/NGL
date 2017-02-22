@@ -178,7 +178,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	
 	$scope.isExperimentDeleteAvailable = function(username){
-		return ($scope.isWorkflowModeAvailable('F') && (!$scope.isCreationMode && username === $scope.experiment.traceInformation.createUser || Permissions.check("admin")));
+		return ($scope.isWorkflowModeAvailable('F') && (!$scope.isCreationMode() && username === $scope.experiment.traceInformation.createUser || Permissions.check("admin")));
 	};
 	
 	$scope.askDeleteExperiment = function(){
