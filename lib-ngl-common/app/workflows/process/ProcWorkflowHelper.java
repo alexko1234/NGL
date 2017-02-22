@@ -158,7 +158,8 @@ public class ProcWorkflowHelper {
 
 	public void updateContentPropertiesWithContentProcessProperties(ContextValidation validation, Process process) {
 			//update output container with new process property values
-		if(null != process.outputContainerCodes && process.outputContainerCodes.size() > 0){
+		if(null != process.outputContainerCodes && process.outputContainerCodes.size() > 0 
+				&& process.properties != null && process.properties.size() >0){
 			List<String> propertyCodes = getProcessesPropertyDefinitionCodes(process, Level.CODE.Content);
 			Map<String,PropertyValue> updatedProperties = process.properties.entrySet()
 														.stream()
