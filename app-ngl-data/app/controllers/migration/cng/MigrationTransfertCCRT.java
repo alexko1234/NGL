@@ -42,25 +42,29 @@ public class MigrationTransfertCCRT extends CommonController{
 		String errorMessage ="";
 		//Get correspondance projectNGL/projectFG
 		MigrationForm form = filledFormQueryString(MigrationForm.class);
+		Set<String> localProjects = new HashSet<String>();
 		BufferedReader reader = null;
 		try {
 			//Parse file
 			reader = new BufferedReader(new FileReader(new File(form.file)));
 			//Read header
 			String line = "";
+			String header = reader.readLine();
+			Logger.debug("Header "+header);
 			
 			while ((line = reader.readLine()) != null) {
 				Logger.debug("Line "+line);
 				String[] tabLine = line.split("\\t");
 				String codeProject = tabLine[0];
 				String codeFG = tabLine[1];
-				if(codeProject!=null && codeFG!=null){
+				boolean localDataDeleted = Boolean.parseBoolean(tabLine[2]);
+				if(codeProject!=null && codeFG!=null && codeFG.startsWith("fg")){
 					//Get project in DB
 					Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, codeProject);
 					if(project!=null){
 						Logger.debug("Project "+project.code);
 						MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class,DBQuery.is("code", project.code),
-											DBUpdate.set("bioinformaticParameters.fgGroup",codeFG).set("bioinformaticParameters.fgPriority", 0));
+											DBUpdate.set("bioinformaticParameters.fgGroup",codeFG).set("bioinformaticParameters.fgPriority", 0).set("bioinformaticParameters.localDataDelete", localDataDeleted));
 						
 						//Get ReadSet to update isSentCCRT=true et codeProject=
 						List<ReadSet> readSetsToUpdate = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -71,12 +75,20 @@ public class MigrationTransfertCCRT extends CommonController{
 							String pathCCRT=calculateCCRTPath(readSet.path, codeFG);
 							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readSet.code),
 									DBUpdate.set("location", "CCRT").set("path", pathCCRT));
+							if(localDataDeleted){
+								MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readSet.code),
+										DBUpdate.set("properties.localDataDeleted", localDataDeleted));
+							}
 						}
 						
 					}else
 						errorMessage+="No code project in DB "+codeProject+"\n";
-				}else
-					return badRequest("No code project/project FG "+codeProject+"/"+codeFG);
+				}else{
+					if(codeProject==null || codeFG==null)
+						return badRequest("No code project/project FG "+codeProject+"/"+codeFG);
+					else
+						localProjects.add(codeProject);
+				}
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -89,15 +101,6 @@ public class MigrationTransfertCCRT extends CommonController{
 			reader.close();
 		}
 
-		//Get localProjects
-		Set<String> localProjects = new HashSet<String>();
-		reader = new BufferedReader(new FileReader(new File(form.fileLocalProjects)));
-		String line = "";
-		while ((line = reader.readLine()) != null) {
-			localProjects.add(line);
-		}
-		reader.close();
-		
 		//Check allReadSet updated
 		List<ReadSet> readSetsNotUpdated = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("properties.isSentCCRT.value", true).notEquals("location", "CCRT").notIn("projectCode", localProjects),keys).toList();
 		if(readSetsNotUpdated.size()>0){
