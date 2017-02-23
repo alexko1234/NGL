@@ -3,8 +3,11 @@ package services.io.reception.mapping;
 import java.util.Map;
 
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import models.laboratory.sample.description.SampleCategory;
+import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -27,17 +30,20 @@ public class SampleMapping extends Mapping<Sample> {
 	
 	protected void update(Sample sample) {
 		
-		//TODO update categoryCode if not a code but a label.
 		if(Action.update.equals(action)){
 			sample.traceInformation.setTraceInformation(contextValidation.getUser());
 		}else{
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
+		//TODO update categoryCode if not a code but a label.
+		if(sample.categoryCode == null){
+			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
+		}
 	}
 
 
 	@Override
-	public void consolidate(Sample c) {
+	public void consolidate(Sample sample) {
 		// TODO Auto-generated method stub
 		
 	}	

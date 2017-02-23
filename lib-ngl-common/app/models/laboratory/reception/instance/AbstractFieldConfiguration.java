@@ -76,6 +76,17 @@ public abstract class AbstractFieldConfiguration {
 			}else{
 				field.set(dbObject, Collections.singletonList(value));
 			}			
+		}else if(String.class.isAssignableFrom(field.getType()) && null != value){
+			field.set(dbObject, value.toString());
+		}else if(Number.class.isAssignableFrom(field.getType()) && null != value){
+			if(Double.class.isAssignableFrom(field.getType())){
+				field.set(dbObject, Double.valueOf(value.toString()));
+			}else if(Integer.class.isAssignableFrom(field.getType())){
+				field.set(dbObject, Integer.valueOf(value.toString()));
+			}else if(Long.class.isAssignableFrom(field.getType())){
+				field.set(dbObject, Long.valueOf(value.toString()));
+			}
+			
 		}else {
 			field.set(dbObject, value);
 		}

@@ -40,7 +40,7 @@ public class ExcelHelper {
 				return cell.getDateCellValue().getTime()+"";
 			}else{
 				DataFormatter df = new DataFormatter(Locale.US);
-				return df.formatCellValue(cell);
+				return df.formatCellValue(cell).replace(",", "");
 			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();

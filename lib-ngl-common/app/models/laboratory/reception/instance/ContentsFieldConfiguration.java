@@ -24,12 +24,18 @@ public class ContentsFieldConfiguration extends ObjectFieldConfiguration<Content
 			throws Exception {
 		
 		if(Action.save.equals(action)){
+			Content content = new Content();
+			populateSubFields(content, rowMap, contextValidation, action);
 			if(!pool){
-				Content content = new Content();
-				populateSubFields(content, rowMap, contextValidation, action);
-				populateField(field, dbObject, Collections.singletonList(content));	
+				populateField(field, dbObject,Collections.singletonList(content));	
 			}else{
-				throw new RuntimeException("Pool not managed for save");
+				List<Content> contents = (List)field.get(dbObject);
+				if(null == contents)contents = new ArrayList<Content>(0);
+				contents.add(content);
+				populateField(field, dbObject,contents);	
+				
+				
+				//throw new RuntimeException("Pool not managed for save");
 			}
 		}else if(Action.update.equals(action)) {
 			//in case on update we need to retrieve the good content, we used the sampleCode for that so the sampleCode must be declared in content configs
