@@ -217,7 +217,11 @@ public class ProtocolServiceCNS {
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 					
-		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
+		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
+			lp.add(newProtocol("nanodrop","Nanodrop","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
+			
+			lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
+
 				
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));

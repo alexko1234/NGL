@@ -99,10 +99,19 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
+		l.add(newExperimentType("Spectrophotométrie UV","uv-spectrophotometry", null,22000,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsUvQuantification(), 
+				getInstrumentUsedTypes("nanodrop"),"OneToVoid", true, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newExperimentType("Qcard","qcard", null,22000,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQcard(), 
+				getInstrumentUsedTypes("hand"),"OneToVoid", true, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return l;
 	}
+
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
@@ -407,6 +416,68 @@ public class QualityControl extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
+	private List<PropertyDefinition> getPropertyDefinitionsQcard() {
+			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			
+			propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+					null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
+			
+
+			propertyDefinitions.add(newPropertiesDefinition("Dilution 1 - facteur (1/X)",	"dilutionFactor1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 				
+					"single", 16, true, null, null));
+
+			/*propertyDefinitions.add(newPropertiesDefinition("Dilution 2 - facteur (1/X)",	"dilutionFactor2", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 				
+					"single", 9, true, null, null));
+
+			propertyDefinitions.add(newPropertiesDefinition("Dilution 3 - facteur (1/X)",	"dilutionFactor3", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 				
+					"single", 10, true, null, null));
+			*/
+			propertyDefinitions.add(newPropertiesDefinition("Profil Qcard dil 1", "qcardProfile1", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
+					"img", 19, true, null, null));
+			
+			/*propertyDefinitions.add(newPropertiesDefinition("Profil Qcard dil 2", "qcardProfile2", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+					"img", 14, true, null, null));
+			
+			propertyDefinitions.add(newPropertiesDefinition("Profil Qcard dil 3", "qcardProfile3", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+					"img", 15, true, null, null));
+			
+				*/	
+			propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules","moleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", null, 				
+					"single", 20, true, null, null));
+		
+		
+		return propertyDefinitions;
+	}
+
+	private List<PropertyDefinition> getPropertyDefinitionsUvQuantification() {
+
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+		
+
+		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution (1/X)","dilutionFactor", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 				
+				"single", 14, true, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution", "concentration0", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 15, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 16, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("DO 260/280",	"260-280-ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
+				"single", 17, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("DO 260/230",	"260-230-ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
+				"single", 18, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Graph d'absorbance", "absorbanceVsWavelength", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+				"img", 19, true, null, null));
+		
+		
+		return propertyDefinitions;
+	}
 
 
 	
