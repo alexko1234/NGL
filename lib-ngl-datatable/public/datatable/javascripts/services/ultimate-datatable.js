@@ -3455,13 +3455,11 @@ directive('udtTable', function(){
   		    		if(scope.udtTable && scope["datatableForm"]){
   		    			scope.udtTable.formController = scope["datatableForm"];
   		    		}
-  		    		
   		    		scope.$watch("udtTable", function(newValue, oldValue) {
   		    			if(newValue && newValue !== oldValue && scope["datatableForm"]){
   		    				scope.udtTable.formController = scope["datatableForm"];
   		    			}
 		            });
-  		    		
   		    		scope.udtTableFunctions.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
   		    			scope.udtModalImage = {};
   		    			scope.udtModalImage.modalImage = imageData;
@@ -3638,9 +3636,9 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
   		    	templateUrl:'ultimate-datatable.html',
   		    	link: function(scope, element, attr) {
   		    		if(!attr.ultimateDatatable) return;
-  		    		
+		            
   		    		scope.$watch(attr.ultimateDatatable, function(newValue, oldValue) {
-  		    			if(newValue && newValue !== oldValue){
+  		    			if(newValue && (newValue !== oldValue || !scope.udtTable)){
   		    				scope.udtTable = newValue;
   		    			}
 		            });
