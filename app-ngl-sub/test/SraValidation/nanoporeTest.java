@@ -52,26 +52,35 @@ public class nanoporeTest extends AbstractTestsSRA {
 			if (readSet.submissionState != null ){
 				System.out.println("Le readSet " + readSet.code + " a un status de soumission à " + readSet.submissionState.code);	
 			}
-			// Recuperer scientificName via NCBI pour ce readSet. Le scientificName est utilisé dans la construction
-			// des samples et des experiments 
+			// Le scientificName est utilisé dans la construction
+			// des samples et des experiments. Il est recuperé par NGL-BI au ncbi 
 			String laboratorySampleCode = readSet.sampleCode;
 			models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 			String taxonId = laboratorySample.taxonCode;
 			String scientificName = laboratorySample.ncbiScientificName;
 			if (StringUtils.isBlank(scientificName)){
-				//scientificName=updateLaboratorySampleForNcbiScientificName(taxonId, contextValidation);
+				//scientificName=updateLaboratorySampleForNcbiScientificName(taxonId, contextValidation); fait dans ngl-bi
 				System.out.println("Pas de recuperation du nom scientifique pour le sample "+ laboratorySampleCode);
 			}
 			SubmissionServices submissionServices = new SubmissionServices();
 			// Creer l'experiment avec un state.code = 'N'
 			Run run = submissionServices.createRunEntity(readSet);
+			System.out.println("run.code = " + run.code);
+			System.out.println("run.reunCenter = " +run.runCenter); 
+			System.out.println("run.expCode = " + run.expCode);
+			System.out.println("run.Date = " + run.runDate);
+			System.out.println("run.Date = " + run.runDate);
+			
 			Experiment experiment = submissionServices.createExperimentEntity(readSet, scientificName, user);
+			System.out.println("libraryLayoutOrientation = "+experiment.libraryLayoutOrientation);
+			System.out.println("lastBaseCoord="+experiment.lastBaseCoord);
+			System.out.println("spotLength="+experiment.spotLength);
+			System.out.println("libraryLayoutNominalLength="+experiment.libraryLayoutNominalLength);
 			
 			String laboratorySampleName = laboratorySample.name;
 			String clone = laboratorySample.referenceCollab;	
 			System.out.println("name = '" + laboratorySampleName +"'");
 			System.out.println("clone = '" + clone +"'");
-
 		}	
 		
 	}	

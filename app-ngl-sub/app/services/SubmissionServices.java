@@ -1029,9 +1029,6 @@ public class SubmissionServices {
 			}
 		}
 		
-		if (experiment.libraryLayoutNominalLength == null) {
-			throw new SraException("experiment sans libraryLayoutNominalLength : " + experiment.code);
-		}
 		//System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
 		experiment.state = new State("N", user); 
 		String laboratorySampleCode = readSet.sampleCode;
@@ -1057,9 +1054,12 @@ public class SubmissionServices {
 					System.out.println(", value  => "+propertyValue.value);
 				} */
 				PropertyValue propertyNbCycle = ngsrg.get("nbCycle");
-				experiment.spotLength = (Long) propertyNbCycle.value;
+				if (ngsrg.get("nbCycle") != null){
+					experiment.spotLength = (Long) propertyNbCycle.value;
+				}
 			}
 		}
+		
 		// Ajouter les read_spec en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
 		experiment.libraryLayout = null;
 		experiment.libraryLayoutOrientation = null;
@@ -1100,7 +1100,6 @@ public class SubmissionServices {
 					}
 				} else {
 					System.out.println("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
-
 					throw new SraException("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
 				}
 			}
@@ -1115,23 +1114,25 @@ public class SubmissionServices {
 		// traitement de cette lane que se trouve l'information:
 		// Un readSet est sur une unique lane, mais une lane peut contenir plusieurs readSet
 		List<Lane> laboratoryLanes = laboratoryRun.lanes;
-		for (Lane ll : laboratoryLanes) {
-			List<String> readSetCodes = ll.readSetCodes;
-			for (String rsc : readSetCodes){
-				if (rsc.equalsIgnoreCase(readSet.code)){
-					// bonne lane = lane correspondant au run associé au readSet
-					models.laboratory.run.instance.Treatment laneTreatment = (ll.treatments.get("ngsrg"));
-					Map<String, Map<String, PropertyValue>> laneResults = laneTreatment.results();
-					Map<String, PropertyValue> lanengsrg = laneResults.get("default");
-					Set<String> laneListKeys = lanengsrg.keySet();  // Obtenir la liste des clés
-					/*for(String k: laneListKeys) {
-						System.out.println("attention cle = " + k);
-						PropertyValue propertyValue = lanengsrg.get(k);
-						System.out.println(propertyValue.toString());
-						System.out.println(propertyValue.value);
-					}*/
-					experiment.lastBaseCoord =  (Integer) lanengsrg.get("nbCycleRead1").value + 1;
-					break;
+		if (laboratoryLanes != null) {
+			for (Lane ll : laboratoryLanes) {
+				List<String> readSetCodes = ll.readSetCodes;
+				for (String rsc : readSetCodes){
+					if (rsc.equalsIgnoreCase(readSet.code)){
+						// bonne lane = lane correspondant au run associé au readSet
+						models.laboratory.run.instance.Treatment laneTreatment = (ll.treatments.get("ngsrg"));
+						Map<String, Map<String, PropertyValue>> laneResults = laneTreatment.results();
+						Map<String, PropertyValue> lanengsrg = laneResults.get("default");
+						Set<String> laneListKeys = lanengsrg.keySet();  // Obtenir la liste des clés
+						/*for(String k: laneListKeys) {
+							System.out.println("attention cle = " + k);
+							PropertyValue propertyValue = lanengsrg.get(k);
+							System.out.println(propertyValue.toString());
+							System.out.println(propertyValue.value);
+						}*/
+						experiment.lastBaseCoord =  (Integer) lanengsrg.get("nbCycleRead1").value + 1;
+						break;
+					}
 				}
 			}
 		}
@@ -1190,7 +1191,6 @@ public class SubmissionServices {
 		return experiment;
 	}
 
-	
 	
 
 

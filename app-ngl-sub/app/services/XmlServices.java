@@ -236,7 +236,13 @@ public class XmlServices {
 				chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource.get(experiment.librarySource) + "</LIBRARY_SOURCE>\n";
 				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection) + "</LIBRARY_SELECTION>\n";
 				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
-				chaine = chaine + "              <" + experiment.libraryLayout + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\" />\n";
+				
+				chaine = chaine + "              <\" + experiment.libraryLayout\"";	
+				if("PAIRED".equals(experiment.libraryLayout)) {
+					chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
+				}
+				chaine = chaine + " />\n";
+
 				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
 				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
 				chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
