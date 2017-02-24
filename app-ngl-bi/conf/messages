@@ -696,6 +696,7 @@ analyses.valuation.user = Evalué par
 analyses.valuation.comment = Commentaire
 analyses.treatments.mergingBA = Merging
 analyses.treatments.assemblyBA = Assembly
+analyses.treatments.assemblyBA.software = Logiciel
 analyses.treatments.contigFilterBA = Contig Filter
 analyses.treatments.scaffoldingBA = Scaffolding
 analyses.treatments.gapClosingBA = Gap Closing
