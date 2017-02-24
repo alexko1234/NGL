@@ -152,12 +152,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** chip-electrophoresis **/
-		// FDS 21/02/2017 ajout Strip-8 en input
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("bioAnalyzer2", "BioAnalyzer2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ), 
-				getContainerSupportCategories(new String[]{"tube","strip-8"}),null, 
+				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// pas de properties ????
@@ -310,11 +309,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
-		/** FDS ajout 20/02/2017 NGL-1167 : Chromium  ( entree tubes / sortie ??? pour l'instant mettre tube **/
+		/** FDS ajout 20/02/2017 NGL-1167 : Chromium  ( entree tubes / sortie strip-8 **/
 		l.add(newInstrumentUsedType("Chromium controller", "chromium-controller", InstrumentCategory.find.findByCode("10x-genomics-instrument"), getChromiumControllerProperties(), 
 				getInstruments(
-						createInstrument("chromium1", "Chromium 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
-				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), 
+						createInstrument("chromium1", "Chromium 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("chromium2", "Chromium 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"strip-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);

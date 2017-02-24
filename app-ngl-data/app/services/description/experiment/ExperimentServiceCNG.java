@@ -900,7 +900,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution (ng/µl)","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
+		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),"single",22, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "positionOnChip", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", 

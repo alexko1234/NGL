@@ -73,7 +73,9 @@ public class ProtocolServiceCNG {
 													   "tubes-to-plate",
 													   "plate-to-tubes",
 													   "plates-to-plate",
-													   "x-to-plate")));
+													   "x-to-plate",
+													   "chromium-gem-generation",
+													   "wg-chromium-lib-prep")));
 
 		// 12/12/2016 protocoles pour RNA
 		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 

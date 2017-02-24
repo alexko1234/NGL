@@ -64,20 +64,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimentType" des containers qui viendraient 
 		//       d'un collaborateur exterieur ex : ext-denat-dil-lib
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-		// FDS ajout 20/02/2017 NGL-1167: processus Chromiun 10x WG
-		l.add(DescriptionFactory.newProcessType("Prep Chromium WG", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
-				4,
-				getPropertyDefinitionsWgChromium(), 
-				Arrays.asList(getPET("ext-to-wg-chromium-lib-process",-1), //ordered list of experiment type in process type
-						getPET("chromium-gem-generation",0),
-						getPET("wg-chromium-lib-prep",1) ), 
-				getExperimentTypes("chromium-gem-generation").get(0),         //first experiment type    
-				getExperimentTypes("wg-chromium-lib-prep").get(0),        //last  experiment type
-				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		}
-		
 		// FDS ajout 27/01/2016 -- JIRA NGL-894: processus pour X5; chgt label 16/09/2016
 		l.add(DescriptionFactory.newProcessType("WG PCR free (FC ordonnée)", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				1,
@@ -212,6 +198,21 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		// FDS ajout 20/02/2017 NGL-1167: processus Chromium 10x WG
+		l.add(DescriptionFactory.newProcessType("Prep Chromium WG", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
+				4,
+				getPropertyDefinitionsWgChromium(), 
+				Arrays.asList(getPET("ext-to-wg-chromium-lib-process",-1), //ordered list of experiment type in process type
+						getPET("chromium-gem-generation",0),
+						getPET("wg-chromium-lib-prep",1) ), 
+				getExperimentTypes("chromium-gem-generation").get(0),         //first experiment type    
+				getExperimentTypes("wg-chromium-lib-prep").get(0),           //last  experiment type
+				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		}
+		
 		
 				
 		DAOHelpers.saveModels(ProcessType.class, l, errors);

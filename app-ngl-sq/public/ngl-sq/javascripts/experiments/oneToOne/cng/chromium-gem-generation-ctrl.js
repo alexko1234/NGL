@@ -1,11 +1,5 @@
 // FDS 23/02/2017 -- JIRA NGL-1167
-angular.module('homeeee').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable',
-                                                     function($scope, $parse, $filter, atmToSingleDatatable ){
-	var inputExtraHeaders=Messages("experiments.inputs");
-}]);
-
-///////////
-angular.module('home').controller('ChromiumGemCtrllllll',['$scope', '$parse',  '$filter', 'atmToSingleDatatable',
+angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable',
 	                                                     function($scope, $parse, $filter, atmToSingleDatatable ){	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
@@ -119,10 +113,10 @@ angular.module('home').controller('ChromiumGemCtrllllll',['$scope', '$parse',  '
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },      
 			         { // colonne==> position dans le strip
-			        	 "header":Messages("containers.table.support.column"),
-			        	 //"header":"STRIP POS",
-			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 
+			        	 //"header":Messages("containers.table.support.column"),
+			        	 "header":"STRIP POS",
+			        	 // ne pas utiliser  *1 ici car affiche "0" quand n'est pas encore defini...
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.column", 
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -193,7 +187,6 @@ angular.module('home').controller('ChromiumGemCtrllllll',['$scope', '$parse',  '
 			}
 	}; // fin struct datatableConfig
 
-/*
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
@@ -201,26 +194,46 @@ angular.module('home').controller('ChromiumGemCtrllllll',['$scope', '$parse',  '
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
+	
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
-
+		
 		var dataMain = datatable.getData();
 		
 		var outputContainerSupportCode = $scope.outputContainerSupport.code;
 		var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
 
 		if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+			
 			for(var i = 0; i < dataMain.length; i++){
 				
-				var atm = dataMain[i].atomicTransfertMethod;
+				// recuperer la valeur du select "positionOnChip"
+				var newPosChip =$parse("inputContainerUsed.experimentProperties.positionOnChip.value")(dataMain[i]);
+				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.positionOnChip.value;
+				var tube=$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].code;
 				
-				if ( null != atm.positionOnChip ) {
-					console.log(i + "position on chip=" + atm.positionOnChip);	
+				console.log("data :"+ i + "tube: "+tube + "=> new position on chip=" +  newPosChip);
+				
+				var atm = dataMain[i].atomicTransfertMethod;
+				console.log("atm.line="+ atm.line + " atm.column="+atm.column);
+						
+				if ( null != newPosChip ) {
+					console.log("utiliser newPosChip pour creer newContainerCode ...");	
 					
-					//var newContainerCode = outputContainerSupportCode+"_"+atm.positionOnChip;
-					var newContainerCode = outputContainerSupportCode+"_9" ;
-
+					var newContainerCode = outputContainerSupportCode+"_"+newPosChip ;
+					console.log("newContainerCode="+ newContainerCode);
+					
 					$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
 					$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
+					
+					// il faut aussi assigner la column et line du support !!!!
+					$parse('outputContainerUsed.locationOnContainerSupport.line').assign(dataMain[i],1);
+					$parse('outputContainerUsed.locationOnContainerSupport.column').assign(dataMain[i],newPosChip);
+					
+					// ???????   atm.line  + atm.column !!!
+					$parse('line').assign(dataMain[i],1);
+					$parse('column').assign(dataMain[i],newPosChip);
+					
+					console.log("atm.line="+ atm.line + " atm.column="+atm.column);
 				
 					if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
 						$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
@@ -290,11 +303,11 @@ angular.module('home').controller('ChromiumGemCtrllllll',['$scope', '$parse',  '
 		
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
-		console.log("previous code: "+ $scope.outputContainerSupport.code);
+		//console.log("previous code: "+ $scope.outputContainerSupport.code);
 	}
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
 		 $scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
-		 console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
+		 //console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-	*/
+
 }]);
