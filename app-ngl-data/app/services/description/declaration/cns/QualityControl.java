@@ -126,6 +126,76 @@ public class QualityControl extends AbstractDeclaration {
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		/*l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				null, 
+				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				null, 
+				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				null, 
+				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); */
+		
+		
+		return l;
+	}
+	
+	
+	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
+		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getPET(et.code, -1))
+			.collect(Collectors.toList());
+		pets.add(getPET("ext-to-qc-transfert-purif",-1));
+		pets.add(getPET("fluo-quantification",0));
+		return pets;		
+	}
+	
+	@Override
+	protected List<ProcessType> getProcessTypeDEV() {
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				getPropertyDefinitionsEvalAReception(), 
+				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				getPropertyDefinitionsEvalAReception(), 
+				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
+				ProcessCategory.find.findByCode("sample-valuation"), 1010,
+				getPropertyDefinitionsEvalAReception(), 
+				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
+				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		return l;
+	}
+
+	@Override
+	protected List<ProcessType> getProcessTypePROD() {
+		// TODO Auto-generated method stub
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
 		l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
 				null, 
@@ -147,29 +217,6 @@ public class QualityControl extends AbstractDeclaration {
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
-		return l;
-	}
-	
-	
-	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
-		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
-			.stream()
-			.map(et -> getPET(et.code, -1))
-			.collect(Collectors.toList());
-		pets.add(getPET("ext-to-qc-transfert-purif",-1));
-		pets.add(getPET("fluo-quantification",0));
-		return pets;		
-	}
-	
-	@Override
-	protected List<ProcessType> getProcessTypeDEV() {
-		return null;
-	}
-
-	@Override
-	protected List<ProcessType> getProcessTypePROD() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -225,7 +272,16 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		
 	}
+	private List<PropertyDefinition> getPropertyDefinitionsEvalAReception() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
+		propertyDefinitions.add(newPropertiesDefinition("Type(s) banque(s) à réaliser", "libraryToDo", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
+				null, null, null, null,"single", 18, true, null,null));
+		
+		return propertyDefinitions;	
+		
+	}	
+		
 	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
