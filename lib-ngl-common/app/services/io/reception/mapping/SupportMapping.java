@@ -69,15 +69,34 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		}
 		
 		if(null == support.storageCode){
-			support.storageCode  = getStorageCode(containers);
+			support.storageCode = getStorageCode(containers);
 		}
 		
 		if(null == support.state){
-			support.state  = getState(containers);
+			support.state = getState(containers);
+		}
+		
+		if(null == support.fromTransformationTypeCodes || support.fromTransformationTypeCodes.size() == 0){
+			support.fromTransformationTypeCodes = getFromTransformationTypeCodes(containers);
 		}
 	}
 
 	
+	private Set<String> getFromTransformationTypeCodes(List<Container> containers) {
+		Set<String> transformationTypeCodes = containers
+									.stream()
+									.filter(c -> c.fromTransformationTypeCodes != null)
+									.map(c -> c.fromTransformationTypeCodes)
+									.flatMap(Set::stream)
+									.collect(Collectors.toSet());
+		if(transformationTypeCodes.size() > 0){
+			return transformationTypeCodes;
+		}else{
+			return null;
+		}
+	}
+
+
 	private State getState(List<Container> containers) {
 		Set<String> categoryCodes = containers.stream().map(c -> c.state.code).collect(Collectors.toSet());
 		if(categoryCodes.size() == 1)
