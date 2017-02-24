@@ -247,7 +247,14 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerFromTransformationTypeCode)){
-			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));
+			if(experimentSearch.containerFromTransformationTypeCode.contains("none")){
+				queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")));
+			}else if(!experimentSearch.containerFromTransformationTypeCode.contains("none")){
+				queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));				
+			}else{
+				queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes"),
+						DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode)));
+			}
 		}
 		
 		if (CollectionUtils.isNotEmpty(experimentSearch.stateResolutionCodes)) { //all
