@@ -1,10 +1,14 @@
 package services.io;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
+
+import play.Logger;
+
 
 public class ExcelHelper {
 	
@@ -40,7 +44,8 @@ public class ExcelHelper {
 				return cell.getDateCellValue().getTime()+"";
 			}else{
 				DataFormatter df = new DataFormatter(Locale.US);
-				return df.formatCellValue(cell).replace(",", "");
+				//Logger.debug(cell.getColumnIndex()+" "+((DecimalFormat)df.getDefaultFormat(cell)).toPattern()+" "+cell.getNumericCellValue()+" "+df.formatCellValue(cell));
+				return df.formatCellValue(cell).replace(",", "");				
 			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();
