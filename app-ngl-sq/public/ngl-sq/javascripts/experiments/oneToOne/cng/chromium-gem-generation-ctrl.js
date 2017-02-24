@@ -112,9 +112,8 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			        	 "position":35,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },      
-			         { // colonne==> position dans le strip
-			        	 //"header":Messages("containers.table.support.column"),
-			        	 "header":"STRIP POS",
+			         { // colonne==> position dans le strip ( renommer ??)
+			        	 "header":Messages("containers.table.support.column"),
 			        	 // ne pas utiliser  *1 ici car affiche "0" quand n'est pas encore defini...
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.column", 
 			        	 "order":true,
@@ -209,16 +208,14 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 				// recuperer la valeur du select "positionOnChip"
 				var newPosChip =$parse("inputContainerUsed.experimentProperties.positionOnChip.value")(dataMain[i]);
 				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.positionOnChip.value;
-				var tube=$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].code;
 				
-				console.log("data :"+ i + "tube: "+tube + "=> new position on chip=" +  newPosChip);
+				console.log("data :"+ i + "=> new position on chip=" + newPosChip);
 				
 				var atm = dataMain[i].atomicTransfertMethod;
 				console.log("atm.line="+ atm.line + " atm.column="+atm.column);
 						
-				if ( null != newPosChip ) {
-					console.log("utiliser newPosChip pour creer newContainerCode ...");	
-					
+				if ( null != newPosChip ) {	
+					// creation du code du container
 					var newContainerCode = outputContainerSupportCode+"_"+newPosChip ;
 					console.log("newContainerCode="+ newContainerCode);
 					
@@ -229,11 +226,14 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 					$parse('outputContainerUsed.locationOnContainerSupport.line').assign(dataMain[i],1);
 					$parse('outputContainerUsed.locationOnContainerSupport.column').assign(dataMain[i],newPosChip);
 					
-					// ???????   atm.line  + atm.column !!!
+					//assigner ici ???
+					$parse('outputContainerUsed.locationOnContainerSupport.categoryCode').assign(dataMain[i],"strip-8");
+					
+					// manquants ???????   atm.line  + atm.column !!!
 					$parse('line').assign(dataMain[i],1);
 					$parse('column').assign(dataMain[i],newPosChip);
-					
 					console.log("atm.line="+ atm.line + " atm.column="+atm.column);
+					
 				
 					if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
 						$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
@@ -284,7 +284,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
 			class:"OneToOne",
-			line: undefined, 
+			line: 1, 
 			column: undefined, 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
@@ -297,7 +297,15 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// TEST COMPTAGE
+	if ( $scope.experiment.atomicTransfertMethods.length > 8 ){
+		$scope.messages.setSuccess("Warning: "+ Messages('experiments.input.error.maxContainers',8));
+		// continuer qd meme... il n'existe pas de setWarning ???????????
+		$scope.atmService = atmService;
+	}else{
+		// au tout debut lenght=0 ???
+		$scope.atmService = atmService;
+	}
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 		

@@ -37,7 +37,7 @@ public class ProtocolServiceCNG {
 	public static void saveProtocols(ContextValidation ctx){		
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
-		//-------Experiences de transformation
+		//----------Experiences de transformation-------------------------------------
 		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", 
 				InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
@@ -62,20 +62,16 @@ public class ProtocolServiceCNG {
 													   "pcr-and-purification",
 													   "labchip-migration-profile")));
 		
-		
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		
-	
 		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("normalization-and-pooling",														   
 													   "aliquoting",
 													   "tubes-to-plate",
 													   "plate-to-tubes",
 													   "plates-to-plate",
-													   "x-to-plate",
-													   "chromium-gem-generation",
-													   "wg-chromium-lib-prep")));
+													   "x-to-plate")));
 
 		// 12/12/2016 protocoles pour RNA
 		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
@@ -87,7 +83,6 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes( "library-prep",
 													    "pcr-and-purification")));						
 
-		
 		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"
 		lp.add(newProtocol("normalization","normalisation","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("lib-normalization")));
@@ -99,9 +94,14 @@ public class ProtocolServiceCNG {
 		// 27/09/2016 ajout protocole "protocole_dépôt_illumina" dédié a l'experience "illumina-depot"
 		lp.add(newProtocol("protocol-illumina-depot","protocole_dépôt_illumina","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("illumina-depot")));
-
 		
-		//-------Experiences de Control Qualité
+		// 24/02/2017 ajout protocole pour Chromium
+		lp.add(newProtocol("chromium-genome-protocol","chromium genome protocol","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("chromium-gem-generation",
+													   "wg-chromium-lib-prep")));
+		
+		
+		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
 		
@@ -111,6 +111,8 @@ public class ProtocolServiceCNG {
 		//01/09/2016 ajout 
 		lp.add(newProtocol("labchip-gx","LabChiP_GX", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes( "labchip-migration-profile" )));
+		
+		
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
