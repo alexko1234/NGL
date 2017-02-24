@@ -38,56 +38,17 @@
 			
 			}				
 		}
-		</div>
-		<div class="row">
-		
 		@columnSearchForm{
 			@formGroup{
 			
 			<div class="input-group">
 			      <input type="text" class="form-control" placeholder="@Messages("containerSupports.placeholder.barcodeGeneration.nbCodes")" ng-model="nbCodes">
 			      <span class="input-group-btn">
-			        <button title='@Messages("containerSupports.button.barcodeGeneration")' data-toggle="tooltip" ng-disabled="!datatable.isEmpty()" ng-click="generateBarcode()"  class="btn btn-default">
+			        <button title='@Messages("containerSupports.button.barcodeGeneration")' data-toggle="tooltip" ng-click="generateBarcode()"  class="btn btn-default">
 					<i class="fa fa-barcode"></i>
 					</button>
 			      </span>
 			    </div>
-			    
-	}
-	}
-	
-	@columnSearchForm{
-			@formGroup{	
-				<div bt-select placeholder="@Messages("search.placeholder.printing.printer")" class="form-control" ng-disabled="datatable.isEmpty()" ng-model="form.printerCode" bt-options="printer.code as printer.name for printer in printers" ng-change="changePrinter()">
-				</div>
-			}
-			
-			
-		}
-		@columnSearchForm{
-			@formGroup{
-				<div bt-select placeholder="@Messages("search.placeholder.printing.barcode.position")" class="form-control" ng-disabled="datatable.isEmpty()" ng-model="form.barcodePositionId" auto-select bt-options="position.id as position.barcodePositionName for position in selectedPrinter.barcodePositions" >
-				</div>				
-			}
-			
-			
-		}
-	
-	@columnSearchForm{
-			@formGroup{		    
-				<div class="btn-toolbar">
-					<button type="submit" title='@Messages("button.tag.printing")' data-toggle="tooltip" ng-click="print()" ng-disabled="datatable.isEmpty()" class="btn btn-primary" >
-						<i class="fa fa-print"></i>
-					</button>
-
-					<button type="submit" title='@Messages("button.exportCSV")' data-toggle="tooltip" ng-click="exportCSV()" ng-disabled="datatable.isEmpty()" class="btn btn-primary" >
-						<i class="fa fa-file-text-o"></i>
-					</button>
-								
-					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
-						<i class="fa fa-undo"></i>
-					</button>
-				</div>
 			 
 			}				
 		}		
@@ -98,9 +59,4 @@
 </div>
 <div class="row">
 	<div class="col-md-12 col-lg-12"  messages="messages"></div>	
-</div>
-
-<div class="col-md-12 col-lg-12" ultimate-datatable="datatable">
-
-</div>
 </div>
