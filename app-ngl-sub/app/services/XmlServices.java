@@ -246,20 +246,22 @@ public class XmlServices {
 				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
 				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
 				chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
-				chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
-				chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
-				chaine = chaine + "              <SPOT_LENGTH>"+experiment.spotLength+"</SPOT_LENGTH>\n";
-				for (ReadSpec readSpec: experiment.readSpecs) {
-					chaine = chaine + "              <READ_SPEC>\n";
-					chaine = chaine + "                <READ_INDEX>"+readSpec.readIndex+"</READ_INDEX>\n";
-					chaine = chaine + "                <READ_LABEL>"+readSpec.readLabel+"</READ_LABEL>\n";
-					chaine = chaine + "                <READ_CLASS>"+readSpec.readClass+"</READ_CLASS>\n";
-					chaine = chaine + "                <READ_TYPE>"+readSpec.readType+"</READ_TYPE>\n";
-					chaine = chaine + "                <BASE_COORD>" + readSpec.baseCoord + "</BASE_COORD>\n";
-					chaine = chaine + "              </READ_SPEC>\n";
+				if (! "OXFORD_NANOPORE".equalsIgnoreCase(experiment.typePlatform)) {
+					chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
+					chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
+					chaine = chaine + "              <SPOT_LENGTH>"+experiment.spotLength+"</SPOT_LENGTH>\n";
+					for (ReadSpec readSpec: experiment.readSpecs) {
+						chaine = chaine + "              <READ_SPEC>\n";
+						chaine = chaine + "                <READ_INDEX>"+readSpec.readIndex+"</READ_INDEX>\n";
+						chaine = chaine + "                <READ_LABEL>"+readSpec.readLabel+"</READ_LABEL>\n";
+						chaine = chaine + "                <READ_CLASS>"+readSpec.readClass+"</READ_CLASS>\n";
+						chaine = chaine + "                <READ_TYPE>"+readSpec.readType+"</READ_TYPE>\n";
+						chaine = chaine + "                <BASE_COORD>" + readSpec.baseCoord + "</BASE_COORD>\n";
+						chaine = chaine + "              </READ_SPEC>\n";
+					}
+					chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
+					chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
 				}
-				chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
-				chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
 				chaine = chaine + "      </DESIGN>\n";
 				chaine = chaine + "      <PLATFORM>\n";
 				chaine = chaine + "        <" + experiment.typePlatform + ">\n";

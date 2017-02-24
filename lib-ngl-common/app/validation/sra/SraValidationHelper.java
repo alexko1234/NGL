@@ -34,8 +34,8 @@ public class SraValidationHelper extends CommonValidationHelper{
 		}  else if ("OXFORD_NANOPORE".equalsIgnoreCase(experiment.typePlatform)){
 			contextValidation.addKeyToRootKeyName("readSpecsNanopore::");
 			if (experiment.readSpecs.size() != 0){
-				//contextValidation.addErrors("",  "Plateforme OXFORD_NANOPORE incompatible avec presence de readspec ");
-				System.out.println("Pas de validation implementée avec readspec et NANOPORE pour l'experiment " + experiment.code);
+				contextValidation.addErrors("",  "Plateforme OXFORD_NANOPORE incompatible avec presence de readspec ");
+				//System.out.println("Pas de validation implementée avec readspec et NANOPORE pour l'experiment " + experiment.code);
 				
 			}			
 			contextValidation.removeKeyFromRootKeyName("readSpecsNanopore::");

@@ -920,7 +920,7 @@ public class SubmissionServices {
 	
 	
 	
-	
+
 	// methode mise en public car utilisee dans test mais devrait etre private
 	public Experiment createExperimentEntity(ReadSet readSet, String scientificName, String user) throws SraException {
 		// On cree l'experiment pour le readSet demandé.
@@ -972,63 +972,63 @@ public class SubmissionServices {
 		
 		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(laboratoryRun.typeCode.toLowerCase());
 		
-		experiment.libraryLayoutNominalLength = null;
-
-		// mettre la valeur calculée de libraryLayoutNominalLength
-		models.laboratory.run.instance.Treatment treatmentMapping = readSet.treatments.get("mapping");
-		if (treatmentMapping != null) {
-			Map <String, Map<String, PropertyValue>> resultsMapping = treatmentMapping.results();
-			if ( resultsMapping != null && (resultsMapping.containsKey("pairs"))){
-				Map<String, PropertyValue> pairs = resultsMapping.get("pairs");
-				if (pairs != null) {
-					Set <String> listKeysMapping = pairs.keySet();  // Obtenir la liste des clés
-					for(String k: listKeysMapping) {
-						//System.out.print("coucou cle = '" + k+"'  => ");
-						PropertyValue propertyValue = pairs.get(k);
-						//System.out.println(propertyValue.value);
-					}
-					if (pairs.containsKey("estimatedPEInsertSize")) {
-						PropertyValue estimatedInsertSize = pairs.get("estimatedPEInsertSize");
-						experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
-						System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
-					} 
-					if (pairs.containsKey("estimatedMPInsertSize")) {
-						PropertyValue estimatedInsertSize = pairs.get("estimatedMPInsertSize");
-						experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
-						System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
-					}	
-				}
-			}
-		}
-		if (experiment.libraryLayoutNominalLength != null) {
-			System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
-		}
-		if (experiment.libraryLayoutNominalLength == null) {
-			// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
-			// voir recup un peu plus bas:
-			//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
-			if (sampleOnContainerProperties != null) {
-				//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
-			
-				for(String k: listKeysSampleOnContainerProperties){
-					//System.out.print("MA cle = '" + k +"'");
-					PropertyValue propertyValue = sampleOnContainerProperties.get(k);
-					//System.out.print(propertyValue.toString());
-					//System.out.println(", MA value  => "+propertyValue.value);
-				} 
-				
-				if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
-					//System.out.println("recherche valeur theorique possible");
-					PropertyValue nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
-					Integer nominalLengthCodeValue = (Integer) nominalLengthTypeCode.value;
-					if ((nominalLengthCodeValue != null) && (nominalLengthCodeValue!= -1)){
-						experiment.libraryLayoutNominalLength = nominalLengthCodeValue;
-						System.out.println("valeur theorique libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
-					}
-				}
-			}
-		}
+		experiment.libraryLayoutNominalLength = null;		
 		
+		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
+			// Rechercher libraryLayoutNominalLength pour les single illumina (paired)
+			// mettre la valeur calculée de libraryLayoutNominalLength
+			models.laboratory.run.instance.Treatment treatmentMapping = readSet.treatments.get("mapping");
+			if (treatmentMapping != null) {
+				Map <String, Map<String, PropertyValue>> resultsMapping = treatmentMapping.results();
+				if ( resultsMapping != null && (resultsMapping.containsKey("pairs"))){
+					Map<String, PropertyValue> pairs = resultsMapping.get("pairs");
+					if (pairs != null) {
+						Set <String> listKeysMapping = pairs.keySet();  // Obtenir la liste des clés
+						for(String k: listKeysMapping) {
+							//System.out.print("coucou cle = '" + k+"'  => ");
+							PropertyValue propertyValue = pairs.get(k);
+							//System.out.println(propertyValue.value);
+						}
+						if (pairs.containsKey("estimatedPEInsertSize")) {
+							PropertyValue estimatedInsertSize = pairs.get("estimatedPEInsertSize");
+							experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
+							System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
+						} 
+						if (pairs.containsKey("estimatedMPInsertSize")) {
+							PropertyValue estimatedInsertSize = pairs.get("estimatedMPInsertSize");
+							experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
+							System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
+						}	
+					}
+				}
+			}
+			
+			if (experiment.libraryLayoutNominalLength == null) {
+				// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
+				// voir recup un peu plus bas:
+				//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+				if (sampleOnContainerProperties != null) {
+					//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+
+					for(String k: listKeysSampleOnContainerProperties){
+						//System.out.print("MA cle = '" + k +"'");
+						PropertyValue propertyValue = sampleOnContainerProperties.get(k);
+						//System.out.print(propertyValue.toString());
+						//System.out.println(", MA value  => "+propertyValue.value);
+					} 
+
+					if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
+						//System.out.println("recherche valeur theorique possible");
+						PropertyValue nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
+						Integer nominalLengthCodeValue = (Integer) nominalLengthTypeCode.value;
+						if ((nominalLengthCodeValue != null) && (nominalLengthCodeValue!= -1)){
+							experiment.libraryLayoutNominalLength = nominalLengthCodeValue;
+							System.out.println("valeur theorique libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
+						}
+					}
+				}
+			}
+		}
 		//System.out.println("valeur de experiment.libLayoutExpLength"+ experiment.libraryLayoutNominalLength);			
 		experiment.state = new State("N", user); 
 		String laboratorySampleCode = readSet.sampleCode;
@@ -1040,30 +1040,34 @@ public class SubmissionServices {
 		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		String technology = laboratoryRun.instrumentUsed.typeCode;
 		
-		// Recuperer l'information spotLength, 
-		models.laboratory.run.instance.Treatment treatmentNgsrg = (laboratoryRun.treatments.get("ngsrg"));
-		if (treatmentNgsrg != null) {
-			Map <String, Map<String, PropertyValue>> resultsNgsrg = treatmentNgsrg.results();
-			if (resultsNgsrg != null && resultsNgsrg.containsKey("default")) {
-				Map<String, PropertyValue> ngsrg = resultsNgsrg.get("default");
-				Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
-				/*for(String k: listKeys){
+		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
+			// Recuperer l'information spotLength pour les illumina
+			models.laboratory.run.instance.Treatment treatmentNgsrg = (laboratoryRun.treatments.get("ngsrg"));
+			if (treatmentNgsrg != null) {
+				Map <String, Map<String, PropertyValue>> resultsNgsrg = treatmentNgsrg.results();
+				if (resultsNgsrg != null && resultsNgsrg.containsKey("default")) {
+					Map<String, PropertyValue> ngsrg = resultsNgsrg.get("default");
+					Set <String> listKeys = ngsrg.keySet();  // Obtenir la liste des clés
+					/*for(String k: listKeys){
 					System.out.print("cle = " + k);
 					PropertyValue propertyValue = ngsrg.get(k);
 					//System.out.print(propertyValue.toString());
 					System.out.println(", value  => "+propertyValue.value);
 				} */
-				PropertyValue propertyNbCycle = ngsrg.get("nbCycle");
-				if (ngsrg.get("nbCycle") != null){
-					experiment.spotLength = (Long) propertyNbCycle.value;
+					PropertyValue propertyNbCycle = ngsrg.get("nbCycle");
+					if (ngsrg.get("nbCycle") != null){
+						experiment.spotLength = (Long) propertyNbCycle.value;
+					}
 				}
 			}
 		}
 		
-		// Ajouter les read_spec en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
+		
+		// Ajouter les read_spec (dans SPOT_DESCRIPTOR ) en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
+		// les rsnanopore sont normalement des single forward.
 		experiment.libraryLayout = null;
 		experiment.libraryLayoutOrientation = null;
-		experiment.libraryConstructionProtocol = VariableSRA.libraryConstructionProtocol;
+		
 		if (laboratoryRun.properties.containsKey("sequencingProgramType")){	
 			String libraryLayout =  (String) laboratoryRun.properties.get("sequencingProgramType").value;
 			
@@ -1074,6 +1078,7 @@ public class SubmissionServices {
 				} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
 					experiment.libraryLayout = "PAIRED";
 					//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+
 					if (sampleOnContainerProperties != null) {
 						//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 					
@@ -1106,7 +1111,7 @@ public class SubmissionServices {
 			System.out.println("libraryLayout======"+libraryLayout);
 		}
 
-		
+		experiment.libraryConstructionProtocol = VariableSRA.libraryConstructionProtocol;
 		experiment.run = createRunEntity(readSet);
 
 		// Renseigner l'objet experiment pour lastBaseCoord : Recuperer les lanes associées au
@@ -1138,55 +1143,60 @@ public class SubmissionServices {
 		}
 		System.out.println("'"+readSet.code+"'");
 		experiment.readSpecs = new ArrayList<ReadSpec>();
-		// IF ILLUMINA ET SINGLE  Attention != si nanopore et SINGLE
-		if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
-			ReadSpec readSpec_1 = new ReadSpec();
-			readSpec_1.readIndex = 0; 
-			readSpec_1.readLabel = "F";
-			readSpec_1.readClass = "Application Read";
-			readSpec_1.readType = "forward";
-			readSpec_1.baseCoord = (Integer) 1;
-			experiment.readSpecs.add(readSpec_1);
-		}
+		
+		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
+			// IF ILLUMINA ET SINGLE  Attention != si nanopore et SINGLE
+			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
+				ReadSpec readSpec_1 = new ReadSpec();
+				readSpec_1.readIndex = 0; 
+				readSpec_1.readLabel = "F";
+				readSpec_1.readClass = "Application Read";
+				readSpec_1.readType = "forward";
+				readSpec_1.baseCoord = (Integer) 1;
+				experiment.readSpecs.add(readSpec_1);
+			}
 
-		// IF ILLUMINA ET PAIRED ET "forward-reverse"
-		if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
-				&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
-			ReadSpec readSpec_1 = new ReadSpec();
-			readSpec_1.readIndex = 0;
-			readSpec_1.readLabel = "F";
-			readSpec_1.readClass = "Application Read";
-			readSpec_1.readType = "Forward";
-			readSpec_1.baseCoord = (Integer) 1;
-			experiment.readSpecs.add(readSpec_1);
+			// IF ILLUMINA ET PAIRED ET "forward-reverse"
+			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
+					&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
+				ReadSpec readSpec_1 = new ReadSpec();
+				readSpec_1.readIndex = 0;
+				readSpec_1.readLabel = "F";
+				readSpec_1.readClass = "Application Read";
+				readSpec_1.readType = "Forward";
+				readSpec_1.baseCoord = (Integer) 1;
+				experiment.readSpecs.add(readSpec_1);
 
-			ReadSpec readSpec_2 = new ReadSpec();
-			readSpec_2.readIndex = 1;
-			readSpec_2.readLabel = "R";
-			readSpec_2.readClass = "Application Read";
-			readSpec_2.readType = "Reverse";
-			readSpec_2.baseCoord = experiment.lastBaseCoord;
-			experiment.readSpecs.add(readSpec_2);
+				ReadSpec readSpec_2 = new ReadSpec();
+				readSpec_2.readIndex = 1;
+				readSpec_2.readLabel = "R";
+				readSpec_2.readClass = "Application Read";
+				readSpec_2.readType = "Reverse";
+				readSpec_2.baseCoord = experiment.lastBaseCoord;
+				experiment.readSpecs.add(readSpec_2);
 
-		}
-		// IF ILLUMINA ET PAIRED ET "reverse-forward"
-		if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
-				&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("reverse-forward") ) {
-			ReadSpec readSpec_1 = new ReadSpec();
-			readSpec_1.readIndex = 0;
-			readSpec_1.readLabel = "R";
-			readSpec_1.readClass = "Application Read";
-			readSpec_1.readType = "Reverse";
-			readSpec_1.baseCoord = (Integer) 1;
-			experiment.readSpecs.add(readSpec_1);
+			}
+			// IF ILLUMINA ET PAIRED ET "reverse-forward"
+			if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
+					&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("reverse-forward") ) {
+				ReadSpec readSpec_1 = new ReadSpec();
+				readSpec_1.readIndex = 0;
+				readSpec_1.readLabel = "R";
+				readSpec_1.readClass = "Application Read";
+				readSpec_1.readType = "Reverse";
+				readSpec_1.baseCoord = (Integer) 1;
+				experiment.readSpecs.add(readSpec_1);
 
-			ReadSpec readSpec_2 = new ReadSpec();
-			readSpec_2.readIndex = 1;
-			readSpec_2.readLabel ="F";
-			readSpec_2.readClass = "Application Read";
-			readSpec_2.readType = "Forward";
-			readSpec_2.baseCoord = experiment.lastBaseCoord;
-			experiment.readSpecs.add(readSpec_2);
+				ReadSpec readSpec_2 = new ReadSpec();
+				readSpec_2.readIndex = 1;
+				readSpec_2.readLabel ="F";
+				readSpec_2.readClass = "Application Read";
+				readSpec_2.readType = "Forward";
+				readSpec_2.baseCoord = experiment.lastBaseCoord;
+				experiment.readSpecs.add(readSpec_2);
+			}
+		} else {
+			//on ne cree pas de readSpec dans le cas de nanopore car pas de spot_descriptor
 		}
 		return experiment;
 	}

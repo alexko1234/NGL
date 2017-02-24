@@ -72,7 +72,8 @@ public class Experiment extends DBObject implements IValidation {
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout"); // single ou paired
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation"); // forward ou forward-reverse
 
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		//ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
@@ -86,20 +87,18 @@ public class Experiment extends DBObject implements IValidation {
 		}
 		ValidationHelper.required(contextValidation, this.readSetCode , "readSetCode");
 		// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
-		if ( ! ("OXFORD_NANOPORE".equalsIgnoreCase(this.typePlatform)||"LS454".equalsIgnoreCase(this.typePlatform))) {
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
+
+		// Dans le cas des illumina ou LS454
+		if (! "OXFORD_NANOPORE".equalsIgnoreCase(this.typePlatform)) {
 			ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
-		}
-		if ("ILLUMINA".equalsIgnoreCase(this.typePlatform)) {
+			ValidationHelper.required(contextValidation, this.lastBaseCoord , "lastBaseCoord");
 			if (StringUtils.isNotBlank(this.libraryLayout) && libraryLayout.equalsIgnoreCase("paired")){
-				if (this.lastBaseCoord == null) {
-					contextValidation.addErrors("lastBaseCoord", " aucune valeur et donnée pairée");
-				}	
+				ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
 			}
 		}
-		if ("PAIRED".equalsIgnoreCase(this.libraryLayout)){
-			ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
-		}		// Verifier les readSpec :
+		// Si nanopore pas de readspec et pas spotLength, lastBasecoord, et libraryLayoutNominalLength
+		// Verifier les readSpec :
 		SraValidationHelper.validateReadSpecs(contextValidation, this);
 		
 		// verifier que code est bien renseigné
@@ -114,6 +113,7 @@ public class Experiment extends DBObject implements IValidation {
 			//mess += "le readSetcode "+ this.run.code + " existe deja dans la collection Experiment de la base";
 		//}
 
+		
 	}
 	
 	@Override
