@@ -43,9 +43,12 @@ public class ExcelHelper {
 			if (HSSFDateUtil.isCellDateFormatted(cell)){
 				return cell.getDateCellValue().getTime()+"";
 			}else{
-				DataFormatter df = new DataFormatter(Locale.US);
-				//Logger.debug(cell.getColumnIndex()+" "+((DecimalFormat)df.getDefaultFormat(cell)).toPattern()+" "+cell.getNumericCellValue()+" "+df.formatCellValue(cell));
-				return df.formatCellValue(cell).replace(",", "");				
+				DataFormatter df = new DataFormatter();
+				DecimalFormat decimalFormat = (DecimalFormat)df.getDefaultFormat(cell);
+				String value =  decimalFormat.format(cell.getNumericCellValue());
+				//Logger.debug(cell.getColumnIndex()+" "+value+" / "+cell.getNumericCellValue()+" / "+df.formatCellValue(cell));
+				return value;
+							
 			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();
