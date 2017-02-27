@@ -155,14 +155,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// FDS 24/02/2017 ajouter strip-8 en input 
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
-						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
-						createInstrument("bioAnalyzer2", "BioAnalyzer2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ), 
+						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube","strip-8"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// pas de properties ????
 		// FDS 01/09/2016 nom et code incorrects -/- specs!!! Laisser le code mais corriger le name; 
-		// FDS 12/01/2017 ajout CHIP_GX2; BUG:le code etait en doublon 
+		// FDS 12/01/2017 ajout CHIP_GX2;  24/02/217 BUG:le code etait en doublon 
 		l.add(newInstrumentUsedType("LabChip GX", "labChipGX", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(
 						createInstrument("labGX", "LABCHIP_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ,
@@ -480,6 +479,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
+	// FDS 27/02/2017 Pas sur que cette propriété doive etre tracée au CNG, si c'est les cas, la liste des puces n'est pas celle la (CNS)
 	private static List<PropertyDefinition> getChipElectrophoresisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		

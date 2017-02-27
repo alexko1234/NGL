@@ -108,11 +108,13 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("3a-kapa-qPCR-240715","3A_KAPA_qPCR_240715", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
 		
-		//01/09/2016 ajout 
+		// 01/09/2016 ajout 
 		lp.add(newProtocol("labchip-gx","LabChiP_GX", "?","1","production",
-				InstanceFactory.setExperimentTypeCodes( "labchip-migration-profile" )));
+				InstanceFactory.setExperimentTypeCodes("labchip-migration-profile")));
 		
-		
+		// 27/02/2017 ajout protocole pour Bioanalyzer ???????
+		lp.add(newProtocol("bioanalyzer","BioAnalyzer", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes("bioanalyzer-chip-migration")));
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);

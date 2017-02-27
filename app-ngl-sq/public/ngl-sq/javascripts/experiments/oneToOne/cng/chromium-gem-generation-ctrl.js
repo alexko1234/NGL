@@ -83,17 +83,6 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			         
 			         //--->  colonnes specifiques experience s'inserent ici  (outputUsed ??)
 			         
-		             /// ne pas aficher les containercodes  sauf pour DEBUG
-			            {
-			        	 "header":"DEBUG code",
-			        	 "property":"outputContainer.code",
-			        	 "order":true,
-						 "hide":true,
-						 "edit":false,
-			        	 "type":"text",
-			        	 "position":99,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			            },
 			         { // Volume avec valeur par defaut
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -193,7 +182,49 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	
+	// GA 27/02/2017 : ne plus utiliser le system copyContainerXXToDT sur action save mais utiliser plutot updatePropertyFromUDT
+	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
+	// Pose 2 problemes:
+	// 1) ca n'affiche pas en temps reels     2) seules les modifiees sont mises a jour en cas de modifiaction du support
+	/*
+	$scope.updatePropertyFromUDT = function(udt, col){
+		//console.log("update from property : "+col.property );
+		
+		var outputContainerSupportCode = $scope.outputContainerSupport.code;
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.positionOnChip.value'){
+			var newPosChip =  $parse("inputContainerUsed.experimentProperties.positionOnChip.value")(udt.data);
+			//console.log("data => new position on chip=" + newPosChip);
+			
+			if ((undefined != newPosChip) && (undefined != outputContainerSupportCode))
+			{	
+				// creation du code du container
+				var newContainerCode = outputContainerSupportCode+"_"+newPosChip ;
+				console.log("newContainerCode="+ newContainerCode);
+				
+				console.log("assigning...");
+				
+				$parse('outputContainerUsed.code').assign(udt.data,newContainerCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(udt.data,outputContainerSupportCode);
+				
+				//assigner la column et line du support !!!!
+				$parse('outputContainerUsed.locationOnContainerSupport.line').assign(udt.data,'1');
+				$parse('outputContainerUsed.locationOnContainerSupport.column').assign(udt.data,newPosChip);
+				
+				// Historique mais continer a renseigner car effets de bord possibles ????
+				$parse('line').assign(udt.data.atomicTransfertMethod,1);
+				$parse('column').assign(udt.data.atomicTransfertMethod,newPosChip);
+				console.log("end assigning...");
+			}
+			
+			var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
+			if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
+				$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(value.data,outputContainerSupportStorageCode);
+			}
+		}
+	}
+	*/
+		
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 		
 		var dataMain = datatable.getData();
@@ -207,33 +238,29 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 				
 				// recuperer la valeur du select "positionOnChip"
 				var newPosChip =$parse("inputContainerUsed.experimentProperties.positionOnChip.value")(dataMain[i]);
+				console.log("data :"+ i + "=> new position on chip=" + newPosChip);
 				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.positionOnChip.value;
 				
-				console.log("data :"+ i + "=> new position on chip=" + newPosChip);
-				
 				var atm = dataMain[i].atomicTransfertMethod;
-				console.log("atm.line="+ atm.line + " atm.column="+atm.column);
 						
 				if ( null != newPosChip ) {	
+					
 					// creation du code du container
 					var newContainerCode = outputContainerSupportCode+"_"+newPosChip ;
 					console.log("newContainerCode="+ newContainerCode);
 					
 					$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
+					// independant de la position...
 					$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
 					
-					// il faut aussi assigner la column et line du support !!!!
+					//assigner la column et line du support !!!!
 					$parse('outputContainerUsed.locationOnContainerSupport.line').assign(dataMain[i],1);
 					$parse('outputContainerUsed.locationOnContainerSupport.column').assign(dataMain[i],newPosChip);
 					
-					//assigner ici ???
-					$parse('outputContainerUsed.locationOnContainerSupport.categoryCode').assign(dataMain[i],"strip-8");
-					
-					// manquants ???????   atm.line  + atm.column !!!
-					$parse('line').assign(dataMain[i],1);
-					$parse('column').assign(dataMain[i],newPosChip);
-					console.log("atm.line="+ atm.line + " atm.column="+atm.column);
-					
+					// Historique mais continer a renseigner car effets de bord possible ????
+					$parse('line').assign(atm,1);
+					$parse('column').assign(atm,newPosChip);
+					//console.log("atm.line="+ atm.line + " atm.column="+atm.column);	
 				
 					if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
 						$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
@@ -297,13 +324,13 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	// TEST COMPTAGE
+	// verification du nombre d'inputs container
 	if ( $scope.experiment.atomicTransfertMethods.length > 8 ){
-		$scope.messages.setSuccess("Warning: "+ Messages('experiments.input.error.maxContainers',8));
-		// continuer qd meme... il n'existe pas de setWarning ???????????
+		$scope.messages.setError("Warning: "+ Messages('experiments.input.error.maxContainers',8));
+		// continuer qd meme... il n'existe pas de setWarning
 		$scope.atmService = atmService;
 	}else{
-		// au tout debut lenght=0 ???
+		// au tout debut lenght=0
 		$scope.atmService = atmService;
 	}
 	

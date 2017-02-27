@@ -1,8 +1,8 @@
 @()
+
 <div class="col-md-12 col-lg-12" ng-controller="ChromiumGemCtrl">
-  <form class="form-inline" role="form">
-  	  <!-- premiere ligne -->
-      <div class="row margin-bottom-7">
+   <div class="row margin-bottom-7">
+      <form class="form-inline" role="form">
          <div class="form-group col-lg-4">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -25,6 +25,7 @@
               </div>
               <div ng-switch-when="true">
                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
+                  <!-- FDS pas trouvé de classe correcte==> style="width:65%" -->
                   <input class="form-control input-sm" type="text" id="plateStorage" style="width:65%"
 									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
 			 						                   ng-model="outputContainerSupport.storageCode" />	
@@ -35,6 +36,6 @@
   </form>	
 
   <div class="row">
-	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
+	  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
   </div>
 </div>
