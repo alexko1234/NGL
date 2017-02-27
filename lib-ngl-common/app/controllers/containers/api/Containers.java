@@ -23,6 +23,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
@@ -70,8 +71,8 @@ public class Containers extends CommonController {
 	final static Form<Container> containerForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processTypeCodes","processCodes", "valuation", "state", "support","concentration");
-	final static List<String> authorizedUpdateFields = Arrays.asList("valuation","state");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processTypeCodes","processCodes", "valuation", "state", "support","concentration","comments");
+	final static List<String> authorizedUpdateFields = Arrays.asList("valuation","state","comments");
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
@@ -166,6 +167,7 @@ public class Containers extends CommonController {
 				}
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
+				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
 				input.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
@@ -183,6 +185,8 @@ public class Containers extends CommonController {
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			if(!filledForm.hasErrors()){
+				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+				
 				TraceInformation ti = container.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
 				

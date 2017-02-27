@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
@@ -25,6 +26,7 @@ import models.laboratory.sample.instance.Sample;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
 import play.Logger;
@@ -76,6 +78,26 @@ public class InstanceHelpers {
 		return comments;
 	}
 
+	
+	public static List<Comment> updateComments(List<Comment> comments, ContextValidation contextValidation){
+		if(comments != null && comments.size() > 0){
+			comments = comments.parallelStream()
+							.filter(c -> StringUtils.isNotBlank(c.comment))
+							.map(c -> {
+								c.comment = c.comment.trim();
+								if(null == c.createUser){
+									c.createUser = contextValidation.getUser();
+									c.creationDate = new Date();
+									c.code = CodeHelper.getInstance().generateExperimentCommentCode(c);
+								}
+								return c;
+							}).collect(Collectors.toList());
+			if(comments.size() > 0)return comments;
+		}
+		return new ArrayList<Comment>(0);					
+	}
+	
+	
 	@Deprecated
 	public static void updateTraceInformation(TraceInformation traceInformation, String user) {
 
