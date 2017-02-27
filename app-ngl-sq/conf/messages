@@ -177,7 +177,7 @@ containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
 containers.table.expectedCoverage= Couv. souhaitée
 containers.table.resolutionCodes = Résolutions
-
+containers.table.libraryToDo = Librairie à faire
 
 container.from = issu de
 
@@ -551,6 +551,7 @@ button.printMode = Imprimer
 button.tag.printing = Etiquettes
 button.print = Imprimer
 button.delete = Supprimer
+button.exportCSV = Export CSV
 #select
 select.wrongStartColumnTagPlate= Colonne de début de la plaque d''index incorrecte
 

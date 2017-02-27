@@ -1,10 +1,14 @@
 package services.io;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
+
+import play.Logger;
+
 
 public class ExcelHelper {
 	
@@ -39,8 +43,12 @@ public class ExcelHelper {
 			if (HSSFDateUtil.isCellDateFormatted(cell)){
 				return cell.getDateCellValue().getTime()+"";
 			}else{
-				DataFormatter df = new DataFormatter(Locale.US);
-				return df.formatCellValue(cell);
+				DataFormatter df = new DataFormatter();
+				DecimalFormat decimalFormat = (DecimalFormat)df.getDefaultFormat(cell);
+				String value =  decimalFormat.format(cell.getNumericCellValue()).replace(",", ".");
+				//Logger.debug(cell.getColumnIndex()+" "+value+" / "+cell.getNumericCellValue()+" / "+df.formatCellValue(cell));
+				return value;
+							
 			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();

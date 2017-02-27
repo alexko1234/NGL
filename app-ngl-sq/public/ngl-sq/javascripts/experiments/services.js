@@ -195,6 +195,7 @@
 				lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
 				lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
 				lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
+				lists.refresh.experimentTypes({categoryCode:"transformation"}, "fromTransformations");
 				lists.refresh.reportConfigs({pageCodes:["experiments-addcolumns"]}, "experiments-addcolumns");
 				lists.refresh.filterConfigs({pageCodes:["experiments-search-addfilters"]}, "experiments-search-addfilters");
 				//lists.refresh.instruments();

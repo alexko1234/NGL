@@ -247,7 +247,17 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerFromTransformationTypeCode)){
-			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));
+			if(experimentSearch.containerFromTransformationTypeCode.contains("none")){
+				queryElts.add(DBQuery.or(DBQuery.size("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", 0),
+						DBQuery.notExists("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes"),
+						DBQuery.regex("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", Pattern.compile("^ext-to.*$"))));
+			}else if(!experimentSearch.containerFromTransformationTypeCode.contains("none")){
+				queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode));				
+			}else{
+				queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes"),
+						DBQuery.regex("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", Pattern.compile("^ext-to.*$")),
+						DBQuery.in("atomicTransfertMethods.inputContainerUseds.fromTransformationTypeCodes", experimentSearch.containerFromTransformationTypeCode)));
+			}
 		}
 		
 		if (CollectionUtils.isNotEmpty(experimentSearch.stateResolutionCodes)) { //all

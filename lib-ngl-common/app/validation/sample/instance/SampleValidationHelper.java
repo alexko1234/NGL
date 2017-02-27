@@ -39,7 +39,7 @@ public class SampleValidationHelper extends CommonValidationHelper {
 			}
 			
 			if(proDefinitions.size() > 0){
-				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions,false);
+				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions,false); //need false because we generate sample from another sample
 			}
 	}
 }

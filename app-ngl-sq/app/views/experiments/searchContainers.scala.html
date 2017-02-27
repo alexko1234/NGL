@@ -70,7 +70,7 @@
 		}
 		@columnFormGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.fromTransformationTypeCodes" multiple="true" placeholder="@Messages("containerSupports.table.fromTransformationTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in searchService.lists.get('fromTransformation')">
+				bt-options="expType.code as expType.name for expType in searchService.lists.get('fromTransformation', true)">
 			</div>
 		}
 		@columnFormGroup{

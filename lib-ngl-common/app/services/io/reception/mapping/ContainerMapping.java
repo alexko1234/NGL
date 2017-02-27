@@ -66,7 +66,7 @@ public class ContainerMapping extends Mapping<Container> {
 			content.ncbiScientificName = sample.ncbiScientificName;
 			content.sampleCategoryCode = sample.categoryCode;
 			content.sampleTypeCode = sample.typeCode;
-			content.percentage = percentage;
+			if(null == content.percentage)content.percentage = percentage;
 			content.properties = computeProperties(content.properties, sample, c.code);
 			
 			c.projectCodes.add(content.projectCode);

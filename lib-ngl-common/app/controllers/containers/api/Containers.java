@@ -41,6 +41,7 @@ import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
 import play.modules.jongo.MongoDBPlugin;
+import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results.StringChunks;
@@ -140,6 +141,7 @@ public class Containers extends CommonController {
 
 	
 	@Permission(value={"writing"})
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result update(String code){
 		Container container = findContainer(code);
 		if(container == null){

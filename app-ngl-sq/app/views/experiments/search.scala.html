@@ -71,7 +71,7 @@
 			
 			@formGroup{	
 				<div bt-select class="form-control" ng-model="searchService.form.containerFromTransformationTypeCode" 
-					bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" 
+					bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('fromTransformations',true)" 
 					placeholder='@Messages("experiment.placeholder.containerFromTransformationTypeCode")'>
 				</div>
 			}						

@@ -39,7 +39,7 @@ public class MigrationProcessProperties extends CommonController {
 			
 			//backupContainerCollection();
 			
-			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery/*.exists("outputContainerSupportCodes")*/.notExists("outputContainerCodes")
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("state.code", new String[]{"IP","N"})
 					/*.is("code", "BYU_AABL_TAG-PCR-AND-DNA-LIBRARY_22385HMN7")*/)
 					.sort("code",Sort.DESC).getCursor().forEach(p -> migrationProcess(p));
 			
@@ -97,20 +97,9 @@ public class MigrationProcessProperties extends CommonController {
 							}	
 							return 0;
 						}).sum();
-					
+					/*
 					if(!container.support.code.equals(process.inputContainerSupportCode)){
-						/*
-						Logger.debug("test "+container.code);
-						if(null != container.treeOfLife){
-							long nbFound = container.treeOfLife.from.containers.stream().filter(pc -> pc.processCodes.contains(process.code)).count();
-							if(nbFound == 1)process.outputContainerCodes.add(container.code);
-							else if(nbFound > 1)Logger.warn("strange found several parent container for same process "+container.code);
-							else if(container.categoryCode.equals("tube"))process.outputContainerCodes.add(container.code);
-						}else{
-							//Logger.debug("add container to process "+container.code);
-							process.outputContainerCodes.add(container.code);
-						}
-						*/
+						
 						
 						if(container.treeOfLife == null){
 							process.outputContainerCodes.add(container.code);
@@ -121,7 +110,7 @@ public class MigrationProcessProperties extends CommonController {
 						
 											
 					}
-					
+					*/
 					if(nbContentChange > 0){
 						Logger.debug("update container "+container.code+" "+container.state.code);
 						container.traceInformation.setTraceInformation("ngl");
@@ -135,7 +124,7 @@ public class MigrationProcessProperties extends CommonController {
 			
 			
 		});
-		
+		/*
 		if((process.outputContainerCodes != null && process.outputContainerSupportCodes != null) 
 				&& (process.outputContainerCodes.size() == process.outputContainerSupportCodes.size() 
 				|| (process.outputContainerCodes.size() > process.outputContainerSupportCodes.size()  
@@ -145,16 +134,12 @@ public class MigrationProcessProperties extends CommonController {
 								|| "prepfc-depot".equals(process.typeCode) || "prepfcordered-depot".equals(process.typeCode)
 								|| "x5-wg-pcr-free".equals(process.typeCode))))){
 			
-		/*
-		if(process.outputContainerCodes != null && process.outputContainerSupportCodes != null && (process.outputContainerCodes.size() == process.outputContainerSupportCodes.size()
-				|| process.outputContainerCodes.size() == (process.outputContainerSupportCodes.size() +1))){*/
-			//Logger.debug("save process "+process.code+" / "+process.state.code);			
 			process.traceInformation.setTraceInformation("ngl");
 			MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
 		}else if(process.outputContainerCodes != null && process.outputContainerSupportCodes != null){
 			Logger.debug("process size cont !="+process.code+" / "+process.state.code+" "+process.outputContainerCodes.size()+" != "+process.outputContainerSupportCodes.size()+" : "+process.outputContainerCodes);
 		}
-		
+		*/
 	}
 
 

@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
@@ -123,11 +125,20 @@ public abstract class FileService {
 				if(null != sample && null == sample.code && sample.projectCodes != null && sample.projectCodes.size() == 1){
 					sample.code = generateSampleCode(sample); 
 					//update content sampleCode
-					if(container.contents.get(0).sampleCode == null || !container.contents.get(0).sampleCode.equals(sample.code)){
-						container.contents.get(0).sampleCode = sample.code;				
-					}else{
-						contextValidation.addErrors("container.content.sampleCode", "not null during sample code generation : "+container.contents.get(0).sampleCode);
-					};			
+					
+					List<Content> contents = container.contents.stream().filter(c -> (c.sampleCode == null)).collect(Collectors.toList());
+					if(contents.size() == 1){
+						if(contents.get(0).sampleCode == null || !contents.get(0).sampleCode.equals(sample.code)){
+							contents.get(0).sampleCode = sample.code;				
+						}else{
+							contextValidation.addErrors("container.content.sampleCode", "not null during sample code generation : "+container.contents.get(0).sampleCode);
+						};
+						
+					}else if(contents.size() > 1){
+						contextValidation.addErrors("container.contents", "several contents without sampleCode need only one");
+					}
+					
+						
 				}else if(null != sample && null != sample.code){
 					if(container.contents.get(0).sampleCode == null || !container.contents.get(0).sampleCode.equals(sample.code)){
 						container.contents.get(0).sampleCode = sample.code;				

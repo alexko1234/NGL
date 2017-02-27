@@ -60,6 +60,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Thermocycleur + Robot pipetage", "thermocycler-and-liquid-handling-robot"));
 		l.add(newInstrumentCategory("Robot pipetage + Covaris", "liquid-handling-robot-and-covaris"));
 		l.add(newInstrumentCategory("Hydroshear","hydroshear"));
+		l.add(newInstrumentCategory("Spectrophotomètre", "spectrophotometer"));
 		
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
@@ -287,6 +288,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 					getCovarisBiomekProperties(),getInstrumentBiomekCovaris() 
 				,getContainerSupportCategories(new String[]{"96-well-plate","tube"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("Nanodrop", "nanodrop", InstrumentCategory.find.findByCode("spectrophotometer"),  null,getInstrumentNanodrop() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
@@ -296,6 +300,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 
 
+	
 	private List<Instrument> getThermocyclerInstruments() {
 		List<Instrument> instruments = new ArrayList<Instrument>();
 		for(int i = 1; i <= 42; i++){
@@ -810,5 +815,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("ODYSSEE", "ODYSSEE", null, true, "/env/ig/atelier/bionano/cns/ODYSSEE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;
 	}
+	
+	private List<Instrument> getInstrumentNanodrop() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("nanodrop1","Nanodrop 1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
+		return instruments;	}
 	
 }
