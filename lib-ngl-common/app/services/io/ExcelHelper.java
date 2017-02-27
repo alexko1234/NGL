@@ -45,7 +45,7 @@ public class ExcelHelper {
 			}else{
 				DataFormatter df = new DataFormatter();
 				DecimalFormat decimalFormat = (DecimalFormat)df.getDefaultFormat(cell);
-				String value =  decimalFormat.format(cell.getNumericCellValue());
+				String value =  decimalFormat.format(cell.getNumericCellValue()).replace(",", ".");
 				//Logger.debug(cell.getColumnIndex()+" "+value+" / "+cell.getNumericCellValue()+" / "+df.formatCellValue(cell));
 				return value;
 							
