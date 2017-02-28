@@ -281,7 +281,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS 21/02/2017 ajout -- JIRA NGL-1167: experiments pour Chromium
-			l.add(newExperimentType("Bioanalyzer","bioanalyzer-chip-migration", null, 400,
+			l.add(newExperimentType("Bioanalyzer","bioanalyzer-migration-profile", null, 400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsBioanalyzer(), 
 					getInstrumentUsedTypes("agilent-2100-bioanalyzer"),
@@ -539,15 +539,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				false,false,false,
 				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
 				null, // pas purif
-				getExperimentTypes("labchip-migration-profile"), // qc 
-				getExperimentTypes("tubes-to-plate")
+				getExperimentTypes("bioanalyzer-migration-profile"), // qc 
+				getExperimentTypes("tubes-to-plate") // transfert en plaque
 				).save();
 			
 		newExperimentTypeNode("wg-chromium-lib-prep",getExperimentTypes("wg-chromium-lib-prep").get(0),
 				false,false,false,
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
-				getExperimentTypes("labchip-migration-profile"), // qc 
+				getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile"), // qc 
 				null  // pas transfert 
 				).save();
 		}
@@ -926,7 +926,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	// FDS ajout 21/02/2017 -- JIRA NGL-1167: QC Bioanalyzer pour process Chromium (copie cproperties LabChipGX)
+	// FDS ajout 21/02/2017 -- JIRA NGL-1167: QC Bioanalyzer pour process Chromium (copie properties LabChipGX)
 	// TODO  changer 11,13,14 ?????????????
 	public static List<PropertyDefinition> getPropertyDefinitionsBioanalyzer() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

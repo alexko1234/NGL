@@ -114,7 +114,7 @@ public class ProtocolServiceCNG {
 		
 		// 27/02/2017 ajout protocole pour Bioanalyzer ???????
 		lp.add(newProtocol("bioanalyzer","BioAnalyzer", "?","1","production",
-				InstanceFactory.setExperimentTypeCodes("bioanalyzer-chip-migration")));
+				InstanceFactory.setExperimentTypeCodes("bioanalyzer-migration-profile")));
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
