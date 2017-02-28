@@ -33,7 +33,7 @@ public class Experiment extends DBObject implements IValidation {
 	public String libraryLayoutOrientation = null;	 // champs de la proc renseigné à "forward" ou ssi paired "forward-reverse"  ou "reverse-forward"*/
 	public String libraryName = null;               // required 
 	public String libraryConstructionProtocol = null; // fixé à "none provided" par defaut, mais forme libre
-	public String typePlatform = "ILLUMINA";      // required et contrainte, L454 ou illumina en fonction de plateform_map de la proc
+	public String typePlatform = null;      // required et contrainte, L454 ou illumina en fonction de plateform_map de la proc
 	public String instrumentModel = null;   // required et contrainte et depend de plateformType.
 	// Actuellement forcement Illumina puisque collection Illumina
     public Integer lastBaseCoord = null; // valeur renseignee ssi illumina paired */
@@ -89,6 +89,7 @@ public class Experiment extends DBObject implements IValidation {
 		// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
 
+		System.out.println("platform = " + this.typePlatform);
 		// Dans le cas des illumina ou LS454
 		if (! "OXFORD_NANOPORE".equalsIgnoreCase(this.typePlatform)) {
 			ValidationHelper.required(contextValidation, this.spotLength , "spotLength");

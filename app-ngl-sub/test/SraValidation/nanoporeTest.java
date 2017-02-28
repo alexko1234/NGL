@@ -25,7 +25,7 @@ public class nanoporeTest extends AbstractTestsSRA {
 		List<String> readSetCodes = new ArrayList<String>();
 		String codeReadSet = "BWW_B_ONT_1_FAB45991_B"; // pas de submissionState
 		codeReadSet = "AWK_D_ONT_1_FAA57595_B";
-		
+		codeReadSet = "BNZ_C_ONT_1_FAA101310_A";
 		
 		readSetCodes.add(codeReadSet);
 		get_infos(readSetCodes);

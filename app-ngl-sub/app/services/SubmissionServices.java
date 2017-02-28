@@ -930,7 +930,6 @@ public class SubmissionServices {
 		
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);
 		experiment.readSetCode = readSet.code;
-		
 		experiment.projectCode = readSet.projectCode;
 		experiment.traceInformation.setTraceInformation(user);
 		//System.out.println("expCode =" + experiment.code);
@@ -956,19 +955,20 @@ public class SubmissionServices {
 		if (readSet.typeCode.equalsIgnoreCase("rsillumina")){
 			typeCode = "Illumina";
 		} else if (readSet.typeCode.equalsIgnoreCase("rsnanopore")){
-			typeCode = "Nanopore";
+			typeCode = "oxford_nanopore";
 		} else if (readSet.typeCode.equalsIgnoreCase("default-readset")){
 			// rien condition à eliminer au plus tard, lors de la mise en prod.
 		} else {
 			throw new SraException("readset.typeCode inconnu " + typeCode);
 		}
+		experiment.typePlatform = typeCode;
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
 		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
 
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
-		//System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
-		//System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
-		//System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
+		System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
+		System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
+		System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
 		
 		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(laboratoryRun.typeCode.toLowerCase());
 		
@@ -1062,55 +1062,59 @@ public class SubmissionServices {
 			}
 		}
 		
-		
-		// Ajouter les read_spec (dans SPOT_DESCRIPTOR ) en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
-		// les rsnanopore sont normalement des single forward.
-		experiment.libraryLayout = null;
-		experiment.libraryLayoutOrientation = null;
-		
-		if (laboratoryRun.properties.containsKey("sequencingProgramType")){	
-			String libraryLayout =  (String) laboratoryRun.properties.get("sequencingProgramType").value;
-			
-			if (StringUtils.isNotBlank(libraryLayout)) { 
-				if (libraryLayout.equalsIgnoreCase("SR")){
-					experiment.libraryLayout = "SINGLE";
-					experiment.libraryLayoutOrientation = "forward";
-				} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
-					experiment.libraryLayout = "PAIRED";
-					//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+		if ("rsnanopore".equalsIgnoreCase(readSet.typeCode)){
+			// Pas de spot_descriptor
+			experiment.libraryLayout = "SINGLE";
+			experiment.libraryLayoutOrientation = "forward";
+		} else {
+			// Ajouter les read_spec (dans SPOT_DESCRIPTOR ) en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
+			// les rsnanopore sont normalement des single forward.
+			experiment.libraryLayout = null;
+			experiment.libraryLayoutOrientation = null;
 
-					if (sampleOnContainerProperties != null) {
-						//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
-					
-						/*for(String k: listKeysSampleOnContainerProperties){
+			if (laboratoryRun.properties.containsKey("sequencingProgramType")){	
+				String libraryLayout =  (String) laboratoryRun.properties.get("sequencingProgramType").value;
+
+				if (StringUtils.isNotBlank(libraryLayout)) { 
+					if (libraryLayout.equalsIgnoreCase("SR")){
+						experiment.libraryLayout = "SINGLE";
+						experiment.libraryLayoutOrientation = "forward";
+					} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
+						experiment.libraryLayout = "PAIRED";
+						//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+
+						if (sampleOnContainerProperties != null) {
+							//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+
+							/*for(String k: listKeysSampleOnContainerProperties){
 							System.out.print("cle = " + k);
 							PropertyValue propertyValue = sampleOnContainerProperties.get(k);
 							System.out.print(propertyValue.toString());
 							System.out.println(", value  => "+propertyValue.value);
 						} */
-						if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {					
-							PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
-							String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
-							if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
-								experiment.libraryLayoutOrientation = "reverse-forward";
-							} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
+							if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {					
+								PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
+								String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
+								if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
+									experiment.libraryLayoutOrientation = "reverse-forward";
+								} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
 										||libProcessTypeCodeValue.equalsIgnoreCase("H")||libProcessTypeCodeValue.equalsIgnoreCase("L")
 										||libProcessTypeCodeValue.equalsIgnoreCase("Z")||libProcessTypeCodeValue.equalsIgnoreCase("MI")
 										||libProcessTypeCodeValue.equalsIgnoreCase("K")){
-								experiment.libraryLayoutOrientation = "forward-reverse";
-							} else {
-								throw new SraException("Pour le readSet " + readSet +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
+									experiment.libraryLayoutOrientation = "forward-reverse";
+								} else {
+									throw new SraException("Pour le readSet " + readSet +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
+								}
 							}
 						}
+					} else {
+						System.out.println("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
+						throw new SraException("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
 					}
-				} else {
-					System.out.println("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
-					throw new SraException("Pour le laboratoryRun " + laboratoryRun.code + " valeur de properties.sequencingProgramType differente de SR ou PE => " + libraryLayout);
 				}
+				System.out.println("libraryLayout======"+libraryLayout);
 			}
-			System.out.println("libraryLayout======"+libraryLayout);
 		}
-
 		experiment.libraryConstructionProtocol = VariableSRA.libraryConstructionProtocol;
 		experiment.run = createRunEntity(readSet);
 

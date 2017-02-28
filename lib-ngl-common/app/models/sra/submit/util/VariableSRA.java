@@ -189,7 +189,7 @@ public interface VariableSRA {
 	static final Map<String, String> mapTypePlatform = new HashMap<String, String>() {
 		{
 			put("illumina", "ILLUMINA"); 
-			put("ls454","LS454");
+			//put("ls454","LS454");
 			put("oxford_nanopore","OXFORD_NANOPORE");
 		}
 	};  
