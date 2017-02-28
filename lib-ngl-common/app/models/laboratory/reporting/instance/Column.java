@@ -36,7 +36,7 @@ public class Column implements IValidation{
 	
 	public String[] queryIncludeKeys; //if void used property
 	
-	
+	public String editTemplate;
 	
 	
 	@Override

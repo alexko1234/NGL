@@ -122,7 +122,9 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	
 	protected BasicDBObject getKeys(DatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
-		keys.putAll((BSONObject)getIncludeKeys(form.includes.toArray(new String[form.includes.size()])));
+		if(!form.includes.contains("*")){
+			keys.putAll((BSONObject)getIncludeKeys(form.includes.toArray(new String[form.includes.size()])));
+		}
 		keys.putAll((BSONObject)getExcludeKeys(form.excludes.toArray(new String[form.excludes.size()])));		
 		return keys;
 	}

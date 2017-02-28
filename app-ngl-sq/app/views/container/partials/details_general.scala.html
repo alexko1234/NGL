@@ -37,36 +37,77 @@
 				<div class="form-control-static" list-resize='container.sampleCodes' list-resize-min-size='3' horizontal/>
 			}
 			@columnLabelValue(Messages("containers.table.comments")){
-				<div class="form-control-static" ng-repeat="comment in container.comments">
-					<span ng-if="comment.comment" ng-bind="comment.comment" />
-				</div>
+				<div ng-switch on="isEditMode()">
+					<p ng-switch-when="false"  class="form-control-static" ng-bind-html="convertToBr(container.comments[0].comment)" />	
+					<textarea ng-switch-when="true" class="form-control" ng-model="container.comments[0].comment" rows="3"></textarea>
+				</div>			
 			}
 		}
-			
+		
 		@column(){				
 			@columnLabelValue(Messages("containers.table.concentration")){
-				<p class="form-control-static">
-					<span ng-bind="container.concentration.value|number:2" />
-					 <span ng-if="container.concentration.value !== undefined && container.concentration.value !== null" ng-bind="container.concentration.unit" />
-				</p>
+				<div ng-switch on="isEditMode()">
+					<p ng-switch-when="false" class="form-control-static">
+						<span ng-bind="container.concentration.value|number:2" />
+						<span ng-if="container.concentration.value !== undefined && container.concentration.value !== null" ng-bind="container.concentration.unit" />
+					</p>
+					<div ng-switch-when=true>
+					<div class="col-md-6 col-lg-7">
+						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.concentration.value">
+					</div>
+					<div class="col-md-6 col-lg-5">
+						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.concentration.unit" bt-options="unit.code as unit.name for unit in getUnits('concentration')" auto-select></div>								
+					</div>
+					</div>
+				</div>	
 			}
 			@columnLabelValue(Messages("containers.table.volume")){
-				<p class="form-control-static">
-					<span ng-bind="container.volume.value" />
-					 <span ng-if="container.volume.value !== undefined && container.volume.value !== null" ng-bind="container.volume.unit" />
-				</p>
+				<div ng-switch on="isEditMode()">
+					<p ng-switch-when="false" class="form-control-static">
+						<span ng-bind="container.volume.value" />
+						<span ng-if="container.volume.value !== undefined && container.volume.value !== null" ng-bind="container.volume.unit" />
+					</p>
+					<div ng-switch-when=true>
+					<div class="col-md-6 col-lg-7">
+						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.volume.value">
+					</div>
+					<div class="col-md-6 col-lg-5">
+						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.volume.unit" bt-options="unit.code as unit.name for unit in getUnits('volume')" auto-select></div>								
+					</div>
+					</div>
+				</div>					
 			}
 			@columnLabelValue(Messages("containers.table.quantity")){
-				<p class="form-control-static">
-					<span ng-bind="container.quantity.value" />
-					 <span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
-				</p>
+				<div ng-switch on="isEditMode()">
+					<p ng-switch-when="false" class="form-control-static">
+						<span ng-bind="container.quantity.value" />
+						<span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
+					</p>
+					<div ng-switch-when=true>
+					<div class="col-md-6 col-lg-7">
+						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.quantity.value">
+					</div>
+					<div class="col-md-6 col-lg-5">
+						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.quantity.unit" bt-options="unit.code as unit.name for unit in getUnits('quantity')" auto-select></div>								
+					</div>
+					</div>
+				</div>				
 			}
 			@columnLabelValue(Messages("containers.table.size")){
-				<p class="form-control-static">
-					<span ng-bind="container.size.value" />
-					<span ng-if="container.size.value !== undefined && container.size.value !== null" ng-bind="container.size.unit" />
-				</p>
+				<div ng-switch on="isEditMode()">
+					<p ng-switch-when="false" class="form-control-static">
+						<span ng-bind="container.size.value" />
+						<span ng-if="container.size.value !== undefined && container.size.value !== null" ng-bind="container.size.unit" />
+					</p>
+					<div ng-switch-when=true>
+					<div class="col-md-6 col-lg-7">
+						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.size.value">
+					</div>
+					<div class="col-md-6 col-lg-5">
+						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.size.unit" bt-options="unit.code as unit.name for unit in getUnits('size')" auto-select></div>								
+					</div>
+					</div>
+				</div>				
 			}
 			
 			<div class="row">
@@ -85,7 +126,19 @@
 		
 		@column(){
 			@columnLabelValue(Messages("containers.table.valid")){
-				<p class="form-control-static" ng-bind="container.valuation.valid|codes:'valuation'" />				
+				<div ng-switch on="isEditMode()">
+					<p ng-switch-when="false" class="form-control-static"  ng-bind="container.valuation.valid|codes:'valuation'"/>
+					<div ng-switch-when="true">
+						<div bt-select class="form-control" ng-model="container.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
+					</div>
+				</div>
+						
+			}
+			@columnLabelValue(Messages("containers.table.resolutionCodes")){
+				<div bt-select class="form-control" ng-model="container.state.resolutionCodes" multiple="true" 
+			    		bt-options="valid.code as valid.name for valid in lists.get('containerResolutions')" 
+			    		ng-edit="mainService.isEditMode()">
+			    	</div>			
 			}	
 			@columnLabelValue(Messages("containers.table.creationDate")){
 				<p class="form-control-static" ng-bind="container.traceInformation.creationDate|date:'@Messages("date.format")'" />
@@ -94,7 +147,7 @@
 				<p class="form-control-static" ng-bind="container.traceInformation.createUser" />
 			}		
 			@columnLabelValue(Messages("containers.table.storageCode")){
-				<p class="form-control-static" ng-bind="container.support.storageCode" />
+				<p class="form-control-static" ng-bind="container.support.storageCode" />				
 			}	
 			@columnLabelValue(Messages("containers.table.processCodes")){
 				<div class="form-control-static" list-resize="container.processCodes" list-resize-min-size='2' horizontal />

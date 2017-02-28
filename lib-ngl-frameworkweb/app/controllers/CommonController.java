@@ -217,7 +217,7 @@ public abstract class CommonController extends Controller{
 	
 	protected static BasicDBObject getKeys(DatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
-		if(null != form.includes && form.includes.size() > 0){
+		if(null != form.includes && form.includes.size() > 0 && !form.includes.contains("*")){
 			keys.putAll((BSONObject)getIncludeKeys(form.includes.toArray(new String[form.includes.size()])));			
 		}else if(null != form.excludes && form.excludes.size() > 0){
 			keys.putAll((BSONObject)getExcludeKeys(form.excludes.toArray(new String[form.excludes.size()])));					

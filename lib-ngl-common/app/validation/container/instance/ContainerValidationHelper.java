@@ -14,6 +14,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
@@ -223,7 +224,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			volume.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");			
+			contextValidation.removeObject("propertyDefinitions");	
+			ValidationHelper.required(contextValidation, ((PropertySingleValue)volume).unit, "volume.unit");
+			
 		}
 	}
 
@@ -238,7 +241,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			concentration.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");			
+			contextValidation.removeObject("propertyDefinitions");	
+			
+			ValidationHelper.required(contextValidation, ((PropertySingleValue)concentration).unit, "concentration.unit");
+			
 		}
 		
 	}
@@ -253,7 +259,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			quantity.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");			
+			contextValidation.removeObject("propertyDefinitions");
+			ValidationHelper.required(contextValidation, ((PropertySingleValue)quantity).unit, "quantity.unit");
+			
 		}
 		
 	}
@@ -269,7 +277,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			size.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");			
+			contextValidation.removeObject("propertyDefinitions");	
+			ValidationHelper.required(contextValidation, ((PropertySingleValue)size).unit, "size.unit");
+			
 		}
 	}
 	

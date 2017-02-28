@@ -1,6 +1,10 @@
 package controllers.containers.api;
 
 import static play.data.Form.form;
+import static validation.container.instance.ContainerValidationHelper.validateConcentration;
+import static validation.container.instance.ContainerValidationHelper.validateQuantity;
+import static validation.container.instance.ContainerValidationHelper.validateSize;
+import static validation.container.instance.ContainerValidationHelper.validateVolume;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,8 +75,8 @@ public class Containers extends CommonController {
 	final static Form<Container> containerForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processTypeCodes","processCodes", "valuation", "state", "support","concentration","comments");
-	final static List<String> authorizedUpdateFields = Arrays.asList("valuation","state","comments");
+	final static List<String> defaultKeys =  Arrays.asList("*");
+	final static List<String> authorizedUpdateFields = Arrays.asList("valuation","state","comments","volume","quantity","size","concentration");
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
@@ -168,6 +172,7 @@ public class Containers extends CommonController {
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+				cleanProperty(input);
 				input.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
@@ -195,10 +200,25 @@ public class Containers extends CommonController {
 					input.valuation.date = new Date();
 				}
 				
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-						DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Container.class).set("traceInformation", ti));
-				
-				return ok(Json.toJson(findContainer(code)));
+				if(queryFieldsForm.fields.contains("volume")){
+					validateVolume(input.volume, ctxVal);					
+				}
+				if(queryFieldsForm.fields.contains("quantity")){
+					validateQuantity(input.quantity, ctxVal);					
+				}
+				if(queryFieldsForm.fields.contains("size")){
+					validateSize(input.size, ctxVal);
+				}
+				if(queryFieldsForm.fields.contains("concentration")){
+					validateConcentration(input.concentration, ctxVal);					
+				}
+				if(!ctxVal.hasErrors()){
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+							DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Container.class).set("traceInformation", ti));
+					return ok(Json.toJson(findContainer(code)));
+				}else{
+					return badRequest(filledForm.errorsAsJson());
+				}				
 			}else{
 				return badRequest(filledForm.errorsAsJson());
 			}		
@@ -208,6 +228,22 @@ public class Containers extends CommonController {
 	
 	
 	
+	private static void cleanProperty(Container input) {
+		if(null != input.volume && null == input.volume.value){
+			input.volume = null;
+		}
+		if(null != input.concentration && null == input.concentration.value){
+			input.concentration = null;
+		}
+		if(null != input.size && null == input.size.value){
+			input.size = null;
+		}
+		if(null != input.quantity && null == input.quantity.value){
+			input.quantity = null;
+		}
+		
+	}
+
 	@Permission(value={"writing"})
 	public static Result updateState(String code){
 		Container container = findContainer(code);

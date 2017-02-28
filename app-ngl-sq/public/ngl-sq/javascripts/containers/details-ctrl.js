@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$filter','$window', 'mainService', 'tabService', 'lists', 'messages', 
-                                          function($scope,$http,$q,$routeParams,$filter,$window,mainService,tabService,lists,messages){
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$filter','$window', '$sce','mainService', 'tabService', 'lists', 'messages', 
+                                          function($scope,$http,$q,$routeParams,$filter,$window,$sce,mainService,tabService,lists,messages){
 	
 	$scope.angular = angular;
 	
@@ -37,9 +37,64 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
 	};
 	
+	$scope.isSaveInProgress = function(){
+		return saveInProgress;
+	};
+	
+	var units = {
+		 "volume":[{"code":"µL","name":"µL"}],	
+		 "concentration":[{"code":"ng/µl","name":"ng/µl"},{"code":"nM","name":"nM"}],	
+		 "quantity":[{"code":"ng","name":"ng"}],	
+		 "size":[{"code":"pb","name":"pb"}]			
+	};
+	
+	
+	$scope.getUnits = function(unitType){
+		return units[unitType];
+	}
+	
+	$scope.convertToBr = function(text){
+		if(text)return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
+	};
+	/* buttons section */
+	$scope.save = function(){
+		saveInProgress = true;	
+		$http.put(jsRoutes.controllers.containers.api.Containers.update($scope.container.code).url, $scope.container)
+		.success(function(data, status, headers, config) {
+			$scope.container = data;
+			$scope.messages.setSuccess("save");						
+			mainService.stopEditMode();
+			
+			saveInProgress = false;									
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.setError("save");
+			$scope.messages.setDetails(data);				
+			saveInProgress = false;				
+		});			
+	};
+	
+	$scope.cancel = function(){
+		$scope.messages.clear();
+		mainService.stopEditMode();
+		updateData();				
+	};
+	
+	$scope.activeEditMode = function(){
+		$scope.messages.clear();
+		mainService.startEditMode();		
+	}
+
+	var updateData = function(){
+		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
+			$scope.container = response.data;				
+		});
+	};
+	var saveInProgress = false;
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
+		$scope.mainService = mainService;
 		mainService.stopEditMode();
 			
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
@@ -52,6 +107,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			$scope.lists.refresh.containerSupportCategories();
 			$scope.lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false});
+			$scope.lists.refresh.resolutions({"objectTypeCode":"Container"}, "containerResolutions");
 					
 			if(undefined === mainService.get('containerActiveTab')){
 				mainService.put('containerActiveTab', 'general');

@@ -191,7 +191,7 @@ containers.resultsqc.type = Type QC
 containers.resultsqc.results = Résultats
 containers.resultsqc.valuation = Validation container
 containers.resultsqc.date = Date
-containers.resultsqc.valuationComment = Commentaire
+containers.resultsqc.valuationComment = Commentaire éval.
 
 containers.treeTabs.code = Code
 containers.treeTabs.creationDate = Créé le
@@ -228,6 +228,8 @@ containers.table.processResolutions = Processus résolutions
 containers.dispatch.value.mandatory = L''orientation du container est obligatoire
 containers.status.value.mandatory = Le statut du container est obligatoire
 comments.remove.confirm = Pouvez-vous confirmer la suppression ?
+
+container.placeholder.unit = Unité
 
 #search
 search.placeholder.projects = Projets
