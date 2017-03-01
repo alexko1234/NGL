@@ -18,6 +18,7 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 				if(volume1){
 					inputContainerUsed.volume = volume1;
 				}
+				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}
 				
 		});			

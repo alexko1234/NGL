@@ -18,6 +18,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 				if(concentration1){
 					inputContainerUsed.concentration = concentration1;
 				}
+				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}
 			
 		});			

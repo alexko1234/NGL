@@ -15,6 +15,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 				if(volume1){
 					inputContainerUsed.volume = volume1;
 				}
+				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}
 				
 		});			

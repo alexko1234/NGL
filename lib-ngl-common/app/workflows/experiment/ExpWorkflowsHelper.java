@@ -1179,6 +1179,12 @@ public class ExpWorkflowsHelper {
 		.map(icu -> {
 			Container c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,icu.code);
 
+			/*
+			 * TODO
+			 * Here to keep the value in entry of experiment replace icu attribute values by input attribute values before update
+			 * 
+			 */
+			
 			if(null != icu.concentration)c.concentration = icu.concentration;
 			if(null != icu.quantity)c.quantity = icu.quantity;
 			if(null != icu.volume)c.volume = icu.volume;
@@ -1204,7 +1210,7 @@ public class ExpWorkflowsHelper {
 			c.contents.forEach(content -> {
 				content.properties.putAll(newContentProperties);
 			});
-			
+			//TODO Validate Container
 			return c;
 
 		}).collect(Collectors.groupingBy(c -> c.support.code));

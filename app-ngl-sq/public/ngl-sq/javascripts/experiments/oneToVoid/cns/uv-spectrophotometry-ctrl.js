@@ -6,7 +6,15 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 	config.name = $scope.experiment.typeCode.toUpperCase();
 	$scope.atmService.data.setConfig(config );
 	
-	
+	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
+		
+		experiment.atomicTransfertMethods.forEach(function(atm){
+			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
+			if(inputContainerUsed){
+				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+			}			
+		});			
+	};
 	
 	$scope.button = {
 			isShow:function(){
