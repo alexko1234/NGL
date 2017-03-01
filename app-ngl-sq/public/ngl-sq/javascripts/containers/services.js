@@ -118,6 +118,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"concentration.value",
 			"order":true,
 			"hide":true,
+			"edit":true,
 			"position":11.1,
 			"format":3,
 			"type":"number",
@@ -128,6 +129,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"concentration.unit",
 			"order":true,
 			"hide":true,
+			"edit":true,
+			"editTemplate":'<div bt-select class="form-control" #ng-model bt-options="unit.code as unit.name for unit in searchService.getUnits(\'concentration\')" auto-select></div>',
+			"choiceInList":true,
 			"position":11.2,
 			"type":"text",
 			"groupMethod":"unique"
@@ -265,6 +269,12 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			additionalColumns:[],
 			selectedAddColumns:[],
 			authorizedStates : null,
+			units : {
+				 "volume":[{"code":"µL","name":"µL"}],	
+				 "concentration":[{"code":"ng/µl","name":"ng/µl"},{"code":"nM","name":"nM"}],	
+				 "quantity":[{"code":"ng","name":"ng"}],	
+				 "size":[{"code":"pb","name":"pb"}]			
+			},
 			setRouteParams:function($routeParams){
 				var count = 0;
 				for(var p in $routeParams){
@@ -330,6 +340,10 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				}
 				*/
 				return this.lists.getStates();
+			},
+				
+			getUnits : function(unitType){
+				return this.units[unitType];
 			},
 			updateForm : function(){
 				this.form.includes = [];

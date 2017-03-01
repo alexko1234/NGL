@@ -40,7 +40,15 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		save:{
 			active:Permissions.check("writing")?true:false,
-			url:function(value){return jsRoutes.controllers.containers.api.Containers.update(value.code).url+"?fields=valuation&fields=state&fields=comments";},
+			url:function(value){
+				var fields = "fields=valuation&fields=state&fields=comments";
+				if(value.concentration)fields = fields+"&fields=concentration";
+				if(value.volume)fields = fields+"&fields=volume";
+				if(value.quantity)fields = fields+"&fields=quantity";
+				if(value.size)fields = fields+"&fields=size";
+				
+				return jsRoutes.controllers.containers.api.Containers.update(value.code).url+"?"+fields;
+			},
 			method:'put',
 			mode:'remote'			
 		}

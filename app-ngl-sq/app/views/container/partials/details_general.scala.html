@@ -48,7 +48,7 @@
 			@columnLabelValue(Messages("containers.table.concentration")){
 				<div ng-switch on="isEditMode()">
 					<p ng-switch-when="false" class="form-control-static">
-						<span ng-bind="container.concentration.value|number:2" />
+						<span ng-bind="container.concentration.value|number:3" />
 						<span ng-if="container.concentration.value !== undefined && container.concentration.value !== null" ng-bind="container.concentration.unit" />
 					</p>
 					<div ng-switch-when=true>
