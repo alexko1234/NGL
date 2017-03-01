@@ -43,7 +43,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','$filter
 			},
 			otherButtons :{
 				active:true,
-				template:'<button class="btn btn-default" ng-click="print()"  ng-disabled="datatable.isEmpty()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-print" ></i></button>'
+				template:'<button class="btn btn-primary" ng-click="print()"  ng-disabled="datatable.isEmpty()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-print" ></i></button>'
 			},
 			showTotalNumberRecords:false
 	};
