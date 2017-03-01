@@ -391,9 +391,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private List<PropertyDefinition> getBluePippinProperties() {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Marqueur utilisé", "marker", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
-				"object_list", 10, true, null,null));
+				"single", 10, true, null,null));
 		l.add(newPropertiesDefinition("Cassette", "cassette", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, null, 
-				"object_list", 11, true, null,null));
+				"single", 11, true, null,null));
 		
 		return l;
 	}
