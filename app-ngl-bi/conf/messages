@@ -745,6 +745,13 @@ analyses.treatments.assembly_ba.contigSizeRepartition.cumulativeSizePercent = % 
 analyses.treatments.contigFilter_ba.storedBases = Nb bases conservées
 analyses.treatments.contigFilter_ba.lostBasesPercent = % bases perdues
 
+analyses.treatments.scaffoldingFilter_ba.preservedBases = Nb bases conservées
+analyses.treatments.scaffoldingFilter_ba.lostBasesPercent = % bases perdues
+analyses.treatments.scaffoldingFilter_ba.preservedSequences = Nb contigs/scaffolds conservés
+analyses.treatments.scaffoldingFilter_ba.numberOfN = Nb N
+analyses.treatments.scaffoldingFilter_ba.preservedCoverage = Couverture conservée
+
+
 
 analyses.treatments.scaffolding_ba.N50Scaffold = N50 
 analyses.treatments.scaffolding_ba.N80Scaffold = N80 
@@ -941,6 +948,7 @@ readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
 filterTaxonBilan=Seuil Taxon (% vs rRNA tot.)
+filterTaxonBilanTaxo=Seuil Taxon (% vs nt)
 filterTaxonBilanMitochondrion=Seuil Taxon (% vs mitochondrion)
 filterTaxonBilanPlastid=Seuil Taxon (% vs plastid)
 ###############
