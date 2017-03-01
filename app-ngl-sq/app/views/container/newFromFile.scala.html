@@ -36,25 +36,12 @@
 	@columnSearchForm{
 			@formGroup{
 			      <input type="text" class="form-control" placeholder="@Messages("containerSupports.placeholder.barcodeGeneration.nbCodes")" ng-model="form.nbCodes">
-	}
-	}
-	
-	@columnSearchForm{
+			}
 			@formGroup{	
 				<div bt-select placeholder="@Messages("search.placeholder.printing.printer")" class="form-control" ng-disabled="datatable.isEmpty()" ng-model="formprint.printerCode" bt-options="printer.code as printer.name for printer in printers" ng-change="changePrinter()">
 				</div>
 			}
-			
-			
-		}
-		@columnSearchForm{
-			@formGroup{
-				<div bt-select placeholder="@Messages("search.placeholder.printing.barcode.position")" class="form-control" ng-disabled="datatable.isEmpty()" ng-model="formprint.barcodePositionId" auto-select bt-options="position.id as position.barcodePositionName for position in selectedPrinter.barcodePositions" >
-				</div>				
-			}
-			
-			
-		}
+	}
 	
 	@columnSearchForm{
 			@formGroup{	
@@ -69,7 +56,13 @@
 					</button>
 				</div>
 			 
-			}				
+			}	
+			
+			
+			@formGroup{
+				<div bt-select placeholder="@Messages("search.placeholder.printing.barcode.position")" class="form-control" ng-disabled="datatable.isEmpty()" ng-model="formprint.barcodePositionId" auto-select bt-options="position.id as position.barcodePositionName for position in selectedPrinter.barcodePositions" >
+				</div>				
+			}			
 		}	
 
 }
