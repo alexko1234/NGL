@@ -120,25 +120,11 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http'
 			$scope.loading = false;
 		});
 	};
-	init();
-	
-	//TODO generalBanlanceSheets+typeCode in mainService
-	/*if(!angular.isUndefined(mainService.get('generalBalanceSheets'))){
-		//$scope.balanceSheetsGeneralService.loadFromCache();
-	}else{
-		$scope.balanceSheetsGeneralService.init($routeParams.typeCode,datatableConfigYearlySum,datatableConfigYearly);
-	}*/
-	
-	
-	
-	
-
-	
+	init();	
 }]);
 
-angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','mainService', 'tabService', 'datatable', 'balanceSheetsGeneralSrv', '$routeParams', 
-                                                    function($scope, $http, mainService, tabService, datatable, balanceSheetsGeneralSrv, $routeParams){
-	
+angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','mainService', 'tabService', 'lists', 'datatable', 'balanceSheetsGeneralSrv', '$routeParams', 
+                                                    function($scope, $http, mainService, tabService, lists, datatable, balanceSheetsGeneralSrv, $routeParams){
 	
 	 var configQuarterDT = {
 		name:'quarterDT',
@@ -156,8 +142,8 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 			active : false
 		},
 		callbackEndDisplayResult : function(){
-			 for(var i = 0; i < linesToColor.length; i++){
-				 colorBlue($scope.dtQuarters, linesToColor[i]);
+			 for(var i = 0; i < $scope.dataForYear.lineToColorQuarter.length; i++){
+				 colorBlue($scope.dtQuarters, $scope.dataForYear.lineToColorQuarter[i]);
 			 }
 		},
 		columns : [
@@ -180,6 +166,236 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		]
 	 };
 	
+	 
+	// Initializing our components
+	 var configSequencingDT = {
+			 name:'sequencingDT',
+				search : {
+					active:false
+				},
+				pagination:{
+					active : false
+				},
+				hide:{
+					active:false
+				},
+				select : {
+					active : false
+				},
+				order : {
+					mode : 'local',
+					active : true,
+					by : 'nbBases',
+					reverse : true,
+					callback:function(datatable){
+						$scope.balanceSheetsGeneralService.computeChartSequencing($scope.dataForYear.dataSequencingDT);
+					}
+				},
+				columns : [
+							{	"property":"name",
+								"header":Messages("balanceSheets.runTypeCode"),
+								"type":"text",
+								"order":true,
+							  	"position":1
+							},
+							{	"property":"nbBases",
+								"header":Messages("balanceSheets.nbBases"),
+								"type":"number",
+								"order":true,
+							  	"position":2
+							},
+							{
+								"property":"percentage",
+								"header":Messages("balanceSheets.percentage"),
+								"type":"text",
+								"order":true,
+								"position":3
+							}
+				]
+			 }; 
+	 var configSumDT = {
+			 	name:'sumDT',
+			 	showTotalNumberRecords : false,
+				search : {
+					active:false
+				},
+				pagination:{
+					active : false
+				},
+				hide:{
+					active:false
+				},
+				select : {
+					active : false
+				},
+				callbackEndDisplayResult : function(){
+					 colorBlue($scope.dtSequencingSum, 0);
+					 colorBlue($scope.dtSampleSum, 0);
+				},
+				columns : [
+				           {	"property":"property",
+				        	   "header": Messages("balanceSheets.property"),
+				        	   "type" :"text",
+				        	   "position":1
+				           },
+				           {	"property":"value",
+				        	   "header": Messages("balanceSheets.value"),
+				        	   "type" :"number",
+				        	   "position":2
+				           }
+				           ]
+	 };
+	
+	 var configProjectDT = {
+			 	name:'projectDT',
+				group : {
+					active : false,
+				},
+				search : {
+					active:false
+				},
+				pagination:{
+					active : false
+				},
+				hide:{
+					active:false
+				},
+				select : {
+					active : false
+				},
+				order : {
+					active : true,
+					mode : 'local'
+				},
+				columns : [
+				           {	"property":"code",
+				        	   "header": Messages("balanceSheets.projectCode"),
+				        	   "type" :"text",
+				        	   "order" : true,
+				        	   "position":1
+				           },
+				           {	"property":"name",
+				        	   "header": Messages("balanceSheets.projectName"),
+				        	   "type" :"text",
+				        	   "order" : true,
+				        	   "position":2
+				           },
+				           {
+				        	   "property":"nbBases",
+				        	   "header": Messages("balanceSheets.nbBases"),
+				        	   "type":"number",
+				        	   "order" : true,
+				        	   "position":3
+				           },
+				           {
+				        	   "property":"percentageForTenProjects",
+				        	   "header": Messages("balanceSheets.percentageForTenProjects"),
+				        	   "type":"text",
+				        	   "order" : true,
+				        	   "position":4
+				           },
+				           {
+				        	   "property":"percentageForYear",
+				        	   "header":Messages("balanceSheets.percentageForYear"),
+				        	   "type":"text",
+				        	   "order":true,
+				        	   "position":5
+				           }
+				   ]
+			 }; 
+	 var configProjectSumDT = {
+			 	name:'projectSumDT',
+			 	showTotalNumberRecords : false,
+				search : {
+					active:false
+				},
+				pagination:{
+					active : false
+				},
+				hide:{
+					active:false
+				},
+				select : {
+					active : false
+				},
+				callbackEndDisplayResult : function(){
+					 // Color text in blue
+					 colorBlue($scope.dtProjectSum, 0);
+					 colorBlue($scope.dtProjectSum, 1);
+				},
+				columns : [
+							{	"property":"property",
+							  	"header": Messages("balanceSheets.property"),
+							  	"type" :"text",
+							  	"position":1
+							},
+							{	"property":"value",
+								"header": Messages("balanceSheets.value"),
+								"type" :"number",
+							  	"position":2
+							},
+							{
+								"property" :"percentage",
+								"header": Messages("balanceSheets.percentage"),
+								"type" : "text",
+								"position" : 3
+							}			           
+				]
+			 }; 
+	
+	 var configSampleDT = {
+			 name:'sampleDT',
+				order : {
+					active : true,
+					by : 'nbBases',
+					reverse : true,
+					mode: 'local'
+				},
+				search : {
+					active:false
+				},
+				pagination:{
+					active : false
+				},
+				hide:{
+					active:false
+				},
+				select : {
+					active : false
+				},
+				columns : [
+					        {
+					        	"property" : "category",
+					        	"header" : Messages("balanceSheets.categoryType"),
+					        	//filter: "codes:'sample_cat'",
+					        	"type" : "text",
+					        	"order" : true,
+					        	"position" : 1
+					        },
+							{	"property":"type",
+								"filter": "codes:'type'",
+							  	"header": Messages("balanceSheets.projectType"),
+							  	"type" :"text",
+							  	"order" : true,
+							  	"position":2
+							},
+							{	"property":"nbBases",
+								"header": Messages("balanceSheets.nbBases"),
+								"type" :"Number",
+								"order" : true,
+							  	"position":3
+							},
+							{
+								"property":"percentage",
+								"header": Messages("balanceSheets.percentage"),
+								"type":"text",
+								"order" : true,
+								"position":4
+							}
+						]
+			 }; 
+		 
+		 
 	 var colorBlue = function(datatable, pos){
 		 datatable.displayResult[pos].line.trClass="text-primary";
 	}
@@ -191,18 +407,22 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		return $scope.loading;
 	};
 	
+	$scope.setActiveTab = function(value){
+		 mainService.put('balanceSheetActiveTab', value);
+	 };
+	 
+	 $scope.getTabClass = function(value){
+		 if(value === mainService.get('balanceSheetActiveTab')){
+			 return 'active';
+		 }
+	 };
 	var actualYear = new Date().getFullYear();
-	
-	/*if(mainService.get('activeYear') == undefined){
-		mainService.put('activeYear', actualYear);
-	}*/
 	
 	var init = function(){
 		$scope.loading=true;
 		// Year managing
 		var actualYear = new Date().getFullYear();
 		var activeYear = $routeParams.year;
-		var changeYear = true;
 
 		// Tabs
 		tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode, "general").url});
@@ -212,6 +432,11 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		// Activate the tab corresponding to the selected year
 		tabService.activeTab(actualYear - activeYear + 1);
 		
+		if(mainService.get('balanceSheetActiveTab') == undefined){
+			mainService.put('balanceSheetActiveTab', 'quarter');
+		}
+		
+
 		var form = {includes : [], typeCodes : []};
 		 form.includes.push("default");
 		 //For rsillumina
@@ -229,65 +454,69 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		 form.typeCode=$routeParams.typeCode;
 		 form.limit = 20000;
 		 
-		/* var runForm = {includes : []};
-		 runForm.includes.push("instrumentUsed.typeCode");
-		 runForm.includes.push("sequencingStartDate");
-		 runForm.includes.push("typeCode");
-		 runForm.fromDate = moment("01/01/"+activeYear, Messages("date.format").toUpperCase()).valueOf();
-		 runForm.toDate = moment("31/12/"+activeYear, Messages("date.format").toUpperCase()).valueOf();
-		 
 		 var projectForm = {includes : []};
 		 projectForm.includes.push("code");
 		 projectForm.includes.push("name");
-		 projectForm.includes.push("traceInformation.creationDate");*/
+		 projectForm.includes.push("traceInformation.creationDate");
 		
 		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form})
 		 	.success(function(data, status, headers, config) {
-		 		var dataForYear = $scope.balanceSheetsGeneralService.computeDataForYear(data,activeYear);
-		 		$scope.dtQuarters = datatable(configQuarterDT);
-				$scope.dtQuarters.setData(dataForYear.dataQuarterDT, dataForYear.dataQuarterDT.length);
-		 		$scope.loading=false;
+		 		$http.get(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,{params:{objectTypeCode:"Run"},key:"runTypes"})
+				.success(function(results, status, headers, config) {
+					$http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm})
+					.success(function(projectData, status, headers, config) {
+						$scope.dataForYear = $scope.balanceSheetsGeneralService.computeDataForYear(data,results,projectData,activeYear);
+						$scope.dtQuarters = datatable(configQuarterDT);
+						$scope.dtQuarters.setData($scope.dataForYear.dataQuarterDT, $scope.dataForYear.dataQuarterDT.length);
+				
+						$scope.chartQuarter = $scope.balanceSheetsGeneralService.computeChartQuarters($scope.dataForYear);
+				
+						$scope.dtSequencing = datatable(configSequencingDT);
+						$scope.dtSequencing.setData($scope.dataForYear.dataSequencingDT, $scope.dataForYear.dataSequencingDT.length);
+						
+						var sumData = [{
+							 "property" : Messages('balanceSheets.sum'),
+							 "value" : $scope.dataForYear.total
+						}];
+						
+						$scope.dtSequencingSum = datatable(configSumDT);
+						$scope.dtSequencingSum.setData(sumData, 1);
+						$scope.chartSequencing = $scope.balanceSheetsGeneralService.computeChartSequencing($scope.dataForYear.dataSequencingDT);
+						
+						$scope.dtProject = datatable(configProjectDT);
+						$scope.dtProject.setData($scope.dataForYear.dataProjectDT, $scope.dataForYear.dataProjectDT.length);
+					
+						$scope.dtProjectSum = datatable(configProjectSumDT);
+						$scope.dtProjectSum.setData([
+						{
+							 "property" : Messages('balanceSheets.totalTen'),
+							 "value" : $scope.dataForYear.totalProject,
+							 "percentage" : (parseFloat(($scope.dataForYear.totalProject * 100 / $scope.dataForYear.total).toFixed(2))).toLocaleString() + " %"
+						},
+						{
+							"property" : Messages('balanceSheets.totalSum'),
+							"value" : $scope.dataForYear.total,
+							 percentage : "100 %"
+						}], 2);
+						$scope.chartProject = $scope.balanceSheetsGeneralService.computeChartProject($scope.dataForYear.dataProjectDT,$scope.dataForYear.totalProject);
+						
+						$scope.dtSample = datatable(configSampleDT);
+						$scope.dtSample.setData($scope.dataForYear.dataSampleDT, $scope.dataForYear.dataSampleDT.length);
+						
+						$scope.dtSampleSum = datatable(configSumDT);
+						$scope.dtSampleSum.setData(sumData, 1);
+						
+						$scope.chartSample = $scope.balanceSheetsGeneralService.computeChartSample($scope.dataForYear.dataSampleDT,$scope.dataForYear.total);
+						
+						$scope.loading=false;
+					});
+				});
 		 });
 		 
 		
 		
 	}
 	init();
-	
-	
-	
-	// Keeping the active balance sheet opened after we change year
-	/*$scope.tabs = [true, false, false, false];
-	$scope.setActiveTab = function(value){
-		mainService.put('balanceSheetsActiveTab', value);
-		for(var i = 0; i < $scope.tabs.length; i++){
-			if(i == value){
-				$scope.tabs[i] = true;
-			}else{
-				$scope.tabs[i] = false;
-			}
-		}
-		
-		// Detect if the active year has changed
-		if(mainService.get('activeYear') == activeYear){
-			changeYear = false;
-		}else{
-			mainService.put('activeYear', activeYear);
-		}
-		
-		
-		// Init the balance sheet
-		$scope.balanceSheetsService.init(changeYear, activeYear);
-	};*/
-	
-	
-	// The first tab will always be the active one when consulting the balance sheet for the first time
-
-	/*if(mainService.get('balanceSheetsActiveTab') == undefined){
-		mainService.put('balanceSheetsActiveTab', "0");
-	}
-	$scope.setActiveTab(mainService.get('balanceSheetsActiveTab'));*/
-	
 	
 }]);
 

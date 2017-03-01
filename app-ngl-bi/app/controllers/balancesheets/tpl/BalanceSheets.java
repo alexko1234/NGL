@@ -24,7 +24,8 @@ public class BalanceSheets extends CommonController{
 				controllers.balancesheets.tpl.routes.javascript.BalanceSheets.general(),
 				controllers.readsets.api.routes.javascript.ReadSets.list(),
 				controllers.runs.api.routes.javascript.Runs.list(),
-				controllers.projects.api.routes.javascript.Projects.list()
+				controllers.projects.api.routes.javascript.Projects.list(),
+				controllers.commons.api.routes.javascript.CommonInfoTypes.list()
 		));
 		
 	}
