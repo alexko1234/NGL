@@ -1,7 +1,6 @@
 angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 
-	
 	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
 	config.name = $scope.experiment.typeCode.toUpperCase();
@@ -30,19 +29,19 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	};	
 	
 
-	// code venant de chip-migration-ctrl.js au CNS: prevus pour LabChipGX ET bionanalyzer
-	// supprimer code pour labchipGX
-	
+	// code venant de chip-migration-ctrl.js au CNS: prevus pour LabChipGX ET bionanalyzer => supprimer code pour labchipGX
 	var profilsMap = {};
 	angular.forEach($scope.experiment.atomicTransfertMethods, function(atm){
-		var pos = $parse('inputContainerUseds[0].instrumentProperties.chipPosition.value')(atm);			
+		// CNS var pos = $parse('inputContainerUseds[0].instrumentProperties.chipPosition.value')(atm);
+		var pos = $parse('inputContainerUseds[0].experimentProperties.chipPosition.value')(atm);
 		var img = $parse('inputContainerUseds[0].experimentProperties.migrationProfile')(atm);
 		if(pos && img)this[pos] = img;
 	},profilsMap)
 	
 	var internalProfils = profilsMap;
-	$scope.getProfil=function(line, column){
-		return internalProfils[line];					
+	/// ???? line et column?????
+	$scope.getProfil=function(column){
+		return internalProfils[column];					
 	};
 	
 	$scope.$watch("profils",function(newValues, oldValues){
@@ -57,22 +56,17 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			internalProfils = _profilsMap;
 			
 			angular.forEach($scope.atmService.data.displayResult, function(dr){
-				var pos = $parse('inputContainerUsed.instrumentProperties.chipPosition.value')(dr.data);			
+				// CNS var pos = $parse('inputContainerUsed.instrumentProperties.chipPosition.value')(dr.data);	
+				var pos = $parse('inputContainerUsed.experimentProperties.chipPosition.value')(dr.data);
 				if(pos)	$parse('inputContainerUsed.experimentProperties.migrationProfile').assign(dr.data, this[pos]);
 			}, _profilsMap);	
 		}
-		angular.element('#importProfils')[0].value = null;
-		
+		angular.element('#importProfils')[0].value = null;	
 	})
 	
-	// FDS CNG peut pas changer d'instrument..
-	//$scope.$watch("instrumentType", function(newValue, OldValue){
-	//	if(newValue)
-	//		$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
-	//})
-	
+
 	var columns = $scope.atmService.data.getColumnsConfig();
-	
+	//positions 7 a 10 dispo...
 	columns.push({
 			"header" : Messages("containers.table.concentration"),
 			"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
@@ -98,9 +92,19 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
-		});
+	});
 	
-	// CNG pas de workname
+	columns.push({
+    	"header": Messages("containers.table.codeAliquot"),
+		"property": "inputContainer.contents",
+		"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
+		"order":false,
+		"hide":true,
+		"type":"text",
+		"position":7.1,
+		"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders": {0 : Messages("experiments.inputs")}
+	});
 	
 	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
@@ -108,14 +112,14 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			"order" : false,
 			"hide" : true,
 			"type" : "text",
-			"position" : 7.1,
+			"position" : 7.2,
 			"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
 		});
 	
-	/*	OUI il car il un QC au bioanalyzer apre l'etape Chromium PCR indexing....*/
+	/*	OUI il car il un QC au bioanalyzer apres l'etape Chromium PCR indexing....*/
 	columns.push({
 			"header" : Messages("containers.table.tags"),
 			"property" : "inputContainer.contents",
@@ -132,14 +136,14 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 
-	// boutton pour ???????
-	
+	// bouton des profils
 	$scope.button = {
 		isShow:function(){
 			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
 			}	
 	};
 	
+	/*  pas d'import de ???  pour bioanalyzer
 	var importData = function(){
 		$scope.messages.clear();
 		
@@ -166,7 +170,8 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 		});
 	};
 	
-	$scope.importButton = {
+	
+	 $scope.importButton = {
 		isShow:function(){
 			return ("labchip-gx" === $scope.experiment.instrument.typeCode  && !$scope.mainService.isEditMode() 
 					&& ($scope.isInProgressState() || Permissions.check("admin")))
@@ -176,6 +181,7 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 		},
 		click:importData,		
 	};
+	*/
 	
 	/* pas de sample sheet pour bioanalyzer
 	 * 

@@ -81,12 +81,14 @@ public class RunServiceCNG  extends AbstractRunService{
 		return propertyDefinitions;
 	}
 	
-	//GA 24/07/2015 ajout des TagCategories
+	// GA 24/07/2015 ajout des TagCategories
+	// FDS 01/03/2017 ajout POOL-INDEX
 	private static List<Value> getTagCategories(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
+		values.add(DescriptionFactory.newValue("POOL-INDEX", "POOL-INDEX"));
 		return values;	
 	}
 	

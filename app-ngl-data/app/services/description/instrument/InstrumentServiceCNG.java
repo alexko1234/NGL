@@ -152,8 +152,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** chip-electrophoresis **/
-		// FDS 24/02/2017 ajouter strip-8 en input 
-		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
+		// FDS 24/02/2017 ajouter strip-8 en input
+		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"),getBioanalyzerProperties(), 
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube","strip-8"}),null, 
@@ -479,14 +479,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	// FDS 27/02/2017 Pas sur que cette propriété doive etre tracée au CNG, si c'est les cas, la liste des puces n'est pas celle la (CNS)
-	private static List<PropertyDefinition> getChipElectrophoresisProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		
-		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
-				                       newValues("DNA HS", "DNA 12000", "RNA"), "single"));		
-		return l;
-	}
 	
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
@@ -666,6 +658,23 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				newValues("programme 1",  
 						  "---"),
 						  "single", null, false ,null, null));
+		return l;
+	}
+	
+	//FDS 01/03/2017 NGL-1167: QC bioanalyser ajouté pour process Chromium
+	private static List<PropertyDefinition> getBioanalyzerProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		// Production demande de ne pas tracer le type de puce...
+		// l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("type1", "type2"), 
+		//		"single", 10, true, null,null));
+		
+		// propertie de niveau ContainerIn 
+		// N"APPARAIT PAS DANS UDT !!!=> essaier dans l'experience comme pour gem-generation
+		// l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+		//		newValues("1", "2", "3", "4", "5", "6","7","8","9","10","11"), 
+		//		"single", 12, true, null,null));
+		
 		return l;
 	}
 	

@@ -1,11 +1,15 @@
 package services.instance.parameter;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 import play.Logger;
 import models.LimsCNGDAO;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.parameter.Parameter;
 import models.laboratory.parameter.index.Index;
+import models.laboratory.parameter.index.IlluminaIndex;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -29,17 +33,17 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
-		createIndex(); // NW: supression des arguments
+		importIndexIllumina(limsServices,contextError);  //01/03/2017 chgt de nom + remise des params....
+		createIndexChromium(contextError); // 01/03/2017 ajout
 	}
 
-	// NW: suppression du mot clef "static" 
-	// NW: supression des arguments et renommage de contextValidation en contextError
-	public void createIndex() throws SQLException, DAOException{
+	//01/03/2017 chgt de nom + remise des params....
+	public void importIndexIllumina(LimsCNGDAO limsServices,ContextValidation contextValidation) throws SQLException, DAOException{
 		logger.info("start loading indexes");
 		
 		//-1- chargement depuis la base source Postgresql
 		logger.info("1/3 loading from source database...");
-		List<Index> indexes = limsServices.findIndexIlluminaToCreate(contextError) ;
+		List<Index> indexes = limsServices.findIndexIlluminaToCreate(contextValidation) ;
 		logger.info("found "+indexes.size() + " items");
 		
 		//-2a- trouver les samples concernés dans la base mongoDB et les supprimer
@@ -56,4 +60,34 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 		
 		logger.info("end loading indexes");
 	}
+	
+	// FDS 01/03/2017 creation des index pour processus Chromium (mais utilisés au final en sequencage-illumina)
+	// Plaque=> 96 index SI-GA-<ligne>-<col>
+	public void createIndexChromium(ContextValidation contextValidation){
+	
+		for ( int row = 1; row <=8; row++){
+			for(int col = 1 ; col <= 12 ; col++){
+				Index index = getChromiumIndex(row,col);				
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+					logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+				}
+			}
+		}
+	}
+
+	private static Index getChromiumIndex(int row, int col) {
+		Index index = new IlluminaIndex();
+		String code = "SI-GA-"+ (char)(64 + row) + col;
+		index.code = code;
+		index.name = code;
+		index.shortName = code;
+		index.sequence = code ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
+		index.categoryCode = "POOL-INDEX";
+		index.supplierName = new HashMap<String,String>();
+		index.supplierName.put("10x Genomics", code);
+		index.traceInformation=new TraceInformation("ngl-data");
+		return index;
+	}
+	
 }

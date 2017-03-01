@@ -903,8 +903,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),"single",22, true, null, null));
 		
-		// rendre obligatoire dès le début ( supprimer state:"F") car est utilisé pour créer le code du container out
-		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "positionOnChip", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+		// rendre obligatoire dès le début (supprimer state:"F") car est utilisé pour créer le code du container out
+		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 				DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), null, null, null,"single",23, true, null, null));
 	
 		return propertyDefinitions;
@@ -926,25 +926,28 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	// FDS ajout 21/02/2017 -- JIRA NGL-1167: QC Bioanalyzer pour process Chromium (copie properties LabChipGX)
-	// TODO  changer 11,13,14 ?????????????
+	// FDS ajout 21/02/2017 -- JIRA NGL-1167: QC Bioanalyzer pour process Chromium: aucune obligatoire !!
 	public static List<PropertyDefinition> getPropertyDefinitionsBioanalyzer() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//InputContainer (pas d'outputContainer sur une experience QC )
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl"),
 				"single", 11, true, null, null));
 		
-		// laiser la position 12 libre pour la colonne unit
 
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
-				"single", 13, true, null, null));
+				"single", 12, true, null, null));
+		
+		// NOTE: la position 12 est reservee pour "ladder"
+		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+				DescriptionFactory.newValues("1","2","3","4","5","6","7","8","9","10","11"), 
+				"single", 13, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 14, false, null, null));
-		
+			
 		return propertyDefinitions;
 	}
 	
