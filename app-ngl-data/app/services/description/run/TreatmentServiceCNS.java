@@ -146,7 +146,15 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getScaffoldingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "130"));
-
+		
+		
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
+		l.add(DescriptionFactory.newTreatmentType("Scaffolding Filter BA","scaffolding-filter-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "scaffoldingFilterBA", 
+				getScaffoldingFilterBAPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "135"));
+		}
+		
 		l.add(DescriptionFactory.newTreatmentType("Gap Closing BA","gapClosing-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "gapClosingBA", 
 				getGapClosingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
@@ -765,14 +773,14 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Assembly statistics","assemblyStatistics",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), String.class, false, "single"));	
 
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percentage of assembled reads","readsAssembledPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Percentage of assembled reads","readsAssembledPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, false, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% expected pool size", "expectedPoolSizePercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of reads used for assembly", "readsUsed", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of bases used for assembly", "basesUsed", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Coverage used for assembly", "coverageUsed", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of reads really assembled", "readsAssembled", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of reads really assembled", "readsAssembled", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Long.class, false, "single"));
 
 
 
@@ -817,6 +825,17 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% expected pool size", "expectedPoolSizePercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));
 
+		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getScaffoldingFilterBAPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de bases conservées","preservedBases",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases perdues","lostBasesPercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de contigs/scaffolds conservés","preservedSequences",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nombre de N","numberOfN",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture conservée","preservedCoverage",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "single"));
 		return propertyDefinitions;		
 	}
 
