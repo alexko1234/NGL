@@ -51,6 +51,11 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 					var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 					if(concentration1){
 						inputContainerUsed.concentration = concentration1;
+					}										
+				}else{
+					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
+					if(quantity1){
+						inputContainerUsed.quantity = quantity1;
 					}
 				}
 			}
@@ -59,7 +64,43 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	
 	};
 	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
 		
+		if($scope.experiment.typeCode === "chip-migration" && col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
+			computeQuantity1(value.data);
+		}
+		
+	}
+	
+	var computeQuantity1 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.quantity1");
+		var quantity1 = getter(udtData);
+		
+		var compute = {
+				inputVol1 : $parse("inputContainerUsed.experimentProperties.volume1")(udtData),
+				inputConc1 : $parse("inputContainerUsed.concentration")(udtData),
+				isReady:function(){
+					return (this.inputVol1 && this.inputConc1 && this.inputVol1.value && this.inputConc1.value);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputVol1.value * inputConc1.value)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				quantity1.value = Math.round(result*10)/10;
+				quantity1.unit = (compute.inputConc1.unit === 'nM')?'nmol':'ng/µl';
+			}else{
+				quantity1.value = undefined;
+			}	
+			getter.assign(udtData, quantity1);
+		}else{
+			console.log("not ready to computeQuantity1");
+		}
+		
+	}
+	
 	var profilsMap = {};
 	angular.forEach($scope.experiment.atomicTransfertMethods, function(atm){
 		var pos = null;

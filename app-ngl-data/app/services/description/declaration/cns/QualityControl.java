@@ -447,13 +447,18 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 18, true, null,null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, null,null,null,"single", 19, false, null,null)); //not unit because can be different
+		
+		
 		//Property compute in javascript
 		propertyDefinitions.add(newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 19, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 20, false, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert","insertSize", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 20, false, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 21, false, null,null));
 	
+		
 		
 		return propertyDefinitions;
 	}
