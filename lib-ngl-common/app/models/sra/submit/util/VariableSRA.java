@@ -194,9 +194,13 @@ public interface VariableSRA {
 		}
 	};  
 	static final Map<String, String> mapInstrumentModel = new HashMap<String, String>() {
-		{
+		{	// instrument model pour optical_mapping:
+			put("argus",null); // pas prevus de soumettre ces données
+
 			// instrument model pour oxford_nanopore
-			put("minion","MinION");
+			put("minion", "MinION");
+			put("mk1", "MinION");
+			put("mk1b", "MinION");
 			
 			// instrument model pour L454
 			put("454 gs 20", "454 GS 20"); 

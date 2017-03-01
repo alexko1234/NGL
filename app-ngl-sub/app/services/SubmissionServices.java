@@ -966,14 +966,14 @@ public class SubmissionServices {
 		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
 
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
-		System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
-		System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
-		System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
+		//System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
+		//System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = '" + instrumentUsed.typeCode+"'");
+		//System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
+		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(instrumentUsed.typeCode.toLowerCase());
+		//System.out.println("experiment.instrumentModel="+experiment.instrumentModel);
 		
-		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(laboratoryRun.typeCode.toLowerCase());
 		
 		experiment.libraryLayoutNominalLength = null;		
-		
 		if( ! "rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// Rechercher libraryLayoutNominalLength pour les single illumina (paired)
 			// mettre la valeur calculée de libraryLayoutNominalLength
