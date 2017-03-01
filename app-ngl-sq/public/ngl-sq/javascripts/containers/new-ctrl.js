@@ -38,9 +38,12 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','$filter
 			select:{
 				active:false
 			},
+			cancel : {
+			    active:false
+			},
 			otherButtons :{
 				active:true,
-				template:'<button class="btn btn-default" ng-click="print()"  ng-disabled="datatable.isEmpty()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-tags" ></i></button>'
+				template:'<button class="btn btn-default" ng-click="print()"  ng-disabled="datatable.isEmpty()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-print" ></i></button>'
 			},
 			showTotalNumberRecords:false
 	};
@@ -91,8 +94,10 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','$filter
 	$scope.reset = function(){
 		$scope.form = {};
 		$scope.formprint = {};	
-		$scope.messages=messages();
-		//angular.element('#importFile')[0].value = null;
+		$scope.messages=messages();	
+		if(angular.element('#importFile')[0]!=undefined){
+			angular.element('#importFile')[0].value = null;
+		}
 		$scope.datatable.setData([]);
 	};
 	
