@@ -186,8 +186,8 @@ public class MetaGenomique extends AbstractDeclaration {
                                      , getPET("dna-illumina-indexed-library",1)
                                      , getPET("solution-stock",2)
                                      , getPET("prepa-flowcell",3)
-                                     , getPET("prepa-fc-ordered",4)
-                                     , getPET("illumina-depot",5)),
+                                     , getPET("prepa-fc-ordered",3)
+                                     , getPET("illumina-depot",4)),
                                      getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-pcr-free-process").get(0),
                                      DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
