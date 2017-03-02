@@ -24,6 +24,7 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 		});			
 	};
 	
+
 	$scope.$watch("gel1",function(imgNew, imgOld){
 		if(imgNew){			
 			
@@ -111,6 +112,21 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
+	
+	columns.push({
+		"header" : Messages("containers.table.libraryToDo"),
+		"property" : "inputContainerUsed.contents",
+		"filter" : "getArray:'processProperties.libraryToDo.value' | unique ",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 10.8,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
+	
 	
 /*	columns.push({
 		"header":Messages("containers.table.size")+ " (pb)",
