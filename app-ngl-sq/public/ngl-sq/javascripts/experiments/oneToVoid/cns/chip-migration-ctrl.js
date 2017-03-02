@@ -195,6 +195,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
+	
 	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",
@@ -207,7 +208,23 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				0 : Messages("experiments.inputs")
 			}
 		});
-	/*	
+	
+	if($scope.experiment.typeCode === "chip-migration-rna-evaluation"){
+		columns.push({		
+			"header" : Messages("containers.table.libraryToDo"),
+			"property" : "inputContainerUsed.contents",
+			"filter" : "getArray:'processProperties.libraryToDo.value' | unique ",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 10.8,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+	}
+		/*	
 	columns.push({
 			"header" : Messages("containers.table.tags"),
 			"property" : "inputContainer.contents",

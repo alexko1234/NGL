@@ -177,7 +177,7 @@ containers.table.ncbiScientificName= Taxon
 containers.table.workName = Label de travail 
 containers.table.expectedCoverage= Couv. souhaitée
 containers.table.resolutionCodes = Résolutions
-containers.table.libraryToDo = Librairie à faire
+containers.table.libraryToDo = Type(s) banque(s) à réaliser
 
 container.from = issu de
 
