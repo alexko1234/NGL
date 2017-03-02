@@ -3,6 +3,7 @@ package models.laboratory.processes.instance;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -102,7 +103,7 @@ public class Process extends DBObject implements IValidation{
 		Process p = new Process();
 		p.typeCode = this.typeCode;
 		p.categoryCode = this.categoryCode;
-		p.properties = this.properties;
+		p.properties = new HashMap<String, PropertyValue>(this.properties);
 		p.traceInformation = this.traceInformation;
 		p.inputContainerSupportCode = this.inputContainerSupportCode;
 		p.inputContainerCode = this.inputContainerCode;
