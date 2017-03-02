@@ -679,6 +679,7 @@ public class SubmissionServices {
 						if(fileLien.exists()){
 							fileLien.delete();
 						}
+						
 						System.out.println("fileCible = " + fileCible);
 						System.out.println("fileLien = " + fileLien);
 
@@ -1250,7 +1251,15 @@ public class SubmissionServices {
 					rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
 					rawData.relatifName = runInstanceFile.fullname;
 					//System.out.println ("rawData.relatifName = " +rawData.relatifName);
-					rawData.location = readSet.location;
+					String cns_directory= rawData.directory.replace("/ccc/genostore/count007/fg0001/rawdata/", "/envcns/proj/");
+					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
+					if(fileCible.exists()){
+						System.out.println("le fichier "+ fileCible +"existe bien");
+						rawData.location = "CNS";
+					} else {
+						System.out.println("le fichier "+ fileCible +"n'existe pas");
+						rawData.location = readSet.location;
+					}
 					run.listRawData.add(rawData);
 					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
 						//System.out.println("Recuperation du md5 pour" + rawData.relatifName ");
