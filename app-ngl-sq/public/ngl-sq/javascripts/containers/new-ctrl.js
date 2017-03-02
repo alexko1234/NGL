@@ -76,7 +76,16 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','$filter
 	
 	$scope.print = function(){
 		$scope.messages.clear();
-		var tags = $scope.datatable.getData();
+		var tags = []
+		
+		if($scope.formprint.printerCode!=="BBP4"){
+			
+			 $scope.datatable.getData().forEach(function(code){
+				 tags.push({"barcode": code.barcode,"label": ""});
+			});
+			
+		}else { tags = $scope.datatable.getData();}
+		
 		$scope.formprint.tags = tags;
 		
 		$http.post(jsRoutes.controllers.printing.api.Tags.print().url, $scope.formprint)
@@ -121,7 +130,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','$filter
 					var lineValue = "";
 					var values=[];
 					data.forEach(function(code){
-						values.push({"barcode": code});
+						values.push({"barcode": code,"label": code});
 					});
 							                
 	               //Datatable
