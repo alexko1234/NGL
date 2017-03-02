@@ -699,6 +699,7 @@ analyses.treatments.assemblyBA = Assembly
 analyses.treatments.assemblyBA.software = Logiciel
 analyses.treatments.contigFilterBA = Contig Filter
 analyses.treatments.scaffoldingBA = Scaffolding
+analyses.treatments.scaffoldingFilterBA = Scaffolding Filter
 analyses.treatments.gapClosingBA = Gap Closing
 analyses.files.path  = Chemin
 analyses.files.fullname= Nom du fichier
