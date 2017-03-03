@@ -75,6 +75,7 @@ public class Containers extends CommonController {
                 controllers.receptions.io.routes.javascript.Receptions.importFile(),
 	      		controllers.printing.api.routes.javascript.Tags.list(),
                 controllers.printing.api.routes.javascript.Tags.print(),
+  	    		controllers.printing.tpl.routes.javascript.Printing.home(),
                 controllers.commons.api.routes.javascript.Parameters.list()
           )
         );

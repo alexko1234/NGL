@@ -229,6 +229,8 @@ containers.dispatch.value.mandatory = L''orientation du container est obligatoir
 containers.status.value.mandatory = Le statut du container est obligatoire
 comments.remove.confirm = Pouvez-vous confirmer la suppression ?
 
+containers.create.tab.importfile=Import fichier
+containers.create.tab.printbarcode= Génération CB et étiquettes
 container.placeholder.unit = Unité
 
 #search
@@ -549,7 +551,7 @@ button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
 button.import.file = Import fichier
 button.printMode = Imprimer
-button.tag.printing = Etiquettes
+button.tag.printing = Impression étiquettes
 button.print = Imprimer
 button.delete = Supprimer
 button.exportCSV = Export CSV

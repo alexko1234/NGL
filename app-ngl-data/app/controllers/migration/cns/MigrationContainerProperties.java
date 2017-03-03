@@ -56,9 +56,34 @@ public class MigrationContainerProperties  extends CommonController{
 
 	public static Result migration() {
 				//updateDateCreationTube();
-				updateAmplificationExt();
+				//updateAmplificationExt();
+				updateQuantificationError();
 				return ok("Migration update container Finish");
 	}
+
+	
+	
+	
+	private static void updateQuantificationError() {
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("qualityControlResults.code", "FLUO-QUANTIFICATION-20170301_152358DCG")).toList();
+		
+		for(Container c:containers){
+			c.qualityControlResults.stream().filter(q -> q.code.equals("FLUO-QUANTIFICATION-20170301_152358DCG")).forEach(q->{
+				
+				if(q.properties.containsKey("quantity1"))
+					c.quantity=(PropertySingleValue) q.properties.get("quantity1");
+				if(q.properties.containsKey("volume1"))
+					c.volume=(PropertySingleValue) q.properties.get("volume1");
+				if(q.properties.containsKey("concentration1"))
+					c.concentration=(PropertySingleValue) q.properties.get("concentration1");
+				
+				MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,c);
+			}); 
+		}
+		
+		
+	}
+
 
 	public static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 	

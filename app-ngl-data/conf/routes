@@ -91,6 +91,8 @@ GET     /cng/migration-lanes                    controllers.migration.cng.Migrat
 
 GET		/cns/migration-transfert-ccrt			controllers.migration.cns.MigrationTransfertCCRT.migration()
 GET		/cng/migration-transfert-ccrt			controllers.migration.cng.MigrationTransfertCCRT.migration()
+GET		/cns/migration-error-pool				controllers.migration.cns.MigrationErrorPool.migration()
+
 
 GET 	/migration-process-properties			controllers.migration.MigrationProcessProperties.migration()
 
