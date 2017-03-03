@@ -11,6 +11,10 @@ angular.module('home').controller('OneToVoidQcardCNSCtrl',['$scope', '$parse','$
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
+				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
+				if(volume1){
+					inputContainerUsed.volume = volume1;
+				}
 				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}			
 		});			
