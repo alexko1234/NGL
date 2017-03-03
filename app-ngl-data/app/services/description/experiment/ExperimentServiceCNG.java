@@ -211,7 +211,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// il n'y a plus de Cbot non V2...
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellCNG(),
@@ -488,7 +487,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();	
 		
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
-		//FDS 08/12/2016 bug manquait "normalization-and-pooling" en previous pour le dev
+		//FDS 08/12/2016 ajout "normalization-and-pooling" en previous
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization","normalization-and-pooling"), // previous nodes
@@ -540,18 +539,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
 				null, // pas purif
 				getExperimentTypes("bioanalyzer-migration-profile"), // qc 
-				getExperimentTypes("tubes-to-plate") // transfert en plaque
+				getExperimentTypes("tubes-to-plate") // transfert en strip-8 en plaque-96 (TODO!!)
 				).save();
 			
 		newExperimentTypeNode("wg-chromium-lib-prep",getExperimentTypes("wg-chromium-lib-prep").get(0),
 				false,false,false,
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
-				getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile"), // qc 
+				getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc 
 				null  // pas transfert 
 				).save();
-		}
-		
+		}		
 	}
 
 	
@@ -901,8 +899,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),"single",22, true, null, null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),
+				"single",22, true, null, null));
 		
+		// MEME probleme que le bioanalyzer ==> propriété d'instrument plutot ???
 		// rendre obligatoire dès le début (supprimer state:"F") car est utilisé pour créer le code du container out
 		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 				DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), null, null, null,"single",23, true, null, null));
@@ -916,12 +916,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//OuputContainer
 		// ces propriétés de containerOut doivent etre propagées au content; propriétés obligatoires a: Finished 
-
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
+        // ................utiliser getTagIlluminaPool ????
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIlluminaPool(), 
 				"single", 30, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
-				"single", 31, true, null,null));		
+		// FDS forcer tagCategory a POOL-INDEX ?? 
+		// test default value pas compatible avec une liste de valeurs ?????...... getTagCategories()=> null + default='POOL-INDEX',
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F",getTagCategories(), 
+				"single", 31,true,null, null));		
 		
 		return propertyDefinitions;
 	}
@@ -935,23 +937,16 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl"),
 				"single", 11, true, null, null));
 		
-
 		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
-				"single", 12, true, null, null));
-		
-		// NOTE: la position 12 est reservee pour "ladder"
-		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
-				DescriptionFactory.newValues("1","2","3","4","5","6","7","8","9","10","11"), 
-				"single", 13, true, null,null));
-		
+				"single", 12, true, null, null));	
+	
+		// le bouton import  n'apparait que si la propriété est editable=true
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
-				"img", 14, false, null, null));
+				"img", 14,true, null, null));
 			
 		return propertyDefinitions;
 	}
-	
-	
 	
 	// 05/12/2016 NGL-1164: trouver toutes les experiences de transformation SAUF les depot
 	private List<ExperimentTypeNode> getETNForPool(){

@@ -192,14 +192,14 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		
 		var outputContainerSupportCode = $scope.outputContainerSupport.code;
 		
-		if(col.property === 'inputContainerUsed.experimentProperties.positionOnChip.value'){
-			var newPosChip =  $parse("inputContainerUsed.experimentProperties.positionOnChip.value")(udt.data);
-			//console.log("data => new position on chip=" + newPosChip);
+		if(col.property === 'inputContainerUsed.experimentProperties.chipPosition.value'){
+			var newChipPos =  $parse("inputContainerUsed.experimentProperties.chipPosition.value")(udt.data);
+			//console.log("data => new position on chip=" + newChipPos);
 			
-			if ((undefined != newPosChip) && (undefined != outputContainerSupportCode))
+			if ((undefined != newChipPos) && (undefined != outputContainerSupportCode))
 			{	
 				// creation du code du container
-				var newContainerCode = outputContainerSupportCode+"_"+newPosChip ;
+				var newContainerCode = outputContainerSupportCode+"_"+newChipPos ;
 				console.log("newContainerCode="+ newContainerCode);
 				
 				console.log("assigning...");
@@ -209,11 +209,11 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 				
 				//assigner la column et line du support !!!!
 				$parse('outputContainerUsed.locationOnContainerSupport.line').assign(udt.data,'1');
-				$parse('outputContainerUsed.locationOnContainerSupport.column').assign(udt.data,newPosChip);
+				$parse('outputContainerUsed.locationOnContainerSupport.column').assign(udt.data,newChipPos);
 				
 				// Historique mais continer a renseigner car effets de bord possibles ????
 				$parse('line').assign(udt.data.atomicTransfertMethod,1);
-				$parse('column').assign(udt.data.atomicTransfertMethod,newPosChip);
+				$parse('column').assign(udt.data.atomicTransfertMethod,newChipPos);
 				console.log("end assigning...");
 			}
 			
@@ -236,17 +236,17 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			
 			for(var i = 0; i < dataMain.length; i++){
 				
-				// recuperer la valeur du select "positionOnChip"
-				var newPosChip =$parse("inputContainerUsed.experimentProperties.positionOnChip.value")(dataMain[i]);
-				console.log("data :"+ i + "=> new position on chip=" + newPosChip);
-				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.positionOnChip.value;
+				// recuperer la valeur du select "chipPosition"
+				var newChipPos =$parse("inputContainerUsed.experimentProperties.chipPosition.value")(dataMain[i]);
+				console.log("data :"+ i + "=> new chip position =" + newChipPos);
+				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.chipPosition.value;
 				
 				var atm = dataMain[i].atomicTransfertMethod;
 						
-				if ( null != newPosChip ) {	
+				if ( null != newChipPos ) {	
 					
 					// creation du code du container
-					var newContainerCode = outputContainerSupportCode+"_"+newPosChip ;
+					var newContainerCode = outputContainerSupportCode+"_"+newChipPos ;
 					console.log("newContainerCode="+ newContainerCode);
 					
 					$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
@@ -255,11 +255,11 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 					
 					//assigner la column et line du support !!!!
 					$parse('outputContainerUsed.locationOnContainerSupport.line').assign(dataMain[i],1);
-					$parse('outputContainerUsed.locationOnContainerSupport.column').assign(dataMain[i],newPosChip);
+					$parse('outputContainerUsed.locationOnContainerSupport.column').assign(dataMain[i],newChipPos);
 					
 					// Historique mais continer a renseigner car effets de bord possible ????
 					$parse('line').assign(atm,1);
-					$parse('column').assign(atm,newPosChip);
+					$parse('column').assign(atm,newChipPos);
 					//console.log("atm.line="+ atm.line + " atm.column="+atm.column);	
 				
 					if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){

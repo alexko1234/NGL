@@ -66,17 +66,34 @@ public abstract class AbstractExperimentService {
 		abstract void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException;
 	
 	//GA 24/07/2015 ajout des TagCategories
+	// FDS 02/03/2017 ajout POOL-INDEX.... pourquoi cette méthode existe aussi dans RunService ???
 		protected static List<Value> getTagCategories(){
 			List<Value> values = new ArrayList<Value>();
 			values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 			values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 			values.add(DescriptionFactory.newValue("MID", "MID"));
+			values.add(DescriptionFactory.newValue("POOL-INDEX", "POOL-INDEX"));
 			return values;	
 		}
 		
 		protected static List<Value> getTagIllumina() {
 			
-			List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
+			List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, 
+					DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
+			List<Value> values = new ArrayList<Value>();
+			indexes.forEach(index -> {
+				values.add(DescriptionFactory.newValue(index.code, index.name));	
+			});
+			
+			return values;
+		}	
+			
+		// FDS 02/03/2017 ne récupérer que les Tag Illumina de categorie POOL-INDEX
+		/// ne faire qu'une seule méthode ???  avec un param optionnel ???????? voir Guillaume
+		protected static List<Value> getTagIlluminaPool() {
+			
+			List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, 
+					DBQuery.is("typeCode", "index-illumina-sequencing").and(DBQuery.is("categoryCode", "POOL-INDEX"))).sort("name").toList();
 			List<Value> values = new ArrayList<Value>();
 			indexes.forEach(index -> {
 				values.add(DescriptionFactory.newValue(index.code, index.name));	

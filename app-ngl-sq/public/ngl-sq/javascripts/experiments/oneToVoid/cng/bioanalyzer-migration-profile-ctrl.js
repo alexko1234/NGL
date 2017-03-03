@@ -32,8 +32,7 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	// code venant de chip-migration-ctrl.js au CNS: prevus pour LabChipGX ET bionanalyzer => supprimer code pour labchipGX
 	var profilsMap = {};
 	angular.forEach($scope.experiment.atomicTransfertMethods, function(atm){
-		// CNS var pos = $parse('inputContainerUseds[0].instrumentProperties.chipPosition.value')(atm);
-		var pos = $parse('inputContainerUseds[0].experimentProperties.chipPosition.value')(atm);
+		var pos = $parse('inputContainerUseds[0].instrumentProperties.chipPosition.value')(atm);
 		var img = $parse('inputContainerUseds[0].experimentProperties.migrationProfile')(atm);
 		if(pos && img)this[pos] = img;
 	},profilsMap)
@@ -56,15 +55,21 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			internalProfils = _profilsMap;
 			
 			angular.forEach($scope.atmService.data.displayResult, function(dr){
-				// CNS var pos = $parse('inputContainerUsed.instrumentProperties.chipPosition.value')(dr.data);	
-				var pos = $parse('inputContainerUsed.experimentProperties.chipPosition.value')(dr.data);
+				var pos = $parse('inputContainerUsed.instrumentProperties.chipPosition.value')(dr.data);
 				if(pos)	$parse('inputContainerUsed.experimentProperties.migrationProfile').assign(dr.data, this[pos]);
 			}, _profilsMap);	
 		}
 		angular.element('#importProfils')[0].value = null;	
 	})
 	
-
+    // meme s'il n'y a pas de choix possible par l'utilisateur, ce watch est indispensable pour que les proprietes d'instrument soient injectees dans l'interface..	
+	// MERCI Maud !!!
+	$scope.$watch("instrumentType", function(newValue, OldValue){
+		if(newValue)
+			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
+	})
+	
+	
 	var columns = $scope.atmService.data.getColumnsConfig();
 	//positions 7 a 10 dispo...
 	columns.push({
@@ -131,8 +136,8 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
-
 		}); 
+		
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 
