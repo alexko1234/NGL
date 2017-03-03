@@ -12,6 +12,8 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.project.instance.Project;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.Logger;
 import play.Logger.ALogger;
+import play.modules.jongo.MongoDBPlugin;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
@@ -232,6 +235,23 @@ public class ContainerTests extends AbstractTests {
 			processes= MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",c.processCodes)).toList();
 		}
 		return processes;
+		
+	}
+	
+	
+	@Test
+	public void generateSampleCode() throws InterruptedException{
+		Project project = new Project();
+		project.code = "TST";
+		
+		MongoDBPlugin.getCollection(InstanceConstants.PROJECT_COLL_NAME).findOne("{'code':'TST'}").as(Project.class);
+		
+		for(int i = 0; i < 120; i++){
+		
+			System.out.println(CodeHelper.getInstance().generateSampleCode(project, true));			
+		}
+		
+		
 		
 	}
 /**********************************Tests of Containers class methods (Controller)***************************************************/	

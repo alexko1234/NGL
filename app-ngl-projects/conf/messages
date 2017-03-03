@@ -68,6 +68,9 @@ projects.bioinformaticParameters.mappingReference = Référence mapping
 projects.bioinformaticParameters.fgGroup = Projet France Génomique
 projects.bioinformaticParameters.fgPriority = Priorité Transfert CCRT
 
+projects.lastSampleCode=Dernier sample code
+projects.nbCharactersInSampleCode = Nb de lettres dans le code sample initial
+
 umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés

@@ -42,6 +42,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
+import org.jongo.MongoCollection;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,6 +50,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import play.data.validation.ValidationError;
+import play.modules.jongo.MongoDBPlugin;
 import utils.AbstractTests;
 import utils.Constants;
 import fr.cea.ig.DBObject;
@@ -364,4 +366,6 @@ public class InstanceTest extends AbstractTests{
 			System.out.println(CodeHelper.getInstance().generateExperimentCode(e));			
 		}
 	}
+	
+	
 }
