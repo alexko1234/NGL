@@ -133,7 +133,10 @@ public class DefaultCodeImpl implements Code {
 		char lastLetter='Z';
 
 		if(currentCode==null){
-			newCode="AAAA";
+			newCode="A";
+			while(newCode.length() < project.nbCharactersInSampleCode){
+				newCode=newCode+"A";
+			}			
 		}else {
 			
 			int nbCharacter=currentCode.length();
@@ -150,7 +153,10 @@ public class DefaultCodeImpl implements Code {
 				newCode=beginCode+Character.toString((char) (currentCode.charAt(lastCharacter-1)+1)); // Concatenation debut code sample + lettre suivante
 			}
 			else {
-				newCode="AA";
+				newCode="A";
+				while(newCode.length() < project.nbCharactersInSampleCode){
+					newCode=newCode+"A";
+				}
 				lastCharacter=1;
 			}
 			

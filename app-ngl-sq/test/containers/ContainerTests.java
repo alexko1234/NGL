@@ -238,22 +238,7 @@ public class ContainerTests extends AbstractTests {
 		
 	}
 	
-	
-	@Test
-	public void generateSampleCode() throws InterruptedException{
-		Project project = new Project();
-		project.code = "TST";
-		
-		MongoDBPlugin.getCollection(InstanceConstants.PROJECT_COLL_NAME).findOne("{'code':'TST'}").as(Project.class);
-		
-		for(int i = 0; i < 120; i++){
-		
-			System.out.println(CodeHelper.getInstance().generateSampleCode(project, true));			
-		}
-		
-		
-		
-	}
+
 /**********************************Tests of Containers class methods (Controller)***************************************************/	
 	
 	
