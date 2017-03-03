@@ -476,7 +476,7 @@ public class DataMappingCNS {
 	}
 
 	public static String getState(String containerCategoryCode, int etatLims,String experimentTypeCode) {
-		if(containerCategoryCode.equals("tube") && experimentTypeCode==null){
+		if(experimentTypeCode==null){
 			return getStateFromStateTubeLims(etatLims);
 		}else if(containerCategoryCode.equals("lane")){
 			return getStateFromStatePrepaflowcellLims(etatLims);
