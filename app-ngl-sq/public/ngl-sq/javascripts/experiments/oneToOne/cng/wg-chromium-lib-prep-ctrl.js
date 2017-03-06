@@ -333,6 +333,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 	// Calculs 
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
+		
+		// mettre ici l'update automatique de categoryTag a partir du Teag Selectionné...
+		// TODO
 
 		// si l'utilisateur défini le volume a engager => calculer la quantité
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){

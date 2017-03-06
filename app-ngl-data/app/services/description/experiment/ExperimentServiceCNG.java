@@ -6,6 +6,7 @@ import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -850,11 +851,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, "25",null));
 		
-		/* suppression demandée lors du test avant mise en prod
-		propertyDefinitions.add(newPropertiesDefinition("Qté engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode("ng"),MeasureUnit.find.findByCode("ng"),"single", 25, true, null,null));
-		*/
-		
 		//OuputContainer 
 		// rien...??
 		
@@ -877,11 +873,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		// ces propriétés de containerOut doivent etre propagees au content
 		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
 
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
-				"single", 30, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
+				getTagIllumina(), "single", 30, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
-				"single", 31, true, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
+				getTagCategories(), "single", 31, true, null,null));		
 		
 		/* 24/11/2016  suppression de ces 2 propriétés car non pertinentes
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null, null
@@ -904,8 +900,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		// MEME probleme que le bioanalyzer ==> propriété d'instrument plutot ???
 		// rendre obligatoire dès le début (supprimer state:"F") car est utilisé pour créer le code du container out
-		propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
-				DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), null, null, null,"single",23, true, null, null));
+		// OUI 06/03/2017  NETTOYER DES QUE OK
+		//propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+		//		DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), null, null, null,"single",23, true, null, null));
 	
 		return propertyDefinitions;
 	}
@@ -914,16 +911,20 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private List<PropertyDefinition> getPropertyDefinitionsWGChromiumLibPrep() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
+		return propertyDefinitions;
+		// TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+		propertyDefinitions.add(newPropertiesDefinition("TRUC", "truc", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null, 
+				"single", 10, true, null,null));
+		
 		//OuputContainer
 		// ces propriétés de containerOut doivent etre propagées au content; propriétés obligatoires a: Finished 
-        // ................utiliser getTagIlluminaPool ????
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIlluminaPool(), 
-				"single", 30, true, null,null));
+		// TEST...... getTagIllumina(new ArrayList<String>( Arrays.asList("POOL-INDEX")))
+		propertyDefinitions.add(newPropertiesDefinition("Taggg", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
+				getTagIllumina(), "single", 30, true, null,null));
 		
 		// FDS forcer tagCategory a POOL-INDEX ?? 
-		// test default value pas compatible avec une liste de valeurs ?????...... getTagCategories()=> null + default='POOL-INDEX',
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F",getTagCategories(), 
-				"single", 31,true,null, null));		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Taggg", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F",
+				DescriptionFactory.newValues("POOL-INDEX"), "single", 31, false ,"POOL-INDEX", null));		
 		
 		return propertyDefinitions;
 	}

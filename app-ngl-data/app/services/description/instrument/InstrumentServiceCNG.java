@@ -671,11 +671,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//FDS 20/02/2017 NGL-1167: Chromium.. Y a-t-il des proprietes ou non?? 
 	private static List<PropertyDefinition> getChromiumControllerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		// liste des programmes....
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
-				newValues("programme 1",  
-						  "---"),
-						  "single", null, false ,null, null));
+		
+		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience.. comme pour Bionanalyzer !! 
+		// Obligatoire, position 23 ???
+		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+					newValues("1","2","3","4","5","6","7","8"), 
+					"single", 23, true, null,null));
+
 		return l;
 	}
 	
@@ -683,15 +685,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getBioanalyzerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		// Production demande de ne pas tracer le type de puce...
+		// Production CNG demande de ne pas tracer le type de puce...
 		// l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("type1", "type2"), 
 		//		"single", 10, true, null,null));
-		
-		 //propertie de niveau ContainerIn  (obligayoire ou pas ??)
-		 //N"APPARAIT PAS DANS UDT !!! avec position 12....  essai avec position 98... idem
 		 
 		 l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
-					newValues("1", "2", "3", "4", "5", "6","7","8","9","10","11"), 
+					newValues("1","2","3","4","5","6","7","8","9","10","11"), 
 					"single", 15, true, null,null));
 		
 		return l;
