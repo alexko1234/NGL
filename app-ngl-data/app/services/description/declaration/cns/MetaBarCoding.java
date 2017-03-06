@@ -395,9 +395,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getBanqueProcessTypeMetaTB(), 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.addAll(getPropertyMetaB());
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("400-550 (ITS2)", "500-650","autre"), 
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
+				DescriptionFactory.newValues("400-550 (ITS2)", "500-650","autre"), 
 				null,null,null,"single", 17, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, DescriptionFactory.newValues("550-700 (ITS2)", "650-800","autre"), 
+		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
+				DescriptionFactory.newValues("550-700 (ITS2)", "650-800","autre"), 
 				null,null,null,"single", 18, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 19, true, null, null));
