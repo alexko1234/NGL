@@ -203,32 +203,15 @@ public class MetaGenomique extends AbstractDeclaration {
          propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"),
                          null,null,null,"single", 14, true, null, null));
          propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null,
-                         DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"),
+                         DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","autre"),
                          null,null,null,"single", 16, true, null, null));
 
 
          propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
          return propertyDefinitions;
- }
+	 }
 
 
-	private List<PropertyDefinition> getPropertiesMetaGenomiqueWithSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDB(), 
-				null,null,null,"single", 13, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"), 
-				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
-				null,null,null,"single", 15, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58", "280-310 (F300)", "450-550 (W500)", "550-650 (W600)", "600-700 (W700)","650-700 (W700)", "650-750 (W700)",  "700-800 (W800)","750-800"),
-				
-				null,null,null,"single", 16, true, null, null));
-		
-
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
-		return propertyDefinitions;
-	}
 	
 	private List<PropertyDefinition> getPropertiesMetaGenomiqueWithSizingDEV() {
         List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -239,7 +222,7 @@ public class MetaGenomique extends AbstractDeclaration {
         propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null,
                         null,null,null,"single", 15, true, null, null));
         propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null,
-        		DescriptionFactory.newValues("280-310 (F300)", "450-550 (W500)", "550-650 (W600)", "600-700 (W700)","650-700 (W700)", "650-750 (W700)", "700-800 (W800)","750-800"),
+        		DescriptionFactory.newValues("280-310 (F300)", "450-550 (W500)", "550-650 (W600)", "600-700 (W700)","650-700 (W700)","700-800 (W800)","750-800","autre"),
                 null,null,null,"single", 16, true, null, null));
 
 
