@@ -53,6 +53,25 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		return units[unitType];
 	}
 	
+	$scope.computeQuantity = function(){
+		var concentration = $scope.container.concentration;
+		var volume = $scope.container.volume;
+		
+		if(concentration && concentration.value && volume && volume.value){
+			var result = volume.value * concentration.value;
+			if(angular.isNumber(result) && !isNaN(result)){
+				var quantity = {};
+				quantity.value = Math.round(result*10)/10;
+				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+				$scope.container.quantity = quantity;
+			}else {
+				$scope.container.quantity =  undefined;
+			}
+		}else {
+			$scope.container.quantity =  undefined;
+		}
+	}
+	
 	$scope.convertToBr = function(text){
 		if(text)return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
 	};
