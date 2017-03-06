@@ -432,7 +432,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)", "450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)", "650-750 (W700)","700-800 (W800)","750-800"), 											
+				DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)", "450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)", "700-800 (W800)","750-800","autre"), 											
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
 				DescriptionFactory.newValues("550-700 (ITS2)", "650-800"), 
@@ -462,7 +462,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	private List<PropertyDefinition> getSizingPropertiesDEV(){
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)", "450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)", "650-750 (W700)","700-800 (W800)","750-800"), 											
+				DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)", "450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)","700-800 (W800)","750-800","autre"), 											
 				null,null,null,"single", 17, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
 				DescriptionFactory.newValues("550-700 (ITS2)", "650-800"), 
@@ -472,18 +472,6 @@ public class BanqueIllumina extends AbstractDeclaration {
 	}
 	
 	
-	private List<PropertyDefinition> getSizingPropertiesPROD(){
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","280-310 (F300)","400-550 (ITS2)", "450-550 (W500)","550-650 (W600)","500-650", "600-700 (W700)", "650-750 (W700)", "650-750 (W700)","700-800 (W800)","750-800"), 											
-				null,null,null,"single", 17, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
-				DescriptionFactory.newValues("550-700 (ITS2)", "650-800"), 
-				null,null,null,"single", 18, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
-		return propertyDefinitions;
-	}
-
 	private List<PropertyDefinition> getPropertyBanqueIlluminaSpriSelect() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.addAll(getSpriSelectProperties());
@@ -493,7 +481,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 	private List<PropertyDefinition> getSpriSelectProperties(){
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58"), 											
+				DescriptionFactory.newValues("ss0.6/0.53","ss0.7/0.58","autre"), 											
 				null,null,null,"single", 17, true, null, null));
 	//	propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
 		//		DescriptionFactory.newValues("650-800"), 
