@@ -301,8 +301,8 @@ public class MetaBarCoding extends AbstractDeclaration {
                         null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
         propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null,
-                        DescriptionFactory.newValues("280-310 (F300)", "400-550 (ITS2)", "450-550 (W500)","550-650 (W600)", "500-650","550-700 (ITS2)", "600-700 (W700)","650-700 (W700)", "650-800", "700-800 (W800)","750-800", "autre"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
-
+                        DescriptionFactory.newValues("280-310 (F300)", "400-550 (ITS2)", "450-550 (W500)","550-650 (W600)", "500-650","550-700 (ITS2)", "600-700 (W700)","650-750 (W700)","650-700 (W700)", "650-800", "700-800 (W800)","750-800", "autre"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 14, true, null,null));
+        				
         propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null,
                         "single", 100, true, null,null));
 
