@@ -57,6 +57,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 					if(quantity1){
 						inputContainerUsed.quantity = quantity1;
+					}else{
+						inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 					}
 				}
 			}
