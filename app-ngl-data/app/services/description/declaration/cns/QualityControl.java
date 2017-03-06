@@ -499,15 +499,15 @@ public class QualityControl extends AbstractDeclaration {
 			propertyDefinitions.add(newPropertiesDefinition("Profil Qcard", "qcardProfile1", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
 					"img", 19, true, null, null));
 			
-			/*propertyDefinitions.add(newPropertiesDefinition("Profil Qcard dil 2", "qcardProfile2", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
-					"img", 14, true, null, null));
-			
+			propertyDefinitions.add(newPropertiesDefinition("Profil Qcard 2", "qcardProfile2", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+					"img", 20, true, null, null));
+			/*
 			propertyDefinitions.add(newPropertiesDefinition("Profil Qcard dil 3", "qcardProfile3", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 					"img", 15, true, null, null));
 			
 				*/	
 			propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules","moleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", null, 				
-					"single", 20, true, null, null));
+					"single", 21, true, null, null));
 			
 			propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 					null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 21, true, null,null));
