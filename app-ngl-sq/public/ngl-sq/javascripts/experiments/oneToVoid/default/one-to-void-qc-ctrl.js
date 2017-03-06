@@ -165,8 +165,10 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"position" : 1,
 				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
-			columns.push({
-				"header" : Messages("containers.table.support.line"),
+			// FDS 27/02/2017 existe maintenant inContainerSupportCategoryCode="strip-8"
+			if ($scope.experiment.instrument.inContainerSupportCategoryCode==="96-well-plate"){
+			  columns.push({
+			  	"header" : Messages("containers.table.support.line"),
 				"property" : "inputContainer.support.line",
 				"order" : true,
 				"edit" : false,
@@ -174,7 +176,8 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"type" : "text",
 				"position" : 1.1,
 				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
+			  });
+			}
 			columns.push({
 				"header" : Messages("containers.table.support.column"),
 				"property" : "inputContainer.support.column*1",
