@@ -103,6 +103,7 @@ public class Process extends DBObject implements IValidation{
 		Process p = new Process();
 		p.typeCode = this.typeCode;
 		p.categoryCode = this.categoryCode;
+		
 		if(null != this.properties && this.properties.size() > 0){
 			p.properties = new HashMap<String, PropertyValue>(this.properties);
 		}
