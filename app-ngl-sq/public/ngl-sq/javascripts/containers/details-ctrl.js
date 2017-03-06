@@ -44,7 +44,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	var units = {
 		 "volume":[{"code":"µL","name":"µL"}],	
 		 "concentration":[{"code":"ng/µl","name":"ng/µl"},{"code":"nM","name":"nM"}],	
-		 "quantity":[{"code":"ng","name":"ng"}],	
+		 "quantity":[{"code":"ng","name":"ng"},{"code":"nmol","name":"nmol"}],
 		 "size":[{"code":"pb","name":"pb"}]			
 	};
 	

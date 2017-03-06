@@ -37,8 +37,8 @@ public class Column implements IValidation{
 	public String[] queryIncludeKeys; //if void used property
 	
 	public String editTemplate;
-	
-	
+	public String editDirectives;
+	public Boolean watch;
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		// TODO Auto-generated method stub

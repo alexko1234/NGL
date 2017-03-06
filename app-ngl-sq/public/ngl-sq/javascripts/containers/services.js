@@ -118,23 +118,25 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"concentration.value",
 			"order":true,
 			"hide":true,
-			"edit":true,
+			"edit":(mainService.getHomePage() === 'search')?true:false,
 			"position":11.1,
 			"format":3,
 			"type":"number",
-			"groupMethod":"unique"
+			"groupMethod":"unique",
+			"editDirectives":"  udt-change='searchService.computeQuantity(value)'"
 		});	
 		columns.push({
 			"header":Messages("containers.table.concentration.unit"),
 			"property":"concentration.unit",
 			"order":true,
 			"hide":true,
-			"edit":true,
-			"editTemplate":'<div bt-select class="form-control" #ng-model bt-options="unit.code as unit.name for unit in searchService.getUnits(\'concentration\')" auto-select></div>',
+			"edit":(mainService.getHomePage() === 'search')?true:false,
+			"editTemplate":'<div bt-select class="form-control" #ng-model   udt-change="searchService.computeQuantity(value)" bt-options="unit.code as unit.name for unit in searchService.getUnits(\'concentration\')" auto-select></div>',
 			"choiceInList":true,
 			"position":11.2,
 			"type":"text",
-			"groupMethod":"unique"
+			"groupMethod":"unique",
+			"editDirectives":""
 		});
 		columns.push({
 			"header":Messages("containers.table.creationDate"),
@@ -272,7 +274,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			units : {
 				 "volume":[{"code":"µL","name":"µL"}],	
 				 "concentration":[{"code":"ng/µl","name":"ng/µl"},{"code":"nM","name":"nM"}],	
-				 "quantity":[{"code":"ng","name":"ng"}],	
+				 "quantity":[{"code":"ng","name":"ng"},{"code":"nmol","name":"nmol"}],	
 				 "size":[{"code":"pb","name":"pb"}]			
 			},
 			setRouteParams:function($routeParams){
@@ -398,6 +400,26 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				this.form.sampleCodes = [];									
 			},
 
+			computeQuantity : function(value){
+				var container = value.data;
+				var concentration = container.concentration;
+				var volume = container.volume;
+				
+				if(concentration && concentration.value && volume && volume.value){
+					var result = volume.value * concentration.value;
+					if(angular.isNumber(result) && !isNaN(result)){
+						var quantity = {};
+						quantity.value = Math.round(result*10)/10;
+						quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+						container.quantity = quantity;
+					}else {
+						container.quantity =  undefined;
+					}
+				}else {
+					container.quantity =  undefined;
+				}
+			},
+			
 			search : function(){
 				this.updateForm();
 				mainService.setForm(this.form);				
