@@ -182,7 +182,7 @@ public class Containers extends CommonController {
 				}
 				
 			}else{
-				return badRequest("run code are not the same");
+				return badRequest("container code are not the same");
 			}	
 		}else{
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
