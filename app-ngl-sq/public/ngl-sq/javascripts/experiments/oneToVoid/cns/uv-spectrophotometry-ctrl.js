@@ -26,6 +26,47 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 				}	
 		};
 	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactor.value'){
+			computeConcentration1(value.data);
+		}else if(col.property === 'inputContainerUsed.experimentProperties.concentration0.value'){
+			computeConcentration1(value.data);
+		}
+		
+	}
+	
+	var computeConcentration1 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.concentration1.value");
+		var concentration1 = getter(udtData);
+		
+		var compute = {
+				conc1 : $parse("inputContainerUsed.experimentProperties.concentration0.value")(udtData),
+				dilution1 : ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2),
+				isReady:function(){
+					return (this.conc1 && this.dilution1);
+				}
+			};
+		
+		if(compute.isReady()){
+			
+			var result = $parse("(conc1 * dilution1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				concentration1 = Math.round(result*10)/10;				
+			}else{
+				concentration1 = undefined;
+			}	
+			getter.assign(udtData, concentration1);
+		}else{
+			console.log("not ready to computeConcentration1");
+		}
+		
+	}
+	
+	
 	var columns = $scope.atmService.data.getColumnsConfig();
 	
 	columns.push({
