@@ -41,10 +41,10 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 	var computeConcentration1 = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.concentration1.value");
 		var concentration1 = getter(udtData);
-		
+		console.log("Position "+($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).indexOf("1/"));
 		var compute = {
 				conc1 : $parse("inputContainerUsed.experimentProperties.concentration0.value")(udtData),
-				dilution1 : ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2),
+				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2) : undefined ) ,
 				isReady:function(){
 					return (this.conc1 && this.dilution1);
 				}
@@ -61,6 +61,7 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 			}	
 			getter.assign(udtData, concentration1);
 		}else{
+			getter.assign(udtData, undefined);
 			console.log("not ready to computeConcentration1");
 		}
 		
