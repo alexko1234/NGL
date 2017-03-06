@@ -12,8 +12,12 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
+				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(volume1){
 					inputContainerUsed.volume = volume1;
+				}
+				if(concentration1){
+					inputContainerUsed.concentration = concentration1;
 				}
 				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}			
