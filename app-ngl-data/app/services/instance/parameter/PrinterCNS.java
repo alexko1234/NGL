@@ -73,7 +73,7 @@ public class PrinterCNS {
 				Arrays.asList(
 						newBarcodePosition("1","CB 2D TUBE",298,"A100,30,0,2,1,1,N","b20,30,A,d4",true, true)
 						)));
-		lp.add(newBBP11("BBP8", "prod / tube","bbp8.tx.local",9100,"2","15","1",true, 
+		lp.add(newBBP11("BBP8", "bureau Nanopore","bbp8.tx.local",9100,"2","15","1",true, 
 				Arrays.asList(
 						newBarcodePosition("1","CB 2D TUBE",298,"A100,30,0,2,1,1,N","b20,30,A,d4",true, true)
 						)));
