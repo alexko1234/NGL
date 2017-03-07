@@ -185,7 +185,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		});
 	
 	
-	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
+/*	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
 		columns.push({
 			"header" : Messages("containers.table.workName"),
 			"property" : "inputContainer.properties.workName.value",
@@ -197,7 +197,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
-	
+	*/
 	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",
@@ -220,7 +220,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			"edit" : false,
 			"hide" : true,
 			"type" : "text",
-			"position" : 10.8,
+			"position" : 10.1,
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
