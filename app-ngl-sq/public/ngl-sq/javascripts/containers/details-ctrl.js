@@ -44,13 +44,32 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	var units = {
 		 "volume":[{"code":"µL","name":"µL"}],	
 		 "concentration":[{"code":"ng/µl","name":"ng/µl"},{"code":"nM","name":"nM"}],	
-		 "quantity":[{"code":"ng","name":"ng"}],	
+		 "quantity":[{"code":"ng","name":"ng"},{"code":"nmol","name":"nmol"}],
 		 "size":[{"code":"pb","name":"pb"}]			
 	};
 	
 	
 	$scope.getUnits = function(unitType){
 		return units[unitType];
+	}
+	
+	$scope.computeQuantity = function(){
+		var concentration = $scope.container.concentration;
+		var volume = $scope.container.volume;
+		
+		if(concentration && concentration.value && volume && volume.value){
+			var result = volume.value * concentration.value;
+			if(angular.isNumber(result) && !isNaN(result)){
+				var quantity = {};
+				quantity.value = Math.round(result*10)/10;
+				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+				$scope.container.quantity = quantity;
+			}else {
+				$scope.container.quantity =  undefined;
+			}
+		}else {
+			$scope.container.quantity =  undefined;
+		}
 	}
 	
 	$scope.convertToBr = function(text){

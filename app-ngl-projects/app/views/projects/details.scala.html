@@ -55,7 +55,7 @@
 										<p class="form-control-static" ng-switch-when="false">{{project.name}}</p>
 										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.name">
 									</div -->
-									
+									<p class="form-control-static">{{project.name}}</p>
 									
 								}
 				
@@ -119,6 +119,17 @@
 				
 								@views.html.helper.columnLabelValue(Messages("projects.traceInformation.createUser")){
 									<p class="form-control-static">{{project.traceInformation.createUser}}</p>	
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.lastSampleCode")){
+									<p class="form-control-static">{{project.lastSampleCode}}</p>	
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.nbCharactersInSampleCode")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.nbCharactersInSampleCode}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.nbCharactersInSampleCode">										
+									</div>
 								}
 							}				
 						</div>

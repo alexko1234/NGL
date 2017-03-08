@@ -53,10 +53,10 @@
 					</p>
 					<div ng-switch-when=true>
 					<div class="col-md-6 col-lg-7">
-						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.concentration.value">
+						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.concentration.value" ng-change="computeQuantity()">
 					</div>
 					<div class="col-md-6 col-lg-5">
-						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.concentration.unit" bt-options="unit.code as unit.name for unit in getUnits('concentration')" auto-select></div>								
+						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.concentration.unit" bt-options="unit.code as unit.name for unit in getUnits('concentration')" auto-select ng-change="computeQuantity()"></div>								
 					</div>
 					</div>
 				</div>	
@@ -69,16 +69,21 @@
 					</p>
 					<div ng-switch-when=true>
 					<div class="col-md-6 col-lg-7">
-						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.volume.value">
+						<input class="form-control" udt-html-filter="number" type="text" ng-model="container.volume.value" ng-change="computeQuantity()">
 					</div>
 					<div class="col-md-6 col-lg-5">
-						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.volume.unit" bt-options="unit.code as unit.name for unit in getUnits('volume')" auto-select></div>								
+						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.volume.unit" bt-options="unit.code as unit.name for unit in getUnits('volume')" auto-select ng-change="computeQuantity()"></div>								
 					</div>
 					</div>
 				</div>					
 			}
 			@columnLabelValue(Messages("containers.table.quantity")){
-				<div ng-switch on="isEditMode()">
+				<p class="form-control-static">
+						<span ng-bind="container.quantity.value" />
+						<span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
+					</p>
+				
+				<!-- div ng-switch on="isEditMode()">
 					<p ng-switch-when="false" class="form-control-static">
 						<span ng-bind="container.quantity.value" />
 						<span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
@@ -91,7 +96,7 @@
 						<div bt-select class="form-control" placeholder="@Messages("container.placeholder.unit")"  ng-model="container.quantity.unit" bt-options="unit.code as unit.name for unit in getUnits('quantity')" auto-select></div>								
 					</div>
 					</div>
-				</div>				
+				</div-->				
 			}
 			@columnLabelValue(Messages("containers.table.size")){
 				<div ng-switch on="isEditMode()">

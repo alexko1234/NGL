@@ -3,12 +3,12 @@
 angular.module('home', ['ngRoute', 'ultimateDataTableServices','commonsServices', 'ui.bootstrap', 
                         'ngl-bi.BalanceSheetsService'], function($routeProvider, $locationProvider) {
 	
-	$routeProvider.when('/balance-sheets/general/home',{
+	$routeProvider.when('/balance-sheets/:typeCode/general/home',{
 		templateUrl : '/tpl/balance-sheets/general',
 		controller : 'BalanceSheetsGeneralCtrl'
 	});
 	
-	$routeProvider.when('/balance-sheets/:year/home',{
+	$routeProvider.when('/balance-sheets/:typeCode/:year/home',{
 		templateUrl : '/tpl/balance-sheets/year',
 		controller : 'BalanceSheetsYearCtrl'
 	});

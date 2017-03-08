@@ -12,8 +12,12 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
+				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(volume1){
 					inputContainerUsed.volume = volume1;
+				}
+				if(concentration1){
+					inputContainerUsed.concentration = concentration1;
 				}
 				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}			
@@ -41,10 +45,9 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 	var computeConcentration1 = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.concentration1.value");
 		var concentration1 = getter(udtData);
-		
 		var compute = {
 				conc1 : $parse("inputContainerUsed.experimentProperties.concentration0.value")(udtData),
-				dilution1 : ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2),
+				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2) : undefined ) ,
 				isReady:function(){
 					return (this.conc1 && this.dilution1);
 				}
@@ -61,6 +64,7 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 			}	
 			getter.assign(udtData, concentration1);
 		}else{
+			getter.assign(udtData, undefined);
 			console.log("not ready to computeConcentration1");
 		}
 		

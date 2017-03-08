@@ -314,7 +314,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			if(angular.isNumber(result) && !isNaN(result)){
 				quantity = {};
 				quantity.value = Math.round(result*10)/10;
-				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng/µl';
+				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
 				return quantity;
 			}
 		}

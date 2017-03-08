@@ -12,6 +12,8 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.project.instance.Project;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.Logger;
 import play.Logger.ALogger;
+import play.modules.jongo.MongoDBPlugin;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
@@ -234,6 +237,8 @@ public class ContainerTests extends AbstractTests {
 		return processes;
 		
 	}
+	
+
 /**********************************Tests of Containers class methods (Controller)***************************************************/	
 	
 	

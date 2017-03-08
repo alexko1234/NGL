@@ -25,6 +25,8 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 				var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 				if(quantity1){
 					inputContainerUsed.quantity = quantity1;
+				}else{
+					inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 				}
 			}
 			

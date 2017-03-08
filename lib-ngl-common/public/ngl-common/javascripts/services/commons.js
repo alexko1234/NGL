@@ -1132,7 +1132,9 @@ angular.module('commonsServices', []).
     	                    $scope.chartData.chart.width = $scope.chartData.chart.type || $attrs.width;
 
     	                $scope.chartObj = new Highcharts.Chart($scope.chartData);
+    	               
     	            });
+    	            
     	        }
     	    };
     	    

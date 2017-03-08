@@ -85,7 +85,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 		}
 	});
 	
-	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
+/*	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
 		columns.push({
 			"header" : Messages("containers.table.workName"),
 			"property" : "inputContainer.properties.workName.value",
@@ -96,7 +96,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 			"position" : 3.1,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
-	}
+	}*/
 	
 	/*
    columns.push({

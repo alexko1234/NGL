@@ -9,6 +9,9 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.project.instance.Project;
+import models.utils.CodeHelper;
+import models.utils.InstanceConstants;
 import models.utils.instance.ExperimentHelper;
 
 import org.junit.AfterClass;
@@ -17,6 +20,7 @@ import org.junit.Test;
 
 import play.Logger;
 import play.Logger.ALogger;
+import play.modules.jongo.MongoDBPlugin;
 import utils.AbstractTests;
 import utils.InitDataHelper;
 

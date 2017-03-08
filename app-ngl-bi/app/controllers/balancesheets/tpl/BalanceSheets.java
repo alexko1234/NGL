@@ -7,8 +7,8 @@ import controllers.CommonController;
 
 
 public class BalanceSheets extends CommonController{
-	public static Result home(String homecode){
-		return ok(home.render(homecode));
+	public static Result home(String homecode, String year){
+		return ok(home.render(homecode, year));
 	}
 	public static Result year() {
 		return ok(year.render());
@@ -24,7 +24,8 @@ public class BalanceSheets extends CommonController{
 				controllers.balancesheets.tpl.routes.javascript.BalanceSheets.general(),
 				controllers.readsets.api.routes.javascript.ReadSets.list(),
 				controllers.runs.api.routes.javascript.Runs.list(),
-				controllers.projects.api.routes.javascript.Projects.list()
+				controllers.projects.api.routes.javascript.Projects.list(),
+				controllers.commons.api.routes.javascript.CommonInfoTypes.list()
 		));
 		
 	}

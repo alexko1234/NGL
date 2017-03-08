@@ -64,7 +64,7 @@ public class Container extends DBObject implements IValidation {
 	// Container informations
 	public TraceInformation traceInformation;
 	public Map<String, PropertyValue> properties;
-	public List<Comment> comments;
+	public List<Comment> comments = new ArrayList<Comment>(0);
 
 	//Relation with container support
 	public LocationOnContainerSupport support; 
