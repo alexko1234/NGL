@@ -7,11 +7,15 @@ factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse
 	 
 		var balanceSheetsGeneralService = {
 		
-			computeDataByYear : function(data){
+			computeDataByYear : function(data,typeCode){
 				var actualYear = new Date().getFullYear();
+				var startYear = 2008;
+				if(typeCode=='rsnanopore'){
+					startYear=2014;
+				}
 				var dataByYear = [];
-				 for (var i = 2008; i <= actualYear; i++){
-					 dataByYear[i-2008] = {
+				 for (var i = startYear; i <= actualYear; i++){
+					 dataByYear[i-startYear] = {
 							 nbBases : 0,
 							 year : i
 					 };
@@ -20,7 +24,7 @@ factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse
 				 // Calculating our bases for each year
 				 for(var i = 0; i < data.length; i++){
 					var readsetDate =  balanceSheetsGeneralService.convertToDate(data[i].runSequencingStartDate);
-					dataByYear[readsetDate.getFullYear() - 2008].nbBases += balanceSheetsGeneralService.getProperty(data[i]);
+					dataByYear[readsetDate.getFullYear() - startYear].nbBases += balanceSheetsGeneralService.getProperty(data[i]);
 				 }
 				 return dataByYear;
 			},

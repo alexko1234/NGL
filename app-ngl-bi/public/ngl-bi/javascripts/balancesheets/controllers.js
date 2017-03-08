@@ -96,7 +96,7 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http'
 		form.limit = 100000;
 
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
-			var dataByYear = $scope.balanceSheetsGeneralService.computeDataByYear(data);
+			var dataByYear = $scope.balanceSheetsGeneralService.computeDataByYear(data,$routeParams.typeCode);
 			mainService.put($routeParams.typeCode+'-general',dataByYear);
 			calculateData(dataByYear);
 		});
@@ -121,7 +121,11 @@ var init = function(){
 	// Tabs
 	var actualYear = new Date().getFullYear();
 	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode, "general").url});
-	for(var i = actualYear; i >= 2008 ; i--){
+	var startYear = 2008;
+	if($routeParams.typeCode=='rsnanopore'){
+		startYear=2014;
+	}
+	for(var i = actualYear; i >= startYear ; i--){
 		tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode, i).url});
 	}
 
@@ -533,8 +537,12 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		var activeYear = $routeParams.year;
 
 		// Tabs
+		var startYear = 2008;
+		if($routeParams.typeCode=='rsnanopore'){
+			startYear=2014;
+		}
 		tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode, "general").url});
-		for(var i = actualYear; i >= 2008 ; i--){
+		for(var i = actualYear; i >= startYear ; i--){
 			tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home($routeParams.typeCode, i).url});
 		}
 		// Activate the tab corresponding to the selected year
