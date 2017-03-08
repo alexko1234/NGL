@@ -1,6 +1,7 @@
 package services.description.experiment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -76,26 +77,30 @@ public abstract class AbstractExperimentService {
 			return values;	
 		}
 		
+		// FDS 06/03/2017 modifications: ajout methode getTagIlluminaCategory
 		protected static List<Value> getTagIllumina() {
-			
-			List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, 
-					DBQuery.is("typeCode", "index-illumina-sequencing")).sort("name").toList();
-			List<Value> values = new ArrayList<Value>();
-			indexes.forEach(index -> {
-				values.add(DescriptionFactory.newValue(index.code, index.name));	
-			});
-			
-			return values;
-		}	
+			return getTagIlluminaCategory(null) ;
+		}
 		
-		// FDS 02/03/2017 ne récupérer que les Tag Illumina de categorie POOL-INDEX
 		protected static List<Value> getTagIllumina (List<String> categoryCodes) {
+			return getTagIlluminaCategory(categoryCodes) ;
+		}
+		
+		protected static List<Value> getTagIlluminaCategory (List<String> categoryCodes) {
+			List<Value> values = new ArrayList<Value>();
 			
+			if ( null == categoryCodes )
+			{
+				// ancien fonctionnement recuperer index "SINGLE-INDEX","DUAL-INDEX" et"MID"
+				categoryCodes = new ArrayList<String>( Arrays.asList("SINGLE-INDEX","DUAL-INDEX","MID"));
+			}
+			
+			//System.out.print("getTagIlluminaCategory getting indexes :"+ categoryCodes+"\n");
+					
 			List<IlluminaIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, 
 					DBQuery.is("typeCode", "index-illumina-sequencing").and(DBQuery.in("categoryCode", categoryCodes))).sort("name").toList();
-			List<Value> values = new ArrayList<Value>();
 			indexes.forEach(index -> {
-				values.add(DescriptionFactory.newValue(index.code, index.name));	
+					values.add(DescriptionFactory.newValue(index.code, index.name));	
 			});
 			
 			return values;

@@ -1,5 +1,9 @@
-// FDS 02/03/2017 -- JIRA NGL-1167 : processus Chromium
-// code copié depuis library-prep-ctrl......==> utiliser plaque d'index Chromium?????
+/* FDS 02/03/2017 -- JIRA NGL-1167 : processus Chromium
+   code copié depuis library-prep-ctrl......==> utiliser plaque d'index Chromium????? Pas encore specifie...
+   
+   2 fonctionnements  -main     strip-8   => tubes,strip-8,plaque-96
+                      -sciclone plaque-96 => plaque-96
+*/
 angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 	
@@ -135,7 +139,8 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			        	 "position":35,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },  
-			         { //  Ligne 
+			         
+			         { //  Ligne  .....si ouput=plaque !! d'ou sort la valeur affichee ?????????????
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
 			        	 "order":true,
@@ -144,7 +149,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			        	 "position":36,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },     
-			         { // colonne
+			         { // colonne .....si ouput=plaque  !! d'ou sort la valeur affichee ?????????????
 			        	 "header":Messages("containers.table.support.column"),
 			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 
@@ -217,7 +222,8 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			"extraHeaders":{
 				"number":2,
 				"dynamic":true,
-			},
+			}
+			/*,
 			"otherButtons": {
                 active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
                 complex:true,
@@ -226,7 +232,8 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
                 	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie'
                 	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
                 	+'</div>'
-			}
+             
+			}*/
 	}; // fin struct datatableConfig
 	
 	
@@ -237,6 +244,10 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
+	
+	// en mode plaque uniquement !!!!!!
+	/******
+	 
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
 		var dataMain = datatable.getData();
@@ -261,13 +272,17 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		
 	    datatable.setData(dataMain);
 	}
+	*****/
 	
-	// ajout showButton + suppression start = false;
+	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		
+		/// NECESSAIRE ??
+		// dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
@@ -293,6 +308,8 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		$scope.atmService.data.setEdit();
 	});
 	
+	
+/* PAS NECESSAIRE EN CHROMIUM ???	
     // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
 	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
 	$scope.copyVolumeInToExp = function(){
@@ -307,6 +324,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
 		})		
 	};
+*/
 		
 	//Init
 	
@@ -328,28 +346,67 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// le sciclone ne traite que des plaques (le type de container de sorti est deja restreint)
+	if ( ( $scope.experiment.instrument.categoryCode !== 'hand') && ($scope.experiment.instrument.inContainerSupportCategoryCode !== $scope.experiment.instrument.outContainerSupportCategoryCode) ) {
+		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));
+	} else {
+		$scope.messages.clear();
+		$scope.atmService = atmService;
+	}
+
+	
+    // recuperer les tags existants
+	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
+	.success(function(data, status, headers, config) {
+			$scope.tags = data;		
+	})
 	
 	// Calculs 
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 		
-		// mettre ici l'update automatique de categoryTag a partir du Teag Selectionné...
-		// TODO
-
-		// si l'utilisateur défini le volume a engager => calculer la quantité
+		/* PAS EN CHROMIUM ???
+		 //  si l'utilisateur défini le volume a engager => calculer la quantité
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
 			computeQuantity(value.data);
 		}
+		*/
 		
-		// 05/08/2016 essai d'ajouter le calcul inverse...===> PB LES 2 MODIFICATIONS SE MARCHENT SUR LES PIEDS !!
-		//
-		// si l'utilisateur défini la quantité a engager => calculer le volume
-		//if(col.property === 'inputContainerUsed.experimentProperties.inputQuantityLib.value'){
-		//	computeVolume(value.data);
-		//}
+		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
+			computeTagCategory(value.data);			
+		}
+		
 	}
+	
+	// determination  automatique de TagCategory
+	var computeTagCategory = function(udtData){
+		var getter = $parse("outputContainerUsed.experimentProperties.tagCategory.value");
+		var tagCategory = getter(udtData);
+		
+		var compute = {
+				tagValue : $parse("outputContainerUsed.experimentProperties.tag.value")(udtData),
+				tag : $filter("filter")($scope.tags,{code:$parse("outputContainerUsed.experimentProperties.tag.value")(udtData)},true),
+				isReady:function(){
+					return (this.tagValue && this.tag && this.tag.length === 1);
+				}
+		};
+		
+		if(compute.isReady()){
+			var result = compute.tag[0].categoryCode;
+			console.log("result = "+result);
+			if(result){
+				tagCategory = result;				
+			}else{
+				tagCategory = undefined;
+			}	
+			getter.assign(udtData, tagCategory);
+		}else if(compute.tagValue){
+			getter.assign(udtData, undefined);
+		}
+	}
+	
 
+/* PAS EN CHROMIUM ???
 	// -1- inputQuantityLib=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
 	var computeQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
@@ -384,8 +441,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			console.log("Missing values to calculate Quantity");
 		}
 	}
-	
-	// PLUS APPELLEE...voir plus haut...
+
 	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainer.concentration.value
 	var computeVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
@@ -413,8 +469,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			console.log("Missing values to calculate Volume");
 		}
 	}
+*/	
 	
-	
+/* pas specifié, voir plus tard..
 	var importData = function(){
 		$scope.messages.clear();
 
@@ -444,9 +501,11 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			angular.element('#importFile')[0].value = null;
 		});		
 	};
+*/
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 		
+	
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
 		//console.log("previous code: "+ $scope.outputContainerSupport.code);
@@ -456,6 +515,10 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
+
+	
+	
+/* pas specifié, voir plus tard..
 	// importer un fichier definissant quels index sont déposés dans quels containers
 	$scope.button = {
 		isShow:function(){
@@ -477,13 +540,14 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 	
 	//actuellement 1 seule definie
 	
-	$scope.plates = [ {name:"RAP TruSeq RNA HT", tagCategory:"DUAL-INDEX"} ];
+	$scope.plates = [ {name:"???????", tagCategory:"POOL-INDEX"} ];
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
 	// pour l'instant une seule plaque => faire un simple tableau
-	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
+	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
 	// NB: ce sont les memes index et dans la meme disposition que pour la "DAP TruSeq RNA HT", faut il tout dupliquer ???
 	var tagPlateCode=[];
+	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! index DUAL.. a changer !!!!!!!!!!!!!!!!!!!
 	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
 	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
 	tagPlateCode.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508");
@@ -550,4 +614,6 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			},	
 		select:setTags,
 	};
+*/
+	
 }]);

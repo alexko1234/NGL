@@ -83,16 +83,6 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			         
 			         //--->  colonnes specifiques experience s'inserent ici  (outputUsed ??)
 			         
-			         { // Volume avec valeur par defaut
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
-			        	 "hide":true,
-			        	 "edit":true,
-			        	 "type":"number",
-			        	 "defaultValues":20,
-			        	 "position":34,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },
 			         { //  barcode du containerSupport strip sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
@@ -131,7 +121,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			},
 			"order":{
 				"mode":"local",
-				"active":true//,
+				"active":true //,
 				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
 				//"by":"inputContainer.support.column*1"
 			},
@@ -145,10 +135,10 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	        	"withoutEdit": true,
 	        	"changeClass":false,
 	        	"showButton":false,
-	        	"mode":"local",
-	        	"callback":function(datatable){
-	        		copyContainerSupportCodeAndStorageCodeToDT(datatable);
-	        	}
+	        	"mode":"local" //,
+	        	//"callback":function(datatable){
+	        	//	copyContainerSupportCodeAndStorageCodeToDT(datatable);
+	        	//}
 			},
 			"hide":{
 				"active":true
@@ -182,49 +172,57 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	// GA 27/02/2017 : ne plus utiliser le system copyContainerXXToDT sur action save mais utiliser plutot updatePropertyFromUDT
-	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable....
-	// Pose 2 problemes:
-	// 1) ca n'affiche pas en temps reels     2) seules les modifiees sont mises a jour en cas de modifiaction du support
-	/*
+	/* GA 27/02/2017 : ne plus utiliser le system copyContainerXXToDT sur action save mais utiliser plutot updatePropertyFromUDT
+	  updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable...
+	  
+	  FDS: Pose 2 problemes:
+	  1) ca n'affiche pas en temps reels  alors que ca devrait !!!    
+	  2) seules les modifiees sont mises a jour en cas de modifiaction du support ====> essai ajout updateContainerCodeDT
+	  
+	07/03/2017 essai de refaire marcher....
+	*/
+	
 	$scope.updatePropertyFromUDT = function(udt, col){
-		//console.log("update from property : "+col.property );
+		console.log("update property : "+ col.property );
 		
 		var outputContainerSupportCode = $scope.outputContainerSupport.code;
 		
-		if(col.property === 'inputContainerUsed.experimentProperties.chipPosition.value'){
-			var newChipPos =  $parse("inputContainerUsed.experimentProperties.chipPosition.value")(udt.data);
-			//console.log("data => new position on chip=" + newChipPos);
+		if(col.property === 'inputContainerUsed.instrumentProperties.chipPosition.value'){
+			var newChipPos =  $parse("inputContainerUsed.instrumentProperties.chipPosition.value")(udt.data);
+			console.log("new position on chip=" + newChipPos);
 			
 			if ((undefined != newChipPos) && (undefined != outputContainerSupportCode))
 			{	
 				// creation du code du container
-				var newContainerCode = outputContainerSupportCode+"_"+newChipPos ;
-				console.log("newContainerCode="+ newContainerCode);
+				var newContainerCode = outputContainerSupportCode +"_"+ newChipPos ;
+				console.log("....newContainerCode="+ newContainerCode);
+					
+				$parse('outputContainerUsed.code').assign(udt.data, newContainerCode);
 				
-				console.log("assigning...");
+				console.log("assigning container support code!!!"+ outputContainerSupportCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(udt.data, outputContainerSupportCode);// devrait se mettre a jour "live"!!!
 				
-				$parse('outputContainerUsed.code').assign(udt.data,newContainerCode);
-				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(udt.data,outputContainerSupportCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.line').assign(udt.data, '1');
 				
-				//assigner la column et line du support !!!!
-				$parse('outputContainerUsed.locationOnContainerSupport.line').assign(udt.data,'1');
-				$parse('outputContainerUsed.locationOnContainerSupport.column').assign(udt.data,newChipPos);
+				console.log("assigning column !!!"+newChipPos);		
+				$parse('outputContainerUsed.locationOnContainerSupport.column').assign(udt.data, newChipPos);// devrait se mettre a jour "live"!!!
 				
-				// Historique mais continer a renseigner car effets de bord possibles ????
-				$parse('line').assign(udt.data.atomicTransfertMethod,1);
-				$parse('column').assign(udt.data.atomicTransfertMethod,newChipPos);
+				// Historique mais continuer a renseigner car effets de bord possibles ????
+				$parse('line').assign(udt.data.atomicTransfertMethod, 1);
+				$parse('column').assign(udt.data.atomicTransfertMethod, newChipPos);
+				
 				console.log("end assigning...");
 			}
 			
 			var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
 			if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
-				$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(value.data,outputContainerSupportStorageCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(udt.data,outputContainerSupportStorageCode);
 			}
 		}
 	}
-	*/
-		
+	
+	
+	/* 07/02/2017  ne plus passer par ce systeme....
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 		
 		var dataMain = datatable.getData();
@@ -237,14 +235,15 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			for(var i = 0; i < dataMain.length; i++){
 				
 				// recuperer la valeur du select "chipPosition"
-				var newChipPos =$parse("inputContainerUsed.experimentProperties.chipPosition.value")(dataMain[i]);
+				// !!!! instrument property
+				//var newChipPos =$parse("inputContainerUsed.experimentProperties.chipPosition.value")(dataMain[i]);
+				var newChipPos =$parse("inputContainerUsed.instrumentProperties.chipPosition.value")(dataMain[i]);
 				console.log("data :"+ i + "=> new chip position =" + newChipPos);
 				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.chipPosition.value;
 				
 				var atm = dataMain[i].atomicTransfertMethod;
 						
-				if ( null != newChipPos ) {	
-					
+				if ( null != newChipPos ) {		
 					// creation du code du container
 					var newContainerCode = outputContainerSupportCode+"_"+newChipPos ;
 					console.log("newContainerCode="+ newContainerCode);
@@ -272,6 +271,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	    datatable.setData(dataMain);
 	}
 	
+	*/
 	// ajout showButton + suppression start = false;
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
@@ -303,11 +303,40 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.data.setEdit();
 	});
 	
+	// meme s'il n'y a pas de choix possible par l'utilisateur, ce watch est indispensable pour que les proprietes d'instrument soient injectees dans l'interface..	
+	$scope.$watch("instrumentType", function(newValue, OldValue){
+		if(newValue)
+			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
+	});
+	
+	// ESSAI ....
+	$scope.$watch("outputContainerSupport.code", function(newValue, OldValue){
+		if ((newValue !== undefined ) && ( newValue !== OldValue)){
+			console.log("outputContainerSupport.code  CHANGED !!! "+newValue+ " ...  update all outputContainers");	
+			updateContainerCodesDT($scope.datatable);
+		}
+	});
+		
+	// TEST !!!!  PBBBB  datatable   pas defini !!!!!!!!
+	var updateContainerCodesDT = function(datatable){			
+		var dataMain = datatable.getData();
+			
+		for(var i = 0; i < dataMain.length; i++){
+			var currentChipPos =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties.chipPosition.value;
+			
+			console.log("updating chip position :"+ currentChipPos);
+			var newContainerCode = $scope.outputContainerSupport.code+"_"+currentChipPos ;
+
+			console.log("reassigning outputContainerUsed.code..=> "+  newContainerCode);
+			$parse('outputContainerUsed.code').assign(udt.data,newContainerCode);
+		}
+   }	
+   
 		
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
-	//defined new atomictransfertMethod
+	//define new atomictransfertMethod; line is set to one for strip-8
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
 			class:"OneToOne",
@@ -335,7 +364,8 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	}
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
-		
+	
+
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
 		//console.log("previous code: "+ $scope.outputContainerSupport.code);

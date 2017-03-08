@@ -911,19 +911,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private List<PropertyDefinition> getPropertyDefinitionsWGChromiumLibPrep() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		return propertyDefinitions;
-		// TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-		propertyDefinitions.add(newPropertiesDefinition("TRUC", "truc", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null, 
-				"single", 10, true, null,null));
-		
 		//OuputContainer
 		// ces propriétés de containerOut doivent etre propagées au content; propriétés obligatoires a: Finished 
-		// TEST...... getTagIllumina(new ArrayList<String>( Arrays.asList("POOL-INDEX")))
-		propertyDefinitions.add(newPropertiesDefinition("Taggg", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
-				getTagIllumina(), "single", 30, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
+				getTagIllumina(new ArrayList<String>( Arrays.asList("POOL-INDEX"))), "single", 30, true, null,null));
 		
-		// FDS forcer tagCategory a POOL-INDEX ?? 
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Taggg", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F",
+		// restreindre tagCategory a POOL-INDEX 
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F",
 				DescriptionFactory.newValues("POOL-INDEX"), "single", 31, false ,"POOL-INDEX", null));		
 		
 		return propertyDefinitions;

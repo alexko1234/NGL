@@ -330,8 +330,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		/** FDS ajout 20/02/2017 NGL-1167 : Chromium controller ( entree tubes / sortie strip-8 **/
 		l.add(newInstrumentUsedType("Chromium controller", "chromium-controller", InstrumentCategory.find.findByCode("10x-genomics-instrument"), getChromiumControllerProperties(), 
 				getInstruments(
-						createInstrument("chromium1", "Chromium 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("chromium2", "Chromium 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("chromium1", "Chromium 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube"}), 
 				getContainerSupportCategories(new String[]{"strip-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -668,7 +667,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	//FDS 20/02/2017 NGL-1167: Chromium.. Y a-t-il des proprietes ou non?? 
+	//FDS 20/02/2017 NGL-1167: Chromium controller
 	private static List<PropertyDefinition> getChromiumControllerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
