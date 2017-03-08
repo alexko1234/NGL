@@ -415,7 +415,9 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 
 
 	var colorBlue = function(datatable, pos){
-		datatable.displayResult[pos].line.trClass="text-primary";
+		if(datatable.displayResult != undefined){
+			datatable.displayResult[pos].line.trClass="text-primary";
+		}
 	}
 
 	// Service
@@ -425,10 +427,12 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		return $scope.loading;
 	};
 
+	
 	$scope.setActiveTab = function(value){
 		mainService.put('balanceSheetActiveTab', value);
+		
 	};
-
+	
 	$scope.getTabClass = function(value){
 		if(value === mainService.get('balanceSheetActiveTab')){
 			return 'active';
@@ -520,6 +524,7 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 
 		$scope.loading=false;
 	};
+	
 	
 	var init = function(){
 		$scope.loading=true;

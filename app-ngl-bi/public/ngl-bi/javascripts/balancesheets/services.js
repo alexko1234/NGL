@@ -307,7 +307,8 @@ factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse
 				 var chartQuarters = {
 					 chart : {
 						 zoomType : 'x',
-						 height : 770
+						 height : 770,
+						 reflow : true
 					 },
 					 title : {
 						 text : Messages("balanceSheets.quarterBases")
