@@ -179,31 +179,16 @@ public class Nanopore extends AbstractDeclaration{
 	                        getPET("nanopore-fragmentation",0),
 	                        getPET("nanopore-frg",0),
 	                        getPET("nanopore-dna-reparation",0),
-	                        getPET("nanopore-depot",0),
+	                       
 	                                           
 	                        getPET("nanopore-library",1),
-	                        getPET("nanopore-fragmentation",1),
-	                        getPET("nanopore-frg",1),
-	                        getPET("nanopore-dna-reparation",1),
+	                         getPET("nanopore-dna-reparation",1),
 	                        getPET("nanopore-depot",1),
 	               
 	                        getPET("nanopore-library",2),
-	                        getPET("nanopore-fragmentation",2),
-	                        getPET("nanopore-frg",2),
-	                        getPET("nanopore-dna-reparation",2),
 	                        getPET("nanopore-depot",2),
 	                       
-	                        getPET("nanopore-library",3),
-	                        getPET("nanopore-fragmentation",3),
-	                        getPET("nanopore-frg",3),
-	                        getPET("nanopore-dna-reparation",3),
-	                        getPET("nanopore-depot",3),
-	               
-	                        getPET("nanopore-library",4),
-	                        getPET("nanopore-fragmentation",4),
-	                        getPET("nanopore-frg",4),
-	                        getPET("nanopore-dna-reparation",4),
-	                        getPET("nanopore-depot",4)),
+	                         getPET("nanopore-depot",3)),
 	               
 	                getExperimentTypes("nanopore-library").get(0),
 	                getExperimentTypes("nanopore-depot").get(0),
