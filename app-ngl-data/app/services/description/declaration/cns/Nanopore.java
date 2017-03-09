@@ -508,16 +508,6 @@ public class Nanopore extends AbstractDeclaration{
 			getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,
 			null).save();
 		
-	/*	newExperimentTypeNode("nanopore-fragmentation",
-				getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,
-				getExperimentTypeNodes("dna-rna-extraction", "ext-to-nanopore-process-library"),null,null,
-				getExperimentTypes("aliquoting")).save();
-				
-		newExperimentTypeNode("nanopore-library",
-				getExperimentTypes("nanopore-library").get(0),false, false,false,
-				getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,
-				getExperimentTypes("pool-tube")).save();
-	*/
 	}
 
 	@Override
@@ -528,72 +518,41 @@ public class Nanopore extends AbstractDeclaration{
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		
-		 newExperimentTypeNode("nanopore-fragmentation",
-	                getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,
-	                getExperimentTypeNodes("dna-rna-extraction", "ext-to-nanopore-process-library","nanopore-library","nanopore-dna-reparation","nanopore-frg","nanopore-fragmentation"),null,null,
-	                getExperimentTypes("aliquoting")).save();
-	        
-	        newExperimentTypeNode("nanopore-frg",
-	                getExperimentTypes("nanopore-frg").get(0),false, false,false,
-	                getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot","nanopore-library","nanopore-dna-reparation","nanopore-frg","nanopore-fragmentation"),getExperimentTypes("nanopore-sizing"),getExperimentTypes("fluo-quantification"),
-	                getExperimentTypes("aliquoting","pool-tube")).save();    
-	        
-	        newExperimentTypeNode("nanopore-dna-reparation",
-	                getExperimentTypes("nanopore-dna-reparation").get(0),false, false,false,
-	                getExperimentTypeNodes("ext-to-nanopore-rep-lib-depot","nanopore-frg","nanopore-fragmentation","dna-rna-extraction","nanopore-library","nanopore-dna-reparation","nanopore-frg","nanopore-fragmentation"),null,getExperimentTypes("fluo-quantification"),
-	                getExperimentTypes("aliquoting","pool-tube")).save();
-	        
-	        newExperimentTypeNode("nanopore-library",
-	                getExperimentTypes("nanopore-library").get(0),false, false,false,
-	                getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","dna-rna-extraction","nanopore-fragmentation", "nanopore-frg","nanopore-library","nanopore-dna-reparation","nanopore-frg","nanopore-fragmentation"),getExperimentTypes("nanopore-sizing"),getExperimentTypes("fluo-quantification"),
-	                getExperimentTypes("aliquoting","pool-tube")).save();    
-	                
-	        newExperimentTypeNode("nanopore-depot",
-	                getExperimentTypes("nanopore-depot").get(0),false, false,false,
-	            getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run","nanopore-dna-reparation","nanopore-library","nanopore-frg","nanopore-fragmentation"),null,null,
-	            null).save();
-	   
-
-
-	/*	newExperimentTypeNode("ext-to-nanopore-frg-lib-depot", 
-				getExperimentTypes("ext-to-nanopore-frg-lib-depot").get(0), false, false, false, 
-				null, null, null, null).save();
-		
-		newExperimentTypeNode("ext-to-nanopore-frg-rep-lib-depot",
-				getExperimentTypes("ext-to-nanopore-frg-rep-lib-depot").get(0), false, false, false, 
-				null, null, null, null).save();
-		
-		newExperimentTypeNode("ext-to-nanopore-rep-lib-depot", 
-				getExperimentTypes("ext-to-nanopore-rep-lib-depot").get(0), false, false, false, 
-				null, getExperimentTypes("nanopore-sizing"), null, null).save();
+		newExperimentTypeNode("ext-to-nanopore-process-dev", 
+				getExperimentTypes("ext-to-nanopore-process-dev").get(0), false, false, false, 
+				null, null, null, 
+				null).save();
 		
 		
 		newExperimentTypeNode("nanopore-fragmentation",
 				getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,
-				getExperimentTypeNodes("dna-rna-extraction", "ext-to-nanopore-process-library"),null,null,
+				getExperimentTypeNodes("dna-rna-extraction", "ext-to-nanopore-process-library","ext-to-nanopore-process-dev"),null,null,
 				getExperimentTypes("aliquoting")).save();
 		
 		newExperimentTypeNode("nanopore-frg",
 				getExperimentTypes("nanopore-frg").get(0),false, false,false,
-				getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot"),getExperimentTypes("nanopore-sizing"),getExperimentTypes("fluo-quantification"),
+				getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot","ext-to-nanopore-process-library","ext-to-nanopore-process-dev"),getExperimentTypes("nanopore-sizing"),getExperimentTypes("fluo-quantification"),
 				getExperimentTypes("aliquoting","pool-tube")).save();	
 		
 		newExperimentTypeNode("nanopore-dna-reparation",
 				getExperimentTypes("nanopore-dna-reparation").get(0),false, false,false,
-				getExperimentTypeNodes("ext-to-nanopore-rep-lib-depot","nanopore-frg","nanopore-fragmentation","dna-rna-extraction"),null,getExperimentTypes("fluo-quantification"),
+				getExperimentTypeNodes("ext-to-nanopore-rep-lib-depot","nanopore-frg","nanopore-fragmentation","dna-rna-extraction","ext-to-nanopore-process-dev"),null,getExperimentTypes("fluo-quantification"),
 				getExperimentTypes("aliquoting","pool-tube")).save();
 		
 		newExperimentTypeNode("nanopore-library",
 				getExperimentTypes("nanopore-library").get(0),false, false,false,
-				getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","dna-rna-extraction","nanopore-fragmentation", "nanopore-frg","nanopore-dna-reparation"),getExperimentTypes("nanopore-sizing"),getExperimentTypes("fluo-quantification"),
+				getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","dna-rna-extraction","nanopore-fragmentation", "nanopore-frg","nanopore-dna-reparation","ext-to-nanopore-process-dev"),getExperimentTypes("nanopore-sizing"),getExperimentTypes("fluo-quantification"),
 				getExperimentTypes("aliquoting","pool-tube")).save();	
 				
 		newExperimentTypeNode("nanopore-depot",
 				getExperimentTypes("nanopore-depot").get(0),false, false,false,
-			getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,
+			getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run","ext-to-nanopore-process-dev"),null,null,
 			null).save();
-	*/
+		
+	   
+
+
+
 	}
 
 	//NE PAS MODIFIER NI SUPPRIMER (historique)
