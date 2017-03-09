@@ -181,7 +181,6 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	  
 	07/03/2017 essai de refaire marcher....
 	*/
-	
 	$scope.updatePropertyFromUDT = function(udt, col){
 		console.log("update property : "+ col.property );
 		
@@ -309,7 +308,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
 	});
 	
-	// ESSAI ....
+	// TEST ....MARCHE PAS  voir ci dessous....
 	$scope.$watch("outputContainerSupport.code", function(newValue, OldValue){
 		if ((newValue !== undefined ) && ( newValue !== OldValue)){
 			console.log("outputContainerSupport.code  CHANGED !!! "+newValue+ " ...  update all outputContainers");	
@@ -336,11 +335,12 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
-	//define new atomictransfertMethod; line is set to one for strip-8
+	//define new atomictransfertMethod
+	//FDS: line forcee a 1 pour strip-8; pourquoi column undefined et pas "c"  ??????
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
 			class:"OneToOne",
-			line: 1, 
+			line: "1", 
 			column: undefined, 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)

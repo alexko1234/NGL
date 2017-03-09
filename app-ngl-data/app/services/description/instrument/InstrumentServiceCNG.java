@@ -672,10 +672,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience.. comme pour Bionanalyzer !! 
-		// Obligatoire, position 23 ???
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 					newValues("1","2","3","4","5","6","7","8"), 
-					"single", 23, true, null,null));
+					"single",23, true, null,null));
 
 		return l;
 	}
@@ -690,7 +689,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		 
 		 l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 					newValues("1","2","3","4","5","6","7","8","9","10","11"), 
-					"single", 15, true, null,null));
+					"single", 11, true, null,null));
 		
 		return l;
 	}

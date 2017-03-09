@@ -547,7 +547,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				false,false,false,
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
-				getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc 
+				//getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc  ?? inutile de les mettre tous
+				getExperimentTypes("labchip-migration-profile"), // qc   un seul suffit meme s'il y en a plusieurs possibles
 				null  // pas transfert 
 				).save();
 		}		
@@ -687,8 +688,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single", 11, true, null, null));
 		
 		// laiser la position 12 libre pour la colonne unit
-
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 13, true, null, null));
 		
@@ -930,15 +930,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//InputContainer (pas d'outputContainer sur une experience QC )
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl"),
-				"single", 11, true, null, null));
+				"single", 14, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));	
 	
-		// le bouton import  n'apparait que si la propriété est editable=true
+		// le bouton import n'apparait que si la propriété est editable=true
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
-				"img", 14,true, null, null));
+				"img", 13,true, null, null));
 			
 		return propertyDefinitions;
 	}
