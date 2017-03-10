@@ -64,7 +64,7 @@
 			@columnLabelValue(Messages("containers.table.volume")){
 				<div ng-switch on="isEditMode()">
 					<p ng-switch-when="false" class="form-control-static">
-						<span ng-bind="container.volume.value" />
+						<span ng-bind="container.volume.value|number" />
 						<span ng-if="container.volume.value !== undefined && container.volume.value !== null" ng-bind="container.volume.unit" />
 					</p>
 					<div ng-switch-when=true>
@@ -79,7 +79,7 @@
 			}
 			@columnLabelValue(Messages("containers.table.quantity")){
 				<p class="form-control-static">
-						<span ng-bind="container.quantity.value" />
+						<span ng-bind="container.quantity.value|number" />
 						<span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
 					</p>
 				
@@ -101,7 +101,7 @@
 			@columnLabelValue(Messages("containers.table.size")){
 				<div ng-switch on="isEditMode()">
 					<p ng-switch-when="false" class="form-control-static">
-						<span ng-bind="container.size.value" />
+						<span ng-bind="container.size.value|number" />
 						<span ng-if="container.size.value !== undefined && container.size.value !== null" ng-bind="container.size.unit" />
 					</p>
 					<div ng-switch-when=true>
