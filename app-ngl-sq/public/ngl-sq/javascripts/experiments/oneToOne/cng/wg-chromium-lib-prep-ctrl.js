@@ -203,53 +203,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		});
 	}
 	
-	if ($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
-		datatableConfig.columns.push({
-			// barcode plaque sortie == support Container used code
-			"header" : Messages("containers.table.support.name"),
-			"property" : "outputContainerUsed.locationOnContainerSupport.code",
-			"hide" : true,
-			"type" : "text",
-			"position" : 400,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-		
-		if ($scope.experiment.instrument.outContainerSupportCategoryCode == "96-well-plate") {
-			// la ligne est fixe=1  pour un strip-8
-			datatableConfig.columns.push({
-				// Ligne
-				"header" : Messages("containers.table.support.line"),
-				"property" : "outputContainerUsed.locationOnContainerSupport.line",
-				"edit" : true,
-				"order" : true,
-				"hide" : true,
-				"type" : "text",
-				"position" : 401,
-				"extraHeaders" : {
-					0 : Messages("experiments.outputs")
-				}
-			});
-		}
-		
-		datatableConfig.columns.push({
-			// colonne
-			"header" : Messages("containers.table.support.column"),
-			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
-			// forcer a numerique.=> type:number, property: *1
-			"property" : "outputContainerUsed.locationOnContainerSupport.column",
-			"edit" : true,
-			"order" : true,
-			"hide" : true,
-			"type" : "number",
-			"position" : 402,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-
-	} else {
+	// probleme de rafraichissement de la vue en cas de mauvaus choix inital de l'utilisateur...pas corriger par loadTemplate 
+	// dans le watch  "$scope.experiment.instrument.categoryCode"   => forcer la vue ici...
+	if ( $scope.experiment.instrument.categoryCode === "hand") {
 		// tubes 
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.code"),
@@ -276,7 +232,53 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 				0 : Messages("experiments.outputs")
 			}
 		});
-	}
+	} else {
+		// l'autre cas pour l'instant est le sciclone qui n'a que des palques-96 en sortie
+	
+		datatableConfig.columns.push({
+			// barcode plaque sortie == support Container used code
+			"header" : Messages("containers.table.support.name"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.code",
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		
+
+		datatableConfig.columns.push({
+			// Ligne
+			"header" : Messages("containers.table.support.line"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.line",
+			"edit" : true,
+			"order" : true,
+			"hide" : true,
+			"type" : "text",
+			"position" : 401,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		
+		datatableConfig.columns.push({
+			// colonne
+			"header" : Messages("containers.table.support.column"),
+			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
+			// forcer a numerique.=> type:number, property: *1
+			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			"edit" : true,
+			"order" : true,
+			"hide" : true,
+			"type" : "number",
+			"position" : 402,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+
+	} 
 	
 	// en mode plaque ou strip uniquement !!!!!!
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){		
@@ -307,10 +309,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			}
 		
 			datatable.setData(dataMain);
-		}
-		// en mode tube il faut quand meme faire qq chose sinon des barcodes automatiques sont attribués.... 
-		// TODO !!!!!
-		
+		}		
 	}
 	
 		
@@ -441,31 +440,11 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 	$scope.$watch("$scope.experiment.instrument.categoryCode", function(){
 			if ($scope.experiment.instrument.categoryCode === "hand")
 				$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
-			// forcer raffraichissement de la vue... marche pas et duplique l'affichage !!!
-			//$scope.$emit('refresh');
+			// GA: tester forcer rechargement template
+			// $scope.loadTemplate();=> duplique le nbre de lignes dans datatable !!!
 	
 	});	
-
-	
-	
-	
-/* PAS NECESSAIRE EN CHROMIUM ???	a NETTOYER..
-	    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
-		//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
-		$scope.copyVolumeInToExp = function(){
-			console.log("copyVolumeInToExp");
-			
-			var data = $scope.atmService.data.displayResult;		
-			data.forEach(function(value){
-				
-				if ( !value.data.inputContainerUsed.experimentProperties ){
-					value.data.inputContainerUsed.experimentProperties = {};
-				}
-				value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
-			})		
-		};
-*/
-				
+		
 	
 /* pas specifié, voir plus tard..................?????????????????????//
  

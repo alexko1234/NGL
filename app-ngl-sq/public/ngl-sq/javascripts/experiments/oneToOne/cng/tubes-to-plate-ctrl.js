@@ -1,3 +1,5 @@
+/* FDS 10/03/2017 NGL-1167 : pour process Chromium autoriser aussi les strips */
+
 angular.module('home').controller('CNGTubesToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable',
                                                        function($scope, $http,$parse,$filter,atmToSingleDatatable) {
 	var datatableConfig = {
@@ -382,13 +384,12 @@ angular.module('home').controller('CNGTubesToPlateCtrl',['$scope' ,'$http','$par
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode === "tube"){
+	/* FDS 10/03/2017 NGL-1167 : pour process Chromium autoriser aussi les strips */
+	if (($scope.experiment.instrument.inContainerSupportCategoryCode === "tube") || ( $scope.experiment.instrument.inContainerSupportCategoryCode === "strip-8")){
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
-		$scope.messages.setError(Messages('experiments.input.error.only-tubes'));					
-	}
-	
-	
+		$scope.messages.setError(Messages('experiments.input.error.only-tubes-or-strips'));					
+	}	
 	
 }]);

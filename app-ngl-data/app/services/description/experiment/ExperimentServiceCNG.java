@@ -250,8 +250,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsWGChromiumLibPrep(),
 					getInstrumentUsedTypes("hand","sciclone-ngsx"), 
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			}
 			
 			/** Quality Control, ordered by display order **/
@@ -307,8 +306,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand","janus","epmotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
-			l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
+			// test modif nom
+			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -323,7 +322,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10800,
+			// test modif nom...
+			l.add(newExperimentType("Tubes + Plaques -> Plaque","x-to-plate",null,10800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

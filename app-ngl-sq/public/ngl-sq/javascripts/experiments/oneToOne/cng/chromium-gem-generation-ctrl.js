@@ -302,12 +302,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.data.setEdit();
 	});
 	
-	// meme s'il n'y a pas de choix possible par l'utilisateur, ce watch est indispensable pour que les proprietes d'instrument soient injectees dans l'interface..	
-	$scope.$watch("instrumentType", function(newValue, OldValue){
-		if(newValue)
-			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
-	});
-	
+
 	// TEST ....MARCHE PAS  voir ci dessous....
 	$scope.$watch("outputContainerSupport.code", function(newValue, OldValue){
 		if ((newValue !== undefined ) && ( newValue !== OldValue)){
@@ -352,6 +347,13 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			volume : "µL"
 	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	//  pour que les proprietes d'instrument soient injectees dans le datatable
+	// ne marche QUE avec watch... 
+	$scope.$watch("instrumentType", function(newValue, OldValue){
+		if(newValue)
+			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
+	});
 	
 	// verification du nombre d'inputs container
 	if ( $scope.experiment.atomicTransfertMethods.length > 8 ){
