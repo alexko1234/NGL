@@ -1,13 +1,12 @@
 @()
-<!-- copie depuis libraryprep.scala pour garder la possibilite d'associer les index via 2 modes
+<!-- copie depuis libraryprep.scala pour garder la possibilité d'associer les index via 2 modes
     => import fichier XXXXX
 	=> selection 1 colonne de départ pour plaque ????
 	
-    2 fonctionnements  -main:     strip-8   => tubes, strip-8, plaque-96
-                       -sciclone: plaque-96 => plaque-96
+    2 fonctionnements  -main    : strip-8       => tubes, strip-8, 96-well-plate
+                       -sciclone: 96-well-plate => 96-well-plate
 	  
-	  ??!! probleme avec ng-switch utiliser if ?????
-	  div ng-if "experiment.instrument.outContainerSupportCategoryCode!='tube'" >
+	  !! utilisation de ng-switch => utiliser if 
 -->
 <div class="col-md-12 col-lg-12" ng-controller="WgChromiumLibraryPrepCtrl" >
   <div ng-if ="( experiment.instrument.outContainerSupportCategoryCode  !== 'tube')"  >

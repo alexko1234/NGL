@@ -38,7 +38,7 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	},profilsMap)
 	
 	var internalProfils = profilsMap;
-	/// ???? line et column?????
+	/// pas besoin de line ?????
 	$scope.getProfil=function(column){
 		return internalProfils[column];					
 	};
@@ -71,33 +71,6 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
-	//positions 7 a 10 dispo...
-	columns.push({
-			"header" : Messages("containers.table.concentration"),
-			"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
-			//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 8,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
-
-	columns.push({
-			"header" : Messages("containers.table.volume") + " (µL)",
-			"property" : "inputContainer.volume.value",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "number",
-			"position" : 9,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-	});
 	
 	columns.push({
     	"header": Messages("containers.table.codeAliquot"),
@@ -124,20 +97,6 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			}
 		});
 	
-	/*	OUI il car il un QC au bioanalyzer apres l'etape Chromium PCR indexing....*/
-	columns.push({
-			"header" : Messages("containers.table.tags"),
-			"property" : "inputContainer.contents",
-			"order" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 9.2,
-			"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		}); 
-		
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 
@@ -148,79 +107,5 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			}	
 	};
 	
-	/*  pas d'import de ???  pour bioanalyzer
-	var importData = function(){
-		$scope.messages.clear();
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
-		.success(function(data, status, headers, config) {
-			$scope.messages.clazz="alert alert-success";
-			$scope.messages.text=Messages('experiments.msg.import.success');
-			$scope.messages.showDetails = false;
-			$scope.messages.open();	
-			//only atm because we cannot override directly experiment on scope.parent
-			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
-			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
-			$scope.$emit('refresh');
-			
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.import.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.open();	
-			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
-		});
-	};
-	
-	
-	 $scope.importButton = {
-		isShow:function(){
-			return ("labchip-gx" === $scope.experiment.instrument.typeCode  && !$scope.mainService.isEditMode() 
-					&& ($scope.isInProgressState() || Permissions.check("admin")))
-			},
-		isFileSet:function(){
-			return ($scope.file === undefined)?"disabled":"";
-		},
-		click:importData,		
-	};
-	*/
-	
-	/* pas de sample sheet pour bioanalyzer
-	 * 
-	var generateSampleSheet = function(){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
-	};
-	
-	if("labchip-gx" === $scope.experiment.instrument.typeCode){
-		
-		$scope.setAdditionnalButtons([{
-			isDisabled : function(){return $scope.isNewState();} ,
-			isShow:function(){return !$scope.isNewState();},
-			click:generateSampleSheet,
-			label:Messages("experiments.sampleSheet")
-		}]);
-	}
-	*/
 	
 }]);

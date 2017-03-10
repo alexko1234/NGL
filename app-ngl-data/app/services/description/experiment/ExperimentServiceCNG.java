@@ -517,7 +517,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization", "normalization-and-pooling"), // previous nodes, 12/12/2016 ajout "normalization-and-pooling"
+				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization", "normalization-and-pooling"), // previous nodes
 				null,
 				null, // pas qc
 				null  // pas tranfert
@@ -547,7 +547,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				false,false,false,
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
-				getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc 
+				//getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc  ?? inutile de les mettre tous
+				getExperimentTypes("labchip-migration-profile"), // qc   un seul suffit meme s'il y en a plusieurs possibles
 				null  // pas transfert 
 				).save();
 		}		
@@ -687,8 +688,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single", 11, true, null, null));
 		
 		// laiser la position 12 libre pour la colonne unit
-
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 13, true, null, null));
 		
@@ -714,7 +714,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment PrepPcrFree pour le process X5
-	// FDS 24/11/2016 supprimer les valeurs par defaut 55/1100 car il y a maintenant un bouton supplémentaire pour copier automatiquement les volumes ( les qtés se calculent)
 	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -879,13 +878,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
 				getTagCategories(), "single", 31, true, null,null));		
 		
-		/* 24/11/2016  suppression de ces 2 propriétés car non pertinentes
-		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",32,true,"350", null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théorique)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null, null	
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",33, true,"470",null));
-	    */
 		return propertyDefinitions;
 	}
 	
@@ -897,12 +889,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),
 				"single",22, true, null, null));
-		
-		// MEME probleme que le bioanalyzer ==> propriété d'instrument plutot ???
-		// rendre obligatoire dès le début (supprimer state:"F") car est utilisé pour créer le code du container out
-		// OUI 06/03/2017  NETTOYER DES QUE OK
-		//propertyDefinitions.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
-		//		DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), null, null, null,"single",23, true, null, null));
 	
 		return propertyDefinitions;
 	}
@@ -930,15 +916,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//InputContainer (pas d'outputContainer sur une experience QC )
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl"),
-				"single", 11, true, null, null));
+				"single", 14, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Size", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));	
 	
-		// le bouton import  n'apparait que si la propriété est editable=true
+		// le bouton import n'apparait que si la propriété est editable=true
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
-				"img", 14,true, null, null));
+				"img", 13,true, null, null));
 			
 		return propertyDefinitions;
 	}

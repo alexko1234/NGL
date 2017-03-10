@@ -198,7 +198,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		});
 	}
 	*/
-	columns.push({
+/*	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",
 			"order" : false,
@@ -209,7 +209,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
-		});
+		});*/
 	
 	if($scope.experiment.typeCode === "chip-migration-rna-evaluation"){
 		columns.push({		

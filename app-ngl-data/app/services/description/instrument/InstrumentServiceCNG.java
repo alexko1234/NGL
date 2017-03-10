@@ -357,14 +357,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		/* 23/01/2017 strictement la meme liste que cBot standard!! simplification...
-		 A NETTOYER.....
-        l.add(newPropertiesDefinition("Type lectures","sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
-        l.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-        l.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-        		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
-        */
-        
+		/* 23/01/2017 strictement la meme liste que cBot standard!! simplification...*/    
 		l.addAll(getCBotProperties());
 		
         return l;
@@ -672,10 +665,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience.. comme pour Bionanalyzer !! 
-		// Obligatoire, position 23 ???
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 					newValues("1","2","3","4","5","6","7","8"), 
-					"single", 23, true, null,null));
+					"single",23, true, null,null));
 
 		return l;
 	}
@@ -690,7 +682,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		 
 		 l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 					newValues("1","2","3","4","5","6","7","8","9","10","11"), 
-					"single", 15, true, null,null));
+					"single", 11, true, null,null));
 		
 		return l;
 	}

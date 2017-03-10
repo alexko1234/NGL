@@ -1,8 +1,8 @@
 /* FDS 02/03/2017 -- JIRA NGL-1167 : processus Chromium
    code copié depuis library-prep-ctrl......==> utiliser plaque d'index Chromium????? Pas encore specifie...
    
-   2 fonctionnements  -main     strip-8   => tubes,strip-8,plaque-96
-                      -sciclone plaque-96 => plaque-96
+   2 fonctionnements  -main     : strip-8       => tubes ( Julie demande de bloquer   strip-8, 96-well-plate pour l'instant...)
+                      -sciclone : 96-well-plate => 96-well-plate
 */
 angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
@@ -16,7 +16,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			"columns":[
 			         //--------------------- INPUT containers section -----------------------
 			         		        
-			          { // barcode support entree  ( plaque ou strip )
+			          { // barcode support entree
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
 						 "hide":true,
@@ -24,16 +24,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			        	 "position":1,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },    
-			         { // Ligne
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"inputContainer.support.line",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":2,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },
-			         { // colonne
+			         // Ligne:  seulement pour plaques voir + loin
+			         
+			         { // colonne:  strip-8 ou plaque
 			        	 "header":Messages("containers.table.support.column"),
 			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
 			        	 "property":"inputContainer.support.column*1",
@@ -118,9 +111,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 						 "hide":true,
 						 "edit":false,
 			        	 "type":"text",
-			        	 "position":99,
+			        	 "position":500,
 			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },*/		     
+			         },	 */	     
 			         { // Volume avec valeur par defaut
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -130,47 +123,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			        	 "defaultValues":20,
 			        	 "position":34,
 			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },			         
-			         { // barcode support sortie == support Container used code... faut Used 
-			        	 "header":Messages("containers.table.support.name"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":35,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },  
-			         
-			         { //  Ligne  .....si ouput=plaque !! d'ou sort la valeur affichee ?????????????
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":36,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },     
-			         { // colonne .....si ouput=plaque  !! d'ou sort la valeur affichee ?????????????
-			        	 "header":Messages("containers.table.support.column"),
-			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":37,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },	
-			         /*
-			         { // Etat outpout container      
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"outputContainer.state.code | codes:'state'",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":40,
-			        	 "extraHeaders":{0: outputExtraHeaders}
 			         }
-			         */
 			         ],
 			"compact":true,
 			"pagination":{
@@ -236,6 +189,131 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			}*/
 	}; // fin struct datatableConfig
 	
+
+	if ($scope.experiment.instrument.inContainerSupportCategoryCode == "96-well-plate") {
+		datatableConfig.columns.push({
+			// Ligne  seulement pour plaques 
+			"header":Messages("containers.table.support.line"),
+			"property":"inputContainer.support.line",
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"position":2,
+			"extraHeaders":{0: inputExtraHeaders}
+		});
+	}
+	
+	if ($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
+		datatableConfig.columns.push({
+			// barcode plaque sortie == support Container used code
+			"header" : Messages("containers.table.support.name"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.code",
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		
+		if ($scope.experiment.instrument.outContainerSupportCategoryCode == "96-well-plate") {
+			// la ligne est fixe=1  pour un strip-8
+			datatableConfig.columns.push({
+				// Ligne
+				"header" : Messages("containers.table.support.line"),
+				"property" : "outputContainerUsed.locationOnContainerSupport.line",
+				"edit" : true,
+				"order" : true,
+				"hide" : true,
+				"type" : "text",
+				"position" : 401,
+				"extraHeaders" : {
+					0 : Messages("experiments.outputs")
+				}
+			});
+		}
+		
+		datatableConfig.columns.push({
+			// colonne
+			"header" : Messages("containers.table.support.column"),
+			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
+			// forcer a numerique.=> type:number, property: *1
+			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			"edit" : true,
+			"order" : true,
+			"hide" : true,
+			"type" : "number",
+			"position" : 402,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+
+	} else {
+		// tubes 
+		datatableConfig.columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.code",
+			"order" : true,
+			"edit" : true,
+			"hide" : true,
+			"type" : "text",
+			"position" : 400,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+		datatableConfig.columns.push({
+			//storage pour tubes
+			"header" : Messages("containers.table.storageCode"),
+			"property" : "outputContainerUsed.locationOnContainerSupport.storageCode",
+			"order" : true,
+			"edit" : true,
+			"hide" : true,
+			"type" : "text",
+			"position" : 401,
+			"extraHeaders" : {
+				0 : Messages("experiments.outputs")
+			}
+		});
+	}
+	
+	// en mode plaque ou strip uniquement !!!!!!
+	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){		
+		if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
+			var dataMain = datatable.getData();
+		
+			var outputContainerSupportCode = $scope.outputContainerSupport.code;
+		
+			if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+				for(var i = 0; i < dataMain.length; i++){
+				
+					var atm = dataMain[i].atomicTransfertMethod;
+					var newContainerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
+
+					$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
+					$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
+				
+					// Historique mais continuer a renseigner car effets de bord possible ????
+					$parse('line').assign(atm, atm.line);
+					$parse('column').assign(atm,atm.column );
+					console.log("atm.line="+ atm.line + " atm.column="+atm.column);	
+				
+					var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
+					if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
+						$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
+					}
+				}
+			}
+		
+			datatable.setData(dataMain);
+		}
+		// en mode tube il faut quand meme faire qq chose sinon des barcodes automatiques sont attribués.... 
+		// TODO !!!!!
+		
+	}
+	
+		
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
@@ -243,37 +321,6 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
-	
-	
-	// en mode plaque uniquement !!!!!!
-	/******
-	 
-	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
-
-		var dataMain = datatable.getData();
-		
-		var outputContainerSupportCode = $scope.outputContainerSupport.code;
-		var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
-
-		if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
-			for(var i = 0; i < dataMain.length; i++){
-				
-				var atm = dataMain[i].atomicTransfertMethod;
-				var newContainerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
-
-				$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
-				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
-				
-				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
-				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
-				}
-			}
-		}
-		
-	    datatable.setData(dataMain);
-	}
-	*****/
-	
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
@@ -308,24 +355,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		$scope.atmService.data.setEdit();
 	});
 	
-	
-/* PAS NECESSAIRE EN CHROMIUM ???	
-    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
-	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
-	$scope.copyVolumeInToExp = function(){
-		console.log("copyVolumeInToExp");
-		
-		var data = $scope.atmService.data.displayResult;		
-		data.forEach(function(value){
-			
-			if ( !value.data.inputContainerUsed.experimentProperties ){
-				value.data.inputContainerUsed.experimentProperties = {};
-			}
-			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
-		})		
-	};
-*/
-		
+
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
@@ -346,14 +376,13 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 	};
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	// le sciclone ne traite que des plaques (le type de container de sorti est deja restreint)
+	// le sciclone ne traite que des plaques (le type de container de sortie est deja restreint)
 	if ( ( $scope.experiment.instrument.categoryCode !== 'hand') && ($scope.experiment.instrument.inContainerSupportCategoryCode !== $scope.experiment.instrument.outContainerSupportCategoryCode) ) {
 		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));
 	} else {
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}
-
 	
     // recuperer les tags existants
 	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
@@ -365,17 +394,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 		
-		/* PAS EN CHROMIUM ???
-		 //  si l'utilisateur défini le volume a engager => calculer la quantité
-		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
-			computeQuantity(value.data);
-		}
-		*/
-		
 		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
 			computeTagCategory(value.data);			
 		}
-		
 	}
 	
 	// determination  automatique de TagCategory
@@ -404,74 +425,50 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			getter.assign(udtData, undefined);
 		}
 	}
+	$scope.outputContainerSupport = { code : null , storageCode : null};	
+		
 	
-
-/* PAS EN CHROMIUM ???
-	// -1- inputQuantityLib=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
-	var computeQuantity = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
-
-		if($parse("inputContainerUsed.concentration.unit === 'nM'")(udtData)) {
-			console.log("unit = nM");
-		}
-		
-		var compute = {
-				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
-				isReady:function(){
-					/// return (this.inputVolume && this.inputConc); bug!!!  le calcul ne se fait pas si inputConc=0 ( par exemple WATER)
-					/// bloquer le calcul si l'unité n'est pas nM TODO...
-					return (this.inputVolume && (this.inputConc != undefined));
-				}
-		};
-		
-		if(compute.isReady()){
-			var result = $parse("inputConc * inputVolume")(compute);
-			console.log("result = "+result);
-			
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputQuantity = Math.round(result*10)/10;				
-			}else{
-				inputQuantity = undefined;
-			}	
-			getter.assign(udtData, inputQuantity);
-			
-		}else{
-			console.log("Missing values to calculate Quantity");
-		}
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
+		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+		//console.log("previous code: "+ $scope.outputContainerSupport.code);
 	}
-
-	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainer.concentration.value
-	var computeVolume = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
-
-		var compute = {
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputQuantity : $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value")(udtData),		
-				isReady:function(){
-					return (this.inputConc && this.inputQuantity);
-				}
-		};
-		
-		if(compute.isReady()){
-			var result = $parse("inputQuantity / inputConc")(compute);
-			console.log("result = "+result);
-			
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputVolume = Math.round(result*10)/10;				
-			}else{
-				inputVolume = undefined;
-			}	
-			getter.assign(udtData, inputVolume);
-			
-		}else{
-			console.log("Missing values to calculate Volume");
-		}
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
+		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-*/	
 	
-/* pas specifié, voir plus tard..
+	/* julie demande de bloquer les types de sortie a Tube uniquement si la main est utilisee */
+	$scope.$watch("$scope.experiment.instrument.categoryCode", function(){
+			if ($scope.experiment.instrument.categoryCode === "hand")
+				$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+			// forcer raffraichissement de la vue... marche pas et duplique l'affichage !!!
+			//$scope.$emit('refresh');
+	
+	});	
+
+	
+	
+	
+/* PAS NECESSAIRE EN CHROMIUM ???	a NETTOYER..
+	    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
+		//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
+		$scope.copyVolumeInToExp = function(){
+			console.log("copyVolumeInToExp");
+			
+			var data = $scope.atmService.data.displayResult;		
+			data.forEach(function(value){
+				
+				if ( !value.data.inputContainerUsed.experimentProperties ){
+					value.data.inputContainerUsed.experimentProperties = {};
+				}
+				value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
+			})		
+		};
+*/
+				
+	
+/* pas specifié, voir plus tard..................?????????????????????//
+ 
 	var importData = function(){
 		$scope.messages.clear();
 
@@ -501,24 +498,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			angular.element('#importFile')[0].value = null;
 		});		
 	};
-*/
 	
-	$scope.outputContainerSupport = { code : null , storageCode : null};	
-		
-	
-	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
-		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
-		//console.log("previous code: "+ $scope.outputContainerSupport.code);
-	}
-	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
-		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
-		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
-	}
-	
-
-	
-	
-/* pas specifié, voir plus tard..
 	// importer un fichier definissant quels index sont déposés dans quels containers
 	$scope.button = {
 		isShow:function(){
