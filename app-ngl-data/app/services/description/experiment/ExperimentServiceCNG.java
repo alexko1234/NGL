@@ -288,6 +288,16 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 			
+			l.add(newExperimentType("QC Bank","bank-qc", null, 500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsBankQC(), 
+					getInstrumentUsedTypes("hand"),
+					"OneToVoid", false,
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+
+			
+			
+			
 			/** Transfert, ordered by display order **/
 			// NOTE: pas de Node a creer pour experiences type transfert 
 			
@@ -939,4 +949,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return pets;		
 	}
 	
+	private List<PropertyDefinition> getPropertyDefinitionsBankQC() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
+		
+		return propertyDefinitions;
+		
+	}
 }

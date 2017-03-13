@@ -49,24 +49,25 @@ public class SampleServiceCNG extends AbstractSampleService {
 		// GA 20/01/2016 utiliser getSampleCNGPropertyDefinitions dans tous les cas !!
 		//TODO ...remplacer   Institute.CODE.CNG   par   Constants.CODE.CNG
 		
-		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNG)));
 		
 		// il y a du ChIP et du MedIP au CNG mais ce n'est pas detaillé au niveau sample dans la base Solexa  creer un.SampleType de meme nom que SampleCategory
-		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG))); 
+		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), null, getInstitutes(Constants.CODE.CNG))); 
 
 		//FDS 20/01/2016 l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNG))); 
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG))); 
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), null, getInstitutes(Constants.CODE.CNG))); 
 
 		/* pas de subdivisions dans la base solexa...=> SampleType=SampleCategory*/
-		l.add(newSampleType("FAIRE", "FAIRE", SampleCategory.find.findByCode("FAIRE"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("methylated base DNA (mbd)", "methylated-base-DNA", SampleCategory.find.findByCode("methylated-base-DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("bisulfite DNA", "bisulfite-DNA", SampleCategory.find.findByCode("bisulfite-DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("Control", "CTRL", SampleCategory.find.findByCode("control"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("FAIRE", "FAIRE", SampleCategory.find.findByCode("FAIRE"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("methylated base DNA (mbd)", "methylated-base-DNA", SampleCategory.find.findByCode("methylated-base-DNA"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("bisulfite DNA", "bisulfite-DNA", SampleCategory.find.findByCode("bisulfite-DNA"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("Control", "CTRL", SampleCategory.find.findByCode("control"), null, getInstitutes(Constants.CODE.CNG)));
 		
 		//default values		
-		l.add(newSampleType("Défaut", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("Défaut", "default-sample-cng", SampleCategory.find.findByCode("default"), null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), null, getInstitutes(Constants.CODE.CNG)));
 		
 		//use only in  NGL-BI. Please not used in sample import !!!!!!!!!!!!!!!
 		l.add(newSampleType("Non défini", "not-defined", SampleCategory.find.findByCode("unknown"),null, getInstitutes(Constants.CODE.CNG)));
@@ -74,11 +75,7 @@ public class SampleServiceCNG extends AbstractSampleService {
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
 	
-	private static List<PropertyDefinition> getSampleCNGPropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, true, "single"));
-		return propertyDefinitions;
-	}
+	
 	
 	/*FDS 20/01/2016 DEPRECATED
 	private static List<PropertyDefinition> getSampleCommonPropertyDefinitions() throws DAOException {
