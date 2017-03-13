@@ -696,8 +696,10 @@ analyses.valuation.user = Evalué par
 analyses.valuation.comment = Commentaire
 analyses.treatments.mergingBA = Merging
 analyses.treatments.assemblyBA = Assembly
+analyses.treatments.assemblyBA.software = Logiciel
 analyses.treatments.contigFilterBA = Contig Filter
 analyses.treatments.scaffoldingBA = Scaffolding
+analyses.treatments.scaffoldingFilterBA = Scaffolding Filter
 analyses.treatments.gapClosingBA = Gap Closing
 analyses.files.path  = Chemin
 analyses.files.fullname= Nom du fichier
@@ -743,6 +745,13 @@ analyses.treatments.assembly_ba.contigSizeRepartition.cumulativeSizePercent = % 
 
 analyses.treatments.contigFilter_ba.storedBases = Nb bases conservées
 analyses.treatments.contigFilter_ba.lostBasesPercent = % bases perdues
+
+analyses.treatments.scaffoldingFilter_ba.preservedBases = Nb bases conservées
+analyses.treatments.scaffoldingFilter_ba.lostBasesPercent = % bases perdues
+analyses.treatments.scaffoldingFilter_ba.preservedSequences = Nb contigs/scaffolds conservés
+analyses.treatments.scaffoldingFilter_ba.numberOfN = Nb N
+analyses.treatments.scaffoldingFilter_ba.preservedCoverage = Couverture conservée
+
 
 
 analyses.treatments.scaffolding_ba.N50Scaffold = N50 
@@ -944,6 +953,7 @@ readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
 filterTaxonBilan=Seuil Taxon (% vs rRNA tot.)
+filterTaxonBilanTaxo=Seuil Taxon (% vs nt)
 filterTaxonBilanMitochondrion=Seuil Taxon (% vs mitochondrion)
 filterTaxonBilanPlastid=Seuil Taxon (% vs plastid)
 ###############

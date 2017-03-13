@@ -127,6 +127,7 @@ rule "Create ReadSet"
 		
 		
 		readSet.state=new State("N","ngsrg");
+		readSet.submissionState = new State("NONE", "ngsrg");
 		
 		readSet.runCode=$run.code;
 		readSet.runTypeCode=$run.typeCode;
