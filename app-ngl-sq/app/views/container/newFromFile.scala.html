@@ -78,8 +78,9 @@
 	<div udt-form>
 		<ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#importfile" data-toggle="tab">@Messages("containers.create.tab.importfile")</a></li>
+	  @if(play.Play.application().configuration().getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
 	   	<li ><a href="#" data-target="#printbarcode" data-toggle="tab">@Messages("containers.create.tab.printbarcode")</a></li>
-	   	
+	  }
 	   	</ul>
 			
 <div class="tab-content">
@@ -90,7 +91,7 @@
 			</div>		
 		</form>	
 	</div>
-	
+	@if(play.Play.application().configuration().getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
 	<div class="tab-pane" id="printbarcode" ultimate-datatable="datatable">
 	<form class="well well-small">
 			<div class="row">
@@ -99,6 +100,7 @@
 			
 	</form>	
 	</div>
+	}
 </div>
 
 <div class="row">
