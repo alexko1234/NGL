@@ -429,7 +429,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();		
 	
-		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 		//FDS ajout 20/02/2017 JIRA NGL-1167
@@ -475,27 +474,71 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("labchip-migration-profile"), // qc 
 				null // pas de transfert ??
 				).save();
+			
 		
-		//12/12/2016 bug manquait prep-pcr-free en previous
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
+		newExperimentTypeNode("chromium-gem-generation",getExperimentTypes("chromium-gem-generation").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
+				null, // pas purif
+				getExperimentTypes("bioanalyzer-migration-profile"), // qc 
+				getExperimentTypes("tubes-to-plate") // transfert en strip-8 en plaque-96 (TODO!!)
+				).save();
+		
+		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
+		newExperimentTypeNode("wg-chromium-lib-prep",getExperimentTypes("wg-chromium-lib-prep").get(0),
+				false,false,false,
+				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
+				null, // pas purif
+				//getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc  ?? inutile de les mettre tous
+				getExperimentTypes("labchip-migration-profile"), // qc   un seul suffit meme s'il y en a plusieurs possibles
+				null  // pas transfert 
+				).save();
+
+			
+		//FDS 12/12/2016 ajout prep-pcr-free en previous
+		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification","prep-pcr-free"), // previous
+				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification","prep-pcr-free","wg-chromium-lib-prep"), // previous
 				null,
 				null, // pas de QC
 				null  // pas de transfert
 				).save();	
-	
+		
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous (fait partie de WG_Nano)
+		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification"), // previous nodes
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification","wg-chromium-lib-prep" ), // previous nodes
 				null, 
 				getExperimentTypes("miseq-qc"), // qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();	
+		
+		}else{
+			
+			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification","prep-pcr-free"), // previous
+					null,
+					null, // pas de QC
+					null  // pas de transfert
+					).save();	
+			
+			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
+					false, false, false, 
+					getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification"), // previous nodes
+					null, 
+					getExperimentTypes("miseq-qc"), // qc 
+					getExperimentTypes("aliquoting","pool") // tranfert
+					).save();	
+		}
 		
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		//FDS 08/12/2016 ajout "normalization-and-pooling" en previous
@@ -541,27 +584,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null  // pas tranfert
 				).save();
 		
-		
-		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			
-		newExperimentTypeNode("chromium-gem-generation",getExperimentTypes("chromium-gem-generation").get(0),
-				false,false,false,
-				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
-				null, // pas purif
-				getExperimentTypes("bioanalyzer-migration-profile"), // qc 
-				getExperimentTypes("tubes-to-plate") // transfert en strip-8 en plaque-96 (TODO!!)
-				).save();
-			
-		newExperimentTypeNode("wg-chromium-lib-prep",getExperimentTypes("wg-chromium-lib-prep").get(0),
-				false,false,false,
-				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
-				null, // pas purif
-				//getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc  ?? inutile de les mettre tous
-				getExperimentTypes("labchip-migration-profile"), // qc   un seul suffit meme s'il y en a plusieurs possibles
-				null  // pas transfert 
-				).save();
-		}		
 	}
 
 	
