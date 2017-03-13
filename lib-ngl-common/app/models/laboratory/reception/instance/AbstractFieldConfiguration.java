@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = DefaultFieldConfiguration.class, name = AbstractFieldConfiguration.defaultType),
 	@JsonSubTypes.Type(value = ExcelFieldConfiguration.class, name = AbstractFieldConfiguration.excelType),
+	@JsonSubTypes.Type(value = DoubleExcelFieldConfiguration.class, name = AbstractFieldConfiguration.doubleExcelType),
 	@JsonSubTypes.Type(value = PropertiesFieldConfiguration.class, name = AbstractFieldConfiguration.propertiesType),
 	@JsonSubTypes.Type(value = PropertyValueFieldConfiguration.class, name = AbstractFieldConfiguration.propertyValueType),
 	@JsonSubTypes.Type(value = ObjectFieldConfiguration.class, name = AbstractFieldConfiguration.objectType),
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 public abstract class AbstractFieldConfiguration {
 	public static final String defaultType = "default";
 	public static final String excelType = "excel";
+	public static final String doubleExcelType = "doubleExcel";
 	public static final String propertiesType = "properties";
 	public static final String objectType = "object";
 	public static final String propertyValueType = "propertyValue";
