@@ -21,6 +21,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.Logger.ALogger;
@@ -36,14 +37,30 @@ public class SwitchContainer extends CommonController{
 	public static Result migration() {
 		String oldParentContainerName = "221D4N4IK_C3";
 		String newParentContainerName = "221D4N4IK_E3";
-		
+		//21KC2XTKY 21KC2XTL9
+		//221D4N4IK_C3 221D4N4IK_E3
 		Container oldParentContainer = getContainer(oldParentContainerName);
 		Container newParentContainer = getContainer(newParentContainerName);
 		
-		//TODO Load processes ??
+		
 		
 		updateContainers(oldParentContainer,newParentContainer);
 		return ok("SwitchContainer End");
+	}
+
+	/**
+	 * Load only process where container are child not on input
+	 * @param oldParentContainerName
+	 * @return
+	 */
+	private static List<Process> getProcessesWhereChild(String containerCode) {
+		// TODO Auto-generated method stub
+		return MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("outputContainerCodes", containerCode)).toList();
+	}
+	
+	private static List<Process> getProcessesWhereInput(String containerCode) {
+		// TODO Auto-generated method stub
+		return MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("inputContainerCode", containerCode)).toList();
 	}
 
 
@@ -64,6 +81,14 @@ public class SwitchContainer extends CommonController{
 		List<String> newParentPaths = getPaths(newParent.treeOfLife.paths, newParent.code);
 		
 		
+		//TODO Load processes ??
+		List<String> oldProcessesWhereChild = getProcessesWhereChild(oldParent.code).stream().map(p -> p.code).collect(Collectors.toList());
+		List<String> newProcessesWhereChild = getProcessesWhereChild(newParent.code).stream().map(p -> p.code).collect(Collectors.toList());
+				
+		List<String> oldProcessesWhereInput = getProcessesWhereInput(oldParent.code).stream().map(p -> p.code).collect(Collectors.toList());
+		List<String> newProcessesWhereInput = getProcessesWhereInput(newParent.code).stream().map(p -> p.code).collect(Collectors.toList());
+		
+		
 		Logger.info("oldParentProjectCodes : "+oldParentProjectCodes);
 		Logger.info("newParentProjectCodes : "+newParentProjectCodes);
 		
@@ -72,6 +97,11 @@ public class SwitchContainer extends CommonController{
 		
 		Logger.info("oldParentPaths : "+oldParentPaths);
 		Logger.info("newParentPaths : "+newParentPaths);
+		
+		
+		Logger.info("oldProcesses : "+oldProcessesWhereChild+" "+oldProcessesWhereInput);
+		Logger.info("newProcesses : "+newProcessesWhereChild+" "+newProcessesWhereInput);
+		
 		
 		Map<String, PropertyValue> allContentPropertiesKeep = new HashMap<String, PropertyValue>();
 		//1 find all childs that's must be updated
@@ -117,11 +147,7 @@ public class SwitchContainer extends CommonController{
 			
 			allContentPropertiesKeep.putAll(currentContentProperties);
 			
-			/*
-			List<Content> newContents =  IntStream.range(0, oldContents.size())
-			.mapToObj(i -> oldContents.get(i).replace(oldParentPaths.get(i), newParentPaths.get(i)))
-			.collect(Collectors.toList());
-			*/
+			
 			Logger.debug("Nb container contents "+container.contents.size());
 			
 			List<Content> newContents =  newContents(newParent.contents, allContentPropertiesKeep);
@@ -132,6 +158,23 @@ public class SwitchContainer extends CommonController{
 			Logger.debug("Nb container contents "+container.contents.size());
 			Logger.debug("Nb currentContentProperties "+currentContentProperties.size());
 			Logger.debug("keep properties "+allContentPropertiesKeep);
+			
+			//TODO PROCESS CODE IN TREE OF LIFE
+			/*
+			container.treeOfLife.from.containers.stream().forEach(c -> {
+				if(oldProcessesWhereChild.size() > 0 && c.processCodes.containsAll(oldProcessesWhereChild)){
+					c.processCodes.removeAll(oldProcessesWhereChild);
+					c.processCodes.addAll(newProcessesWhereChild);
+					Logger.debug("update process codes child");
+					
+				}else if(oldProcessesWhereInput.size() > 0 && c.processCodes.containsAll(oldProcessesWhereInput)){
+					c.processCodes.removeAll(oldProcessesWhereInput);
+					c.processCodes.addAll(newProcessesWhereInput);
+					Logger.debug("update process codes input");					
+				}	
+				//TODO Quiz process type code
+			});
+			*/
 		});
 	}
 
