@@ -16,6 +16,10 @@ public class ExcelFieldConfiguration extends AbstractFieldConfiguration {
 	
 	public String defaultValue;
 	
+	public Integer beginIndex;
+	public Integer endIndex;
+	
+	
 	public ExcelFieldConfiguration() {
 		super(AbstractFieldConfiguration.excelType);		
 	}
@@ -25,7 +29,12 @@ public class ExcelFieldConfiguration extends AbstractFieldConfiguration {
 			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
 		
 		if(rowMap.containsKey(cellPosition)){
-			String value = rowMap.get(cellPosition);			
+			String value = rowMap.get(cellPosition);	
+			if(null != beginIndex && null != endIndex){
+				value = value.substring(beginIndex, endIndex);
+			}else if(null != beginIndex){
+				value = value.substring(beginIndex);
+			}
 			populateField(field, dbObject, value);				
 		}else if(defaultValue != null){
 			populateField(field, dbObject, defaultValue);
