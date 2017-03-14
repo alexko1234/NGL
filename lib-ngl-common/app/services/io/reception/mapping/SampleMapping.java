@@ -1,5 +1,6 @@
 package services.io.reception.mapping;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 
 import models.laboratory.common.instance.TraceInformation;
@@ -25,6 +26,44 @@ public class SampleMapping extends Mapping<Sample> {
 	 */
 	public SampleMapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action, ContextValidation contextValidation) {
 		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
+	}
+	
+	/**
+	 * convert a file line in Sample
+	 * we override the defaut comportment to reused a prexist sample.
+	 * @param rowMap
+	 * @return
+	 */
+	public Sample convertToDBObject(Map<Integer, String> rowMap) throws Exception{
+		Sample object = type.newInstance();
+		boolean needPopulate = false;
+		if(Action.update.equals(action)){
+			object = get(object, rowMap, true);
+			needPopulate=true;
+		}else if(Action.save.equals(action)){
+			Sample objectInDB = get(object, rowMap, false);
+			if(null != objectInDB){
+				object = objectInDB;
+				needPopulate=false;
+			}else if(object.code != null){
+				Sample objectInObjects = (Sample)objects.get(Mapping.Keys.sample.toString()).get(object.code);
+				if(null != objectInObjects){
+					object = objectInObjects;
+				}
+				needPopulate=true;
+			}
+		}
+		
+		if(null != object && needPopulate){
+			Field[] fields = type.getFields();
+			for(Field field : fields){
+				populateField(field, object, rowMap);			
+			}
+			update(object);
+			
+		}
+		
+		return object;
 	}
 	
 	

@@ -17,6 +17,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
+import models.laboratory.reception.instance.DoubleExcelFieldConfiguration;
 import models.laboratory.reception.instance.ExcelFieldConfiguration;
 import models.laboratory.reception.instance.ObjectFieldConfiguration;
 import models.laboratory.reception.instance.PropertiesFieldConfiguration;
@@ -302,7 +303,9 @@ public abstract class FileService {
 
 	private void updateAbstractFieldConfigurationHeader(AbstractFieldConfiguration afc) {
 		if(ExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
-			updateExcelConfigurationHeader(afc);
+			updateExcelConfigurationHeader((ExcelFieldConfiguration)afc);
+		}else if(DoubleExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+			updateDoubleExcelConfigurationHeader((DoubleExcelFieldConfiguration)afc);
 		}else if(PropertiesFieldConfiguration.class.isAssignableFrom(afc.getClass())){
 			PropertiesFieldConfiguration pfc = (PropertiesFieldConfiguration)afc;
 			Set<String> propertyNames = pfc.configs.keySet();
@@ -324,8 +327,7 @@ public abstract class FileService {
 		}
 	}
 
-	private void updateExcelConfigurationHeader(AbstractFieldConfiguration afc) {
-		ExcelFieldConfiguration efc = (ExcelFieldConfiguration)afc;
+	private void updateExcelConfigurationHeader(ExcelFieldConfiguration efc) {
 		if(this.headerByIndex.containsKey(efc.cellPosition)){
 			efc.headerValue = this.headerByIndex.get(efc.cellPosition);
 		}else{
@@ -333,7 +335,16 @@ public abstract class FileService {
 		}
 	}
 
+	private void updateDoubleExcelConfigurationHeader(DoubleExcelFieldConfiguration efc) {
+		if(this.headerByIndex.containsKey(efc.cellPosition1)&&this.headerByIndex.containsKey(efc.cellPosition2)){
+			efc.headerValue = this.headerByIndex.get(efc.cellPosition1)+" / "+this.headerByIndex.get(efc.cellPosition2);
+		}else{
+			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellPosition1);
+		}
+	}
 
+	
+	
 	public abstract void analyse();
 
 }

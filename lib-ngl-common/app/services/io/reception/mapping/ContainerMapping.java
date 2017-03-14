@@ -68,7 +68,9 @@ public class ContainerMapping extends Mapping<Container> {
 			content.sampleTypeCode = sample.typeCode;
 			if(null == content.percentage)content.percentage = percentage;
 			content.properties = computeProperties(content.properties, sample, c.code);
-			
+			if(content.projectCode == null && sample.projectCodes.size() == 1){
+				content.projectCode = sample.projectCodes.iterator().next();
+			}
 			c.projectCodes.add(content.projectCode);
 			c.sampleCodes.add(content.sampleCode);
 		});				
