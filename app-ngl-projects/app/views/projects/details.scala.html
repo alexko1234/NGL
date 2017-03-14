@@ -126,7 +126,7 @@
 								}
 								
 								@views.html.helper.columnLabelValue(Messages("projects.nbCharactersInSampleCode")){
-									<div ng-switch on="mainService.isEditMode()">
+									<div ng-switch on="(mainService.isEditMode() && !project.lastSampleCode)">
 										<p class="form-control-static" ng-switch-when="false">{{project.nbCharactersInSampleCode}}</p>
 										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.nbCharactersInSampleCode">										
 									</div>
