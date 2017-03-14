@@ -239,6 +239,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("Tapestation", "tapestation", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
+				getInstruments(
+						createInstrument("tapestation-inra", "Tapestation INRA", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),null, 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getBioanalyzerProperties(), 
 				getInstruments(
 						createInstrument("bioanalyzer1", "Bioanalyzer 1 ADN", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
