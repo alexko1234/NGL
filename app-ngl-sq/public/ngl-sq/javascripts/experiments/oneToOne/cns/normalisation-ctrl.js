@@ -51,7 +51,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 					*/			 
 					 {
 			        	 "header" : Messages("containers.table.concentration"),
-			 			 "property": "inputContainer.concentration.value",
+			 			 "property": "inputContainerUsed.concentration.value",
 			 			 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -62,7 +62,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        
 					 {
 			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"inputContainer.concentration.unit",
+			        	 "property":"inputContainerUsed.concentration.unit",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -73,7 +73,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

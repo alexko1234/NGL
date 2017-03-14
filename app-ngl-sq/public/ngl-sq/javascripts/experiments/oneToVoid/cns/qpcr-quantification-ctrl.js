@@ -98,7 +98,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	});
 	columns.push({
 		"header":Messages("containers.table.concentration"),
-		"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
+		"property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
 		//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 		"order":false,
 		"hide":true,
@@ -108,7 +108,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	});
 	columns.push({
 		"header":Messages("containers.table.size")+ " (pb)",
-		"property": "inputContainer.size.value",
+		"property": "inputContainerUsed.size.value",
 		"order":false,
 		"hide":true,
 		"type":"text",
@@ -118,7 +118,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	
 	columns.push({
 		"header" : Messages("containers.table.volume") + " (µL)",
-		"property" : "inputContainer.volume.value",
+		"property" : "inputContainerUsed.volume.value",
 		"order" : true,
 		"edit" : false,
 		"hide" : true,

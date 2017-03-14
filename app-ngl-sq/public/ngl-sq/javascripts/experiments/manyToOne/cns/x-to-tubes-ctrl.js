@@ -194,7 +194,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 	var columns = $scope.atmService.$atmToSingleDatatable.data.getColumnsConfig();
 	columns.push({
 		"header" : Messages("containers.table.size"),
-		"property": "inputContainer.size.value",
+		"property": "inputContainerUsed.size.value",
 		"order" : true,
 		"edit" : false,
 		"hide" : true,

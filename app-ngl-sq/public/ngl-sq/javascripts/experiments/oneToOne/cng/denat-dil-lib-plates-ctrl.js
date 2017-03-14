@@ -96,7 +96,7 @@ angular.module('home').controller('DenatDilLibCtrlPlates',['$scope', '$parse', '
 			         },				 
 					 {  //Concentration en nM;
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainer.concentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

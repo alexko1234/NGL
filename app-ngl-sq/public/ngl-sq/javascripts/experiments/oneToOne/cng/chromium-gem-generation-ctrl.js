@@ -52,7 +52,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 					 },
 					 { // Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.concentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -61,7 +61,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			         },  
 			         { // Volume
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",

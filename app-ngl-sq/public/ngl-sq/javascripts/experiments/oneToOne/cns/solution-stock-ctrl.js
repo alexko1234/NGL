@@ -52,7 +52,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 								 
 					 {
 			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainer.concentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -62,7 +62,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         },
 					 {
 			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"inputContainer.concentration.unit",
+			        	 "property":"inputContainerUsed.concentration.unit",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -72,7 +72,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         },
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -82,7 +82,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         },
 			         {
 				 		 "header":Messages("containers.table.size"),
-				 		 "property": "inputContainer.size.value",
+				 		 "property": "inputContainerUsed.size.value",
 				 		 "order":false,
 				 		 "hide":true,
 				 		 "type":"text",

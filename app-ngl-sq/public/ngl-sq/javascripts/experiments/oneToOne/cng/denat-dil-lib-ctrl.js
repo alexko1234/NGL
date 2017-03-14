@@ -63,7 +63,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			         },				 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainer.concentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

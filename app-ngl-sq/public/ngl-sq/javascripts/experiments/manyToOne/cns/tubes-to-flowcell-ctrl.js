@@ -37,7 +37,7 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 		         },				         
 				 {
 		        	 "header":Messages("containers.table.concentration") + " (nM)",
-		        	 "property":"inputContainer.concentration.value",
+		        	 "property":"inputContainerUsed.concentration.value",
 		        	 "order":true,
 					 "edit":false,
 					 "hide":true,
@@ -48,7 +48,7 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 		        
 		         {
 		        	 "header":Messages("containers.table.volume") + " (µL)",
-		        	 "property":"inputContainer.volume.value",
+		        	 "property":"inputContainerUsed.volume.value",
 		        	 "order":true,
 					 "edit":false,
 					 "hide":true,

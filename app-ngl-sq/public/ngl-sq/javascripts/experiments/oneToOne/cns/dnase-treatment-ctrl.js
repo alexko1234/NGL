@@ -50,8 +50,8 @@ angular.module('home').controller('DNAseTreatmentCtrl',['$scope', '$parse', 'atm
 			         },
 					 {
 			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainer.concentration",
-			        	 "property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
+			        	 "property":"inputContainerUsed.concentration",
+			        	 "property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
 			     		 //"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 			        	 "order":true,
 						 "edit":false,
@@ -62,7 +62,7 @@ angular.module('home').controller('DNAseTreatmentCtrl',['$scope', '$parse', 'atm
 			         },
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

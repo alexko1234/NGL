@@ -74,7 +74,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 */
 	columns.push({
 		"header" : Messages("containers.table.volume") + " (µL)",
-		"property" : "inputContainer.volume.value",
+		"property" : "inputContainerUsed.volume.value",
 		"order" : true,
 		"edit" : false,
 		"hide" : true,
