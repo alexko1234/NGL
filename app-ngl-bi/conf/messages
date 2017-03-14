@@ -272,8 +272,8 @@ run.treatments.sav.default.nonIndexedYieldTotal=Rendement total non indexé (Gb)
 run.treatments.sav.default.Q30PercTotal=% Q30 total
 run.treatments.sav.default.nonIndexedQ30PercTotal=% Q30 total non indexé
 
-runs.treatments.topIndex.unknownIndex.sequence = Séquence index inconnu
-runs.treatments.topIndex.unknownIndex.percent = % séquence
+runs.treatments.topIndex.unknownIndex.sequence = Index non attendus
+runs.treatments.topIndex.unknownIndex.percent = % séquence / perte
 runs.treatments.topIndex.distance = Distance
 #search
 sequencingProgramType.value.PE = Pair End
