@@ -178,7 +178,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		// FDS 13/03/2017 NGL-1167
-        //  FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modi du label=> supprimer RNA
+        // FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modi du label=> supprimer RNA
 		l.add(DescriptionFactory.newProcessType("Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 				21,   
 				null, // pas de propriétés ??

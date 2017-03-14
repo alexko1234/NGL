@@ -1,17 +1,18 @@
 @()
-<!-- copie depuis libraryprep.scala pour garder la possibilité d'associer les index via 2 modes
-    => import fichier XXXXX
+<!-- FDS 06/03/2017 copie depuis libraryprep.scala pour garder la possibilité d'associer les index via 2 modes
+    => import fichier
 	=> selection 1 colonne de départ pour plaque ????
 	
     2 fonctionnements  -main    : strip-8       => tubes, strip-8, 96-well-plate
                        -sciclone: 96-well-plate => 96-well-plate
-	  
-	  !! utilisation de ng-switch => utiliser if 
+
 -->
 <div class="col-md-12 col-lg-12" ng-controller="WgChromiumLibraryPrepCtrl" >
-  <div ng-if ="( experiment.instrument.outContainerSupportCategoryCode  !== 'tube')"  >
+
+<!--  13/03/2017----    suite a reunion NE PAS ENCORE mettre en production le mode sciclone/plaque
+  <div ng-if ="( experiment.instrument.outContainerSupportCategoryCode  !== 'tube')" >
   <form class="form-inline" role="form">
-  	  <!-- premiere ligne -->
+  	  -- premiere ligne --
       <div class="row margin-bottom-7">
          <div class="form-group col-lg-4">          
               <div ng-switch on="mainService.isEditMode()"> 
@@ -42,9 +43,9 @@
 			  </div>   
 	     </div>
 	  </div>
-	  <!------ 2eme ligne  eventuellement mais pas encore specifié------>
+	  -- 2eme ligne  eventuellement mais pas encore specifié--
 	  <div class="row margin-bottom-4">
-	  <!--- 
+	  --- 
          <div class="form-group col-lg-6"  ng-show="button.isShow()">
              <label for="importFile" class="control-label">Fichier ????</label>
              <div class="input-group" style="width:50%">
@@ -68,12 +69,17 @@
              <select ng-model="tagPlate" ng-options="plate.name for plate in plates" selectpicker btn-primary">                                      
              </select>                        				  
           </div> 
-          --->
+          ---
     </div>
 
   </form>
   </div>	
+  -->
   
+  <!-- juste pour espacement tant que le code cidessus n'est pas activé -->
+  <div class="row margin-bottom-4"></div>
+  
+   
   <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
   </div>

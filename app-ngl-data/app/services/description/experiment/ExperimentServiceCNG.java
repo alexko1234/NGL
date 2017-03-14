@@ -245,10 +245,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
+			// 13/03/2017 ne pas encore proposer le Sciclone...getInstrumentUsedTypes("hand","sciclone-ngsx"), 
 			l.add(newExperimentType("Prep Lib & PCR indexing (Chromium)","wg-chromium-lib-prep",null,1600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsWGChromiumLibPrep(),
-					getInstrumentUsedTypes("hand","sciclone-ngsx"), 
+					getInstrumentUsedTypes("hand"), 
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			}
@@ -316,8 +317,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand","janus","epmotion"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			// test modif nom
-			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10500,
+			
+			l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
