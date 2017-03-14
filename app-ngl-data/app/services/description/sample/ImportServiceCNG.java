@@ -1,9 +1,10 @@
 package services.description.sample;
 
 import static services.description.DescriptionFactory.newImportType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class ImportServiceCNG extends AbstractImportService {
 		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newImportType("Import tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		
+		l.add(newImportType("Import plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
@@ -43,8 +44,8 @@ public class ImportServiceCNG extends AbstractImportService {
 
 	private static List<PropertyDefinition> getBankReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Sex", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("0","1","2"), null,null,null,"single", 17, false, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));		
 		return propertyDefinitions;
 	}
 	
