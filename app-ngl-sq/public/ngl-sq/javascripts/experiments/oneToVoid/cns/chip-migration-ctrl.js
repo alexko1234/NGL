@@ -91,6 +91,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		if(compute.isReady()){
 			getter.assign(udtData, $scope.computeQuantity(compute.inputConc1, compute.inputVol1));
 		}else{
+			getter.assign(udtData, undefined);
 			console.log("not ready to computeQuantity1");
 		}
 		
