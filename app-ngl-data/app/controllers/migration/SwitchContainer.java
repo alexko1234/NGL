@@ -1,7 +1,10 @@
 package controllers.migration;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,16 +13,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.collections.ComparatorUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult.Sort;
 import models.laboratory.common.description.Level;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
@@ -35,17 +41,79 @@ public class SwitchContainer extends CommonController{
 	private static final String TAG_PROPERTY_NAME = "tag";
 	
 	public static Result migration() {
-		String oldParentContainerName = "221D4N4IK_C3";
-		String newParentContainerName = "221D4N4IK_E3";
+		//String oldParentContainerName = "221D4N4IK_C3";
+		//String newParentContainerName = "221D4N4IK_E3";
+		
+		String oldParentContainerName = "21KC2XTKY";
+		String newParentContainerName = "21KC2XTL9";
+		
+		
 		//21KC2XTKY 21KC2XTL9
 		//221D4N4IK_C3 221D4N4IK_E3
 		Container oldParentContainer = getContainer(oldParentContainerName);
 		Container newParentContainer = getContainer(newParentContainerName);
 		
-		
+		updateProcessWhereChild(oldParentContainer,newParentContainer);
 		
 		updateContainers(oldParentContainer,newParentContainer);
 		return ok("SwitchContainer End");
+	}
+
+	private static void updateProcessWhereChild(Container oldParentContainer, Container newParentContainer) {
+		List<Process> oldProcesses = getProcessesWhereChild(oldParentContainer.code);
+		List<Process> newProcesses = getProcessesWhereChild(newParentContainer.code);
+		
+		List<Container> containers = getNextContainersForProcesses(oldParentContainer.code, oldProcesses.stream().map(p -> p.code).collect(Collectors.toList()));
+		
+		Set<String> containerCodes = new TreeSet<String>();
+		Set<String> containerSupportCodes = new TreeSet<String>();
+		Set<String> experimentCodes = new TreeSet<String>();
+		
+		Iterator<Container> iti = containers.iterator();
+		while(iti.hasNext()){
+			Container c = iti.next();
+			containerCodes.add(c.code);
+			containerSupportCodes.add(c.support.code);
+			if(null != c.treeOfLife.from.experimentCode)
+				experimentCodes.add(c.treeOfLife.from.experimentCode);
+			if(null != c.qualityControlResults)
+				experimentCodes.addAll(c.qualityControlResults.stream().map(qcr -> qcr.code).collect(Collectors.toSet()));
+		}
+		
+		Logger.info("containerCodes  : "+containerCodes);
+		Logger.info("containerSupportCodes  : "+containerSupportCodes);
+		Logger.info("experimentCodes  : "+experimentCodes);
+		
+		oldProcesses.forEach(p -> {
+			Logger.info("update old process  : "+p.code);
+			p.experimentCodes.removeAll(experimentCodes);
+			p.outputContainerCodes.removeAll(containerCodes);
+			p.outputContainerSupportCodes.removeAll(containerSupportCodes);	
+			p.currentExperimentTypeCode = getLastExperiment(p.experimentCodes);
+			Logger.info("currentExperimentTypeCode  : "+p.currentExperimentTypeCode);
+			//TODO update projectCode and sampleCode but need to retrieve the content
+		});
+		
+		newProcesses.forEach(p -> {
+			Logger.info("update new process  : "+p.code);
+			p.experimentCodes.addAll(experimentCodes);
+			p.outputContainerCodes.addAll(containerCodes);
+			p.outputContainerSupportCodes.addAll(containerSupportCodes);
+			p.currentExperimentTypeCode = getLastExperiment(p.experimentCodes);
+			Logger.info("currentExperimentTypeCode  : "+p.currentExperimentTypeCode);
+			//TODO update projectCode and sampleCode but need to retrieve the content
+		});
+	}
+
+	private static String getLastExperiment(Set<String> experimentCodes) {
+		List<Experiment> exps =  MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", experimentCodes)).sort("traceInformation.creationDate", Sort.DESC).limit(1).toList();
+		return exps.get(0).code;
+	}
+
+	private static List<Container> getNextContainersForProcesses(String code, List<String> processCodes) {
+		return MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+				DBQuery.in("treeOfLife.from.containers.processCodes", processCodes).regex("treeOfLife.paths", Pattern.compile(","+code+"$|,"+code+",")))
+		.sort("traceInformation.creationDate").toList();		
 	}
 
 	/**
@@ -81,14 +149,6 @@ public class SwitchContainer extends CommonController{
 		List<String> newParentPaths = getPaths(newParent.treeOfLife.paths, newParent.code);
 		
 		
-		//TODO Load processes ??
-		List<String> oldProcessesWhereChild = getProcessesWhereChild(oldParent.code).stream().map(p -> p.code).collect(Collectors.toList());
-		List<String> newProcessesWhereChild = getProcessesWhereChild(newParent.code).stream().map(p -> p.code).collect(Collectors.toList());
-				
-		List<String> oldProcessesWhereInput = getProcessesWhereInput(oldParent.code).stream().map(p -> p.code).collect(Collectors.toList());
-		List<String> newProcessesWhereInput = getProcessesWhereInput(newParent.code).stream().map(p -> p.code).collect(Collectors.toList());
-		
-		
 		Logger.info("oldParentProjectCodes : "+oldParentProjectCodes);
 		Logger.info("newParentProjectCodes : "+newParentProjectCodes);
 		
@@ -97,10 +157,6 @@ public class SwitchContainer extends CommonController{
 		
 		Logger.info("oldParentPaths : "+oldParentPaths);
 		Logger.info("newParentPaths : "+newParentPaths);
-		
-		
-		Logger.info("oldProcesses : "+oldProcessesWhereChild+" "+oldProcessesWhereInput);
-		Logger.info("newProcesses : "+newProcessesWhereChild+" "+newProcessesWhereInput);
 		
 		
 		Map<String, PropertyValue> allContentPropertiesKeep = new HashMap<String, PropertyValue>();
