@@ -9,6 +9,10 @@
 	@_treatments.ngsrgNanopore()
 }
 
+@if(code=="chromium"){
+	@_treatments.chromium()
+}
+
 @if(code == "duplicates") {
 	@_treatments.duplicates()	
 }
@@ -84,5 +88,3 @@
 @if(code == "rna-seq"){
 	@_treatments.rnaSeq()
 }
-	
-
