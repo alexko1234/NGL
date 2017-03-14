@@ -51,6 +51,8 @@ public class SampleMapping extends Mapping<Sample> {
 					object = objectInObjects;
 				}
 				needPopulate=true;
+			}else{
+				needPopulate=true;
 			}
 		}
 		

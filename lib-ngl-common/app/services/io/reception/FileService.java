@@ -145,7 +145,7 @@ public abstract class FileService {
 						container.contents.get(0).sampleCode = sample.code;				
 					}
 
-				}else if(null != sample && null == sample.code && sample.projectCodes.size() == 0){
+				}else if(null != sample && null == sample.code && sample.projectCodes != null && sample.projectCodes.size() == 0){
 					contextValidation.addErrors("sample.projectCodes", "no project code found for sample code generation");
 				}
 

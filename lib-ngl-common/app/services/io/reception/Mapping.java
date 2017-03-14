@@ -102,7 +102,7 @@ public abstract class Mapping<T extends DBObject> {
 	}
 	
 	public void rollbackInMongoDB(DBObject c){
-		if(Action.save.equals(action)){ //Delete sample and support if already exist !!!!
+		if(Action.save.equals(action) && c._id == null){ //Delete sample and support if already exist !!!!
 			MongoDBDAO.deleteByCode(collectionName, c.getClass(), c.code);
 		}else if(Action.update.equals(action)){
 			//replace by old version of the object
