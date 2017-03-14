@@ -138,7 +138,7 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atm
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -148,7 +148,7 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atm
 			         },
 			         {
 			        	 "header":Messages("containers.table.quantity") + " (ng)",
-			        	 "property":"inputContainer.quantity.value",
+			        	 "property":"inputContainerUsed.quantity.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

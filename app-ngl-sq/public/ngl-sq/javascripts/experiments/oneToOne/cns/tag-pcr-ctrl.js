@@ -50,7 +50,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					         },
 					         {
 					        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-					        	 "property":"inputContainer.concentration.value",
+					        	 "property":"inputContainerUsed.concentration.value",
 					        	 "order":true,
 								 "edit":false,
 								 "hide":true,
@@ -60,7 +60,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					         },
 					         {
 					        	 "header":Messages("containers.table.volume") + " (µL)",
-					        	 "property":"inputContainer.volume.value",
+					        	 "property":"inputContainerUsed.volume.value",
 					        	 "order":true,
 								 "edit":false,
 								 "hide":true,

@@ -107,7 +107,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			         */
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

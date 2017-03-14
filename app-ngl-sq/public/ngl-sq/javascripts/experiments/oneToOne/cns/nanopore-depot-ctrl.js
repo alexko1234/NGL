@@ -63,7 +63,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			         					 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.concentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -73,7 +73,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -283,8 +283,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		}
 		
 	//	var loadingQtty= $parse('outputContainerUsed.loadingQuantity.value');
-		if(dataMain[0].inputContainer.concentration){
-			var concIN = dataMain[0].inputContainer.concentration.value;
+		if(dataMain[0].inputContainerUsed.concentration){
+			var concIN = dataMain[0].inputContainerUsed.concentration.value;
 			var reportingList = dataLoadingReport ;
 			var reportingVolSum=0;	
 			if (null != reportingList){

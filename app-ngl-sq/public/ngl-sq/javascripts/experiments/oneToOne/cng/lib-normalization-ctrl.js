@@ -116,7 +116,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 					 },
 					 { //Concentration; 12/09/2016 ne pas inclure l'unité dans le label; 08/11/2016 label court
 			        	 "header":Messages("containers.table.concentration.shortLabel"), 
-			        	 "property":"inputContainer.concentration.value",  
+			        	 "property":"inputContainerUsed.concentration.value",  
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -125,7 +125,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			         },
 			         { // 12/09/2016 afficher l'unité concentration dans une colonne séparée pour récupérer la vraie valeur
 			        	 "header":Messages("containers.table.concentration.unit.shortLabel"),
-			        	 "property":"inputContainer.concentration.unit",  
+			        	 "property":"inputContainerUsed.concentration.unit",  
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
@@ -134,7 +134,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			         },
 			         { //Volume 
 			        	 "header":Messages("containers.table.volume") + " (µL)", 
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
