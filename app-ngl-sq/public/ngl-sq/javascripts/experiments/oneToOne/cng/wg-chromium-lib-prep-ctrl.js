@@ -1,7 +1,7 @@
 /* FDS 02/03/2017 -- JIRA NGL-1167 : processus Chromium
    code copié depuis library-prep-ctrl......==> utiliser plaque d'index Chromium????? Pas encore specifie...
    
-   2 fonctionnements  -main     : strip-8       => tubes ( Julie demande de bloquer   strip-8, 96-well-plate pour l'instant...)
+   2 fonctionnements  -main     : strip-8       => tubes         ( Julie demande de bloquer   strip-8  et  96-well-plate pour l'instant...)
                       -sciclone : 96-well-plate => 96-well-plate
 */
 angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
@@ -134,9 +134,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			},
 			"order":{
 				"mode":"local",
-				"active":true//,
-				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
-				//"by":"inputContainer.support.column*1"
+				"active":true
 			},
 			"remove":{
 				"active": ($scope.isEditModeAvailable() && $scope.isNewState()),
@@ -203,7 +201,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		});
 	}
 	
-	// probleme de rafraichissement de la vue en cas de mauvaus choix inital de l'utilisateur...pas corriger par loadTemplate 
+	// probleme de rafraichissement de la vue en cas de mauvaus choix inital de l'utilisateur
 	// dans le watch  "$scope.experiment.instrument.categoryCode"   => forcer la vue ici...
 	if ( $scope.experiment.instrument.categoryCode === "hand") {
 		// tubes 
@@ -267,7 +265,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			"header" : Messages("containers.table.support.column"),
 			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
 			// forcer a numerique.=> type:number, property: *1
-			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			"property" : "outputContainerUsed.locationOnContainerSupport.column*1",
 			"edit" : true,
 			"order" : true,
 			"hide" : true,
@@ -277,7 +275,6 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 				0 : Messages("experiments.outputs")
 			}
 		});
-
 	} 
 	
 	// en mode plaque ou strip uniquement !!!!!!
@@ -299,7 +296,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 					// Historique mais continuer a renseigner car effets de bord possible ????
 					$parse('line').assign(atm, atm.line);
 					$parse('column').assign(atm,atm.column );
-					console.log("atm.line="+ atm.line + " atm.column="+atm.column);	
+					//console.log("atm.line="+ atm.line + " atm.column="+atm.column);	
 				
 					var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
 					if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
@@ -424,9 +421,9 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			getter.assign(udtData, undefined);
 		}
 	}
+	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 		
-	
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
 		//console.log("previous code: "+ $scope.outputContainerSupport.code);
@@ -436,13 +433,10 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
-	/* julie demande de bloquer les types de sortie a Tube uniquement si la main est utilisee */
+	/* Pour l'instant bloquer les types de sortie a Tube uniquement si la main est utilisee */
 	$scope.$watch("$scope.experiment.instrument.categoryCode", function(){
 			if ($scope.experiment.instrument.categoryCode === "hand")
 				$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
-			// GA: tester forcer rechargement template
-			// $scope.loadTemplate();=> duplique le nbre de lignes dans datatable !!!
-	
 	});	
 		
 	

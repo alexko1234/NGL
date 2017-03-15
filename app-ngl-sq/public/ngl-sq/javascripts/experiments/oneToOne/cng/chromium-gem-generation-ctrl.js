@@ -133,10 +133,10 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	        	"withoutEdit": true,
 	        	"changeClass":false,
 	        	"showButton":false,
-	        	"mode":"local" //,
-	        	//"callback":function(datatable){
-	        	//	copyContainerSupportCodeAndStorageCodeToDT(datatable);
-	        	//}
+	        	"mode":"local" ,
+	        	"callback":function(datatable){
+	        		copyContainerSupportCodeAndStorageCodeToDT(datatable);
+	        	}
 			},
 			"hide":{
 				"active":true
@@ -175,10 +175,8 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	  
 	  FDS: Pose 2 problemes:
 	  1) ca n'affiche pas en temps reels  alors que ca devrait !!!    
-	  2) seules les modifiees sont mises a jour en cas de modifiaction du support ====> essai ajout updateContainerCodeDT
-	  
-	07/03/2017 essai de refaire marcher....
-	*/
+	  2) seules les lignes modifiees sont mises a jour en cas de modifiaction du support
+
 	$scope.updatePropertyFromUDT = function(udt, col){
 		console.log("update property : "+ col.property );
 		
@@ -217,9 +215,9 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			}
 		}
 	}
+	*/
 	
-	
-	/* 07/02/2017  ne plus passer par ce systeme....
+	/* 07/02/2017 GA voudrait qu'on ne plus passe par ce systeme  utilisant callback ... pas reussi a faire sans...*/
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 		
 		var dataMain = datatable.getData();
@@ -228,17 +226,12 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
 
 		if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
-			
 			for(var i = 0; i < dataMain.length; i++){
 				
+				var atm = dataMain[i].atomicTransfertMethod;
 				// recuperer la valeur du select "chipPosition"
-				// !!!! instrument property
-				//var newChipPos =$parse("inputContainerUsed.experimentProperties.chipPosition.value")(dataMain[i]);
 				var newChipPos =$parse("inputContainerUsed.instrumentProperties.chipPosition.value")(dataMain[i]);
 				console.log("data :"+ i + "=> new chip position =" + newChipPos);
-				////var oldPosChip =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties.chipPosition.value;
-				
-				var atm = dataMain[i].atomicTransfertMethod;
 						
 				if ( null != newChipPos ) {		
 					// creation du code du container
@@ -246,7 +239,6 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 					console.log("newContainerCode="+ newContainerCode);
 					
 					$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
-					// independant de la position...
 					$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
 					
 					//assigner la column et line du support !!!!
@@ -268,7 +260,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	    datatable.setData(dataMain);
 	}
 	
-	*/
+	
 	// ajout showButton + suppression start = false;
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
@@ -298,37 +290,12 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		console.log("call event activeEditMode");
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
-	});
-	
-
-	// TEST ....MARCHE PAS  voir ci dessous....
-	$scope.$watch("outputContainerSupport.code", function(newValue, OldValue){
-		if ((newValue !== undefined ) && ( newValue !== OldValue)){
-			console.log("outputContainerSupport.code  CHANGED !!! "+newValue+ " ...  update all outputContainers");	
-			updateContainerCodesDT($scope.datatable);
-		}
-	});
-		
-	// TEST !!!!  PBBBB  datatable   pas defini !!!!!!!!
-	var updateContainerCodesDT = function(datatable){			
-		var dataMain = datatable.getData();
-			
-		for(var i = 0; i < dataMain.length; i++){
-			var currentChipPos =$scope.experiment.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties.chipPosition.value;
-			
-			console.log("updating chip position :"+ currentChipPos);
-			var newContainerCode = $scope.outputContainerSupport.code+"_"+currentChipPos ;
-
-			console.log("reassigning outputContainerUsed.code..=> "+  newContainerCode);
-			$parse('outputContainerUsed.code').assign(udt.data,newContainerCode);
-		}
-   }	
-   
+	});	
 		
 	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
-	//define new atomictransfertMethod
+	
 	//FDS: line forcee a 1 pour strip-8; pourquoi column undefined et pas "c"  ??????
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
@@ -344,27 +311,26 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	atmService.defaultOutputUnit = {
 			volume : "µL"
 	};
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	//  pour que les proprietes d'instrument soient injectees dans le datatable
+	// pour que les proprietes d'instrument soient injectees dans le datatable
 	// ne marche QUE avec watch... 
 	$scope.$watch("instrumentType", function(newValue, OldValue){
 		if(newValue)
 			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
 	});
 	
-	// verification du nombre d'inputs container
+	$scope.atmService = atmService;
+	
+	// MARCHE PAS la premiere fois !!!
+	// verification du nombre d'inputs container, on peut le savoir que APRES l'initialisaton de atmService !!!
 	if ( $scope.experiment.atomicTransfertMethods.length > 8 ){
 		$scope.messages.setError("Warning: "+ Messages('experiments.input.error.maxContainers',8));
-		// continuer qd meme... il n'existe pas de setWarning
-		$scope.atmService = atmService;
-	}else{
-		// au tout debut lenght=0
-		$scope.atmService = atmService;
+		//NB il n'existe pas de setWarning...
 	}
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
-	
 
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;

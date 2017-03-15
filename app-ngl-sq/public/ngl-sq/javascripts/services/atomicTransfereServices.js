@@ -503,7 +503,7 @@ angular.module('atomicTransfereServices', [])
 						if(allData[0] && allData[0].inputContainer.categoryCode === 'well'){
 							allData = $filter('orderBy')(allData, ['inputContainer.support.column*1', 'inputContainer.support.line']);
 						}else{
-							// OLD...allData = $filter('orderBy')(allData,'inputContainer.support.code');
+							// OLD... allData = $filter('orderBy')(allData,'inputContainer.support.code');
 							// Ordering using code + line + column
 							allData = $filter('orderBy')(allData,['inputContainer.support.code','inputContainer.support.line*1','inputContainer.support.column*1']);				
 						}

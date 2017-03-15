@@ -664,7 +664,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getChromiumControllerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience.. comme pour Bionanalyzer !! 
+		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience...
+		//14 03 essayer ne ne mettre obligatoire qu'a 'F' ??????? =>pire
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 					newValues("1","2","3","4","5","6","7","8"), 
 					"single",23, true, null,null));
