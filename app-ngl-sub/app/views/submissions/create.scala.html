@@ -60,11 +60,16 @@
 			<input type="file" id="file" base64-file="createService.userFileSamples"/>
 			<BR><BR>
 		</div>		
-		<div ng-if="createService.externalStudies">
+		@**<div ng-if="createService.externalStudies">**@
+			@**<label>@Messages("userFileCloneToAc")</label> **@
+			@**<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>**@
+		@**</div>	**@
+		
+		<div> 
 			<label>@Messages("userFileCloneToAc")</label> 
-			<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>
+			<input type="file" base64-file="createService.userFileClonesToAc" />
 		</div>	
-					
+								
 	}
 	
 }

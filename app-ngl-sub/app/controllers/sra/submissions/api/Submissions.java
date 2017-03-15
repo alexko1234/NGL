@@ -289,15 +289,14 @@ public class Submissions extends DocumentController<Submission>{
 			InputStream inputStreamUserFileClonesToAc = Tools.decodeBase64(submissionsCreationForm.base64UserFileClonesToAc);
 			UserCloneTypeParser userClonesParser = new UserCloneTypeParser();
 			mapUserClones = userClonesParser.loadMap(inputStreamUserFileClonesToAc);		
-			//System.out.println("\ntaille de la map des userClone = " + mapUserClones.size());
+			System.out.println("\ntaille de la map des userClone = " + mapUserClones.size());
 			/*for (Iterator<Entry<String, UserCloneType>> iterator = mapUserClones.entrySet().iterator(); iterator.hasNext();) {
 			  Entry<String, UserCloneType> entry = iterator.next();
 			  System.out.println("cle du userClone = '" + entry.getKey() + "'");
 			  System.out.println("       study_ac : '" + entry.getValue().getStudyAc()+  "'");
 			  System.out.println("       sample_ac : '" + entry.getValue().getSampleAc()+  "'");
-			}
-			*/
-			
+			}*/
+						
 			List<String> readSetCodes;
 			InputStream inputStreamUserFileReadSet = Tools.decodeBase64(submissionsCreationForm.base64UserFileReadSet);
 			Logger.debug("Read base64UserFileReadSet : "+inputStreamUserFileReadSet);

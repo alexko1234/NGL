@@ -213,11 +213,17 @@ public interface VariableSRA {
 			put("illumina genome analyzer ii","Illumina Genome Analyzer II");
 			put("illumina genome analyzer iix","Illumina Genome Analyzer IIx");
 			put("illumina hiseq 2500","Illumina HiSeq 2500");
+			put("hiseq2500","Illumina HiSeq 2500");
 			put("illumina hiseq 2000","Illumina HiSeq 2000");
+			put("hiseq2000","Illumina HiSeq 2000");
 			put("illumina hiseq 1500","Illumina HiSeq 1500");
+			put("hiseq1500","Illumina HiSeq 1500");
 			put("illumina hiseq 1000","Illumina HiSeq 1000");
+			put("hiseq1000","Illumina HiSeq 1000");
 			put("illumina miseq","Illumina MiSeq");
+			put("miseq","Illumina MiSeq");
 			put("illumina hiscansq","Illumina HiScanSQ");
+			put("hiscansq","Illumina HiScanSQ");
 			put("hiseq x ten","HiSeq X Ten");
 			put("nextseq","NextSeq 500");
 			

@@ -59,6 +59,14 @@ public class Configuration  extends DBObject implements IValidation {
 			contextValidation.addKeyToRootKeyName("configuration");
 			// verifier que projectCode est bien renseigné et existe dans lims :
 			SraValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
+			
+			// Verifier que les projects ne sont pas archivés :
+			for (String projectCode: this.projectCodes) {
+				if (StringUtils.isNotBlank(projectCode)) {
+					// verifier si archivage ou non:
+				}
+			}
+			
 			// verifier que champs contraints presents avec valeurs autorisees:
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
