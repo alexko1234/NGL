@@ -6,6 +6,18 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 	var getDefaultDatatableColumn = function() {
 		var columns = [];
 		
+		//15/03/2017 afficher toujours inputContainer.code
+		columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 3,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		
 		columns.push({
 			"header" : Messages("containers.table.fromTransformationTypeCodes"),
 			"property" : "inputContainer.fromTransformationTypeCodes",
@@ -153,53 +165,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
         	 "extraHeaders":{0:Messages("experiments.inputs")}
 		});
 		
-		
-		if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
-			columns.push({
-				"header" : Messages("containers.table.supportCode"),
-				"property" : "inputContainer.support.code",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 1,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
-			// FDS 27/02/2017 existe maintenant inContainerSupportCategoryCode="strip-8"
-			if ($scope.experiment.instrument.inContainerSupportCategoryCode==="96-well-plate"){
-			  columns.push({
-			  	"header" : Messages("containers.table.support.line"),
-				"property" : "inputContainer.support.line",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 1.1,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			  });
-			}
-			columns.push({
-				"header" : Messages("containers.table.support.column"),
-				"property" : "inputContainer.support.column*1",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "number",
-				"position" : 1.2,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
-		}else{
-			columns.push({
-				"header" : Messages("containers.table.code"),
-				"property" : "inputContainer.support.code",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 3,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
-		}
+		//15/03/2017 suppression traitement des cas particulier en fonction de   inContainerSupportCategoryCode
 		
 		return columns;
 	}

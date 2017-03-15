@@ -201,7 +201,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		});
 	}
 	
-	// probleme de rafraichissement de la vue en cas de mauvaus choix inital de l'utilisateur
+	// probleme de rafraichissement de la vue en cas de mauvais choix inital de l'utilisateur
 	// dans le watch  "$scope.experiment.instrument.categoryCode"   => forcer la vue ici...
 	if ( $scope.experiment.instrument.categoryCode === "hand") {
 		// tubes 

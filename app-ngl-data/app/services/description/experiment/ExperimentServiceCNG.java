@@ -208,7 +208,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
-					getInstrumentUsedTypes("hand"),   // Pas encore en PROD... getInstrumentUsedTypes("hand","janus"),
+					getInstrumentUsedTypes("hand"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -485,7 +485,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
 				null, // pas purif
 				getExperimentTypes("bioanalyzer-migration-profile"), // qc 
-				getExperimentTypes("tubes-to-plate") // transfert en strip-8 en plaque-96 (TODO!!)
+				getExperimentTypes("tubes-to-plate") // transfert strip-8 -> plaque-96 
 				).save();
 		
 		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
@@ -493,11 +493,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				false,false,false,
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
-				//getExperimentTypes("labchip-migration-profile","bioanalyzer-migration-profile", "qpcr-quantification"), // qc  ?? inutile de les mettre tous
-				getExperimentTypes("labchip-migration-profile"), // qc   un seul suffit meme s'il y en a plusieurs possibles
-				null  // pas transfert 
+				getExperimentTypes("labchip-migration-profile"), // qc  un seul suffit meme s'il y en a plusieurs possibles
+				getExperimentTypes("tubes-to-plate") // transfert tubes-> plaque
 				).save();
-
 			
 		//FDS 12/12/2016 ajout prep-pcr-free en previous
 		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
