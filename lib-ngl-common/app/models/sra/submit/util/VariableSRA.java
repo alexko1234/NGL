@@ -210,8 +210,14 @@ public interface VariableSRA {
 			
 			// type instrument model pour illumina dans sra version 1.5 : 
 			put("illumina genome analyzer","Illumina Genome Analyzer");
+			put("illumina ga","Illumina Genome Analyzer");
+			put("ga","Illumina Genome Analyzer");
 			put("illumina genome analyzer ii","Illumina Genome Analyzer II");
+			put("illumina gaii","Illumina Genome Analyzer II");
+			put("gaii","Illumina Genome Analyzer II");
 			put("illumina genome analyzer iix","Illumina Genome Analyzer IIx");
+			put("illumina gaiix","Illumina Genome Analyzer IIx");
+			put("gaiix","Illumina Genome Analyzer IIx");
 			put("illumina hiseq 2500","Illumina HiSeq 2500");
 			put("hiseq2500","Illumina HiSeq 2500");
 			put("illumina hiseq 2000","Illumina HiSeq 2000");
@@ -226,6 +232,7 @@ public interface VariableSRA {
 			put("hiscansq","Illumina HiScanSQ");
 			put("hiseq x ten","HiSeq X Ten");
 			put("nextseq","NextSeq 500");
+			
 			
 			// correspondance nomCnsInstrumentModel et instrumentModel :
 			put("rgaiix","Illumina Genome Analyzer IIx");
