@@ -63,7 +63,8 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="unknownIndex in lane.treatments.topIndex.default.unknownIndex.value">
-							<td>{{unknownIndex.sequence}}</td>
+							<td ng-if="unknownIndex.name!=null">{{unknownIndex.sequence}} ({{unknownIndex.name}})</td>
+							<td ng-if="unknownIndex.name==null">{{unknownIndex.sequence}}</td>
 							<td>{{unknownIndex.percent | number:2}}</td>
 							<td ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | filter:{unknownIndexSequence:unknownIndex.sequence} | orderBy:'expectedIndexName'">
 								{{value.distanceFromExpectedIndex | number}}
