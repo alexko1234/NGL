@@ -854,7 +854,6 @@ public class SubmissionServices {
 				// rien : cela peut etre une soumission avec mapCloneToAc
 			}
 			if (study!=null){
-				
 				if (study.state == null) {
 					throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('N','F-SUB')");
 				}
@@ -876,13 +875,14 @@ public class SubmissionServices {
 				if (study.releaseDate == null) {
 					submission.release = false;
 				} else {
-				if (study.releaseDate.compareTo(date)<= 0){
-					submission.release = true;
-					} else {
-						submission.release = false;
+					if (study.releaseDate.compareTo(date)<= 0){
+						submission.release = true;
+						} else {
+							submission.release = false;
+						}
 					}
-				}
-			} 
+				} 
+		
 		}
 		return submission;
 	}
