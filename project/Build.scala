@@ -78,6 +78,7 @@ object ApplicationBuild extends Build {
 	    "org.codehaus.janino" % "janino" % "2.5.15",
 
 	    "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
+	   "org.javassist" % "javassist" % "3.20.0-GA",
 	    cache
 
     	)	
