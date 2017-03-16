@@ -1,7 +1,7 @@
 @()
 <div class="row">
-	<div class="col-md-6 col-lg-6">
-		<table class="table table-condensed table-hover table-bordered table-striped form-horizontal">
+	<div class="col-md-10 col-lg-10">
+		<table class="table table-hover table-condensed  table-bordered table-striped form-horizontal"> 
 			<thead>
 				<tr>
 					<th>@Messages("containers.resultsqc.type")</th>
@@ -14,10 +14,10 @@
 			<tbody>
 				<tr ng-repeat="qc in container.qualityControlResults">
 					<td ><a ng-bind="qc.typeCode|codes:'type'" ng-href="/experiments/{{qc.code}}" target="experiment"></a></td>
-					<td>
+					<td align="right" >
 						<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'" class="row">
-							<div class="col-md-12 col-lg-12" ng-switch-when="true">
-								 <div ng-click="setImage(value.value,value.fullname,value.width,value.height)"  
+							<div class="col-md-10 col-lg-10" ng-switch-when="true">
+								<div ng-click="setImage(value.value,value.fullname,value.width,value.height)"  
      								 			ng-show="value !== undefined" > 
 								<div data-target="#modalImage" role="button" data-toggle="modal" >
 									<a href="#">
@@ -27,19 +27,19 @@
 								</div>
 							</div>
 							<div ng-switch-when="false" ng-switch on="angular.isString(value.value)">
-								<label class="col-md-6 col-lg-6 control-label">{{key|codes:'property_definition'}} : </label>
-								<div ng-switch-when="false" class="col-md-6 col-lg-6">
+								<label  class="col-md-8 col-lg-5 control-label">{{key|codes:'property_definition'}} : </label>
+								<div ng-switch-when="false" class="col-md-9 col-lg-9">
 									<p class="form-control-static" ng-if="value.unit !== null">{{value.value|number:2}} {{value.unit}}</p>
 									<p class="form-control-static" ng-if="value.unit === null">{{value.value|number:2}}</p>										
 								</div>
-								<div ng-switch-when="true" class="col-md-6 col-lg-6">
+								<div ng-switch-when="true" class="col-md-9 col-lg-9">
 									<p class="form-control-static" ng-if="value.unit !== null">{{value.value}} {{value.unit}}</p>
 									<p class="form-control-static" ng-if="value.unit === null">{{value.value}}</p>										
 								</div>								
 							</div>
 						</div>
 					</td>
-					<td ng-bind="qc.valuation.comment" />
+					<td  class="col-md-4 col-lg-4" ng-bind="qc.valuation.comment" />
 					<td ng-bind="qc.valuation.valid|codes:'valuation'" />
 					<td ng-bind="qc.date|date:'@Messages("date.format")'" />					
 				</tr>							
