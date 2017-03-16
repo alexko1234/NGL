@@ -321,14 +321,15 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
 	});
 	
-	$scope.atmService = atmService;
-	
-	// MARCHE PAS la premiere fois !!!
-	// verification du nombre d'inputs container, on peut le savoir que APRES l'initialisaton de atmService !!!
-	if ( $scope.experiment.atomicTransfertMethods.length > 8 ){
-		$scope.messages.setError("Warning: "+ Messages('experiments.input.error.maxContainers',8));
+	// verification du nombre d'inputs container... il faut passer par le basket
+	if ( $scope.mainService.getBasket().length() > 8 ){ 
 		//NB il n'existe pas de setWarning...
+		$scope.messages.setError("Warning: "+ Messages('experiments.input.error.maxContainers',8));
+	}else{
+		$scope.messages.clear();
+		$scope.atmService = atmService;
 	}
+	
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 

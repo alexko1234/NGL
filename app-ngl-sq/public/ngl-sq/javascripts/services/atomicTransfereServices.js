@@ -501,11 +501,11 @@ angular.module('atomicTransfereServices', [])
 						}
 						
 						if(allData[0] && allData[0].inputContainer.categoryCode === 'well'){
-							allData = $filter('orderBy')(allData, ['inputContainer.support.column*1', 'inputContainer.support.line']);
+							// GA 16/03/2017 added inputContainer.support.code
+							allData = $filter('orderBy')(allData, ['inputContainer.support.code','inputContainer.support.column*1', 'inputContainer.support.line']);
 						}else{
-							// OLD... allData = $filter('orderBy')(allData,'inputContainer.support.code');
-							// added  suport.line and support.column; added  inputContainer.code ... NO EFFECT ???
-							allData = $filter('orderBy')(allData,['inputContainer.code','inputContainer.support.code','inputContainer.support.line*1','inputContainer.support.column*1']);
+							// FDS 10/03/2017 added inputContainer.suport.line and inputContainer.support.column; 
+							allData = $filter('orderBy')(allData,['inputContainer.support.code','inputContainer.support.column*1','inputContainer.support.line*1']);
 						}
 						
 						$that.data.setData(allData, allData.length);
@@ -562,11 +562,11 @@ angular.module('atomicTransfereServices', [])
 								});
 								
 								if(allData[0].inputContainer.categoryCode === 'well'){
-									allData = $filter('orderBy')(allData, ['inputContainer.support.column*1', 'inputContainer.support.line']);
+									// GA 16/03/2017 added inputContainer.support.code
+									allData = $filter('orderBy')(allData, ['inputContainer.support.code','inputContainer.support.column*1', 'inputContainer.support.line']);
 								}else{
-									// OLD... allData = $filter('orderBy')(allData,'inputContainer.support.code');
-									// added  support.line and support.column;  added  inputContainer.code ... NO EFFECT ???
-									allData = $filter('orderBy')(allData,['inputContainer.code','inputContainer.support.code','inputContainer.support.line*1','inputContainer.support.column*1']);					
+									// FDS 10/03/2017 added  inputContainer.support.line and inputContainer.support.column
+									allData = $filter('orderBy')(allData,['inputContainer.support.code','inputContainer.support.column*1','inputContainer.support.line*1']);					
 								}
 								$that.data.setData(allData, allData.length);											
 						});

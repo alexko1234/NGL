@@ -5,8 +5,12 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	var config = $scope.atmService.data.getConfig();
 	config.name = $scope.experiment.typeCode.toUpperCase();
 	
+	//surcharger le filtrage... pas normal c'est le filtrage par defaut de atomicTransfereService
+	config.order.by ="inputContainer.support.code";
+	
 	$scope.atmService.data.setConfig(config );
-			
+	
+	
     //  version plus simple du labchipgx CNG....
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		

@@ -76,17 +76,27 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 		}
 	}
 
+	// FDS 16/03/2017 !!! si on remplace la sequence par qq chose (ici un nom) il faut que la longueur soit la meme
+	// sinon lors du pooling, une regle drools de validation va generer une erreur
+	//==> utiliser le format A01 et non A1 pour la position !!! seulement pour la sequence
 	private static Index getChromiumIndex(int row, int col) {
 		Index index = new IlluminaIndex();
-		String code = "SI-GA-"+ (char)(64 + row) + col;
+		
+		String code = "SI-GA-"+ (char)(64 + row);
+		String seq=code;
+		if (col < 10 ) { seq = seq +"0"; }
+		code=code + col;
+		seq=seq+ col;
+		
 		index.code = code;
 		index.name = code;
 		index.shortName = code;
-		index.sequence = code ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
+		index.sequence = seq ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
 		index.categoryCode = "POOL-INDEX";
 		index.supplierName = new HashMap<String,String>();
 		index.supplierName.put("10x Genomics", code);
 		index.traceInformation=new TraceInformation("ngl-data");
+		
 		return index;
 	}
 	

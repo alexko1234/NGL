@@ -1,22 +1,10 @@
-angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSingleDatatable',
-                                                             function($scope,$parse, atmToSingleDatatable) {
+angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter','atmToSingleDatatable','mainService',
+                                                             function($scope,$parse, $filter,atmToSingleDatatable,mainService) {
 	 
 	
 	// NGL-1055: mettre les getArray et codes'' dans filter et pas dans render
 	var getDefaultDatatableColumn = function() {
 		var columns = [];
-		
-		//15/03/2017 afficher toujours inputContainer.code
-		columns.push({
-			"header" : Messages("containers.table.code"),
-			"property" : "inputContainer.code",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 3,
-			"extraHeaders" : {0 : Messages("experiments.inputs")}
-		});
 		
 		columns.push({
 			"header" : Messages("containers.table.fromTransformationTypeCodes"),
@@ -165,7 +153,149 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
         	 "extraHeaders":{0:Messages("experiments.inputs")}
 		});
 		
-		//15/03/2017 suppression traitement des cas particulier en fonction de   inContainerSupportCategoryCode
+		//GA 16/03/2017 colonnes affichées variables en fonction du type de container en entrée
+		// !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket ( ajouter mainService dans le controller )
+		var tmp = [];
+		if(!$scope.isCreationMode()){
+			var tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
+		}else{
+			var tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+		}
+		var supportCategoryCode = undefined;
+		if(tmp.length === 1){
+			supportCategoryCode=tmp[0];
+		}else{
+			supportCategoryCode="mixte";
+		}
+				
+		console.log("supportCategoryCode : "+supportCategoryCode);
+		
+		if(supportCategoryCode ==="tube"){
+			columns.push({
+				"header" : Messages("containers.table.supportCode"),
+				"property" : "inputContainer.support.code",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 3,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+		}else if(supportCategoryCode ==="96-well-plate"){
+			columns.push({
+				"header" : Messages("containers.table.supportCode"),
+				"property" : "inputContainer.support.code",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 1,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+			columns.push({
+				"header" : Messages("containers.table.support.line"),
+				"property" : "inputContainer.support.line",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 1.1,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});		
+			columns.push({
+				"header" : Messages("containers.table.support.column"),
+				"property" : "inputContainer.support.column*1",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "number",
+				"position" : 1.2,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+		}else if(supportCategoryCode ==="strip-8"){
+				columns.push({
+					"header" : Messages("containers.table.supportCode"),
+					"property" : "inputContainer.support.code",
+					"order" : true,
+					"edit" : false,
+					"hide" : true,
+					"type" : "text",
+					"position" : 1,
+					"extraHeaders" : {0 : Messages("experiments.inputs")}
+				});
+			 
+				columns.push({
+					"header" : Messages("containers.table.support.column"),
+					"property" : "inputContainer.support.column*1",
+					"order" : true,
+					"edit" : false,
+					"hide" : true,
+					"type" : "number",
+					"position" : 1.2,
+					"extraHeaders" : {0 : Messages("experiments.inputs")}
+				});
+		}else{
+			// mixte !!
+			columns.push({
+				"header" : Messages("containers.table.code"),
+				"property" : "inputContainer.code",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 3,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+		}
+		
+		/*  A NETTOYER DES QUE CODE CI DESSUS VALIDE....
+		if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+			columns.push({
+				"header" : Messages("containers.table.supportCode"),
+				"property" : "inputContainer.support.code",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 1,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+			// FDS 27/02/2017 existe maintenant inContainerSupportCategoryCode="strip-8"
+			if ($scope.experiment.instrument.inContainerSupportCategoryCode==="96-well-plate"){
+			  columns.push({
+			  	"header" : Messages("containers.table.support.line"),
+				"property" : "inputContainer.support.line",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 1.1,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			  });
+			}
+			columns.push({
+				"header" : Messages("containers.table.support.column"),
+				"property" : "inputContainer.support.column*1",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "number",
+				"position" : 1.2,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+		}else{
+			columns.push({
+				"header" : Messages("containers.table.supportCode"),
+				"property" : "inputContainer.support.code",
+				"order" : true,
+				"edit" : false,
+				"hide" : true,
+				"type" : "text",
+				"position" : 3,
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
+			});
+		}
+		*/
 		
 		return columns;
 	}
