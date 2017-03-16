@@ -19,7 +19,7 @@ object ApplicationBuild extends Build {
    val biVersion = "1.33.9-SNAPSHOT"
 
    val projectsVersion = "1.2-SNAPSHOT"  
-   val reagentsVersion = "1.2-SNAPSHOT" 
+   val reagentsVersion = "1.1.1-SNAPSHOT" 
    val subVersion = "1.2-SNAPSHOT"  
      
    val libDatatableVersion = "1.2-SNAPSHOT"
