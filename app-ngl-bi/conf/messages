@@ -618,6 +618,8 @@ readsets.treatments.gender.mq60 = MQ60
 readsets.treatments.gender.gender = Gender
 readsets.treatments.gender = Gender
 
+readsets.treatments.RNASeq=RNA Seq
+
 readsets.treatments.rnaSeq.echantillonage=Echantillonage
 readsets.treatments.rnaSeq.sampleInput=Nb reads
 

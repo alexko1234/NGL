@@ -2,9 +2,9 @@
 
 <!-- Echantillonnage -->
 <div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+	<div class="col-md-2 col-lg-2">
 	<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.echantillonage")</strong></div>		
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.echantillonage")</strong></div>		
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -19,13 +19,13 @@
 	 	</table>
 	</div>
 	</div>
-</div>
+<!-- </div> -->
 
 <!-- Nettoyage -->
-<div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+<!-- <div class="row">-->
+	<div class="col-md-8 col-lg-8">
 		<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.nettoyage")</strong></div>
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.nettoyage")</strong></div>
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -44,14 +44,15 @@
 				</tr>
 	 		</tbody>
 	 	</table>
+	 	</div>
 	</div>
 </div>
 
 <!-- Alignement Genome -->
 <div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+	<div class="col-md-10 col-lg-10">
 		<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.alignGenome")</strong></div>
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.alignGenome")</strong></div>
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -83,26 +84,27 @@
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.duplicatedReadsPercent.value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.insertLengthMean.value | number}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.insertLengthMeanSd.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.1SenseAlignedReadsPercent.value | number:2}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.2SenseAlignedReadsPercent.value | number:2}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['1SenseAlignedReadsPercent'].value | number:2}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['2SenseAlignedReadsPercent'].value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.intragenicReadsPercent.value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.exonicReadsPercent.value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.intergenicReadsPercent.value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.intronicReadsPercent.value | number:2}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.mappedEnd2ReadsPercent.value | number:2}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.mappedEnd1ReadsPercent.value | number:2}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['mappedEnd2ReadsPercent'].value | number:2}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['mappedEnd1ReadsPercent'].value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.nbTranscripts.value | number}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.nbGenes.value | number}}</td>
 				</tr>
 	 		</tbody>
 	 	</table>
+	 	</div>
 	</div>
 </div>
 <!-- Annotation -->
 <div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+	<div class="col-md-10 col-lg-10">
 		<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.annotation")</strong></div>
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.annotation")</strong></div>
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -131,13 +133,14 @@
 				</tr>
 	 		</tbody>
 	 	</table>
+	 	</div>
 	</div>
 </div>
 <!-- Alignement transcriptome -->
 <div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+	<div class="col-md-5 col-lg-5">
 		<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.alignTranscriptome")</strong></div>
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.alignTranscriptome")</strong></div>
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -156,13 +159,14 @@
 				</tr>
 	 		</tbody>
 	 	</table>
+	 	</div>
 	</div>
-</div>
+<!-- </div>-->
 <!-- Duplication -->
-<div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+<!-- <div class="row">-->
+	<div class="col-md-5 col-lg-5">
 		<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.duplication")</strong></div>
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.duplication")</strong></div>
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -177,13 +181,14 @@
 				</tr>
 	 		</tbody>
 	 	</table>
+	 	</div>
 	</div>
 </div>
 <!-- Insert Size -->
 <div class="row">
-	<div class="col-md-10 col-lg-10 col-xs-12">
+	<div class="col-md-10 col-lg-10">
 		<div class="panel panel-default">
-		<div class="panel-heading"><strong>@Messages("readsets.treatments.rnaSeq.insertSize")</strong></div>
+		<div class="panel-heading text-center"><strong>@Messages("readsets.treatments.rnaSeq.insertSize")</strong></div>
 		<table class="table table-condensed table-hover table-bordered">
 	 		<thead>
 				<tr>
@@ -212,20 +217,21 @@
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.insertsizeMax.value | number}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.insertsizeMean.value | number:2}}</td>
 	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.standardDeviation.value | number:2}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.pairOrientation.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf10percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf20percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf30percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf40percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf50percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf60percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf70percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf80percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf90percent.value | number}}</td>
-	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.widthOf99percent.value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.pairOrientation.value}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf10percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf20percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf30percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf40percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf50percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf60percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf70percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf80percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf90percent'].value | number}}</td>
+	 				<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs['widthOf99percent'].value | number}}</td>
 				</tr>
 	 		</tbody>
 	 	</table>
+	 	</div>
 	</div>
 </div>
 
