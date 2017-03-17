@@ -52,14 +52,14 @@ public abstract class AbstractTreatmentService {
 	{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version logiciel","softwareVersion",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","barcodeExactMatchRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","barcodeQ30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","bcOnWhitelist",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","gemCountEstimate",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","meanBarcodeQscore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","numberReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","read1Q30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("","read2Q30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("barcode exact match ratio","barcodeExactMatchRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("barcode Q30 base ratio","barcodeQ30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("BC on white list","bcOnWhitelist",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("gem count estimate","gemCountEstimate",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("mean Barcode QScore","meanBarcodeQscore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("number Reads","numberReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("read1 Q30 base ratio","read1Q30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("read2 Q30 base ratio","read2Q30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
 		return propertyDefinitions;
 	}
 

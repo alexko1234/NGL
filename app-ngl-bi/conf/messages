@@ -618,7 +618,7 @@ readsets.treatments.gender.mq60 = MQ60
 readsets.treatments.gender.gender = Gender
 readsets.treatments.gender = Gender
 
-readsets.treatments.RNASeq=RNA Seq
+readsets.treatments.RNASeq=RNA-Seq
 
 readsets.treatments.rnaSeq.echantillonage=Echantillonage
 readsets.treatments.rnaSeq.sampleInput=Nb reads
@@ -691,14 +691,14 @@ readsets.treatments.images.margin=25
 readsets.treatments.minknowMetrichor = MinKnow-Metrichor
 
 readsets.treatments.chromium.softwareVersion=Version logiciel
-readsets.treatments.chromium.barcodeExactMatchRatio=
-readsets.treatments.chromium.barcodeQ30BaseRatio=
-readsets.treatments.chromium.bcOnWhitelist=
-readsets.treatments.chromium.gemCountEstimate=
-readsets.treatments.chromium.meanBarcodeQscore=
-readsets.treatments.chromium.numberReads=
-readsets.treatments.chromium.read1Q30BaseRatio=
-readsets.treatments.chromium.read2Q30BaseRatio=
+readsets.treatments.chromium.barcodeExactMatchRatio=Barcode exact match ratio
+readsets.treatments.chromium.barcodeQ30BaseRatio=Barcode Q30 base ratio
+readsets.treatments.chromium.bcOnWhitelist=BC on white list
+readsets.treatments.chromium.gemCountEstimate=Gem count estimate
+readsets.treatments.chromium.meanBarcodeQscore=Mean barcode QScore
+readsets.treatments.chromium.numberReads=Number reads
+readsets.treatments.chromium.read1Q30BaseRatio=Read1 Q30 base ratio
+readsets.treatments.chromium.read2Q30BaseRatio=Read2 Q30 base ratio
 
 
 readsets.files.fullname = Nom du fichier
