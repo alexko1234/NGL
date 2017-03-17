@@ -248,55 +248,6 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			});
 		}
 		
-		/*  A NETTOYER DES QUE CODE CI DESSUS VALIDE....
-		if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
-			columns.push({
-				"header" : Messages("containers.table.supportCode"),
-				"property" : "inputContainer.support.code",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 1,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
-			// FDS 27/02/2017 existe maintenant inContainerSupportCategoryCode="strip-8"
-			if ($scope.experiment.instrument.inContainerSupportCategoryCode==="96-well-plate"){
-			  columns.push({
-			  	"header" : Messages("containers.table.support.line"),
-				"property" : "inputContainer.support.line",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 1.1,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			  });
-			}
-			columns.push({
-				"header" : Messages("containers.table.support.column"),
-				"property" : "inputContainer.support.column*1",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "number",
-				"position" : 1.2,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
-		}else{
-			columns.push({
-				"header" : Messages("containers.table.supportCode"),
-				"property" : "inputContainer.support.code",
-				"order" : true,
-				"edit" : false,
-				"hide" : true,
-				"type" : "text",
-				"position" : 3,
-				"extraHeaders" : {0 : Messages("experiments.inputs")}
-			});
-		}
-		*/
-		
 		return columns;
 	}
 	
@@ -352,6 +303,8 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			}			
 	};
 	
+	// attention ce order by est prevu pour le CNS...Il doit ensuite etre surchargé dans chaque QC du CNG...
+	// il faudrait en fait le supprimer d'ici et l'ajouter dans chque QC du CNS ??? a confirmer
 	if($scope.experiment.instrument.inContainerSupportCategoryCode ==="tube"){
 		datatableConfig.order.by = 'inputContainer.sampleCodes';
 	}

@@ -34,7 +34,6 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 	@Override
 	public void runImport() throws SQLException, DAOException {
 		importIndexIllumina(limsServices,contextError);  //01/03/2017 chgt de nom + remise des params....
-		createIndexChromium(contextError); // 01/03/2017 ajout
 	}
 
 	//01/03/2017 chgt de nom + remise des params....
@@ -59,45 +58,6 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexes,contextError);
 		
 		logger.info("end loading indexes");
-	}
-	
-	// FDS 01/03/2017 creation des index pour processus Chromium (mais utilisés au final en sequencage-illumina)
-	// Plaque=> 96 index SI-GA-<ligne>-<col>
-	public void createIndexChromium(ContextValidation contextValidation){
-	
-		for ( int row = 1; row <=8; row++){
-			for(int col = 1 ; col <= 12 ; col++){
-				Index index = getChromiumIndex(row,col);				
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
-					logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
-					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
-				}
-			}
-		}
-	}
-
-	// FDS 16/03/2017 !!! si on remplace la sequence par qq chose (ici un nom) il faut que la longueur soit la meme
-	// sinon lors du pooling, une regle drools de validation va generer une erreur
-	//==> utiliser le format A01 et non A1 pour la position !!! seulement pour la sequence
-	private static Index getChromiumIndex(int row, int col) {
-		Index index = new IlluminaIndex();
-		
-		String code = "SI-GA-"+ (char)(64 + row);
-		String seq=code;
-		if (col < 10 ) { seq = seq +"0"; }
-		code=code + col;
-		seq=seq+ col;
-		
-		index.code = code;
-		index.name = code;
-		index.shortName = code;
-		index.sequence = seq ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
-		index.categoryCode = "POOL-INDEX";
-		index.supplierName = new HashMap<String,String>();
-		index.supplierName.put("10x Genomics", code);
-		index.traceInformation=new TraceInformation("ngl-data");
-		
-		return index;
 	}
 	
 }

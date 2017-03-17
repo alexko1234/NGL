@@ -6,6 +6,7 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	config.name = $scope.experiment.typeCode.toUpperCase();
 	
 	//surcharger le filtrage... pas normal c'est le filtrage par defaut de atomicTransfereService
+	//==> du au fait qu'il y a deja une surcharge dans one-to-void-cq-ctr.js  specifique au CNS ==>  modifier one-to-void-cq-ctr.js !!!
 	config.order.by ="inputContainer.support.code";
 	
 	$scope.atmService.data.setConfig(config );
