@@ -404,15 +404,15 @@ public class ImportServiceCNS extends AbstractImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 14, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 15, false, null,null));		
-		propertyDefinitions.add(newPropertiesDefinition("Orientation brin synthétisé","strandOrientation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Orientation brin synthétisé","strandOrientation", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 16, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA","rnaLibProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA","rnaLibProtocol", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 18, false, null,null));
 
 		return propertyDefinitions;
@@ -423,9 +423,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 3, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 4, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
 				null,null,null,"single", 5, false, null, null));
@@ -436,11 +436,11 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
 		
 				
-		propertyDefinitions.add(newPropertiesDefinition("Orientation brin synthétisé","strandOrientation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Orientation brin synthétisé","strandOrientation", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 8, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 9, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA","rnaLibProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA","rnaLibProtocol", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 10, false, null,null));
 
 		
