@@ -43,8 +43,13 @@ public class Project extends DBObject implements IValidation{
 	public String umbrellaProjectCode;
 	public BioinformaticParameters bioinformaticParameters;
 	public String lastSampleCode;
+	public Integer nbCharactersInSampleCode = 4;
+	public List<String> authorizedUsers;
 	
-
+	public Boolean archive;
+	
+	
+	
 	@Override
 	@JsonIgnore
 	public void validate(ContextValidation contextValidation) {				
