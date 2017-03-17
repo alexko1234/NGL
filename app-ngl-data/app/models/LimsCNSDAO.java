@@ -254,6 +254,12 @@ public class LimsCNSDAO{
 
 				project.bioinformaticParameters = new BioinformaticParameters();
 
+				if(null != rs.getString("maxadnnom")){
+					project.lastSampleCode = project.code+"_"+rs.getString("maxadnnom");
+					project.nbCharactersInSampleCode = rs.getString("maxadnnom").length();
+				}
+				project.archive = rs.getBoolean("prsarch");
+				
 				project.traceInformation=new TraceInformation();
 				InstanceHelpers.updateTraceInformation(project.traceInformation, "ngl-data");
 				return project;

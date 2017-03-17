@@ -46,6 +46,9 @@ public class Project extends DBObject implements IValidation{
 	public Integer nbCharactersInSampleCode = 4;
 	public List<String> authorizedUsers;
 	
+	public Boolean archive;
+	
+	
 	
 	@Override
 	@JsonIgnore
