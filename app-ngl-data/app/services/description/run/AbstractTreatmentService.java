@@ -47,4 +47,18 @@ public abstract class AbstractTreatmentService {
 		return propertyDefinitions;
 	}
 
+	public static List<PropertyDefinition> getChromiumPropertyDefinitions()
+	{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version logiciel","softwareVersion",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Barcode exact match","barcodeExactMatchRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Barcode Q30","barcodeQ30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Barcode exact match post correction","bcOnWhitelist",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Estimated number of GEMs","gemCountEstimate",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mean quality score","meanBarcodeQscore",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Number of reads","numberReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Q30 of read 1","read1Q30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Q30 of read 2","read2Q30BaseRatio",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		return propertyDefinitions;
+	}
 }
