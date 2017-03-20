@@ -17,6 +17,9 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams','datata
 			exportCSV:{
 				active:true
 			},
+			pagination:{
+				mode:'local'
+			},
 			name:"Projects"
 	};
 
