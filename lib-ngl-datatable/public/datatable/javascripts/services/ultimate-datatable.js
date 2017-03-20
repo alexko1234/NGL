@@ -2312,10 +2312,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         	if(Array.isArray(colValue) && colValue.length === 1  && colValue[0].search
                                         			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue[0]+'"';
-                                        	}else if(!Array.isArray(colValue) && colValue.search
+                                        	} else if(!Array.isArray(colValue) && colValue.search
                                         			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue+'"';
-                                        	}                                        	
+                                        	} else if(!Array.isArray(colValue)){
+                                        		colValue = '"'+colValue+'"';
+                                        	}                                   	
                                         }
                                         
 										
