@@ -135,6 +135,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 		columns.push({
 			"header" : Messages("containers.table.valuationqc.comment"),
 			"property" : "inputContainerUsed.valuation.comment",
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
 			"order" : false,
 			"edit" : true,
 			"hide" : true,
