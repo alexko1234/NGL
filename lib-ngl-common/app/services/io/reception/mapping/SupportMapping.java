@@ -36,7 +36,7 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 			support.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		
-		if(null == support.state){
+		if(null == support.state || null == support.state.code){
 			support.state = new State("IS", contextValidation.getUser());
 		}else if(support.state.user == null){
 			support.state.user = contextValidation.getUser();

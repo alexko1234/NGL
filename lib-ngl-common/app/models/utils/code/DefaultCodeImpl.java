@@ -154,7 +154,7 @@ public class DefaultCodeImpl implements Code {
 			}
 			else {
 				newCode="A";
-				while(newCode.length() < project.nbCharactersInSampleCode){
+				while(newCode.length() < project.nbCharactersInSampleCode+1){
 					newCode=newCode+"A";
 				}
 				lastCharacter=1;
@@ -170,8 +170,11 @@ public class DefaultCodeImpl implements Code {
 	}
 	
 	public synchronized void updateProjectSampleCodeIfNeeded(String projectCode, String newSampleCode){
+		Integer nbCharactersInSampleCode = newSampleCode.replace(projectCode+"_", "").length();
+		
 		MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode)
-				.or(DBQuery.notExists("lastSampleCode"), DBQuery.lessThan("lastSampleCode", newSampleCode)),
-				DBUpdate.set("lastSampleCode",newSampleCode));
+				.or(DBQuery.notExists("lastSampleCode"), DBQuery.lessThan("nbCharactersInSampleCode", nbCharactersInSampleCode), 
+						DBQuery.is("nbCharactersInSampleCode", nbCharactersInSampleCode).lessThan("lastSampleCode", newSampleCode)),
+				DBUpdate.set("lastSampleCode",newSampleCode).set("nbCharactersInSampleCode", nbCharactersInSampleCode));
 	}
 }

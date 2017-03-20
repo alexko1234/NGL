@@ -42,7 +42,7 @@ public class ContainerMapping extends Mapping<Container> {
 			container.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 		//TODO better management for state with a fieldConfiguration
-		if(null == container.state){
+		if(null == container.state || null == container.state.code){
 			container.state = new State("IS", contextValidation.getUser());
 		} else if(container.state.user == null){
 			container.state.user = contextValidation.getUser();
