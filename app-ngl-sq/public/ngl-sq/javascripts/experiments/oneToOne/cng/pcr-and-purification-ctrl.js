@@ -311,7 +311,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			}
 		}
 		
-	    datatable.setData(dataMain);
+		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	//Init

@@ -304,7 +304,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			}
 		}
 		
-	    datatable.setData(dataMain);
+		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	$scope.$on('refresh', function(e) {

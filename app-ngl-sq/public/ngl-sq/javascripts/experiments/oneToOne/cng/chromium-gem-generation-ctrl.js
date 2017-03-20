@@ -1,5 +1,5 @@
 // FDS 23/02/2017 -- JIRA NGL-1167
-angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable',
+angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable', 
 	                                                     function($scope, $parse, $filter, atmToSingleDatatable ){	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
@@ -165,57 +165,11 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
-		$scope.atmService.data.save();
+		$scope.atmService.data.save();		
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	/* GA 27/02/2017 : ne plus utiliser le system copyContainerXXToDT sur action save mais utiliser plutot updatePropertyFromUDT
-	  updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable...
-	  
-	  FDS: Pose 2 problemes:
-	  1) ca n'affiche pas en temps reels  alors que ca devrait !!!    
-	  2) seules les lignes modifiees sont mises a jour en cas de modifiaction du support
-
-	$scope.updatePropertyFromUDT = function(udt, col){
-		console.log("update property : "+ col.property );
-		
-		var outputContainerSupportCode = $scope.outputContainerSupport.code;
-		
-		if(col.property === 'inputContainerUsed.instrumentProperties.chipPosition.value'){
-			var newChipPos =  $parse("inputContainerUsed.instrumentProperties.chipPosition.value")(udt.data);
-			console.log("new position on chip=" + newChipPos);
-			
-			if ((undefined != newChipPos) && (undefined != outputContainerSupportCode))
-			{	
-				// creation du code du container
-				var newContainerCode = outputContainerSupportCode +"_"+ newChipPos ;
-				console.log("....newContainerCode="+ newContainerCode);
-					
-				$parse('outputContainerUsed.code').assign(udt.data, newContainerCode);
-				
-				console.log("assigning container support code!!!"+ outputContainerSupportCode);
-				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(udt.data, outputContainerSupportCode);// devrait se mettre a jour "live"!!!
-				
-				$parse('outputContainerUsed.locationOnContainerSupport.line').assign(udt.data, '1');
-				
-				console.log("assigning column !!!"+newChipPos);		
-				$parse('outputContainerUsed.locationOnContainerSupport.column').assign(udt.data, newChipPos);// devrait se mettre a jour "live"!!!
-				
-				// Historique mais continuer a renseigner car effets de bord possibles ????
-				$parse('line').assign(udt.data.atomicTransfertMethod, 1);
-				$parse('column').assign(udt.data.atomicTransfertMethod, newChipPos);
-				
-				console.log("end assigning...");
-			}
-			
-			var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
-			if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
-				$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(udt.data,outputContainerSupportStorageCode);
-			}
-		}
-	}
-	*/
 	
 	/* 07/02/2017 GA voudrait qu'on ne plus passe par ce systeme  utilisant callback ... pas reussi a faire sans...*/
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
@@ -256,8 +210,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 				}
 			}	
 		}
-		
-	    datatable.setData(dataMain);
+		// Ne plus faire ... datatable.setData(dataMain);
 	}
 	
 	
@@ -273,6 +226,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
+	
 	
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");
@@ -296,7 +250,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	
-	//FDS: line forcee a 1 pour strip-8; pourquoi column undefined et pas "c"  ??????
+	//FDS: line forcee a 1 pour strip-8;
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
 			class:"OneToOne",
@@ -322,7 +276,7 @@ angular.module('home').controller('ChromiumGemCtrl',['$scope', '$parse',  '$filt
 	});
 	
 	// verification du nombre d'inputs container... il faut passer par le basket
-	if ( $scope.mainService.getBasket().length() > 8 ){ 
+	if ( $scope.isCreationMode() && $scope.mainService.getBasket().length() > 8 ){ 
 		//NB il n'existe pas de setWarning...
 		$scope.messages.setError("Warning: "+ Messages('experiments.input.error.maxContainers',8));
 	}else{

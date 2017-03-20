@@ -34,6 +34,17 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 					ocu.code = ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.line;
 				}
 			});
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) == 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
+			// case strip-8
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if (null == ocu.locationOnContainerSupport.code && null != supportCode) {
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.column;
+				}else if(null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.column
+						&& (null == ocu.code || !ocu.code.equals(ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.column))){
+					ocu.code = ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.column;
+				}
+			});
 		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
 			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
 				if(null == ocu.locationOnContainerSupport.code && null != supportCode){

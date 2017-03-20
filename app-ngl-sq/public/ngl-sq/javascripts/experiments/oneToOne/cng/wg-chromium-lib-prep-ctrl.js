@@ -303,13 +303,11 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 						$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
 					}
 				}
-			}
-		
-			datatable.setData(dataMain);
-		}		
+			}		
+		}
+		// Ne plus faire ... datatable.setData(dataMain);
 	}
 	
-		
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");

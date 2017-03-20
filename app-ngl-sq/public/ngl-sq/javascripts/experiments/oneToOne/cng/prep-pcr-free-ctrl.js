@@ -266,7 +266,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			}
 		}
 		
-	    datatable.setData(dataMain);
+		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	// ajout showButton + suppression start = false;

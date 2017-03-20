@@ -299,7 +299,7 @@ angular.module('home').controller('DenatDilLibCtrlPlates',['$scope', '$parse', '
 			}
 		}
 		
-	    datatable.setData(dataMain);
+	    //ne plus faire...datatable.setData(dataMain);
 	}
 		
 	//Init

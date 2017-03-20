@@ -317,7 +317,7 @@ public class ExpWorkflowsHelper {
 
 		if(outputCsc.nbLine.equals(Integer.valueOf(1)) && outputCsc.nbColumn.equals(Integer.valueOf(1))){
 			exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsed(exp, atm, outputCsc, CodeHelper.getInstance().generateContainerSupportCode(), justContainerCode));
-		}else if(!outputCsc.nbLine.equals(Integer.valueOf(1))){
+		}else if(!outputCsc.nbLine.equals(Integer.valueOf(1)) || !outputCsc.nbColumn.equals(Integer.valueOf(1))){
 			String supportCode = CodeHelper.getInstance().generateContainerSupportCode();
 			exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsed(exp, atm, outputCsc, supportCode, justContainerCode));
 		}	

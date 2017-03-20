@@ -269,7 +269,7 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 			}
 		}
 		
-	    datatable.setData(dataMain);
+		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	// ajout showButton + suppression start = false;
