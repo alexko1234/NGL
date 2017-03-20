@@ -14,6 +14,9 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams','datata
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.projects.tpl.Projects.get(line.code).url, remove:true});
 				}
 			},
+			exportCSV:{
+				active:true
+			},
 			name:"Projects"
 	};
 
