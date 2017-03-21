@@ -115,7 +115,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 						getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60,61"));
 
 		//specific CNS
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
