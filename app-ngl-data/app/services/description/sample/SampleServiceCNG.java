@@ -51,6 +51,7 @@ public class SampleServiceCNG extends AbstractSampleService {
 		
 		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNG)));
 		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("IP", "IP", SampleCategory.find.findByCode("IP-sample"),null, getInstitutes(Constants.CODE.CNG)));
 		
 		// il y a du ChIP et du MedIP au CNG mais ce n'est pas detaillé au niveau sample dans la base Solexa  creer un.SampleType de meme nom que SampleCategory
 		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), null, getInstitutes(Constants.CODE.CNG)));
