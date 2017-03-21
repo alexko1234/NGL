@@ -12,6 +12,10 @@
 	@_treatments.chromium()
 }
 
+@if(code=="chromium"){
+	@_treatments.chromium()
+}
+
 @if(code == "duplicates") {
 	@_treatments.duplicates()	
 }
@@ -33,6 +37,7 @@
 @if(code == "contamination") {
 	@_treatments.contamination()
 }
+
 
 
 @if(code == "sorting-ribo") {
@@ -83,3 +88,10 @@
 	@_treatments.minknowMetrichor()
 }
 
+@if(code == "rna-seq"){
+	@_treatments.rnaSeq()
+}
+
+@if(code == "chromium"){
+	@_treatments.chromium()
+}

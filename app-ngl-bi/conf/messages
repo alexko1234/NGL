@@ -272,8 +272,8 @@ run.treatments.sav.default.nonIndexedYieldTotal=Rendement total non indexé (Gb)
 run.treatments.sav.default.Q30PercTotal=% Q30 total
 run.treatments.sav.default.nonIndexedQ30PercTotal=% Q30 total non indexé
 
-runs.treatments.topIndex.unknownIndex.sequence = Séquence index inconnu
-runs.treatments.topIndex.unknownIndex.percent = % séquence
+runs.treatments.topIndex.unknownIndex.sequence = Index non attendus
+runs.treatments.topIndex.unknownIndex.percent = % séquence / perte
 runs.treatments.topIndex.distance = Distance
 #search
 sequencingProgramType.value.PE = Pair End
@@ -604,6 +604,7 @@ readsets.treatments.readQualityTrim = Read Quality (vs TRIM)
 readsets.treatments.contaminationColi = Contam. Coli
 readsets.treatments.contaminationVector = Contam. Vecteur
 readsets.treatments.contaminationPhiX = Contam. PhiX
+readsets.treatments.contaminationAmplicons = Contam. Amplicons
 readsets.treatments.sortingRibo = Sorting Ribo
 readsets.treatments.mapping = Mapping
 readsets.treatments.taxonomy = Taxonomy 
@@ -618,9 +619,88 @@ readsets.treatments.gender.mq60 = MQ60
 readsets.treatments.gender.gender = Gender
 readsets.treatments.gender = Gender
 
+readsets.treatments.RNASeq=RNA-Seq
+
+readsets.treatments.rnaSeq.echantillonage=Echantillonage
+readsets.treatments.rnaSeq.sampleInput=Nb reads
+
+readsets.treatments.rnaSeq.nettoyage=Nettoyage
+readsets.treatments.rnaSeq.storedPairsPercent=% both surviving
+readsets.treatments.rnaSeq.storedForwardReadPercent=% R1 only surviving
+readsets.treatments.rnaSeq.storedReverseReadPercent=% R2 only surviving
+readsets.treatments.rnaSeq.rejectedPairsPercent=% dropped
+
+readsets.treatments.rnaSeq.alignGenome=Alignement Genome
+readsets.treatments.rnaSeq.alignedReadsPercent=% mapped reads
+readsets.treatments.rnaSeq.uniqueReadsPercent=% unique mapped reads
+readsets.treatments.rnaSeq.uniqueAlignedReadsPercent=% unique mapped reads of total
+readsets.treatments.rnaSeq.mismatchPercent=% base mismatch
+readsets.treatments.rnaSeq.duplicatedReadsPercent=% duplicated mapped reads
+readsets.treatments.rnaSeq.insertLengthMean=Mean insert length
+readsets.treatments.rnaSeq.insertLengthMeanSd=SD insert length
+readsets.treatments.rnaSeq.1SenseAlignedReadsPercent=% R1 sense
+readsets.treatments.rnaSeq.2SenseAlignedReadsPercent=% R2 sense
+readsets.treatments.rnaSeq.intragenicReadsPercent=% intragenic
+readsets.treatments.rnaSeq.exonicReadsPercent=% exonic
+readsets.treatments.rnaSeq.intergenicReadsPercent=% intergenic
+readsets.treatments.rnaSeq.intronicReadsPercent=% intronic
+readsets.treatments.rnaSeq.mappedEnd2ReadsPercent=% mapped End 2
+readsets.treatments.rnaSeq.mappedEnd1ReadsPercent=% mapped End 1
+readsets.treatments.rnaSeq.nbTranscripts=Nb transcripts 
+readsets.treatments.rnaSeq.nbGenes=Nb genes
+
+readsets.treatments.rnaSeq.annotation=Annotation
+readsets.treatments.rnaSeq.nbProteinCodingGenes=Nb protein coding genes
+readsets.treatments.rnaSeq.nbProteinCodingTranscripts=Nb protein coding transcripts
+readsets.treatments.rnaSeq.nbMiRnaGenes=Nb miRNA genes
+readsets.treatments.rnaSeq.nbSnoRnaGenes=Nb snoRNA genes
+readsets.treatments.rnaSeq.nbSnRnaGenes=Nb snRNA genes
+readsets.treatments.rnaSeq.nbProtCodGeneChrY=Nb protein coding genes chrY
+readsets.treatments.rnaSeq.nbProtCodTrscriptChrY=Nb protein coding transcripts chrY
+readsets.treatments.rnaSeq.nblncRnaGenes=Nb lincRNA genes
+readsets.treatments.rnaSeq.nblncRnaTrscripts=Nb lincRNA transcripts
+readsets.treatments.rnaSeq.alignTranscriptome=Alignement transcriptome
+readsets.treatments.rnaSeq.mappedReadsPercent=% mapped reads
+readsets.treatments.rnaSeq.readLengthMean=mean read length
+readsets.treatments.rnaSeq.adaptersPercent=% adaptateur
+readsets.treatments.rnaSeq.rRnaMappedPercent=% mapped rRNA
+
+readsets.treatments.rnaSeq.duplication=Duplication
+readsets.treatments.rnaSeq.transcriptDuplicMappedReadsPerc=% duplicated mapped reads transcriptome
+readsets.treatments.rnaSeq.genomDuplicMappedReadsPerc=% duplicated mapped reads genome
+
+readsets.treatments.rnaSeq.insertSize=Insert Size
+readsets.treatments.rnaSeq.insertsizeMedian=median insert size
+readsets.treatments.rnaSeq.insertsizeMin=min insert size
+readsets.treatments.rnaSeq.insertsizeMax=max insert size
+readsets.treatments.rnaSeq.insertsizeMean=mean insert size
+readsets.treatments.rnaSeq.standardDeviation=standard deviation
+readsets.treatments.rnaSeq.pairOrientation=pair orientation
+readsets.treatments.rnaSeq.widthOf10percent=width of 10 percent
+readsets.treatments.rnaSeq.widthOf20percent=width of 20 percent
+readsets.treatments.rnaSeq.widthOf30percent=width of 30 percent
+readsets.treatments.rnaSeq.widthOf40percent=width of 40 percent
+readsets.treatments.rnaSeq.widthOf50percent=width of 50 percent
+readsets.treatments.rnaSeq.widthOf60percent=width of 60 percent
+readsets.treatments.rnaSeq.widthOf70percent=width of 70 percent
+readsets.treatments.rnaSeq.widthOf80percent=width of 80 percent
+readsets.treatments.rnaSeq.widthOf90percent=width of 90 percent
+readsets.treatments.rnaSeq.widthOf99percent=width of 99 percent
+
 readsets.treatments.images.margin=25
 
 readsets.treatments.minknowMetrichor = MinKnow-Metrichor
+
+readsets.treatments.chromium.softwareVersion=Version logiciel
+readsets.treatments.chromium.barcodeExactMatchRatio=Barcode exact match
+readsets.treatments.chromium.barcodeQ30BaseRatio=Barcode Q30
+readsets.treatments.chromium.bcOnWhitelist=Barcode exact match post correction
+readsets.treatments.chromium.gemCountEstimate=Estimated number of GEMs
+readsets.treatments.chromium.meanBarcodeQscore=Mean quality score
+readsets.treatments.chromium.numberReads=Number of reads
+readsets.treatments.chromium.read1Q30BaseRatio=Q30 of read 1
+readsets.treatments.chromium.read2Q30BaseRatio=Q30 of read 2
+
 
 readsets.files.fullname = Nom du fichier
 readsets.files.typeCode = Type de fichier

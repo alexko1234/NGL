@@ -37,6 +37,7 @@ public class RunServiceCNS extends AbstractRunService {
 		List<AnalysisType> l = new ArrayList<AnalysisType>();
 		l.add(DescriptionFactory.newAnalysisType("BAC pool assembly","BPA",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newAnalysisType("Dietetic Assembly","dietetic-assembly",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+		l.add(DescriptionFactory.newAnalysisType("Mopad Assembly","mopad-assembly",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}

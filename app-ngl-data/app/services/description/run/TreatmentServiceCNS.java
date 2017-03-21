@@ -110,11 +110,11 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "5")
 				);
 
-		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", 
+		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX,contaminationAmplicons", 
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 						getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60,61"));
 
 		//specific CNS
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 

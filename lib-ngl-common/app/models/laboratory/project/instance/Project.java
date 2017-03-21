@@ -48,8 +48,6 @@ public class Project extends DBObject implements IValidation{
 	
 	public Boolean archive;
 	
-	
-	
 	@Override
 	@JsonIgnore
 	public void validate(ContextValidation contextValidation) {				
