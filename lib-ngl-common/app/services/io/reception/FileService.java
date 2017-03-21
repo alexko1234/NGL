@@ -129,20 +129,18 @@ public abstract class FileService {
 					
 					List<Content> contents = container.contents.stream().filter(c -> (c.sampleCode == null)).collect(Collectors.toList());
 					if(contents.size() == 1){
-						if(contents.get(0).sampleCode == null || !contents.get(0).sampleCode.equals(sample.code)){
-							contents.get(0).sampleCode = sample.code;				
-						}else{
-							contextValidation.addErrors("container.content.sampleCode", "not null during sample code generation : "+container.contents.get(0).sampleCode);
-						};
-						
+						contents.get(0).sampleCode = sample.code;																
 					}else if(contents.size() > 1){
-						contextValidation.addErrors("container.contents", "several contents without sampleCode need only one");
+						contextValidation.addErrors("container.contents", "several contents without sampleCode");
 					}
 					
 						
 				}else if(null != sample && null != sample.code){
-					if(container.contents.get(0).sampleCode == null || !container.contents.get(0).sampleCode.equals(sample.code)){
-						container.contents.get(0).sampleCode = sample.code;				
+					List<Content> contents = container.contents.stream().filter(c -> (c.sampleCode == null)).collect(Collectors.toList());
+					if(contents.size() == 1){
+						contents.get(0).sampleCode = sample.code;																
+					}else if(contents.size() > 1){
+						contextValidation.addErrors("container.contents", "several contents without sampleCode");
 					}
 
 				}else if(null != sample && null == sample.code && sample.projectCodes != null && sample.projectCodes.size() == 0){
