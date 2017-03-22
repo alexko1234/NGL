@@ -390,6 +390,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	//	instruments.add(createInstrument("blue-pippin","Blue Pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		instruments.add(createInstrument("blue-pippin-1", "Blue pippin 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("blue-pippin-2", "Blue pippin 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return instruments;
 	}
