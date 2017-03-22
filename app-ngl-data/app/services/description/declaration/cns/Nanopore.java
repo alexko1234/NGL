@@ -124,7 +124,7 @@ public class Nanopore extends AbstractDeclaration{
 
 		 l.add(DescriptionFactory.newProcessType("Nanopore DEV", "nanopore-process-dev",
 	                ProcessCategory.find.findByCode("nanopore-library"),60,
-	                getPropertyDefinitionsNanoporeLibrary(),
+	                getPropertyDefinitionsNanoporeFragmentation(),
 	                Arrays.asList(getPET("ext-to-nanopore-process-dev",-1),
 	                       
 	                        getPET("nanopore-library",0),
