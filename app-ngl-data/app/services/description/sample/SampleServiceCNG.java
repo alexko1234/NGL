@@ -40,24 +40,17 @@ public class SampleServiceCNG extends AbstractSampleService {
 		DAOHelpers.saveModels(SampleCategory.class, l, errors);
 	}
 	
-	/* FDS 05/06/205 JIRA NGL-672: ajout Institute.CODE.CNG pour les sampleType communs CNS/CNG 
-	 * NOTE: pour le CNG certains SampleCategory n'ont pas de SampleType definis=> utiliser le meme code (cf G.albini)
-	 */
+
 	public void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<SampleType> l = new ArrayList<SampleType>();
-		
-		// GA 20/01/2016 utiliser getSampleCNGPropertyDefinitions dans tous les cas !!
-		//TODO ...remplacer   Institute.CODE.CNG   par   Constants.CODE.CNG
-		
+				
 		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNG)));
 		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNG)));
 		l.add(newSampleType("IP", "IP", SampleCategory.find.findByCode("IP-sample"),null, getInstitutes(Constants.CODE.CNG)));
 		
-		// il y a du ChIP et du MedIP au CNG mais ce n'est pas detaillé au niveau sample dans la base Solexa  creer un.SampleType de meme nom que SampleCategory
+		// a supprimer apres mise a jour de la base: est remplacé par "IP" ci dessus...
 		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), null, getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), null, getInstitutes(Constants.CODE.CNG))); 
-
-		//FDS 20/01/2016 l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNG))); 
+		
 		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), null, getInstitutes(Constants.CODE.CNG))); 
 
 		/* pas de subdivisions dans la base solexa...=> SampleType=SampleCategory*/

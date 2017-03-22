@@ -1446,13 +1446,13 @@ public class LimsCNGDAO {
 		}
 	}
 	
-	// 21/03/2017 
+	// 21/03/2017 Les vieux echantillons ont été importés sans leur sample type (ils sont 'defaut-sample-cng' actuellement) trouver leur vrai sample type
+	//                il y a 3 types qui doivent etre recodés, les autres sont corrects
 	public Map<String, String> findOldSampleTypes() throws DAOException {
 		MyExtractor extractor = new MyExtractor();
 		// key=stock_barcode   value=sample_type
 		String sql =  "SELECT  s.stock_barcode AS sample_code, "
 			       + " CASE WHEN st.name='DNA' THEN 'gDNA' "
-			       + "      WHEN st.name='IP'  THEN 'IP-sample' "
 			       + "      WHEN st.name='MBD' THEN 'methylated-base-DNA' "
 			       + "      WHEN st.name='UNK' THEN 'default-sample-cng' "
 			       + " ELSE st.name "
