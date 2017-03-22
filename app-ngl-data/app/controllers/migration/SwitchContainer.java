@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -44,98 +45,107 @@ public class SwitchContainer extends CommonController{
 	private static final String TAG_PROPERTY_NAME = "tag";
 	
 	public static Result migration() {
-		String oldParentContainerName = "221D4N4IK_C3";
-		String newParentContainerName = "221D4N4IK_E3";
+		boolean isSwitch = true;
 		
-		//String oldParentContainerName = "21KC2XTKY";
-		//String newParentContainerName = "21KC2XTL9";
+		//String oldParentContainerName = "221D4N4IK_C3";
+		//String newParentContainerName = "221D4N4IK_E3";
+		
+		String oldParentContainerName = "21KC2XTKY";
+		String newParentContainerName = "21KC2XTL9";
 		
 		
-		//String oldParentContainerName = "21KC2XTL9";
-		//String newParentContainerName = "21KC2XTKY";
 		
 		
 		//21KC2XTKY 21KC2XTL9
 		//221D4N4IK_C3 221D4N4IK_E3
-		 Map<Class<?>, List<? extends DBObject>> updatedObjects = changeContainer(oldParentContainerName, newParentContainerName);
+		Map<Class<?>, Map<String, ? extends DBObject>> updatedObjects = new HashMap<Class<?>, Map<String,? extends DBObject>>();
+		updatedObjects.put(Container.class, new TreeMap<String,Container>());
+		updatedObjects.put(Experiment.class, new TreeMap<String,Experiment>());
+		updatedObjects.put(Process.class, new TreeMap<String,Process>());
 		
-		 updatedObjects.get(Container.class).forEach(c -> MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, c));
-		 updatedObjects.get(Experiment.class).forEach(c -> MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, c));
-		 updatedObjects.get(Process.class).forEach(c -> MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, c));
-		 
+		changeContainer(oldParentContainerName, newParentContainerName, updatedObjects);
+		if(isSwitch)
+			changeContainer(newParentContainerName, oldParentContainerName, updatedObjects);
+
+		updatedObjects.get(Container.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, c));
+		updatedObjects.get(Experiment.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, c));
+		updatedObjects.get(Process.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, c));
+
 		return ok("SwitchContainer End");
 	}
 
-	private static Map<Class<?>, List<? extends DBObject>> changeContainer(String oldParentContainerName, String newParentContainerName) {
+	private static void changeContainer(String oldParentContainerName, String newParentContainerName, Map<Class<?>, Map<String, ? extends DBObject>> updatedObjects) {
 		Container oldParentContainer = getContainer(oldParentContainerName);
 		Container newParentContainer = getContainer(newParentContainerName);
 		
-		List<Container> updatedContainers = updateContainers(oldParentContainer,newParentContainer);
+		updateContainers(oldParentContainer,newParentContainer, (Map<String,Container>)updatedObjects.get(Container.class));
 		
-		List<Experiment> updatedExperiments = new ArrayList<Experiment>(); 
-		updatedExperiments.addAll(updateExperimentWhereSwitchError(oldParentContainer, newParentContainer, updatedContainers));
-		updatedExperiments.addAll(updateNextExperiments(oldParentContainer, updatedContainers));
+		updateExperimentWhereSwitchError(oldParentContainer, newParentContainer,
+				(Map<String,Container>)updatedObjects.get(Container.class), (Map<String,Experiment>)updatedObjects.get(Experiment.class));
+		
+		updateNextExperiments(oldParentContainer, 
+				(Map<String,Container>)updatedObjects.get(Container.class), (Map<String,Experiment>)updatedObjects.get(Experiment.class));
 		
 		
-		List<Process> updatedProcesses = new ArrayList<Process>(); 
-		updatedProcesses.addAll(updateProcessWhereChild(oldParentContainer,newParentContainer,updatedContainers, updatedExperiments));
-		updatedProcesses.addAll(updateProcessWhereParent(updatedContainers, updatedExperiments));
+		updateProcessWhereChild(oldParentContainer,newParentContainer, 
+				(Map<String,Container>)updatedObjects.get(Container.class), (Map<String,Experiment>)updatedObjects.get(Experiment.class), (Map<String,Process>)updatedObjects.get(Process.class));
+		updateProcessWhereParent((Map<String,Container>)updatedObjects.get(Container.class), (Map<String,Experiment>)updatedObjects.get(Experiment.class), (Map<String,Process>)updatedObjects.get(Process.class));
 		
-		Map<Class<?>, List<? extends DBObject>> objectMusBeUpdated = new HashMap<Class<?>, List<? extends DBObject>>();
-		objectMusBeUpdated.put(Container.class, updatedContainers);
-		objectMusBeUpdated.put(Experiment.class, updatedExperiments);
-		objectMusBeUpdated.put(Process.class, updatedProcesses);
-		
-		return objectMusBeUpdated;
 	}
 
-	private static  List<Experiment> updateNextExperiments(Container oldParentContainer,
-			List<Container> updatedContainers) {
+	private static void updateNextExperiments(Container oldParentContainer,
+			Map<String, Container> updatedContainers , Map<String, Experiment> updatedExperiments) {
 		Logger.info("");
 		Logger.info("start update next experiments");	
-		Map<String, Container> updatedContainerByCode = updatedContainers.stream().collect(Collectors.toMap(c -> c.code, c -> c));
 		
 		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 				DBQuery.notIn("inputContainerCodes", oldParentContainer.code)
-				.or(DBQuery.in("inputContainerCodes", updatedContainerByCode.keySet()),DBQuery.in("outputContainerCodes", updatedContainerByCode.keySet()))).toList();
+				.or(DBQuery.in("inputContainerCodes", updatedContainers.keySet()),DBQuery.in("outputContainerCodes", updatedContainers.keySet()))).toList();
 		
 		experiments.forEach(exp -> {
 			Logger.info(exp.code+" : start");
-			
+			if(updatedExperiments.containsKey(exp.code)){
+				exp = updatedExperiments.get(exp.code);
+			}
 			exp.atomicTransfertMethods.stream()
 				.map(atm -> atm.inputContainerUseds)
 				.flatMap(List::stream)
-				.filter(icu -> updatedContainerByCode.keySet().contains(icu.code))
-				.forEach(icu ->updateICUWithNewContainer(icu, updatedContainerByCode.get(icu.code),false));
+				.filter(icu -> updatedContainers.keySet().contains(icu.code))
+				.forEach(icu ->updateICUWithNewContainer(icu, updatedContainers.get(icu.code),false));
 		
 			
 			exp.atomicTransfertMethods.stream()
 				.filter(atm -> atm.outputContainerUseds != null)
 				.map(atm -> atm.outputContainerUseds)
 				.flatMap(List::stream)
-				.filter(ocu -> updatedContainerByCode.keySet().contains(ocu.code))
-				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainerByCode.get(ocu.code)));
-	
-			
+				.filter(ocu -> updatedContainers.keySet().contains(ocu.code))
+				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainers.get(ocu.code)));
 			
 			updateXCodes(exp);
+			
+			updatedExperiments.put(exp.code,exp);
+			
 			Logger.info(exp.code+" : end");
 		});
 		
-		Logger.info("end update next experiments");	
-		return experiments;		
+		Logger.info("end update next experiments");			
 	}
 
-	private static List<Experiment> updateExperimentWhereSwitchError(Container oldParentContainer, Container newParentContainer, List<Container> updatedContainers) {
+	private static void updateExperimentWhereSwitchError(Container oldParentContainer, Container newParentContainer, 
+			Map<String, Container> updatedContainers , Map<String, Experiment> updatedExperiments) {
 		Logger.info("");
 		Logger.info("start update experiment where old in input");	
 		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 				DBQuery.notEquals("categoryCode","qualitycontrol").in("inputContainerCodes", oldParentContainer.code)).toList();
-		Map<String, Container> updatedContainerByCode = updatedContainers.stream().collect(Collectors.toMap(c -> c.code, c -> c));
 		
 		if(experiments.size() == 1){
 			Experiment exp = experiments.get(0);
 			Logger.info(exp.code+" : start");
+			
+			if(updatedExperiments.containsKey(exp.code)){
+				exp = updatedExperiments.get(exp.code);
+			}
+			
 			exp.atomicTransfertMethods.stream()
 				.map(atm -> atm.inputContainerUseds)
 				.flatMap(List::stream)
@@ -145,16 +155,19 @@ public class SwitchContainer extends CommonController{
 			exp.atomicTransfertMethods.stream()
 				.map(atm -> atm.outputContainerUseds)
 				.flatMap(List::stream)
-				.filter(ocu -> updatedContainerByCode.keySet().contains(ocu.code))
-				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainerByCode.get(ocu.code)));
+				.filter(ocu -> updatedContainers.keySet().contains(ocu.code))
+				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainers.get(ocu.code)));
 		
 			updateXCodes(exp);
+			
+			updatedExperiments.put(exp.code,exp);
+			
 			Logger.info(exp.code+" : end");
 		}else{
 			throw new RuntimeException("several experiment where "+oldParentContainer.code+" in input");
 		}
 		Logger.info("end update experiment where old in input");	
-		return experiments;
+		
 	}
 
 	
@@ -231,12 +244,11 @@ public class SwitchContainer extends CommonController{
 
 	
 
-	private static List<Process> updateProcessWhereParent(List<Container> updatedContainers, List<Experiment> updatedExperiments) {
+	private static void updateProcessWhereParent(Map<String, Container> updatedContainers , Map<String, Experiment> updatedExperiments, Map<String, Process> updatedProcesses) {
 		Logger.info("");
 		Logger.info("start update process where parent");	
-		List<Process> updatedProcesses = new ArrayList<Process>();
 		
-		updatedContainers.forEach(container ->{
+		updatedContainers.values().forEach(container ->{
 			List<Process> processes = getProcessesWhereInput(container.code);
 			Logger.info(container.code+" : "+container.contents.size()+" / "+processes.size());	
 			
@@ -269,6 +281,11 @@ public class SwitchContainer extends CommonController{
 						
 						IntStream.range(0, processNotMatchContents.size()).forEach(i -> {
 							Process processNeedUpdate = processNotMatchContents.get(i);
+							//TODO 2 process codes but same process object because we rename the process
+							if(updatedProcesses.containsKey(processNeedUpdate.code)){
+								processNeedUpdate = updatedProcesses.get(processNeedUpdate.code); 
+							}
+							
 							oldProcessCodes.add(processNeedUpdate.code);
 							Logger.info(container.code+" : update process "+processNeedUpdate.code);
 							Content contentUsedToUpdate = contentNotMatchProcesses.get(i);
@@ -280,10 +297,10 @@ public class SwitchContainer extends CommonController{
 							processNeedUpdate.code = CodeHelper.getInstance().generateProcessCode(processNeedUpdate);
 							newProcessCodes.add(processNeedUpdate.code);
 							
-							updatedProcesses.add(processNeedUpdate);
+							updatedProcesses.put(processNeedUpdate.code, processNeedUpdate);
 						});
 						
-						updatedContainers.forEach(c -> {
+						updatedContainers.values().forEach(c -> {
 							c.treeOfLife.from.containers.stream().forEach(cParents -> {
 								if(cParents.processCodes.containsAll(oldProcessCodes)){
 									cParents.processCodes.removeAll(oldProcessCodes);
@@ -293,7 +310,7 @@ public class SwitchContainer extends CommonController{
 							});							
 						});
 						
-						updatedExperiments.forEach(exp ->{
+						updatedExperiments.values().forEach(exp ->{
 							if(exp.inputProcessCodes.containsAll(oldProcessCodes)){
 								exp.inputProcessCodes.removeAll(oldProcessCodes);
 								exp.inputProcessCodes.addAll(newProcessCodes);
@@ -319,8 +336,7 @@ public class SwitchContainer extends CommonController{
 			}						
 		});
 		
-		Logger.info("end update process where parent");	
-		return updatedProcesses;
+		Logger.info("end update process where parent");			
 	}
 
 	private static String getTagValue(Map<String,PropertyValue> properties) {
@@ -328,7 +344,7 @@ public class SwitchContainer extends CommonController{
 		
 	}
 
-	private static List<Process> updateProcessWhereChild(Container oldParentContainer, Container newParentContainer, List<Container> updatedContainers, List<Experiment> updatedExperiments) {
+	private static void updateProcessWhereChild(Container oldParentContainer, Container newParentContainer, Map<String, Container> updatedContainers , Map<String, Experiment> updatedExperiments, Map<String, Process> updatedProcesses) {
 		Logger.info("");
 		Logger.info("start update process where child");
 		
@@ -362,25 +378,35 @@ public class SwitchContainer extends CommonController{
 		
 		oldProcesses.forEach(p -> {
 			Logger.info("update old process  : "+p.code);
+			
+			if(updatedProcesses.containsKey(p.code)){
+				p = updatedProcesses.get(p.code); 
+			}
+			
 			p.experimentCodes.removeAll(experimentCodes);
 			p.outputContainerCodes.removeAll(containerCodes);
 			p.outputContainerSupportCodes.removeAll(containerSupportCodes);	
 			p.currentExperimentTypeCode = getLastTypeCodeExperiment(p.experimentCodes);
 			Logger.info("currentExperimentTypeCode  : "+p.currentExperimentTypeCode);
 			//TODO update projectCode and sampleCode but need to retrieve the content
+			updatedProcesses.put(p.code, p);
 		});
 		
 		newProcesses.forEach(p -> {
 			Logger.info("update new process  : "+p.code);
+			if(updatedProcesses.containsKey(p.code)){
+				p = updatedProcesses.get(p.code); 
+			}
 			p.experimentCodes.addAll(experimentCodes);
 			p.outputContainerCodes.addAll(containerCodes);
 			p.outputContainerSupportCodes.addAll(containerSupportCodes);
 			p.currentExperimentTypeCode = getLastTypeCodeExperiment(p.experimentCodes);
 			Logger.info("currentExperimentTypeCode  : "+p.currentExperimentTypeCode);
 			//TODO update projectCode and sampleCode but need to retrieve the content
+			updatedProcesses.put(p.code, p);
 		});
 		
-		updatedContainers.forEach(c -> {
+		updatedContainers.values().forEach(c -> {
 			c.treeOfLife.from.containers.stream().forEach(cParents -> {
 				if(cParents.processCodes.containsAll(oldProcessCodes)){
 					cParents.processCodes.removeAll(oldProcessCodes);
@@ -390,7 +416,7 @@ public class SwitchContainer extends CommonController{
 			});							
 		});
 		
-		updatedExperiments.forEach(exp ->{
+		updatedExperiments.values().forEach(exp ->{
 			if(exp.inputProcessCodes.containsAll(oldProcessCodes)){
 				exp.inputProcessCodes.removeAll(oldProcessCodes);
 				exp.inputProcessCodes.addAll(newProcessCodes);
@@ -408,11 +434,8 @@ public class SwitchContainer extends CommonController{
 				});
 		});
 		
-		List<Process> updatedProcesses = new ArrayList<Process>(oldProcesses);
-		updatedProcesses.addAll(newProcesses);
-		
 		Logger.info("end update process where child");
-		return updatedProcesses;
+		
 	}
 
 	private static String getLastTypeCodeExperiment(Set<String> experimentCodes) {
@@ -447,7 +470,7 @@ public class SwitchContainer extends CommonController{
 	}
 
 
-	private static List<Container> updateContainers(Container oldParent, Container newParent) {
+	private static void updateContainers(Container oldParent, Container newParent, Map<String, Container> updatedContainer) {
 		Logger.info("");
 		Logger.info("start update containers");
 		
@@ -472,6 +495,10 @@ public class SwitchContainer extends CommonController{
 					Logger.info("");
 					Logger.info(container.code+" / "+container.traceInformation.creationDate);
 					
+					if(updatedContainer.containsKey(container.code)){
+						container = updatedContainer.get(container.code);
+					}
+					
 					container.projectCodes.removeAll(oldParentProjectCodes);
 					container.projectCodes.addAll(newParentProjectCodes);
 					
@@ -490,12 +517,12 @@ public class SwitchContainer extends CommonController{
 					
 					updatePaths(container, oldParentPaths, newParentPaths);		
 					updateContents(container, oldParent, newParent, allContentPropertiesKeep);
-			
+		
+					updatedContainer.put(container.code, container);	
 		});
 		
 		Logger.info("end update containers");
-		
-		return containers;
+				
 	}
 
 	private static void updatePaths(Container container, List<String> oldParentPaths, List<String> newParentPaths) {
