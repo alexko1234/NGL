@@ -1,6 +1,7 @@
 package controllers.migration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -39,7 +40,7 @@ public class MigrationProcessProperties extends CommonController {
 			
 			//backupContainerCollection();
 			
-			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("state.code", new String[]{"IP","N"})
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("state.code", Arrays.asList("IP","N"))
 					/*.is("code", "BYU_AABL_TAG-PCR-AND-DNA-LIBRARY_22385HMN7")*/)
 					.sort("code",Sort.DESC).getCursor().forEach(p -> migrationProcess(p));
 			

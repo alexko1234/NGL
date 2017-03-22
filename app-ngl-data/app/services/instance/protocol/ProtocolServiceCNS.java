@@ -215,14 +215,14 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));	
 		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));
 	
+		lp.add(newProtocol("nanodrop","Nanodrop","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
 		
+		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
+
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 					
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			lp.add(newProtocol("nanodrop","Nanodrop","path7","1","production", InstanceFactory.setExperimentTypeCodes("uv-spectrophotometry")));	
 			
-			lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
-
 				
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
 			//lp.add(newProtocol("prt_wait_uat","Proto_en_attente","path1","1","production", null));
