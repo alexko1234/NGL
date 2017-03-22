@@ -22,7 +22,7 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	public Set<String> fromTransformationTypeCodes;
 	public Set<String> fromTransformationCodes;
 	public Set<String> processTypeCodes;
-	public Set<String> processCodes ;
+	public Set<String> processCodes;
 	
 	public Valuation valuation; //only on input because qc are to-void experiment !
 	
