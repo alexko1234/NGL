@@ -93,8 +93,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),    //last  experiment type
 				getExperimentTypes("ext-to-x5-wg-nano").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
-		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 		// FDS 13/03/2017 NGL-1167 ajout "wg-chromium-lib-prep" en -1
 		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
@@ -110,21 +108,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-		}else{
-			
-		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
-				20,
-				null,  // pas de propriétés ??
-				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
-						getPET("prep-pcr-free",-1), getPET("pcr-and-purification",-1),
-						getPET("lib-normalization",0), getPET("normalization-and-pooling",0),
-						getPET("prepa-fc-ordered",1), 
-						getPET("illumina-depot",2) ),           
-				getExperimentTypes("lib-normalization").get(0),            //first experiment type
-				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
-				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
-		}
 		
 		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Dénat, prep FC, dépôt"
 		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
@@ -211,8 +194,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		// FDS ajout 20/02/2017 NGL-1167: processus Chromium 10x WG
 		l.add(DescriptionFactory.newProcessType("Prep Chromium WG", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
 				4,
@@ -224,7 +205,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("wg-chromium-lib-prep").get(0),           //last  experiment type
 				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		}
 		
 				
 		DAOHelpers.saveModels(ProcessType.class, l, errors);

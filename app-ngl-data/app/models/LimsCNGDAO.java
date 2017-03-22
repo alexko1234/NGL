@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.sql.DataSource;
@@ -40,6 +41,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.ResultSetExtractor;
 
 import play.Logger;
 import services.instance.experiment.ExperimentImport;
@@ -1429,4 +1431,39 @@ public class LimsCNGDAO {
 		}
 		contextError.removeKeyFromRootKeyName(key);
 	}
+	
+
+	// 21/03/2017 TX Nicolas=> il n'y a pas dans jdbctemplate une methode qui retourne map <string,string> donc il faut l'implementer
+	private class MyExtractor implements ResultSetExtractor<Map<String,String>> {
+		
+		public Map<String, String> extractData(ResultSet rs) throws SQLException, org.springframework.dao.DataAccessException {
+			Map<String,String> map = new HashMap<String,String>();
+			while (rs.next()) {
+				String key = rs.getString(1);
+				map.put(key, rs.getString(2));
+			}
+			return map;
+		}
+	}
+	
+	// 21/03/2017 
+	public Map<String, String> findOldSampleTypes() throws DAOException {
+		MyExtractor extractor = new MyExtractor();
+		// key=stock_barcode   value=sample_type
+		String sql =  "SELECT  s.stock_barcode AS sample_code, "
+			       + " CASE WHEN st.name='DNA' THEN 'gDNA' "
+			       + "      WHEN st.name='IP'  THEN 'IP-sample' "
+			       + "      WHEN st.name='MBD' THEN 'methylated-base-DNA' "
+			       + "      WHEN st.name='UNK' THEN 'default-sample-cng' "
+			       + " ELSE st.name "
+			       + " END AS sample_type "
+			       + " FROM t_sample s join t_sample_type st on s.type_id=st.id "
+			       + " WHERE nglimport_date < '09/15/2016'"; 
+		//try {
+		 return jdbcTemplate.query(sql, extractor);
+		//} catch (java.sql.SQLException e) {
+		//	Logger.debug(e.getMessage());
+		//}
+	}
+	
 }

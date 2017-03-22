@@ -90,6 +90,7 @@ GET		/cng/migration-projectcodes-rds			controllers.migration.cng.MigrationProjec
 GET     /cng/migration-lanes                    controllers.migration.cng.MigrationLanes.migration()
 
 GET     /cng/add-chromium-index                 controllers.migration.cng.AddIndexChromium.addIndex()
+GET     /cng/migration-sampletype               controllers.migration.cng.MigrationSampleType.migration()
 
 GET		/cns/migration-transfert-ccrt			controllers.migration.cns.MigrationTransfertCCRT.migration()
 GET		/cng/migration-transfert-ccrt			controllers.migration.cng.MigrationTransfertCCRT.migration()

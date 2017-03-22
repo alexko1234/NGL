@@ -145,15 +145,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 21/02/2017 NGL-1167: processus Chromium
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-				
 			l.add(newExperimentType("Ext to Prep Chromium WG","ext-to-wg-chromium-lib-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-			}
 				
 			
 			/** Transformation, ordered by display order **/
@@ -236,7 +233,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 			
 			//FDS ajout 21/02/2017 NGL-1167: Chromium
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 			l.add(newExperimentType("GEM generation (Chromium)","chromium-gem-generation",null,1500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
@@ -252,7 +248,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"), 
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
-			}
 			
 			/** Quality Control, ordered by display order **/
 			
@@ -429,8 +424,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();		
-	
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 		//FDS ajout 20/02/2017 JIRA NGL-1167
 		newExperimentTypeNode("ext-to-wg-chromium-lib-process", getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), 
@@ -440,7 +433,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();	
-		}	
 		
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
@@ -476,8 +468,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null // pas de transfert ??
 				).save();
 			
-		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
 		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
 		newExperimentTypeNode("chromium-gem-generation",getExperimentTypes("chromium-gem-generation").get(0),
@@ -519,25 +509,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("miseq-qc"), // qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();	
-		
-		}else{
-			
-			newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
-					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification","prep-pcr-free"), // previous
-					null,
-					null, // pas de QC
-					null  // pas de transfert
-					).save();	
-			
-			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
-					false, false, false, 
-					getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification"), // previous nodes
-					null, 
-					getExperimentTypes("miseq-qc"), // qc 
-					getExperimentTypes("aliquoting","pool") // tranfert
-					).save();	
-		}
 		
 		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		//FDS 08/12/2016 ajout "normalization-and-pooling" en previous
