@@ -95,12 +95,10 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("protocol-illumina-depot","protocole_dépôt_illumina","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 		
-		if( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		// 24/02/2017 ajout protocole pour Chromium
 		lp.add(newProtocol("chromium-genome-protocol","chromium genome protocol","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("chromium-gem-generation",
 													   "wg-chromium-lib-prep")));
-		}
 		
 		
 		//------------Experiences de Control Qualité------------------------------
@@ -114,11 +112,9 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("labchip-gx","LabChiP_GX", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("labchip-migration-profile")));
 		
-		if( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-		// 27/02/2017 ajout protocole pour Bioanalyzer ???????
+		// 27/02/2017 ajout protocole pour Bioanalyzer 
 		lp.add(newProtocol("bioanalyzer","BioAnalyzer", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("bioanalyzer-migration-profile")));
-		}
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
