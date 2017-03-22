@@ -15,6 +15,7 @@ import java.util.stream.IntStream;
 import org.mongojack.DBQuery;
 
 import controllers.CommonController;
+import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult.Sort;
 import models.laboratory.common.description.Level;
@@ -22,6 +23,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
@@ -55,6 +57,16 @@ public class SwitchContainer extends CommonController{
 		
 		//21KC2XTKY 21KC2XTL9
 		//221D4N4IK_C3 221D4N4IK_E3
+		 Map<Class<?>, List<? extends DBObject>> updatedObjects = changeContainer(oldParentContainerName, newParentContainerName);
+		
+		 updatedObjects.get(Container.class).forEach(c -> MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, c));
+		 updatedObjects.get(Experiment.class).forEach(c -> MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, c));
+		 updatedObjects.get(Process.class).forEach(c -> MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, c));
+		 
+		return ok("SwitchContainer End");
+	}
+
+	private static Map<Class<?>, List<? extends DBObject>> changeContainer(String oldParentContainerName, String newParentContainerName) {
 		Container oldParentContainer = getContainer(oldParentContainerName);
 		Container newParentContainer = getContainer(newParentContainerName);
 		
@@ -69,7 +81,12 @@ public class SwitchContainer extends CommonController{
 		updatedProcesses.addAll(updateProcessWhereChild(oldParentContainer,newParentContainer,updatedContainers, updatedExperiments));
 		updatedProcesses.addAll(updateProcessWhereParent(updatedContainers, updatedExperiments));
 		
-		return ok("SwitchContainer End");
+		Map<Class<?>, List<? extends DBObject>> objectMusBeUpdated = new HashMap<Class<?>, List<? extends DBObject>>();
+		objectMusBeUpdated.put(Container.class, updatedContainers);
+		objectMusBeUpdated.put(Experiment.class, updatedExperiments);
+		objectMusBeUpdated.put(Process.class, updatedProcesses);
+		
+		return objectMusBeUpdated;
 	}
 
 	private static  List<Experiment> updateNextExperiments(Container oldParentContainer,
@@ -84,6 +101,22 @@ public class SwitchContainer extends CommonController{
 		
 		experiments.forEach(exp -> {
 			Logger.info(exp.code+" : start");
+			
+			exp.atomicTransfertMethods.stream()
+				.map(atm -> atm.inputContainerUseds)
+				.flatMap(List::stream)
+				.filter(icu -> updatedContainerByCode.keySet().contains(icu.code))
+				.forEach(icu ->updateICUWithNewContainer(icu, updatedContainerByCode.get(icu.code),false));
+		
+			
+			exp.atomicTransfertMethods.stream()
+				.filter(atm -> atm.outputContainerUseds != null)
+				.map(atm -> atm.outputContainerUseds)
+				.flatMap(List::stream)
+				.filter(ocu -> updatedContainerByCode.keySet().contains(ocu.code))
+				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainerByCode.get(ocu.code)));
+	
+			
 			
 			updateXCodes(exp);
 			Logger.info(exp.code+" : end");
@@ -107,13 +140,13 @@ public class SwitchContainer extends CommonController{
 				.map(atm -> atm.inputContainerUseds)
 				.flatMap(List::stream)
 				.filter(icu -> icu.code.equals(oldParentContainer.code))
-				.forEach(icu -> updateICUWithNewContainer(icu, newParentContainer));
+				.forEach(icu -> updateICUWithNewContainer(icu, newParentContainer, true));
 			
 			exp.atomicTransfertMethods.stream()
 				.map(atm -> atm.outputContainerUseds)
 				.flatMap(List::stream)
 				.filter(ocu -> updatedContainerByCode.keySet().contains(ocu.code))
-				.forEach(ocu -> updateOCUWithNewContainer(ocu, updatedContainerByCode.get(ocu.code)));
+				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainerByCode.get(ocu.code)));
 		
 			updateXCodes(exp);
 			Logger.info(exp.code+" : end");
@@ -170,12 +203,13 @@ public class SwitchContainer extends CommonController{
 		
 	}
 	
-	private static void updateOCUWithNewContainer(OutputContainerUsed ocu, Container updatedContainer) {
-		Logger.info("update OCU "+ocu.code+" with "+updatedContainer.code);
+	private static void updateACUWithNewContainer(AbstractContainerUsed ocu, Container updatedContainer) {
+		Logger.info("update ACU "+ocu.code+" with "+updatedContainer.code);
 		ocu.contents = updatedContainer.contents;
+		
 	}
 
-	private static void updateICUWithNewContainer(InputContainerUsed icu, Container newParentContainer) {
+	private static void updateICUWithNewContainer(InputContainerUsed icu, Container newParentContainer, boolean updateAttribute) {
 		Logger.info("update ICU "+icu.code+" with "+newParentContainer.code);
 		icu.code = newParentContainer.code;
 		icu.categoryCode = newParentContainer.categoryCode;
@@ -183,11 +217,12 @@ public class SwitchContainer extends CommonController{
 		icu.locationOnContainerSupport= newParentContainer.support;
 		
 		///TODO Quiz volume, conc, quantity and size ????
-		icu.volume= newParentContainer.volume;        
-		icu.concentration= newParentContainer.concentration; 
-		icu.quantity= newParentContainer.quantity; 	
-		icu.size= newParentContainer.size; 	
-		
+		if(updateAttribute){
+			icu.volume= null;        
+			icu.concentration= null; 
+			icu.quantity= null; 	
+			icu.size= null; 	
+		}
 		icu.projectCodes= newParentContainer.projectCodes; 
 		icu.sampleCodes= newParentContainer.sampleCodes; 
 		icu.fromTransformationTypeCodes= newParentContainer.fromTransformationTypeCodes;
@@ -235,7 +270,7 @@ public class SwitchContainer extends CommonController{
 						IntStream.range(0, processNotMatchContents.size()).forEach(i -> {
 							Process processNeedUpdate = processNotMatchContents.get(i);
 							oldProcessCodes.add(processNeedUpdate.code);
-							
+							Logger.info(container.code+" : update process "+processNeedUpdate.code);
 							Content contentUsedToUpdate = contentNotMatchProcesses.get(i);
 							//TODO not managed new sample code
 							processNeedUpdate.sampleCodes = SampleHelper.getSampleParent(contentUsedToUpdate.sampleCode);
@@ -330,7 +365,7 @@ public class SwitchContainer extends CommonController{
 			p.experimentCodes.removeAll(experimentCodes);
 			p.outputContainerCodes.removeAll(containerCodes);
 			p.outputContainerSupportCodes.removeAll(containerSupportCodes);	
-			p.currentExperimentTypeCode = getLastExperiment(p.experimentCodes);
+			p.currentExperimentTypeCode = getLastTypeCodeExperiment(p.experimentCodes);
 			Logger.info("currentExperimentTypeCode  : "+p.currentExperimentTypeCode);
 			//TODO update projectCode and sampleCode but need to retrieve the content
 		});
@@ -340,7 +375,7 @@ public class SwitchContainer extends CommonController{
 			p.experimentCodes.addAll(experimentCodes);
 			p.outputContainerCodes.addAll(containerCodes);
 			p.outputContainerSupportCodes.addAll(containerSupportCodes);
-			p.currentExperimentTypeCode = getLastExperiment(p.experimentCodes);
+			p.currentExperimentTypeCode = getLastTypeCodeExperiment(p.experimentCodes);
 			Logger.info("currentExperimentTypeCode  : "+p.currentExperimentTypeCode);
 			//TODO update projectCode and sampleCode but need to retrieve the content
 		});
@@ -380,9 +415,9 @@ public class SwitchContainer extends CommonController{
 		return updatedProcesses;
 	}
 
-	private static String getLastExperiment(Set<String> experimentCodes) {
+	private static String getLastTypeCodeExperiment(Set<String> experimentCodes) {
 		List<Experiment> exps =  MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", experimentCodes)).sort("traceInformation.creationDate", Sort.DESC).limit(1).toList();
-		return exps.get(0).code;
+		return exps.get(0).typeCode;
 	}
 
 	private static List<Container> getNextContainersForProcesses(String code, List<String> processCodes) {
@@ -442,6 +477,16 @@ public class SwitchContainer extends CommonController{
 					
 					container.sampleCodes.removeAll(oldParentSampleCodes);
 					container.sampleCodes.addAll(newParentSampleCodes);
+					
+					container.treeOfLife.from.containers
+						.stream()
+						.filter(c -> c.code.equals(oldParent.code))
+						.forEach(c -> {
+							c.code = newParent.code;
+							c.fromTransformationCodes = newParent.fromTransformationCodes;
+							c.fromTransformationTypeCodes = newParent.fromTransformationTypeCodes;
+							c.supportCode = newParent.support.code;							
+						});
 					
 					updatePaths(container, oldParentPaths, newParentPaths);		
 					updateContents(container, oldParent, newParent, allContentPropertiesKeep);
