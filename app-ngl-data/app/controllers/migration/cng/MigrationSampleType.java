@@ -51,7 +51,7 @@ public class MigrationSampleType extends  CommonController {
 			Logger.info("Migration sample TypeCode starts");
 			try {
 				migrationMissingSampleTypeCode();
-				migrationChangeTypeCode();
+				migrationUpdateSampleTypeCode();
 			}
 			catch(Exception e) {
 				Logger.error(e.getMessage());
@@ -81,44 +81,77 @@ public class MigrationSampleType extends  CommonController {
 		Logger.debug("Nb de containers to update : "+samples.size());
 		
 		Map<String, String> results=limsServices.findOldSampleTypes();
-		Logger.debug("results="+ results);
+		Logger.debug("Nb de old sample: "+results.size());
 		
+		
+		////////////////////////////////////////////TEST
+
+		final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
+		String typeCode = SAMPLE_USED_TYPE_CODE;
+		SampleType sampleType=null;
+		 
+		 //String typeCode=results.get(samp.code);
+		 //TEST HARCODED
+		 ///String typeCode="default-sample-cng";
+		 Logger.debug(" trouver les infos sur le sample TypeCode"+ typeCode+ "");
+		 
+		try { 
+		  //sampleType = SampleType.find.findByCode( results.get(samp.code));
+		  sampleType = SampleType.find.findByCode( typeCode );
+		 } catch (DAOException e) {
+		 	Logger.debug("OOOOOOOOOOPS...",e);
+		}
+		
+		if ( sampleType==null ) {
+			///contextValidation.addErrors("code", "error.codeNotExist", samp.code, typeCode );
+			Logger.debug("...typeCode pas trouvé:"+ typeCode +"");
+		} else {
+			Logger.debug("...typeCode =>"+ sampleType.code+ " categoryCode=>"+ sampleType.category.code);
+			///MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",samp.code), 
+			//	                                                            DBUpdate.set("typeCode", sampleType.code ).set("categoryCode", sampleType.category.code ));
+		}
+		
+		
+		
+		/*
 		for ( Sample samp:samples){
-			 
 			 if (results.containsKey( samp.code )) {
-				 //Logger.debug("sample barcode "+ samp.code + "trouvé. son type est: "+ results.get(samp.code) +" !");
+				 Logger.debug("sample barcode "+ samp.code + "trouvé. son type est: "+ results.get(samp.code) +" !");
+				  
+				/* SampleType sampleType=null;
 				 
-				 // mettre le type venant de la base Solexa ( valeur de cle correspondant au code mongo) dans le document Mongo correspondant
-				 ///samp.typeCode=results.get(samp.code);
-				 // et le sampleCategoryCode ????? comment le trouve-t-on ????
+				 //String typeCode=results.get(samp.code);
+				 //TEST HARCODED
+				 String typeCode="default-sample-cng";
+				 Logger.debug(" trouver les infos sur "+ typeCode+ "");
 				 
-				 SampleType sampleType=null;
-					try { 
-				 sampleType = SampleType.find.findByCode(results.get(samp.code));
-				} catch (DAOException e) {
-					Logger.error("",e);
-					return null;
-				}
-				if ( sampleType==null ) {
-					contextValidation.addErrors("code", "error.codeNotExist", sampleTypeCode, sample.code);
-					return null;
+				try { 
+				  //sampleType = SampleType.find.findByCode( results.get(samp.code));
+				  sampleType = SampleType.find.findByCode( typeCode );
+				 } catch (DAOException e) {
+				 	Logger.debug("OOOOOOOOOOPS...",e);
 				}
 				
-				sample.typeCode=sampleType.code;
-				sample.categoryCode=sampleType.category.code;
-				 
-				 String sampleTypeCode=rs.getString("sample_type");
-				Logger.debug("[commonSampleMapRowSample] code :"+sample.code+ " Sample type code :"+sampleTypeCode);
-				 
-				 MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",samp.code), DBUpdate.set("typeCode", results.get(samp.code)),DBUpdate.set("categoryCode", ??? );
+				if ( sampleType==null ) {
+					///contextValidation.addErrors("code", "error.codeNotExist", samp.code, typeCode );
+					Logger.debug("...typeCode pas trouvé:"+ typeCode +"");
+				} else {
+					Logger.debug("...typeCode =>"+ sampleType.code+ " categoryCode=>"+ sampleType.category.code);
+					///MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",samp.code), 
+					//	                                                            DBUpdate.set("typeCode", sampleType.code ).set("categoryCode", sampleType.category.code ));
+				}
+			
 			 }
 		}
+		*/
 	}	
 		
-   private static void migrationChangeSampleTypeCode() throws DAOException{
+   private static void migrationUpdateSampleTypeCode() throws DAOException{
 		
 	   ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
-				 
+	
+	   
+	   /*  TODO
 	 // au passage modification des 'IP-samples' en 'IP'
 	 // ils ont été importés en sampleTypeCode= IP-sample / sampleCategoryCode=IP-sample
 	 // => chger  sampleTypeCode= IP et laisser sampleCategoryCode tel quel
@@ -160,6 +193,8 @@ public class MigrationSampleType extends  CommonController {
 			 }
 
 		 }
+		 
+		*/
 	}
 	
 	
