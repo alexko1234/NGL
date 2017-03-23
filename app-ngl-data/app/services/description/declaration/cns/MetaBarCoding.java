@@ -34,44 +34,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		/*List<ExperimentType> l = new ArrayList<ExperimentType>();
-
-		l.add(newExperimentType("Ext to MetaBarcoding (sans sizing)","ext-to-tag-pcr-and-dna-library",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Ext to MetaBarcoding avec sizing","ext-to-tag-pcr-and-dna-library-with-sizing",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Tags-PCR","tag-pcr","TAG",750,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsTagPCR(),
-				getInstrumentUsedTypes("thermocycler"),"OneToOne", getSampleTypes("amplicon"),true,
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Bq DNA Illumina indexée","dna-illumina-indexed-library","LIB",850,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsBqDNAIlluminaIndexedLibrary(),
-				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", null,true,
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Amplification/PCR","pcr-amplification-and-purification","PCR",900,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsAmpliPurif(),
-				getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Sizing","sizing","SIZ",950,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
-				getInstrumentUsedTypes("hand"),"OneToMany", null,true,
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
 		
-		l.add(newExperimentType("Spri Select","spri-select","SS",951,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizing(),
-				getInstrumentUsedTypes("hand", "biomek-fx"),"OneToOne", null,true,
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		
-		return l;*/
 		return null;
 	}
 	
@@ -133,38 +96,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		/*List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), 11,
-				getPropertyMetaBarCodingSizing(), 
-				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1)
-						,getPET("dna-rna-extraction",-1)
-						,getPET("tag-pcr",0)
-						,getPET("dna-illumina-indexed-library",1)
-						,getPET("pcr-amplification-and-purification",2)
-						,getPET("sizing",3)
-						,getPET("solution-stock",4)
-						,getPET("prepa-flowcell",5)
-						,getPET("prepa-fc-ordered",5)
-						,getPET("illumina-depot",6)), 
-						getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("MetaBarcoding (sans sizing)", "tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), 12,
-				getPropertyMetaBarCodingWithoutSizing(), 
-				Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1)
-						,getPET("dna-rna-extraction",-1)
-						,getPET("tag-pcr",0)
-						,getPET("dna-illumina-indexed-library",1)
-						,getPET("pcr-amplification-and-purification",2)
-						,getPET("solution-stock",3)
-						,getPET("prepa-flowcell",4)
-						,getPET("prepa-fc-ordered",4)
-						,getPET("illumina-depot",5)), 
-						getExperimentTypes("tag-pcr").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		return l;*/
 		return null;
 	}
 	
@@ -223,22 +155,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		/*
-		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library", getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-tag-pcr-and-dna-library-with-sizing", getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("tag-pcr",getExperimentTypes("tag-pcr").get(0),true, true,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-tag-pcr-and-dna-library","ext-to-tag-pcr-and-dna-library-with-sizing")
-				,null,getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		newExperimentTypeNode("dna-illumina-indexed-library",getExperimentTypes("dna-illumina-indexed-library").get(0),true, true,false,getExperimentTypeNodes("ext-to-dna-illumina-indexed-library-process","ext-to-dna-illumina-indexed-lib-sizing-process","tag-pcr","fragmentation")
-				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("dna-illumina-indexed-library","rna-illumina-indexed-library")
-				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
-		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
-				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		
-		newExperimentTypeNode("spri-select",getExperimentTypes("spri-select").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
-				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	*/
 	}
 	
 	@Override

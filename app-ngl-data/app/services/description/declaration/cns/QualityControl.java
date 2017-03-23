@@ -156,31 +156,6 @@ public class QualityControl extends AbstractDeclaration {
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
-		
-		
-		/*l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				null, 
-				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				null, 
-				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				null, 
-				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); */
-		
-		
 		return l;
 	}
 	

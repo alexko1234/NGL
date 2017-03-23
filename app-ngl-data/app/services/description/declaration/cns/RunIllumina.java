@@ -34,15 +34,7 @@ public class RunIllumina extends AbstractDeclaration {
 		l.add(newExperimentType("Ext to Run Illumina","ext-to-illumina-run",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		/*
-		l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",null,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Ext to Solution-stock","ext-to-solution-stock",null,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		 */
+		
 
 		l.add(newExperimentType("Solution stock","solution-stock","STK",1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
@@ -78,11 +70,7 @@ public class RunIllumina extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		/*
-		l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		*/
+		
 		return l;
 	}
 
