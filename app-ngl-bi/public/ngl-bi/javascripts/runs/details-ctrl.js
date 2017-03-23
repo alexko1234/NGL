@@ -387,7 +387,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	};
 	
 	init();
-}]).controller('RunMinknowMetrichorCtrl', [ '$scope', '$http', function($scope, $http) {	
+}]).controller('RunMinknowBasecallingCtrl', [ '$scope', '$http', function($scope, $http) {	
 	
 	var init = function(){
 		$scope.propDefinitions = {};
@@ -399,10 +399,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		
 	}
 	$scope.$on('save', function(){
-		console.log("save RunMinknowMetrichorCtrl");
-		$http.put(jsRoutes.controllers.runs.api.RunTreatments.update($scope.run.code, $scope.run.treatments.minknowMetrichor.code).url, $scope.run.treatments.minknowMetrichor)
+		console.log("save RunMinknowBasecallingCtrl");
+		$http.put(jsRoutes.controllers.runs.api.RunTreatments.update($scope.run.code, $scope.run.treatments.minknowBasecalling.code).url, $scope.run.treatments.minknowBasecalling)
 			.success(function(data){
-				$scope.run.treatments.minknowMetrichor = data;				
+				$scope.run.treatments.minknowBasecalling = data;				
 			})
 			.error(function(){
 				$scope.messages.setError("save");				
