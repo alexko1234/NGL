@@ -34,70 +34,56 @@ public class QualityControl extends AbstractDeclaration {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
-				getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(),
+                getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid",
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Migration sur gel","gel-migration", null,20200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(), 
-				getInstrumentUsedTypes("hand"),"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(),
+                getInstrumentUsedTypes("hand"),"OneToVoid",
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Migration sur puce (eval ARN)","chip-migration-rna-evaluation", null,20300,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigrationARNEvaluation(), 
-				getInstrumentUsedTypes("agilent-2100-bioanalyzer"),"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigrationARNEvaluation(),
+                getInstrumentUsedTypes("agilent-2100-bioanalyzer"),"OneToVoid",
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
 		l.add(newExperimentType("Migration sur puce (hors eval ARN)","chip-migration", null,20350,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-				getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx","tapestation"),"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(),
+                getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx","tapestation"),"OneToVoid",
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
 		l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
-				getInstrumentUsedTypes("thermocycler"),"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(),
+                getInstrumentUsedTypes("thermocycler"),"OneToVoid",
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 	
 		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20500,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-				getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(),
+                getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid",
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-qc-transfert-purif",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Ext to Eval ADN à réception","ext-to-dna-sample-valuation",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Ext to Eval ARN à réception","ext-to-rna-sample-valuation",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Ext to Eval Amplicon à réception","ext-to-amplicon-sample-valuation",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne",
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Spectrophotométrie UV","uv-spectrophotometry", null,22000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsUvQuantification(), 
-				getInstrumentUsedTypes("nanodrop"),"OneToVoid", true, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(newExperimentType("Qcard","qcard", null,22000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQcard(), 
-				getInstrumentUsedTypes("hand"),"OneToVoid", true, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
 		
-		//QC provenant de collaborateur extérieur.
-		l.add(newExperimentType("QC Exterieur","external-qc", null,22000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsExternalQC(), 
-				getInstrumentUsedTypes("hand"),"OneToVoid", false, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
 		return l;
@@ -108,13 +94,37 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
+        l.add(newExperimentType("Spectrophotométrie UV","uv-spectrophotometry", null,22000,
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsUvQuantification(),
+                getInstrumentUsedTypes("nanodrop"),"OneToVoid", true,
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+        l.add(newExperimentType("Qcard","qcard", null,22000,
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQcard(),
+                getInstrumentUsedTypes("hand"),"OneToVoid", true,
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
+        //QC provenant de collaborateur extérieur.
+        l.add(newExperimentType("QC Exterieur","external-qc", null,22000,
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getNewPropertyDefinitionsExternalQC(),
+                getInstrumentUsedTypes("hand"),"OneToVoid", false,
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
+        
 		return l;
 	}
 
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
+        List<ExperimentType> l = new ArrayList<ExperimentType>();
+        
+        //QC provenant de collaborateur extérieur.
+        l.add(newExperimentType("QC Exterieur","external-qc", null,22000,
+                ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsExternalQC(),
+                getInstrumentUsedTypes("hand"),"OneToVoid", false,
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
 				return null;
 	}
 
@@ -128,28 +138,28 @@ public class QualityControl extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", 
+        l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif",
 				ProcessCategory.find.findByCode("satellites"), 1020,
-				null, 
-				getPETForQCTransfertPurif(), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), 
+                null,
+                getPETForQCTransfertPurif(),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0), getExperimentTypes("ext-to-qc-transfert-purif").get(0),
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
+        /*l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation",
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				getPropertyDefinitionsEvalAReception(), 
-				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
+                null,
+                Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0),
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
+        l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation",
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				getPropertyDefinitionsEvalAReception(), 
-				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
+                null,
+                Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0),
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
+        l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation",
 				ProcessCategory.find.findByCode("sample-valuation"), 1010,
 				getPropertyDefinitionsEvalAReception(), 
 				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
@@ -174,7 +184,28 @@ public class QualityControl extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeDEV() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
+        l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation",
+                ProcessCategory.find.findByCode("sample-valuation"), 1010,
+                getPropertyDefinitionsEvalAReception(),
+                Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0),
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+        l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation",
+                ProcessCategory.find.findByCode("sample-valuation"), 1010,
+                getPropertyDefinitionsEvalAReception(),
+                Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0),
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
+        l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation",
+                ProcessCategory.find.findByCode("sample-valuation"), 1010,
+                getPropertyDefinitionsEvalAReception(),
+                Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0),
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
+        
 		return l;
 	}
 
@@ -183,7 +214,27 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
+        l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation",
+                ProcessCategory.find.findByCode("sample-valuation"), 1010,
+                null,
+                Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0),
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+        l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation",
+                ProcessCategory.find.findByCode("sample-valuation"), 1010,
+                null,
+                Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0),
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
+        l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation",
+                ProcessCategory.find.findByCode("sample-valuation"), 1010,
+                null,
+                Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)),
+                getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0),
+                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+        
 		return null;
 	}
 
@@ -195,14 +246,14 @@ public class QualityControl extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeCommon() {
-		newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false, 
+        newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false,
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 		
-		newExperimentTypeNode("ext-to-dna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-dna-sample-valuation").get(0), false, false, false, 
+        newExperimentTypeNode("ext-to-dna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-dna-sample-valuation").get(0), false, false, false,
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
-		newExperimentTypeNode("ext-to-rna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-rna-sample-valuation").get(0), false, false, false, 
+        newExperimentTypeNode("ext-to-rna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-rna-sample-valuation").get(0), false, false, false,
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
-		newExperimentTypeNode("ext-to-amplicon-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), false, false, false, 
+        newExperimentTypeNode("ext-to-amplicon-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), false, false, false,
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 	
 		
@@ -242,7 +293,7 @@ public class QualityControl extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsEvalAReception() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
-		propertyDefinitions.add(newPropertiesDefinition("Type(s) banque(s) à réaliser", "libraryToDo", LevelService.getLevels(Level.CODE.Process), String.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Type(s) banque(s) à réaliser", "libraryToDo", LevelService.getLevels(Level.CODE.Process), String.class, false, null,
 				null, null, null, null,"single", 18, true, null,null));
 		
 		return propertyDefinitions;	
@@ -252,19 +303,19 @@ public class QualityControl extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Quantité fournie", "providedQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Quantité fournie", "providedQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 15, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode("pb"),"single", 16, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("RIN", "providedRin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("RIN", "providedRin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, "single", 17, false, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
 				null, null, null, null,"single", 18, true, null,null));
 
 		
@@ -273,19 +324,54 @@ public class QualityControl extends AbstractDeclaration {
 	}
 	
 	
+    //ajouter appel à cette methode en mode DEV
+    private List<PropertyDefinition> getNewPropertyDefinitionsExternalQC() {
+        List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
+        propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+                null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
+        propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+                null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
+        propertyDefinitions.add(newPropertiesDefinition("Quantité fournie", "providedQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+                null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 15, true, null,null));
+        propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null,
+                null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode("pb"),"single", 16, true, null,null));        
+        propertyDefinitions.add(newPropertiesDefinition("RIN", "providedRin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+                null, "single", 17, false, null, null));
+        
+        
+        propertyDefinitions.add(newPropertiesDefinition("Méthode quantification", "collabQuantificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+                null, null, null, null,"single", 18, true, null,null));
+        propertyDefinitions.add(newPropertiesDefinition("A260/A280 fourni", "providedA260A280Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+                null, null, null, null,"single", 19, true, null,null));
+        propertyDefinitions.add(newPropertiesDefinition(" A260/A230 fourni", "providedA260A230Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+                null, null, null, null,"single", 20, true, null,null));
+        propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules", "providedMoleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null,
+                null, null, null, null,"single", 18, true, null,null));   
+        propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+                null, null, null, null,"single", 22, true, null,null));
+        
+        propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+                null, null, null, null,"single", 23, true, null,null));
+
+        
+        return propertyDefinitions;
+        
+    }
+    
+    
 	private List<PropertyDefinition> getPropertyDefinitionsDosageFluorometrique() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume mesuré", "preQuantificationVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 14, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 15, true, null,null));
 		
 		return propertyDefinitions;
@@ -295,7 +381,7 @@ public class QualityControl extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyDefinitionsGelMigration() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Photo de gel 30 min.", "electrophoresisGelPhoto", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
@@ -308,7 +394,7 @@ public class QualityControl extends AbstractDeclaration {
 				"single", 16, true, null, null));
 		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
 				"single", 17, true, null,null));
 		
@@ -320,22 +406,22 @@ public class QualityControl extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyDefinitionsPCRGel() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Photo de gel", "electrophoresisGelPhoto", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
 				"img", 13, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 14, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null,
 				null, null, null, null,"single", 1, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Région ciblée","targetedRegion", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Région ciblée","targetedRegion", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null,
 				null, null, null, null,"single", 2, true, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null,
 				"single", 3, true, null,null));
 		
 		
@@ -347,7 +433,7 @@ public class QualityControl extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),
 				"single", 11, true, null, "0"));		
 	
@@ -358,16 +444,16 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("RIN", "rin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
 				"single", 15, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Couleur éval.", "rnaEvaluation", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Couleur éval.", "rnaEvaluation", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
 				newValues("vert","jaune","orange","rouge"), "single", 16, true, null, null));
 		
 		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 17, true, null,null));
 		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
 				"single", 18, true, null, "2"));
 		
@@ -379,41 +465,41 @@ public class QualityControl extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),
 				"single", 11, true, null, "0"));		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Taille", "measuredSize", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+        propertyDefinitions.add(newPropertiesDefinition("Taille", "measuredSize", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 13, true, null, null));
 		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Taille 2", "measuredSize2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Taille 2", "measuredSize2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 14, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Proportion pic 1", "ratioSize1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Proportion pic 1", "ratioSize1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null,
 				"single", 15, true, null, null));
 		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Proportion pic 2", "ratioSize2", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Proportion pic 2", "ratioSize2", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null,
 				"single", 16, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
 				"img", 17, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 18, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Quantité", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, null,null,null,"single", 19, false, null,null)); //not unit because can be different
 		
 		
 		//Property compute in javascript
-		propertyDefinitions.add(newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 20, false, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Taille insert","insertSize", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Taille insert","insertSize", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 21, false, null,null));
 	
 		
@@ -424,14 +510,14 @@ public class QualityControl extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
 				"single", 17, true, null, "2"));		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"), MeasureUnit.find.findByCode("ng/µl"),
 				"single", 18, true, null, "2"));		
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),
 				"single", 19, true, null,null));
 		
@@ -441,7 +527,7 @@ public class QualityControl extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsQcard() {
 			List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 			
-			propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+            propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 					null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 15, true, null,null));
 			
 
@@ -467,7 +553,7 @@ public class QualityControl extends AbstractDeclaration {
 			propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules","moleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "F", null, 				
 					"single", 21, true, null, null));
 			
-			propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+            propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 					null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 21, true, null,null));
 			
 		
@@ -479,17 +565,17 @@ public class QualityControl extends AbstractDeclaration {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 		
 
 		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution (1/X)","dilutionFactor", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, null, 				
 				"single", 14, true, null, null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Concentration dilution", "concentration0", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration dilution", "concentration0", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 15, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 16, false, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("A260/A280",	"A260A280Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
@@ -501,7 +587,7 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Spectre d'absorbance", "absorbanceVsWavelength", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 19, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+        propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
 		
 		
