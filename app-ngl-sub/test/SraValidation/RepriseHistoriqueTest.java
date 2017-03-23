@@ -45,14 +45,14 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	
 	//@Test
 	public void repriseHistoSamplesTest() throws IOException, SraException {
-		/*File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_extract_samples_1.xml");
+		File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_1.xml");
 		_repriseHistoriqueSamplesTest(xmlSample);
-		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_extract_samples_2.xml");
+		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_2.xml");
 		_repriseHistoriqueSamplesTest(xmlSample);
-		*/
-		//File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/list_samples_AXD_BDZ.xml");
-		//_repriseHistoriqueSamplesTest(xmlSample);
-
+		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_3.xml");
+		_repriseHistoriqueSamplesTest(xmlSample);
+		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_4.xml");
+		_repriseHistoriqueSamplesTest(xmlSample);
 	}
 	
 	private void _repriseHistoriqueSamplesTest(File xmlSample) throws IOException, SraException {
@@ -67,12 +67,12 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 			// Verifier la validité des samples
 			for (Sample sample : listSamples) {
 				// enlever les samples TARA soumis par Pesant. Attention nous avons soumis des samples TARA dans le projet BCM et ALP
-				// samples Pesant de la forme TARA_Y110001358
+				// samples Pesant de la forme TARA_Y110001358 TARA_G100010276
 				// samples Tara soumis par CNS de la forme TARA_BCB_ABBI ou TARA_ALP_KC
 				if (sample.code.startsWith("TARA")){
 					Matcher m = p.matcher(sample.code);
 					if ( !m.find() ) {
-						//System.out.println("#### abandon du sampleCode = "+ sample.code);
+						System.out.println("#### abandon du sampleCode = "+ sample.code);
 						continue;
 					} 
 				}
@@ -93,7 +93,10 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 				if (! listSamplesToSave.contains(sample)){
 					listSamplesToSave.add(sample);
 				}
-			
+
+				if (sample.code.equals("1")){
+					sample.projectCode = "AWU";  // sample soumis via interface ebi pour AWU_moleculo
+				}
 				if (sample.code.equals("AQS_1")){
 					sample.projectCode = "AQS";
 				}
@@ -175,18 +178,19 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		} 
 	}
 	
-	@Test
+	//@Test
 	public void repriseHistoriqueStudiesTest() throws IOException, SraException {
-		File xmlStudy = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_studies.xml");
+		File xmlStudy = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_studies.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
 			List<Study> listStudies = repriseHistorique.forStudies(xmlStudy, user);
 			System.out.println("retour dans repriseHistoriqueStudiesTest");
-			// Verifier la validité des samples
+			// Verifier la validité des studies
 			for (Study study: listStudies) {
-				System.out.println("dans repriseHistoriqueStudiesTest => study : " + study.code);
-				if (study.code.startsWith("ena-STUDY-GSC-")){
+				System.out.println("dans repriseHistoriqueStudiesTest => study : '" + study.code+"'" + " et accession = '" + study.accession+"'");
+				// study declaré via interface mais jamais utilisé pour soumission
+				if (study.code.equals("ena-STUDY-GSC-04-12-2013-09:50:11:936-175")){
 					continue;
 				}
 				if (study.code.equals("SY")){
@@ -240,9 +244,17 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 				if (study.code.equals("project_BMR")){
 					study.projectCodes.add("BMR");
 				}
+				
 				if (study.code.equals("project_BII")){
 					study.projectCodes.add("BII");
 				}
+				
+				// study moleculo du projet AWC declare via interface ebi
+				if (study.code.equals("ena-STUDY-GSC-08-03-2017-14:20:01:829-5")){
+					study.projectCodes.add("AWU");
+				}
+				
+				
 				ContextValidation contextValidation = new ContextValidation(user);
 				contextValidation.setCreationMode();
 				contextValidation.getContextObjects().put("type", "sra");
@@ -265,6 +277,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					System.out.println ("ok pour sauvegarde dans la base du study " + study.code);
 				}
 			}
+			
 		} catch (IOException e) {
 			System.out.println("Exception de type IO: " + e.getMessage());
 			throw e;
@@ -277,8 +290,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	//@Test
 	public void repriseHistoriqueExperimentsTest() throws IOException, SraException {
 
-		//File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_experiments.xml");
-		File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/list_experiments_AXD_BDZ.xml");
+		File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_experiments.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
@@ -546,8 +558,29 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					&& !experiment.code.equals("AGRCOTS_TCA") 
 					&& !experiment.code.equals("AFRCOTS_TCA") && !experiment.code.equals("AFRBOTS_TCA")
 					&& !experiment.code.equals("AFRAOTS_TCA") && !experiment.code.equals("AFRDOTS_TCA")
-					&&!experiment.code.equals("exp_2.TCA.AEQ_AOTS_FQ8SXUV02")){
+					&&!experiment.code.equals("exp_2.TCA.AEQ_AOTS_FQ8SXUV02")&& !experiment.code.equals("exp_BED_EXTOSU_6_FC00309.IND6")
+					// donnees moleculo du projet AWU soumises via interface ebi en mars 2017
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-1")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-2")
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-3")
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-4")
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-5")
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-6")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-7")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-8")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-9")
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-10")
+					&& !experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:573-11")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:574-12")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:574-13")
+					&&!experiment.code.equals("ena-EXPERIMENT-GSC-08-03-2017-14:55:06:574-14")
 
+					// Donnees oxford nanopores projet AWK soumis avec des readspec :
+					&& !experiment.code.equals("exp_AWK_ONT_20Kb_R7.3")
+					&& !experiment.code.equals("exp_AWK_ONT_8Kb_R7")
+					&& !experiment.code.equals("exp_AWK_ONT_20Kb_R7")
+					&& !experiment.code.equals("exp_CRV_ONT_R9")
+					){
 					experiment.validateLight(contextValidation);
 					//System.out.println("\ndisplayErrors pour validationExperiment:" + experiment.code);
 				}
@@ -697,9 +730,9 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 						System.out.println("Exception : " + e.getMessage());
 						throw e;
 					}
-				}
+				
 				//System.out.println(" ok Creation du readset " + readset.code);
-
+				}
 			}
 		
 		} catch (IOException e) {
@@ -711,10 +744,10 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		} 
 	}
 	
+		
 	//@Test
-	public void repriseHistoriqueRunsTest() throws IOException, SraException {
-		//File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/ebi_runs.xml");
-		File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_10_01_2017/list_runs_AXD_BDZ.xml");
+	public void _repriseHistoriqueRunsTest() throws IOException, SraException {
+		File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_runs.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {

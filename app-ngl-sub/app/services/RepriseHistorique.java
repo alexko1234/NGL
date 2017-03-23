@@ -142,7 +142,7 @@ public class RepriseHistorique {
 						String anonymizedName = eltSampleName.getElementsByTagName("ANONYMIZED_NAME").item(0).getTextContent();
 						if (StringUtils.isNotBlank(anonymizedName)) {
 							sample.anonymizedName = anonymizedName;
-							System.out.println("anonymizedName : " + anonymizedName);
+							//System.out.println("anonymizedName : " + anonymizedName);
 						}
 					}
 					if (eltSampleName.getElementsByTagName("TAXON_ID").item(0)!= null) {
@@ -520,7 +520,7 @@ public class RepriseHistorique {
 											//System.out.println("baseCoord : " + baseCoord);
 											readSpec.baseCoord = new Integer(baseCoord);									
 										}
-										if (j==2) {
+										if (j==1) {
 											experiment.lastBaseCoord = readSpec.baseCoord;
 										}
 									}
@@ -558,6 +558,7 @@ public class RepriseHistorique {
 						if (experiment.readSpecs.size() == 1){	
 							if("Forward".equalsIgnoreCase(experiment.readSpecs.get(0).readType)){
 								experiment.libraryLayoutOrientation = "Forward";
+								experiment.lastBaseCoord = experiment.readSpecs.get(0).baseCoord;
 							}
 						}
 					}
@@ -570,7 +571,7 @@ public class RepriseHistorique {
 							} else {
 								experiment.lastBaseCoord = experiment.readSpecs.get(0).baseCoord;
 							}
-							//System.out.println("EXPERIMENT.lastBaseCoordonnée = " + experiment.lastBaseCoord);
+							System.out.println("EXPERIMENT.lastBaseCoordonnée = " + experiment.lastBaseCoord);
 						}
 
 						// Determiner experiment.libraryLayoutOrientation à partir des readSpec.READ_LABEL
@@ -692,11 +693,12 @@ public class RepriseHistorique {
 						run.accession = accession;
 						System.out.println("run alias : " + alias);
 					}
+					
 					String dateInString = eltRun.getAttribute("run_date");
 					System.out.println("run date : " + dateInString);
-					dateInString = dateInString.substring(0, 10);
-
+					
 					if (StringUtils.isNotBlank(dateInString)){
+						dateInString = dateInString.substring(0, 10);
 						SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
 						Date date = formatter.parse(dateInString);				
 						System.out.println("run dateInString : " + dateInString);
@@ -751,8 +753,11 @@ public class RepriseHistorique {
 								String filetype = eltFile.getAttribute("filetype");
 								String checksum_method = eltFile.getAttribute("checksum_method");
 								String md5 = eltFile.getAttribute("checksum");
-								RawData rawData = new RawData();
+								RawData rawData = new RawData();								
 								rawData.relatifName = filename;
+								if (filename.contains("/")){
+									rawData.relatifName = filename.substring(filename.lastIndexOf("/")+1);
+								}								
 								rawData.md5 = md5;
 								rawData.extention = filetype;
 								run.listRawData.add(rawData);
@@ -920,7 +925,7 @@ public class RepriseHistorique {
 
 		String pattern1 = "^study_([A-Z]{2,3})$";
 		String pattern2 = "^study_([A-Z]{2,3})(_|-)";
-		String pattern3 = "^study_([A-Z]{2,3})$";
+		String pattern3 = "^project_([A-Z]{2,3})$";
 
 		java.util.regex.Pattern p1 = Pattern.compile(pattern1);
 		java.util.regex.Pattern p2 = Pattern.compile(pattern2);

@@ -52,7 +52,6 @@ public abstract class AbstractTestsSRA {
 		config.put("mongodb.credentials","ngl:ngl");
 		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
 
-
 		
 		config.put("db.default.partitionCount", "1");
 		config.put("db.default.maxConnectionsPerPartition", "10");

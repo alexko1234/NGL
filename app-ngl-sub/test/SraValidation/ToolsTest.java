@@ -7,6 +7,8 @@ import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,8 +27,18 @@ import play.libs.ws.WSResponse;
 import utils.AbstractTestsSRA;
 
 public class ToolsTest extends AbstractTestsSRA {
-		
 	@Test
+	public void testRegExp()throws IOException  {
+		String name = "titi/toto/tutu/lili";
+		
+		String relatifName = "";
+		relatifName = name;
+		if (name.contains("/")){
+			relatifName = name.substring(name.lastIndexOf("/")+1);
+		}
+		System.out.println("name :" + name +" et relatifName="+ relatifName);
+	}
+	//@Test
 	public void SymbolicLinkSuccess() throws IOException  {
 		String nameDirectory = "/env/cns/submit_traces/SRA/NGL_test/tests_liens/linkTest4";
 		

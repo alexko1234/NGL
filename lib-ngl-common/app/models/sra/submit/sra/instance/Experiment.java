@@ -73,7 +73,6 @@ public class Experiment extends DBObject implements IValidation {
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout"); // single ou paired
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation"); // forward ou forward-reverse
 
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		//ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
@@ -86,16 +85,18 @@ public class Experiment extends DBObject implements IValidation {
 			ValidationHelper.required(contextValidation, this.studyCode , "studyCode");
 		}
 		ValidationHelper.required(contextValidation, this.readSetCode , "readSetCode");
-		// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
 
 		System.out.println("platform = " + this.typePlatform);
 		// Dans le cas des illumina ou LS454
 		if (! "OXFORD_NANOPORE".equalsIgnoreCase(this.typePlatform)) {
+			if ("illumina".equalsIgnoreCase(this.typePlatform)) {
 			ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
-			ValidationHelper.required(contextValidation, this.lastBaseCoord , "lastBaseCoord");
+			}
 			if (StringUtils.isNotBlank(this.libraryLayout) && libraryLayout.equalsIgnoreCase("paired")){
+				// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
+				ValidationHelper.required(contextValidation, this.lastBaseCoord , "lastBaseCoord");	
 				ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
+				SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
 			}
 		}
 		// Si nanopore pas de readspec et pas spotLength, lastBasecoord, et libraryLayoutNominalLength
@@ -120,6 +121,10 @@ public class Experiment extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		this.validateLight(contextValidation);
+		if (! "OXFORD_NANOPORE".equalsIgnoreCase(this.typePlatform)) { 
+			//pas mis dans validateLight car il existe dans reprise historique des illumina et LS454 sans lastBaseCoord 
+			ValidationHelper.required(contextValidation, this.lastBaseCoord , "lastBaseCoord");	
+		}
 		contextValidation.addKeyToRootKeyName("experiment");
 		// Verifier le run :
 		if (this.run == null) {
