@@ -8,6 +8,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
@@ -34,6 +35,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
 public class Samples extends DocumentController<Sample>{
@@ -47,31 +49,12 @@ public class Samples extends DocumentController<Sample>{
 	
 	@Permission(value={"reading"})
 	public Result list(){
-		SamplesSearchForm samplesSearch = filledFormQueryString(SamplesSearchForm.class);
-		
-		DBQuery.Query query = getQuery(samplesSearch);
-		if(samplesSearch.datatable){
-			MongoDBResult<Sample> results = mongoDBFinder(samplesSearch, query);
-			List<Sample> samples = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Sample>(samples, results.count())));
-		}
-		else if(samplesSearch.list){
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("name", 1);
-			keys.put("code", 1);
-			MongoDBResult<Sample> results = mongoDBFinder(samplesSearch,query).sort("code");
-			List<Sample> samples = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
-			for(Sample p: samples){
-				los.add(new ListObject(p.code, p.name));
-			}
-			
-			return Results.ok(Json.toJson(los));
+		SamplesSearchForm searchForm = filledFormQueryString(SamplesSearchForm.class);
+		if(searchForm.reporting){
+			return nativeMongoDBQuery(searchForm);
 		}else{
-			MongoDBResult<Sample> results = mongoDBFinder(samplesSearch, query);
-			List<Sample> samples = results.toList();
-			return Results.ok(Json.toJson(samples));
+			DBQuery.Query query = getQuery(searchForm);
+			return mongoJackQuery(searchForm, query);			
 		}		
 	}
 

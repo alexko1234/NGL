@@ -95,8 +95,10 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			}
 		}else{
 			results = MongoDBDAO.find(collectionName, type, query) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense))
-					.limit(form.limit);
+					.sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if(form.limit != -1){
+				results.limit(form.limit);
+			}
 		}
 		
 		return results;
@@ -113,8 +115,10 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			}
 		}else{
 			results = MongoDBDAO.find(collectionName, type, query, keys) 
-					.sort(form.orderBy, Sort.valueOf(form.orderSense))
-					.limit(form.limit);
+					.sort(form.orderBy, Sort.valueOf(form.orderSense));
+			if(form.limit != -1){
+				results.limit(form.limit);
+			}
 		}
 		
 		return results;
