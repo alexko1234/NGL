@@ -431,10 +431,10 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
-	/* Pour l'instant bloquer les types de sortie a Tube uniquement si la main est utilisee */
+	/* FORCER A STRIP si instrument= main  et  sortie=plaque  */
 	$scope.$watch("$scope.experiment.instrument.categoryCode", function(){
-			if ($scope.experiment.instrument.categoryCode === "hand")
-				$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+			if (($scope.experiment.instrument.categoryCode === "hand") && ($scope.experiment.instrument.outContainerSupportCategoryCode === "96-well-plate"))
+				$scope.experiment.instrument.outContainerSupportCategoryCode = "strip-8";
 	});	
 		
 	

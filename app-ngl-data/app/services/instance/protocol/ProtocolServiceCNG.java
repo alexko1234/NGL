@@ -95,8 +95,12 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("protocol-illumina-depot","protocole_dépôt_illumina","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 		
-		// 24/02/2017 ajout protocole pour Chromium
-		lp.add(newProtocol("chromium-genome-protocol","chromium genome protocol","?","1","production", 
+		// 23/03/2017 ajout protocole pour Chromium
+		lp.add(newProtocol("chromium-genome-protocol-v1","chromium genome protocol v1","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("chromium-gem-generation",
+													   "wg-chromium-lib-prep")));
+		
+		lp.add(newProtocol("chromium-genome-protocol-v2","chromium genome protocol v2","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("chromium-gem-generation",
 													   "wg-chromium-lib-prep")));
 		

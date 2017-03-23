@@ -678,11 +678,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// Production CNG demande de ne pas tracer le type de puce...
-		// l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("type1", "type2"), 
+		// l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("HS", "1K, 12K"), 
 		//		"single", 10, true, null,null));
-		 
-		 l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
-					newValues("1","2","3","4","5","6","7","8","9","10","11"), 
+		
+		// reunion avec Marc23/03/2017: la puce  HS n' a que 11 positions utilisable mais les puces 1K, 12K en ont 12=> ajouter position 12
+		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+					newValues("1","2","3","4","5","6","7","8","9","10","11","12"), 
 					"single", 11, true, null,null));
 		
 		return l;
