@@ -309,6 +309,11 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 					System.out.println("experiment exp_KY_LOSU_2_81DHTABXX du projet KY ignore");
 					continue;
 				}
+				// Ecarter l'experiment exp_BAT_EIOSW_6_C1CRCACXX.IND8 (ERX223471) qui a ete supprimé
+				if (experiment.code.equals("exp_BAT_EIOSW_6_C1CRCACXX.IND8")) {
+					System.out.println("exp_BAT_EIOSW_6_C1CRCACXX.IND8 du projet BAT ignore");
+					continue;	
+				}
 				cp ++;
 				
 				/*System.out.println("dans repriseHistoriqueExperimentsTest => experiment : " + experiment.code);
@@ -759,6 +764,11 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 				//System.out.println("run.accession : " + run.accession);
 				//system.out.println("run.experimentCode : " + run.expCode);
 				
+				// Ecarter le run run_BAT_EIOSW_6_C1CRCACXX.IND8 (ERX248937) qui a ete supprimé
+				if (run.code.equals("run_BAT_EIOSW_6_C1CRCACXX.IND8")) {
+					System.out.println("run_BAT_EIOSW_6_C1CRCACXX.IND8 du projet BAT ignore");
+					continue;	
+				}
 				ContextValidation contextValidation = new ContextValidation(user);
 				contextValidation.setCreationMode();
 				System.out.println("run.accession : " + run.accession);
