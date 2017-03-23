@@ -264,6 +264,17 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("RIN", "providedRin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, "single", 17, false, null, null));
 		
+		   propertyDefinitions.add(newPropertiesDefinition("Méthode quantification", "collabQuantificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+	                null, null, null, null,"single", 18, true, null,null));
+	        propertyDefinitions.add(newPropertiesDefinition("A260/A280 fourni", "providedA260A280Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+	                null, null, null, null,"single", 19, true, null,null));
+	        propertyDefinitions.add(newPropertiesDefinition(" A260/A230 fourni", "providedA260A230Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+	                null, null, null, null,"single", 20, true, null,null));
+	        propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules", "providedMoleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null,
+	                null, null, null, null,"single", 18, true, null,null));   
+	        propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+	                null, null, null, null,"single", 22, true, null,null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 				null, null, null, null,"single", 18, true, null,null));
 
