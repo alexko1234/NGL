@@ -251,6 +251,7 @@ runs.modal.header.text = Run status flow
 runs.treatments.sav = SAV
 runs.treatments.ngsrg = NGS-RG
 runs.treatments.minknowMetrichor = MinKnow-Metrichor
+runs.treatments.minknowBasecalling = MinKnow-Basecalling
 runs.treatments.topIndex = Top Index
 runs.treatments.tilesStats = Stats FC
 
