@@ -64,7 +64,9 @@
   	#panel_PEMPSize {
   		font-size: 10px;
   	}
-  	 	
+  	.break {
+  		page-break-before: always;
+  	}
 }
 
 
