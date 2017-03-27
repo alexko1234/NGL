@@ -22,7 +22,8 @@ public class RawData  implements IValidation {
 		} else {
 			contextValidation.addKeyToRootKeyName("rawData");
 		}
-		/*System.out.println("dans validate : relatifName" + this.relatifName);
+		/*
+		System.out.println("dans validate : relatifName" + this.relatifName);
 		System.out.println("dans validate : directory" + this.directory);
 		System.out.println("dans validate : extention" + this.extention);
 		System.out.println("dans validate : location" + this.location);

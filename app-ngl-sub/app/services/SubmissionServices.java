@@ -757,9 +757,14 @@ public class SubmissionServices {
 			}
 			for (String experimentCode: submission.experimentCodes) {
 				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-				
+
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
+				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
+				if (p.archive){
+					throw new SraException("Impossible d'activer la soumission avec le projet " + p.code + " avec archive=true");
+				}
 				System.out.println("exp = "+ expElt.code);
-				for (RawData rawData :expElt.run.listRawData){
+				for (RawData rawData :expElt.run.listRawData) {
 					if (StringUtils.isBlank(rawData.location)) {
 						throw new SraException(" Dans activateSubmission" + rawData.relatifName + " avec location non renseignée");				
 					}
