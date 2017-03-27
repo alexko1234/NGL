@@ -165,6 +165,8 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 				// barcode plaque sortie == support Container used code
 				"header" : Messages("containers.table.support.name"),
 				"property" : "outputContainerUsed.locationOnContainerSupport.code",
+				"order" : true,
+				"edit" : true,
 				"hide" : true,
 				"type" : "text",
 				"position" : 400,
@@ -173,7 +175,6 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 				}
 			});
 			
-
 			datatableConfig.columns.push({
 				// Ligne
 				"header" : Messages("containers.table.support.column"),
@@ -186,8 +187,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 				"extraHeaders" : {
 					0 : Messages("experiments.outputs")
 				}
-			});	
-			
+			});			
 			
 		}
 	} else {
