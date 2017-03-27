@@ -36,66 +36,6 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			        	 "position":3,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },	
-			         /*
-			         { // Projet(s)
-			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainer.projectCodes",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":11,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0: inputExtraHeaders}
-				     },
-				     { // Echantillon(s) 
-			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainer.sampleCodes",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":12,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0: inputExtraHeaders}
-				     },
-				     { // sampleAliquoteCode 
-				        "header":Messages("containers.table.codeAliquot"),
-				 		"property": "inputContainer.contents", 
-				 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
-				 		"order":true,
-				 		"hide":true,
-				 		"type":"text",
-				 		"position":13,
-				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        "extraHeaders":{0: inputExtraHeaders}
-					 },
-					 { // Concentration
-			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.concentration.value",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":14,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },  
-			         { // Volume
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":15,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },
-			         { // Etat input Container 
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code | codes:'state'",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":16,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },
-			         */
 			         
 			         //--->  colonnes specifiques experience s'inserent ici  (inputUsed ??)     
 			         
@@ -187,49 +127,69 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			}*/
 	}; // fin struct datatableConfig
 	
-
-	if ($scope.experiment.instrument.inContainerSupportCategoryCode == "96-well-plate") {
-		datatableConfig.columns.push({
-			// Ligne  seulement pour plaques 
-			"header":Messages("containers.table.support.line"),
-			"property":"inputContainer.support.line",
-			"order":true,
-			"hide":true,
-			"type":"text",
-			"position":2,
-			"extraHeaders":{0: inputExtraHeaders}
-		});
-	}
 	
 	// probleme de rafraichissement de la vue en cas de mauvais choix inital de l'utilisateur
 	// dans le watch  "$scope.experiment.instrument.categoryCode"   => forcer la vue ici...
 	if ( $scope.experiment.instrument.categoryCode === "hand") {
-		// tubes 
-		datatableConfig.columns.push({
-			"header" : Messages("containers.table.code"),
-			"property" : "outputContainerUsed.locationOnContainerSupport.code",
-			"order" : true,
-			"edit" : true,
-			"hide" : true,
-			"type" : "text",
-			"position" : 400,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
-		datatableConfig.columns.push({
-			//storage pour tubes
-			"header" : Messages("containers.table.storageCode"),
-			"property" : "outputContainerUsed.locationOnContainerSupport.storageCode",
-			"order" : true,
-			"edit" : true,
-			"hide" : true,
-			"type" : "text",
-			"position" : 401,
-			"extraHeaders" : {
-				0 : Messages("experiments.outputs")
-			}
-		});
+		if($scope.experiment.instrument.outContainerSupportCategoryCode === "tube") {
+			// tubes 
+			datatableConfig.columns.push({
+				"header" : Messages("containers.table.code"),
+				"property" : "outputContainerUsed.locationOnContainerSupport.code",
+				"order" : true,
+				"edit" : true,
+				"hide" : true,
+				"type" : "text",
+				"position" : 400,
+				"extraHeaders" : {
+					0 : Messages("experiments.outputs")
+				}
+			});			
+			
+			datatableConfig.columns.push({
+				//storage pour tubes
+				"header" : Messages("containers.table.storageCode"),
+				"property" : "outputContainerUsed.locationOnContainerSupport.storageCode",
+				"order" : true,
+				"edit" : true,
+				"hide" : true,
+				"type" : "text",
+				"position" : 401,
+				"extraHeaders" : {
+					0 : Messages("experiments.outputs")
+				}
+			});
+		} else {
+		//strip-8
+			datatableConfig.columns.push({
+				// barcode plaque sortie == support Container used code
+				"header" : Messages("containers.table.support.name"),
+				"property" : "outputContainerUsed.locationOnContainerSupport.code",
+				"hide" : true,
+				"type" : "text",
+				"position" : 400,
+				"extraHeaders" : {
+					0 : Messages("experiments.outputs")
+				}
+			});
+			
+
+			datatableConfig.columns.push({
+				// Ligne
+				"header" : Messages("containers.table.support.column"),
+				"property" : "outputContainerUsed.locationOnContainerSupport.column",
+				"edit" : true,
+				"order" : true,
+				"hide" : true,
+				"type" : "text",
+				"position" : 401,
+				"extraHeaders" : {
+					0 : Messages("experiments.outputs")
+				}
+			});	
+			
+			
+		}
 	} else {
 		// l'autre cas pour l'instant est le sciclone qui n'a que des palques-96 en sortie
 	
