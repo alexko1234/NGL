@@ -167,7 +167,14 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getMinknowMetrichorPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "20"));	
+		
+		l.add(DescriptionFactory.newTreatmentType("MinKnow-Basecalling","minknow-basecalling", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "minknowBasecalling", 
+				getMinknowBaseCallingPropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "20"));	
 
+		
+		
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 
@@ -863,6 +870,33 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 
 
+	private List<PropertyDefinition> getMinknowBaseCallingPropertyDefinitions() throws DAOException {
+
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1.4.3"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Metrichor","metrichorVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","2.45.3"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom workflow","metrichorWorkflowName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1D Basecalling RNN for LSK108"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version workflow","metrichorWorkflowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1.107"));
+
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Metrichor run ID","metrichorRunID", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Channels with Reads","minknowChannelsWithReads", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Events in Reads","minknowEvents", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Complete reads","minknowCompleteReads", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read count","metrichorReadCount", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Total yield (bases)","metrichor2DReadsYield", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Longest read (bases)","metrichorMax2DRead", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));        
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Peak quality score","metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom basecaller","basecallerName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","Albacore"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version basecaller","basecallerVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","Albacore"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom fichier config","configName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","Albacore"));
+		
+		
+		return propertyDefinitions;
+	}
+	
 	private List<PropertyDefinition> getMinknowMetrichorPropertyDefinitions() throws DAOException {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

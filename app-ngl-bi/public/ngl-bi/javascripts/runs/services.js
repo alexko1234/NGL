@@ -114,7 +114,18 @@
 							this.form.stateCodes = ["IW-V","IP-V"];
 						}		
 					}
-					this.form.excludes =  ["lanes"];				
+					this.form.includes = ["default"];
+					//this.form.excludes =  ["lanes"];	
+					
+					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+						//remove .value if present to manage correctly properties (single, list, etc.)
+						if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
+							this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
+						}else{
+							this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
+						}
+						
+					}
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);

@@ -20,6 +20,7 @@ import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.readsets.api.ReadSetsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
@@ -58,7 +59,8 @@ public class Runs extends RunsController {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
-	
+	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "sequencingStartDate", "state", "valuation");
+
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 	@Permission(value={"reading"})
@@ -67,7 +69,8 @@ public class Runs extends RunsController {
 		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
 		//RunsSearchForm form = filledForm.get();
 		RunsSearchForm form = filledFormQueryString(RunsSearchForm.class);
-		BasicDBObject keys = getKeys(form);
+		BasicDBObject keys = getKeys(updateForm(form));
+		
 		if(form.datatable){			
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
 			List<Run> runs = results.toList();
@@ -90,6 +93,14 @@ public class Runs extends RunsController {
 		}
 	}
 
+	private static DatatableForm updateForm(RunsSearchForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			form.includes.addAll(defaultKeys);
+		}
+		return form;
+	}
+	
 	private static List<ListObject> toListObjects(List<Run> runs){
 		List<ListObject> jo = new ArrayList<ListObject>();
 		for(Run r: runs){

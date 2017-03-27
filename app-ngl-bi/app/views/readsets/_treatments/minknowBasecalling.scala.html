@@ -1,0 +1,31 @@
+@()
+
+<div class="panel panel-default">
+  <div class="panel-body">
+		<div class="row">
+			<div class="col-md-3 col-lg-3">
+				
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.minKnowVersion")){					
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.minKnowVersion.value}}</p>
+				}
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.minknowEvents")){
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.minknowEvents.value | number}}</p>
+				}
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.minknowCompleteReads")){
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.minknowCompleteReads.value | number}}</p>
+				}
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.basecallerName")){
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.basecallerName.value}}</p>
+				}
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.basecallerVersion")){
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.basecallerVersion.value}}</p>
+				}
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.configName")){
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.configName.value}}</p>
+				}
+			
+			</div>
+		
+		</div>	
+		</div>
+		</div>

@@ -423,6 +423,42 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 	init();
 	
+}]).controller('RunMinknowBasecallingCtrl', [ '$scope', '$http', function($scope, $http) {	
+	
+	var init = function(){
+		$scope.propDefinitions = {};
+		var tabDefinitions = $scope.treatments.getTreatment().propDefinitions;
+		for(var i=0;i<tabDefinitions.length;i++){
+			var result = tabDefinitions[i];
+			$scope.propDefinitions[result.code]=result;
+		}
+		
+	}
+	$scope.$on('save', function(){
+		console.log("save RunMinknowBasecallingCtrl");
+		$http.put(jsRoutes.controllers.runs.api.RunTreatments.update($scope.run.code, $scope.run.treatments.minknowBasecalling.code).url, $scope.run.treatments.minknowBasecalling)
+			.success(function(data){
+				$scope.run.treatments.minknowBasecalling = data;				
+			})
+			.error(function(){
+				$scope.messages.setError("save");				
+			});
+	});
+	
+	$scope.isEditMode = function(){
+		if($scope.mainService.isEditMode()){
+			if(['F-V', 'IW-V', 'IP-V'].indexOf($scope.run.state.code) >=0){
+				return false;
+			}else{
+				return true;
+			}
+		}else
+			return $scope.mainService.isEditMode();
+    	
+    };
+
+	init();
+	
 }]).controller('RunNGSRGIlluminaCtrl', [ '$scope', 'datatable', function($scope, datatable) {
 	
 	$scope.getNbCycles = function(){

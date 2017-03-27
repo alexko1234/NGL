@@ -251,6 +251,7 @@ runs.modal.header.text = Run status flow
 runs.treatments.sav = SAV
 runs.treatments.ngsrg = NGS-RG
 runs.treatments.minknowMetrichor = MinKnow-Metrichor
+runs.treatments.minknowBasecalling = MinKnow-Basecalling
 runs.treatments.topIndex = Top Index
 runs.treatments.tilesStats = Stats FC
 
@@ -266,6 +267,14 @@ runs.treatments.minknow-metrichor.metrichorReadCount = Read count
 runs.treatments.minknow-metrichor.metrichor2DReadsYield = Total yield (bases)
 runs.treatments.minknow-metrichor.metrichorMax2DRead = Longest read (bases)
 runs.treatments.minknow-metrichor.metrichorMax2DQualityScore = Peak quality score
+
+
+runs.treatments.minknow-basecalling.minKnowVersion = Version MinKNOW
+runs.treatments.minknow-basecalling.minknowEvents = Events in Reads
+runs.treatments.minknow-basecalling.minknowCompleteReads = Complete reads
+runs.treatments.minknow-basecalling.basecallerName = Nom basecaller
+runs.treatments.minknow-basecalling.basecallerVersion = Version basecaller
+runs.treatments.minknow-basecalling.configName = Nom fichier config
 
 run.treatments.sav.default.yieldTotal=Rendement total (Gb)
 run.treatments.sav.default.nonIndexedYieldTotal=Rendement total non indexé (Gb)

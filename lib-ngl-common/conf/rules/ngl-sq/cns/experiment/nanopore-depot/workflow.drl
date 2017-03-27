@@ -29,11 +29,11 @@ rule "Create Run and ReadSets Nanopore"
     	run.code=((new SimpleDateFormat("yyMMdd")).format(runStartDate))+"_"+run.instrumentUsed.code+"_"+run.containerSupportCode;
 		
 		Treatment treatment=new Treatment();
-		treatment.code="minknowMetrichor";
-		treatment.typeCode="minknow-metrichor";
+		treatment.code="minknowBasecalling";
+		treatment.typeCode="minknow-basecalling";
 		treatment.categoryCode="sequencing";
 		treatment.results.put("default",new HashMap<String, PropertyValue>(0));
-		run.treatments.put("minknowMetrichor",treatment);
+		run.treatments.put("minknowBasecalling",treatment);
 		
 		//Add properties
 		run.properties.put("flowcellChemistry",$experiment.instrumentProperties.get("flowcellChemistry"));
