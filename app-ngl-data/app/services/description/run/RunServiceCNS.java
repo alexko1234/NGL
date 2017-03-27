@@ -90,6 +90,7 @@ public class RunServiceCNS extends AbstractRunService {
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Protocole bq RNA","rnaLibProtocol",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Protocole d'extraction","extractionProtocol",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Méthode de déplétion","depletionMethod",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		
 		//GA 21/07/2015 ajouter la propriété sampleAliquoteCode au readset, niveau content n'est pas idéal mais résoud le pb actuel (JIRA 672)
