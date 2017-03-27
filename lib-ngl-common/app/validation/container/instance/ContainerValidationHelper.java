@@ -229,8 +229,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			
 		}
 	}
-
-
+	
 	public static void validateConcentration(PropertyValue concentration, ContextValidation contextValidation) {
 		if(concentration!=null && concentration.value!=null){
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
