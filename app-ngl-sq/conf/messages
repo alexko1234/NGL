@@ -618,6 +618,7 @@ samples.table.sample = Echantillon
 admin.menu = Administration
 admin.supports.title = Supports
 admin.supports.menu.switchindex = Inversion d''index
+admin.supports.menu.contentupdate = Mise à jour propriété content
 admin.supports.switch-index.tabs.search = Recherche des objets NGL
 authorisation.userroles.page = Gestion des roles utilisateurs
 authorisation.users.page.tab.search = Recherche des utilisateurs

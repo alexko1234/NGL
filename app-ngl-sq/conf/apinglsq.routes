@@ -88,3 +88,6 @@ GET		/api/protocols													controllers.protocols.api.Protocols.list()
 
 GET		/api/printing/tags												@controllers.printing.api.Tags.list()
 POST	/api/printing/tags/print										@controllers.printing.api.Tags.print()
+
+
+GET		/api/property-definitions										@controllers.commons.api.PropertyDefinitions.list()
