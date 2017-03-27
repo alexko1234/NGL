@@ -28,7 +28,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			         
 			         { // colonne:  strip-8 ou plaque
 			        	 "header":Messages("containers.table.support.column"),
-			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 // astuce GA: pour pouvoir trier les colonnesCode Container dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
 			        	 "property":"inputContainer.support.column*1",
 			        	 "order":true,
 						 "hide":true,
@@ -191,7 +191,7 @@ angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse
 			
 		}
 	} else {
-		// l'autre cas pour l'instant est le sciclone qui n'a que des palques-96 en sortie
+		// l'autre cas pour l'instant est le sciclone qui n'a que des plaques-96 en sortie
 	
 		datatableConfig.columns.push({
 			// barcode plaque sortie == support Container used code
