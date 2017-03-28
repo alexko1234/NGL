@@ -1,7 +1,9 @@
 package controllers.commons.api;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import controllers.APICommonController;
@@ -16,8 +18,8 @@ import views.components.datatable.DatatableResponse;
 
 public class PropertyDefinitions extends APICommonController<PropertyDefinition> {
 
-	public PropertyDefinitions(Class<PropertyDefinition> type) {
-		super(type);		
+	public PropertyDefinitions() {
+		super(PropertyDefinition.class);		
 	}
 
 	public  Result list() throws DAOException {
@@ -31,7 +33,11 @@ public class PropertyDefinitions extends APICommonController<PropertyDefinition>
 		if(filledForm.get("datatable") != null){
 			return ok(Json.toJson(new DatatableResponse<PropertyDefinition>(values, values.size())));
 		}else if(filledForm.get("list") != null){
-			return ok(Json.toJson(values.parallelStream().map(pd -> new ListObject(pd.code,pd.name)).collect(Collectors.toList())));
+			return ok(Json.toJson(values.parallelStream().map(pd -> new ListObject(pd.code,pd.code)).collect(Collectors.toList())));
+		}else if(filledForm.get("count") != null){
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", values.size());
+			return ok(Json.toJson(m));
 		}else{
 			return ok(Json.toJson(values));
 		}				

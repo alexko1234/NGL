@@ -55,3 +55,6 @@ GET	   	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCr
 POST 	/api/valuation/criterias						controllers.valuation.api.ValuationCriterias.save()
 PUT    	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.update(code)
 DELETE	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.delete(code: java.lang.String)
+
+
+GET		/api/property-definitions						@controllers.commons.api.PropertyDefinitions.list()

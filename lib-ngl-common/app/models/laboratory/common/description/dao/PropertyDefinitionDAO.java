@@ -82,10 +82,10 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 				+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
 				+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
 				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
-			    +"	inner join object_type ot on ot.id = cit.fk_object_type";
+			    +"	inner join object_type ot on ot.id = cit.fk_object_type order by pd.code";
 			    
 		
-		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR), new SqlParameter("pd.code",Types.VARCHAR));
+		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString());
 		return l;
 	}
