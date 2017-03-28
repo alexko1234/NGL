@@ -96,7 +96,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
-						 "edit":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":51,
@@ -186,6 +186,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		computeOutputContainerVolumePerPCR ($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -370,6 +371,18 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 			computeInputQuantity(value.data);
 		}
 		
+	}
+	
+	var computeOutputContainerVolumePerPCR  = function(experiment){
+		if(null !== experiment.atomicTransfertMethods && undefined !== experiment.atomicTransfertMethods){
+			experiment.atomicTransfertMethods.forEach(function(atm){
+			//	var PCRvolume = atm.inputContainerUseds[0].volume.value;
+				var PCRvolume = $parse("outputContainerUseds[0].experimentProperties.PCRvolume.value")(atm);
+				var nbPCR = $parse("inputContainerUseds[0].experimentProperties.nbPCR.value")(atm);
+				var vol =  PCRvolume * nbPCR;
+		    $parse("outputContainerUseds[0].volume.value").assign(atm,vol);
+			});
+		}	
 	}
 	
 	var computeInputQuantity = function(udtData){

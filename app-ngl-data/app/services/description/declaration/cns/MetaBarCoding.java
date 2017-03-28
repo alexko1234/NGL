@@ -319,7 +319,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Nb de PCR", "nbPCR", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null, 
 				null,  null, null, null,"single", 15, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume / PCR", "PCRvolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 50, true, null,null));
 		
+	
 		propertyDefinitions.add(newPropertiesDefinition("DNA polymerase", "dnaPolymerase", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
 				DescriptionFactory.newValues("taq Q5","taq Kapa"), null, null, null,"single", 1, false, null,null));
 		
