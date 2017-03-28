@@ -1,5 +1,6 @@
 package controllers.migration;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,9 +23,11 @@ import fr.cea.ig.MongoDBResult.Sort;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AbstractContainerUsed;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
@@ -45,13 +48,13 @@ public class SwitchContainer extends CommonController{
 	private static final String TAG_PROPERTY_NAME = "tag";
 	
 	public static Result migration() {
-		boolean isSwitch = true;
+		boolean isSwitch = false;
 		
-		//String oldParentContainerName = "221D4N4IK_C3";
-		//String newParentContainerName = "221D4N4IK_E3";
+		String oldParentContainerName = "221D4N4IK_C3";
+		String newParentContainerName = "221D4N4IK_E3";
 		
-		String oldParentContainerName = "21KC2XTKY";
-		String newParentContainerName = "21KC2XTL9";
+		//String oldParentContainerName = "21KC2XTKY";
+		//String newParentContainerName = "21KC2XTL9";
 		
 		
 		
@@ -60,6 +63,7 @@ public class SwitchContainer extends CommonController{
 		//221D4N4IK_C3 221D4N4IK_E3
 		Map<Class<?>, Map<String, ? extends DBObject>> updatedObjects = new HashMap<Class<?>, Map<String,? extends DBObject>>();
 		updatedObjects.put(Container.class, new TreeMap<String,Container>());
+		updatedObjects.put(ContainerSupport.class, new TreeMap<String,ContainerSupport>());
 		updatedObjects.put(Experiment.class, new TreeMap<String,Experiment>());
 		updatedObjects.put(Process.class, new TreeMap<String,Process>());
 		
@@ -67,10 +71,13 @@ public class SwitchContainer extends CommonController{
 		if(isSwitch)
 			changeContainer(newParentContainerName, oldParentContainerName, updatedObjects);
 
+		
 		updatedObjects.get(Container.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, c));
+		updatedObjects.get(ContainerSupport.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, c));
+		
 		updatedObjects.get(Experiment.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, c));
 		updatedObjects.get(Process.class).values().forEach(c -> MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, c));
-
+		
 		return ok("SwitchContainer End");
 	}
 
@@ -78,7 +85,8 @@ public class SwitchContainer extends CommonController{
 		Container oldParentContainer = getContainer(oldParentContainerName);
 		Container newParentContainer = getContainer(newParentContainerName);
 		
-		updateContainers(oldParentContainer,newParentContainer, (Map<String,Container>)updatedObjects.get(Container.class));
+		updateContainers(oldParentContainer,newParentContainer, (Map<String,Container>)updatedObjects.get(Container.class), (Map<String,ContainerSupport>)updatedObjects.get(ContainerSupport.class));
+		
 		
 		updateExperimentWhereSwitchError(oldParentContainer, newParentContainer,
 				(Map<String,Container>)updatedObjects.get(Container.class), (Map<String,Experiment>)updatedObjects.get(Experiment.class));
@@ -142,25 +150,38 @@ public class SwitchContainer extends CommonController{
 			Experiment exp = experiments.get(0);
 			Logger.info(exp.code+" : start");
 			
-			if(updatedExperiments.containsKey(exp.code)){
-				exp = updatedExperiments.get(exp.code);
-			}
 			
-			exp.atomicTransfertMethods.stream()
+			List<AtomicTransfertMethod> atms = exp.atomicTransfertMethods.stream()
+				.filter(atm -> atm.inputContainerUseds
+									.stream()
+									.filter(icu -> icu.code.equals(oldParentContainer.code))
+									.count() > 0)
+				.collect(Collectors.toList());
+			
+			atms.stream()
 				.map(atm -> atm.inputContainerUseds)
 				.flatMap(List::stream)
 				.filter(icu -> icu.code.equals(oldParentContainer.code))
 				.forEach(icu -> updateICUWithNewContainer(icu, newParentContainer, true));
 			
-			exp.atomicTransfertMethods.stream()
+			atms.stream()
 				.map(atm -> atm.outputContainerUseds)
 				.flatMap(List::stream)
 				.filter(ocu -> updatedContainers.keySet().contains(ocu.code))
 				.forEach(ocu -> updateACUWithNewContainer(ocu, updatedContainers.get(ocu.code)));
 		
-			updateXCodes(exp);
 			
-			updatedExperiments.put(exp.code,exp);
+			if(updatedExperiments.containsKey(exp.code)){
+				Map<String, AtomicTransfertMethod> atmByKey = atms.stream().collect(Collectors.toMap(atm -> atm.viewIndex+"_"+atm.line+""+atm.column, atm -> atm));
+				exp = updatedExperiments.get(exp.code);
+				List<AtomicTransfertMethod> keepAtms = exp.atomicTransfertMethods.parallelStream()
+					.filter(atm -> !atmByKey.containsKey(atm.viewIndex+"_"+atm.line+""+atm.column))
+					.collect(Collectors.toList());
+				keepAtms.addAll(atmByKey.values());
+				exp.atomicTransfertMethods = keepAtms;
+			}
+			updateXCodes(exp);
+			updatedExperiments.put(exp.code,exp);	
 			
 			Logger.info(exp.code+" : end");
 		}else{
@@ -470,7 +491,7 @@ public class SwitchContainer extends CommonController{
 	}
 
 
-	private static void updateContainers(Container oldParent, Container newParent, Map<String, Container> updatedContainer) {
+	private static void updateContainers(Container oldParent, Container newParent, Map<String, Container> updatedContainer, Map<String, ContainerSupport> updatedSupport) {
 		Logger.info("");
 		Logger.info("start update containers");
 		
@@ -485,14 +506,15 @@ public class SwitchContainer extends CommonController{
 		
 		Logger.info("old sample codes"+oldParentSampleCodes);
 		Logger.info("new sample codes"+newParentSampleCodes);
-
-		
+		Logger.info("");
+		Logger.info("Containers");
 		Map<String, PropertyValue> allContentPropertiesKeep = new HashMap<String, PropertyValue>();
 		//1 find all childs that's must be updated
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.regex("treeOfLife.paths", Pattern.compile(","+oldParent.code+"$|,"+oldParent.code+",")))
 				.sort("traceInformation.creationDate").toList();
 		containers.forEach(container -> {
 					Logger.info("");
+					
 					Logger.info(container.code+" / "+container.traceInformation.creationDate);
 					
 					if(updatedContainer.containsKey(container.code)){
@@ -521,6 +543,29 @@ public class SwitchContainer extends CommonController{
 					updatedContainer.put(container.code, container);	
 		});
 		
+		Logger.info("");
+		Logger.info("Supports");
+		
+		Set<String> containerCodes = containers.parallelStream().map(c -> c.support.code).collect(Collectors.toSet());
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", containerCodes))
+				.sort("traceInformation.creationDate").toList();
+		containerSupports.forEach(containerSupport -> {
+			Logger.info("");
+			Logger.info(containerSupport.code+" / "+containerSupport.traceInformation.creationDate);
+			
+			if(updatedSupport.containsKey(containerSupport.code)){
+				containerSupport = updatedSupport.get(containerSupport.code);
+			}
+			
+			containerSupport.projectCodes.removeAll(oldParentProjectCodes);
+			containerSupport.projectCodes.addAll(newParentProjectCodes);
+			
+			containerSupport.sampleCodes.removeAll(oldParentSampleCodes);
+			containerSupport.sampleCodes.addAll(newParentSampleCodes);
+			
+			updatedSupport.put(containerSupport.code, containerSupport);	
+			
+		});
 		Logger.info("end update containers");
 				
 	}
@@ -560,13 +605,35 @@ public class SwitchContainer extends CommonController{
 		
 		
 		//Logger.debug("Nb container contents "+container.contents.size());
-		
-		List<Content> newContents =  newContents(newParent.contents, allContentPropertiesKeep);
-		
-		
-		if(container.contents.removeAll(oldContents)){
-			Logger.debug(container.code+" : update contents" );
-			container.contents.addAll(newContents);
+		if(oldContents != null && oldContents.size() > 0){
+			List<Content> newContents =  newContents(newParent.contents, allContentPropertiesKeep);
+			if(oldContents.size() == newContents.size()){
+				Set<Double> oldPercentages = oldContents.stream().map(c -> c.percentage).collect(Collectors.toSet());
+				if(oldPercentages.size() == 1){
+					Double oldPercentage = oldPercentages.iterator().next();
+					Logger.info("apply same percentage for new content "+oldPercentage);
+					newContents.forEach(c -> c.percentage = oldPercentage);
+				}else{
+					throw new RuntimeException("Contents are not the same percentage "+newParent.code);
+				}
+			}else{
+				Set<Double> oldPercentages = oldContents.stream().map(c -> c.percentage).collect(Collectors.toSet());
+				if(oldPercentages.size() == 1){
+					Double oldPercentage = oldPercentages.iterator().next();
+					Double newPercentage = new BigDecimal((oldPercentage / newContents.size()) * oldContents.size()).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+					Logger.info("apply same computing percentage for new content "+oldPercentage);
+					newContents.forEach(c -> c.percentage = newPercentage);
+				}else{
+					throw new RuntimeException("Contents are not the same percentage "+newParent.code);
+				}
+			}
+			
+			if(container.contents.removeAll(oldContents)){
+				Logger.debug(container.code+" : update contents" );
+				container.contents.addAll(newContents);
+			}
+		}else{
+			Logger.warn(container.code+" : not found old contents !!!" );
 		}
 	}
 
