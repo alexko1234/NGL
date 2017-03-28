@@ -13,9 +13,9 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 			if(inputContainerUsed){
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.volume = volume1;
+					inputContainerUsed.newVolume = volume1;
 				}
-				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+				inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}
 				
 		});			
@@ -59,8 +59,8 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 	
 	/*columns.push({
 		"header" : Messages("containers.table.concentration"),
-		"property": "inputContainer.concentration",
-		"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
+		"property": "inputContainerUsed.concentration",
+		"property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
 		//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 		"order" : true,
 		"edit" : false,
@@ -101,7 +101,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 	/*
    columns.push({
 		"header":Messages("containers.table.size")+ " (pb)",
-		"property": "inputContainer.size.value",
+		"property": "inputContainerUsed.size.value",
 		"order":false,
 		"hide":true,
 		"type":"text",

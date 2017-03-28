@@ -16,7 +16,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 				var insertsize = $parse("experimentProperties.measuredInsertSize")(inputContainerUsed);
 				if(insertsize){
 					console.log("copy experimentProperties.measuredInsertSize to inputContainerUsed.size :"+ insertsize.value);
-					inputContainerUsed.size = insertsize;
+					inputContainerUsed.newSize = insertsize;
 				}
 			}
 		});		

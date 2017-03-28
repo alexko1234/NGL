@@ -354,7 +354,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 		//}
 	}
 
-	// -1- inputQuantityLib=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
+	// -1- inputQuantityLib=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
 	var computeQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
 
@@ -390,7 +390,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	}
 	
 	// PLUS APPELLEE...voir plus haut...
-	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainer.concentration.value
+	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainerUsed.concentration.value
 	var computeVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
 

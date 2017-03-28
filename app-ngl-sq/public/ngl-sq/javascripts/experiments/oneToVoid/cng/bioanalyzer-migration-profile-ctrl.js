@@ -22,12 +22,12 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 					
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
-					inputContainerUsed.concentration = concentration1;
+					inputContainerUsed.newConcentration = concentration1;
 				}
 				
 				var size1 = $parse("experimentProperties.size1")(inputContainerUsed);
 				if(size1){
-					inputContainerUsed.size = size1;
+					inputContainerUsed.newSize = size1;
 				}
 			}	
 		});	

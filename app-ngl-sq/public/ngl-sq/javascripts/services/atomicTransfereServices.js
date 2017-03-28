@@ -132,33 +132,28 @@ angular.module('atomicTransfereServices', [])
 					
 					input.locationOnContainerSupport.storageCode = undefined;
 					
-					return input;
-					/*
-					 return {"state":container.state
-						}; 
-					 
-					 */
+					return input;					
 				},
-				updateInputContainerUsedFromContainer : function(containerUsed, container){
+				updateInputContainerUsedFromContainer : function(containerUsed, container, experimentStateCode){
 					containerUsed.categoryCode = container.categoryCode; 
 					containerUsed.contents = container.contents;
 					//GA for storage we keep the experiment information to change it. used in QC.
 					var storageCode = containerUsed.locationOnContainerSupport.storageCode;
 					containerUsed.locationOnContainerSupport = container.support;
 					containerUsed.locationOnContainerSupport.storageCode = storageCode;
-					
-					containerUsed.volume = container.volume;
-					containerUsed.concentration = container.concentration;
-					containerUsed.quantity = container.quantity;
-					containerUsed.size = container.size;
-					containerUsed.sampleCodes=container.sampleCodes;
-					containerUsed.projectCodes=container.projectCodes;
-					if(container.state.code === 'IU'){ //because after the processTypeCodes and processCodes is set to null
+					if(experimentStateCode != null && experimentStateCode != undefined && experimentStateCode !== 'F'){
+						containerUsed.volume = container.volume;
+						containerUsed.concentration = container.concentration;
+						containerUsed.quantity = container.quantity;
+						containerUsed.size = container.size;
+						
 						containerUsed.fromTransformationTypeCodes=container.fromTransformationTypeCodes;
 						containerUsed.fromTransformationCodes=container.fromTransformationCodes;
 						containerUsed.processTypeCodes=container.processTypeCodes;
-						containerUsed.processCodes=container.processCodes;											
+						containerUsed.processCodes=container.processCodes;
 					}
+					containerUsed.sampleCodes=container.sampleCodes;
+					containerUsed.projectCodes=container.projectCodes;
 					containerUsed.state = container.state; //TODO GA need to be remove but keep for backward compatibility
 					return containerUsed;
 				},
@@ -423,7 +418,7 @@ angular.module('atomicTransfereServices', [])
 				
 				customExperimentToView : undefined, //used to cutom the view with one atm
 				
-				convertExperimentATMToDatatable : function(experimentATMs){
+				convertExperimentATMToDatatable : function(experimentATMs, experimentStateCode){
 					var promises = [];
 					
 					var atms = experimentATMs;
@@ -473,7 +468,7 @@ angular.module('atomicTransfereServices', [])
 							              
 							              //allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
 							              allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
-							              allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
+							              allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer, experimentStateCode);
 							              
 							              //allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
 							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
@@ -489,7 +484,7 @@ angular.module('atomicTransfereServices', [])
 									allData[l].atomicTransfertMethod = atm;							              
 									//allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
 									allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
-									allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
+									allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer, experimentStateCode);
 									allData[l].inputContainer = inputContainer;	
 									l++;
 									if($that.customExperimentToView !== undefined){
@@ -578,7 +573,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					if(!$scope.isCreationMode()){
-						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);													
+						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
@@ -589,7 +584,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);				
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
@@ -797,7 +792,7 @@ angular.module('atomicTransfereServices', [])
 					throw 'newAtomicTransfertMethod not defined in atmToDragNDrop client';
 				},
 				
-				convertExperimentToDnD:function(experimentATMs){
+				convertExperimentToDnD:function(experimentATMs, experimentStateCode){
 					var promises = [];
 					
 					var atms = experimentATMs;
@@ -821,7 +816,7 @@ angular.module('atomicTransfereServices', [])
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
-								atm.inputContainerUseds[j] = $commonATM.updateInputContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);
+								atm.inputContainerUseds[j] = $commonATM.updateInputContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer, experimentStateCode);
 							}
 						}
 						
@@ -863,8 +858,8 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					if(!$scope.isCreationMode()){
-						this.convertExperimentToDnD(experiment.atomicTransfertMethods);	
-						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+						this.convertExperimentToDnD(experiment.atomicTransfertMethods, experiment.state.code);	
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);
 					}else{
 						this.addNewAtomicTransfertMethodsInDnD();
 					}	
@@ -884,7 +879,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					this.convertExperimentToDnD(experiment.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);
 				}
 		}
 		
@@ -902,7 +897,7 @@ angular.module('atomicTransfereServices', [])
 		$atmToSingleDatatable.isAddNew = false;
 		
 		var $utils = {
-				convertExperimentToDnD:function($service, experimentATMs){
+				convertExperimentToDnD:function($service, experimentATMs, experimentStateCode){
 					var promises = [];
 					
 					var atms = experimentATMs;
@@ -926,7 +921,7 @@ angular.module('atomicTransfereServices', [])
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
-								atm.inputContainerUseds[j] = $commonATM.updateInputContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);								
+								atm.inputContainerUseds[j] = $commonATM.updateInputContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer, experimentStateCode);								
 							}
 							if(!$service.data.atmViewOpen[i]){
 								$service.data.atmViewOpen[i] = false;
@@ -1275,8 +1270,8 @@ angular.module('atomicTransfereServices', [])
 					}
 					if(!$scope.isCreationMode()){
 						this.data.isAllATMViewClose = true;
-						$utils.convertExperimentToDnD(this, experiment.atomicTransfertMethods);	
-						$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+						$utils.convertExperimentToDnD(this, experiment.atomicTransfertMethods, experiment.state.code);	
+						$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);
 					}else{
 						this.data.isAllATMViewClose = false;
 						$utils.addNewAtomicTransfertMethodsInDnD(this);
@@ -1303,7 +1298,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					$utils.convertExperimentToDnD(this, experiment.atomicTransfertMethods);
-					$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);
+					$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);
 				}
 		}
 		
@@ -1402,7 +1397,7 @@ angular.module('atomicTransfereServices', [])
 					}
 					if(!$scope.isCreationMode()){
 						this.convertExperimentToData(experiment.atomicTransfertMethods);	
-						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);
 					}else{
 						this.addNewAtomicTransfertMethodsInData();
 					}	
@@ -1420,7 +1415,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}					
 					this.convertExperimentToData(experiment.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);
 				}
 		}
 		

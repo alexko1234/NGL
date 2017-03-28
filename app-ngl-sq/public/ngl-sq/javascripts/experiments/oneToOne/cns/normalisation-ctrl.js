@@ -84,7 +84,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        /*
 			         {
 				 			"header":Messages("containers.table.size"),
-				 			"property": "inputContainer.size.value",
+				 			"property": "inputContainerUsed.size.value",
 				 			"order":false,
 				 			"hide":true,
 				 			"type":"text",

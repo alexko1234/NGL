@@ -13,9 +13,9 @@ angular.module('home').controller('OneToVoidQcardCNSCtrl',['$scope', '$parse','$
 			if(inputContainerUsed){
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.volume = volume1;
+					inputContainerUsed.newVolume = volume1;
 				}
-				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+				inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}			
 		});			
 	};

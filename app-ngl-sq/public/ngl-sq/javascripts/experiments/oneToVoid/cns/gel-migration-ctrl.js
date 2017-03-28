@@ -16,9 +16,11 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 			if(inputContainerUsed){
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.volume = volume1;
-				}
-				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+					inputContainerUsed.newVolume = volume1;
+					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.newVolume);
+				}else{
+					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+				}				
 			}
 				
 		});			
@@ -130,7 +132,7 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 	
 /*	columns.push({
 		"header":Messages("containers.table.size")+ " (pb)",
-		"property": "inputContainer.size.value",
+		"property": "inputContainerUsed.size.value",
 		"order":false,
 		"hide":true,
 		"type":"text",

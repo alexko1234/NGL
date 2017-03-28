@@ -17,7 +17,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				var measuredSize = $parse("experimentProperties.measuredSize")(inputContainerUsed);
 				
 				if(measuredSize){
-					inputContainerUsed.size = measuredSize;
+					inputContainerUsed.newSize = measuredSize;
 					
 					
 					if(experiment.typeCode === "chip-migration" && 
@@ -26,8 +26,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 									|| inputContainerUsed.fromTransformationTypeCodes.indexOf("spri-select")  > -1)){
 						var experimentProperties = $parse("experimentProperties")(inputContainerUsed);
 						
-						experimentProperties.insertSize = {value:inputContainerUsed.size.value, unit:inputContainerUsed.size.unit};
-						experimentProperties.insertSize.value = inputContainerUsed.size.value - 121;
+						experimentProperties.insertSize = {value:inputContainerUsed.newSize.value, unit:inputContainerUsed.newSize.unit};
+						experimentProperties.insertSize.value = inputContainerUsed.newSize.value - 121;
 						experimentProperties.libLayoutNominalLength = experimentProperties.insertSize;
 						
 						var firstContent = inputContainerUsed.contents[0]; 
@@ -43,22 +43,22 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.volume = volume1;
+					inputContainerUsed.newVolume = volume1;
 				}
 				
 				
 				if(experiment.typeCode === "chip-migration-rna-evaluation"){
 					var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 					if(concentration1){
-						inputContainerUsed.concentration = concentration1;
+						inputContainerUsed.newConcentration = concentration1;
 					}
-					inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 				}else{
 					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 					if(quantity1){
-						inputContainerUsed.quantity = quantity1;
+						inputContainerUsed.newQuantity = quantity1;
 					}else{
-						inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+						inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 					}
 				}
 			}

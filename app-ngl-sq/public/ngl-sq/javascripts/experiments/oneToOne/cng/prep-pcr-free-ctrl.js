@@ -492,7 +492,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 		}
 	}
 
-	//inputQuantity=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	//inputQuantity=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
 	var computeQuantityFrag = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityFrag.value");
 		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");

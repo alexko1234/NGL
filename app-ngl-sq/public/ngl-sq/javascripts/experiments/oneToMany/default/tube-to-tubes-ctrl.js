@@ -50,7 +50,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

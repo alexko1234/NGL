@@ -14,19 +14,19 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			if(inputContainerUsed){
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
-					inputContainerUsed.concentration = concentration1;
+					inputContainerUsed.newConcentration = concentration1;
 				}
 				
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.volume = volume1;
+					inputContainerUsed.newVolume = volume1;
 				}
 				
 				var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 				if(quantity1){
-					inputContainerUsed.quantity = quantity1;
+					inputContainerUsed.newQuantity = quantity1;
 				}else{
-					inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 				}
 			}
 			

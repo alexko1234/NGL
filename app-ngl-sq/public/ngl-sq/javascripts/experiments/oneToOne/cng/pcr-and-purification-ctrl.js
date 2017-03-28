@@ -96,7 +96,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			         /* suppression demandee lors du test avant mise en prod 01/09/2016
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainer.concentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -361,7 +361,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 		}
 	}
 
-	//inputQuantity=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	//inputQuantity=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
 	var computeQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
 

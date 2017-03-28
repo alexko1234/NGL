@@ -39,7 +39,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 			if(inputContainerUsed){
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
-					inputContainerUsed.concentration = concentration1;
+					inputContainerUsed.newConcentration = concentration1;
 				}
 			}
 			

@@ -14,12 +14,12 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.volume = volume1;
+					inputContainerUsed.newVolume = volume1;
 				}
 				if(concentration1){
-					inputContainerUsed.concentration = concentration1;
+					inputContainerUsed.newConcentration = concentration1;
 				}
-				inputContainerUsed.quantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+				inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}			
 		});			
 	};

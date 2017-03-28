@@ -55,7 +55,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 				
 	/*	columns.push({
 			"header" : Messages("containers.table.concentration"),
-			"property": "inputContainer.concentration",
+			"property": "inputContainerUsed.concentration",
 			"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 			"order" : true,
 			"edit" : false,
@@ -69,7 +69,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 
 		columns.push({
 			"header" : Messages("containers.table.volume") + " (µL)",
-			"property" : "inputContainer.volume.value",
+			"property" : "inputContainerUsed.volume.value",
 			"order" : true,
 			"edit" : false,
 			"hide" : true,

@@ -70,7 +70,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					         },
 					         /*{
 					        	 "header":Messages("containers.table.quantity") + " (ng)",
-					        	 "property":"inputContainer.quantity.value",
+					        	 "property":"inputContainerUsed.quantity.value",
 					        	 "order":true,
 								 "edit":false,
 								 "hide":true,

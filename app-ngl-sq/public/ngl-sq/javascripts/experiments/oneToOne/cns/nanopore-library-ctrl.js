@@ -190,11 +190,11 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 	var copyLigationPropertiesToOutputContainerUsedQuantity = function(datatable){
 		var data = datatable.getData();
 		angular.forEach(data, function(value){
-			var ligationQuantity = $parse("outputContainerUsed.experimentProperties.ligationQuantity.value")(value);
-			$parse("outputContainerUsed.quantity.value").assign(value, ligationQuantity);
+			var ligationQuantity = $parse("outputContainerUsed.experimentProperties.ligationQuantity")(value);
+			$parse("outputContainerUsed.quantity").assign(value, ligationQuantity);
 			
-			var ligationConcentration = $parse("outputContainerUsed.experimentProperties.ligationConcentration.value")(value);
-			$parse("outputContainerUsed.concentration.value").assign(value, ligationConcentration);
+			var ligationConcentration = $parse("outputContainerUsed.experimentProperties.ligationConcentration")(value);
+			$parse("outputContainerUsed.concentration").assign(value, ligationConcentration);
 		})
 		//datatable.setData(data);
 		

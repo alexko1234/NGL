@@ -494,7 +494,7 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 		}
 	}
 
-	//inputQuantity=inputContainer.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
+	//inputQuantity=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value
 	var computeQuantityFrag = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityFrag.value");
 		var getter2 = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
