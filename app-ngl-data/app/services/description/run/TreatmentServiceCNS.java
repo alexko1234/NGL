@@ -890,8 +890,8 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Peak quality score","metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom basecaller","basecallerName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","Albacore"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version basecaller","basecallerVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","Albacore"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom fichier config","configName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","Albacore"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version basecaller","basecallerVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom fichier config","configName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single"));
 		
 		
 		return propertyDefinitions;
