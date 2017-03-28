@@ -8,7 +8,7 @@ import fr.cea.ig.DBObject;
 public class NGLObject extends DBObject implements IValidation{
 	
 	
-		public enum Action {delete, replace};
+		public enum Action {delete, replace, exchange};
 	
 		public String code;
 		public String typeCode;		
@@ -23,6 +23,7 @@ public class NGLObject extends DBObject implements IValidation{
 		public String readSetToSwitchCode;
 		
 		public String action;
+		public Long nbOccurrences;
 		
 		@Override
 		public void validate(ContextValidation contextValidation) {

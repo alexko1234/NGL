@@ -64,6 +64,14 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 						 "edit":false,
 						 "type":"text",
 			        	 "position":7
+			         },
+			         {
+			        	 "header":"Nb occurrences",
+			        	 "property":"nbOccurrences",
+			        	 "order":true,
+						 "edit":false,
+						 "type":"number",
+			        	 "position":8
 			         }
 			         
 			        
@@ -118,24 +126,34 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 		
 			refreshSamples : function(){
 				if(this.form.projectCode){
-					lists.refresh.samples({projectCodes:[this.form.projectCode]});
+					this.lists.refresh.samples({projectCodes:[this.form.projectCode]});
 				}
 			},
 			
 			refreshReadSets : function(){
 				if(this.form.projectCode){
-					lists.refresh.readSets({projectCode:this.form.projectCode});
+					this.lists.refresh.readSets({projectCode:this.form.projectCode});
 				}
 			},
 			
+			refreshPropertyDefValuesCodes:function(){
+				this.form["contentProperties"] = undefined;
+				this.lists.clear("values");
+				if(this.form.contentPropertyNameUpdated){
+					this.lists.refresh.values({propertyDefinitionCode:this.form.contentPropertyNameUpdated},"values");
+				}
+				
+			},
+			
+			
 			reset : function(){
-				this.form = {};									
+				this.form = {};	
+				this.lists.clear("values");
 			},
 			
 			updateForm : function(){
 				if(!this.form.collectionNames){
-					this.form.collectionNames = ["ngl_sq.Container","ngl_sq.Process","ngl_sq.Experiment","ngl_bi.ReadSetIllumina"];
-					this.form.contentPropertyNameUpdated = "tag";
+					this.form.collectionNames = ["ngl_sq.Container","ngl_sq.Process","ngl_sq.Experiment","ngl_bi.ReadSetIllumina"];					
 				}
 			},
 						
@@ -184,7 +202,9 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 			 "property":"newValue",
 			 "order":true,
 			 "edit":true,
-			 "editTemplate":'<input class="form-control" type="text" #ng-model typeahead="tag.code as tag.name for tag in searchService.lists.getTags() | filter:$viewValue | limitTo:20" typeahead-min-length="1" />',
+			 "editTemplate":""
+	   			+"<div ng-show=\"searchService.lists.get('values').length > 0\" class='form-control' bt-select  #ng-model filter='true' placeholder='Property definition value' bt-options='v.code as v.code for v in searchService.lists.get(\"values\")' ></div>"
+	   			+"<input ng-show=\"searchService.lists.get('values').length == 0\" type=\"text\" class='form-control'  #ng-model/>",	   			 
 			 "type":"text",
 			 "position":8
 			},
@@ -207,19 +227,12 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 		 "property":"newValue",
 		 "order":true,
 		 "edit":true,
-		 "editTemplate":'<input class="form-control" type="text" #ng-model typeahead="tag.code as tag.name for tag in searchService.lists.getTags() | filter:$viewValue | limitTo:20" typeahead-min-length="1" />',
-		 "type":"text",
-		 "position":8
-		},
-		{
-		   	 "header":"ReadSet to switch",
-			 "property":"readSetToSwitchCode",
-			 "order":true,
-			 "edit":true,
-			 "editTemplate":'<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.readsets")+'" bt-options="readset.code as readset.code for readset in searchService.lists.getReadSets()" ng-focus="searchService.refreshReadSets()"></div>',
+		 "editTemplate":""
+	   			+"<div ng-show=\"searchService.lists.get('values').length > 0\" class='form-control' bt-select  #ng-model filter='true' placeholder='Property definition value' bt-options='v.code as v.code for v in searchService.lists.get(\"values\")' ></div>"
+	   			+"<input ng-show=\"searchService.lists.get('values').length == 0\" type=\"text\" class='form-control'  #ng-model/>",	   			 
 			 "type":"text",
-			 "position":9
-			},
+		 "position":8
+		},		
 		{
 	   	 "header":"Action",
 		 "property":"action",

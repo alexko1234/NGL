@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -35,6 +38,11 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 		query = DBQuery.or(DBQuery.elemMatch("atomicTransfertMethods.outputContainerUseds.contents", query),
 				DBQuery.elemMatch("atomicTransfertMethods.inputContainerUseds.contents", query));	
 		
+		if(CollectionUtils.isNotEmpty(form.codes)){
+			query.and(DBQuery.in("code", form.codes));
+		}else if(StringUtils.isNotBlank(form.codeRegex)){
+			query.and(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
+		}
 		return query;
 	}
 	
@@ -77,7 +85,7 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			})
 			.forEach(content ->{
 				content.properties.get(input.contentPropertyNameUpdated).value = input.newValue;
-			});;
+			});
 		
 	}
 	
@@ -119,8 +127,61 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.filter(entry -> (entry.getKey().equals(input.contentPropertyNameUpdated) && entry.getValue().value.equals(input.currentValue)))
 			.forEach(entry ->{
 				entry.getValue().value = input.newValue;
-			});
-			
+			});					
+	}
+
+	@Override
+	public Long getNbOccurrence(NGLObject input) {
+		Experiment exp = getObject(input.code);
 		
+		Long count = exp.atomicTransfertMethods
+			.stream()
+			.map(atm -> atm.inputContainerUseds)
+			.flatMap(List::stream)
+			.map(icu -> icu.contents)
+			.flatMap(List::stream)
+			.filter(content -> {
+				if(input.projectCode.equals(content.projectCode) &&
+						input.sampleCode.equals(content.sampleCode) &&
+						content.properties.containsKey(input.contentPropertyNameUpdated) && 
+						input.currentValue.equals(content.properties.get(input.contentPropertyNameUpdated).value)){
+							return true;
+					}else{
+						return false;
+					}
+			})
+			.count();
+		
+		count = count + exp.atomicTransfertMethods
+				.stream()
+				.filter(atm -> atm.outputContainerUseds != null)
+				.map(atm -> atm.outputContainerUseds)
+				.flatMap(List::stream)
+				.map(ocu -> ocu.contents)
+				.flatMap(List::stream)
+				.filter(content -> {
+					if(input.projectCode.equals(content.projectCode) &&
+							input.sampleCode.equals(content.sampleCode) &&
+							content.properties.containsKey(input.contentPropertyNameUpdated) && 
+							input.currentValue.equals(content.properties.get(input.contentPropertyNameUpdated).value)){
+								return true;
+						}else{
+							return false;
+						}
+				})
+				.count();
+		
+		count = count + exp.atomicTransfertMethods
+				.stream()
+				.filter(atm -> atm.outputContainerUseds != null)			
+				.map(atm -> atm.outputContainerUseds)
+				.flatMap(List::stream)
+				.filter(ocu -> ocu.experimentProperties != null)
+				.map(ocu -> ocu.experimentProperties.entrySet())
+				.flatMap(Set::stream)
+				.filter(entry -> (entry.getKey().equals(input.contentPropertyNameUpdated) && entry.getValue().value.equals(input.currentValue)))
+				.count();	
+		
+		return count;
 	}
 }

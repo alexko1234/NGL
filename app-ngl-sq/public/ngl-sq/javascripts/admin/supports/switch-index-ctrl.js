@@ -226,7 +226,7 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 		 "order":true,
 		 "edit":true,
 		 "choiceInList":true,
-		 "possibleValues":[{"code":"delete","name":"Delete"},{"code":"replace","name":"Replace"}],
+		 "possibleValues":[{"code":"exchange","name":"Switch"}],
 		 "type":"text",
 		 "position":10
 		}

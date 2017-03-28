@@ -19,15 +19,22 @@
 	@columnSearchForm{			
 		
 		@formGroup{
-			<div class='form-control' bt-select ng-model='searchService.form["contentProperties[tag]"]' filter='true' placeholder='Tag' bt-options='v.code as v.code for v in searchService.lists.getTags()'></div>			
+			<div class='form-control' bt-select ng-model='searchService.form.contentPropertyNameUpdated' filter='true' placeholder='Property definition code' bt-options='v.code as v.code for v in searchService.lists.getPropertyDefinitions({"levelCode":"Content"})' ng-change="searchService.refreshPropertyDefValuesCodes()"></div>			
 		}
 		
-	}
-	@columnSearchForm{			
 		
 	}
+	@columnSearchForm{
+		<div class="form-group">
+   			<div ng-show="searchService.lists.get('values').length > 0" class='form-control' bt-select ng-model='searchService.form["contentProperties["+searchService.form.contentPropertyNameUpdated+"]"]' filter='true' placeholder='Property definition value' bt-options='v.code as v.code for v in searchService.lists.get("values")' ></div>
+   			<input ng-show="searchService.lists.get('values').length == 0" type="text"  class='form-control' ng-model='searchService.form["contentProperties["+searchService.form.contentPropertyNameUpdated+"]"]'/>	   
+		</div>
+			
+	}
 	@columnSearchForm{			
-		
+		@formGroup{
+			<bt-input  class="form-control"  input-ng-model="searchService.form.codeRegex" textarea-ng-model="searchService.form.codes" placeholder='Codes' ></bt-input>									
+		}
 		
 	}				
 }
