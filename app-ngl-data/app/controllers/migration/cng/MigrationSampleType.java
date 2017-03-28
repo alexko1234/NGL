@@ -133,6 +133,7 @@ public class MigrationSampleType extends  CommonController {
 	   
 	   // NON LES SAMPLES ONT été importés  a default-sample-cng" et corrigés par migrationMissingSampleTypeCode...
 	   // les contents correspondants doivent etre corrigés dans Container ou le type IP-sample doit changé a IP
+	   //TEST MODIF GIT
 	   List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("typeCode","IP")).toList();
 	   Logger.debug("Nb de containers a mettre a jour : "+samples.size());
 	   int i=1;

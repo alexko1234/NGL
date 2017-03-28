@@ -1459,11 +1459,8 @@ public class LimsCNGDAO {
 			       + " END AS sample_type "
 			       + " FROM t_sample s join t_sample_type st on s.type_id=st.id "
 			       + " WHERE nglimport_date < '09/15/2016'"; 
-		//try {
+
 		 return jdbcTemplate.query(sql, extractor);
-		//} catch (java.sql.SQLException e) {
-		//	Logger.debug(e.getMessage());
-		//}
 	}
 	
 }
