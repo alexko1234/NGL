@@ -1,7 +1,7 @@
 /* FDS 02/03/2017 -- JIRA NGL-1167 : processus Chromium
    code copié depuis library-prep-ctrl......==> utiliser plaque d'index Chromium????? Pas encore specifie...
    
-   2 fonctionnements  -main     : strip-8       => tubes         ( Julie demande de bloquer   strip-8  et  96-well-plate pour l'instant...)
+   2 fonctionnements  -main     : strip-8       => tubes         ( Julie demande de bloquer  96-well-plate pour l'instant...)
                       -sciclone : 96-well-plate => 96-well-plate
 */
 angular.module('home').controller('WgChromiumLibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
