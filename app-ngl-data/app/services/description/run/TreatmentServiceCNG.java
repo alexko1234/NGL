@@ -58,7 +58,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "20"));		
 
-		l.add(DescriptionFactory.newTreatmentType("Chromium","chromium", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "chromium", 
+		l.add(DescriptionFactory.newTreatmentType("Chromium","chromium", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "chromium", 
 				getChromiumPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("pairs",Boolean.TRUE)), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "24"));	
