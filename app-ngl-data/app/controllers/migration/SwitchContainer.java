@@ -607,6 +607,13 @@ public class SwitchContainer extends CommonController{
 		//Logger.debug("Nb container contents "+container.contents.size());
 		if(oldContents != null && oldContents.size() > 0){
 			List<Content> newContents =  newContents(newParent.contents, allContentPropertiesKeep);
+			
+			Double oldSumPercentage =  oldContents.stream().mapToDouble(c -> c.percentage).sum();
+			Logger.info("apply sum percentage for new content "+oldSumPercentage);
+			newContents.forEach(c -> c.percentage = new BigDecimal(((c.percentage*oldSumPercentage)/100)).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
+			Double newPercentage =  newContents.stream().mapToDouble(c -> c.percentage).sum();
+			Logger.info("new sum percentage for new content "+newPercentage);
+			/*
 			if(oldContents.size() == newContents.size()){
 				Set<Double> oldPercentages = oldContents.stream().map(c -> c.percentage).collect(Collectors.toSet());
 				if(oldPercentages.size() == 1){
@@ -627,7 +634,7 @@ public class SwitchContainer extends CommonController{
 					throw new RuntimeException("Contents are not the same percentage "+newParent.code);
 				}
 			}
-			
+			*/
 			if(container.contents.removeAll(oldContents)){
 				Logger.debug(container.code+" : update contents" );
 				container.contents.addAll(newContents);
