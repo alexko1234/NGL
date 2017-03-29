@@ -48,13 +48,13 @@ public class SwitchContainer extends CommonController{
 	private static final String TAG_PROPERTY_NAME = "tag";
 	
 	public static Result migration() {
-		boolean isSwitch = false;
+		boolean isSwitch = true;
 		
-		String oldParentContainerName = "221D4N4IK_C3";
-		String newParentContainerName = "221D4N4IK_E3";
+		//String oldParentContainerName = "221D4N4IK_C3";
+		//String newParentContainerName = "221D4N4IK_E3";
 		
-		//String oldParentContainerName = "21KC2XTKY";
-		//String newParentContainerName = "21KC2XTL9";
+		String oldParentContainerName = "21KC2XTKY";
+		String newParentContainerName = "21KC2XTL9";
 		
 		
 		
