@@ -1186,10 +1186,10 @@ public class ExpWorkflowsHelper {
 			 * 
 			 */
 			
-			if(null != icu.concentration)c.concentration = icu.concentration;
-			if(null != icu.quantity)c.quantity = icu.quantity;
-			if(null != icu.volume)c.volume = icu.volume;
-			if(null != icu.size)c.size = icu.size;
+			if(null != icu.newConcentration && null != icu.newConcentration.value)c.concentration = icu.newConcentration;
+			if(null != icu.newQuantity && null != icu.newQuantity.value)c.quantity = icu.newQuantity;
+			if(null != icu.newVolume && null != icu.newVolume.value)c.volume = icu.newVolume;
+			if(null != icu.newSize && null != icu.newSize.value)c.size = icu.newSize;
 			if(null != icu.valuation){
 				c.valuation = icu.valuation;
 				c.valuation.user = validation.getUser();
