@@ -313,7 +313,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
+            //27/03/2017 renommage "Tubes" en "Tubes ou Strips"
+			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -328,7 +329,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// test modif nom...
+			// renommage "Tubes ou Plaques" en "Tubes + Plaques
 			l.add(newExperimentType("Tubes + Plaques -> Plaque","x-to-plate",null,10800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 

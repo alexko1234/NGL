@@ -135,18 +135,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodePROD() {
-		/*
-		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
-				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
-		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","dna-rna-extraction","ext-to-metagenomic-process-with-sizing","ext-to-metagenomic-process"),	
-				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		
-		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation"),
-				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		 */
 		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
 				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -206,16 +195,6 @@ public class MetaTProcess extends AbstractDeclaration {
 				getTagCategoriesIllumina(), null,null,null,"single", 15, false, null,null));
 
 		
-		/*
-		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
-				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
-
-		propertyDefinitions.add(newPropertiesDefinition("Type synthèse cDNA", "cDNAsynthesisType", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("random","oligoDT"), null, null, null,"single", 1, true, null,null));
-
-		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "rnaLibProtocol", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
-				null, null, null, null,"single", 1, false, null,null));
-		*/
 		return propertyDefinitions;
 	}
 
@@ -235,16 +214,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
-		/*
-		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
-				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
-
-		propertyDefinitions.add(newPropertiesDefinition("Type synthèse cDNA", "cDNAsynthesisType", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
-				DescriptionFactory.newValues("random","oligoDT"), null, null, null,"single", 1, true, null,null));
-
-		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA", "rnaLibProtocol", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
-				null, null, null, null,"single", 1, false, null,null));
-	*/
+		
 		return propertyDefinitions;
 	}
 

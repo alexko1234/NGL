@@ -13,8 +13,8 @@
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containerSupports.tabs.general")</a></li>
-			<li ng-class="getTabClass('storages')"><a href="#" data-target="#storages" data-toggle="tab" ng-click="setActiveTab('storages')">@Messages("containerSupports.tabs.storages")</a></li>
-			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("containerSupports.tabs.workflow")</a></li>			
+			<li class="{{getTabClass('storages')}} hidden-print"><a href="#" data-target="#storages" data-toggle="tab" ng-click="setActiveTab('storages')">@Messages("containerSupports.tabs.storages")</a></li>
+			<li class="{{getTabClass('workflow')}} hidden-print"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("containerSupports.tabs.workflow")</a></li>			
 		</ul>
 	
 		<div class="tab-content">

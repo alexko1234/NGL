@@ -25,17 +25,6 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected List<ExperimentType> getExperimentTypePROD() {
-		/*List<ExperimentType> l = new ArrayList<ExperimentType>();
-
-		l.add(newExperimentType("Ext to  MetaGénomique (bq sizée)","ext-to-metagenomic-process-with-sizing",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Ext to MetaGénomique","ext-to-metagenomic-process",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		return l;*/
 		return null;
 	}
 	
@@ -79,38 +68,7 @@ public class MetaGenomique extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypePROD() {
-		/*List<ProcessType> l = new ArrayList<ProcessType>();
-
-		l.add(DescriptionFactory.newProcessType("(Meta)Génomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
-				getPropertiesMetaGenomique(), 
-				Arrays.asList(getPET("ext-to-metagenomic-process",-1)
-						,getPET("dna-rna-extraction",-1)
-						, getPET("fragmentation",0)
-						, getPET("dna-illumina-indexed-library",1)
-						, getPET("pcr-amplification-and-purification",2)
-						, getPET("solution-stock",3)
-						, getPET("prepa-flowcell",4)
-						, getPET("prepa-fc-ordered",4)
-						, getPET("illumina-depot",5)), 
-						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process").get(0), 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("(Meta)Génomique (bq sizée)", "metagenomic-process-with-sizing", ProcessCategory.find.findByCode("library"), 32,
-				getPropertiesMetaGenomiqueWithSizing(), 
-				Arrays.asList(getPET("ext-to-metagenomic-process-with-sizing",-1)
-						,getPET("dna-rna-extraction",-1)
-						, getPET("fragmentation",0)
-						, getPET("dna-illumina-indexed-library",1)
-						, getPET("pcr-amplification-and-purification",2)
-						, getPET("sizing",3)
-						, getPET("spri-select",3)
-						, getPET("solution-stock",4)
-						, getPET("prepa-flowcell",5)
-						, getPET("prepa-fc-ordered",5)
-						, getPET("illumina-depot",6)), 
-						getExperimentTypes("fragmentation").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-metagenomic-process-with-sizing").get(0), 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		return l;*/
 		return null;
 	}
 

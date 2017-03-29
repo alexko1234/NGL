@@ -17,7 +17,7 @@ public class ProjectTests extends AbstractTests {
 	@Test
 	public void importProject() throws SQLException, DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
-		ProjectImportCNS.createProjet(contextValidation);
+		ProjectImportCNS.createProject(contextValidation);
 		Assert.assertEquals(contextValidation.errors.size(),0);
 	}
 

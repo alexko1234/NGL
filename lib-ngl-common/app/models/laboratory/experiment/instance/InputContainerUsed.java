@@ -9,6 +9,7 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ContainerUsedValidationHelper;
 
 public class InputContainerUsed extends AbstractContainerUsed {
@@ -51,16 +52,18 @@ public class InputContainerUsed extends AbstractContainerUsed {
 		ContainerUsedValidationHelper.validateInputContainerCategoryCode(categoryCode, contextValidation);
 		
 		long t3 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateVolume(volume, contextValidation);
+		ContainerValidationHelper.validateVolume(volume, contextValidation);
 		
 		long t4 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateConcentration(concentration, contextValidation);
+		ContainerValidationHelper.validateConcentration(concentration, contextValidation);
 		
 		long t5 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateQuantity(quantity, contextValidation);
+		ContainerValidationHelper.validateQuantity(quantity, contextValidation);
 		
 		long t6 = System.currentTimeMillis();
 		ContainerUsedValidationHelper.validatePercentage(percentage, contextValidation);
+		
+		ContainerValidationHelper.validateSize(size, contextValidation);
 		
 		long t7 = System.currentTimeMillis();
 		ContainerUsedValidationHelper.validateExperimentProperties(experimentProperties, Level.CODE.ContainerIn, contextValidation);

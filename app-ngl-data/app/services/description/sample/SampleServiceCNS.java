@@ -97,7 +97,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 		
 		//l.add(newSampleType("Core", "core", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("Culture d'échantillons marins", "culture-of-marine-samples", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
-		
+		l.add(newSampleType("Echantillon biologique", "biological-sample", SampleCategory.find.findByCode("environmental-samples"),null, getInstitutes(Constants.CODE.CNS)));
 		
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);

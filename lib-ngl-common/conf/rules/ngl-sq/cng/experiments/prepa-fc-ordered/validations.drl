@@ -176,18 +176,5 @@ rule "Check too many inputs in lane"
     	$contextValidation.addErrors("Position["+$position+"]","Un seul container par lane pour le Janus");
 end   
 
-// 14/02/2017 
-rule "Code strip with bad chars"
-    @nglSQ( validations )
-	dialect "java"
-	salience 900
-	no-loop
-    when
-   		$experiment:Experiment($typeCode:typeCode, ($typeCode=="prepa-flowcell") || ($typeCode=="prepa-fc-ordered"), $instrumentProperties:instrumentProperties)
-    	$stripCode: PropertyValue($code:value, $code matches ".*[^a-zA-Z0-9].*") from $instrumentProperties.get("stripCode")
-   		$contextValidation:ContextValidation()
-    then
-   		Logger.debug("Code Strip with bad chars");
-    	$contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "Code Strip");
-end
+
  

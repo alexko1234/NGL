@@ -158,6 +158,8 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.projects.api.Projects.list().url,params,(key)?key:'projects');    					
     				},
     				samples : function(params, key){
+    					if(params)params.limit=-1
+    					else params = {limit:-1};
     					load(jsRoutes.controllers.samples.api.Samples.list().url,params,(key)?key:'samples');    					
     				},
     				users : function(params, key){

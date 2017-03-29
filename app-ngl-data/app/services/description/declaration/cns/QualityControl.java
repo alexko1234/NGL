@@ -156,31 +156,6 @@ public class QualityControl extends AbstractDeclaration {
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
-		
-		
-		/*l.add(DescriptionFactory.newProcessType("Evaluation ADN à réception", "dna-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				null, 
-				Arrays.asList(getPET("ext-to-dna-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), getExperimentTypes("ext-to-dna-sample-valuation").get(0), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Evaluation ARN à réception", "rna-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				null, 
-				Arrays.asList(getPET("ext-to-rna-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), getExperimentTypes("ext-to-rna-sample-valuation").get(0), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(DescriptionFactory.newProcessType("Evaluation Amplicon à réception", "amplicon-sample-valuation", 
-				ProcessCategory.find.findByCode("sample-valuation"), 1010,
-				null, 
-				Arrays.asList(getPET("ext-to-amplicon-sample-valuation",-1)), 
-				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); */
-		
-		
 		return l;
 	}
 	
@@ -288,6 +263,17 @@ public class QualityControl extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("RIN", "providedRin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, "single", 17, false, null, null));
+		
+		   propertyDefinitions.add(newPropertiesDefinition("Méthode quantification", "collabQuantificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+	                null, null, null, null,"single", 18, true, null,null));
+	        propertyDefinitions.add(newPropertiesDefinition("A260/A280 fourni", "providedA260A280Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+	                null, null, null, null,"single", 19, true, null,null));
+	        propertyDefinitions.add(newPropertiesDefinition(" A260/A230 fourni", "providedA260A230Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+	                null, null, null, null,"single", 20, true, null,null));
+	        propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules", "providedMoleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null,
+	                null, null, null, null,"single", 18, true, null,null));   
+	        propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+	                null, null, null, null,"single", 22, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 				null, null, null, null,"single", 18, true, null,null));

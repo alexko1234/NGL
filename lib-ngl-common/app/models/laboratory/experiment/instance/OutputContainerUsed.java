@@ -5,6 +5,7 @@ import java.util.List;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ContainerUsedValidationHelper;
 
 public class OutputContainerUsed extends AbstractContainerUsed{
@@ -36,17 +37,17 @@ public class OutputContainerUsed extends AbstractContainerUsed{
 		ContainerUsedValidationHelper.validateOutputContents(contents, contextValidation);
 		
 		long t4 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateVolume(volume, contextValidation);
+		ContainerValidationHelper.validateVolume(volume, contextValidation);
 		
 		long t4_1 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateSize(size, contextValidation);
+		ContainerValidationHelper.validateSize(size, contextValidation);
 		
 		
 		long t5 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateConcentration(concentration, contextValidation);
+		ContainerValidationHelper.validateConcentration(concentration, contextValidation);
 		
 		long t6 = System.currentTimeMillis();
-		ContainerUsedValidationHelper.validateQuantity(quantity, contextValidation);
+		ContainerValidationHelper.validateQuantity(quantity, contextValidation);
 		
 		long t7 = System.currentTimeMillis();
 		ContainerUsedValidationHelper.validateExperimentProperties(experimentProperties, Level.CODE.ContainerOut, contextValidation);

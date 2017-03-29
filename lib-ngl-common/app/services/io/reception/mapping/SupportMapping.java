@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -14,10 +17,14 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import models.laboratory.sample.instance.Sample;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import play.Logger;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -59,26 +66,30 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 
 	@Override
 	public void consolidate(ContainerSupport support) {
-		List<Container> containers = getContainersForASupport(support);
-		support.nbContainers = containers.size();
-		support.nbContents = containers.stream().mapToInt(c -> c.contents.size()).sum();
-		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
-		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
-		if(null == support.categoryCode){
-			support.categoryCode = getSupportCategoryCode(containers);
+		if(objects.containsKey(Keys.container.toString())){
+			List<Container> containers = getContainersForASupport(support);
+			support.nbContainers = containers.size();
+			support.nbContents = containers.stream().mapToInt(c -> c.contents.size()).sum();
+			support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
+			support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
+			if(null == support.categoryCode){
+				support.categoryCode = getSupportCategoryCode(containers);
+			}
+			
+			if(null == support.storageCode){
+				support.storageCode = getStorageCode(containers);
+			}
+			
+			if(null == support.state){
+				support.state = getState(containers);
+			}
+			
+			if(null == support.fromTransformationTypeCodes || support.fromTransformationTypeCodes.size() == 0){
+				support.fromTransformationTypeCodes = getFromTransformationTypeCodes(containers);
+			}
 		}
 		
-		if(null == support.storageCode){
-			support.storageCode = getStorageCode(containers);
-		}
 		
-		if(null == support.state){
-			support.state = getState(containers);
-		}
-		
-		if(null == support.fromTransformationTypeCodes || support.fromTransformationTypeCodes.size() == 0){
-			support.fromTransformationTypeCodes = getFromTransformationTypeCodes(containers);
-		}
 	}
 
 	
@@ -131,7 +142,7 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		}
 	}
 	private List<Container> getContainersForASupport(ContainerSupport containerSupport) {
-		Map<String, DBObject> allContainers = objects.get("container");
+		Map<String, DBObject> allContainers = objects.get(Keys.container.toString());
 		
 		List<Container> selectedContainers = allContainers.values().stream()
 			.map(c -> (Container)c)
@@ -141,5 +152,16 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		return selectedContainers;
 	}
 
-	
+	@Override
+	public void synchronizeMongoDB(DBObject c){
+		if(Action.update.equals(action) && configuration.containsKey("storageCode") && !objects.containsKey(Keys.container.toString())){
+			Logger.info("update storageCode for all container for support "+c.code);
+			ContainerSupport support = (ContainerSupport)c;
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, ContainerSupport.class, 
+					DBQuery.and(DBQuery.is("support.code", support.code)), 
+					DBUpdate.set("support.storageCode", support.storageCode).set("traceInformation", support.traceInformation));
+			
+		}
+		super.synchronizeMongoDB(c);
+	}
 }

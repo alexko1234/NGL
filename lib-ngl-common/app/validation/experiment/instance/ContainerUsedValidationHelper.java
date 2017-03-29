@@ -92,7 +92,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		}
 		
 	}
-
+/*
 	public static void validateVolume(PropertyValue volume, ContextValidation contextValidation) {
 		if(volume!=null && volume.value!=null){
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
@@ -103,7 +103,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			volume.validate(contextValidation);
-			contextValidation.removeObject("propertyDefinitions");
+			contextValidation.removeObject("propertyDefinitions");			
 		}
 	}
 
@@ -152,7 +152,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			contextValidation.removeObject("propertyDefinitions");
 		}
 	}
-
+*/
 	
 	public static void validateOutputContainerCode(String code,	ContextValidation contextValidation) {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);

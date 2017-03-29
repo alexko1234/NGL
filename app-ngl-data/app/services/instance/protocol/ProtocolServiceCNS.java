@@ -122,8 +122,17 @@ public class ProtocolServiceCNS {
 		//lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("amplification", "solution-stock")));
 		//lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
 
-		lp.add(newProtocol("zr-duet-extraction","Extraction ZR Duet","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
+		lp.add(newProtocol("zr-duet-extraction","Extraction ZR Duet","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction"),false));
 		lp.add(newProtocol("cryogenic-grinding","Cryobroyage","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
+		
+		lp.add(newProtocol("zr-duet-extraction-euk-v1","Extraction ZR Duet euk. v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction"),
+				concatMap(newPSV("extractionProtocol","ZR Duet euk."))));
+		lp.add(newProtocol("zr-duet-extraction-prok-v1","Extraction ZR Duet prok. v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction"),
+				concatMap(newPSV("extractionProtocol","ZR Duet prok."))));
+		lp.add(newProtocol("zr-duet-extraction-dev","Extraction ZR Duet DEV","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
+		
+			
+		
 		lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
 		
 		lp.add(newProtocol("dnase-treatment","Traitement à la Dnase","path2","1","production",InstanceFactory.setExperimentTypeCodes("dnase-treatment")));

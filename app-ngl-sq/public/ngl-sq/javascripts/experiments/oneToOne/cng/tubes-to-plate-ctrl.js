@@ -4,19 +4,8 @@ angular.module('home').controller('CNGTubesToPlateCtrl',['$scope' ,'$http','$par
                                                        function($scope, $http,$parse,$filter,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
-			columns:[			  
-					{
-						"header" : Messages("containers.table.code"),
-						"property" : "inputContainer.support.code",
-						"order" : true,
-						"edit" : false,
-						"hide" : true,
-						"type" : "text",
-						"position" : 1,
-						"extraHeaders" : {
-							0 : Messages("experiments.inputs")
-						}
-					},
+			columns:[
+			        // 28/03/2017 attention on peut aussi avoir des strips: differencier les premieres colonnes => voir plus bas
 					{
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -289,6 +278,50 @@ angular.module('home').controller('CNGTubesToPlateCtrl',['$scope' ,'$http','$par
 			}
 			
 	};
+	
+	// 28/03/2017 attention on peut aussi avoir des strips: differencier les premieres colonnes
+    if($scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
+    	datatableConfig.columns.push({	
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainer.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});	
+    }else{
+    	// strip-8
+    	datatableConfig.columns.push({	
+			"header" : Messages("containers.table.supportCode"),
+			"property" : "inputContainer.support.code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+    	});
+    	
+    	datatableConfig.columns.push({	
+			"header" :  Messages("containers.table.support.column"),
+			"property" : "inputContainer.support.column*1",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 1.1,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+    	});
+    	
+    }
 
 	var updateATM = function(experiment){
 		if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
