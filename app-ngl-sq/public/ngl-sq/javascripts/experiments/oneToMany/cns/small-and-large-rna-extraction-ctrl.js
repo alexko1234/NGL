@@ -73,7 +73,7 @@ angular.module('home').controller('SmallAndLargeRNAIsolation',['$scope', '$parse
 			         },
 			         /*{
 			        	 "header":Messages("containers.table.quantity") + " (ng)",
-			        	 "property":"inputContainer.quantity.value",
+			        	 "property":"inputContainerUsed.quantity.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
