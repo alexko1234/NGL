@@ -52,13 +52,16 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 					if(concentration1){
 						inputContainerUsed.newConcentration = concentration1;
 					}
-					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+					inputContainerUsed.newQuantity = $scope.computeQuantity(
+							(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
+							(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 				}else{
 					var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 					if(quantity1){
 						inputContainerUsed.newQuantity = quantity1;
 					}else{
-						inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+						inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration,
+								(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 					}
 				}
 			}

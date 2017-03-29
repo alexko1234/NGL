@@ -19,7 +19,9 @@ angular.module('home').controller('OneToVoidUvSpectrophotometryCNSCtrl',['$scope
 				if(concentration1){
 					inputContainerUsed.newConcentration = concentration1;
 				}
-				inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
+				inputContainerUsed.newQuantity =  $scope.computeQuantity(
+						(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
+						(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 			}			
 		});			
 	};

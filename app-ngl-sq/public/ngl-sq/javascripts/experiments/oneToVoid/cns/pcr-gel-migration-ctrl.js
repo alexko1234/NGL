@@ -14,8 +14,10 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
 					inputContainerUsed.newVolume = volume1;
+					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.newVolume);
+				}else{
+					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 				}
-				inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, inputContainerUsed.volume);
 			}
 				
 		});			
