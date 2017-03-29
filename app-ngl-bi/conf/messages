@@ -788,7 +788,7 @@ analyses.treatments.assemblyBA = Assembly
 analyses.treatments.assemblyBA.software = Logiciel
 analyses.treatments.contigFilterBA = Contig Filter
 analyses.treatments.scaffoldingBA = Scaffolding
-analyses.treatments.scaffoldingFilterBA = Scaffolding Filter
+analyses.treatments.assemblyFilterBA = Assembly Filter
 analyses.treatments.gapClosingBA = Gap Closing
 analyses.files.path  = Chemin
 analyses.files.fullname= Nom du fichier
@@ -835,12 +835,28 @@ analyses.treatments.assembly_ba.contigSizeRepartition.cumulativeSizePercent = % 
 analyses.treatments.contigFilter_ba.storedBases = Nb bases conservées
 analyses.treatments.contigFilter_ba.lostBasesPercent = % bases perdues
 
-analyses.treatments.scaffoldingFilter_ba.preservedBases = Nb bases conservées
-analyses.treatments.scaffoldingFilter_ba.lostBasesPercent = % bases perdues
-analyses.treatments.scaffoldingFilter_ba.preservedSequences = Nb contigs/scaffolds conservés
-analyses.treatments.scaffoldingFilter_ba.numberOfN = Nb N
-analyses.treatments.scaffoldingFilter_ba.preservedCoverage = Couverture conservée
+#POST FILTRE
+analyses.treatments.assemblyFilter_ba.preservedBases = Nb de bases conservés
+analyses.treatments.assemblyFilter_ba.preservedSequences = Nb contigs/scaffolds conservés
+analyses.treatments.assemblyFilter_ba.numberOfN = Nombre de N
+analyses.treatments.assemblyFilter_ba.preservedCoverage = Couverture conservés
+analyses.treatments.assemblyFilter_ba.minSequenceSize = Smallest contigs/scaffolds size (bases)
+analyses.treatments.assemblyFilter_ba.maxSequenceSize = Largest contigs/scaffolds size (bases)
+analyses.treatments.assemblyFilter_ba.averageSequenceSize = Average contigs/scaffolds size (bases)
+analyses.treatments.assemblyFilter_ba.N50SequenceSize = N50 size (bases)
+analyses.treatments.assemblyFilter_ba.N50SequenceNb = Nb contigs/scaffolds N50
+analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.size = size
+analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.sequenceNumber = number of sequences
+analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.sequencePercent = % sequences
+analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.cumulativeSize = Cumulative Size (bases)
+analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.cumulativeSizePercent = % assembly size (bases)
 
+#POST ASSEMBLAGE
+analyses.treatments.assemblyFilter_ba.assemblySequenceNb = Nb contigs/scaffolds
+analyses.treatments.assemblyFilter_ba.assemblySize = Assembly size (bases)
+
+
+analyses.treatments.assemblyFilter_ba.GCpercent = % GC
 
 
 analyses.treatments.scaffolding_ba.N50Scaffold = N50 
