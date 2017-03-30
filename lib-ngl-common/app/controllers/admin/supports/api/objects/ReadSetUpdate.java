@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.description.TreatmentCategory;
@@ -21,6 +23,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 import controllers.readsets.api.ReadSets;
@@ -93,7 +96,10 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 			}
 		}else if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, input.code);
-			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = input.newValue;
+			PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
+			Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
+			
+			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
 			readSet.validate(cv);
 			if(!cv.hasErrors()){
 				updateObject(readSet);				

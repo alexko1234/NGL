@@ -204,7 +204,7 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 			 "edit":true,
 			 "editTemplate":""
 	   			+"<div ng-show=\"searchService.lists.get('values').length > 0\" class='form-control' bt-select  #ng-model filter='true' placeholder='Property definition value' bt-options='v.code as v.code for v in searchService.lists.get(\"values\")' ></div>"
-	   			+"<input ng-show=\"searchService.lists.get('values').length == 0\" type=\"text\" class='form-control'  #ng-model/>",	   			 
+	   			+"<input ng-show=\"searchService.lists.get('values').length == 0\" type=\"text\" class='form-control' #ng-model />",	   			 
 			 "type":"text",
 			 "position":8
 			},
@@ -229,7 +229,7 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 		 "edit":true,
 		 "editTemplate":""
 	   			+"<div ng-show=\"searchService.lists.get('values').length > 0\" class='form-control' bt-select  #ng-model filter='true' placeholder='Property definition value' bt-options='v.code as v.code for v in searchService.lists.get(\"values\")' ></div>"
-	   			+"<input ng-show=\"searchService.lists.get('values').length == 0\" type=\"text\" class='form-control'  #ng-model/>",	   			 
+	   			+"<input ng-show=\"searchService.lists.get('values').length == 0\" type=\"text\" class='form-control' #ng-model />",	   			 
 			 "type":"text",
 		 "position":8
 		},		
@@ -239,7 +239,7 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 		 "order":true,
 		 "edit":true,
 		 "choiceInList":true,
-		 "possibleValues":[{"code":"delete","name":"Delete"},{"code":"replace","name":"Replace"}],
+		 "possibleValues":[{"code":"replace","name":"Replace"}],
 		 "type":"text",
 		 "position":10
 		}

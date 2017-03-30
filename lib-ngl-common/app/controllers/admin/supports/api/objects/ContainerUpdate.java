@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.Analysis;
@@ -16,6 +18,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 
@@ -64,18 +67,23 @@ public class ContainerUpdate extends AbstractUpdate<Container>{
 
 	private void updateContent(Container container, NGLObject input) {
 		
+		PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
+		Object currentValue = ValidationHelper.convertStringToType(pd.valueType, input.currentValue);
+		Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
+		
+		
 		container.contents.stream()
 			.filter(c -> {
 				if(input.projectCode.equals(c.projectCode) &&
 					input.sampleCode.equals(c.sampleCode) &&
-					input.currentValue.equals(c.properties.get(input.contentPropertyNameUpdated).value)){
+					currentValue.equals(ValidationHelper.convertStringToType(pd.valueType, c.properties.get(input.contentPropertyNameUpdated).value.toString()))){
 						return true;
 				}else{
 					return false;
 				}
 			})
 			.forEach(c -> {
-				c.properties.get(input.contentPropertyNameUpdated).value = input.newValue;
+				c.properties.get(input.contentPropertyNameUpdated).value = newValue;
 			});
 		
 	}
@@ -83,11 +91,14 @@ public class ContainerUpdate extends AbstractUpdate<Container>{
 	@Override
 	public Long getNbOccurrence(NGLObject input) {
 		Container container = getObject(input.code);
+		
+		PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
+		Object value = ValidationHelper.convertStringToType(pd.valueType, input.currentValue);
 		return container.contents.stream()
 		.filter(c -> {
 			if(input.projectCode.equals(c.projectCode) &&
 				input.sampleCode.equals(c.sampleCode) &&
-				input.currentValue.equals(c.properties.get(input.contentPropertyNameUpdated).value)){
+				value.equals(ValidationHelper.convertStringToType(pd.valueType, c.properties.get(input.contentPropertyNameUpdated).value.toString()))){
 					return true;
 			}else{
 				return false;

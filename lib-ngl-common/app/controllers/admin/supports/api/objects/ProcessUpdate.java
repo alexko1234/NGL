@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
@@ -15,6 +17,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 
@@ -44,8 +47,12 @@ public class ProcessUpdate extends AbstractUpdate<Process>{
 	@Override
 	public void update(NGLObject input, ContextValidation cv) {
 		Process process = getObject(input.code);
+		
+		PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
+		Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
+		
 		if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
-			process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = input.newValue;
+			process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
 			
 		}else{
 			throw new RuntimeException(input.action+" not implemented");
