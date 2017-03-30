@@ -11,6 +11,7 @@ import models.Constants;
 import models.LimsCNGDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.description.SampleType;
 import models.utils.InstanceConstants;
@@ -22,7 +23,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 
-
 import play.Logger;
 import play.mvc.Result;
 import play.api.modules.spring.Spring;
@@ -32,9 +32,10 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 /**
- * correction des samples importés avant 15/09/2015 avec typeCode='default-sample-cng' alors qu'il est connu dans
- * la base source Solexa...
- * + modification des 'IP-samples' en 'IP'
+ * 1) samples importés avant 15/09/2015 avec typeCode='default-sample-cng' alors qu'il est connu dansla base source Solexa...
+ *    => mettre les sampleTypeCode et sampleCategoryCode corrects
+ * 2) depuis l'ajout de l'import des fichiers banque CNG, le sampleTypeCode des samples "IP" a changé
+ *    => modifier "IP-sample" qui avait été positionné correctement (malgré le point 1) en "IP"
  * @author fdsantos
  * 21/03/2017
  */
@@ -51,7 +52,7 @@ public class MigrationSampleType extends  CommonController {
 		JacksonDBCollection<Sample, String> containersCollBck = MongoDBDAO.getCollection(CONTAINER_COLL_NAME_BCK, Sample.class);
 		
 		if ( (samplesCollBck.count() == 0) && (containersCollBck.count() == 0) ){
-			// collections backup vide (inexistante ??)=> faire les backup
+			// collections backup vide (inexistante ??)=> faire backup
 			backUpCollections();
 			
 			Logger.info("Migration sampleTypeCodes début...");
@@ -61,6 +62,7 @@ public class MigrationSampleType extends  CommonController {
 			}
 			catch(Exception e) {
 				Logger.error(e.getMessage());
+				// pour plus d'infos...
 				e.printStackTrace();
 				e.getCause().printStackTrace();	
 			}
@@ -68,6 +70,7 @@ public class MigrationSampleType extends  CommonController {
 		} else {
 			Logger.info("Migration sampleTypeCodes déjà effectuée !");
 		}		
+			
 		Logger.info("Migration sampleTypeCode fin");
 		
 		// est affiché dans le naviguateur
@@ -92,14 +95,13 @@ public class MigrationSampleType extends  CommonController {
 		
 		// lister les samples dont le typeCode ="default-sample-cng"
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("typeCode","default-sample-cng")).toList();
-		Logger.debug("Nb de containers a corriger : "+samples.size());
+		Logger.debug("Nb de samples a corriger : "+samples.size());
 		
 		// trouver les vrais typeCodes de tous les samples dans Solexa et stocker dans une map
 		Map<String, String> results=limsServices.findOldSampleTypes();
-		Logger.debug("Nb de old sample: "+results.size());
+		Logger.debug("Nb de old samples: "+results.size());
 		
-		for ( Sample samp:samples){
-			
+		for ( Sample samp:samples){		
 			 // trouver le sample dans la map
 			 if (results.containsKey(samp.code)) {
 				 
@@ -119,51 +121,35 @@ public class MigrationSampleType extends  CommonController {
 				} else {
 					//Logger.debug("...typeCode =>"+ sampleType.code+ " categoryCode=>"+ sampleType.category.code);
 					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",samp.code), 
-						                                                                DBUpdate.set("typeCode", sampleType.code ).set("categoryCode", sampleType.category.code ));
+						                                                                DBUpdate.set("typeCode", sampleType.code ).
+						                                                                         set("categoryCode", sampleType.category.code ));
 				}
 			 }
 		}
-		Logger.info("-1- done");
+		Logger.info("-1- fini");
 	}	
-		
-   private static void migrationUpdateSampleTypeCodeIP() throws DAOException{
-	   
-	   Logger.info("-2- update 'IP-sample' SampleTypeCode");
-	   //ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
-	   
-	   // NON LES SAMPLES ONT été importés  a default-sample-cng" et corrigés par migrationMissingSampleTypeCode...
-	   // les contents correspondants doivent etre corrigés dans Container ou le type IP-sample doit changé a IP
-	   //TEST MODIF GIT
-	   List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("typeCode","IP")).toList();
-	   Logger.debug("Nb de containers a mettre a jour : "+samples.size());
-	   int i=1;
-	   
-	   for ( Sample samp:samples){  
-		   Logger.debug(i+"> mettre a jour les container contenant >"+samp.code+"<");
- 
-	       //-b-lister les containers contenant ce sample et les mettre a jour
-		   List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-		                                       DBQuery.is("contents.sampleCode",  samp.code    )).toList();   
+	 
    
-	       Logger.debug("Nb de containers a mettre a jour : "+containers.size());
-	      
-	  	   for (Container cont:containers) {
-				Logger.debug("...trouvé dans container: "+ cont.code );
-			
-			    cont.contents.stream().forEach(c->{
-						
-					if (c.sampleCode.equals(samp.code))
-					{
-						Logger.debug(" ... contents "+c.sampleCode +" / " + c.sampleTypeCode + " / "+  c.sampleCategoryCode + " ");
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("code",cont.code), DBQuery.is("contents.sampleCode",samp.code)),                                         
-                                                                                                  DBUpdate.set("contents.sampleTypeCode", "IP" ));
-						
-					}
-				});
-		   }	 
-		   
-		   i++;
-	   }
-   }
+  private static void migrationUpdateSampleTypeCodeIP() throws DAOException{
+	  
+	  Logger.info("-2- update 'IP-sample' SampleTypeCode");
+	  // utilisation de cursor et stream() ?? 
+	  //           .cursor.forEach(container -> {
+	  //  .contents.stream().forEach(content -> {
+	  
+	  //lister les containers contenant au moins un contents avec sampleTypeCode 'IP-sample'
+	   MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("contents.sampleTypeCode", "IP-sample" ))
+	      .cursor.forEach(container -> {
+			   container.contents.stream()
+				   .filter(content -> content.sampleTypeCode.equals("IP-sample"))
+				   .forEach(content -> {
+				    	//Logger.debug("container: "+ container.code + ", contents.sampleCode: " + content.sampleCode + ", sampleTypeCode:" + content.sampleTypeCode);
+					    content.sampleTypeCode = "IP";
+				   });
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
+		});
+	   
+	   Logger.info("-2- fini");
+  }
 	
 }
