@@ -616,7 +616,7 @@ samples.table.sample = Echantillon
 #
 ###############
 admin.menu = Administration
-admin.supports.title = Supports
+admin.supports.title = Administration
 admin.supports.menu.switchindex = Inversion d''index
 admin.supports.menu.contentupdate = Mise à jour propriété content
 admin.supports.switch-index.tabs.search = Recherche des objets NGL
