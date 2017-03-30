@@ -251,7 +251,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 
@@ -269,7 +269,7 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 
