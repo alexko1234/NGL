@@ -273,13 +273,13 @@ public class MetaTProcess extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
-	private List<Value> getBanqueProcessTypeMetaRA() {
+	public static  List<Value> getBanqueProcessTypeMetaRA() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("RA", "RA - RNAseq"));
 		return values;
 	}
 	
-	private List<Value> getBanqueProcessTypeMetaRB() {
+	public static List<Value> getBanqueProcessTypeMetaRB() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("RB", "RB - RNAseq stranded"));
 		return values;

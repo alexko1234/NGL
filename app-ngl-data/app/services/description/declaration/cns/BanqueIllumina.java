@@ -274,32 +274,52 @@ public class BanqueIllumina extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		
 		List<Value> libProcessTypeCodes = new ArrayList<Value>();
-		libProcessTypeCodes.add(newValue("DA", "DA - DNAseq"));
-		libProcessTypeCodes.add(newValue("DD", "DD - Chromium 10x"));
-		libProcessTypeCodes.add(newValue("TA", "TA - Targeted DNAseq"));
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDA());
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDD());
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDE());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
 		
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, libProcessTypeCodes, 
-				null,null,null,"single", 13, true, null, null));
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
 		propertyDefinitions.addAll(getAmpureProperties());
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
-	
+
 	private List<PropertyDefinition> getDNALibIlluminaSizingProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDB());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
+		
 		propertyDefinitions.addAll(getAmpureProperties());
 		propertyDefinitions.addAll(getSizingProperties());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getDNALibIlluminaSpriSelectProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDC());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
+		
 		propertyDefinitions.addAll(getSpriSelectProperties());
 		return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getAmpureSTKDepotProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDA());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
 		propertyDefinitions.addAll(getAmpureProperties());
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
@@ -307,6 +327,12 @@ public class BanqueIllumina extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getAmpureSizingSTKDepotProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDB());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
 		propertyDefinitions.addAll(getAmpureProperties());
 		propertyDefinitions.addAll(getSizingProperties());
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
@@ -315,13 +341,29 @@ public class BanqueIllumina extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getAmpliSizingSTKDepotProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDB());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
 		propertyDefinitions.addAll(getAmpureProperties());
 		propertyDefinitions.addAll(getSizingProperties());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getAmpliSTKDepotProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDA());
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDD());
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDE());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
+		
 		propertyDefinitions.addAll(getAmpureProperties());
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
@@ -329,12 +371,24 @@ public class BanqueIllumina extends AbstractDeclaration {
 
 	private List<PropertyDefinition> getAmpliSpriSelectDepotProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDC());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
 		propertyDefinitions.addAll(getSpriSelectProperties());
+		
 		return propertyDefinitions;
 	}
 	
 	private List<PropertyDefinition> getSizingSTKDepotProcessProperties(){
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDB());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTB());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		
 		propertyDefinitions.addAll(getSizingProperties());
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
@@ -355,6 +409,10 @@ public class BanqueIllumina extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 	
+	private PropertyDefinition getLibProcessTypeCodeProperty(List<Value> libProcessTypeCodes) {
+		return newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, libProcessTypeCodes, 
+				null,null,null,"single", 13, true, null, null);
+	}
 	
 
 	private List<PropertyDefinition> getAmpureProperties(){

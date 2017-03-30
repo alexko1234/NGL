@@ -241,28 +241,36 @@ public class MetaGenomique extends AbstractDeclaration {
 	}
 	
 	
-	private List<Value> getLibProcessDA() {
+	public static List<Value> getLibProcessDA() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("DA", "DA - DNAseq"));
 		return values;
 	}
 	
-	private List<Value> getLibProcessDB() {
+	public static  List<Value> getLibProcessDB() {
         List<Value> values = new ArrayList<Value>();
         values.add(DescriptionFactory.newValue("DB", "DB - DNAseq avec sizing (gel)"));
         return values;
 	}
 
-	private List<Value> getLibProcessDC() {
+	public static  List<Value> getLibProcessDC() {
         List<Value> values = new ArrayList<Value>();
         values.add(DescriptionFactory.newValue("DC", "DC - DNAseq avec spri select"));
         return values;
 	}
 	
-	private List<Value> getLibProcessDE() {
+	public static  List<Value> getLibProcessDD() {
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("DD", "DD - Chromium 10x"));
+		return values;
+	}
+	
+	public static  List<Value> getLibProcessDE() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("DE", "DE - PCR Free"));
 		return values;
 	}
+	
+	
 
 }

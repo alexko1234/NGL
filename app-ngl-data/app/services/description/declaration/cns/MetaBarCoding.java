@@ -336,13 +336,13 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	}
 		
-	private List<Value> getBanqueProcessTypeMetaTB() {
+	public static  List<Value> getBanqueProcessTypeMetaTB() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("TB", "TB - Targeted DNAseq avec sizing"));
 		return values;
 	}
 	
-	private List<Value> getBanqueProcessTypeMetaTA(){
+	public static  List<Value> getBanqueProcessTypeMetaTA(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("TA", "TA - Targeted DNAseq"));
 		return values;
