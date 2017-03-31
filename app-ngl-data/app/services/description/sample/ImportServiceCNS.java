@@ -100,6 +100,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
+		values.add(DescriptionFactory.newValue("POOL-INDEX", "POOL-INDEX"));
 		return values;	
 	}
 	
