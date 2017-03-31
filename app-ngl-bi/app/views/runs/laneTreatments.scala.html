@@ -41,6 +41,7 @@
 }
 @if(code == "topindex"){
 
+<div ng-controller="TopIndexCtrl"">
 <div class=row>
 <ul class="nav nav-tabs margin-bottom-5">
 	<li class="active"><a href="#" data-target="#topIndex" data-toggle="tab">@Messages("runs.treatments.topIndex")</a></li>
@@ -56,8 +57,11 @@
 						<tr>
 							<th>@Messages("runs.treatments.topIndex.unknownIndex.sequence")</th>
 							<th>@Messages("runs.treatments.topIndex.unknownIndex.percent")</th>
-							<th ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | unique:'expectedIndexName' | orderBy:'expectedIndexName'">
+							<th ng-if="existIndexName(lane)" ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | unique:'expectedIndexName' | orderBy:'expectedIndexName'">
 								@Messages("runs.treatments.topIndex.distance") / {{value.expectedIndexName}}
+							</th>
+							<th ng-if="!existIndexName(lane)" ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | unique:'expectedIndexSequence' | orderBy:'expectedIndexSequence'">
+								@Messages("runs.treatments.topIndex.distance") / {{value.expectedIndexSequence}}
 							</th>
 						</tr>
 					</thead>
@@ -66,7 +70,10 @@
 							<td ng-if="unknownIndex.name!=null">{{unknownIndex.sequence}} ({{unknownIndex.name}})</td>
 							<td ng-if="unknownIndex.name==null">{{unknownIndex.sequence}}</td>
 							<td>{{unknownIndex.percent | number:2}}</td>
-							<td ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | filter:{unknownIndexSequence:unknownIndex.sequence} | orderBy:'expectedIndexName'">
+							<td ng-if="existIndexName(lane)" ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | filter:{unknownIndexSequence:unknownIndex.sequence} | orderBy:'expectedIndexName'">
+								{{value.distanceFromExpectedIndex | number}}
+							</td>
+							<td ng-if="!existIndexName(lane)" ng-repeat="value in lane.treatments.topIndex.default.varIndex.value | filter:{unknownIndexSequence:unknownIndex.sequence} | orderBy:'expectedIndexSequence'">
 								{{value.distanceFromExpectedIndex | number}}
 							</td>
 						</tr>
@@ -84,7 +91,7 @@
 		
 		 	<!-- <img id="tilesStatsId" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/> -->
 </div>
-
+</div>
 }
 
 @column()(value: Html) = {
