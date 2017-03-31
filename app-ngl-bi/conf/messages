@@ -838,6 +838,12 @@ analyses.treatments.contigFilter_ba.storedBases = Nb bases conservées
 analyses.treatments.contigFilter_ba.lostBasesPercent = % bases perdues
 
 #POST FILTRE
+analyses.treatments.assemblyFilter_ba.NXSequenceNb = Number of contigs/scaffolds
+analyses.treatments.assemblyFilter_ba.NXSequenceSize = Size (bases)
+analyses.treatments.assembly_ba.N50Sequence = N50 
+analyses.treatments.assembly_ba.N80Sequence = N80 
+analyses.treatments.assembly_ba.N90Sequence = N90 
+
 analyses.treatments.assemblyFilter_ba.preservedBases = Nb de bases conservés
 analyses.treatments.assemblyFilter_ba.preservedSequences = Nb contigs/scaffolds conservés
 analyses.treatments.assemblyFilter_ba.numberOfN = Nombre de N
@@ -845,8 +851,6 @@ analyses.treatments.assemblyFilter_ba.preservedCoverage = Couverture conservés
 analyses.treatments.assemblyFilter_ba.minSequenceSize = Smallest contigs/scaffolds size (bases)
 analyses.treatments.assemblyFilter_ba.maxSequenceSize = Largest contigs/scaffolds size (bases)
 analyses.treatments.assemblyFilter_ba.averageSequenceSize = Average contigs/scaffolds size (bases)
-analyses.treatments.assemblyFilter_ba.N50SequenceSize = N50 size (bases)
-analyses.treatments.assemblyFilter_ba.N50SequenceNb = Nb contigs/scaffolds N50
 analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.size = size
 analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.sequenceNumber = number of sequences
 analyses.treatments.assemblyFilter_ba.sequenceSizeRepartition.sequencePercent = % sequences
