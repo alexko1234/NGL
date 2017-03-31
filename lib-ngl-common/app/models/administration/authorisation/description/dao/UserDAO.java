@@ -46,6 +46,20 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		return this.jdbcTemplate.query(sql, mapper).size()>0;
 	}
 
+	public String  getUserPassword(String login) throws DAOException{
+		String sql = "SELECT login , password "+
+				"FROM user WHERE login='"+login+"' ";
+		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
+		List<User> users =  this.jdbcTemplate.query(sql, mapper);
+		if(users != null && users.size() == 1){
+			return users.get(0).password.toString();
+		}else{
+			return null;
+		}
+		
+		//return null ;
+	}	
+	
 	public boolean isUserAccessApplication(String login, String application){
 		if(!login.equals("") && getUserId(login) != 0){
 			applicationAccess(login, application);
