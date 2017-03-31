@@ -701,6 +701,7 @@ readsets.treatments.rnaSeq.widthOf99percent=width of 99 percent
 readsets.treatments.images.margin=25
 
 readsets.treatments.minknowMetrichor = MinKnow-Metrichor
+readsets.treatments.minknowBasecalling = MinKnow-Basecalling
 
 readsets.treatments.chromium.softwareVersion=Version logiciel
 readsets.treatments.chromium.barcodeExactMatchRatio=Barcode exact match
