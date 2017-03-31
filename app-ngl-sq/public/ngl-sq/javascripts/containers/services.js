@@ -535,6 +535,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					var allFilters = angular.copy(lists.get("containers-search-addfilters")[0].filters);
 					
 					/* add static filters here*/
+					allFilters.push({property:"comments.comment",html:"<textarea class='form-control' ng-model='searchService.form.commentRegex' placeholder='"+Messages("search.placeholder.commentRegex")+"' title='"+Messages("search.placeholder.commentRegex")+"'></textarea>",position:allFilters.length+1});
 					
 					
 					var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
