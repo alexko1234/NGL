@@ -860,7 +860,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("size","sequenceSizeRepartition.size",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("number of sequences","sequenceSizeRepartition.sequenceNumber",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% sequences","sequenceSizeRepartition.sequencePercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% sequences","sequenceSizeRepartition.sequencePercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cumulative Size (bases)","sequenceSizeRepartition.cumulativeSize",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Integer.class, true, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% assembly size (bases)","sequenceSizeRepartition.cumulativeSizePercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, true, "object_list"));
 		

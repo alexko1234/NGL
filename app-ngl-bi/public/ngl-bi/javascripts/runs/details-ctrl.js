@@ -913,6 +913,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	};
 	
 	init();
+}]).controller('TopIndexCtrl', [ '$scope', 'datatable', function($scope, datatable) {
+	
+	$scope.existIndexName = function(data){
+    	for(var index in data.treatments.topIndex.default.varIndex.value){
+    		if(data.treatments.topIndex.default.varIndex.value[index].expectedIndexName!=null){
+    			return true;
+    		}
+    	}
+    	return false;
+    };
+    
 }]);
 
 
