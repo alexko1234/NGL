@@ -21,9 +21,9 @@
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.barcodeExactMatchRatio.value|number:2"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.barcodeQ30BaseRatio.value|number:2"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.bcOnWhitelist.value|number:2"></td>
-					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.gemCountEstimate.value"></td>
+					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.gemCountEstimate.value | number"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.meanBarcodeQscore.value|number:2"></td>
-					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.numberReads.value"></td>
+					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.numberReads.value | number"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.read1Q30BaseRatio.value|number:2"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.read2Q30BaseRatio.value|number:2"></td>
 				</tr>
