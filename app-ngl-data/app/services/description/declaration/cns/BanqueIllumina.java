@@ -305,6 +305,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		
 		List<Value> libProcessTypeCodes = new ArrayList<Value>();
 		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDC());
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDD());
 		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
 		
 		
