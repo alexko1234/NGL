@@ -665,6 +665,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 			"position" : 500,
 			"order" : false,
 			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
 			"hide" : true,
 			"type" : "text"
 		});
