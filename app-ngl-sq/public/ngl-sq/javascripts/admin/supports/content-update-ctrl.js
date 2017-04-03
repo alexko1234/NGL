@@ -119,7 +119,7 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 			
 			datatableSQ : undefined,
 			datatableBI : undefined,
-			
+			searchInProgress:false,
 			resetSampleCodes : function(){
 				this.form.sampleCode = undefined;									
 			},
@@ -156,9 +156,12 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 					this.form.collectionNames = ["ngl_sq.Container","ngl_sq.Process","ngl_sq.Experiment","ngl_bi.ReadSetIllumina"];					
 				}
 			},
-						
+			isSearchInProgress : function(){
+				return this.searchInProgress;
+			},			
 			search : function(){
 				$scope.messages.clear();
+				$scope.searchService.searchInProgress=true;
 				$scope.searchService.datatableSQ.setData([]);
 		 		$scope.searchService.datatableBI.setData([]);
 				this.updateForm();
@@ -178,10 +181,12 @@ angular.module('home').controller('ContentUpdateCtrl', ['$scope', '$filter', '$h
 				 		
 				 		$scope.searchService.datatableSQ.setData(data.sq);
 				 		$scope.searchService.datatableBI.setData(data.bi);
+				 		$scope.searchService.searchInProgress=false;
 				 	}).error(function(data){
 				 		$scope.messages.setError("get");
 				 		$scope.messages.setDetails(data);
 				 		$scope.messages.showDetails=true;
+				 		$scope.searchService.searchInProgress=false;
 				 	});
 				
 			}

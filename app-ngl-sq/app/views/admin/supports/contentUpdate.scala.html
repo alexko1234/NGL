@@ -40,6 +40,12 @@
 				
 }
 
+<div class="inProgressSpinner" ng-if="searchService.isSearchInProgress()">
+	<button class="btn btn-primary btn-lg">
+		<i class="fa fa-spinner fa-spin fa-5x"></i>
+	</button>
+</div>
+
 <!-- @searchForm(form)()("searchService.datatable") -->
 <div class="row">
 	<div class="col-md-12 col-lg-12"  messages="messages"></div>

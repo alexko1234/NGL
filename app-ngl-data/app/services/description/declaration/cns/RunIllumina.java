@@ -91,7 +91,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", 
 				ProcessCategory.find.findByCode("sequencing"),62 , 
-				getPropertyDefinitionsIlluminaDepotCNS(), 
+				getIlluminaDepotProperties(), 
 				Arrays.asList(getPET("ext-to-illumina-run",-1),
 						getPET("solution-stock",-1), 
 						getPET("prepa-flowcell",0),
@@ -102,7 +102,7 @@ public class RunIllumina extends AbstractDeclaration {
 		
 		l.add(DescriptionFactory.newProcessType("STK, FC, dépôt Illumina", "norm-fc-depot-illumina", 
 				ProcessCategory.find.findByCode("sequencing"), 63,
-				getPropertyDefinitionsQPCRQuantification(), 
+				getIlluminaDepotProperties(), 
 				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),
 						getPET("sizing",-1),
 						getPET("spri-select",-1),
@@ -137,6 +137,27 @@ public class RunIllumina extends AbstractDeclaration {
 		return null;
 	}
 
+	public static List<PropertyDefinition> getIlluminaDepotProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		//TO do multi value
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadType(), "single",200));		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadLenght(), "single",300));
+
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
+						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
+		return propertyDefinitions;
+	}
+	
+	
 	@Override
 	protected void getExperimentTypeNodeCommon() {
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
@@ -298,25 +319,7 @@ public class RunIllumina extends AbstractDeclaration {
 
 	}
 
-	public static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
-		//TO do multi value
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadType(), "single",200));		
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadLenght(), "single",300));
-
-		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
-						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
-		return propertyDefinitions;
-	}
+	
 
 	private static List<Value> getSequencingType(){
 		List<Value> values = new ArrayList<Value>();
@@ -357,12 +360,6 @@ public class RunIllumina extends AbstractDeclaration {
 		values.add(DescriptionFactory.newValue("0.3","300"));
 		values.add(DescriptionFactory.newValue("1","1000"));
 		return values;
-	}
-
-
-	public static List<PropertyDefinition> getPropertyDefinitionsQPCRQuantification() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions =getPropertyDefinitionsIlluminaDepotCNS();			
-		return propertyDefinitions;
 	}
 
 }

@@ -92,7 +92,7 @@ public abstract class AbstractExperimentService {
 			if ( null == categoryCodes )
 			{
 				// ancien fonctionnement recuperer index "SINGLE-INDEX","DUAL-INDEX" et"MID"
-				categoryCodes = new ArrayList<String>( Arrays.asList("SINGLE-INDEX","DUAL-INDEX","MID"));
+				categoryCodes = new ArrayList<String>( Arrays.asList("SINGLE-INDEX","DUAL-INDEX","MID","POOL-INDEX"));
 			}
 			
 			//System.out.print("getTagIlluminaCategory getting indexes :"+ categoryCodes+"\n");

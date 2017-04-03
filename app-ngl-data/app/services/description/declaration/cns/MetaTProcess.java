@@ -247,11 +247,11 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Type de déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("pas de déplétion","déplétion rRNA prok","déplétion rRNA plante"), 
 				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("Smarter V4","Ovation RNAseq system v2"), 
+		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("Smarter V4","Ovation RNAseq system v2","Smarter_DEV"), 
 				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 
@@ -269,17 +269,17 @@ public class MetaTProcess extends AbstractDeclaration {
 				null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 
-	private List<Value> getBanqueProcessTypeMetaRA() {
+	public static  List<Value> getBanqueProcessTypeMetaRA() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("RA", "RA - RNAseq"));
 		return values;
 	}
 	
-	private List<Value> getBanqueProcessTypeMetaRB() {
+	public static List<Value> getBanqueProcessTypeMetaRB() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("RB", "RB - RNAseq stranded"));
 		return values;

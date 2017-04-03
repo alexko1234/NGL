@@ -23,7 +23,7 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	public Set<String> fromTransformationTypeCodes;
 	public Set<String> fromTransformationCodes;
 	public Set<String> processTypeCodes;
-	public Set<String> processCodes ;
+	public Set<String> processCodes;
 	
 	/*used in QualityControl to keep the original values*/
 	public PropertySingleValue newVolume;        
