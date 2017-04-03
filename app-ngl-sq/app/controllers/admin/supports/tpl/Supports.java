@@ -13,9 +13,11 @@ public class Supports extends CommonController{
 	}
 	
 	public static Result search(String code){
-		if("switch-index".equals(code))
+		if("switch-index".equals(code)){
 			return ok(searchSwitchIndex.render());
-		else{
+		}else if("content-update".equals(code)){
+			return ok(contentUpdate.render());
+		}else{
 			return ok();
 		}
 	}
@@ -35,6 +37,7 @@ public class Supports extends CommonController{
   	    		controllers.commons.api.routes.javascript.Users.list(),
 	      		controllers.commons.api.routes.javascript.Values.list(),
 	      		controllers.commons.api.routes.javascript.Parameters.list(),
+	      		controllers.commons.api.routes.javascript.PropertyDefinitions.list(),
 	      		controllers.admin.supports.tpl.routes.javascript.Supports.home(),
 	      		controllers.admin.supports.tpl.routes.javascript.Supports.search(),
 	      		controllers.admin.supports.api.routes.javascript.NGLObjects.list(),

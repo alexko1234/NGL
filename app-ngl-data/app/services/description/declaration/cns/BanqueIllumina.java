@@ -332,6 +332,15 @@ public class BanqueIllumina extends AbstractDeclaration {
 	
 	private List<PropertyDefinition> getPropertyBanqueIlluminaSpriSelect() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("DC", "DC - DNAseq avec spri select"));
+		values.add(DescriptionFactory.newValue("DD", "DD - Chromium 10x"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, values, 
+				null,null,null,"single", 13, true, null, null));
+		
+		
 		propertyDefinitions.addAll(getSpriSelectProperties());
 		return propertyDefinitions;
 	}

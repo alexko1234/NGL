@@ -7,6 +7,11 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 		controller : 'SwitchIndexSearchCtrl'
 	});
 	
+	$routeProvider.when('/admin/supports/content-update/home', {
+		templateUrl : jsRoutes.controllers.admin.supports.tpl.Supports.search('content-update').url,
+		controller : 'ContentUpdateCtrl'
+	});
+	
 	$routeProvider.otherwise({redirectTo: jsRoutes.controllers.admin.supports.tpl.Supports.home('switch-index').url});
 
 	// configure html5 to get links working with bookmarked

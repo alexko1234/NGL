@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Parameter;
+import models.laboratory.parameter.index.IlluminaIndex;
 import models.laboratory.parameter.index.Index;
 import models.laboratory.parameter.index.NanoporeIndex;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
@@ -29,6 +32,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 	public void runImport() throws SQLException, DAOException {
 		createIndexIllumina(limsServices,contextError);
 		createIndexNanopore(contextError);
+		createIndexChromium(contextError);
 	}
 
 	
@@ -68,6 +72,45 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.supplierName = new HashMap<String,String>();
 		index.supplierName.put("oxfordNanopore", code);
 		index.traceInformation=new TraceInformation("ngl-data");
+		return index;
+	}
+	
+	public static void createIndexChromium(ContextValidation contextValidation) throws DAOException{
+		
+		for ( int row = 1; row <=8; row++){
+			for(int col = 1 ; col <= 12 ; col++){
+				Index index = getChromiumIndex(row,col);				
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+					Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+				} else {
+					Logger.info("index : "+ index.code + " already exists !!");
+				}
+			}
+		}
+	}
+
+	// FDS 16/03/2017 !!! si on remplace la sequence par qq chose (ici un nom) il faut que la longueur soit la meme
+	// sinon lors du pooling, une regle drools de validation va generer une erreur
+	//==> utiliser le format A01 et non A1 pour la position !!! seulement pour la sequence
+	private static Index getChromiumIndex(int row, int col) {
+		Index index = new IlluminaIndex();
+		
+		String code = "SI-GA-"+ (char)(64 + row);
+		String seq=code;
+		if (col < 10 ) { seq = seq +"0"; }
+		code=code + col;
+		seq=seq+ col;
+		
+		index.code = code;
+		index.name = code;
+		index.shortName = code;
+		index.sequence = seq ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
+		index.categoryCode = "POOL-INDEX";
+		index.supplierName = new HashMap<String,String>();
+		index.supplierName.put("10x Genomics", code);
+		index.traceInformation=new TraceInformation("ngl-data");
+		
 		return index;
 	}
 }

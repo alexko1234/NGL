@@ -28,10 +28,14 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
+		
 		createProject(contextError);
 		deleteProject(contextError);
+		
+		//lastNGLSampleCode(contextError);
 	}
 
+	
 	
 	private void deleteProject(ContextValidation contextValidation) throws SQLException, DAOException{
 		List<String> availableProjectCodes = limsServices.findProjectToCreate(contextValidation)
@@ -64,11 +68,18 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 			Project nglProject = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, limsProject.code);
 			if(nglProject != null){
 				Builder update =  DBUpdate.set("name",limsProject.name).set("archive", limsProject.archive);
-				if((limsProject.lastSampleCode != null && nglProject.lastSampleCode != null && 
-						limsProject.lastSampleCode.compareTo(nglProject.lastSampleCode) > 0) || limsProject.lastSampleCode != null){
+				
+				if((nglProject.lastSampleCode == null &&  limsProject.lastSampleCode != null)
+						|| (nglProject.lastSampleCode != null &&  limsProject.lastSampleCode != null
+							&& limsProject.nbCharactersInSampleCode > nglProject.nbCharactersInSampleCode)
+						|| (nglProject.lastSampleCode != null &&  limsProject.lastSampleCode != null
+								&& limsProject.nbCharactersInSampleCode == nglProject.nbCharactersInSampleCode
+								&& limsProject.lastSampleCode.compareTo(nglProject.lastSampleCode) > 0)){
 					update.set("lastSampleCode",limsProject.lastSampleCode);
 					update.set("nbCharactersInSampleCode",limsProject.nbCharactersInSampleCode);
+					Logger.error(nglProject.code+": "+limsProject.lastSampleCode +" != "+ nglProject.lastSampleCode);
 				}
+					
 				nglProject.traceInformation.setTraceInformation("ngl-data");
 				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, 
 						DBQuery.is("code", limsProject.code),update);
@@ -80,5 +91,38 @@ public class ProjectImportCNS extends AbstractImportDataCNS{
 	
 		//InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextValidation);
 		
+	}
+
+	
+	private void lastNGLSampleCode(ContextValidation contextError) {
+		MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).getCursor().forEach(p -> {
+				String lastNGLSampleCode = getLastSample(p.code);
+				if(null != lastNGLSampleCode){
+					p.lastSampleCode = lastNGLSampleCode;
+					p.nbCharactersInSampleCode = lastNGLSampleCode.replace(p.code+"_","").length();
+					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
+				}else{
+					p.lastSampleCode = null;
+					p.nbCharactersInSampleCode = null;
+					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, p);
+				}
+			
+		});;
+		
+	}
+
+	
+	private static String getLastSample(String code) {
+		String[] last = new String[]{null};
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", code))
+			.sort("code").getCursor().forEach(s -> {
+				if(last[0] == null || s.code.length() > last[0].length()){
+					last[0] = s.code;
+				}else if(s.code.length() == last[0].length() && s.code.compareTo(last[0]) > 0){
+					last[0] = s.code;
+				}
+				
+			});
+		return last[0];
 	}
 }

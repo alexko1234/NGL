@@ -178,6 +178,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
+		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter V4"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
@@ -185,7 +186,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
 				concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","random + oligodT"))));
     	
-		
+		lp.add(newProtocol("smarter_dev","Smarter_DEV","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
+				concatMap(newPSV("rnaLibProtocol","Smarter DEV"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
+    	
 		lp.add(newProtocol("truseq_stranded_poly_a","TruSeq Stranded poly A_ptr_sox153_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
 				concatMap(newPSV("rnaLibProtocol","TruSeq Stranded poly A"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		

@@ -97,6 +97,7 @@ GET		/cng/migration-transfert-ccrt			controllers.migration.cng.MigrationTransfer
 GET		/cns/migration-error-pool				controllers.migration.cns.MigrationErrorPool.migration()
 
 GET		/cns/migration-error-flowcellChemistry	controllers.migration.cns.MigrationUpdateFlowcellChemistryNanopore.migration(fileName: java.lang.String)
+GET 	/cns/migration-projects					controllers.migration.MigrationProjet.migration()
 
 GET 	/migration-process-properties			controllers.migration.MigrationProcessProperties.migration()
 

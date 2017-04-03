@@ -64,4 +64,6 @@ public abstract class AbstractUpdate<T extends DBObject> {
 
 	public abstract void update(NGLObject input, ContextValidation cv) ;
 
+	public abstract Long getNbOccurrence(NGLObject o);
+
 }

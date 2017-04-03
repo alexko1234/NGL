@@ -255,7 +255,7 @@ search.placeholder.printing.printer = Imprimante
 search.placeholder.printing.barcode.position = Barre code position
 search.placeholder.readsets = ReadSets
 search.placeholder.resolutions = Résolutions
-
+search.placeholder.commentRegex = Regex commentaire
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
 search.tab.addcolumns = Colonnes supplémentaires
@@ -616,8 +616,9 @@ samples.table.sample = Echantillon
 #
 ###############
 admin.menu = Administration
-admin.supports.title = Supports
+admin.supports.title = Administration
 admin.supports.menu.switchindex = Inversion d''index
+admin.supports.menu.contentupdate = Mise à jour propriété content
 admin.supports.switch-index.tabs.search = Recherche des objets NGL
 authorisation.userroles.page = Gestion des roles utilisateurs
 authorisation.users.page.tab.search = Recherche des utilisateurs
