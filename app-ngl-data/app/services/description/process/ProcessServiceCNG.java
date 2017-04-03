@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;// ajout FDS
+import java.util.stream.Collectors;// ajout FDS pour getPETForQCTransfertPurif
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -28,6 +28,7 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.instrument.InstrumentServiceCNG;
+import services.description.declaration.cng.Nanopore;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -42,6 +43,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Nanopore", "nanopore-library")); // VERIFIER LABEL AVEC Julie
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));
 		// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
@@ -206,7 +208,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-				
+		// FDS ajout 03/03/2017 NGL-1225: processus Nanopore DEV
+		l.addAll(new Nanopore().getProcessType());
+		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	
