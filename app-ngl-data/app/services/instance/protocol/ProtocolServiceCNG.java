@@ -1,15 +1,19 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.newProtocol;
+import static services.instance.InstanceFactory.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mongojack.DBQuery;
 
 import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -197,5 +201,22 @@ public class ProtocolServiceCNG {
 			Logger.debug("protocol '"+protocole.name + "' saved..." );
 		}
 	}
+	
+	/*
+	protocole	Smarter V4	Ovation RNAseq system v2	TruSeq Stranded poly A	TruSeq Stranded Proc	Smarter Stranded	Indac
+	rnaLibProtocol	smarterV4	ovationRNAseqSystemV2	truseqStrandedPolyA	truseqStrandedProk	smarterStranded	indac
+	strandOrientation	?	?	reverse	reverse	forward	reverse
+	cDNAsynthesisType	?	?	?	?	?	?
+	 */
+		@SafeVarargs
+		private static Map<String, PropertyValue> concatMap(
+				Map<String, PropertyValue>...map) {
+			Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
+			for(int i = 0 ; i < map.length; i++){
+				mapFinal.putAll(map[i]);
+			}
+			return mapFinal;
+		}
+	
 	
 }

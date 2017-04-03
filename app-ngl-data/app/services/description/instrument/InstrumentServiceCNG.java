@@ -25,6 +25,7 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.common.MeasureService;
 
 public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
@@ -123,15 +124,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getMiseqProperties(), 
 				getInstrumentMiSeq(),
-				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-1"}), 
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("MISEQ QC", "MISEQ-QC-MODE", InstrumentCategory.find.findByCode("qc-illumina-sequencer"), getMiseqQCProperties(), 
 				getInstrumentMiSeqQC(),
 				getContainerSupportCategories(new String[]{"96-well-plate","tube"}), 
 				null, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq2000Properties(), 
 				getInstrumentHiseq2000(),
@@ -140,23 +141,28 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq2500Properties(), 
 				getInstrumentHiseq2500(),
-				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("NEXTSEQ500", "NEXTSEQ500", InstrumentCategory.find.findByCode("illumina-sequencer"), getNextseq500Properties(), 
 				getInstrumentNextseq500(),
-				getContainerSupportCategories(new String[]{"flowcell-4"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-4"}), 
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("HISEQ4000", "HISEQ4000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq4000Properties(), 
 				getInstrumentHiseq4000(),
-				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-8"}), 
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("HISEQX", "HISEQX", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseqXProperties(), 
 				getInstrumentHiseqX(),
-				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-8"}), 
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
 		
 		/** chip-electrophoresis **/
 		// FDS 24/02/2017 ajouter strip-8 en input
@@ -164,7 +170,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("bioAnalyzer2", "BioAnalyzer2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), // ajout 30/03/2017
-				getContainerSupportCategories(new String[]{"tube","strip-8"}),null, 
+				getContainerSupportCategories(new String[]{"tube","strip-8"}),
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// pas de properties ????
@@ -174,7 +181,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("labGX",  "LABCHIP_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ,
 						createInstrument("labGX2", "LABCHIP_GX2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))) ,
-				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),null, 
+				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),
+				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
@@ -186,9 +194,18 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("thermo2", "Thermo2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("thermo3", "Thermo3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("thermo4", "Thermo4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube"}),
+				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		
+		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul ( input tubes ou plaques / output tubes ou  plaques)
+		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1", "mastercycler-nsx1", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
+				getInstruments(
+						createInstrument("mastercycler1", "Mastercycler 1 (Nexus SX1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** covaris **/
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
@@ -205,8 +222,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 		
-		// covaris 3 supprimé, manquant???? 
-		// ajouté 05/12/2016
 		l.add(newInstrumentUsedType("Covaris E220", "covaris-e220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("cov3", "Cov3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
@@ -241,7 +256,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS ajout 04/08/2016 JIRA NGL-1026: Sciclone NGSX seul; 23/09/2016 deuxieme Sciclone oublié !!!
+		//FDS ajout 04/08/2016 JIRA NGL-1026: Sciclone NGSX seul
 		l.add(newInstrumentUsedType("Sciclone NGSX", "sciclone-ngsx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getScicloneNGSXAloneProperties(), 
 				getInstruments(
 						createInstrument("ngs1", "NGS-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -257,7 +272,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-		
 		
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 
@@ -329,7 +343,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		
 		// FDS ajout 20/02/2017 NGL-1167 : Chromium controller ( entree tubes / sortie strip-8
 		l.add(newInstrumentUsedType("Chromium controller", "chromium-controller", InstrumentCategory.find.findByCode("10x-genomics-instrument"), getChromiumControllerProperties(), 
 				getInstruments(
@@ -338,25 +351,36 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"strip-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		
 		/** nanopore sequencers **/
 		// FDS ajout 30/03/2017 : NGL-1225 ( Nanopore )
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMinIon() 
-				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(newInstrumentUsedType("MinION", "minion", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),
+				getInstrumentMinIon(), 
+				getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKI() 
-				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(), 
+				getInstrumentMKI(), 
+				getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newInstrumentUsedType("Mk1B", "mk1b", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKIB() 
-				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(newInstrumentUsedType("Mk1B", "mk1b", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),
+				getInstrumentMKIB(), 
+				getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
 		
 		/** centrifugeuses **/
+		l.add(newInstrumentUsedType("Eppendorf Centrifuge 5424", "eppendorf-5424", InstrumentCategory.find.findByCode("centrifuge"), getEppendorf5424Properties(), 
+				getInstruments(
+						createInstrument("eppendorf-5424-1","Eppendorf 5424", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-		l.add(newInstrumentUsedType("Eppendorf Centrifuge 5424", "eppendorf-5424", InstrumentCategory.find.findByCode("centrifuge"), geEppendorf5424Properties(),  getInstrumentEppendorf5424()
-				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getEppendorfMiniSpinProperties(),  getInstrumentEppendorfMiniSpinPlus()
-		//		,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -503,11 +527,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	// FDS a renommer "Nbre de Cycles / pcrCycleNumber
+	// FDS a renommer "Nbre de Cycles / pcrCycleNumber => necessite une reprise d'historique !!! NON CAR aucune experience en base
+	// pourquoi ces 2 valeurs 15 et 18 ???????????
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
+		l.add(newPropertiesDefinition("Nbre de Cycles", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
 				                       newValues("15","18"), "single"));		
 		return l;
 	}
@@ -712,21 +737,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 
-	/* FDS  ?? au CNG ?????
-	private static List<PropertyDefinition> getEppendorfMiniSpinProperties() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
-		// propriété de la Minispin... a adapter !!!!
-        propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
-        		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
-        propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
-        		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
-        // unite s
-        propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
-        		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
-		return propertyDefinitions;
-	}
-	*/
 	
 	// FD meme proprietes que minispin ???
 	private static List<PropertyDefinition> getEppendorf5424Properties() throws DAOException {
@@ -734,11 +744,17 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
         propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
         		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
+        
         propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
-        		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
+        		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),
+        					  MeasureUnit.find.findByCode("rpm"),
+        					  MeasureUnit.find.findByCode("rpm"), "single", 2));
+        
         // unite s
         propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
-        		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
+        		null, "60", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),
+        				    MeasureUnit.find.findByCode("s"),
+        				    MeasureUnit.find.findByCode("s"), "single", 3));
 		return propertyDefinitions;
 	}
 	
@@ -752,7 +768,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9-spot-on"));
        
         //Liste a definir
-        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
+        propertyDefinitions.add(newPropertiesDefinition("Identifiant PC", "pcId", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
 
 		return propertyDefinitions;
 	}
@@ -762,7 +778,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1", true, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1", true,  "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("MISEQ2", "MISEQ2", "M2", false, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
@@ -771,7 +787,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
 		instruments.add(createInstrument("MISEQ1-QC", "MISEQ1 QC", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
-		instruments.add(createInstrument("MISEQ2-QC", "MISEQ2 QC", null, true, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ2-QC", "MISEQ2 QC", null, true,  "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
 	
@@ -853,20 +869,4 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	/* FDS  CNG ???
-	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		return instruments;
-	}
-	*/
-	
-	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
-	private static List<Instrument> getInstrumentEppendorf5424Plus() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("Eppendorf 5424 1", "eppendorf-5424-1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		return instruments;
-	}
-
 }
