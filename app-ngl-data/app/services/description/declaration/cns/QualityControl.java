@@ -339,7 +339,7 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode("µL"),"single", 22, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité finale", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 23, true, null,null));
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 23, false, null,null));
 		
 		return propertyDefinitions;
 		
