@@ -668,7 +668,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000", 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
-				MeasureUnit.find.findByCode("mM"), // ERRRRRRRRRRRRRRRRRRRR ???
+				MeasureUnit.find.findByCode("mM"), // NORMAL, pas une faute de frappe
 				MeasureUnit.find.findByCode("nM"), 
 				"single",25));
 		
