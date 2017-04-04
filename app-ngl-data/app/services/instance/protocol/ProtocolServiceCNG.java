@@ -115,7 +115,7 @@ public class ProtocolServiceCNG {
 		//cdna-synthesis
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production",
 				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-		        /* proprietes de niveau contents, pas necessaire au CNS pour l'instant...
+		        /* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
 		           concatMap(newPSV("rnaLibProtocol","Smarter V4"),
 		         
 						  newPSV("strandOrientation","unstranded"),
@@ -124,7 +124,7 @@ public class ProtocolServiceCNG {
 		
 		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", 
 				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-				/* proprietes de niveau contents, pas necessaire au CNS pour l'instant...
+				/* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
 				   concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),
 					      newPSV("strandOrientation","unstranded"),
 						  newPSV("cDNAsynthesisType","random + oligodT"))));
@@ -132,10 +132,10 @@ public class ProtocolServiceCNG {
 		
 		//nanopore-frg 
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
+				InstanceFactory.setExperimentTypeCodes("nanopore-frg")));
 		
 		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
+				InstanceFactory.setExperimentTypeCodes("nanopore-frg")));
 		
 		//nanopore-dna-reparation
 		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", 
