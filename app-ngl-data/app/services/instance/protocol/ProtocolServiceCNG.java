@@ -110,8 +110,37 @@ public class ProtocolServiceCNG {
 		
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-		// 30/03/2017 ajout protocoles pour Nanopore ...copié CNS........EN COURS
-
+		// 30/03/2017 ajout protocoles pour Nanopore
+			
+		//cdna-synthesis
+		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production",
+				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
+		        /* proprietes de niveau contents, pas necessaire au CNS pour l'instant...
+		           concatMap(newPSV("rnaLibProtocol","Smarter V4"),
+		         
+						  newPSV("strandOrientation","unstranded"),
+						  newPSV("cDNAsynthesisType","oligodT"))));
+			    */	
+		
+		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", 
+				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
+				/* proprietes de niveau contents, pas necessaire au CNS pour l'instant...
+				   concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),
+					      newPSV("strandOrientation","unstranded"),
+						  newPSV("cDNAsynthesisType","random + oligodT"))));
+			    */	
+		
+		//nanopore-frg 
+		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
+		
+		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
+		
+		//nanopore-dna-reparation
+		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));
+		
 		//nanopore-library")
 		lp.add(newProtocol("R9-1D-ligation","R9-1D ligation","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
@@ -137,7 +166,7 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
 				concatMap(newPSV("libraryProtocol","R9-2D"))));
 		
-		//nanopore-depo
+		//nanopore-depot
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
@@ -149,26 +178,7 @@ public class ProtocolServiceCNG {
 		
 		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
-		
-		
-		//nanopore-dna-reparation
-		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));
-		
-		
-		//cdna-synthesis
-		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production",
-				InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
-				concatMap(newPSV("rnaLibProtocol","Smarter V4"),
-						  newPSV("strandOrientation","unstranded"),
-						  newPSV("cDNAsynthesisType","oligodT"))));
-    	
-		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
-				concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),
-					      newPSV("strandOrientation","unstranded"),
-						  newPSV("cDNAsynthesisType","random + oligodT"))));
-		
+
 		}
 		
 		//------------Experiences de Control Qualité------------------------------
@@ -190,7 +200,8 @@ public class ProtocolServiceCNG {
 		//------------Experiences de Purification-----------------------------
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		// 30/03/2017 ajout Protocole pour Sizing ...EN COURS
-		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));	
+		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));	
 
 		}
 		
