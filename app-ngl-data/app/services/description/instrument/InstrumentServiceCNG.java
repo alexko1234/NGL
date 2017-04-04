@@ -860,11 +860,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
 	private static List<Instrument> getInstrumentMinIon() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN18834", "MN18834", null, true, "/env/ig/atelier/nanopore/cng/MN18834", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19240", "MN19240", null, true, "/env/ig/atelier/nanopore/cng/MN19240", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19270", "MN19270", null, true, "/env/ig/atelier/nanopore/cng/MN19270", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19813", "MN19813", null, true, "/env/ig/atelier/nanopore/cng/MN19813", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN18834", "MN18834", null, true, "/env/ig/atelier/nanopore/cng/MN18834xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19240", "MN19240", null, true, "/env/ig/atelier/nanopore/cng/MN19240xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19270", "MN19270", null, true, "/env/ig/atelier/nanopore/cng/MN19270xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19813", "MN19813", null, true, "/env/ig/atelier/nanopore/cng/MN19813xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 		return instruments;
 	}

@@ -350,7 +350,6 @@ public class Nanopore extends AbstractDeclaration{
 	}
 	
 	// --4-- Librairie Nanopore (ONT)
-//MODIF PAS VUES !!!!!!!!!!!!1	
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
