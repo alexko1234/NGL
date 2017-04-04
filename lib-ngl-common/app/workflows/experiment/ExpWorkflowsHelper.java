@@ -1199,7 +1199,7 @@ public class ExpWorkflowsHelper {
 			if(null != icu.newQuantity && null != icu.newQuantity.value)c.quantity = icu.newQuantity;
 			if(null != icu.newVolume && null != icu.newVolume.value)c.volume = icu.newVolume;
 			if(null != icu.newSize && null != icu.newSize.value)c.size = icu.newSize;
-			if(null != icu.valuation){
+			if(null != icu.valuation && TBoolean.TRUE.equals(icu.copyValuationToInput)){
 				c.valuation = icu.valuation;
 				c.valuation.user = validation.getUser();
 				c.valuation.date = new Date();
