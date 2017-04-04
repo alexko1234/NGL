@@ -133,7 +133,7 @@ public class Nanopore extends AbstractDeclaration{
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//--4-- "Librairie ONT"
+		//--4-- Librairie ONT
 		l.add(newExperimentType("Librairie ONT","nanopore-library","LIB",2000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyLibrairieNanopore(),
@@ -141,7 +141,7 @@ public class Nanopore extends AbstractDeclaration{
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-	    //--5--Depot Nanopore
+	    //--5--Dépot Nanopore
 		l.add(newExperimentType("Dépot Nanopore","nanopore-depot",null,2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDepotNanopore(),	
@@ -262,7 +262,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	//////////////////// EXPERIMENT PROPERTIES /////////////////////////////////////////
 
-	// --1-- CdnaSynthesis
+	// --1-- Synthèse cDNA 
 	private List<PropertyDefinition> getPropertyCdnaSynthesis() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
@@ -281,17 +281,17 @@ public class Nanopore extends AbstractDeclaration{
 		return propertyDefinitions;
 	}
 	
-	//--2-- FragmentationNanopore
+	//--2-- Fragmentation Nanopore
 	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//Containers IN
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Nb fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class,true, null, null , 
+				"Nb fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null , 
 				"single",11,true,null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Qté totale dans frg","inputFrgQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class,true,  null,null, 
+				"Qté totale dans frg","inputFrgQuantity",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Double.class,false,  null,null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),
 				MeasureUnit.find.findByCode("ng"),
 				MeasureUnit.find.findByCode( "ng"),
@@ -308,7 +308,7 @@ public class Nanopore extends AbstractDeclaration{
 				"img",50,true,null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Taille réelle","measuredLibrarySize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, true, null,null, 
+				"Taille réelle","measuredLibrarySize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, false, null,null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),
 				MeasureUnit.find.findByCode("pb"),
 				MeasureUnit.find.findByCode("pb"),
@@ -333,7 +333,7 @@ public class Nanopore extends AbstractDeclaration{
 	}
 	
 
-	// --3-- ReparationNanopore
+	// --3-- Reparation Nanopore
 	private static List<PropertyDefinition> getPropertyReparationNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -349,7 +349,8 @@ public class Nanopore extends AbstractDeclaration{
 		return propertyDefinitions;
 	}
 	
-	// --4-- LibrairieNanopore
+	// --4-- Librairie Nanopore (ONT)
+//MODIF PAS VUES !!!!!!!!!!!!1	
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -362,10 +363,10 @@ public class Nanopore extends AbstractDeclaration{
 				"single",10,true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Qté engagée dans bq","libraryInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content),Double.class,false, null,null, 
+				"Qté engagée","libraryInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content),Double.class,false, null,null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),
 				MeasureUnit.find.findByCode("ng"),
-				MeasureUnit.find.findByCode( "ng"), 
+				MeasureUnit.find.findByCode("ng"), 
 				"single",11,true, null, null));
 		
 		//Containers OUT
@@ -382,7 +383,7 @@ public class Nanopore extends AbstractDeclaration{
 				"img",40,true,null,null));	
 
 		propertyDefinitions.add(newPropertiesDefinition(
-				"Taille (pb)","measuredSize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, true, null,null, 
+				"Taille","measuredSize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, false, null,null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),
 				MeasureUnit.find.findByCode("pb"),
 				MeasureUnit.find.findByCode("pb"),

@@ -117,7 +117,6 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
 		        /* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
 		           concatMap(newPSV("rnaLibProtocol","Smarter V4"),
-		         
 						  newPSV("strandOrientation","unstranded"),
 						  newPSV("cDNAsynthesisType","oligodT"))));
 			    */	

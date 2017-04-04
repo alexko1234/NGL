@@ -43,7 +43,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Nanopore", "nanopore-library")); // VERIFIER LABEL AVEC Julie
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Nanopore", "nanopore-library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));
 		// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
