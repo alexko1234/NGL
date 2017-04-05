@@ -43,21 +43,16 @@ public class Nanopore extends AbstractDeclaration{
 		List<ProcessType> l=new ArrayList<ProcessType>();
 		
 		 // supression nanopore-fragmentation; ajout de cDNAsynthesis; renumerotation
-	//05/03/2017  ajouts de cdna-synthesis, nanopore-frg,nanopore-dna-reparation,nanopore-library en -1 ... marche pas ????
+
 		 l.add(DescriptionFactory.newProcessType("Nanopore DEV", "nanopore-process-dev", ProcessCategory.find.findByCode("nanopore-library"),
 				60,
                 getPropertyDefinitionsNanoporeFragmentation(), 
                 Arrays.asList(getPET("ext-to-nanopore-process-dev",-1), 
-	              		      getPET("cdna-synthesis",-1),
-	                          getPET("nanopore-frg",-1),
-	                          getPET("nanopore-dna-reparation",-1),
-	                          getPET("nanopore-library",-1),
                       
                 		      getPET("cdna-synthesis",0),
                               getPET("nanopore-frg",0),
                               getPET("nanopore-dna-reparation",0),
                               getPET("nanopore-library",0),
-                              getPET("nanopore-depot",0),
                               
                               getPET("nanopore-frg",1),
                               getPET("nanopore-dna-reparation",1),
@@ -73,7 +68,8 @@ public class Nanopore extends AbstractDeclaration{
                               
                               getPET("nanopore-depot",4)), 
                               
-                getExperimentTypes("cdna-synthesis").get(0),              //first experiment type    
+                getExperimentTypes("nanopore-library").get(0),            //first experiment type    !!!!mettre celle qui parmis les getPET(0) se retrouve avec le getPET(x) le plus elevé
+                                                                          //                         => ici c'est donc nanopore-library qu'on trouve en getPET(  3 )
                 getExperimentTypes("nanopore-depot").get(0),              //last  experiment type
                 getExperimentTypes("ext-to-nanopore-process-dev").get(0), //void  experiment type
                 DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -109,17 +105,17 @@ public class Nanopore extends AbstractDeclaration{
 		
 		// ext to  
 
-		
 		l.add(newExperimentType("Ext to Process DEV", "ext-to-nanopore-process-dev",null, -1,
 			    ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne",
 			    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		// others 
+		
 		//--1-- Synthèse cDNA (recuperee dans MetaTprocess CNS)
 		l.add(newExperimentType("Synthèse cDNA","cdna-synthesis","cDNA",1700,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyCdnaSynthesis(),
-				getInstrumentUsedTypes("thermocycler"), //???? VERIFIER
+				getInstrumentUsedTypes("thermocycler"),
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -194,17 +190,19 @@ public class Nanopore extends AbstractDeclaration{
 	@Override
 	protected void getExperimentTypeNodeCommon() {
 
-		
+		// ext  to
 		newExperimentTypeNode("ext-to-nanopore-process-dev", getExperimentTypes("ext-to-nanopore-process-dev").get(0), 
 				false, false, false, 
+				null, // no previous nodes
 				null, 
-				null, null, null
+				null, 
+				null
 				).save();
 		
 		// others
 		newExperimentTypeNode("cdna-synthesis", getExperimentTypes("cdna-synthesis").get(0),
 				false, false,false,
-				getExperimentTypeNodes("ext-to-nanopore-process-dev"),     // previous nodes
+				getExperimentTypeNodes("ext-to-nanopore-process-dev"), // previous nodes
 				null, // pas purif
 				null, // pas qc
 				null  // pas transfert
@@ -214,7 +212,7 @@ public class Nanopore extends AbstractDeclaration{
 				false, false,false,
 				getExperimentTypeNodes("ext-to-nanopore-process-dev",
 									   "cdna-synthesis"),     // previous nodes
-				getExperimentTypes("nanopore-sizing"), // purif
+				getExperimentTypes("nanopore-sizing"),        // purif
 				null, // pas qc
 				null  // pas transfert
 				).save();	
@@ -223,8 +221,7 @@ public class Nanopore extends AbstractDeclaration{
 				false, false,false,
 				getExperimentTypeNodes("ext-to-nanopore-process-dev",
 									   "cdna-synthesis",
-						               "nanopore-frg"
-						               ), // previous nodes
+						               "nanopore-frg"), // previous nodes
 			    null, // pas purif
 			    null, // pas qc
 				null  // pas transfert
@@ -235,16 +232,15 @@ public class Nanopore extends AbstractDeclaration{
 				getExperimentTypeNodes("ext-to-nanopore-process-dev",
 									   "cdna-synthesis",
 						               "nanopore-frg",
-						               "nanopore-dna-reparation"), // previous nodes
-			    getExperimentTypes("nanopore-sizing"),        // purif
-			    null, //getExperimentTypes("fluo-quantification"),    // qc
-				getExperimentTypes("aliquoting","pool")   // transfert
+						               "nanopore-dna-reparation"),  // previous nodes
+			    getExperimentTypes("nanopore-sizing"),              // purif
+			    null, //pas qc
+				getExperimentTypes("aliquoting","pool")             // transfert
 				).save();	
 				
 		newExperimentTypeNode("nanopore-depot", getExperimentTypes("nanopore-depot").get(0),
 				false, false,false,
-			    getExperimentTypeNodes("ext-to-nanopore-process-dev",
-			    		               "nanopore-library"), // previous nodes
+			    getExperimentTypeNodes("nanopore-library"), // previous nodes
 			    null,  // pas purif
 			    null,  // pas qc
 			    null   // pas transfert
