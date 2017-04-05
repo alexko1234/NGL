@@ -25,6 +25,7 @@ import models.utils.InstanceConstants;
 import play.Logger;
 import play.mvc.Result;
 import services.instance.sample.UpdateSampleNCBITaxonCNS;
+import services.ncbi.TaxonomyServices;
 
 public class MigrationUpdateNCBITaxonSample extends CommonController{
 
@@ -62,8 +63,8 @@ public class MigrationUpdateNCBITaxonSample extends CommonController{
 					String ncbiScientificName=null;
 					String ncbiLineage=null;
 					if(!taxonCodeScientificName.containsKey(newTaxonCode) || !taxonCodeLineageName.containsKey(newTaxonCode)){
-						ncbiScientificName = UpdateSampleNCBITaxonCNS.getScientificNameCNS(newTaxonCode);
-						ncbiLineage=UpdateSampleNCBITaxonCNS.getLineageCNS(newTaxonCode);
+						ncbiScientificName = TaxonomyServices.getScientificName(newTaxonCode);
+						ncbiLineage=TaxonomyServices.getLineage(newTaxonCode);
 						if(ncbiScientificName!=null && ncbiLineage!=null){
 							taxonCodeScientificName.put(newTaxonCode, ncbiScientificName);
 							taxonCodeLineageName.put(newTaxonCode, ncbiLineage);
