@@ -112,9 +112,14 @@ public class IO extends TPLCommonController {
 		
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
 		PropertyFileValue pfv = filledForm.get();
+		
+		DynamicForm dynamicfilledForm = form().bindFromRequest(); 
+        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+        contextValidation.getContextObjects().putAll(dynamicfilledForm.data());
+		
 		if(null != pfv){
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
 			AbstractInput input = getInputInstance(experiment, contextValidation);
+			
 			if(!contextValidation.hasErrors()){
 				try{
 					experiment = input.importFile(experiment, pfv,contextValidation);

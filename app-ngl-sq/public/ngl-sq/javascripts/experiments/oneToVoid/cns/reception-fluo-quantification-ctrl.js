@@ -14,17 +14,17 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			if(inputContainerUsed){
 				var concentration1 = $parse("experimentProperties.concentration1")(inputContainerUsed);
 				if(concentration1){
-					inputContainerUsed.newconcentration = concentration1;
+					inputContainerUsed.newConcentration = concentration1;
 				}
 				
 				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
 				if(volume1){
-					inputContainerUsed.newvolume = volume1;
+					inputContainerUsed.newVolume = volume1;
 				}
 				
 				var quantity1 = $parse("experimentProperties.quantity1")(inputContainerUsed);
 				if(quantity1){
-					inputContainerUsed.newquantity = quantity1;
+					inputContainerUsed.newQuantity = quantity1;
 				}else{
 					inputContainerUsed.newQuantity = $scope.computeQuantity(
 							(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
@@ -40,18 +40,6 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
 
-	columns.push({
-		"header" : Messages("containers.table.volume") + " (µL)",
-		"property" : "inputContainerUsed.volume.value",
-		"order" : true,
-		"edit" : false,
-		"hide" : true,
-		"type" : "number",
-		"position" : 9,
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
-	});
 	
 	
 	columns.push({		
@@ -227,9 +215,23 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 					console.log("not ready to concentration CalMethod moyenne 2 HS");
 				}
 				
-			}else if(calMethod==="BR si >25 et HS si <=25"){
-				//TODO
-				getter.assign(udtData,$parse("inputContainerUsed.experimentProperties.concentrationHS2.value")(udtData));
+			}else if(calMethod==="BR si > 25 et HS1 si BR <= 25"){
+				var compute = {
+						inputConcHS1 : $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData),
+						inputConcBR1 : $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData),
+						isReady:function(){
+							return (this.inputConcHS1 && this.inputConcBR1);
+						}
+					};
+				var concentration1;
+				if(compute.isReady()){
+					concentration1 = $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData) >25 ? $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData) :  $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData); 
+					console.log("result BR si > 25 et HS1 si BR <= 25 = "+result);
+				}else {
+					concentration1=undefined;
+				}
+					getter.assign(udtData,concentration1);
+				
 			}else if(calMethod==="BR 1 seul"){
 				getter.assign(udtData,$parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData));
 
@@ -275,10 +277,10 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 	}
 	
 	
-	var importData = function(){
+	var importData = function(typeQC){
 		$scope.messages.clear();
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		console.log("File :"+$scope.file+", typeqc :"+typeQC);
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url+"?gamme="+typeQC, $scope.file)
 		.success(function(data, status, headers, config) {
 			$scope.messages.clazz="alert alert-success";
 			$scope.messages.text=Messages('experiments.msg.import.success');
@@ -310,7 +312,8 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
-		click:importData,		
+		clickHS:function(){ return importData("HS");},
+		clickBR:function(){ return importData("BR");}
 	};
 	
 }]);
