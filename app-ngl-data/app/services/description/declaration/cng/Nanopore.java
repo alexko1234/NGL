@@ -47,11 +47,16 @@ public class Nanopore extends AbstractDeclaration{
 	                ProcessCategory.find.findByCode("nanopore-library"),60,
 	                getPropertyDefinitionsNanoporeFragmentation(), 
 	                Arrays.asList(getPET("ext-to-nanopore-process-dev",-1), 
-	                		
+		              		      getPET("cdna-synthesis",-1),
+		                          getPET("nanopore-frg",-1),
+		                          getPET("nanopore-dna-reparation",-1),
+		                          getPET("nanopore-library",-1),
+                          
 	                		      getPET("cdna-synthesis",0),
 	                              getPET("nanopore-frg",0),
 	                              getPET("nanopore-dna-reparation",0),
 	                              getPET("nanopore-library",0),
+	                              getPET("nanopore-depot",0),
 	                              
 	                              getPET("nanopore-frg",1),
 	                              getPET("nanopore-dna-reparation",1),
