@@ -43,39 +43,40 @@ public class Nanopore extends AbstractDeclaration{
 		List<ProcessType> l=new ArrayList<ProcessType>();
 		
 		 // supression nanopore-fragmentation; ajout de cDNAsynthesis; renumerotation
-		 l.add(DescriptionFactory.newProcessType("Nanopore DEV", "nanopore-process-dev",
-	                ProcessCategory.find.findByCode("nanopore-library"),60,
-	                getPropertyDefinitionsNanoporeFragmentation(), 
-	                Arrays.asList(getPET("ext-to-nanopore-process-dev",-1), 
-		              		      getPET("cdna-synthesis",-1),
-		                          getPET("nanopore-frg",-1),
-		                          getPET("nanopore-dna-reparation",-1),
-		                          getPET("nanopore-library",-1),
-                          
-	                		      getPET("cdna-synthesis",0),
-	                              getPET("nanopore-frg",0),
-	                              getPET("nanopore-dna-reparation",0),
-	                              getPET("nanopore-library",0),
-	                              getPET("nanopore-depot",0),
-	                              
-	                              getPET("nanopore-frg",1),
-	                              getPET("nanopore-dna-reparation",1),
-	                              getPET("nanopore-library",1),
-	                              getPET("nanopore-depot",1),
-	                              
-	                              getPET("nanopore-dna-reparation",2),
-	                              getPET("nanopore-library",2),
-	                              getPET("nanopore-depot",2),    
-	                              
-	                              getPET("nanopore-library",3),
-	                              getPET("nanopore-depot",3), 
-	                              
-	                              getPET("nanopore-depot",4)), 
-	                              
-	                getExperimentTypes("cdna-synthesis").get(0),              //first experiment type    
-	                getExperimentTypes("nanopore-depot").get(0),              //last  experiment type
-	                getExperimentTypes("ext-to-nanopore-process-dev").get(0), //void  experiment type
-	                DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+	//05/03/2017  ajouts de cdna-synthesis, nanopore-frg,nanopore-dna-reparation,nanopore-library en -1 ... marche pas ????
+		 l.add(DescriptionFactory.newProcessType("Nanopore DEV", "nanopore-process-dev", ProcessCategory.find.findByCode("nanopore-library"),
+				60,
+                getPropertyDefinitionsNanoporeFragmentation(), 
+                Arrays.asList(getPET("ext-to-nanopore-process-dev",-1), 
+	              		      getPET("cdna-synthesis",-1),
+	                          getPET("nanopore-frg",-1),
+	                          getPET("nanopore-dna-reparation",-1),
+	                          getPET("nanopore-library",-1),
+                      
+                		      getPET("cdna-synthesis",0),
+                              getPET("nanopore-frg",0),
+                              getPET("nanopore-dna-reparation",0),
+                              getPET("nanopore-library",0),
+                              getPET("nanopore-depot",0),
+                              
+                              getPET("nanopore-frg",1),
+                              getPET("nanopore-dna-reparation",1),
+                              getPET("nanopore-library",1),
+                              getPET("nanopore-depot",1),
+                              
+                              getPET("nanopore-dna-reparation",2),
+                              getPET("nanopore-library",2),
+                              getPET("nanopore-depot",2),    
+                              
+                              getPET("nanopore-library",3),
+                              getPET("nanopore-depot",3), 
+                              
+                              getPET("nanopore-depot",4)), 
+                              
+                getExperimentTypes("cdna-synthesis").get(0),              //first experiment type    
+                getExperimentTypes("nanopore-depot").get(0),              //last  experiment type
+                getExperimentTypes("ext-to-nanopore-process-dev").get(0), //void  experiment type
+                DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return l;
 	}
 
