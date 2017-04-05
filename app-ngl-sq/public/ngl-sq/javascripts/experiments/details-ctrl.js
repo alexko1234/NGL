@@ -128,6 +128,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		angular.element('#finalDispatchModal').modal('hide');
 	});
 	
+	$scope.initValuationModal = function(){
+		$scope.messages.clear();
+		$scope.$broadcast('initValuationModal');
+	};
+	
+	$scope.$on('initValuationModal', function(e) {
+		if(e.stopPropagation){ //only emit as stopPropagation ???
+			$scope.$broadcast('initValuationModal');
+		}
+	});
+	
 	$scope.activeEditMode = function(){
 		$scope.messages.clear();
 		mainService.startEditMode();
@@ -210,7 +221,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.save = function(callbackFunction){
-		
 		$scope.messages.clear();
 		saveInProgress = true;
 		$scope.$broadcast('saveReagents', callbackFunction);		
@@ -218,7 +228,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.startExperiment = function(){
 		
-		$scope.save(function(experiment){
+		var callback = function(experiment){
 			
 			mainService.put("experiment",$scope.experiment);
 			$scope.experiment = experiment;
@@ -236,7 +246,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					$scope.$broadcast('activeEditMode');
 				}
 			});
-		});
+		};
+		$scope.save(callback);
 	};
 	
 	
@@ -246,7 +257,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			angular.element('#finalResolutionModal').modal('hide');
 			
-			$scope.save(function(experiment){
+			var callback = function(experiment){
 				mainService.put("experiment",$scope.experiment);
 				$scope.experiment = experiment;
 				var state =  angular.copy($scope.experiment.state);
@@ -263,8 +274,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					if(mainService.isEditMode()){
 						$scope.$broadcast('activeEditMode');
 					}
-				});			
-			});
+				});
+			};
+			$scope.save(callback);			
+			
 		}else{
 			angular.element('#finalResolutionModal').modal('show');
 		}
@@ -1909,4 +1922,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	});
 
 	
+}]).controller('ValuationCtrl',['$scope', '$http','$q','$parse','$filter','lists','mainService','datatable','commonAtomicTransfertMethod', 
+    function($scope,$http,$q,$parse,$filter,lists,mainService,datatable, commonAtomicTransfertMethod) {
+	console.log("Valuation Ctrl");
+	$scope.$on('initValuationModal', function(e) {
+		console.log("valuationModal");
+	});
 }]);
