@@ -269,34 +269,43 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		var dataQCFlowcell = $scope.datatableQcFlowcell.getData();
 		var dataLoadingReport = $scope.datatableLoadingReport.getData();
 	
-		$parse('outputContainerUsed.experimentProperties.qcFlowcell._type').assign(dataMain[0], "object_list");
-		$parse('outputContainerUsed.experimentProperties.qcFlowcell.value').assign(dataMain[0], dataQCFlowcell);
-		
-		$parse('inputContainerUsed.experimentProperties.loadingReport._type').assign(dataMain[0], "object_list");		
-		$parse('inputContainerUsed.experimentProperties.loadingReport.value').assign(dataMain[0], dataLoadingReport);
-		
-		//copy flowcell code to output code
-		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
-		if(null != codeFlowcell && undefined != codeFlowcell){
-			$parse('outputContainerUsed.code').assign(dataMain[0],codeFlowcell);
-			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[0],codeFlowcell);
-		}
-		
-	//	var loadingQtty= $parse('outputContainerUsed.loadingQuantity.value');
-		if(dataMain[0].inputContainerUsed.concentration){
-			var concIN = dataMain[0].inputContainerUsed.concentration.value;
-			var reportingList = dataLoadingReport ;
-			var reportingVolSum=0;	
-			if (null != reportingList){
-				for(var j=0; j < reportingList.length; j++){
-					reportingVolSum +=reportingList[j].volume;
-				}
+		dataMain.forEach(function(dataMain){
+			$parse('outputContainerUsed.experimentProperties.qcFlowcell._type').assign(dataMain, "object_list");
+			$parse('outputContainerUsed.experimentProperties.qcFlowcell.value').assign(dataMain, dataQCFlowcell);
+			
+			$parse('inputContainerUsed.experimentProperties.loadingReport._type').assign(dataMain, "object_list");		
+			$parse('inputContainerUsed.experimentProperties.loadingReport.value').assign(dataMain, dataLoadingReport);
+			
+			//copy flowcell code to output code
+			var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
+			if(null != codeFlowcell && undefined != codeFlowcell){
+				$parse('outputContainerUsed.code').assign(dataMain,codeFlowcell);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain,codeFlowcell);
+			}else{
+				codeFlowcell = $parse("outputContainerUsed.instrumentProperties.containerSupportCode.value")(dataMain);
+				$parse('outputContainerUsed.code').assign(dataMain,codeFlowcell);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain,codeFlowcell);
 			}
 			
-			if(reportingVolSum){
-				$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain[0],concIN * reportingVolSum);
+		//	var loadingQtty= $parse('outputContainerUsed.loadingQuantity.value');
+			if(dataMain.inputContainerUsed.concentration){
+				var concIN = dataMain.inputContainerUsed.concentration.value;
+				var reportingList = dataLoadingReport ;
+				var reportingVolSum=0;	
+				if (null != reportingList){
+					for(var j=0; j < reportingList.length; j++){
+						reportingVolSum +=reportingList[j].volume;
+					}
+				}
+				
+				if(reportingVolSum){
+					$parse('inputContainerUsed.experimentProperties.loadingQuantity.value').assign(dataMain,concIN * reportingVolSum);
+				}
 			}
-		}
+		});
+		
+		
+		
 		//datatable.setData(dataMain);
 	}
 	
@@ -364,8 +373,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	
 	$scope.$on('activeEditMode', function(e) {
 		console.log("call event activeEditMode");
-		//$scope.atmService.data.selectAll(true);
-		//$scope.atmService.data.setEdit();
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
 		
 		$scope.datatableQcFlowcell.selectAll(true);
 		$scope.datatableQcFlowcell.setEdit();
@@ -399,9 +408,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	}
 	
 	//overide defaut method
-	atmService.convertOutputPropertiesToDatatableColumn = function(property){
+	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
 		if(property.propertyValueType === "single"){
-			return  this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":Messages("experiments.outputs")});
+			return  this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 		}else if(property.propertyValueType === "object_list"){
 			var newColum = this.$commonATM.convertObjectListPropertyToDatatableColumn(property,"",{"0":"QC Flowcell"});
 			var columns = $scope.datatableQcFlowcell.getColumnsConfig();
@@ -410,9 +419,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			return undefined;						
 		}		
 	};
-	atmService.convertInputPropertiesToDatatableColumn = function(property){
+	atmService.convertInputPropertiesToDatatableColumn = function(property, pName){
 		if(property.propertyValueType === "single"){
-			return this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":Messages("experiments.inputs")});
+			return this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":Messages("experiments.inputs")});
 		}else if(property.propertyValueType === "object_list"){
 			var newColum = this.$commonATM.convertObjectListPropertyToDatatableColumn(property,"",{"0":"Bilan chargement"});
 			var columns = $scope.datatableLoadingReport.getColumnsConfig();

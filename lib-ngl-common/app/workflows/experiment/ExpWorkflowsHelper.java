@@ -1139,7 +1139,16 @@ public class ExpWorkflowsHelper {
 	private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 	public void callWorkflowRules(ContextValidation validation, Experiment exp) {
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", exp, validation),null);
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(exp);
+		facts.add(validation);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);
+			if(atomic.viewIndex == null)atomic.viewIndex = i+1; //used to have the position in the list
+			facts.add(atomic);
+		}
+		
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 	}
 
 	/**
