@@ -19,7 +19,7 @@ import validation.ContextValidation;
 public abstract class AbstractImportData implements Runnable{
 
 	public ContextValidation contextError;
-	final String name;
+	protected final String name;
 	protected ALogger logger;
 
 	public abstract void runImport() throws SQLException, DAOException, MongoException, RulesException;

@@ -14,27 +14,77 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
+import models.utils.dao.DAOException;
 import play.Logger;
+import play.cache.Cache;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
+import scala.concurrent.Future;
 
 public class TaxonomyServices {
 
 	private static String URLNCBI = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&retmote=xml";
 
+	
+	public static Promise<NCBITaxon> getNCBITaxon(String taxonCode){
+		if(taxonCode!=null){
+			Logger.debug("Get taxo info for code : "+taxonCode);
+			NCBITaxon taxon = getObjectInCache(taxonCode);
+			if(null == taxon){
+				Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
+				Promise<NCBITaxon> xml = homePage.map(response -> {
+					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+					DocumentBuilder db = dbf.newDocumentBuilder();
+					Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
+					NCBITaxon newTaxon = new NCBITaxon(taxonCode, doc);
+					setObjectInCache(newTaxon, taxonCode);
+					return newTaxon;
+				});
+				return xml;
+			}else{
+				Logger.debug("found taxon in cache "+taxonCode);
+				return Promise.pure(taxon);
+			}
+			
+		}
+		return Promise.pure(new NCBITaxon());
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static NCBITaxon getObjectInCache(String code){
+		if(null != code){
+			try {
+				String key = NCBITaxon.class.toString()+"."+code;
+				return (NCBITaxon) Cache.get(key);				
+			} catch (DAOException e) {
+				throw new RuntimeException(e);
+			}
+		}else{
+			return null;
+		}		
+	}
+	
+	private static void setObjectInCache(NCBITaxon o, String code){
+		if(null != o && null != code){
+			Cache.set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+		}		
+	}
+	
+	@Deprecated
 	public static String getTaxonomyInfo(String taxonCode, String expression) throws XPathExpressionException
 	{
 		if(taxonCode!=null && expression!=null){
 			Logger.debug("Get taxo info for "+expression+" for taxon "+taxonCode);
 			Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
 			Promise<Document> xml = homePage.map(response -> {
-				DocumentBuilderFactory dbf =
-						DocumentBuilderFactory.newInstance();
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				DocumentBuilder db = dbf.newDocumentBuilder();
 				Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
 				return doc;
 			});
+			
+			
 			String value = null;
 			int nbTry=0;
 			while(nbTry<3 && value==null){
@@ -57,7 +107,7 @@ public class TaxonomyServices {
 		}else
 			return null;
 	}
-
+	@Deprecated
 	public static String getValue(Promise<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException
 	{
 		Document doc = xml.get(10000);
@@ -66,7 +116,7 @@ public class TaxonomyServices {
 		//read a string value
 		return xPath.compile(expression).evaluate(doc);
 	}
-	
+	@Deprecated
 	public static String getScientificName(String taxonCode)
 	{
 		try {
@@ -76,7 +126,7 @@ public class TaxonomyServices {
 		}
 		return null;
 	}
-
+	@Deprecated
 	public static String getLineage(String taxonCode)
 	{
 		try {

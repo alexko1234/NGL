@@ -55,8 +55,8 @@ public class MigrationUpdateNCBITaxonSample extends CommonController {
 		String ncbiScientificName=null;
 		String ncbiLineage=null;
 		if(play.Play.application().configuration().getString("institute").equals("CNS")){
-			ncbiScientificName=UpdateSampleNCBITaxonCNS.getScientificNameCNS(sample.taxonCode);
-			ncbiLineage=UpdateSampleNCBITaxonCNS.getLineageCNS(sample.taxonCode);
+			ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
+			ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
 		}else{
 			ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
 			ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);

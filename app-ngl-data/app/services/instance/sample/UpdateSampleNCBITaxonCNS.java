@@ -18,33 +18,6 @@ public class UpdateSampleNCBITaxonCNS extends AbstractUpdateSampleNCBITaxon{
 
 	}
 
-	@Override
-	public void runImport() throws SQLException, DAOException, MongoException,
-	RulesException {
-		updateSampleNCBI(contextError, null);
-
-	}
-
-	public String getScientificName(String taxonCode) 
-	{
-		return getScientificNameCNS(taxonCode);
-	}
-	
-	public String getLineage(String taxonCode)
-	{
-		return getLineageCNS(taxonCode);
-	}
-	
-	public static String getScientificNameCNS(String taxonCode)
-	{
-		return TaxonomyServices.getScientificName(taxonCode);
-	}
-
-	public static String getLineageCNS(String taxonCode)
-	{
-		return TaxonomyServices.getLineage(taxonCode);
-	}
-
 
 
 }

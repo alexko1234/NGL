@@ -55,7 +55,7 @@ public class ImportDataCNS{
 		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
 		*/
 		
-		new UpdateSamplePropertiesCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
+		new UpdateSamplePropertiesCNS(Duration.create(8,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
 	}
 
 }
