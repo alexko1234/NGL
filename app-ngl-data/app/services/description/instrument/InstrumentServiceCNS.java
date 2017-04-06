@@ -483,11 +483,24 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         		null, "single", 49, true, "R9.4-spot-on", null));
         
         propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
-        		null, "single", 50, true, null, null));
+        		getPromethionPosition(), "single", 50, true, null, null));
         
 		return propertyDefinitions;
 	}
 	
+	private static List<Value> getPromethionPosition() {
+		List<Value> values = new ArrayList<Value>();
+		values.addAll(newValues("pl1_A1-D1", "pl1_A2-D2", "pl1_A3-D3", "pl1_A4-D4", "pl1_A5-D5", "pl1_A6-D6"));
+		values.addAll(newValues("pl1_E1-H1", "pl1_E2-H2", "pl1_E3-H3", "pl1_E4-H4", "pl1_E5-H5", "pl1_E6-H6"));
+		values.addAll(newValues("pl1_A7-D7", "pl1_A8-D8", "pl1_A9-D9", "pl1_A10-D10", "pl1_A11-D11", "pl1_A12-D12"));
+		values.addAll(newValues("pl1_E7-H7", "pl1_E8-H8", "pl1_E9-H9", "pl1_E10-H10", "pl1_E11-H11", "pl1_E12-H12"));
+		values.addAll(newValues("pl2_A1-D1", "pl2_A2-D2", "pl2_A3-D3", "pl2_A4-D4", "pl2_A5-D5", "pl2_A6-D6"));
+		values.addAll(newValues("pl2_E1-H1", "pl2_E2-H2", "pl2_E3-H3", "pl2_E4-H4", "pl2_E5-H5", "pl2_E6-H6"));
+		values.addAll(newValues("pl2_A7-D7", "pl2_A8-D8", "pl2_A9-D9", "pl2_A10-D10", "pl2_A11-D11", "pl2_A12-D12"));
+		values.addAll(newValues("pl2_E7-H7", "pl2_E8-H8", "pl2_E9-H9", "pl2_E10-H10", "pl2_E11-H11", "pl2_E12-H12"));
+		return values;
+	}
+
 	private static List<PropertyDefinition> getNanoporeSequencerPropertiesUAT() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
