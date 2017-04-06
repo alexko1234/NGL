@@ -271,7 +271,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Mk1B", "mk1b", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKIB() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
+		l.add(newInstrumentUsedType("PromethION", "promethION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getPromethIONProperties(),getInstrumentPromethION() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
 				,getContainerSupportCategories(new String[]{"irys-chip-2"}), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -468,6 +469,22 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	//	propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",500));
 	//	propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
 
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getPromethIONProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, null, 
+	        		null, "single", 48, true, null, null));
+	       
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, true, null, 
+        		null, "single", 49, true, "R9.4-spot-on", null));
+        
+        propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+        		null, "single", 50, true, null, null));
+        
 		return propertyDefinitions;
 	}
 	
@@ -803,7 +820,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-
+	private static List<Instrument> getInstrumentPromethION () throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("PromethION1", "PromethION1", null, true, "/env/ig/atelier/nanopore/cns/PromethION1", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return instruments;
+	}
+	
 	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
