@@ -47,11 +47,11 @@ public class Input extends AbstractInput {
 				}else if(!typeQC.contains(contextValidation.getObject("gamme").toString())) {
 					contextValidation.addErrors("Erreur gamme", "La gamme du fichier "+typeQC+" ne correspond pas au type d'import "+contextValidation.getObject("gamme").toString());
 				}else if(typeQC.equals("BR")){
-					codeProperties="concentrationDilBR1";
+					codeProperties="concentrationBR1";
 				}else if(typeQC.equals("HS")){
-					codeProperties="concentrationDilHS1";
+					codeProperties="concentrationHS1";
 				}else if(typeQC.equals("HS2")){
-					codeProperties="concentrationDilHS2";
+					codeProperties="concentrationHS2";
 				}
 				
 			}
