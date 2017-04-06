@@ -22,10 +22,12 @@ import services.description.common.LevelService;
 
 public class RunServiceCNG  extends AbstractRunService{
 	
+	// FDS 06/04/2017 NGL-1225: ajout rsnanopore
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
 		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		l.add(DescriptionFactory.newReadSetType("rsillumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
+		l.add(DescriptionFactory.newReadSetType("rsnanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
@@ -34,13 +36,17 @@ public class RunServiceCNG  extends AbstractRunService{
 		List<AnalysisType> l = new ArrayList<AnalysisType>();		
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
-
+	
+	// FDS 06/04/2017 NGL-1225: ajout nanopore
 	public void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunCategory> l = new ArrayList<RunCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
+		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Nanopore", "nanopore"));
+		
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
+	// FDS 06/04/2017 NGL-1225: ajout "nanopore"
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
 		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
@@ -50,6 +56,10 @@ public class RunServiceCNG  extends AbstractRunService{
 		l.add(DescriptionFactory.newRunType("RNEXTSEQ500","RNEXTSEQ500", 4, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RHS4000","RHS4000", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RHSX","RHSX", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+
+		l.add(DescriptionFactory.newRunType("MinIon","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("MKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("MKIb","RMKIB", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
@@ -77,6 +87,17 @@ public class RunServiceCNG  extends AbstractRunService{
 		//GA 21/07/2015 ajouter la propriété sampleAliquoteCode au readset, niveau content n'est pas idéal mais résoud le pb actuel (JIRA 672)
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Code aliquot","sampleAliquoteCode",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		
+		return propertyDefinitions;
+	}
+	
+	// FDS 06/04/2017 NGL-1225: ajout 
+	private static List<PropertyDefinition> getReadSetPropertyDefinitionsNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Protocole banque","libraryProtocol",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		
 		return propertyDefinitions;
 	}
@@ -156,6 +177,15 @@ public class RunServiceCNG  extends AbstractRunService{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Types processus banque","libProcessTypeCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
 				getLibProcessTypeCodeValues(), "list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Codes aliquots","sampleAliquoteCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,"list"));
+	    return propertyDefinitions;
+	}
+	
+	// FDS 06/04/2017 NGL-1225: ajout 
+	private static List<PropertyDefinition> getRunNanoporePropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Run), String.class, false, null, null, 
+				"single", null, false, null, null));
+		
 	    return propertyDefinitions;
 	}
 	
