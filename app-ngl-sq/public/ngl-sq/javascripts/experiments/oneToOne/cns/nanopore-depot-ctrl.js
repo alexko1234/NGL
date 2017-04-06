@@ -99,7 +99,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":10,
+			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -109,7 +109,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":20,
+			        	 "position":600,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }
 			         ],
@@ -143,9 +143,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: false,
-				showButton: false,
-				byDefault:false,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
 			messages:{
@@ -318,9 +318,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		//dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-		//dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-		//dtConfig.edit.byDefault = false;
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.showButton = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		
@@ -375,7 +375,10 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	});
 	
 	//Init
-	
+	$scope.$watch("instrumentType", function(newValue, OldValue){
+		if(newValue)
+			$scope.atmService.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
+	});
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
