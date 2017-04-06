@@ -288,8 +288,11 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			$scope.messages.open();	
 			//only atm because we cannot override directly experiment on scope.parent
 			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
-			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
+			$scope.fileHS = undefined;
+			$scope.fileBR = undefined;
+			angular.element('#importFileHS')[0].value = null;
+			angular.element('#importFileBR')[0].value = null;
+
 			$scope.$emit('refresh');
 			
 		})
@@ -298,8 +301,11 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
 			$scope.messages.open();	
-			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
+			$scope.fileHS = undefined;
+			$scope.fileBR = undefined;
+			angular.element('#importFileHS')[0].value = null;
+			angular.element('#importFileBR')[0].value = null;
+
 		});
 	};
 	
@@ -310,10 +316,10 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 					 
 			},
 		isFileSetHS:function(){
-			return ($scope.fileHS === undefined)?"disabled":"";
+			return ($scope.fileHS ===null || $scope.fileHS === undefined)?"disabled":"";
 		},
 		isFileSetBR:function(){
-			return ($scope.fileBR === undefined)?"disabled":"";
+			return ($scope.fileBR === null || $scope.fileBR === undefined)?"disabled":"";
 		},
 		clickHS:function(){ return importData("HS");},
 		clickBR:function(){ return importData("BR");}
