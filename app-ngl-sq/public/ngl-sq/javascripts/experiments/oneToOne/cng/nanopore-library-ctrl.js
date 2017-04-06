@@ -252,8 +252,13 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
-	//Init
 	
+	//force ouptut = "tube"
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
+	
+	//Init
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod

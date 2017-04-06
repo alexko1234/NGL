@@ -390,6 +390,11 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 		$scope.atmService.data.datatableConfig.setEdit();
 	});
 	
+	// force output = "tube"
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
+	
 	var atmService = atmToGenerateMany($scope, datatableConfigTubeParam, datatableConfigTubeConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){

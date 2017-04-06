@@ -226,6 +226,12 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 		$scope.atmService.data.setEdit();
 	});
 	
+	//force ouptut = "tube"
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){ 
+		  $scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
+
+	
 	//Init		
 
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
