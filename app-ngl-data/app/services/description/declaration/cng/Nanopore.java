@@ -147,8 +147,8 @@ public class Nanopore extends AbstractDeclaration{
 		l.add(newExperimentType("Dépot Nanopore","nanopore-depot",null,2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDepotNanopore(),	
-				//getInstrumentUsedTypes("minion","mk1", "mk1b"), CNS
-				getInstrumentUsedTypes("minion"),  //A VERIFIER  !!!!!!!!!!!!!!
+				//getInstrumentUsedTypes("minION","mk1", "mk1b"), CNS
+				getInstrumentUsedTypes("minION"), 
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		
