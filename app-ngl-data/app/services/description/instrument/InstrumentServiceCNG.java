@@ -354,7 +354,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		/** nanopore sequencers **/
 		// FDS ajout 30/03/2017 : NGL-1225 ( Nanopore )
-		l.add(newInstrumentUsedType("MinION", "minion", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),
+		l.add(newInstrumentUsedType("MinION", "miniION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),
 				getInstrumentMinIon(), 
 				getContainerSupportCategories(new String[]{"tube"}), 
 				getContainerSupportCategories(new String[]{"flowcell-1"}), 
