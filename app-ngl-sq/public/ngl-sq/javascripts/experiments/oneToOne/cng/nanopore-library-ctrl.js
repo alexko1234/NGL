@@ -104,11 +104,12 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         */
+			         // TEST "edit":true,
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":400,

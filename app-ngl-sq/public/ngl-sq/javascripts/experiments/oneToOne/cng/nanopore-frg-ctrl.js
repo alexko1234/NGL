@@ -81,6 +81,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	
+			         //------------------------ OUTPUT containers section -------------------
 			         {
 			        	 "header":"Conc. finale (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -112,11 +113,12 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 			        	 "position":90,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         // TEST "edit":true....................pas suffisant
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":400,

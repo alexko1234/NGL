@@ -81,6 +81,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
+			         //------------------------ OUTPUT containers section -------------------
 			         {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -112,11 +113,12 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         //TEST "edit":true
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":400,

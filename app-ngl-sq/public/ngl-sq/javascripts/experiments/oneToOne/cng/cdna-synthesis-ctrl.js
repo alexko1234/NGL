@@ -1,4 +1,4 @@
-angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmToSingleDatatable','lists','mainService',
+angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'atmToSingleDatatable','lists','mainService',
                                                     function($scope, $parse, atmToSingleDatatable,lists,mainService){
                                                     
 	var datatableConfig = {
@@ -71,6 +71,7 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 					        	 "position":7,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },
+					         //------------------------ OUTPUT containers section -------------------
 					         {
 					        	 "header":Messages("containers.table.state.code"),
 					        	 "property":"inputContainer.state.code",
@@ -82,7 +83,6 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 					        	 "position":7,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         },			        
-					        
 					         {
 					        	 "header":Messages("containers.table.volume")+" (µL)",
 					        	 "property":"outputContainerUsed.volume.value",
@@ -95,16 +95,16 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 					         },
 					         /*
 					         {
-					        	 "header":Messages("containers.table.code"),
+					        	 "header":Messages("containers.table.code")+"XXXXXXXXX",
 					        	 "property":"outputContainerUsed.code",
 					        	 "order":true,
-								 "edit":false,
+								 "edit":true,
 								 "hide":true,
 								 "type":"text",
-					        	 "position":400,
+					        	 "position":499,
 					        	 "extraHeaders":{0:Messages("experiments.outputs")}
 					         },
-					         */
+                             */
 					         {
 					        	 "header":Messages("containers.table.stateCode"),
 					        	 "property":"outputContainer.state.code | codes:'state'",
@@ -217,9 +217,6 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 		$scope.atmService.data.setEdit();
 	});
 	
-	
-	
-	
 	//Init		
 	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
 		datatableConfig.columns.push({
@@ -317,11 +314,12 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 		});
 
 	} else {
+		// TEST "edit" : true......................................PAS SUFFISANT
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.code"),
 			"property" : "outputContainerUsed.code",
 			"order" : true,
-			"edit" : false,
+			"edit" : true,
 			"hide" : true,
 			"type" : "text",
 			"position" : 400,
@@ -330,6 +328,7 @@ angular.module('home').controller('cDNASynthesisCtrl',['$scope', '$parse', 'atmT
 			}
 		});		
 	}
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(line, column){
