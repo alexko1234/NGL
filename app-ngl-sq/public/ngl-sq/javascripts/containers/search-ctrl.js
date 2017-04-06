@@ -41,7 +41,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		save:{
 			active:Permissions.check("writing")?true:false,
 			url:function(value){
-				var fields = "fields=valuation&fields=state";
+				var fields = "fields=valuation";
+				if(value.state)fields = fields+"&fields=state";
 				if(value.comments)fields = fields+"&fields=comments";
 				if(value.concentration)fields = fields+"&fields=concentration";
 				if(value.volume)fields = fields+"&fields=volume";
