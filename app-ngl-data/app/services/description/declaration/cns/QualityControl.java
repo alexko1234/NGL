@@ -48,7 +48,7 @@ public class QualityControl extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 		
-		l.add(newExperimentType("Migration sur puce (eval ARN)","chip-migration-rna-evaluation", null,20300,
+		l.add(newExperimentType("Migration sur puce (eval ARN ou cDNA)","chip-migration-rna-evaluation", null,20300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigrationARNEvaluation(), 
 				getInstrumentUsedTypes("agilent-2100-bioanalyzer"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
