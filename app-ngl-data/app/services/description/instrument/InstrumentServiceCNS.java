@@ -835,7 +835,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<Instrument> getInstrumentPromethION () throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("PromethION1", "PromethION1", null, true, "/env/ig/atelier/nanopore/cns/PromethION1", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("PROMETHION1", "PromethION1", null, true, "/env/ig/atelier/nanopore/cns/PROMETHION1", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
