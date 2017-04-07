@@ -19,7 +19,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-import lims.services.ILimsRunServices;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
