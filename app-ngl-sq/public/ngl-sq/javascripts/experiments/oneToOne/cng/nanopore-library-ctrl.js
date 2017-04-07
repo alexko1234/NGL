@@ -104,10 +104,10 @@ angular.module('home').controller('NanoporeLibraryCtrlCNG',['$scope', '$parse', 
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         */
-			         // TEST "edit":true,
+			         // au CNG il faut "outputContainerUsed.locationOnContainerSupport.code" + edit: true
 			         {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"outputContainerUsed.code",
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,

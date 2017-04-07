@@ -198,10 +198,10 @@ angular.module('home').controller('NanoporeSizingCtrlCNG',['$scope', '$parse', '
 			        	 "position":55,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         // test "edit":true,
+			      // au CNG il faut "outputContainerUsed.locationOnContainerSupport.code" + edit: true
 			         {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"outputContainerUsed.code",
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
