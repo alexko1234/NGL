@@ -336,9 +336,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 					
-				
+			if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
 			// NOTE: toutes les experiences nanopores sont regroupées dans Nanopore.java
 						l.addAll(new Nanopore().getExperimentType());
+			}
 			
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 	}
@@ -533,6 +534,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();
 
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
 		new Nanopore().getExperimentTypeNode();
 		
@@ -554,6 +556,23 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();	
+		} else {
+			newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
+					false, false,false,
+					// PB...getETNForPool(),  // previous nodes...
+					getExperimentTypeNodes("prep-pcr-free",
+							               "prep-wg-nano",
+							               "pcr-and-purification",
+							               "lib-normalization",
+							               "library-prep",
+							               "denat-dil-lib",
+							               "normalization-and-pooling"),// previous nodes
+					null,
+					null,
+					null
+					).save();	
+			
+		}
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
 				false,false,false,

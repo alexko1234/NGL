@@ -232,8 +232,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
 		// FDS ajout 03/03/2017 NGL-1225: processus Nanopore DEV
 		l.addAll(new Nanopore().getProcessType());
+		}
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}

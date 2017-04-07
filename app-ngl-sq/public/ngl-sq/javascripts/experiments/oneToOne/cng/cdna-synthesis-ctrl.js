@@ -275,7 +275,7 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 	
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube") {
 		datatableConfig.columns.push({
-			// barcode plaque sortie == support Container used code... faut Used
+			// barcode plaque sortie 
 			"header" : Messages("containers.table.support.name"),
 			"property" : "outputContainerUsed.locationOnContainerSupport.code",
 			"hide" : true,
@@ -298,11 +298,12 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 				0 : Messages("experiments.outputs")
 			}
 		});
-		datatableConfig.columns.push({// colonne
+		datatableConfig.columns.push({
+			// colonne
 			"header" : Messages("containers.table.support.column"),
 			// astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel
 			// forcer a numerique.=> type:number, property: *1
-			"property" : "outputContainerUsed.locationOnContainerSupport.column",
+			"property" : "outputContainerUsed.locationOnContainerSupport.column*1",
 			"edit" : false,
 			"order" : true,
 			"hide" : true,
@@ -314,10 +315,10 @@ angular.module('home').controller('cDNASynthesisCtrlCNG',['$scope', '$parse', 'a
 		});
 
 	} else {
-		// TEST "edit" : true......................................PAS SUFFISANT
+		// au CNG il faut "outputContainerUsed.locationOnContainerSupport.code" + edit: true
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.code"),
-			"property" : "outputContainerUsed.code",
+			"property" : "outputContainerUsed.locationOnContainerSupport.code",
 			"order" : true,
 			"edit" : true,
 			"hide" : true,
