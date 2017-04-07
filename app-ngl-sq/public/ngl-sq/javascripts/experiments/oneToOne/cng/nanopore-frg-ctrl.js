@@ -1,4 +1,4 @@
-angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSingleDatatable','datatable',
+angular.module('home').controller('NanoporeFrgCtrlCNG',['$scope', '$parse','atmToSingleDatatable','datatable',
                                                                function($scope,$parse, atmToSingleDatatable, datatable) {
 	
 	//Nouvelle fragmentation 

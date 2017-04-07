@@ -1,5 +1,5 @@
 // copy CNG 06/04/2017
-angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atmToGenerateMany',
+angular.module('home').controller('NanoporeSizingCtrlCNG',['$scope', '$parse', 'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience	

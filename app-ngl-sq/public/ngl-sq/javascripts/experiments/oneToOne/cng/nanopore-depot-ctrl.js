@@ -1,4 +1,4 @@
-angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
+angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
                                                                function($scope, $parse,  atmToSingleDatatable, datatable) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
