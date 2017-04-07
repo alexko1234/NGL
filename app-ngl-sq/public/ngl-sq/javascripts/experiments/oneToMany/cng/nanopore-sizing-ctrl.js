@@ -157,7 +157,7 @@ angular.module('home').controller('NanoporeSizingCtrlCNG',['$scope', '$parse', '
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },			        
-			         
+			         //------------------------ OUTPUT containers section -------------------
 			         {
 			        	 "header":Messages("containers.table.size")+" (pb)",
 			        	 "property":"outputContainerUsed.size.value",
@@ -198,11 +198,12 @@ angular.module('home').controller('NanoporeSizingCtrlCNG',['$scope', '$parse', '
 			        	 "position":55,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         // test "edit":true,
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
 						 "hide":true,
 						 "type":"text",
 			        	 "position":400,
