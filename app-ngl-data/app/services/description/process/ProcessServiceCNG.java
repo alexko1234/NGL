@@ -233,8 +233,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
-		// FDS ajout 03/03/2017 NGL-1225: processus Nanopore DEV
-		l.addAll(new Nanopore().getProcessType());
+			// FDS ajout 03/03/2017 NGL-1225: processus Nanopore DEV
+			l.addAll(new Nanopore().getProcessType());
 		}
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);

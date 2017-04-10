@@ -535,27 +535,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();
 
 		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-		//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
-		new Nanopore().getExperimentTypeNode();
-		
-		//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
-// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....
-// !!!!!		
-		newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
-				false, false,false,
-				// PB...getETNForPool(),  // previous nodes...
-				getExperimentTypeNodes("prep-pcr-free",
-						               "prep-wg-nano",
-						               "pcr-and-purification",
-						               "lib-normalization",
-						               "library-prep",
-						               "denat-dil-lib",
-						               "normalization-and-pooling",
-						               "nanopore-library"),// previous nodes
-				null,
-				null,
-				null
-				).save();	
+			//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
+			new Nanopore().getExperimentTypeNode();
+			
+			//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
+			// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....
+			// !!!!!		
+			newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
+					false, false,false,
+					// PB...getETNForPool(),  // previous nodes...
+					getExperimentTypeNodes("prep-pcr-free",
+							               "prep-wg-nano",
+							               "pcr-and-purification",
+							               "lib-normalization",
+							               "library-prep",
+							               "denat-dil-lib",
+							               "normalization-and-pooling",
+							               "nanopore-library"),// previous nodes
+					null,
+					null,
+					null
+					).save();	
 		} else {
 			newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
 					false, false,false,
