@@ -6,6 +6,7 @@ import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
 import lims.services.ILimsRunServices;
+import mail.MailServiceException;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
@@ -77,6 +78,12 @@ public class LimsRunServices implements ILimsRunServices {
 	public Sample findSampleToCreate(String sampleCode) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void sendMailFVQC(ReadSet readSet) throws MailServiceException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

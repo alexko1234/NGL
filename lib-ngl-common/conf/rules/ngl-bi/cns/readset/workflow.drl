@@ -152,19 +152,8 @@ rule "Find Fungi for taxonomy treatment"
 		}
 end
 
-rule "Synchro readset old lims : updateReadSetAfterQC"
-	@nglBI( F_QC_1 )
-	dialect "java"
-	salience 600
-	no-loop
-	when
-		$readset : ReadSet(typeCode == "default-readset" || typeCode == "rsillumina")
-	then
-		Logger.debug("Synchro readset old lims : updateReadSetAfterQC "+$readset.code);
-		Spring.getBeanOfType(ILimsRunServices.class).updateReadSetAfterQC($readset);
-end
 
-rule "Synchro readset old lims F_VQC : valuationReadSet"
+rule "Send mail agirs F_VQC"
 	@nglBI( F_VQC_1 )
 	dialect "java"
 	salience 600
@@ -172,21 +161,8 @@ rule "Synchro readset old lims F_VQC : valuationReadSet"
 	when
 		$readset : ReadSet(typeCode == "default-readset" || typeCode == "rsillumina")
 	then
-		Logger.debug("Synchro readset old lims F_VQC : valuationReadSet "+$readset.code);
-		Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet($readset, true);
-			
-end
-
-rule "Synchro readset old lims F_AUA : valuationReadSet"
-	@nglBI( A-UA_1 )
-	dialect "java"
-	salience 600
-	no-loop
-	when
-		$readset : ReadSet(typeCode == "default-readset" || typeCode == "rsillumina")
-	then
-		Logger.debug("Synchro readset old lims F_AUA : valuationReadSet "+$readset.code);
-		Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet($readset, false);
+		Logger.debug("Send mail agirs F_VQC "+$readset.code);
+		Spring.getBeanOfType(ILimsRunServices.class).sendMailFVQC($readset);
 			
 end
 

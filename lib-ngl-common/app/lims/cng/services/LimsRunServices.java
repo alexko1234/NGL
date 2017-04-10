@@ -16,6 +16,7 @@ import lims.models.experiment.illumina.Lane;
 import lims.models.experiment.illumina.Library;
 import lims.models.instrument.Instrument;
 import lims.services.ILimsRunServices;
+import mail.MailServiceException;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
@@ -194,6 +195,11 @@ public class LimsRunServices implements ILimsRunServices {
 	public Sample findSampleToCreate(String sampleCode) {
 		Logger.warn("Not Implemented");	
 		return null;
+	}
+
+	@Override
+	public void sendMailFVQC(ReadSet readSet) throws MailServiceException {
+		Logger.warn("Not Implemented");		
 	}
 	
 }
