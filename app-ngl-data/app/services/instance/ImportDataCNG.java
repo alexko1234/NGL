@@ -7,6 +7,7 @@ import services.instance.container.ContainerImportCNG;
 import services.instance.parameter.IndexImportCNG;
 import services.instance.project.ProjectImportCNG;
 import services.instance.sample.UpdateSampleNCBITaxonCNG;
+import services.instance.sample.UpdateSamplePropertiesCNS;
 
 /**
  * @author dnoisett
@@ -31,6 +32,10 @@ public class ImportDataCNG {
 		//vérifier s'il y a des containers a importer toutes les 10 minutes
 		new ContainerImportCNG(Duration.create(15,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 		
+		//Mise a jour des info du NCBI pour les samples qui n'en ont pas
 		new UpdateSampleNCBITaxonCNG(Duration.create(1,TimeUnit.MINUTES),Duration.create(10,TimeUnit.MINUTES));
+		 
+		//11/04/2017 ajouter la propagation des modifications apportées aux samples...
+		new UpdateSamplePropertiesCNS(Duration.create(8,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
 	}
 }
