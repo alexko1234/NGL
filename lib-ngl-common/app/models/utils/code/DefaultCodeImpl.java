@@ -61,7 +61,7 @@ public class DefaultCodeImpl implements Code {
 	}
 	
 	public synchronized String generateContainerSupportCode() {
-		 return generateBarCode();
+		 return generateBarCode().replace("0", "#");
 	}
 
 	// ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
