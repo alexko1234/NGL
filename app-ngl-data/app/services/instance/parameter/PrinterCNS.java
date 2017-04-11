@@ -62,7 +62,7 @@ public class PrinterCNS {
 		lp.add(newBBP11("BBP4", "sequence / plaque","bbp4.tx.local",9100,"2","15","1",true, 
 				Arrays.asList(
 						newBarcodePosition("1","6cm code barre en dessous",712,"A25,0,0,2,2,1,N","B75,28,0,1B,2,2,39,N",true, false),
-						newBarcodePosition("1","6cm code barre en dessus",712,"A25,42,0,2,2,1,N","B75,0,0,1B,2,2,39,N",false, false)						
+						newBarcodePosition("2","6cm code barre en dessus",712,"A25,42,0,2,2,1,N","B75,0,0,1B,2,2,39,N",false, false)						
 						)));
 		lp.add(newBBP11("BBP5", "finishing / tube","bbp5.tx.local",9100,"2","15","1",true, 
 				Arrays.asList(
