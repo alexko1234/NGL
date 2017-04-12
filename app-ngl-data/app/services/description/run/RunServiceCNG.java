@@ -57,9 +57,9 @@ public class RunServiceCNG  extends AbstractRunService{
 		l.add(DescriptionFactory.newRunType("RHS4000","RHS4000", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RHSX","RHSX", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-		l.add(DescriptionFactory.newRunType("MinIon","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("MKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("MKIb","RMKIB", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("MinIon","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("MKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("MKIb","RMKIB", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
@@ -91,16 +91,7 @@ public class RunServiceCNG  extends AbstractRunService{
 		return propertyDefinitions;
 	}
 	
-	// FDS 06/04/2017 NGL-1225: ajout 
-	private static List<PropertyDefinition> getReadSetPropertyDefinitionsNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Protocole banque","libraryProtocol",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
-		
-		return propertyDefinitions;
-	}
+	
 	
 	// GA 24/07/2015 ajout des TagCategories
 	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java !!!!
@@ -180,13 +171,6 @@ public class RunServiceCNG  extends AbstractRunService{
 	    return propertyDefinitions;
 	}
 	
-	// FDS 06/04/2017 NGL-1225: ajout 
-	private static List<PropertyDefinition> getRunNanoporePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Run), String.class, false, null, null, 
-				"single", null, false, null, null));
-		
-	    return propertyDefinitions;
-	}
+	
 	
 }

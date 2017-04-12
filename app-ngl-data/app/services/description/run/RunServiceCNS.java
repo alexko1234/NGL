@@ -103,15 +103,7 @@ public class RunServiceCNS extends AbstractRunService {
 		
 		return propertyDefinitions;
 	}
-	private static List<PropertyDefinition> getReadSetPropertyDefinitionsNanopore() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Protocole banque","libraryProtocol",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
-		
-		return propertyDefinitions;
-	}
+	
 	
 	//GA 24/07/2015 ajout des TagCategories
 	private static List<Value> getTagCategories(){
@@ -162,15 +154,6 @@ public class RunServiceCNS extends AbstractRunService {
 	    return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getRunNanoporePropertyDefinitions() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Run), String.class, false, null, null, 
-				"single", null, false, null, null));
-		
-	    return propertyDefinitions;
-	}
 	
-
-
 
 }
