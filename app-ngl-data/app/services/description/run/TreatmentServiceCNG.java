@@ -170,7 +170,6 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				getTreatmentTypeContexts("read1"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "150"));
 
-
 		//TODO : level parameter must be verified
 		l.add(DescriptionFactory.newTreatmentType("Sample Control","sample-control", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sampleControl", 
 				getSampleControlTreatmentPropertyDefinitions(), 
