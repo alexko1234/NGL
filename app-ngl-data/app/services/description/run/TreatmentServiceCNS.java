@@ -419,7 +419,4 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;		
 	}
 
-
-	
-	
 }
