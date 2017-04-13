@@ -410,7 +410,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 14, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 15, false, null,null));		
+				getTagCategories(), null,null,null,"single", 15, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Orientation brin synthétisé","strandOrientation", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 16, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
@@ -440,7 +440,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 14, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 15, false, null,null));		
+				getTagCategories(), null,null,null,"single", 15, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 6, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
@@ -456,7 +456,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 3, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 4, false, null,null));		
+				getTagCategories(), null,null,null,"single", 4, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
 				null,null,null,"single", 5, false, null, null));
 		
