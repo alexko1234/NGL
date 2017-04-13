@@ -58,7 +58,7 @@ public class TaxonomyServicesTest extends AbstractTests{
 		});
 		Thread.sleep(10000);
 	}
-	
+	@Test
 	public void shouldNotNCBITaxonTest() throws InterruptedException
 	{
 		
@@ -66,23 +66,39 @@ public class TaxonomyServicesTest extends AbstractTests{
 		    @Override
 		    public void invoke(NCBITaxon taxon) throws Throwable {
 		    	String scientificName = taxon.getScientificName();
-		    	Assert.assertNull(scientificName);
+		    	Assert.assertEquals(scientificName, "Taxon code 135 is not exists");
 				String lineage = taxon.getLineage();
-				Assert.assertNull(lineage);
+				Assert.assertEquals(lineage, "Taxon code 135 is not exists");
 		    }
 		});
 		Thread.sleep(10000);
 	}
-	
+	@Test
 	public void shouldNotNCBITaxonForNullCodeTest() throws InterruptedException
 	{
 		TaxonomyServices.getNCBITaxon(null).onRedeem(new Callback<NCBITaxon>() {
 		    @Override
 		    public void invoke(NCBITaxon taxon) throws Throwable {
 		    	String scientificName = taxon.getScientificName();
-		    	Assert.assertNull(scientificName);
+		    	Assert.assertEquals(scientificName, "Taxon code null is not exists");
 				String lineage = taxon.getLineage();
-				Assert.assertNull(lineage);
+				Assert.assertEquals(lineage, "Taxon code null is not exists");
+		    }
+		});
+		Thread.sleep(10000);
+	}
+	
+	@Test
+	public void shouldErrorNCBITaxonTest() throws InterruptedException
+	{
+		
+		TaxonomyServices.getNCBITaxon("0").onRedeem(new Callback<NCBITaxon>() {
+		    @Override
+		    public void invoke(NCBITaxon taxon) throws Throwable {
+		    	String scientificName = taxon.getScientificName();
+		    	Assert.assertEquals(scientificName, "Taxon code 0 is on error");
+				String lineage = taxon.getLineage();
+				Assert.assertEquals(lineage, "Taxon code 0 is on error");
 		    }
 		});
 		Thread.sleep(10000);

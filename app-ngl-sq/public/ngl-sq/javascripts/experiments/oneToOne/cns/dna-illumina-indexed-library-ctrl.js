@@ -263,7 +263,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 	}
 	
 	
-	var populateIndexPlate = function(startIndex, endIndex){
+	var populateIndex12LinePlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
 		
 		var values={};
@@ -287,13 +287,39 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		}
 		return values
 	}
+	
+	var populateIndex6ColumnPlate = function(startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		for(var i = 1 ; i <= 12; i++){
+			
+			for(var j=0; j < lines.length; j++){
+				var line = lines[j];
+				var indexName = "IND"+currentIndex;
+				if(currentIndex === 41)indexName=indexName+"b";
+				values[line+i]=indexName;
+				
+				if(currentIndex === endIndex){
+					currentIndex = startIndex;
+				}else{
+					currentIndex++;
+				}
+			}
+			
+		}
+		return values
+	}
+	
 	$scope.indexPlates = [];
 	//12BA001-12BA096 ; 12BA097-12BA192 ; 12BA193-12BA288 ; 12BA289-12BA384
 	
-	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndexPlate(1, 96)});
-	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndexPlate(97, 192)});
-	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndexPlate(193, 288)});
-	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndexPlate(289, 384)});
+	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndex12LinePlate(1, 96)});
+	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndex12LinePlate(97, 192)});
+	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndex12LinePlate(193, 288)});
+	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndex12LinePlate(289, 384)});
+	$scope.indexPlates.push({label:"IND1-IND48", value:populateIndex6ColumnPlate(1, 48)});
 	
 	$scope.updatePlateWithIndex = function(selectedPlateIndex){
 		console.log("choose : "+selectedPlateIndex);

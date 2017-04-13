@@ -66,8 +66,8 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 		
 		
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
-				DBQuery.or(DBQuery.notExists("ncbiScientificName"),DBQuery.notExists("ncbiLineage")),keys).toList();
-		
+				DBQuery.notEquals("taxonCode",null).or(DBQuery.is("ncbiScientificName", null),DBQuery.is("ncbiLineage", null)),keys).toList();
+		Logger.info("update sample without ncbi data : "+samples.size());
 		Map<String, List<Sample>> samplesByTaxon = samples.stream().collect(Collectors.groupingBy(sample -> sample.taxonCode));
 		
 		List<Promise<NCBITaxon>> promises = samplesByTaxon.keySet()
@@ -80,22 +80,36 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 			    @Override
 			    public void invoke(List<NCBITaxon> taxons)  {
 			        taxons.forEach(taxon -> {
-				        String ncbiScientificName=taxon.getScientificName();
+				        if(taxon.error){
+				        	contextError.addErrors(taxon.code, "error to find taxon");
+				        }
+				        if(!taxon.exists){
+				        	contextError.addErrors(taxon.code, "taxon code not exists !!");
+				        }
+				        
+			        	String ncbiScientificName=taxon.getScientificName();
 						String ncbiLineage=taxon.getLineage();
 						
+						DBUpdate.Builder builder = DBUpdate.set("traceInformation.modifyDate",new Date() ).set("traceInformation.modifyUser","ngl-data");
+						
 						if(ncbiScientificName==null){
-							contextError.addErrors(taxon.code, "no scientific name ");
+							contextError.addErrors(taxon.code, "no ncbi scientific name");
+							builder.set("ncbiScientificName", "no ncbi scientific name");
+						}else{
+							builder.set("ncbiScientificName", ncbiScientificName);
 						}
 						if(ncbiLineage==null){
-							contextError.addErrors(taxon.code, "no lineage ");
+							contextError.addErrors(taxon.code, "no ncbi lineage");
+							builder.set("ncbiLineage", "no ncbi lineage");
+						}else{
+							builder.set("ncbiLineage", ncbiLineage);
 						}
-				        
 						samplesByTaxon.get(taxon.code).forEach(sample ->{
-							//Logger.info("Update sample taxon info "+sample.code+" / "+taxon.code);
-							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
-									DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage)
-									.set("traceInformation.modifyDate",new Date() ).set("traceInformation.modifyUser","ngl-data"));	
+								//Logger.info("Update sample taxon info "+sample.code+" / "+taxon.code);
+								MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
+										DBQuery.is("code", sample.code), builder);	
 						});					
+						
 			        });
 			        Logger.debug("finish update");
 			        if(contextError.hasErrors()){

@@ -59,8 +59,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		l.add(newImportType("Reception d'ADN", "dna-reception", ImportCategory.find.findByCode("sample-import"), getDNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception d'Amplicon", "amplicon-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception d'ARN", "rna-reception", ImportCategory.find.findByCode("sample-import"), getRNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
-		l.add(newImportType("Reception Lib. RNA", "rna-library-reception", ImportCategory.find.findByCode("sample-import"), getRNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
-		l.add(newImportType("Reception Lib. DNA", "dna-library-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. ARN", "rna-library-reception", ImportCategory.find.findByCode("sample-import"), getRNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. ADN", "dna-library-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. ADN sans index", "dna-library-without-index-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryWithoutIndexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Pool Lib.", "pool-library-reception", ImportCategory.find.findByCode("sample-import"), getPoolLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
 		
@@ -420,7 +421,17 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
+	private List<PropertyDefinition> getDNALibraryWithoutIndexReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
 	
+		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 6, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
+		
+		return propertyDefinitions;
+	}
 	
 	private List<PropertyDefinition> getDNALibraryReceptionPropertyDefinitions() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

@@ -317,7 +317,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			
 		}
 
-		container.qualityControlResults=new ArrayList<QualityControlResult>();
+		List<QualityControlResult> qualityControlResults=new ArrayList<QualityControlResult>();
 		try{
 			if(rs.getString("concentrationTypeCode")!=null){
 				QualityControlResult qcConcentrationResult=new QualityControlResult();
@@ -346,7 +346,10 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}catch(SQLException e){
 			
 		}
-
+		
+		if(qualityControlResults.size() == 0){
+			container.qualityControlResults = qualityControlResults;
+		}
 		
 		if(null != experimentTypeCode){
 			container.fromTransformationTypeCodes=new HashSet<String>();
