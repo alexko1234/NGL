@@ -81,7 +81,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 			for(int col = 1 ; col <= 12 ; col++){
 				Index index = getChromiumIndex(row,col);				
 				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
-					Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+					//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
 					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
 				} else {
 					Logger.info("index : "+ index.code + " already exists !!");

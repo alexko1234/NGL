@@ -80,20 +80,27 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 			    @Override
 			    public void invoke(List<NCBITaxon> taxons)  {
 			        taxons.forEach(taxon -> {
-				        String ncbiScientificName=taxon.getScientificName();
+				        if(taxon.error){
+				        	contextError.addErrors(taxon.code, "error to find taxon");
+				        }
+				        if(!taxon.exists){
+				        	contextError.addErrors(taxon.code, "taxon code not exists !!");
+				        }
+				        
+			        	String ncbiScientificName=taxon.getScientificName();
 						String ncbiLineage=taxon.getLineage();
 						
 						DBUpdate.Builder builder = DBUpdate.set("traceInformation.modifyDate",new Date() ).set("traceInformation.modifyUser","ngl-data");
 						
 						if(ncbiScientificName==null){
-							contextError.addErrors(taxon.code, "no scientific name ");
-							builder.unset("ncbiScientificName");
+							contextError.addErrors(taxon.code, "no ncbi scientific name");
+							builder.set("ncbiScientificName", "no ncbi scientific name");
 						}else{
 							builder.set("ncbiScientificName", ncbiScientificName);
 						}
 						if(ncbiLineage==null){
-							contextError.addErrors(taxon.code, "no lineage ");
-							builder.unset("ncbiLineage");
+							contextError.addErrors(taxon.code, "no ncbi lineage");
+							builder.set("ncbiScientificName", "no ncbi lineage");
 						}else{
 							builder.set("ncbiLineage", ncbiLineage);
 						}
