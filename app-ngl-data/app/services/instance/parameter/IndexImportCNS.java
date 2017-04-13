@@ -84,7 +84,7 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 					//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
 					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
 				} else {
-					Logger.info("index : "+ index.code + " already exists !!");
+					//Logger.info("index : "+ index.code + " already exists !!");
 				}
 			}
 		}

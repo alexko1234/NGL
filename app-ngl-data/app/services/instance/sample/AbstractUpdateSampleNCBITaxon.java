@@ -100,7 +100,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 						}
 						if(ncbiLineage==null){
 							contextError.addErrors(taxon.code, "no ncbi lineage");
-							builder.set("ncbiScientificName", "no ncbi lineage");
+							builder.set("ncbiLineage", "no ncbi lineage");
 						}else{
 							builder.set("ncbiLineage", ncbiLineage);
 						}
