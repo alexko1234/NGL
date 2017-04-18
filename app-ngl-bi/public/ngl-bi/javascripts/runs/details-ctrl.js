@@ -313,7 +313,26 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
     	}
     };
     
-   
+   $scope.setImage = function(imageData, imageName, treatmentContext, treatmentCode, imageFullSizeWidth, imageFullSizeHeight) {
+		$scope.modalImage = imageData;
+	
+		$scope.modalTitle = '';
+		if (treatmentContext !== '') {
+			$scope.modalTitle = treatmentContext + ' : ';
+		}
+		$scope.modalTitle = $scope.modalTitle + Messages('runs.treatments.' + treatmentCode + '.' + imageName);
+	
+		var margin = Messages("runs.treatments.images.margin");		
+		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+
+		$scope.modalWidth = imageFullSizeWidth * zoom;
+		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
+		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
+	
+		//$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;	
+		//$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+	}
+	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
