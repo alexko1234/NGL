@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.typesafe.config.ConfigFactory;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
@@ -33,7 +35,10 @@ public class RunServiceCNG  extends AbstractRunService{
 	}
 	
 	public void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<AnalysisType> l = new ArrayList<AnalysisType>();		
+		List<AnalysisType> l = new ArrayList<AnalysisType>();	
+		if(!ConfigFactory.load().getString("ngl.env").equals("PROD")) {
+			l.add(DescriptionFactory.newAnalysisType("Genome analysis","genome-analysis",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
+		}
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
 	
