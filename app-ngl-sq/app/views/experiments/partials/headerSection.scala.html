@@ -24,7 +24,7 @@
 					<button class="btn btn-default" ng-click="openPrintTagsPage()" ng-if="isInProgressState() || isFinishState()" title="@Messages("button.tag.printing")"><i class="fa fa-tags" ></i></button>
 					}
 				
-					<button class="btn btn-default" ng-if="isDispactchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
+					<button class="btn btn-default" ng-if="isDispatchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
 					
 				
 				 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>

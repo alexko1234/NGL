@@ -86,7 +86,13 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$window.open(jsRoutes.controllers.printing.tpl.Printing.home("tags").url+"?experimentCode="+$scope.experiment.code, 'tags');
 	};
 	
-	$scope.isDispactchModalAvailable = function(){
+	$scope.$on('initValuationModalDone', function(e) {
+		angular.element('#finalValuationModal').modal('show');
+	});
+	
+	
+	
+	$scope.isDispatchModalAvailable = function(){
 		return $scope.isFinishState();
 	};
 	
@@ -128,16 +134,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		angular.element('#finalDispatchModal').modal('hide');
 	});
 	
-	$scope.initValuationModal = function(){
-		$scope.messages.clear();
-		$scope.$broadcast('initValuationModal');
-	};
-	
-	$scope.$on('initValuationModal', function(e) {
-		if(e.stopPropagation){ //only emit as stopPropagation ???
-			$scope.$broadcast('initValuationModal');
-		}
-	});
 	
 	$scope.activeEditMode = function(){
 		$scope.messages.clear();
@@ -220,15 +216,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 	};
 	
-	$scope.save = function(callbackFunction){
+	$scope.save = function(endSaveSuccessCallbackFunction, endSaveChildCallbackFunction){
 		$scope.messages.clear();
 		saveInProgress = true;
-		$scope.$broadcast('saveReagents', callbackFunction);		
+		
+		var callbackFunctions = {
+				endSaveChildCallbackFunction : endSaveChildCallbackFunction,
+				endSaveSuccessCallbackFunction : endSaveSuccessCallbackFunction
+		};
+		
+		$scope.$broadcast('saveReagents', callbackFunctions);		
 	};
 	
 	$scope.startExperiment = function(){
 		
-		var callback = function(experiment){
+		var endSaveSuccessCallbackFunction = function(experiment){
 			
 			mainService.put("experiment",$scope.experiment);
 			$scope.experiment = experiment;
@@ -247,45 +249,60 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 			});
 		};
-		$scope.save(callback);
+		$scope.save(endSaveSuccessCallbackFunction);
 	};
 	
 	
 	$scope.finishExperiment = function(){
-		
-		if($scope.experiment.status.valid !== 'UNSET'){
-			
-			angular.element('#finalResolutionModal').modal('hide');
-			
-			var callback = function(experiment){
-				mainService.put("experiment",$scope.experiment);
-				$scope.experiment = experiment;
-				var state =  angular.copy($scope.experiment.state);
-				state.code = "F";
-				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
-				.success(function(data, status, headers, config) {
-					endSaveSuccess(data);
-					$scope.initDispatchModal();
-				})
-				.error(function(data, status, headers, config) {				
-					$scope.messages.setError("save");
-					$scope.messages.setDetails(data);				
-					saveInProgress = false;	
-					if(mainService.isEditMode()){
-						$scope.$broadcast('activeEditMode');
-					}
-				});
+		var endSaveChildCallbackFunction = false;
+		if($scope.experiment.status.valid === 'UNSET'){
+			 endSaveChildCallbackFunction = function(){
+					saveInProgress = false;
+					angular.element('#finalResolutionModal').modal('show');
 			};
-			$scope.save(callback);			
-			
 		}else{
-			angular.element('#finalResolutionModal').modal('show');
+			angular.element('#finalResolutionModal').modal('hide');
+			if($scope.experiment.categoryCode === "qualitycontrol"){
+				var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
+				if(atms.length > 0){
+					 endSaveChildCallbackFunction = function(){
+						var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
+						if(atms.length > 0){
+							saveInProgress = false;
+							$scope.$broadcast('initValuationModal');
+						}
+					 }
+				}
+			}
 		}
+		
+			
+		var endSaveSuccessCallbackFunction = function(experiment){
+			mainService.put("experiment",$scope.experiment);
+			$scope.experiment = experiment;
+			
+			var state =  angular.copy($scope.experiment.state);
+			state.code = "F";
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
+			.success(function(data, status, headers, config) {
+				endSaveSuccess(data);
+				$scope.initDispatchModal();
+			})
+			.error(function(data, status, headers, config) {				
+				$scope.messages.setError("save");
+				$scope.messages.setDetails(data);				
+				saveInProgress = false;	
+				if(mainService.isEditMode()){
+					$scope.$broadcast('activeEditMode');
+				}
+			});		
+		};
+		
+		$scope.save(endSaveSuccessCallbackFunction, endSaveChildCallbackFunction);					
 	};
 	
-	$scope.$on('reagentsSaved', function(e, callbackFunction) {
-		
-		$scope.$broadcast('save', callbackFunction);
+	$scope.$on('reagentsSaved', function(e, callbackFunctions) {
+		$scope.$broadcast('save', callbackFunctions);
 	});
 	
 	
@@ -319,7 +336,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('refreshReagents');
 	}); 
 	
-	$scope.$on('childSaved', function(e, callbackFunction) {
+	$scope.$on('childSaved', function(e, callbackFunctions) {
 		
 		updatePropertyUnit($scope.experiment);
 		
@@ -330,8 +347,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			if(mainService.isEditMode()){
 				$scope.$broadcast('activeEditMode');
 			}
+		}else if(callbackFunctions.endSaveChildCallbackFunction){
+				callbackFunctions.endSaveChildCallbackFunction();
 		}else if(creationMode){
-			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
+			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
 				.success(function(data, status, headers, config) {
 					
 					creationMode = false;
@@ -356,7 +375,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				});
 		}else{
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunction})
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
 			.success(function(data, status, headers, config) {
 				if(config.callbackFunction){
 					config.callbackFunction(data);
@@ -1115,10 +1134,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}
 	});
 
-	$scope.$on('saveReagents', function(e, callbackFunction) {	
+	$scope.$on('saveReagents', function(e, callbackFunctions) {	
 		$scope.datatableReagent.save()
 		$scope.experiment.reagents = $scope.datatableReagent.getData();
-		$scope.$emit('reagentsSaved', callbackFunction);
+		$scope.$emit('reagentsSaved', callbackFunctions);
 	});
 	
 	$scope.$on('cancel', function(e) {
@@ -1925,7 +1944,172 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 }]).controller('ValuationCtrl',['$scope', '$http','$q','$parse','$filter','lists','mainService','datatable','commonAtomicTransfertMethod', 
     function($scope,$http,$q,$parse,$filter,lists,mainService,datatable, commonAtomicTransfertMethod) {
 	console.log("Valuation Ctrl");
+	
+	var datatableConfig = {
+			name:"copyToInput",
+			compact:true,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				//by:'code'
+			},
+			remove:{
+				active:false,
+			},
+			save:{
+				active:Permissions.check("writing")?true:false,
+	        	withoutEdit: true,
+	        	showButton:false,
+	        	mode:'local',
+	        	changeClass: false,
+	        	keepEdit: true,
+	        	callback:function(datatable){
+	        		
+	        		//beginning of algo
+	        		var data = datatable.getData();
+	        		var isError = false;
+	        		for(var i = 0 ; i < data.length ; i++){
+	        			if(data[i].inputContainerUseds[0].copyValuationToInput === undefined 
+	        					|| data[i].inputContainerUseds[0].copyValuationToInput === null
+	        					|| data[i].inputContainerUseds[0].copyValuationToInput === 'UNSET'){
+	        				datatable.addErrorsForKey(i, {"inputContainerUseds[0].copyValuationToInput":[Messages("containers.copyValuationToInput.value.mandatory")]}, "inputContainerUseds[0].copyValuationToInput");
+	        				isError = true;
+	        			}	        			
+	        		}
+	        		if(!isError){
+	        			$scope.finishExperiment();
+	        		}
+	        	}
+	        		
+			},
+			edit:{
+				active:Permissions.check("writing")?true:false,
+				columnMode:true,
+				byDefault: true,
+				showButton:false
+			},
+			hide:{
+				active:false
+			},
+			messages:{
+				active:false,
+				columnMode:true
+			},			
+			extraHeaders:{
+				number:2,
+				dynamic:true,
+			},
+			mergeCells: {
+                 active: false
+            },
+            showTotalNumberRecords: false,
+	};
+	
+	var getColumns = function() {
+		var columns = [];
+		columns.push({
+			"header" : Messages("containers.table.code"),
+			"property" : "inputContainerUseds[0].code",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 3,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		
+		columns.push({
+			"header" : Messages("containers.table.fromTransformationTypeCodes"),
+			"property" : "inputContainerUseds[0].fromTransformationTypeCodes",
+			"filter": "unique | codes:'type'",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+			"position" : 4,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		columns.push({
+			"header" : Messages("containers.table.valuation.valid"),
+			"property" : "inputContainerUseds[0].valuation.valid",
+			"filter" : "codes:'valuation'",
+			"order" : true,
+			"edit" : false,
+			"hide" : false,
+			"type" : "text",
+			"position" : 5,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		columns.push({
+			"header" : Messages("containers.table.projectCodes"),
+			"property" : "inputContainerUseds[0].projectCodes",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 6,
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		
+		columns.push({
+			"header" : Messages("containers.table.sampleCodes"),
+			"property" : "inputContainerUseds[0].sampleCodes",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 7,
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+
+		columns.push({
+			"header" : Messages("containers.table.valuationqc.valid"),
+			"property" : "inputContainerUseds[0].valuation.valid",
+			"filter" : "codes:'valuation'",
+			"order" : true,
+			"edit" : true,
+			"hide" : false,
+			"type" : "text",
+			"choiceInList" : true,
+			"listStyle" : 'bt-select',
+			"possibleValues" : 'lists.getValuations()',
+			"position" : 30,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		
+		columns.push({
+			"header" : Messages("containers.table.valuationqc.copyToInput"),
+			"property" : "inputContainerUseds[0].copyValuationToInput",
+			"filter" : "codes:'valuation'",
+			"order" : true,
+			"edit" : true,
+			"hide" : false,
+			"type" : "text",
+			"choiceInList" : true,
+			"listStyle" : 'bt-select',
+			"possibleValues" : 'lists.getValuations()',
+			"position" : 30.1,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		return columns;
+	};
+	
 	$scope.$on('initValuationModal', function(e) {
 		console.log("valuationModal");
+		
+		datatableConfig.columns = getColumns(),						
+		$scope.containersDT = datatable(datatableConfig);
+		$scope.containersDT.setData($scope.experiment.atomicTransfertMethods);
+		
+		$scope.$emit('initValuationModalDone');
 	});
 }]);

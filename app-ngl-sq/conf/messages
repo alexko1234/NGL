@@ -204,7 +204,7 @@ containers.table.nlrsConcentration= Concentration arrondie (ng/µl)
 containers.table.valuation.valid = Valide
 containers.table.valuationqc.valid = Valide ? (QC courant)
 containers.table.valuationqc.comment = Commentaire éval..
-containers.table.valuationqc.copyToInput = Copier validation dans container ?
+containers.table.valuationqc.copyToInput = Copier la validité dans le container d''entrée?
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
 containers.placeholder.user = Container créé par
@@ -233,6 +233,8 @@ comments.remove.confirm = Pouvez-vous confirmer la suppression ?
 containers.create.tab.importfile=Import fichier
 containers.create.tab.printbarcode= Génération CB et étiquettes
 container.placeholder.unit = Unité
+
+containers.copyValuationToInput.value.mandatory = La valeur de copie est obligatoire
 
 #search
 search.placeholder.projects = Projets
@@ -506,6 +508,8 @@ experiment.panel.experimentInformation = Expérience
 experiment.panel.instrumentInformation = Instrument
 experiment.panel.traceInformation = Info
 
+
+experiment.valuationCopyToInput.title = Copie de la valeur de validité au sein du container : 
 
 reagents.table.kitname = Nom du kit
 reagents.table.boxname = Nom de la boite
