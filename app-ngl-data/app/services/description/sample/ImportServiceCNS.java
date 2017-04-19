@@ -192,6 +192,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("LSCE", "LSCE"));
 		values.add(DescriptionFactory.newValue("to-check", "to check"));
 		values.add(DescriptionFactory.newValue("Nice", "Nice"));
+		values.add(DescriptionFactory.newValue("Banyuls", "Banyuls"));
 		
 		return values;	
 	}
@@ -249,6 +250,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
+		values.add(DescriptionFactory.newValue("E>2000", "SEQ-IMG-ethanol>2000"));
 		values.add(DescriptionFactory.newValue("Undefined", "Undefined"));
 		return values;	
 	}
