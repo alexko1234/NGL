@@ -78,8 +78,9 @@ public class Input extends AbstractInput {
 					.stream()
 					.map(atm -> atm.inputContainerUseds.get(0))
 					.forEach(icu -> {
+						String key = icu.locationOnContainerSupport.code+"_"+icu.locationOnContainerSupport.line+icu.locationOnContainerSupport.column;
 						PropertySingleValue concentration1 = getPSV(icu,code);
-						concentration1.value = results.get(icu.code);
+						concentration1.value = results.get(key);
 						concentration1.unit = "ng/µl";
 						
 					});
