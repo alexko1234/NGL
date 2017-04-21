@@ -74,24 +74,19 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 	
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
-		
-		if(col.property === 'inputContainerUsed.experimentProperties.concentrationBR1.value'){
-			computeConcentration1(value.data);
-	 	}else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS1.value'){
+		if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorBR1.value'
+			|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilBR1.value'){
+			computeConcentrationBR1(value.data);
+    		computeConcentration1(value.data);
+	 	}else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS1.value'
+	 		|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS1.value'){
 			computeConcentrationHS1(value.data);
     		computeConcentration1(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.concentrationBR1.value'){
-    		computeConcentration1(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS2.value'){
+	 	} else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS2.value'
+	 		|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS2.value'){
         	computeConcentrationHS2(value.data);
     		computeConcentration1(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS1.value'){
-			computeConcentrationHS1(value.data);
-    		computeConcentration1(value.data);
-        }else if(col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS2.value'){
-        	computeConcentrationHS2(value.data);
-    		computeConcentration1(value.data);
-    	}else if(col.property === 'inputContainerUsed.experimentProperties.calculationMethod.value'){
+		}else if(col.property === 'inputContainerUsed.experimentProperties.calculationMethod.value'){
     		computeConcentration1(value.data);
     	}else if(col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
     		computeQuantity1(value.data);
@@ -106,7 +101,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 		var concentration1 = getter(udtData);
 		var compute = {
 				conc1 : $parse("inputContainerUsed.experimentProperties.concentrationDilBR1.value")(udtData),
-				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2) : undefined ) ,
+				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactorBR1.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactorBR1.value")(udtData)).substring(2) : undefined ) ,
 				isReady:function(){
 					return (this.conc1 && this.dilution1);
 				}
