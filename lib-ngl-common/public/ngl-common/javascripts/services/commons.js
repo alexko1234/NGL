@@ -1309,13 +1309,12 @@ angular.module('commonsServices', []).
     			if(angular.isArray(input) && input.length > 0){
     				var output = [];
     				for(var i=0;i<input.length;i++){
-    					var tmp = Messages(Codes(key+"."+input[i]));
-    					if(tmp === key+"."+input[i] && !replaceIfNotFound){
-    						output[i] = input[i];
-    					}else{
-    						output[i] = tmp;
-    					}
-    					
+   						var tmp = Messages(Codes(key+"."+input[i]));
+   						if(tmp === key+"."+input[i] && !replaceIfNotFound){
+   							output[i] = input[i];
+   						}else{
+   							output[i] = tmp;
+   						}
     				}
     			
     				return output;

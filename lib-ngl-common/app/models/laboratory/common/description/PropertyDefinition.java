@@ -5,16 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentQueryParams;
-import models.laboratory.instrument.description.dao.InstrumentDAO;
-import models.utils.ListObject;
 import models.utils.Model;
-import models.utils.Model.Finder;
-import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import play.data.validation.Constraints.Required;
 
 /**
  * Type property definition 
@@ -73,6 +65,10 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 		
 		public List<PropertyDefinition> findUnique(Level.CODE levelCode) throws DAOException{
 			return ((PropertyDefinitionDAO)getInstance()).findUnique(levelCode);
+		}
+		
+		public List<PropertyDefinition> findUnique() throws DAOException{
+			return ((PropertyDefinitionDAO)getInstance()).findUnique();
 		}
 		
 	}
