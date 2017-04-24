@@ -212,7 +212,7 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("small-and-large-rna-isolation", "chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate")));
+				InstanceFactory.setExperimentTypeCodes("small-and-large-rna-isolation", "chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate", "dilution")));
 
 		lp.add(newProtocol("Ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure")));
 
