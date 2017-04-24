@@ -41,47 +41,61 @@ public class XmlServices {
 		writeAllXml(submissionCode, resultDirectory);
 	}
 	*/	
+	
 	public static Submission writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		System.out.println("resultDirectory = " + resultDirectory);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
-		if (StringUtils.isNotBlank(submission.studyCode)) {	
-			File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
-			writeStudyXml(submission, studyFile);
-		}
-		if (submission.sampleCodes.size() != 0){
-			File sampleFile = new File(resultDirectory + File.separator + VariableSRA.xmlSamples);
-			writeSampleXml(submission, sampleFile); 
-		}
-		if (submission.experimentCodes.size() != 0){
-			File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
-			writeExperimentXml(submission, experimentFile); 
+		// si on est dans soumission de données :
+		if (!submission.release) {
+			if (StringUtils.isNotBlank(submission.studyCode)) {	
+				File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
+				writeStudyXml(submission, studyFile);
+			}
+			if (submission.sampleCodes.size() != 0){
+				File sampleFile = new File(resultDirectory + File.separator + VariableSRA.xmlSamples);
+				writeSampleXml(submission, sampleFile); 
+			}
+			if (submission.experimentCodes.size() != 0){
+				File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
+				writeExperimentXml(submission, experimentFile); 
+			} else {
+				System.out.println("experimentCodes==0 ??????????");
+				Logger.debug("experimentCodes==0 ??????????");
+			}
+			if (submission.runCodes.size() != 0){
+				File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
+				writeRunXml(submission, runFile); 
+			} else {
+				System.out.println("runCodes==0 ??????????");
+				Logger.debug("runCodes==0 ??????????");
+			}
+		
+			File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
+			writeSubmissionXml(submission, submissionFile);
 		} else {
-			System.out.println("experimentCodes==0 ??????????");
-			Logger.debug("experimentCodes==0 ??????????");
+			File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
+			writeSubmissionReleaseXml(submission, submissionFile);
+
 		}
-		if (submission.runCodes.size() != 0){
-			File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
-			writeRunXml(submission, runFile); 
-		} else {
-			System.out.println("runCodes==0 ??????????");
-			Logger.debug("runCodes==0 ??????????");
-		}
-		File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
-		writeSubmissionXml(submission, submissionFile);
 		// mettre à jour dans la base l'objet submission pour les champs xml...
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode),
 				DBUpdate.set("xmlSubmission", submission.xmlSubmission).set("xmlStudys", submission.xmlStudys).set("xmlSamples", submission.xmlSamples).set("xmlExperiments", submission.xmlExperiments).set("xmlRuns", submission.xmlRuns).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+	
 		return submission;
 	}
+	
 
 	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
 		if (submission == null) {
 			return;
 		}
-
+		// Si demande de release pas d'ecriture de study.
+		if (submission.release) {
+			return;
+		}
 		if (StringUtils.isNotBlank(submission.studyCode)) {	
 			System.out.println("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
@@ -359,9 +373,11 @@ public class XmlServices {
 		chaine = chaine + "    </CONTACTS>\n";
 			
 		chaine = chaine + "    <ACTIONS>\n";
-		if (!submission.release)  {
+		// soumission systematique en confidential meme si study deja public
+		/*if (!submission.release)  {
 			chaine = chaine + "      <ACTION>\n        <HOLD/>\n      </ACTION>\n";
 		}
+        */
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
 		}
@@ -374,37 +390,56 @@ public class XmlServices {
 		}
 		chaine = chaine + "    </ACTIONS>\n";
 		
+		
+		
 		chaine = chaine + "  </SUBMISSION>\n";
 		chaine = chaine + "</SUBMISSION_SET>\n";
+		
 		output_buffer.write(chaine);
 		output_buffer.close();	
 		submission.xmlSubmission = outputFile.getName();
 	}
 
 
-	/*    public void testProcessBuilder() throws IOException {
-	        String[] command = {"ls", "-al"}; // commande et option ou argument
-	        ProcessBuilder processBuilder = new ProcessBuilder(command);
+	public static void writeSubmissionReleaseXml (Submission submission, File outputFile) throws IOException {
+		if (submission == null) {
+			return;
+		}
+		if(StringUtils.isBlank(submission.studyCode)){
+			return;
+		}
+		
+		// ouvrir fichier en ecriture
+		System.out.println("Creation du fichier " + outputFile);
+		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
+		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+		chaine = chaine + "<SUBMISSION_SET>\n";
+		
+		System.out.println("Ecriture du submission " + submission.code);
+		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
+		if (StringUtils.isNotBlank(submission.accession)) {
+			chaine = chaine + "accession=\"" + submission.accession + "\" ";
+		}
+		
+		chaine = chaine + ">\n";	
+		chaine = chaine + "    <CONTACTS>\n";
+		chaine = chaine + "      <CONTACT>  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
+		chaine = chaine + "    </CONTACTS>\n";
+			
+		chaine = chaine + "    <ACTIONS>\n";
+		
+		chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + submission.studyCode + "\"/>\n      </ACTION>\n";
+		
+		chaine = chaine + "    </ACTIONS>\n";
+		
+		
+		
+		chaine = chaine + "  </SUBMISSION>\n";
+		chaine = chaine + "</SUBMISSION_SET>\n";
+		
+		output_buffer.write(chaine);
+		output_buffer.close();	
+		submission.xmlSubmission = outputFile.getName();
+	}
 
-	        //You can set up your work directory
-	        //processBuilder.directory(new File("test"));
-	        Process process = processBuilder.start();
-	        //Read out dir output
-	        BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-	        String line;
-
-	        while ((line = br.readLine()) != null) {
-	            System.out.println(line);
-	        }
-
-	        //Wait to get exit value
-	        try {
-	            int exitValue = process.waitFor();
-	            System.out.println("\n\nExit Value is " + exitValue);
-	        } catch (InterruptedException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
-	    }
-	    */ 
 }

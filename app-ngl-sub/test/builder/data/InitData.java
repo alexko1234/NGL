@@ -200,7 +200,7 @@ public class InitData extends AbstractTestData{
 
 		//Log data submitted
 		Submission submissionDB = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, codeSub1);
-		Logger.info("Submission "+submissionDB.code+","+submissionDB.submissionDirectory+","+submissionDB.submissionDate);
+		Logger.info("Submission "+submissionDB.code+","+submissionDB.submissionDirectory+","+submissionDB.creationDate);
 
 	}
 }

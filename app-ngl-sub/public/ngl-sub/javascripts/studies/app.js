@@ -12,7 +12,18 @@ angular.module('home', ['ngRoute', 'commonsServices', 'ultimateDataTableServices
 		templateUrl : '/tpl/sra/studies/consultation',
 		controller : 'ConsultationCtrl'
 	});	
-		
+	$routeProvider.when('/sra/studies/release/home', {
+		// url qui va appeler controler java de type tpl
+		templateUrl : '/tpl/sra/studies/release',
+		controller : 'ReleaseCtrl'
+	});	
+	
+	$routeProvider.when('/sra/studies/:code', {
+		// url qui va appeler controler java de type tpl
+		templateUrl : '/tpl/sra/studies/details',
+		controller : 'DetailsCtrl'
+	});
+			
 	$routeProvider.otherwise({redirectTo: '/sra/studies/create/home'});
 
 	// configure html5 to get links working with bookmarked

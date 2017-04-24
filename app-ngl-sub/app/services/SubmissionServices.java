@@ -78,7 +78,6 @@ import play.libs.ws.WSResponse;
 
 
 public class SubmissionServices {
-	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
@@ -100,8 +99,87 @@ public class SubmissionServices {
 		}
 	}
 	
+	public String initReleaseSubmission(String studyCode, ContextValidation contextValidation) throws SraException {
+		String user = contextValidation.getUser();
+		Study study = null;
+		if (StringUtils.isNotBlank(studyCode)) {
+			study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
+				Study.class, DBQuery.and(DBQuery.is("code", studyCode)));
+		} 
+		Submission submission = createSubmissionEntityforRelease(study, user, study.projectCodes);
+
+		// updater dans base si besoin le study pour le statut 'N-R' 
+		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
+			study.state.code = "";
+			study.traceInformation.modifyDate = new Date();
+			study.traceInformation.modifyUser = user;
+			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+					DBQuery.is("code", study.code),
+					DBUpdate.set("state.code", "N-R").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
+			}
+		
+		// puis valider et sauver submission
+		contextValidation.setCreationMode();
+		contextValidation.getContextObjects().put("type", "sra");
+		submission.validate(contextValidation);
+		
+		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
+			submission.validate(contextValidation);
+			MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
+			System.out.println ("sauvegarde dans la base du submission " + submission.code);
+		}
+		
+		// equivalent de activate :
+		
+		File dirSubmission = createDirSubmission(submission);
+		// Avancer le status de submission et study à IW-SUB-R
+		State state = new State("IW-SUB-R", user);
+		submissionWorkflows.setState(contextValidation, submission, state);
+		if (! contextValidation.hasErrors()) {
+		// updater la soumission dans la base pour le repertoire de soumission (la date de soumission sera mise à la reception des AC)
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
+				DBQuery.is("code", submission.code),
+				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
+		} else {
+			System.out.println("Probleme pour passer la soumission avec le state IW-SUB");
+			contextValidation.displayErrors(Logger.of("SRA"));
+		}
+		return submission.code;
+	}
 	
-	public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, String acStudy, String acSample, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
+	private Submission createSubmissionEntityforRelease(Study study, String user, List<String> projectCodes) throws SraException{
+		
+		Submission submission = null;
+		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+		Date courantDate = new java.util.Date();
+		String st_my_date = dateFormat.format(courantDate);	
+		submission = new Submission(user, projectCodes);
+		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(projectCodes);
+		submission.creationDate = courantDate;
+		System.out.println("submissionCode="+ submission.code);
+
+		submission.release = true;
+		
+		
+		if (study!=null){	
+			// mettre à jour l'objet submission pour le study  :
+			if (! submission.refStudyCodes.contains("study.code")){
+				submission.refStudyCodes.add(study.code);
+			}
+			
+			submission.studyCode = study.code;
+
+			if ( ! study.state.code.equals("F-SUB")) {
+				throw new SraException("Study " + study.code + " avec status incompatible avec demande de release " + study.state.code );
+			} 
+		}
+		
+		submission.state = new State("N-R", user);
+		return submission;
+	}
+	
+	
+	public String initPrimarySubmission(List<String> readSetCodes, String studyCode, String configCode, String acStudy, String acSample, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
 		//public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, ContextValidation contextValidation) throws SraException, IOException {
 		// Cree en base un objet submission avec state.code=N, met dans la base la configuration avec state.code='U-SUB'
 		// met les readSet avec state.code = 'N', les experiments avec state.code='N', les samples à soumettre 
@@ -116,6 +194,7 @@ public class SubmissionServices {
 		// Verifier config et initialiser objet submission avec release a false(private) state.code='N'et 
 		// pas de validation integrale de config qui a ete stocke dans la base donc valide mais verification
 		// de quelques contraintes en lien avec soumission.
+		
 
 		System.out.println("\ntaille de la map des userClone dans init = " + mapUserClones.size());
 		
@@ -285,7 +364,7 @@ public class SubmissionServices {
 			/*for (Iterator<Entry<String, UserCloneType>> iterator = mapUserClones.entrySet().iterator(); iterator.hasNext();) {
 				  Entry<String, UserCloneType> entry = iterator.next();
 				  if (entry.getKey().equals(clone)) {
-					  System.out.println("dans initNewSubmission 1 : cle du userClone = '" + entry.getKey() + "'");
+					  System.out.println("dans initPrimarySubmission 1 : cle du userClone = '" + entry.getKey() + "'");
 					  System.out.println("       study_ac : '" + entry.getValue().getStudyAc()+  "'");
 					  System.out.println("       sample_ac : '" + entry.getValue().getSampleAc()+  "'");
 				  }	
@@ -682,7 +761,7 @@ public class SubmissionServices {
 			// readSet.submissionState à NONE, et si studyCode utilisé par cette seule soumission remettre studyCode.stat.code=N
 			// et si config utilisé par cette seule soumission remettre configCode.state.code=N
 			cleanDataBase(submission.code, contextValidation);		
-			throw new SraException("SubmissionServices::initNewSubmission::probleme validation  voir log: ");
+			throw new SraException("SubmissionServices::initPrimarySubmission::probleme validation  voir log: ");
 		} 	
 		System.out.println("Creation de la soumission " + submission.code);
 		return submission.code;
@@ -717,10 +796,39 @@ public class SubmissionServices {
 		return externalStudy;
 	}
 	
-	
+	public File createDirSubmission(Submission submission) throws SraException{
+		// Determiner le repertoire de soumission:
+		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+		Date courantDate = new java.util.Date();
+		String st_my_date = dateFormat.format(courantDate);
+					
+		String syntProjectCode = "";
+		for (String projectCode: submission.projectCodes) {
+			if (StringUtils.isNotBlank(projectCode)) {
+				syntProjectCode += "_" + projectCode;
+			}
+		}
+		if (StringUtils.isNotBlank(syntProjectCode)){
+			syntProjectCode = syntProjectCode.replaceFirst("_", "");
+		}
+					
+		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
+		//submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
+		File dataRep = new File(submission.submissionDirectory);
+		System.out.println("Creation du repertoire de soumission : " + submission.submissionDirectory);
+		Logger.of("SRA").info("Creation du repertoire de soumission" + submission.submissionDirectory);
+		if (dataRep.exists()){
+			throw new SraException("Le repertoire " + dataRep + " existe deja !!! (soumission concurrente ?)");
+		} else {
+			if(!dataRep.mkdirs()){	
+				throw new SraException("Impossible de creer le repertoire " + dataRep + " ");
+			}
+		}
+		return (dataRep);
+	}
 
 	
-	public void activateSubmission(ContextValidation contextValidation, String submissionCode) throws SraException {
+	public void activatePrimarySubmission(ContextValidation contextValidation, String submissionCode) throws SraException {
 		// creer repertoire de soumission sur disque et faire liens sur données brutes
 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
@@ -728,33 +836,10 @@ public class SubmissionServices {
 			throw new SraException("aucun objet submission dans la base pour  : " + submissionCode);
 		}
 		try {
-			// Determiner le repertoire de soumission:
-			DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
-			Date courantDate = new java.util.Date();
-			String st_my_date = dateFormat.format(courantDate);
+			// creation repertoire de soumission :
+			File dataRep = createDirSubmission(submission);
 			
-			String syntProjectCode = "";
-			for (String projectCode: submission.projectCodes) {
-				if (StringUtils.isNotBlank(projectCode)) {
-					syntProjectCode += "_" + projectCode;
-				}
-			}
-			if (StringUtils.isNotBlank(syntProjectCode)){
-				syntProjectCode = syntProjectCode.replaceFirst("_", "");
-			}
-			
-			submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
-			submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
-			File dataRep = new File(submission.submissionDirectory);
-			System.out.println("Creation du repertoire de soumission et liens vers donnees brutes : " + submission.submissionDirectory);
-			Logger.of("SRA").info("Creation du repertoire de soumission" + submission.submissionDirectory);
-			if (dataRep.exists()){
-				throw new SraException("Le repertoire " + dataRep + " existe deja !!! (soumission concurrente ?)");
-			} else {
-				if(!dataRep.mkdirs()){	
-					throw new SraException("Impossible de creer le repertoire " + dataRep);
-				}
-			}
+			// creation liens donnees brutes vers repertoire de soumission
 			for (String experimentCode: submission.experimentCodes) {
 				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 
@@ -766,7 +851,7 @@ public class SubmissionServices {
 				System.out.println("exp = "+ expElt.code);
 				for (RawData rawData :expElt.run.listRawData) {
 					if (StringUtils.isBlank(rawData.location)) {
-						throw new SraException(" Dans activateSubmission" + rawData.relatifName + " avec location non renseignée");				
+						throw new SraException(" Dans activatePrimarySubmission" + rawData.relatifName + " avec location non renseignée");				
 					}
 					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
 					// donnée est au CNS et si elle n'est pas à zipper
@@ -794,24 +879,23 @@ public class SubmissionServices {
 				}
 			}
 		} catch (SraException e) {
-			throw new SraException(" Dans activateSubmission" + e);			
+			throw new SraException(" Dans activatePrimarySubmission" + e);			
 		} catch (SecurityException e) {
-			throw new SraException(" Dans activateSubmission pb SecurityException: " + e);
+			throw new SraException(" Dans activatePrimarySubmission pb SecurityException: " + e);
 		} catch (UnsupportedOperationException e) {
-			throw new SraException(" Dans activateSubmission pb UnsupportedOperationException: " + e);
+			throw new SraException(" Dans activatePrimarySubmission pb UnsupportedOperationException: " + e);
 		} catch (FileAlreadyExistsException e) {
-			throw new SraException(" Dans activateSubmission pb FileAlreadyExistsException: " + e);
+			throw new SraException(" Dans activatePrimarySubmission pb FileAlreadyExistsException: " + e);
 		} catch (IOException e) {
-			throw new SraException(" Dans activateSubmission pb IOException: " + e);		
+			throw new SraException(" Dans activatePrimarySubmission pb IOException: " + e);		
 		}
 		
 		// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state=uservalidate
-		
 		String user = contextValidation.getUser();
 		State state = new State("IW-SUB", user);
 		submissionWorkflows.setState(contextValidation, submission, state);
 		if (! contextValidation.hasErrors()) {
-		// updater la soumission dans la base pour le repertoire de soumission :
+		// updater la soumission dans la base pour le repertoire de soumission (la date de soumission sera mise à la reception des AC)
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
 				DBQuery.is("code", submission.code),
 				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
@@ -834,12 +918,13 @@ public class SubmissionServices {
 		String st_my_date = dateFormat.format(courantDate);	
 		submission = new Submission(user, config.projectCodes);
 		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(config.projectCodes);
-		submission.submissionDate = courantDate;
+		submission.creationDate = courantDate;
 		System.out.println("submissionCode="+ submission.code);
 		submission.state = new State("N", user);
-		submission.release = false;
+		submission.release = false; // soumission toujours en confidentielle et levee de confidentialite du
+		                            // study par l'utilisateur via interface.
 		submission.configCode = config.code;
-		// Creation de la map deportéé dans methode initNewSubmission pour ne mettre dans la map
+		// Creation de la map deportéé dans methode initPrimarySubmission pour ne mettre dans la map
 		// que les noms de clones utilisee par la soumission
 
 		
@@ -871,26 +956,17 @@ public class SubmissionServices {
 					submission.studyCode = study.code; // studyCode à soumettre
 				
 				} else if (study.state.code.equals("F-SUB")) {
-				
+				    // pas de soumission du study
 				} else {
 					throw new SraException("study.state.code not in ('N', 'F-SUB') => utilisation pour cette soumission d'un study en cours de soumission ?");
 				}
-				// mettre à jour l'objet submission pour la releaseDate  :
-				Date date = new Date();
-				if (study.releaseDate == null) {
-					submission.release = false;
-				} else {
-					if (study.releaseDate.compareTo(date)<= 0){
-						submission.release = true;
-						} else {
-							submission.release = false;
-						}
-					}
-				} 
+			} 
 		
 		}
 		return submission;
 	}
+	
+	
 
 	public String getNcbiScientificName(Integer taxonId) throws IOException, XPathExpressionException  {
 		Promise<WSResponse> homePage = WS.url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
@@ -1491,8 +1567,6 @@ public class SubmissionServices {
 					}
 				}
 			}
-			
-			
 			
 			System.out.println("deletion dans base pour submission "+submissionCode);
 			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);

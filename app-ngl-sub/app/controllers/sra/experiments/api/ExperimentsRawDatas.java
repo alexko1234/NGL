@@ -91,6 +91,12 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 		}else if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
 			queries.add(DBQuery.in("code", form.listExperimentCodes));
 		}
+		
+		// ajout pour interface release study :
+		if (StringUtils.isNotBlank(form.studyCode)) {
+			queries.add(DBQuery.in("studyCode", form.studyCode));
+		}
+		// end ajout
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

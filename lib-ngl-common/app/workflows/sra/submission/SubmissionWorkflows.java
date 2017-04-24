@@ -48,17 +48,29 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			Submission object) {	
 		
 		if (StringUtils.isNotBlank(object.studyCode)) {
-			if (! object.state.code.equalsIgnoreCase("N")) {
-			// Recuperer object study pour mettre historique des state traceInformation à jour:
-			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, object.studyCode);
-			study.state = updateHistoricalNextState(study.state, object.state);
-			study.traceInformation = updateTraceInformation(study.traceInformation, object.state);
-			// Mettre à jour study pour le state, traceInformation 
-			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-					DBQuery.is("code", object.code).notExists("accession"),
-					DBUpdate.set("state", study.state).set("traceInformation", study.traceInformation));
-			}
-		}		
+			if ((! object.state.code.equalsIgnoreCase("N")) && (! object.state.code.equalsIgnoreCase("N-R"))) {
+				Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, object.studyCode);
+				// Recuperer object study pour mettre historique des state traceInformation à jour:
+				if (! object.state.code.equalsIgnoreCase("F-SUB-R")){
+					// Recopier etat de soumission dans etat du study
+					study.state = updateHistoricalNextState(study.state, object.state);
+					study.traceInformation = updateTraceInformation(study.traceInformation, object.state);				
+				} else {
+					// Mettre etat du study à F-SUB si etat de submission est à F-SUB-R :
+					State state_replacement = new State();
+					state_replacement.code = "F-SUB";
+					state_replacement.user = object.state.user;
+					state_replacement.date = object.state.date;
+					study.state = updateHistoricalNextState(study.state, state_replacement);
+					study.traceInformation = updateTraceInformation(study.traceInformation, state_replacement);				
+				}
+				// Mettre à jour study pour le state, traceInformation 
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+				DBQuery.is("code", object.code).notExists("accession"),
+				DBUpdate.set("state", study.state).set("traceInformation", study.traceInformation));
+		   }
+		}
+	
 		if (object.sampleCodes != null){
 			for (int i = 0; i < object.sampleCodes.size() ; i++) {
 				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, object.sampleCodes.get(i));

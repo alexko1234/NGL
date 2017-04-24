@@ -5,7 +5,10 @@ import play.Routes;
 import play.mvc.Result;
 import views.html.studies.home;
 import views.html.studies.create;
+import views.html.studies.release;
 import views.html.studies.consultation;
+import views.html.studies.details;
+
 
 public class Studies extends CommonController
 {
@@ -21,11 +24,23 @@ public class Studies extends CommonController
 	public static Result consultation() {
 		return ok(consultation.render());
 	}	
+	
+	public static Result release() {
+		return ok(release.render());
+	}	
 
 	public static Result get(String code) {
 		return ok(home.render("search"));
 	}
-		
+	
+	public static Result details() {
+		return ok(details.render());
+	}	
+	
+	
+	
+
+
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
@@ -38,8 +53,11 @@ public class Studies extends CommonController
   	    		controllers.sra.studies.api.routes.javascript.Studies.get(),
  	    		controllers.sra.studies.tpl.routes.javascript.Studies.get(),
   	    		controllers.sra.studies.api.routes.javascript.Studies.list(),
-  	    		controllers.sra.studies.api.routes.javascript.Studies.update()
-  	     	)  	      	  	      
+  	    		controllers.sra.studies.api.routes.javascript.Studies.update(),
+  	    		controllers.sra.studies.api.routes.javascript.Studies.release(),
+  	    		controllers.sra.experiments.api.routes.javascript.Experiments.list()
+  	    		)
+  	    		
   	    );
   	  }
 }

@@ -83,7 +83,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		contextValidation.getContextObjects().put("type", "sra");
 		//String submissionCode = submissionServices.initNewSubmission(readSetCodes, study.code, config.code, null, null, null, contextValidation);
 
-		String submissionCode = submissionServices.initNewSubmission(readSetCodes, study.code, config.code, null, null, null, null, null, contextValidation);
+		String submissionCode = submissionServices.initPrimarySubmission(readSetCodes, study.code, config.code, null, null, null, null, null, contextValidation);
 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class,  submissionCode);
 		System.out.println("Submission " + submission.code);

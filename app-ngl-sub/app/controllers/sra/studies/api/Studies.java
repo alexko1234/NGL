@@ -2,13 +2,17 @@ package controllers.sra.studies.api;
 
 import static play.data.Form.form;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.AbstractStudy;
 import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
@@ -24,6 +28,7 @@ import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
+import services.SubmissionServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
@@ -41,7 +46,28 @@ public class Studies extends DocumentController<AbstractStudy>{
 		super(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
 	}
 
+	
+	public Result release(String studyCode) throws SraException {
+		String user = this.getCurrentUser();
+		
+		ContextValidation contextValidation = new ContextValidation(user);
+		SubmissionServices submissionServices = new SubmissionServices();
+		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
+		AbstractStudy userStudy = filledForm.get();	
+		Study study = null;
+		try {
+			String submissionCode = submissionServices.initReleaseSubmission(studyCode, contextValidation);
+			// creer le repertoire de soumission
+			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
+		} catch (SraException e) {
+			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
+			Logger.debug("filled form "+filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson());
+		}
+		return ok(Json.toJson(study));
+	}
 
+	
 	public Result save() {
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		AbstractStudy userStudy = filledForm.get();
@@ -115,7 +141,6 @@ public class Studies extends DocumentController<AbstractStudy>{
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
-		
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
 			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
 			// C'est une valeur qui peut prendre une valeur autorisee dans le formulaire. Ici on veut que 
@@ -126,20 +151,35 @@ public class Studies extends DocumentController<AbstractStudy>{
 			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
 		
+		if (StringUtils.isNotBlank(form.stateCode)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCode));
+		}	
+		
+		if ((form.confidential != null) && (form.confidential==true)) {
+			Calendar calendar = Calendar.getInstance();
+			Date date_courante  = calendar.getTime();
+			queries.add(DBQuery.greaterThan("releaseDate", date_courante));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
 	
+	/* la methode getObject(code) heritée correspond a la methode get ici appelée getStudy
 	private AbstractStudy getStudy(String code) {
 		AbstractStudy study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, code);
 		return study;
-	}
+	}*/
+	
+	
 	
 	public Result update(String code) {
 		//Get Submission from DB 
-		AbstractStudy study = getStudy(code);
+		//AbstractStudy study = getStudy(code);
+		AbstractStudy study = getObject(code);
+
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 
@@ -167,6 +207,36 @@ public class Studies extends DocumentController<AbstractStudy>{
 			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
+	
+/*	public Result release(String code) {
+		//Get Submission from DB 
+		AbstractStudy study = getStudy(code);		
+		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);		
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 
-
+		if (study == null) {
+			//return badRequest("Study with code "+code+" not exist");
+			ctxVal.addErrors("study ", " not exist");
+			return badRequest(filledForm.errorsAsJson());
+		}
+		AbstractStudy studyInput = filledForm.get();
+		if (code.equals(studyInput.code)) {	
+			ctxVal.setUpdateMode();
+			ctxVal.getContextObjects().put("type","sra");
+			studyInput.traceInformation.setTraceInformation(getCurrentUser());
+			studyInput.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				Logger.info("Update study state "+studyInput.state.code);
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
+				return ok(Json.toJson(studyInput));
+			}else {
+				return badRequest(filledForm.errorsAsJson());
+			}
+		} else {
+			//return badRequest("study code are not the same");
+			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
+			return badRequest(filledForm.errorsAsJson());
+		}	
+	}
+*/
 }
