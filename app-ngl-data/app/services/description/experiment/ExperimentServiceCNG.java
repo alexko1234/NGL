@@ -715,6 +715,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode( "µL"), 
 				"single",28,false, "50",null));
 		
+		// NGL-1325 ajout propriété sequencingType de niveau Experiment, optionnelle
+		propertyDefinitions.add(newPropertiesDefinition("Type de séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
+				DescriptionFactory.newValues("Hiseq 4000","Hiseq X"),null,null,null, 
+				"single",10, true, null,null));	
+		
 		return propertyDefinitions;
 		
 	}

@@ -253,7 +253,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	//-2- code Flowcell
 	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
-			$scope.experiment.instrumentProperties.cbotFile.value = undefined;
+		    $scope.experiment.instrumentProperties.cbotFile.value = undefined;		
+		    checkFCsequencingType();// ajout 24/04/2017 NGL-1325
 		}
 	});	
 	
@@ -263,5 +264,36 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.experiment.instrumentProperties.cbotFile.value = undefined;
 		}
 	});	
-
+	
+   // ajout 24/04/2017 NGL-1325
+	$scope.$watch("experiment.experimentProperties.sequencingType.value", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
+			checkFCsequencingType();
+		} else {
+			$scope.messages.clear();
+		}
+	});	
+	
+	function checkFCsequencingType (){
+		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
+		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
+		var fcBarcode= $scope.experiment.instrumentProperties.containerSupportCode.value;
+		
+		/// ! fcBarcode.test ( ) fonctionne pas !!!
+		if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq 4000') && ( null===fcBarcode.match(H4000fcRegexp))) {
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "Code Flowcell n'est pas du type Hiseq 4000 (*BBXX)";
+			$scope.messages.showDetails = false;
+			$scope.messages.open();
+		} else	if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq X') && ( null ===fcBarcode.match(HXfcRegexp))) {
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "Code Flowcell n'est pas du type Hiseq X (*ALXX)";
+			$scope.messages.showDetails = false;
+			$scope.messages.open();
+		} else {
+			// attention ecrase des eventuels messages precedents...
+			$scope.messages.clear();
+		}	
+	}
+	
 }]);
