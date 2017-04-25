@@ -114,7 +114,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}else{
 			$scope.messages.setSuccess("save");
 		}
-		
+		//First step to have a new experiment after dispatch not fonctionnal
 		if(args.newExperiment){
 			var creationMode = false;
 			var saveInProgress = false;
@@ -217,56 +217,56 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.finishExperimentModals = function(){
-		var next = false;
+		var step2 = false;
+		var step3 = false;
+		saveInProgress = true;
 		if($scope.experiment.categoryCode === "qualitycontrol"){
 			var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
 			if(atms.length > 0){
-				 endSaveChildCallbackFunction = function(){
-					var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
-					if(atms.length > 0){
-						saveInProgress = false;
-						$scope.$broadcast('initValuationModal');
-					}
-				 }
+				saveInProgress = false;
+				$scope.$broadcast('initValuationModal');				
 			}else{
 				angular.element('#finalValuationModal').modal('hide');
-				next = true;
+				step2 = true;
 			}
 		}else{
-			next = true;			
+			step2 = true;			
 		}
 		
-		if(next){
+		if(step2){
 			if($scope.experiment.status.valid === 'UNSET'){
-				 endSaveChildCallbackFunction = function(){
-						saveInProgress = false;
-						angular.element('#finalResolutionModal').modal('show');
-				};
+				saveInProgress = false;
+				angular.element('#finalResolutionModal').modal('show');				
 			}else{
-				angular.element('#finalValuationModal').modal('hide');
+				angular.element('#finalResolutionModal').modal('hide');
+				step3 = true;
 			}
 		}
 		
+		if(step3){
+			var endSaveSuccessCallbackFunction = function(experiment){
+				mainService.put("experiment",$scope.experiment);
+				$scope.experiment = experiment;
+				
+				var state =  angular.copy($scope.experiment.state);
+				state.code = "F";
+				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
+				.success(function(data, status, headers, config) {
+					endSaveSuccess(data);
+					$scope.initDispatchModal();
+				})
+				.error(function(data, status, headers, config) {				
+					$scope.messages.setError("save");
+					$scope.messages.setDetails(data);				
+					saveInProgress = false;	
+					if(mainService.isEditMode()){
+						$scope.$broadcast('activeEditMode');
+					}
+				});		
+			};
+			saveOnRemote(endSaveSuccessCallbackFunction);
+		}		
 		
-		
-		
-		}else{
-			angular.element('#finalResolutionModal').modal('hide');
-			if($scope.experiment.categoryCode === "qualitycontrol"){
-				var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
-				if(atms.length > 0){
-					 endSaveChildCallbackFunction = function(){
-						var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
-						if(atms.length > 0){
-							saveInProgress = false;
-							$scope.$broadcast('initValuationModal');
-						}
-					 }
-				}else{
-					angular.element('#finalValuationModal').modal('hide');
-				}
-			}
-		}
 	};
 	
 	$scope.save = function(endSaveSuccessCallbackFunction, endSaveChildCallbackFunction){
@@ -308,29 +308,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.finishExperiment = function(){
 		var endSaveChildCallbackFunction = $scope.finishExperimentModals;
-			
-		var endSaveSuccessCallbackFunction = function(experiment){
-			mainService.put("experiment",$scope.experiment);
-			$scope.experiment = experiment;
-			
-			var state =  angular.copy($scope.experiment.state);
-			state.code = "F";
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
-			.success(function(data, status, headers, config) {
-				endSaveSuccess(data);
-				$scope.initDispatchModal();
-			})
-			.error(function(data, status, headers, config) {				
-				$scope.messages.setError("save");
-				$scope.messages.setDetails(data);				
-				saveInProgress = false;	
-				if(mainService.isEditMode()){
-					$scope.$broadcast('activeEditMode');
-				}
-			});		
-		};
 		
-		$scope.save(endSaveSuccessCallbackFunction, endSaveChildCallbackFunction);					
+		$scope.save(null, endSaveChildCallbackFunction);					
 	};
 	
 	$scope.$on('reagentsSaved', function(e, callbackFunctions) {
@@ -2024,7 +2003,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	        		}
 	        		if(!isError){
 	        			$scope.experiment.atomicTransfertMethods = data;
-	        			$scope.finishExperiment();
+	        			$scope.finishExperimentModals();
 	        		}
 	        	}
 	        		
