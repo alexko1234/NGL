@@ -302,7 +302,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     this.computePaginationList();
                     this.computeDisplayResult();
                     var that = this;
-                    this.computeDisplayResultTimeOut.then(function() {
+                    this.computeDisplayResultTimeOut.finally(function() {
                         that.setSpinner(false);
                     });
                 }
@@ -326,7 +326,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             datatable: this
                         }).success(function(data, status, headers, config) {
                             config.datatable._setData(data.data, data.recordsNumber);
-                            that.computeDisplayResultTimeOut.then(function() {
+                            that.computeDisplayResultTimeOut.finally(function() {
                                 that.setSpinner(false);
                             });
                         });
@@ -3667,7 +3667,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 			    	scope.udtTableFunctions.cancel = function(){
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.cancel()}).then(function(){
-		    				scope.udtTable.computeDisplayResultTimeOut.then(function(){
+		    				scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false); 
 							});	   		    				
 		    			});
@@ -3679,7 +3679,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setNumberRecordsPerPage(elt)}).then(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.pagination.mode)){
-		    					scope.udtTable.computeDisplayResultTimeOut.then(function(){
+		    					scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false); 
 								});	    				
 		    				}
@@ -3692,7 +3692,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setPageNumber(page)}).then(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.pagination.mode)){
-								scope.udtTable.computeDisplayResultTimeOut.then(function(){
+								scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false); 
 								});									
 		    				}	    				
@@ -3710,7 +3710,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setOrderColumn(column)}).then(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.order.mode)){
-								scope.udtTable.computeDisplayResultTimeOut.then(function(){
+								scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false);  		    			
 								});								
 		    				} 		    				
@@ -3728,7 +3728,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		scope.udtTableFunctions.setGroupColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.setGroupColumn(column)}).then(function(){
-							scope.udtTable.computeDisplayResultTimeOut.then(function(){
+							scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false);
 							});  		    				
 		    			});
@@ -3745,7 +3745,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		scope.udtTableFunctions.updateShowOnlyGroups = function(){
 		    			scope.udtTable.setSpinner(true);
 		    			$timeout(function(){scope.udtTable.updateShowOnlyGroups()}).then(function(){
-							scope.udtTable.computeDisplayResultTimeOut.then(function(){
+							scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false); 
 							});									
 		    			});
