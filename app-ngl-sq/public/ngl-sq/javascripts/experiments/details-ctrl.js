@@ -216,6 +216,59 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 	};
 	
+	$scope.finishExperimentModals = function(){
+		var next = false;
+		if($scope.experiment.categoryCode === "qualitycontrol"){
+			var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
+			if(atms.length > 0){
+				 endSaveChildCallbackFunction = function(){
+					var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
+					if(atms.length > 0){
+						saveInProgress = false;
+						$scope.$broadcast('initValuationModal');
+					}
+				 }
+			}else{
+				angular.element('#finalValuationModal').modal('hide');
+				next = true;
+			}
+		}else{
+			next = true;			
+		}
+		
+		if(next){
+			if($scope.experiment.status.valid === 'UNSET'){
+				 endSaveChildCallbackFunction = function(){
+						saveInProgress = false;
+						angular.element('#finalResolutionModal').modal('show');
+				};
+			}else{
+				angular.element('#finalValuationModal').modal('hide');
+			}
+		}
+		
+		
+		
+		
+		}else{
+			angular.element('#finalResolutionModal').modal('hide');
+			if($scope.experiment.categoryCode === "qualitycontrol"){
+				var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
+				if(atms.length > 0){
+					 endSaveChildCallbackFunction = function(){
+						var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
+						if(atms.length > 0){
+							saveInProgress = false;
+							$scope.$broadcast('initValuationModal');
+						}
+					 }
+				}else{
+					angular.element('#finalValuationModal').modal('hide');
+				}
+			}
+		}
+	};
+	
 	$scope.save = function(endSaveSuccessCallbackFunction, endSaveChildCallbackFunction){
 		$scope.messages.clear();
 		saveInProgress = true;
@@ -254,28 +307,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	
 	$scope.finishExperiment = function(){
-		var endSaveChildCallbackFunction = false;
-		if($scope.experiment.status.valid === 'UNSET'){
-			 endSaveChildCallbackFunction = function(){
-					saveInProgress = false;
-					angular.element('#finalResolutionModal').modal('show');
-			};
-		}else{
-			angular.element('#finalResolutionModal').modal('hide');
-			if($scope.experiment.categoryCode === "qualitycontrol"){
-				var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
-				if(atms.length > 0){
-					 endSaveChildCallbackFunction = function(){
-						var atms = $filter('filter')($scope.experiment.atomicTransfertMethods,{inputContainerUseds:{copyValuationToInput:'UNSET'}});
-						if(atms.length > 0){
-							saveInProgress = false;
-							$scope.$broadcast('initValuationModal');
-						}
-					 }
-				}
-			}
-		}
-		
+		var endSaveChildCallbackFunction = $scope.finishExperimentModals;
 			
 		var endSaveSuccessCallbackFunction = function(experiment){
 			mainService.put("experiment",$scope.experiment);
@@ -349,8 +381,16 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			}
 		}else if(callbackFunctions.endSaveChildCallbackFunction){
 				callbackFunctions.endSaveChildCallbackFunction();
-		}else if(creationMode){
-			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
+		}else{
+			saveOnRemote(callbackFunctions.endSaveSuccessCallbackFunction);
+		} 
+		
+	});
+	
+	
+	var saveOnRemote = function(callbackFunction){
+		if(creationMode){
+			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
 				.success(function(data, status, headers, config) {
 					
 					creationMode = false;
@@ -375,7 +415,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				});
 		}else{
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunction})
 			.success(function(data, status, headers, config) {
 				if(config.callbackFunction){
 					config.callbackFunction(data);
@@ -392,8 +432,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 			});			
 		}
-		
-	});
+	};
+	
 	
 	var finishEditMode = false;
 	$scope.isFinishEditMode = function(){		
@@ -1983,6 +2023,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	        			}	        			
 	        		}
 	        		if(!isError){
+	        			$scope.experiment.atomicTransfertMethods = data;
 	        			$scope.finishExperiment();
 	        		}
 	        	}
