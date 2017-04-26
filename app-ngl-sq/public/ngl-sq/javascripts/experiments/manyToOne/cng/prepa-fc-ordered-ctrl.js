@@ -246,14 +246,14 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
     //-1- stripCode.value
 	$scope.$watch("experiment.instrumentProperties.stripCode.value", function(newValue, OldValue){
 			if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
-				$scope.experiment.instrumentProperties.cbotFile.value = undefined;
+				if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined;} // 26/04 ajout if exists
 			}
 	});	
 	
 	//-2- code Flowcell
 	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
-			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; }	// 26/04 ajout if exists
+			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } // 26/04 ajout if exists
 		    checkFCsequencingType();// ajout 24/04/2017 NGL-1325
 		}
 	});	
@@ -261,7 +261,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	//-3- code cBot
 	$scope.$watch("experiment.instrument.code" , function(newValue, OldValue){
 		if ( newValue !== OldValue ) {
-			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined;}	//test 26/04 ajout if exists
+			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } //26/04 ajout if exists
 		}
 	});	
 	
@@ -277,8 +277,10 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
 		$scope.messages.clear();
 		// !! peut etre non encore definie...
-		var fcBarcode= $scope.experiment.instrumentProperties.containerSupportCode.value;
-		
+		var fcBarcode=undefined;
+		if ( $scope.experiment.instrumentProperties.containerSupportCode ) {
+			fcBarcode= $scope.experiment.instrumentProperties.containerSupportCode.value;
+		}
 		/// ! fcBarcode.test ( ) fonctionne pas !!!
 		if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq 4000') && ( null===fcBarcode.match(H4000fcRegexp))) {
 		   //( null===$scope.experiment.instrumentProperties.containerSupportCode.value.match(H4000fcRegexp))) {
@@ -302,18 +304,20 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	if ( $scope.isCreationMode() && ($scope.experiment.instrument.typeCode === 'janus-and-cBotV2')){
 		// !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket (ajouter mainService dans le controller)
 		// $parse marche pas ici.... var tmp = $scope.$parse("getBasket().get()|getArray:'support.categoryCode'|unique",mainService); 
-		var tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+		var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+		var supports = $scope.$eval("getBasket().get()|getArray:'support.code'",mainService);
 		
-		if ( ((tmp.length === 1) && ( tmp[0] ==="tube")) || (tmp.length > 1) ){
-			              // only tubes                         mixte
+		if ( ((categoryCodes.length === 1) && ( categoryCodes[0] ==="tube")) || (categoryCodes.length > 1) ){
+			                          // only tubes                                      mixte
 			$scope.messages.setError(Messages('experiments.input.error.only-plates')+ ' si vous utilisez cet instrument'); 
 			
 			$scope.experiment.instrument.typeCode =null; // pas suffisant pour bloquer la page..
-			$scope.atmService = null; //la oui !!!!!
+			$scope.atmService = null; //empeche la page de se charger...
 		} else {
 			// plaques uniqt mais il y a une limite !! combien ??
-			if ( $scope.mainService.getBasket().length() > 4 ){ 
-				$scope.messages.setError(Messages('experiments.input.error.maxContainers', 4));
+			if ( supports.length > 4 ){ 
+				$scope.messages.setError(Messages('experiments.input.error.maxSupports', 4));
+				$scope.atmService = null; //empeche la page de se charger...
 			}
 		}
 	}
