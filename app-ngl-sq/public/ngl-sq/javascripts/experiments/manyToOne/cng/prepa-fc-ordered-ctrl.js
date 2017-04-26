@@ -1,10 +1,10 @@
-angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$parse', '$http','atmToDragNDrop',
-                                                               function($scope, $parse, $http, atmToDragNDrop) {
-	
+angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$parse', '$http','atmToDragNDrop','mainService',
+                                                               function($scope, $parse, $http, atmToDragNDrop, mainService) {
 	
 	
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
+	// onglet feuille de calcul
 	var columns = [  
 	             {
 		        	 "header":Messages("containers.table.support.number"),
@@ -27,7 +27,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		        	 "extraHeaders":{0:"lib normalisée"}
 		         },	
 		         {
-		        	"header":"Code aliquot",
+		        	"header":Messages ("containers.table.codeAliquot"),
 		 			"property": "inputContainer.contents",
 		 			"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 		 			"order":false,
@@ -58,7 +58,6 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		        	 "position":5,
 		        	 "extraHeaders":{0:"lib normalisée"}
 		         },
-		        
 		         {
 		        	 "header":Messages("containers.table.volume") + " (µL)",
 		        	 "property":"inputContainerUsed.volume.value",
@@ -89,7 +88,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		        	 "type":"number",
 		        	 "position":50,
 		        	 "extraHeaders":{0:"prep FC"}
-		         },		         
+		         },		  
+		         //-- output section
 		         {
 		        	 "header":Messages("containers.table.code"),
 		        	 "property":"outputContainerUsed.code",
@@ -112,8 +112,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		         }
 		         ];
 	
-	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+	// 25/04/2017  si utilisation du janus alors il ne faut que des plaques...
+	if($scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
 		columns.push(
 			 {
 	        	 "header":Messages("containers.table.well"),
@@ -195,13 +195,13 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
 		.success(function(data, status, headers, config) {
 			
+			// a remplacer par message.setSuccess(txt); ???
 			$scope.messages.clazz="alert alert-success";
 			$scope.messages.text=Messages('experiments.msg.import.success');
 			$scope.messages.showDetails = false;
 			$scope.messages.open();	
 			
 			// data est l'experience retournée par input.java
-			
 			// 16/01/2017 recuperer instrumentProperties 
 			$scope.experiment.instrumentProperties= data.instrumentProperties;
 			
@@ -217,7 +217,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		})
 		.error(function(data, status, headers, config) {
-			
+			// a remplacer par message.setError(txt); ???
 			$scope.messages.clazz = "alert alert-danger";
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
@@ -253,7 +253,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	//-2- code Flowcell
 	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
-		    $scope.experiment.instrumentProperties.cbotFile.value = undefined;		
+			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; }	// 26/04 ajout if exists
 		    checkFCsequencingType();// ajout 24/04/2017 NGL-1325
 		}
 	});	
@@ -261,39 +261,67 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	//-3- code cBot
 	$scope.$watch("experiment.instrument.code" , function(newValue, OldValue){
 		if ( newValue !== OldValue ) {
-			$scope.experiment.instrumentProperties.cbotFile.value = undefined;
+			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined;}	//test 26/04 ajout if exists
 		}
 	});	
 	
-   // ajout 24/04/2017 NGL-1325
+    // ajout 24/04/2017 NGL-1325
 	$scope.$watch("experiment.experimentProperties.sequencingType.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			checkFCsequencingType();
-		} else {
-			$scope.messages.clear();
-		}
+		} 
 	});	
 	
 	function checkFCsequencingType (){
 		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
+		$scope.messages.clear();
+		// !! peut etre non encore definie...
 		var fcBarcode= $scope.experiment.instrumentProperties.containerSupportCode.value;
 		
 		/// ! fcBarcode.test ( ) fonctionne pas !!!
 		if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq 4000') && ( null===fcBarcode.match(H4000fcRegexp))) {
+		   //( null===$scope.experiment.instrumentProperties.containerSupportCode.value.match(H4000fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type Hiseq 4000 (*BBXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
-		} else	if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq X') && ( null ===fcBarcode.match(HXfcRegexp))) {
+		} else	if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq X') && ( null===fcBarcode.match(HXfcRegexp))) {
+				//( null ===$scope.experiment.instrumentProperties.containerSupportCode.value.match(HXfcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type Hiseq X (*ALXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
 		} else {
-			// attention ecrase des eventuels messages precedents...
+			console.log('checkFCsequencingType OK');
 			$scope.messages.clear();
 		}	
 	}
 	
+	// ajout 25/04/2017  NFG-1287: les supports d'entree ne doivent etre QUE des plaques pour le Janus
+	if ( $scope.isCreationMode() && ($scope.experiment.instrument.typeCode === 'janus-and-cBotV2')){
+		// !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket (ajouter mainService dans le controller)
+		// $parse marche pas ici.... var tmp = $scope.$parse("getBasket().get()|getArray:'support.categoryCode'|unique",mainService); 
+		var tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+		
+		if ( ((tmp.length === 1) && ( tmp[0] ==="tube")) || (tmp.length > 1) ){
+			              // only tubes                         mixte
+			$scope.messages.setError(Messages('experiments.input.error.only-plates')+ ' si vous utilisez cet instrument'); 
+			
+			$scope.experiment.instrument.typeCode =null; // pas suffisant pour bloquer la page..
+			$scope.atmService = null; //la oui !!!!!
+		} else {
+			// plaques uniqt mais il y a une limite !! combien ??
+			if ( $scope.mainService.getBasket().length() > 4 ){ 
+				$scope.messages.setError(Messages('experiments.input.error.maxContainers', 4));
+			}
+		}
+	}
+	
+	// ajout 26/04/2017: du coup il faut un watch sur $scope.experiment.instrument.typeCode pour effacer un eventuel message d'erreur precedent
+	$scope.$watch("experiment.instrument.typeCode" , function(newValue, OldValue){
+		if ($scope.experiment.instrument.typeCode === 'cBotV2'){
+			$scope.messages.clear();
+		}
+	});	
 }]);
