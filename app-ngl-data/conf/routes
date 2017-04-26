@@ -79,6 +79,9 @@ GET 	/cns/migration-experiment-input-tree-properties		controllers.migration.cns.
 GET 	/cns/migration-experiment-error-input				controllers.migration.cns.MigrationPropertiesExperimentErrorInput.migration(experimentTypeCode: java.lang.String, keyProperty: java.lang.String, addToRun:Boolean ?=false)
 GET 	/cns/migration-container-error-input				controllers.migration.cns.MigrationPropertiesContainerErrorInput.migration(experimentTypeCode: java.lang.String, keyProperty: java.lang.String, previousExperimentTypeCode: java.lang.String ?=null, addToRun:Boolean ?=false)
 
+GET 	/cns/migration-readSet-minknowBasecalling		controllers.migration.cns.MigrationReadSetMinknowBasecalling.migration()
+
+		
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
 GET		/cng/migration-libprocess				controllers.migration.cng.AddLibProcessTypeCode.migration()
