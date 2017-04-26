@@ -509,7 +509,6 @@ experiment.panel.experimentInformation = Expérience
 experiment.panel.instrumentInformation = Instrument
 experiment.panel.traceInformation = Info
 
-
 experiment.valuationCopyToInput.title = Copie de la valeur de validité au sein du container : 
 
 reagents.table.kitname = Nom du kit
