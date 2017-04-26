@@ -9,6 +9,13 @@
 					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.minKnowVersion.value}}</p>
 				}
 				
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.minknowEvents")){					
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.minknowEvents.value}}</p>
+				}
+				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.minknowCompleteReads")){					
+					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.minknowCompleteReads.value}}</p>
+				}
+				
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.basecallerName")){
 					<p>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.basecallerName.value}}</p>
 				}
