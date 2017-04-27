@@ -251,7 +251,7 @@ public class XmlServices {
 				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection) + "</LIBRARY_SELECTION>\n";
 				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
 				
-				chaine = chaine + "              <\" + experiment.libraryLayout\"";	
+				chaine = chaine + "              <"+ experiment.libraryLayout;	
 				if("PAIRED".equals(experiment.libraryLayout)) {
 					chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
 				}

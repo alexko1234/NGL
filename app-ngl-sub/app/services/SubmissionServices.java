@@ -706,7 +706,7 @@ public class SubmissionServices {
 			expElt.validate(contextValidation);
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", expElt.code)){	
 				MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, expElt);
-				System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
+				//System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
 			}
 		}
 
@@ -754,7 +754,7 @@ public class SubmissionServices {
 			System.out.println("submission.validate produit des erreurs");
 			// rallBack avec clean sur exp et sample et mise à jour study
 			System.out.println("\ndisplayErrors dans SubmissionServices::createNewSubmission :");
-			contextValidation.displayErrors(Logger.of("SRA"));
+			//contextValidation.displayErrors(Logger.of("SRA"));
 			System.out.println("\n end displayErrors dans SubmissionServices::createNewSubmission :");
 			
 			// enlever les samples, experiments et submission qui ont ete crées par le service et remettre
@@ -1271,7 +1271,7 @@ public class SubmissionServices {
 								} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
 										||libProcessTypeCodeValue.equalsIgnoreCase("H")||libProcessTypeCodeValue.equalsIgnoreCase("L")
 										||libProcessTypeCodeValue.equalsIgnoreCase("Z")||libProcessTypeCodeValue.equalsIgnoreCase("MI")
-										||libProcessTypeCodeValue.equalsIgnoreCase("K")){
+										||libProcessTypeCodeValue.equalsIgnoreCase("K")||libProcessTypeCodeValue.equalsIgnoreCase("DA")){
 									experiment.libraryLayoutOrientation = "forward-reverse";
 								} else {
 									throw new SraException("Pour le readSet " + readSet +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
@@ -1418,10 +1418,12 @@ public class SubmissionServices {
 					RawData rawData = new RawData();
 					//System.out.println("fichier " + runInstanceFile.fullname);
 					rawData.extention = runInstanceFile.extension;
+					System.out.println("dataDir "+dataDir);
 					rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
+					System.out.println("raw data directory"+rawData.directory);
 					rawData.relatifName = runInstanceFile.fullname;
 					//System.out.println ("rawData.relatifName = " +rawData.relatifName);
-					String cns_directory= rawData.directory.replace("/ccc/genostore/count007/fg0001/rawdata/", "/envcns/proj/");
+					String cns_directory= rawData.directory.replace("/ccc/genostore/count007/fg0001/rawdata/", "/env/cns/proj/");
 					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
 					if(fileCible.exists()){
 						System.out.println("le fichier "+ fileCible +"existe bien");
@@ -1499,28 +1501,28 @@ public class SubmissionServices {
 				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 				// mettre le status pour la soumission des readSet à NONE si possible: 
 				if (experiment != null){
-					System.out.println(" !!!! experimentCode = "+ experimentCode);
-					System.out.println(" !!!! experiment.code = "+ experiment.code);
+					//System.out.println(" !!!! experimentCode = "+ experimentCode);
+					//System.out.println(" !!!! experiment.code = "+ experiment.code);
 
-					System.out.println(" !!!! submissionState.code remis à 'N' pour "+experiment.readSetCode);
+					//System.out.println(" !!!! submissionState.code remis à 'N' pour "+experiment.readSetCode);
 
 					// remettre les readSet dans la base avec submissionState à "NONE":
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 							DBQuery.is("code", experiment.readSetCode),
 							DBUpdate.set("submissionState.code", "NONE").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
-					System.out.println("submissionState.code remis à 'N' pour le readSet "+experiment.readSetCode);
+					//System.out.println("submissionState.code remis à 'N' pour le readSet "+experiment.readSetCode);
 			
 					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("experimentCodes", experimentCode)).toList();
 					if (submissionList.size() > 1) {
 						for (Submission sub: submissionList) {
-							System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
+							//System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
 						}
 						throw new SraException(experimentCode + " utilise par plusieurs objets submissions");
 						
 					} else {
 						// todo : verifier qu'on ne detruit que des experiments en new ou uservalidate
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
-						System.out.println("deletion dans base pour experiment "+experimentCode);
+						//System.out.println("deletion dans base pour experiment "+experimentCode);
 					}
 				}
 			}
