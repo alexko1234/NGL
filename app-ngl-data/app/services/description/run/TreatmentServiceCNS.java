@@ -582,6 +582,10 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan plastid par taxon (nb seq)","taxonBilanPlastid.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan plastid par taxon (%)","taxonBilanPlastid.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, false, "object_list"));	
 
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan contamination par taxon (taxon)","taxonBilanContamination.taxon",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan contamination par taxon (nb seq)","taxonBilanContamination.nbSeq",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan contamination par taxon (%)","taxonBilanContamination.percent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Double.class, false, "object_list"));	
+
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Bilan par division (division)","divisionBilan.division",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, true,
 				DescriptionFactory.newValues("Eukaryota","Bacteria","cellular organisms","Archaea","Viruses"), "object_list"));
