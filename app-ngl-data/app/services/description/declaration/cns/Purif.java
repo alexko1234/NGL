@@ -37,10 +37,22 @@ public class Purif extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Ampure Post-PCR","post-pcr-ampure",null, 30300,
+		l.add(newExperimentType("Ampure","ampure",null, 30300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmupurePCR(),
 				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
+		l.add(newExperimentType("Ampure Post-PCR","post-pcr-ampure",null, 30400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsPostAmupurePCR(),
+				getInstrumentUsedTypes("hand","biomek-fx"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
+		l.add(newExperimentType("Purification sur colonne","spin-column-purification",null, 30500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsSpinColumnPurification(),
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
+		
 		return l;
 		
 	}
@@ -66,6 +78,18 @@ public class Purif extends AbstractDeclaration {
 		return propertyDefinitions;
 	}
 
+	
+	private List<PropertyDefinition> getPropertyDefinitionsSpinColumnPurification() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,"1"));
+		
+		return propertyDefinitions;
+	}
+	
+	
+	
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		return null;
