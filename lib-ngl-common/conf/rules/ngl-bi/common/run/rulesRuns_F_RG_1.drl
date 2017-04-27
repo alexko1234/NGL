@@ -340,6 +340,8 @@ rule "Add treatment minKnowBasecalling from Run to ReadSet nanopore"
 		newResultsValue.put("basecallerName",$treatment.results.get("default").get("basecallerName"));
 		newResultsValue.put("basecallerVersion",$treatment.results.get("default").get("basecallerVersion"));
 		newResultsValue.put("configName",$treatment.results.get("default").get("configName"));
+		newResultsValue.put("minknowEvents",$treatment.results.get("default").get("minknowEvents"));
+		newResultsValue.put("minknowCompleteReads",$treatment.results.get("default").get("minknowCompleteReads"));
 		
 		Treatment treatMetrichorForReadSet = $treatment;
 		treatMetrichorForReadSet.results.put("default",newResultsValue);
