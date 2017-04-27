@@ -12,7 +12,7 @@ datatable.button.group = Group / Ungroup
 datatable.button.length=Size ({0})
 datatable.totalNumberRecords = {0} Result(s)
 datatable.button.exportCSV = CSV Export
-
+datatable.button.top = Go to the top
 datatable.msg.success.save = All backups are successful.
 datatable.msg.error.save = There are {0} backup(s) in error.
 datatable.msg.success.remove = All the deletions are successful.
