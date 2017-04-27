@@ -4,7 +4,8 @@
 "use strict";
 
 angular.module('ultimateDataTableServices', []).
-factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', '$timeout', function($http, $filter, $parse, $window, $q, udtI18n, $timeout) { //service to manage datatable
+factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', '$timeout', '$anchorScroll', '$location',
+		function($http, $filter, $parse, $window, $q, udtI18n, $timeout, $anchorScroll, $location) { //service to manage datatable
     var constructor = function(iConfig) {
         var datatable = {
             configDefault: {
@@ -70,7 +71,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     numberPageListMax: 3,
                     pageList: [],
                     numberRecordsPerPage: 10,
-                    numberRecordsPerPageList: undefined
+                    numberRecordsPerPageList: undefined,
+                    bottom:true,
+                    numberRecordsPerPageForBottomdisplay:50
                 },
                 order: {
                     active: true,
@@ -1762,6 +1765,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             isShowToolbar: function() {
                 return (this.isShowToolbarButtons() || this.isShowToolbarPagination() || this.isShowToolbarResults());
             },
+            
+            isShowToolbarBottom: function() {
+                return (this.isShowToolbarPagination() && this.config.pagination.bottom && this.config.pagination.numberRecordsPerPage >= this.config.pagination.numberRecordsPerPageForBottomdisplay);
+            },
 
             isShowToolbarButtons: function() {
                 return (this.isShowCRUDButtons() || this.isShowHideButtons() || this.isShowAddButtons() || this.isShowShowButtons() || this.isShowExportCSVButton() || this.isShowOtherButtons());
@@ -1799,6 +1806,18 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 return (this.allResult === undefined || this.allResult === null || this.allResult.length === 0);
             },
 
+            goToAnchor : function(hash){
+            	$anchorScroll.yOffset = 50;
+            	if ($location.hash() !== hash) {
+                    // set the $location.hash to `newHash` and
+                    // $anchorScroll will automatically scroll to it
+                    $location.hash(hash);
+                  } else {
+                    // call $anchorScroll() explicitly,
+                    // since $location.hash hasn't changed
+                    $anchorScroll();
+                  }
+            },
             /**
              * Function to show (or not) the "CSV Export" button
              */
@@ -3628,6 +3647,17 @@ directive('udtToolbar', function(){
   		    	link: function(scope, element, attr) {
   		    	}
     		};
+    	});
+;angular.module('ultimateDataTableServices').
+directive('udtToolbarBottom', function(){ 
+    		return {
+    			restrict: 'A',
+  		    	replace:true,
+  		    	templateUrl:'udt-toolbar-bottom.html'		    		
+  		    		,
+  		    	link: function(scope, element, attr) {
+  		    	}
+    		};
     	});;"use strict";
 
 angular.module('ultimateDataTableServices').
@@ -4024,7 +4054,8 @@ factory('udtI18n', [function() {
 							"datatable.button.generalGroup" : "Grouper toute la s\u00e9lection",
 							"datatable.button.basicExportCSV" : "Exporter toutes les lignes",
 							"datatable.button.groupedExportCSV" : "Exporter les lignes group\u00e9es",
-							"datatable.button.showOnlyGroups" : "Voir uniquement les groupes"
+							"datatable.button.showOnlyGroups" : "Voir uniquement les groupes",
+							"datatable.button.top" : "Aller au d\u00e9but du tableau"
 						},
 						"en": {
 							"result":"Results",
@@ -4060,7 +4091,8 @@ factory('udtI18n', [function() {
 							"datatable.button.generalGroup" : "Group All selected lines",
 							"datatable.button.basicExportCSV" : "Export all lines",
 							"datatable.button.groupedExportCSV" : "Export only grouped lines",
-							"datatable.button.showOnlyGroups" : "See only group"
+							"datatable.button.showOnlyGroups" : "See only group",
+							"datatable.button.top" : "Go to the top"
 						},
 						"nl": {
 							"result": "Resultaten",
@@ -4096,7 +4128,8 @@ factory('udtI18n', [function() {
 							"datatable.button.generalGroup": "Groepeer alle geselecteerde regels",
 							"datatable.button.basicExportCSV": "Exporteer alle regels",
 							"datatable.button.groupedExportCSV": "Exporteer alleen de gegroepeerde regels",
-							"datatable.button.showOnlyGroups": "Toon alleen de groep"
+							"datatable.button.showOnlyGroups": "Toon alleen de groep",
+							"datatable.button.top" : "Ga naar de top"
 						}
 					},
 
@@ -4125,9 +4158,11 @@ run(['$templateCache', function($templateCache) {
   $templateCache.put('ultimate-datatable.html',
     '<div name="datatable" class="datatable" ng-if="udtTable">'
    +    '<div ng-transclude/>'
+   +	'<div id="udt-top-{{udtTable.config.name}}"/>'
    +    '<div udt-toolbar ng-if="udtTable.isShowToolbar()"/>'
    +    '<div udt-messages ng-if="udtTable.config.messages.active"/>'
    +    '<div udt-table/>'
+   +    '<div udt-toolbar-bottom ng-show="udtTable.isShowToolbarBottom()"/>'
    +'</div>');
 }])
 .run(['$templateCache', function($templateCache) {
@@ -4417,4 +4452,23 @@ run(['$templateCache', function($templateCache) {
    +        '</div>'
    +    '</div>'
    +'</div>');
+}]).run(['$templateCache', function($templateCache) {
+	  $templateCache.put('udt-toolbar-bottom.html',
+			    '<div name="udt-toolbar-bottom" class="row margin-bottom-3">'
+			   +    '<div class="col-md-12 col-lg-12">'
+			   +        '<div class="btn-toolbar pull-right" name="udt-toolbar-pagination" ng-if="udtTable.isShowToolbarPagination()">'
+			   +            '<div class="btn-group" ng-if="udtTable.isShowPagination()">'
+			   +                '<ul class="pagination">'
+			   +                    '<li ng-repeat="page in udtTable.config.pagination.pageList" ng-class="page.clazz">'
+			   +                        '<a href="" ng-click="udtTableFunctions.setPageNumber(page);" ng-bind="page.label"></a>'
+			   +                    '</li>'
+			   +                '</ul>'
+			   +            '</div>'
+			   +			'<button class="btn btn-default" ng-click="udtTable.goToAnchor(\'udt-top-\'+udtTable.config.name)" title="{{udtTableFunctions.messages.Messages(\'datatable.button.top\')}}">'
+			   +                        '<i class="fa fa-chevron-up"></i>'
+			   +                        '<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.show\')}} </span>'
+			   +             '</button>'
+			   +        '</div>'
+			   +    '</div>'
+			   +'</div>');
 }]);
