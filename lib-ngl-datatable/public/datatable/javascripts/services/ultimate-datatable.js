@@ -241,7 +241,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     active: false
                 }
             },
-            messages: udtI18n(navigator.language || navigator.userLanguage), //i18n intern service instance
+            messages: udtI18n(navigator.languages || navigator.language || navigator.userLanguage), //i18n intern service instance
             //errors functions
             /**
              * Reset all the errors for a line
