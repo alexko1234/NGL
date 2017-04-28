@@ -177,16 +177,7 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 			        	 "position":53,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
-			        	 "header":Messages("containers.table.quantity")+" (ng)",
-			        	 "property":"outputContainerUsed.quantity.value",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-						 "type":"number",
-			        	 "position":54,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }, 
+			        
 			         {
 			        	 "header":Messages("containers.table.volume")+" (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -194,9 +185,19 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 						 "edit":true,
 						 "hide":true,
 						 "type":"number",
-			        	 "position":55,
+			        	 "position":54,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         {
+			        	 "header":Messages("containers.table.quantity")+" (ng)",
+			        	 "property":"outputContainerUsed.quantity.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "type":"number",
+			        	 "position":55,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         }, 
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
