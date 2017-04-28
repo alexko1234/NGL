@@ -271,7 +271,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Mk1B", "mk1b", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKIB() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
+		l.add(newInstrumentUsedType("PromethION", "promethION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getPromethIONProperties(),getInstrumentPromethION() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
 				,getContainerSupportCategories(new String[]{"irys-chip-2"}), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -460,7 +461,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9-spot-on"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.4-spot-on"));
        
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
@@ -471,10 +472,79 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return propertyDefinitions;
 	}
 	
+	private static List<PropertyDefinition> getPromethIONProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, null, 
+	        		null, "single", 48, true, null, null));
+	       
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, true, null, 
+        		null, "single", 49, true, "R9.4-spot-on", null));
+        
+        propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+        		getPromethionPosition(), "single", 50, true, null, null));
+        
+		return propertyDefinitions;
+	}
+	
+	private static List<Value> getPromethionPosition() {
+		List<Value> values = new ArrayList<Value>();
+		values.add(newValue("PH_p-101_0","pl1_A1-D1"));  
+		values.add(newValue("PH_p-101_2","pl1_A2-D2"));  
+		values.add(newValue("PH_p-105_0","pl1_A3-D3"));  
+		values.add(newValue("PH_p-105_2","pl1_A4-D4"));  
+		values.add(newValue("PH_p-109_0","pl1_A5-D5"));  
+		values.add(newValue("PH_p-109_2","pl1_A6-D6")); 
+		values.add(newValue("PH_p-101_1","pl1_E1-H1")); 
+		values.add(newValue("PH_p-101_3","pl1_E2-H2")); 
+		values.add(newValue("PH_p-105_1","pl1_E3-H3")); 
+		values.add(newValue("PH_p-105_3","pl1_E4-H4")); 
+		values.add(newValue("PH_p-109_1","pl1_E5-H5")); 
+		values.add(newValue("PH_p-109_3","pl1_E6-H6")); 
+		values.add(newValue("PH_p-102_0","pl1_A7-D7")); 
+		values.add(newValue("PH_p-102_2","pl1_A8-D8")); 
+		values.add(newValue("PH_p-106_0","pl1_A9-D9")); 
+		values.add(newValue("PH_p-106_2","pl1_A10-D10")); 
+		values.add(newValue("PH_p-110_0","pl1_A11-D11")); 
+		values.add(newValue("PH_p-110_2","pl1_A12-D12")); 
+		values.add(newValue("PH_p-102_1","pl1_E7-H7")); 
+		values.add(newValue("PH_p-102_3","pl1_E8-H8")); 
+		values.add(newValue("PH_p-106_1","pl1_E9-H9")); 
+		values.add(newValue("PH_p-106_3","pl1_E10-H10")); 
+		values.add(newValue("PH_p-110_1","pl1_E11-H11")); 
+		values.add(newValue("PH_p-110_3","pl1_E12-H12")); 
+		values.add(newValue("PH_p-103_0","pl2_A1-D1")); 
+		values.add(newValue("PH_p-103_2","pl2_A2-D2")); 
+		values.add(newValue("PH_p-107_0","pl2_A3-D3")); 
+		values.add(newValue("PH_p-107_2","pl2_A4-D4")); 
+		values.add(newValue("PH_p-111_0","pl2_A5-D5")); 
+		values.add(newValue("PH_p-111_2","pl2_A6-D6")); 
+		values.add(newValue("PH_p-103_1","pl2_E1-H1")); 
+		values.add(newValue("PH_p-103_3","pl2_E2-H2")); 
+		values.add(newValue("PH_p-107_1","pl2_E3-H3")); 
+		values.add(newValue("PH_p-107_3","pl2_E4-H4")); 
+		values.add(newValue("PH_p-111_1","pl2_E5-H5")); 
+		values.add(newValue("PH_p-111_3","pl2_E6-H6")); 
+		values.add(newValue("PH_p-104_0","pl2_A7-D7")); 
+		values.add(newValue("PH_p-104_2","pl2_A8-D8")); 
+		values.add(newValue("PH_p-108_0","pl2_A9-D9")); 
+		values.add(newValue("PH_p-108_2","pl2_A10-D10")); 
+		values.add(newValue("PH_p-112_0","pl2_A11-D11")); 
+		values.add(newValue("PH_p-112_2","pl2_A12-D12")); 
+		values.add(newValue("PH_p-104_1","pl2_E7-H7")); 
+		values.add(newValue("PH_p-104_3","pl2_E8-H8")); 
+		values.add(newValue("PH_p-108_1","pl2_E9-H9")); 
+		values.add(newValue("PH_p-108_3","pl2_E10-H10")); 
+		values.add(newValue("PH_p-112_1","pl2_E11-H11")); 
+		values.add(newValue("PH_p-112_3","pl2_E12-H12")); 		
+		return values;
+	}
+
 	private static List<PropertyDefinition> getNanoporeSequencerPropertiesUAT() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"R9-spot-on"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"R9.4-spot-on"));
        
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
@@ -803,7 +873,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-
+	private static List<Instrument> getInstrumentPromethION () throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("PCA0026", "PCA0026", null, true, "/env/ig/atelier/nanopore/cns/PCA0026", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return instruments;
+	}
+	
 	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));

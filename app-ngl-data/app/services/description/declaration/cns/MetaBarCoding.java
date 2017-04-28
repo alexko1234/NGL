@@ -306,7 +306,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		propertyDefinitions.addAll(getPropertyMetaB());
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 17, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 
@@ -323,7 +323,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				null,null,null,"single", 18, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 19, true, null, null));
-		propertyDefinitions.addAll(RunIllumina.getPropertyDefinitionsIlluminaDepotCNS());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
 		return propertyDefinitions;
 	}
 	
@@ -339,18 +339,23 @@ public class MetaBarCoding extends AbstractDeclaration {
 
 	}
 		
-	private List<Value> getBanqueProcessTypeMetaTB() {
+	public static  List<Value> getBanqueProcessTypeMetaTB() {
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("TB", "TB - Targeted DNAseq avec sizing"));
 		return values;
 	}
 	
-	private List<Value> getBanqueProcessTypeMetaTA(){
+	public static  List<Value> getBanqueProcessTypeMetaTA(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("TA", "TA - Targeted DNAseq"));
 		return values;
 	}
 	
+	public static  List<Value> getBanqueProcessTypeN(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("N", "N - Mate Pair"));
+		return values;
+	}
 	
 
 }

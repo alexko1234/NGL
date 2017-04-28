@@ -4,11 +4,13 @@ index.title = Bienvenue dans l'application NGL-SUB
 #Study
 studies.menu = Study
 studies.menu.create = Création
+studies.menu.release = Release
 studies.page.title=Study
 study.create.success= Sauvegarde du study reussie
 studies.msg.save.success=Study crée
 create.placeholder.studiesTitle= * Title du study
 create.placeholder.projectCodes= * Choisir au moins un code projet
+release.placeholder.projectCodes= * Choisir au moins un code projet
 create.placeholder.abstract= * Donner un Abstract
 create.placeholder.description= * Donner une description
 create.placeholder.existingStudyType= * Choisir un type de study
@@ -25,8 +27,17 @@ study.studyAbstract=StudyAbstract
 study.description=Description
 study.bioProjectId=BioProjectId
 study.existingStudyType=ExistingStudyType
-
-
+studies.tabs.sample=Sample
+studies.tabs.experiment=Experiment
+studies.tabs.run=Run
+studies.tabs.rawData=RawData
+studies.msg.details-release=Objets liés au study :
+studies.msg.details-release-1=Study :
+studies.msg.details.states=state :
+study.title=Titre :
+study.state=Etat :
+study.abstract=Resume :
+study.description=Description
 #Configuration
 configurations.menu = Configurations
 configurations.menu.create = Création
@@ -151,6 +162,7 @@ button.cancel=Cancel
 button.edit=Edit
 button.validate=Validate
 button.activate=Activate
+button.release=Release du study et des objets liés
 #Containers
 #containers.title = Containers
 #containers.menu = Containers

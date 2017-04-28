@@ -405,6 +405,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.runCheck=false;
 		$scope.rawDataCheck=false;
 		// Attention appel de get du controller api.sra.submissions qui est herite
+		// $routeParams.code contient le code qui apparait dans l'url de consultation donc le code de la submission
 		$http.get(jsRoutes.controllers.sra.submissions.api.Submissions.get($routeParams.code).url).success(function(data) {
 			$scope.submission = data;	
 			console.log("$routeParams.code:"+$routeParams.code);

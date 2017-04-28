@@ -133,6 +133,21 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 		});
 		
 		columns.push({
+			"header" : Messages("containers.table.valuationqc.copyToInput"),
+			"property" : "inputContainerUsed.copyValuationToInput",
+			"filter" : "codes:'valuation'",
+			"order" : true,
+			"edit" : true,
+			"hide" : false,
+			"type" : "text",
+			"choiceInList" : true,
+			"listStyle" : 'bt-select',
+			"possibleValues" : 'lists.getValuations()',
+			"position" : 30.1,
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+		
+		columns.push({
 			"header" : Messages("containers.table.valuationqc.comment"),
 			"property" : "inputContainerUsed.valuation.comment",
 			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",

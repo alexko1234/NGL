@@ -3,8 +3,11 @@ package controllers.admin.supports.api.objects;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.description.TreatmentCategory;
@@ -14,10 +17,13 @@ import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import play.Logger;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 import controllers.readsets.api.ReadSets;
@@ -38,7 +44,11 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 		queryElts.add(getSampleCodeQuery(form, ""));
 		queryElts.addAll(getContentPropertiesQuery(form, "sampleOnContainer."));
 		query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));	
-			
+		if(CollectionUtils.isNotEmpty(form.codes)){
+			query.and(DBQuery.in("code", form.codes));
+		}else if(StringUtils.isNotBlank(form.codeRegex)){
+			query.and(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
+		}
 		return query;
 	}
 	
@@ -46,7 +56,7 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 	public void update(NGLObject input, ContextValidation cv) {
 		if(NGLObject.Action.delete.equals(NGLObject.Action.valueOf(input.action))){
 			ReadSets.delete(input.code);
-		}else{
+		}else if(NGLObject.Action.exchange.equals(NGLObject.Action.valueOf(input.action))){
 			//Update readset and switch readSet
 			
 			//Get 2 readsets to switch
@@ -54,8 +64,8 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 			ReadSet readSetToSwitch = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, input.readSetToSwitchCode);
 			
 			//Modify readSet
-			updateReadSetPropeties(readSetOrigin, input.currentValue, input.newValue);
-			updateReadSetPropeties(readSetToSwitch, input.newValue, input.currentValue);
+			updateReadSetProperties(readSetOrigin, input.currentValue, input.newValue);
+			updateReadSetProperties(readSetToSwitch, input.newValue, input.currentValue);
 			
 			
 			//Get treament rg and global
@@ -84,10 +94,20 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 				updateObject(readSetOrigin);
 				updateObject(readSetToSwitch);
 			}
-		}	
+		}else if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
+			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, input.code);
+			PropertyDefinition pd = PropertyDefinition.find.findUnique(input.contentPropertyNameUpdated, Level.CODE.Content);
+			Object newValue = ValidationHelper.convertStringToType(pd.valueType, input.newValue);
+			
+			readSet.sampleOnContainer.properties.get(input.contentPropertyNameUpdated).value = newValue;
+			readSet.validate(cv);
+			if(!cv.hasErrors()){
+				updateObject(readSet);				
+			}
+		}
 	}
 	
-	private void updateReadSetPropeties(ReadSet readSet, String oldValue, String newValue)
+	private void updateReadSetProperties(ReadSet readSet, String oldValue, String newValue)
 	{
 		readSet.code=readSet.code.replace(oldValue, newValue);
 		readSet.sampleOnContainer.properties.put("tag", new PropertySingleValue(newValue));
@@ -104,5 +124,10 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 		//Replace value
 		trtGlobal.results().get("default").put("usefulSequences", trtNgsrg.results.get("default").get("nbCluster"));
 		trtGlobal.results().get("default").put("usefulBases", trtNgsrg.results.get("default").get("nbBases"));
+	}
+	
+	@Override
+	public Long getNbOccurrence(NGLObject input) {
+		return 1L;
 	}
 }

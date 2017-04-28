@@ -70,5 +70,10 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 		public PropertyDefinition findUnique(String code, Level.CODE levelCode) throws DAOException{
 			return ((PropertyDefinitionDAO)getInstance()).findUnique(code, levelCode);
 		}
+		
+		public List<PropertyDefinition> findUnique(Level.CODE levelCode) throws DAOException{
+			return ((PropertyDefinitionDAO)getInstance()).findUnique(levelCode);
+		}
+		
 	}
 }

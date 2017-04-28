@@ -10,6 +10,7 @@ import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -89,7 +90,13 @@ public class Experiments extends DocumentController<Experiment> {
 		
 		if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
 			queries.add(DBQuery.in("code", form.listExperimentCodes));
+		}	
+		
+		// ajout pour interface release study :
+		if (StringUtils.isNotBlank(form.studyCode)) { //all
+			queries.add(DBQuery.in("studyCode", form.studyCode));
 		}
+		// end ajout .
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

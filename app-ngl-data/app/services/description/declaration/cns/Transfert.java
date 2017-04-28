@@ -47,6 +47,12 @@ public class Transfert extends AbstractDeclaration {
 				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newExperimentType("Dilution","dilution",null,10450,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionDilution(),
+				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
 		l.add(newExperimentType("Tubes -> Plaque","tubes-to-plate",null,10500,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
@@ -150,6 +156,26 @@ public class Transfert extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, true, null,null));
+		
+
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getPropertyDefinitionDilution() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, true, "F", null, 
+				"single", 100, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Facteur de dilution (1/X)","dilutionFactor", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
+				null,"single", 21, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 22, false, null,null));
+		
 		
 
 		return propertyDefinitions;

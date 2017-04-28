@@ -1,15 +1,19 @@
 package services.instance.protocol;
 
-import static services.instance.InstanceFactory.newProtocol;
+import static services.instance.InstanceFactory.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mongojack.DBQuery;
 
 import com.typesafe.config.ConfigFactory;
 
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -78,7 +82,7 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes( "library-prep",
 							                            "pcr-and-purification")));
 			
-		// 05/12/2016 library-prep	toujours en DEV
+		// 05/12/2016 library-prep
 		lp.add(newProtocol("2a-ill-sstotalrna-170816","2A_ILL_ssTotalRNA_170816","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes( "library-prep",
 													    "pcr-and-purification")));						
@@ -105,6 +109,77 @@ public class ProtocolServiceCNG {
 													   "wg-chromium-lib-prep")));
 		
 		
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
+		// 30/03/2017 ajout protocoles pour Nanopore
+			
+		//cdna-synthesis
+		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production",
+				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
+		        /* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
+		           concatMap(newPSV("rnaLibProtocol","Smarter V4"),
+						  newPSV("strandOrientation","unstranded"),
+						  newPSV("cDNAsynthesisType","oligodT"))));
+			    */	
+		
+		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", 
+				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
+				/* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
+				   concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),
+					      newPSV("strandOrientation","unstranded"),
+						  newPSV("cDNAsynthesisType","random + oligodT"))));
+			    */	
+		
+		//nanopore-frg 
+		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-frg")));
+		
+		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-frg")));
+		
+		//nanopore-dna-reparation
+		lp.add(newProtocol("ffpe-reparation","réparation FFPE","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-dna-reparation")));
+		
+		//nanopore-library")
+		lp.add(newProtocol("R9-1D-ligation","R9-1D ligation","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-1D ligation"))));
+		
+		lp.add(newProtocol("R9-1D-transposition","R9-1D transposition","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-1D transposition"))));
+		
+		lp.add(newProtocol("R9-Long-Read 1D","R9-Long Read 1D","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-Long Read 1D"))));
+		
+		lp.add(newProtocol("R9-Long-Read 2D","R9-Long Read 2D","path7","1","production",
+				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-Long Read 2D"))));
+		
+		lp.add(newProtocol("R9-Low-input","R9-Low input","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-Low input"))));
+		
+		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-2D"))));
+		
+		//nanopore-depot
+		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		
+		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		 
+		lp.add(newProtocol("R9-on-bead-depot","R9-dépôt sur billes","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+		
+		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
+
+		}
+		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
@@ -120,10 +195,38 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("bioanalyzer","BioAnalyzer", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("bioanalyzer-migration-profile")));
 		
+		
+		//------------Experiences de Purification-----------------------------
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
+		// 30/03/2017 ajout Protocole pour Sizing ...EN COURS
+		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));	
+
+		}
+		
+		
+		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
 			Logger.debug("protocol '"+protocole.name + "' saved..." );
 		}
 	}
+	
+	/*
+	protocole	Smarter V4	Ovation RNAseq system v2	TruSeq Stranded poly A	TruSeq Stranded Proc	Smarter Stranded	Indac
+	rnaLibProtocol	smarterV4	ovationRNAseqSystemV2	truseqStrandedPolyA	truseqStrandedProk	smarterStranded	indac
+	strandOrientation	?	?	reverse	reverse	forward	reverse
+	cDNAsynthesisType	?	?	?	?	?	?
+	 */
+		@SafeVarargs
+		private static Map<String, PropertyValue> concatMap(
+				Map<String, PropertyValue>...map) {
+			Map<String, PropertyValue> mapFinal = new HashMap<String, PropertyValue>(map.length);
+			for(int i = 0 ; i < map.length; i++){
+				mapFinal.putAll(map[i]);
+			}
+			return mapFinal;
+		}
+	
 	
 }

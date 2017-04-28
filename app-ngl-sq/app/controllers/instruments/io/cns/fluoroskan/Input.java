@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import play.Logger;
 import validation.ContextValidation;
 import controllers.instruments.io.utils.AbstractInput;
 
@@ -28,8 +29,34 @@ public class Input extends AbstractInput {
 		
 		String plateCodeInFile = getStringValue(sheet.getRow(0).getCell(1));
 		String plateCodeInExp = experiment.inputContainerSupportCodes.iterator().next();
+
+		Logger.debug("Start Contextvalidation Error "+ plateCodeInExp +", "+ plateCodeInFile );
 		
 		if(plateCodeInExp.equals(plateCodeInFile)){
+						
+			String codeProperties = "concentration1" ;
+
+			if(experiment.typeCode.equals("reception-fluo-quantification") ){
+				
+				String typeQC= getStringValue(sheet.getRow(0).getCell(3));
+				
+				Logger.debug("Type QC "+typeQC);
+				//Valide typeQC
+				if(typeQC==null){
+					contextValidation.addErrors("Erreur gamme", "Code gamme vide dans fichier");
+				}else if(!typeQC.contains(contextValidation.getObject("gamme").toString())) {
+					contextValidation.addErrors("Erreur gamme", "La gamme du fichier "+typeQC+" ne correspond pas au type d'import "+contextValidation.getObject("gamme").toString());
+				}else if(typeQC.equals("BR")){
+					codeProperties="concentrationBR1";
+				}else if(typeQC.equals("HS")){
+					codeProperties="concentrationHS1";
+				}else if(typeQC.equals("HS2")){
+					codeProperties="concentrationHS2";
+				}
+				
+			}
+			
+			final String code=codeProperties;
 			
 			Map<String,Double> results = new HashMap<String,Double>(0);
 			String[] lines = new String[]{"A","B","C","D","E","F","G","H"};
@@ -44,14 +71,16 @@ public class Input extends AbstractInput {
 				}								
 			}
 			
-			//update.
+			
 			if(!contextValidation.hasErrors()){
+				
 				experiment.atomicTransfertMethods
 					.stream()
 					.map(atm -> atm.inputContainerUseds.get(0))
 					.forEach(icu -> {
-						PropertySingleValue concentration1 = getPSV(icu, "concentration1");
-						concentration1.value = results.get(icu.code);
+						String key = icu.locationOnContainerSupport.code+"_"+icu.locationOnContainerSupport.line+icu.locationOnContainerSupport.column;
+						PropertySingleValue concentration1 = getPSV(icu,code);
+						concentration1.value = results.get(key);
 						concentration1.unit = "ng/µl";
 						
 					});

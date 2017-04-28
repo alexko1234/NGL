@@ -1139,7 +1139,16 @@ public class ExpWorkflowsHelper {
 	private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 	public void callWorkflowRules(ContextValidation validation, Experiment exp) {
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", exp, validation),null);
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(exp);
+		facts.add(validation);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);
+			if(atomic.viewIndex == null)atomic.viewIndex = i+1; //used to have the position in the list
+			facts.add(atomic);
+		}
+		
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 	}
 
 	/**
@@ -1190,7 +1199,7 @@ public class ExpWorkflowsHelper {
 			if(null != icu.newQuantity && null != icu.newQuantity.value)c.quantity = icu.newQuantity;
 			if(null != icu.newVolume && null != icu.newVolume.value)c.volume = icu.newVolume;
 			if(null != icu.newSize && null != icu.newSize.value)c.size = icu.newSize;
-			if(null != icu.valuation){
+			if(null != icu.valuation && TBoolean.TRUE.equals(icu.copyValuationToInput)){
 				c.valuation = icu.valuation;
 				c.valuation.user = validation.getUser();
 				c.valuation.date = new Date();

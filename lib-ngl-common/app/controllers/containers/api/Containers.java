@@ -556,6 +556,10 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.in("state.resolutionCodes", containersSearch.stateResolutionCodes));
 		}
 		
+		 if(StringUtils.isNotBlank(containersSearch.commentRegex)){
+				queryElts.add(DBQuery.elemMatch("comments", DBQuery.regex("comment", Pattern.compile(containersSearch.commentRegex))));
+			}
+		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.properties,Level.CODE.Container, "properties"));
 

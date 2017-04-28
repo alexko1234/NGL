@@ -138,9 +138,12 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 					this.form.contentPropertyNameUpdated = "tag";
 				}
 			},
-						
+			isSearchInProgress : function(){
+				return this.searchInProgress;
+			},		
 			search : function(){
 				$scope.messages.clear();
+				$scope.searchService.searchInProgress=true;				
 				$scope.searchService.datatableSQ.setData([]);
 		 		$scope.searchService.datatableBI.setData([]);
 				this.updateForm();
@@ -160,10 +163,12 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 				 		
 				 		$scope.searchService.datatableSQ.setData(data.sq);
 				 		$scope.searchService.datatableBI.setData(data.bi);
+				 		$scope.searchService.searchInProgress=false;						
 				 	}).error(function(data){
 				 		$scope.messages.setError("get");
 				 		$scope.messages.setDetails(data);
 				 		$scope.messages.showDetails=true;
+				 		$scope.searchService.searchInProgress=false;
 				 	});
 				
 			}
@@ -226,7 +231,7 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 		 "order":true,
 		 "edit":true,
 		 "choiceInList":true,
-		 "possibleValues":[{"code":"delete","name":"Delete"},{"code":"replace","name":"Replace"}],
+		 "possibleValues":[{"code":"exchange","name":"Switch"}],
 		 "type":"text",
 		 "position":10
 		}

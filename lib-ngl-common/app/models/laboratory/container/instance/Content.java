@@ -66,4 +66,23 @@ public class Content implements IValidation{
 		ContentValidationHelper.validateProperties(sampleTypeCode, properties, contextValidation);
 	}
 
+	@Override
+	public Content clone() {
+		Content finalContent = new Content();
+		
+		finalContent.projectCode = this.projectCode;
+		finalContent.sampleCode = this.sampleCode;
+		finalContent.sampleCategoryCode = this.sampleCategoryCode;
+		finalContent.sampleTypeCode = this.sampleTypeCode;
+		finalContent.referenceCollab = this.referenceCollab;
+		finalContent.percentage = this.percentage;
+		if(null != this.properties)
+			finalContent.properties = new HashMap<String,PropertyValue>(this.properties);
+		finalContent.taxonCode=this.taxonCode;
+		finalContent.ncbiScientificName=this.ncbiScientificName;
+		if(null != this.processProperties)
+			finalContent.processProperties = new HashMap<String,PropertyValue>(this.processProperties);
+		finalContent.processComments = this.processComments;
+		return finalContent;
+	}
 }

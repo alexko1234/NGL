@@ -95,6 +95,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
+			        	 "watch":true,
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -186,7 +187,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		computeOutputContainerVolumePerPCR ($scope.experiment);
+		//computeOutputContainerVolumePerPCR ($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -371,19 +372,43 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 			computeInputQuantity(value.data);
 		}
 		
+	    if( (col.property === 'inputContainerUsed.experimentProperties.nbPCR.value') || (col.property === 'outputContainerUsed.experimentProperties.PCRvolume.value')){
+	            computeOutputContainerVolumePerPCR(value.data);
+	    }
+	        
 	}
 	
-	var computeOutputContainerVolumePerPCR  = function(experiment){
-		if(null !== experiment.atomicTransfertMethods && undefined !== experiment.atomicTransfertMethods){
-			experiment.atomicTransfertMethods.forEach(function(atm){
-			//	var PCRvolume = atm.inputContainerUseds[0].volume.value;
-				var PCRvolume = $parse("outputContainerUseds[0].experimentProperties.PCRvolume.value")(atm);
-				var nbPCR = $parse("inputContainerUseds[0].experimentProperties.nbPCR.value")(atm);
-				var vol =  PCRvolume * nbPCR;
-		    $parse("outputContainerUseds[0].volume.value").assign(atm,vol);
-			});
-		}	
-	}
+	  var computeOutputContainerVolumePerPCR  = function(udtData){
+		     var getter = $parse("outputContainerUsed.volume.value");
+	         var volume = getter(udtData);
+	   
+	        var compute = {
+	                pcrvolume : $parse("outputContainerUsed.experimentProperties.PCRvolume.value")(udtData),
+	                nbPCR : $parse("inputContainerUsed.experimentProperties.nbPCR.value")(udtData),
+	                isReady:function(){
+	                    return (this.pcrvolume && this.nbPCR);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(pcrvolume * nbPCR)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   volume = Math.round(result*10)/10;               
+	               }else{
+	            	   volume = undefined;
+	               }   
+	               getter.assign(udtData, volume);
+	               console.log("vol = "+volume);
+		              
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to volume");
+	           }
+	    
+	  }
+	
 	
 	var computeInputQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");

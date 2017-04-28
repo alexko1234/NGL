@@ -59,7 +59,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		l.add(newImportType("Reception d'ADN", "dna-reception", ImportCategory.find.findByCode("sample-import"), getDNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception d'Amplicon", "amplicon-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception d'ARN", "rna-reception", ImportCategory.find.findByCode("sample-import"), getRNAReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
-		l.add(newImportType("Reception Lib. RNA", "rna-library-reception", ImportCategory.find.findByCode("sample-import"), getRNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. ARN", "rna-library-reception", ImportCategory.find.findByCode("sample-import"), getRNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. ADN", "dna-library-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Lib. ADN sans index", "dna-library-without-index-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryWithoutIndexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Pool Lib.", "pool-library-reception", ImportCategory.find.findByCode("sample-import"), getPoolLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
 		
@@ -100,6 +102,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
 		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
 		values.add(DescriptionFactory.newValue("MID", "MID"));
+		values.add(DescriptionFactory.newValue("POOL-INDEX", "POOL-INDEX"));
 		return values;	
 	}
 	
@@ -189,6 +192,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("LSCE", "LSCE"));
 		values.add(DescriptionFactory.newValue("to-check", "to check"));
 		values.add(DescriptionFactory.newValue("Nice", "Nice"));
+		values.add(DescriptionFactory.newValue("Banyuls", "Banyuls"));
 		
 		return values;	
 	}
@@ -246,6 +250,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
+		values.add(DescriptionFactory.newValue("E>2000", "SEQ-IMG-ethanol>2000"));
 		values.add(DescriptionFactory.newValue("Undefined", "Undefined"));
 		return values;	
 	}
@@ -376,9 +381,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers"), null, null, null,"single", 2, true, null,null));
+				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers","5.8S F1 / R1"), null, null, null,"single", 2, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S"), null, null, null,"single", 3, true, null,null));
+				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","5.8S"), null, null, null,"single", 3, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null,null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
@@ -407,7 +412,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 14, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 15, false, null,null));		
+				getTagCategories(), null,null,null,"single", 15, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Orientation brin synthétisé","strandOrientation", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 16, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Méthode synthèse cDNA","cDNAsynthesisType", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
@@ -415,6 +420,33 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Protocole bq RNA","rnaLibProtocol", LevelService.getLevels(Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 18, false, null,null));
 
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getDNALibraryWithoutIndexReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
+	
+		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 6, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
+		
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getDNALibraryReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 14, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				getTagCategories(), null,null,null,"single", 15, false, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 6, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
+		
 		return propertyDefinitions;
 	}
 	
@@ -426,7 +458,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 3, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 4, false, null,null));		
+				getTagCategories(), null,null,null,"single", 4, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
 				null,null,null,"single", 5, false, null, null));
 		
@@ -445,9 +477,9 @@ public class ImportServiceCNS extends AbstractImportService {
 
 		
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers"), null, null, null,"single", 11, true, null,null));
+				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers","5.8S F1 / R1"), null, null, null,"single", 11, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S"), null, null, null,"single", 12, true, null,null));
+				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","5.8S"), null, null, null,"single", 12, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null,null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 

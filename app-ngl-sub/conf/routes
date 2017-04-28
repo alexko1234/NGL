@@ -66,7 +66,9 @@ GET		/sra/studies/:homeCode/home					controllers.sra.studies.tpl.Studies.home(ho
 GET		/api/sra/studies							@controllers.sra.studies.api.Studies.list()
 POST	/api/sra/studies							@controllers.sra.studies.api.Studies.save()
 GET		/tpl/sra/studies/create					    controllers.sra.studies.tpl.Studies.create()
+GET		/tpl/sra/studies/release					controllers.sra.studies.tpl.Studies.release()
 GET		/tpl/sra/studies/js-routes				   	controllers.sra.studies.tpl.Studies.javascriptRoutes()
+GET		/tpl/sra/studies/details				    controllers.sra.studies.tpl.Studies.details()
 
 # methode get du controlleur api qui est heritée d'un parent de DocumentController
 GET		/api/sra/studies/:code			        	@controllers.sra.studies.api.Studies.get(code: java.lang.String)
@@ -76,6 +78,7 @@ GET		/tpl/sra/studies/consultation	        	controllers.sra.studies.tpl.Studies.
 # Mise à jour d'un objet study et de ses composants :
 PUT		/sra/studies/:code 							@controllers.sra.studies.api.Studies.update(code: java.lang.String) 
 POST	/api/sra/studies					    	@controllers.sra.studies.api.Studies.save()
+PUT		/api/sra/studies/:studyCode/release	        @controllers.sra.studies.api.Studies.release(studyCode : java.lang.String)
 
 
 #--------

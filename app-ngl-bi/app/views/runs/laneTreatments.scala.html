@@ -84,12 +84,19 @@
 	</div>
 	<div class="tab-pane" id="tilesStats">
 		<div class="col-md-14 col-lg-14">
-		    <img id="default_tilesStats" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/>
+		    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(run.treatments.topIndex.default.tilesStats.value,'tilesStats','','topIndex',
+		run.treatments.topIndex.default.tilesStats.width,
+		run.treatments.topIndex.default.tilesStats.height)">
+		 <a href="#">
+		    <img id="default_tilesStats" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" />
+		 </a> 
+	    </div>
+		    
 	    </div>
 	 </div>
 	</div>
 		
-		 	<!-- <img id="tilesStatsId" ng-src="data:image/png;base64,{{run.treatments.topIndex.default.tilesStats.value}}" class="img-responsive"/> -->
 </div>
 </div>
 }

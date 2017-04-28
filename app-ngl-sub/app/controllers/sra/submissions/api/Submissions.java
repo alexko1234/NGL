@@ -317,7 +317,7 @@ public class Submissions extends DocumentController<Submission>{
 			SubmissionServices submissionServices = new SubmissionServices();
 				
 			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
-			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
+			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest(filledForm.errorsAsJson());
@@ -330,7 +330,7 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submissionCode));
 	}
 
-	
+		
 	public Result activate(String submissionCode) throws SraException, IOException
 	{
 		SubmissionServices submissionServices = new SubmissionServices();
@@ -344,7 +344,7 @@ public class Submissions extends DocumentController<Submission>{
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class); 
 		//ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); // si solution avec ctxVal
 		try {
-			submissionServices.activateSubmission(contextValidation, submissionCode);			
+			submissionServices.activatePrimarySubmission(contextValidation, submissionCode);			
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
 			//return badRequest(Json.toJson(e.getMessage()));

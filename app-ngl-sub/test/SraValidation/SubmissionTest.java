@@ -108,7 +108,7 @@ public class SubmissionTest extends AbstractTestsSRA {
 			for (String readSetCode : readSetCodes) {
 				System.out.println("dans submissionTest        readSetCode = " + readSetCode);
 			}
-			submissionCode = submissionServices.initNewSubmission(readSetCodes, study.code, config.code, null, null, null, contextValidation);
+			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, study.code, config.code, null, null, null, contextValidation);
 			System.out.println("Enregistrement du submissionCode : " + submissionCode); 
 			System.out.println("contextValidation.errors pour submissionTest :" + submissionCode);
 			contextValidation.displayErrors(Logger.of("SRA"));

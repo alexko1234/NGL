@@ -254,7 +254,7 @@ runs.treatments.minknowMetrichor = MinKnow-Metrichor
 runs.treatments.minknowBasecalling = MinKnow-Basecalling
 runs.treatments.topIndex = Top Index
 runs.treatments.tilesStats = Stats FC
-
+runs.treatments.topIndex.tilesStats = Stats FC
 
 runs.treatments.minknow-metrichor.minKnowVersion = Version MinKNOW
 runs.treatments.minknow-metrichor.metrichorVersion = Version Metrichor
@@ -288,6 +288,8 @@ runs.treatments.topIndex.distance = Distance
 #search
 sequencingProgramType.value.PE = Pair End
 sequencingProgramType.value.SR = Single Read
+
+runs.treatments.images.margin=25
 
 ############
 #
@@ -701,6 +703,7 @@ readsets.treatments.rnaSeq.widthOf99percent=width of 99 percent
 readsets.treatments.images.margin=25
 
 readsets.treatments.minknowMetrichor = MinKnow-Metrichor
+readsets.treatments.minknowBasecalling = MinKnow-Basecalling
 
 readsets.treatments.chromium.softwareVersion=Version logiciel
 readsets.treatments.chromium.barcodeExactMatchRatio=Barcode exact match

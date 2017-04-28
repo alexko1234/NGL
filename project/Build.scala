@@ -15,12 +15,12 @@ object ApplicationBuild extends Build {
      
 
 
-   val sqVersion = "1.30.0-SNAPSHOT"  
-   val biVersion = "1.34.0-SNAPSHOT"
+   val sqVersion = "1.31.0-SNAPSHOT"  
+   val biVersion = "1.35.0-SNAPSHOT"
 
    val projectsVersion = "1.3.0-SNAPSHOT"  
    val reagentsVersion = "1.3.0-SNAPSHOT" 
-   val subVersion = "1.2-SNAPSHOT"  
+   val subVersion = "1.2.1-SNAPSHOT"  
      
    val libDatatableVersion = "1.2-SNAPSHOT"
    val libFrameworkWebVersion = "1.1-SNAPSHOT"
@@ -78,6 +78,7 @@ object ApplicationBuild extends Build {
 	    "org.codehaus.janino" % "janino" % "2.5.15",
 
 	    "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
+	   "org.javassist" % "javassist" % "3.20.0-GA",
 	    cache
 
     	)	

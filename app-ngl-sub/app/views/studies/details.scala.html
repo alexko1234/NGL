@@ -1,0 +1,86 @@
+@()
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4">
+		@value
+	</div>
+}
+
+<div class="row">
+	<div class="col-md-12 col-lg-12">
+	<div class="page-header">	
+		<div class="btn-toolbar pull-right" >
+			 <!-- 
+			 affichage uniquement si on vient du menu release : variable release a mettre dans $main
+			 <button class="btn btn-default"  ng-if="release"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
+			 -->
+
+             <!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable--> 
+			 <button class="btn btn-default"  ng-if="isReleasable"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
+		</div>	 
+	</div>
+	</div>
+</div>
+
+<form class="form-horizontal" name="studyForm">
+<div class="row">
+	@column(){
+		@views.html.helper.columnLabelValue(Messages("study.code")){
+			<p class="form-control-static">{{study.code}}</p>
+		}
+		@views.html.helper.columnLabelValue(Messages("study.accession")){
+			<p class="form-control-static">{{study.accession}}</p>
+		}
+		@views.html.helper.columnLabelValue(Messages("study.state")){
+			<p class="form-control-static">{{study.state.code}}</p>
+		}
+		@views.html.helper.columnLabelValue(Messages("study.title")){
+			<p class="form-control-static">{{study.title}}</p>
+		}
+		@views.html.helper.columnLabelValue(Messages("study.abstract")){
+			<p class="form-control-static">{{study.studyAbstract}}</p>
+		}
+		@views.html.helper.columnLabelValue(Messages("study.description")){
+			<p class="form-control-static">{{study.description}}</p>
+		}	
+	}
+	
+</div>
+</form>		
+	
+<div class="page-header"/>	
+					
+<div> 
+	<label>@Messages("studies.msg.details-release")</label> 
+</div>	
+
+
+
+
+
+
+<div class="row">
+	<div class="col-md-12 col-lg-12" messages="messages"></div>
+</div>
+<!-- stopPropagation on checkbox prevent parents default behavior (stop <a> call) -->
+
+<div class="row margin-bottom-7">
+	<div class="col-md-12 col-lg-12">
+		<ul class="nav nav-tabs margin-bottom-5">
+			<!--class="active" permet affichage sans avoir à cliquer sur colonne-->
+			<li class="active"><a a href="#" data-target="#experiment" data-toggle="tab" >@Messages("studies.tabs.experiment")</a></li>
+			<li><a a href="#" data-target="#run" data-toggle="tab">@Messages("studies.tabs.run")</a></li>
+			<li><a a href="#" data-target="#rawData" data-toggle="tab">@Messages("studies.tabs.rawData")</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="experiment">
+				<div ultimate-datatable="experimentDT"></div>
+			</div>
+			<div class="tab-pane" id="run">
+				<div ultimate-datatable="runDT"></div>
+			</div>
+			<div class="tab-pane" id="rawData">
+				<div ultimate-datatable="rawDataDT"></div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -123,9 +123,6 @@ public class Experiments extends DocumentController<Experiment>{
 	protected DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query=DBQuery.empty();
-
-		Logger.info("Experiment Query : "+experimentSearch);
-
 		
 		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
 			queryElts.add(DBQuery.in("code", experimentSearch.codes));

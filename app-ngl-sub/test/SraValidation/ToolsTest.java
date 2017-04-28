@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
@@ -24,10 +24,36 @@ import org.xml.sax.InputSource;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
+import java.util.Calendar;
 import utils.AbstractTestsSRA;
 
 public class ToolsTest extends AbstractTestsSRA {
+	
 	@Test
+	public void testDates()throws IOException {
+		Calendar calendar = Calendar.getInstance();
+		Date date  = calendar.getTime();
+		int year = calendar.get(Calendar.YEAR);
+		System.out.println("annee = " + year);
+		System.out.println("date = " + date);
+
+		calendar.add(Calendar.YEAR, 2);
+		Date date_release  = calendar.getTime();
+		int year_release = calendar.get(Calendar.YEAR);
+		System.out.println("annee_release = " + year_release);
+		System.out.println("date_release = " + date_release);
+
+		
+		/* deprecated :
+		Date release = calendar.get
+		//Date date = new Date();
+		System.out.println("date = " + date);
+		int annee_release = date.getYear() + 2;
+		date.setYear(annee_release);
+		System.out.println("date release = " + date);
+		*/
+	}
+	//@Test
 	public void testRegExp()throws IOException  {
 		String name = "titi/toto/tutu/lili";
 		

@@ -31,19 +31,23 @@ public class Submission extends DBObject implements IValidation {
 	//public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
 	public List<String> projectCodes = new ArrayList<String>();
  	public String accession = null;       // numeros d'accession attribué par ebi */
+	public Date creationDate = null;
 	public Date submissionDate = null;
+
 	public List<String> refStudyCodes = new ArrayList<String>();  // Liste de tous les codes des AbstractStudy (ExternalStudy et Study) referencés par cette soumission, pas forcement à soumettre à l'EBI.
 	public List<String> refSampleCodes = new ArrayList<String>(); // liste de tous les codes des AbstractSamples (ExternalSample ou Sample) references par cette soumission, pas forcement a soumettre à l'EBI.
 	//public List<String> refReadSetCodes = new ArrayList<String>(); // liste des codes des readSet references par cette soumission(pas de soumission).
-	public String studyCode = null;          // study à soumettre à l'ebi si strategy_internal_study
+	public String studyCode = null;          // study à soumettre à l'ebi si strategy_internal_study ou bien study à rendre public
 	public String analysisCode = null;       // analysis à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
 	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
 	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
 	public String configCode = null;
 	public String submissionDirectory = null;
-	public String submissionTmpDirectory = null;
-	public Boolean release = false;
+	//public String submissionTmpDirectory = null;
+	public Boolean release = false; // si true : soumission pour levée de confidentialite d'un study, 
+	                                // si false :  soumission de données (toujours en confidential)
+		
 	public String xmlStudys = null;  // nom relatif du fichier xml des studys rempli uniquement si le fichier existe.
 	public String xmlSamples = null;
 	public String xmlExperiments = null;
@@ -59,14 +63,15 @@ public class Submission extends DBObject implements IValidation {
 	// pour gerer les differents etats de l'objet en fonction de l'avancement dans le workflow de la soumission
 	
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
+	private Object validationDate;
 		// pour loguer les dernieres modifications utilisateurs
 
 	public Submission(String user, List<String>projectCodes) {
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
-		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);	
+		//DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+		//String st_my_date = dateFormat.format(courantDate);	
 		// determination du repertoire de soumission dans methode activate SubmissionServices
-		this.submissionDate = courantDate;
+		Date courantDate = new java.util.Date();
+		this.creationDate = courantDate;
 		this.traceInformation = new TraceInformation();
 		this.traceInformation.setTraceInformation(user);
 		for (String projectCode: projectCodes) {
@@ -80,7 +85,7 @@ public class Submission extends DBObject implements IValidation {
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
-		this.submissionDate = courantDate;
+		this.creationDate = courantDate;
 	}
 
 	@Override
@@ -105,7 +110,8 @@ public class Submission extends DBObject implements IValidation {
 					||this.state.code.equalsIgnoreCase("IP-SUB")
 					|| this.state.code.equalsIgnoreCase("F-SUB")) {
 				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
-				ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
+				ValidationHelper.required(contextValidation, this.creationDate , "creationDate");
+				ValidationHelper.required(contextValidation, this.validationDate , "validationDate");
 			}
 		}
 		/*ValidationHelper.required(contextValidation, this.xmlStudys , "xmlStudys");

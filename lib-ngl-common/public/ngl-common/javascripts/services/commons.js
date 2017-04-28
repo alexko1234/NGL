@@ -211,6 +211,9 @@ angular.module('commonsServices', []).
     				statsConfigs : function(params, key){
     					load(jsRoutes.controllers.stats.api.StatsConfigurations.list().url, params, (key)?key:'statsConfigs');
     				},
+    				propertyDefinitions : function(params, key){
+    					load(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,params,(key)?key:'propertyDefinitions');    				
+    				},
     				values : function(params, key){
     					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
     				},
@@ -368,6 +371,13 @@ angular.module('commonsServices', []).
     			getValues : function(params, key){
     				if(results[key] === undefined){
     					refresh.values(params, key);
+    				}
+    				return results[key];
+    			},
+    			getPropertyDefinitions : function(params, key){
+    				key = (key)?key:'propertyDefinitions';
+    				if(results[key] === undefined){
+    					refresh.propertyDefinitions(params, key);
     				}
     				return results[key];
     			},
@@ -1076,6 +1086,9 @@ angular.module('commonsServices', []).
       		    	  if(newValue && angular.isArray(newValue)){
       		    		items = angular.copy(newValue);      		    		
       		    		render();      		    		
+      		    	  }else if(oldValue && (null == newValue || undefined == newValue)){
+      		    		items = [];
+      		    		render();	
       		    	  }
       		      });
 	      		      

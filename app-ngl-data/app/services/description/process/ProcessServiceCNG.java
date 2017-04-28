@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;// ajout FDS
+import java.util.stream.Collectors;// ajout FDS pour getPETForQCTransfertPurif
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -28,6 +28,7 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.instrument.InstrumentServiceCNG;
+import services.description.declaration.cng.Nanopore;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -41,7 +42,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. Illumina", "library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. Nanopore", "nanopore-library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));
 		// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
@@ -68,7 +70,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("WG PCR free (FC ordonnée)", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				1,
 				getPropertyDefinitionsX5WgPcrFree(), 
-				Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1), //ordered list of experiment type in process type
+				Arrays.asList(
+						getPET("ext-to-x5-wg-pcr-free",-1), //ordered list of experiment type in process type
 						getPET("prep-pcr-free",0),
 						getPET("lib-normalization",1), 
 						getPET("prepa-fc-ordered",2), 
@@ -83,7 +86,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("WG NANO (FC ordonnée)", "x5-wg-nano", ProcessCategory.find.findByCode("library"),
 				2, 
 				getPropertyDefinitionsX5WgNanoDNAseq(), 
-				Arrays.asList(getPET("ext-to-x5-wg-nano",-1), //ordered list of experiment type in process type
+				Arrays.asList(
+						getPET("ext-to-x5-wg-nano",-1), //ordered list of experiment type in process type
 						getPET("prep-wg-nano",0),
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
@@ -99,9 +103,15 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				20,
 				null,  // pas de propriétés ??
-				Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
-						getPET("prep-pcr-free",-1), getPET("pcr-and-purification",-1), getPET("wg-chromium-lib-prep",-1),
-						getPET("lib-normalization",0), getPET("normalization-and-pooling",0),
+				Arrays.asList(
+						getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
+						getPET("prep-pcr-free",-1), 
+						getPET("pcr-and-purification",-1), 
+						getPET("wg-chromium-lib-prep",-1),
+						
+						getPET("lib-normalization",0), 
+						getPET("normalization-and-pooling",0),
+						
 						getPET("prepa-fc-ordered",1), 
 						getPET("illumina-depot",2) ),           
 				getExperimentTypes("lib-normalization").get(0),            //first experiment type
@@ -113,8 +123,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				40,
 		        getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
-				Arrays.asList(getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
-		            	getPET("lib-normalization",-1), getPET("normalization-and-pooling",-1),
+				Arrays.asList(
+						getPET("ext-to-denat-dil-lib",-1), // ordered list of experiment type in process type
+		            	getPET("lib-normalization",-1), 
+		            	getPET("normalization-and-pooling",-1),
+		            	
 		            	getPET("denat-dil-lib",0),
 		            	getPET("prepa-flowcell",1),
 		            	getPET("illumina-depot",2)),        
@@ -127,8 +140,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
 				41,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
-				Arrays.asList(getPET("ext-to-prepa-flowcell",-1), //ordered list of experiment type in process type
+				Arrays.asList(
+						getPET("ext-to-prepa-flowcell",-1), //ordered list of experiment type in process type
 						getPET("denat-dil-lib",-1),
+						
 						getPET("prepa-flowcell",0),
 						getPET("illumina-depot",1) ),        
 				getExperimentTypes("prepa-flowcell").get(0),        //first experiment type
@@ -139,8 +154,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				42,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
-				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
-						getPET("lib-normalization",-1),  getPET("normalization-and-pooling",-1),
+				Arrays.asList(
+						getPET("ext-to-prepa-fc-ordered",-1), //ordered list of experiment type in process type
+						getPET("lib-normalization",-1),  
+						getPET("normalization-and-pooling",-1),
+						
 						getPET("prepa-fc-ordered",0),
 						getPET("illumina-depot",1) ),        
 				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
@@ -152,7 +170,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("Prep lib RNAseq", "rna-lib-process", ProcessCategory.find.findByCode("library"),
 				3,
 				getPropertyDefinitionsRNAlib(), 
-				Arrays.asList(getPET("ext-to-rna-lib-process",-1), //ordered list of experiment type in process type
+				Arrays.asList(
+						getPET("ext-to-rna-lib-process",-1), //ordered list of experiment type in process type
 						getPET("library-prep",0),
 						getPET("pcr-and-purification",1),
 						getPET("normalization-and-pooling",2) , getPET("lib-normalization",2) ), // FDS 16/11/2016 ajout d'une 2eme exp de niveau 2 
@@ -165,9 +184,13 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 				21,   
 				null, // pas de propriétés ??
-				Arrays.asList(getPET("ext-to-norm-and-pool-denat-fc-depot",-1), //ordered list of experiment type in process type
+				Arrays.asList(
+						getPET("ext-to-norm-and-pool-denat-fc-depot",-1), //ordered list of experiment type in process type
 						getPET("pcr-and-purification", -1),
-						getPET("normalization-and-pooling",0), getPET("lib-normalization",0),
+						
+						getPET("normalization-and-pooling",0), 
+						getPET("lib-normalization",0),
+						
 						getPET("denat-dil-lib",1),
 						getPET("prepa-flowcell",2),
 						getPET("illumina-depot",3) ),          
@@ -180,7 +203,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
 				60,
 				null, // pas de propriétés ??  
-				Arrays.asList(getPET("ext-to-qc-transfert-purif",-1), //ordered list of experiment type in process type  (liste donnee par JG) ou utiliser getPETForQCTransfertPurif
+				Arrays.asList(
+						getPET("ext-to-qc-transfert-purif",-1), //ordered list of experiment type in process type  (liste donnee par JG) ou utiliser getPETForQCTransfertPurif
 						getPET("prep-pcr-free",-1),
 						getPET("prep-wg-nano",-1),
 						getPET("pcr-and-purification",-1),
@@ -188,6 +212,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("library-prep",-1),
 						getPET("denat-dil-lib",-1),
 						getPET("normalization-and-pooling",-1),
+						
 						getPET("pool",0) ),	
 				getExperimentTypes("pool").get(0),                       //first experiment type
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
@@ -198,7 +223,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("Prep Chromium WG", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
 				4,
 				getPropertyDefinitionsWgChromium(), 
-				Arrays.asList(getPET("ext-to-wg-chromium-lib-process",-1), //ordered list of experiment type in process type
+				Arrays.asList(
+						getPET("ext-to-wg-chromium-lib-process",-1), //ordered list of experiment type in process type
 						getPET("chromium-gem-generation",0),
 						getPET("wg-chromium-lib-prep",1) ), 
 				getExperimentTypes("chromium-gem-generation").get(0),        //first experiment type    
@@ -206,7 +232,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-				
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
+			// FDS ajout 03/03/2017 NGL-1225: processus Nanopore DEV
+			l.addAll(new Nanopore().getProcessType());
+		}
+		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	

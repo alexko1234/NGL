@@ -234,7 +234,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
 			
 			if(firstTime){
-				sendMailAgirs(readSet);
+				sendMailFVQC(readSet);
 			}
 			
 			Integer cptreco = null;
@@ -320,7 +320,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	}
 
 
-	private synchronized void sendMailAgirs(ReadSet readSet) throws MailServiceException {
+	public synchronized void sendMailFVQC(ReadSet readSet) throws MailServiceException {
 		Logger.debug("send mail agirs");
 		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-VQC"))

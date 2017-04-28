@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.typesafe.config.ConfigFactory;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
@@ -22,25 +24,34 @@ import services.description.common.LevelService;
 
 public class RunServiceCNG  extends AbstractRunService{
 	
+	// FDS 06/04/2017 NGL-1225: ajout rsnanopore
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
 		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		l.add(DescriptionFactory.newReadSetType("rsillumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
+		l.add(DescriptionFactory.newReadSetType("rsnanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNG) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
 	
 	public void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
-		List<AnalysisType> l = new ArrayList<AnalysisType>();		
+		List<AnalysisType> l = new ArrayList<AnalysisType>();	
+		if(!ConfigFactory.load().getString("ngl.env").equals("PROD")) {
+			l.add(DescriptionFactory.newAnalysisType("Whole genome analysis","WG-analysis",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
+		}
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
-
+	
+	// FDS 06/04/2017 NGL-1225: ajout nanopore
 	public void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunCategory> l = new ArrayList<RunCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
+		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Nanopore", "nanopore"));
+		
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
+	// FDS 06/04/2017 NGL-1225: ajout "nanopore"
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
 		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
@@ -50,6 +61,10 @@ public class RunServiceCNG  extends AbstractRunService{
 		l.add(DescriptionFactory.newRunType("RNEXTSEQ500","RNEXTSEQ500", 4, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RHS4000","RHS4000", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RHSX","RHSX", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+
+		l.add(DescriptionFactory.newRunType("MinIon","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("MKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("MKIb","RMKIB", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
@@ -80,6 +95,8 @@ public class RunServiceCNG  extends AbstractRunService{
 		
 		return propertyDefinitions;
 	}
+	
+	
 	
 	// GA 24/07/2015 ajout des TagCategories
 	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java !!!!
@@ -158,5 +175,7 @@ public class RunServiceCNG  extends AbstractRunService{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Codes aliquots","sampleAliquoteCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,"list"));
 	    return propertyDefinitions;
 	}
+	
+	
 	
 }

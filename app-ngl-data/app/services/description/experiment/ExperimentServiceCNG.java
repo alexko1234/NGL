@@ -28,6 +28,8 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
+import services.description.experiment.AbstractExperimentService;
+import services.description.declaration.cng.Nanopore;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -151,7 +153,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null,
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-				
 			
 			/** Transformation, ordered by display order **/
 			
@@ -247,7 +248,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsWGChromiumLibPrep(),
 					getInstrumentUsedTypes("hand"), 
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
 			/** Quality Control, ordered by display order **/
 			
@@ -282,7 +283,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("agilent-2100-bioanalyzer"),
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-
 			
 			l.add(newExperimentType("QC Bank","bank-qc", null, 500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
@@ -292,7 +292,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 			
-			
+			/** Purification, ordered by display order **/
+
 			
 			/** Transfert, ordered by display order **/
 			// NOTE: pas de Node a creer pour experiences type transfert 
@@ -334,7 +335,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
+					
+			if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
+			// NOTE: toutes les experiences nanopores sont regroupées dans Nanopore.java
+						l.addAll(new Nanopore().getExperimentType());
+			}
 			
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 	}
@@ -348,6 +353,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant sinon==>message : experimentTypeNode is mandatory
 
+		// ext to nodes
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), 
 				false, false, false, 
 				null, // no previous nodes
@@ -435,10 +441,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();	
 		
+		
+		// other nodes
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), // previous nodes
-				null,
+				null, // pas de purif
 				getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), // qc
 				getExperimentTypes("aliquoting")  // transfert
 				).save();	
@@ -446,37 +454,36 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		newExperimentTypeNode("prep-wg-nano",getExperimentTypes("prep-wg-nano").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-x5-wg-nano"), // previous nodes
-				null,
-				null,  // pas de QC possible..
-				getExperimentTypes("aliquoting")   // transfert
+				null, // pas de purif
+				null, // pas de qc 
+				getExperimentTypes("aliquoting")  // transfert
 				).save();	
 
 		// FDS mise en prod 12/12/2016
 		newExperimentTypeNode("library-prep",getExperimentTypes("library-prep").get(0),
 				true,false,false,
 				getExperimentTypeNodes("ext-to-rna-lib-process"), // previous nodes
-				null,
-				null, // pas de QC ??
-				null  // pas de transfert ??
+				null, // pas de purif
+				null, // pas de qc
+				null  // pas de transfert 
 				).save();
 			
 		//commun WG_NANO et RNAseq
 		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 				true,false,false,
 				getExperimentTypeNodes("library-prep","prep-wg-nano"), // previous nodes
-				null,
+				null, // pas de purif
 				getExperimentTypes("labchip-migration-profile"), // qc 
-				null // pas de transfert ??
+				null  // pas de transfert
 				).save();
-			
 			
 		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
 		newExperimentTypeNode("chromium-gem-generation",getExperimentTypes("chromium-gem-generation").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-wg-chromium-lib-process"), // previous nodes
-				null, // pas purif
+				null, // pas de purif
 				getExperimentTypes("bioanalyzer-migration-profile"), // qc 
-				getExperimentTypes("tubes-to-plate") // transfert strip-8 -> plaque-96 
+				getExperimentTypes("tubes-to-plate") // transfert 
 				).save();
 		
 		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
@@ -485,16 +492,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypeNodes("chromium-gem-generation"), // previous nodes
 				null, // pas purif
 				getExperimentTypes("labchip-migration-profile"), // qc  un seul suffit meme s'il y en a plusieurs possibles
-				getExperimentTypes("tubes-to-plate") // transfert tubes-> plaque
+				getExperimentTypes("tubes-to-plate") // transfert 
 				).save();
 			
-		//FDS 12/12/2016 ajout prep-pcr-free en previous
-		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
+		//FDS 12/12/2016 ajout prep-pcr-free en previous; FDS 13/03/2017 NGL-1167: ajouter wg-chromium-lib-prep en previous 
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot","pcr-and-purification","prep-pcr-free","wg-chromium-lib-prep"), // previous
-				null,
-				null, // pas de QC
+				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot",
+						               "pcr-and-purification",
+						               "prep-pcr-free",
+						               "wg-chromium-lib-prep"), // previous
+				null, // pas de purif
+				null, // pas de qc
 				null  // pas de transfert
 				).save();	
 		
@@ -505,52 +514,90 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free","pcr-and-purification","wg-chromium-lib-prep" ), // previous nodes
-				null, 
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", 
+						               "prep-pcr-free",
+						               "pcr-and-purification",
+						               "wg-chromium-lib-prep" ), // previous nodes
+				null, // pas de purif
 				getExperimentTypes("miseq-qc"), // qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();	
 		
-		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
-		//FDS 08/12/2016 ajout "normalization-and-pooling" en previous
+		//FDS 20/06/2016 NGL-1029: ajout transfert pool; FDS 08/12/2016 ajout "normalization-and-pooling" en previous
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization","normalization-and-pooling"), // previous nodes
-				null,
+				getExperimentTypeNodes("ext-to-denat-dil-lib", 
+						               "lib-normalization",
+						               "normalization-and-pooling"), // previous nodes
+				null, // pas de purif
 				null, // pas qc 
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();
 
-		//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool dans ce cas
-		newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
-				false, false,false,
-				///getETNForPool(),  // previous nodes...
-				getExperimentTypeNodes("prep-pcr-free","prep-wg-nano","pcr-and-purification","lib-normalization","library-prep","denat-dil-lib","normalization-and-pooling"),// previous nodes
-				null,
-				null,
-				null
-				).save();	
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
+			//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
+			new Nanopore().getExperimentTypeNode();
+			
+			//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
+			// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....
+			// !!!!!		
+			newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
+					false, false,false,
+					// PB...getETNForPool(),  // previous nodes...
+					getExperimentTypeNodes("prep-pcr-free",
+							               "prep-wg-nano",
+							               "pcr-and-purification",
+							               "lib-normalization",
+							               "library-prep",
+							               "denat-dil-lib",
+							               "normalization-and-pooling",
+							               "nanopore-library"),// previous nodes
+					null,
+					null,
+					null
+					).save();	
+		} else {
+			newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
+					false, false,false,
+					// PB...getETNForPool(),  // previous nodes...
+					getExperimentTypeNodes("prep-pcr-free",
+							               "prep-wg-nano",
+							               "pcr-and-purification",
+							               "lib-normalization",
+							               "library-prep",
+							               "denat-dil-lib",
+							               "normalization-and-pooling"),// previous nodes
+					null,
+					null,
+					null
+					).save();	
+			
+		}
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"), // previous nodes
-				null,
+				getExperimentTypeNodes("ext-to-prepa-flowcell",
+						               "denat-dil-lib"), // previous nodes
+				null, // pas de purif
 				null, // pas qc
 				null  // pas tranfert
 				).save();
 		
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization", "normalization-and-pooling"), // previous nodes
-				null,
+				getExperimentTypeNodes("ext-to-prepa-fc-ordered",
+						               "lib-normalization", 
+						               "normalization-and-pooling"), // previous nodes
+				null, // pas de purif
 				null, // pas qc
 				null  // pas tranfert
 				).save();
 		
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
-				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"), // previous nodes
-				null,
+				getExperimentTypeNodes("prepa-flowcell",
+						               "prepa-fc-ordered"), // previous nodes
+				null, // pas de purif
 				null, // pas qc
 				null  // pas tranfert
 				).save();
@@ -562,11 +609,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// laisser editable au cas ou la valeur calculée ne convient pas...
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
+				MeasureUnit.find.findByCode("nM"), 
+				MeasureUnit.find.findByCode("nM"),
 				"single", 11, true, null, "2"));	
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (facteur correctif)", "correctionFactorLibrarySize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, "F", null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "pb"), MeasureUnit.find.findByCode("pb"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, "470", null));
 		
 		return propertyDefinitions;
@@ -576,8 +627,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"), "single",10, false));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"), 
+				"single",10, false));
 		
 		return propertyDefinitions;
 	}
@@ -586,15 +640,23 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Conc. chargement", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pM"), MeasureUnit.find.findByCode("nM"), "single",25));
+		propertyDefinitions.add(newPropertiesDefinition("Conc. chargement", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
+				MeasureUnit.find.findByCode("pM"), 
+				MeasureUnit.find.findByCode("nM"), 
+				"single",25));
 
 		//Outputcontainer		
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, null, null, null, "single",51,false,"1",null));		
-		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"), "single",52, false));
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
+				null, null, null, 
+				"single",51,false,"1",null));	
 		
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"), 
+				"single",52, false));
+
 		return propertyDefinitions;
 	}
 	
@@ -603,27 +665,60 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",21));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22));
-		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null
-				,null, null, null, "single",23,true,"0.1N",null));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"), "single",24));
-		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000" 
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "mM"), MeasureUnit.find.findByCode( "nM"), "single",25));
-		propertyDefinitions.add(newPropertiesDefinition("Vol. master EPX", "masterEPXVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "35"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",26));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true,  null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("pM"), MeasureUnit.find.findByCode("nM"),"single",27,false));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",21));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",22));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null,
+				null, null, null, "single",23,true,"0.1N",null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"), 
+				"single",24));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000", 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
+				MeasureUnit.find.findByCode("mM"), // NORMAL, pas une faute de frappe
+				MeasureUnit.find.findByCode("nM"), 
+				"single",25));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Vol. master EPX", "masterEPXVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "35",
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",26));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true,  null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("pM"), 
+				MeasureUnit.find.findByCode("nM"),
+				"single",27,false));
 
 		//OuputContainer
 		//keep order declaration between phixPercent and finalVolume
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null
-				, null, null, "single",51,false,"1",null));		
-		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"), "single",28,false, "50",null));
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null,
+				null, null, 
+				"single",51,false,"1",null));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode( "µL"), 
+				"single",28,false, "50",null));
+		
+		// NGL-1325 ajout propriété sequencingType de niveau Experiment, optionnelle
+		propertyDefinitions.add(newPropertiesDefinition("Type de séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
+				DescriptionFactory.newValues("Hiseq 4000","Hiseq X"),null,null,null, 
+				"single",10, true, null,null));	
 		
 		return propertyDefinitions;
 		
@@ -644,15 +739,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer 
 		propertyDefinitions.add(newPropertiesDefinition("Densité de clusters", "clusterDensity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("c/mm²"), MeasureUnit.find.findByCode("c/mm²"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
+				MeasureUnit.find.findByCode("c/mm²"), 
+				MeasureUnit.find.findByCode("c/mm²"),
 				"single", 11, true, null, null));
-		//FDS 26/08/2016 -- JIRA NGL-1046: label modifé + level.CODE.Content
-		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert médiane", "measuredInsertSize", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Integer.class, false, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
-				"single", 18, true, null, null));
 		
 		//FDS 26/08/2016 -- JIRA NGL-1046: ajouter toutes les autres propriétés du fichier
-		//    22/09/2016 
 		propertyDefinitions.add(newPropertiesDefinition("% cluster", "clusterPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 12, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("% PF", "passingFilter", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
@@ -665,15 +757,28 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("% Mismatch R1", "R2MismatchPercentage", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 17, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert médiane", "measuredInsertSize", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
+				"single", 18, true, null, null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Taille Min", "minInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
 				"single", 19, true, null, null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Taille Max", "maxInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
 				"single", 20, true, null, null));
-		// !! NGL-1046 et SUPSQCNG-413 =>mettre des doubles
+		
 		propertyDefinitions.add(newPropertiesDefinition("Observed Diversity", "observedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 21, true, null, null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Estimated Diversity", "estimatedDiversity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				null,null,null,"single", 22, true, null, null));
 	
@@ -685,14 +790,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//InputContainer (pas d'outputContainer sur une experience QC )
-		// l'unité est variable. NE PLUS LA SPECIFIER..., MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl")
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
+				null, // l'unité est variable. NE PLUS LA SPECIFIER..., MeasureUnit.find.findByCode("ng/µl")
+				null, // l'unité est variable. NE PLUS LA SPECIFIER..., MeasureUnit.find.findByCode("ng/µl")
 				"single", 11, true, null, null));
 		
 		// laiser la position 12 libre pour la colonne unit
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
 				"single", 13, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
@@ -705,7 +813,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//Utiliser par import ngl-data CNG de creation des depot-illumina
+		//Utilisé par import ngl-data CNG de creation des depot-illumina
 		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, null,
 				null, "single",21, true,null, null));
@@ -721,22 +829,33 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",20,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",20,true,null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",21,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), 
+				MeasureUnit.find.findByCode("ng"), 
+				MeasureUnit.find.findByCode("ng"),
+				"single",21,true,null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",22,true,null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23,true,null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), 
+				MeasureUnit.find.findByCode("ng"), 
+				MeasureUnit.find.findByCode("ng"),
+				"single",23,true,null,null));
 	
 		//OuputContainer
 		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
 		// GA 14/03/2016 => il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
-
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
 				"single", 30, true, null,null));
 		
@@ -744,11 +863,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single", 31, true, null,null));		
 		
 		// pas de niveau content car théoriques( J Guy..)
-		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",32,true,"350", null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
+				"single",32,true,"350", null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théorique)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null	
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",33, true,"470",null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théorique)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null,	
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
+				"single",33, true,"470",null));
 	
 		return propertyDefinitions;
 	}
@@ -759,22 +884,33 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",20));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",20));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",21));
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), 
+				MeasureUnit.find.findByCode("ng"), 
+				MeasureUnit.find.findByCode("ng"),
+				"single",21));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",22));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23));
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), 
+				MeasureUnit.find.findByCode("ng"), 
+				MeasureUnit.find.findByCode("ng"),
+				"single",23));
 	
 		//OuputContainer
 		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
 		// GA 14/03/2016 => il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
-
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
 				"single", 30, true, null,null));
 		
@@ -791,12 +927,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single", 20, true, null,null));
 		
 		//buffer est sur ContainerIn ????????????
-		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single", 20, true, null,null));		
 		
 		//OuputContainer
 		
@@ -809,12 +951,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire VERIFIER
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single", 20, true, null,null));
 		
 		//OuputContainer 
-		propertyDefinitions.add(newPropertiesDefinition("Volume tampon Tris", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),"single", 25, true, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon Tris", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single", 25, true, null,null));		
 		
 		// 18/10/2016 ajout workName
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
@@ -828,12 +976,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
+				MeasureUnit.find.findByCode("µL"),
+				MeasureUnit.find.findByCode("µL"),
+				"single", 20, true, null,null));
 		
 		//OuputContainer 
-		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 25, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
+				MeasureUnit.find.findByCode("µL"),
+				MeasureUnit.find.findByCode("µL"),
+				"single", 25, true, null,null));
 		
 		// 18/10/2016 ajout workName
 		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
@@ -850,8 +1004,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//InputContainer
 		// volume engagé editable et obligatoire, qté pas editable calculée en fonction volume engagé et pas sauvegardée
 		// 27/09/2016 ajout default value '25"
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode("µL"),MeasureUnit.find.findByCode("µL"),"single", 20, true, "25",null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
+				MeasureUnit.find.findByCode("µL"),
+				MeasureUnit.find.findByCode("µL"),
+				"single", 20, true, "25",null));
 		
 		//OuputContainer 
 		// rien...??
@@ -865,21 +1022,28 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		// valeur par defaut pour volume et qté engagées ?? Pas pour l'instant...
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé dans Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"),
+				"single",22, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée dans Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), 
+				MeasureUnit.find.findByCode("ng"), 
+				MeasureUnit.find.findByCode("ng"),
+				"single",23, true, null, null));
 	
 		//OuputContainer
 		// ces propriétés de containerOut doivent etre propagees au content
 		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
-
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
-				getTagIllumina(), "single", 30, true, null,null));
+				getTagIllumina(), 
+				"single", 30, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
-				getTagCategories(), "single", 31, true, null,null));		
+				getTagCategories(), 
+				"single", 31, true, null,null));		
 		
 		return propertyDefinitions;
 	}
@@ -889,8 +1053,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),
+		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution","dilutionConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
+				MeasureUnit.find.findByCode("ng/µL"), 
+				MeasureUnit.find.findByCode("ng/µL"),
 				"single",22, true, null, null));
 	
 		return propertyDefinitions;
@@ -903,11 +1069,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//OuputContainer
 		// ces propriétés de containerOut doivent etre propagées au content; propriétés obligatoires a: Finished 
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", 
-				getTagIllumina(new ArrayList<String>( Arrays.asList("POOL-INDEX"))), "single", 30, true, null,null));
+				getTagIllumina(new ArrayList<String>( Arrays.asList("POOL-INDEX"))), 
+				"single", 30, true, null,null));
 		
 		// restreindre tagCategory a POOL-INDEX 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F",
-				DescriptionFactory.newValues("POOL-INDEX"), "single", 31, false ,"POOL-INDEX", null));		
+				DescriptionFactory.newValues("POOL-INDEX"), 
+				"single", 31, false ,"POOL-INDEX", null));		
 		
 		return propertyDefinitions;
 	}
@@ -917,17 +1085,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//InputContainer (pas d'outputContainer sur une experience QC )
-		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µl"),MeasureUnit.find.findByCode("ng/µl"),
-				"single", 14, true, null, null));
-		
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false,null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 
+				MeasureUnit.find.findByCode("pb"), 
+				MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));	
 	
 		// le bouton import n'apparait que si la propriété est editable=true
 		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
 				"img", 13,true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
+				MeasureUnit.find.findByCode("ng/µl"),
+				MeasureUnit.find.findByCode("ng/µl"),
+				"single", 14, true, null, null));
 			
 		return propertyDefinitions;
 	}
@@ -945,12 +1117,20 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private List<PropertyDefinition> getPropertyDefinitionsBankQC() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
+				MeasureUnit.find.findByCode( "µL"),
+				MeasureUnit.find.findByCode( "µL"),
+				"single", 11, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
+				MeasureUnit.find.findByCode("ng/µl"),
+				MeasureUnit.find.findByCode("ng/µl"),
+				"single", 13, true, null,null));
 		
 		return propertyDefinitions;
 		
 	}
+	
 }

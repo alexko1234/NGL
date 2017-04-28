@@ -221,6 +221,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		columns.push({
 			"header" : Messages("processes.table.comments"),
 			"property" : "comments[0].comment",
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
 			"position" : 500,
 			"order" : false,
 			"edit" : true,

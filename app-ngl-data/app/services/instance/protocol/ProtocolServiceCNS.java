@@ -74,12 +74,14 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","R9-Low input"))));
 		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
 				concatMap(newPSV("libraryProtocol","R9-2D"))));
+		
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		 
 		lp.add(newProtocol("R9-on-bead-depot","R9-dépôt sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
+		lp.add(newProtocol("PromethION_DEV","PromethION_DEV","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
 		
 		//To disable
@@ -137,7 +139,7 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("dnase-treatment","Traitement à la Dnase","path2","1","production",InstanceFactory.setExperimentTypeCodes("dnase-treatment")));
 
-		lp.add(newProtocol("fluo-dosage","dosage_fluo","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification")));
+		lp.add(newProtocol("fluo-dosage","dosage_fluo","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
 		
@@ -155,7 +157,10 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("Tag_ITS2","Tag ITS2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_ITS2_int","Tag ITS2_int","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_ITS2_SYM_VAR","Tag ITS2_SYM_VAR","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		//lp.add(newProtocol("Tag_ITS2_SYM_VAR","Tag ITS2_SYM_VAR","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm56","Tag ITS2_SYM_VAR_Tm56","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm59","Tag ITS2_SYM_VAR_Tm59","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		
 		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		
@@ -178,6 +183,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
+		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
 		
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter V4"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
@@ -185,7 +191,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
 				concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","random + oligodT"))));
     	
-		
+		lp.add(newProtocol("smarter_dev","Smarter_DEV","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
+				concatMap(newPSV("rnaLibProtocol","Smarter DEV"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
+    	
 		lp.add(newProtocol("truseq_stranded_poly_a","TruSeq Stranded poly A_ptr_sox153_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
 				concatMap(newPSV("rnaLibProtocol","TruSeq Stranded poly A"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		
@@ -207,10 +215,15 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("small-and-large-rna-isolation", "chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate")));
+				InstanceFactory.setExperimentTypeCodes("small-and-large-rna-isolation", "chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate", "dilution")));
 
-		lp.add(newProtocol("Ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure")));
-
+		lp.add(newProtocol("ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure")));
+		lp.add(newProtocol("ampure","ampure","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure")));
+		
+		lp.add(newProtocol("zymoclean-rna","Zymoclean RNA","path2","1","production",InstanceFactory.setExperimentTypeCodes("spin-column-purification")));
+		lp.add(newProtocol("zymoclean-dna","Zymoclean DNA","path2","1","production",InstanceFactory.setExperimentTypeCodes("spin-column-purification")));
+		lp.add(newProtocol("qiaamp-dna","QIAamp DNA","path2","1","production",InstanceFactory.setExperimentTypeCodes("spin-column-purification")));
+		
 		lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","pcr-amplification-and-purification")));
 		
 		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));

@@ -203,7 +203,8 @@ containers.table.irysprep.concentration=Concentration Moyenne
 containers.table.nlrsConcentration= Concentration arrondie (ng/µl)
 containers.table.valuation.valid = Valide
 containers.table.valuationqc.valid = Valide ? (QC courant)
-containers.table.valuationqc.comment = Commentaire éval.
+containers.table.valuationqc.comment = Commentaire éval..
+containers.table.valuationqc.copyToInput = Copier la validité dans le container d''entrée?
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
 containers.placeholder.user = Container créé par
@@ -233,6 +234,8 @@ containers.create.tab.importfile=Import fichier
 containers.create.tab.printbarcode= Génération CB et étiquettes
 container.placeholder.unit = Unité
 
+containers.copyValuationToInput.value.mandatory = La valeur de copie est obligatoire
+
 #search
 search.placeholder.projects = Projets
 search.placeholder.samples = Echantillons
@@ -255,7 +258,7 @@ search.placeholder.printing.printer = Imprimante
 search.placeholder.printing.barcode.position = Barre code position
 search.placeholder.readsets = ReadSets
 search.placeholder.resolutions = Résolutions
-
+search.placeholder.commentRegex = Regex commentaire
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
 search.tab.addcolumns = Colonnes supplémentaires
@@ -491,9 +494,10 @@ experiments.table.status = Statut
 experiments.input.error.only-tubes = Seuls des tubes peuvent entrer dans cette expérience
 experiments.input.error.only-tubes-or-strips = Seuls des tubes ou des strips peuvent entrer dans cette expérience
 experiments.input.error.only-plates = Seules des plaques peuvent entrer dans cette expérience
-experiments.input.error.only-1-plate= TEST: Seulement une plaque peut entrer dans cette expérience
+experiments.input.error.only-1-plate= Une seule plaque peut entrer dans cette expérience
 experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les même
 experiments.input.error.maxContainers=Maximum {0} containers en entrée
+experiments.input.error.maxSupports=Maximum {0} supports en entrée
 
 experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 
@@ -505,6 +509,7 @@ experiment.panel.experimentInformation = Expérience
 experiment.panel.instrumentInformation = Instrument
 experiment.panel.traceInformation = Info
 
+experiment.valuationCopyToInput.title = Copie de la valeur de validité au sein du container : 
 
 reagents.table.kitname = Nom du kit
 reagents.table.boxname = Nom de la boite
@@ -616,8 +621,9 @@ samples.table.sample = Echantillon
 #
 ###############
 admin.menu = Administration
-admin.supports.title = Supports
+admin.supports.title = Administration
 admin.supports.menu.switchindex = Inversion d''index
+admin.supports.menu.contentupdate = Mise à jour propriété content
 admin.supports.switch-index.tabs.search = Recherche des objets NGL
 authorisation.userroles.page = Gestion des roles utilisateurs
 authorisation.users.page.tab.search = Recherche des utilisateurs

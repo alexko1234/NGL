@@ -1,7 +1,7 @@
 "use strict"
 
-angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containersSearchService','$routeParams', 
-                                                 function($scope, datatable, lists,$filter,mainService,tabService,containersSearchService,$routeParams) {
+angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable','lists','$filter','mainService','tabService','containersSearchService','$routeParams', 
+                                                 function($scope, $window, datatable, lists,$filter,mainService,tabService,containersSearchService,$routeParams) {
 	var datatableConfig = {
 		group:{active:true},
 		search:{
@@ -41,7 +41,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		save:{
 			active:Permissions.check("writing")?true:false,
 			url:function(value){
-				var fields = "fields=valuation&fields=state";
+				var fields = "fields=valuation";
+				if(value.state)fields = fields+"&fields=state";
 				if(value.comments)fields = fields+"&fields=comments";
 				if(value.concentration)fields = fields+"&fields=concentration";
 				if(value.volume)fields = fields+"&fields=volume";
@@ -52,6 +53,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			},
 			method:'put',
 			mode:'remote'			
+		},
+		otherButtons :{
+			active:PrintTag.isActive(),
+			template:'<button class="btn btn-default" ng-click="openPrintTagsPage(searchService.datatable.getSelection(true))"  ng-disabled="!searchService.datatable.isSelect()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-tags" ></i></button>'					
 		}
 	};
 
@@ -65,6 +70,14 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.searchService.resetForm();		
 	};
 	
+	$scope.openPrintTagsPage = function(supports){
+		var params = {value : ""};
+		supports.forEach(function(value){
+			this.value = this.value + "containerSupportCodes="+value.support.code+"&";
+		},params)
+		params.value = params.value.slice(0, params.value.length-1);
+		$window.open(jsRoutes.controllers.printing.tpl.Printing.home("tags").url+"?"+params.value, 'tags');
+	};
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('search');

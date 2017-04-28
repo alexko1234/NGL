@@ -5,6 +5,7 @@ import java.util.Set;
 import play.Logger;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -23,9 +24,9 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	public Set<String> fromTransformationTypeCodes;
 	public Set<String> fromTransformationCodes;
 	public Set<String> processTypeCodes;
-	public Set<String> processCodes ;
+	public Set<String> processCodes;
 	
-	/*used in QualityControl to keep the original values*/
+	/*used in QualityControl to copy new attribut into input container attribute*/
 	public PropertySingleValue newVolume;        
 	public PropertySingleValue newConcentration; 
 	public PropertySingleValue newQuantity; 	
@@ -33,7 +34,7 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	
 	
 	public Valuation valuation; //only on input because qc are to-void experiment !
-	
+	public TBoolean copyValuationToInput = TBoolean.UNSET;
 	//keep for some html page pool or flowcell
 	public State state;
 	

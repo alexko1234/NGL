@@ -6,8 +6,9 @@ rule "Create Run and ReadSets Nanopore"
 	salience 1000
 	no-loop
 	when 
-	$experiment:Experiment($state:state.code,$typeCode:typeCode,$typeCode=="nanopore-depot",$state=="F")
-	
+	$experiment:Experiment($state:state.code,$typeCode:typeCode,$typeCode=="nanopore-depot",$state=="F",$instrumentUsed:instrument)
+	$atomicTransfert: OneToOneContainer($outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
+	$outputContainerUsed: OutputContainerUsed() from $outputContainerUseds
 	then
 		Logger.debug("Nanopore-depot update state code : "+$state);
 		//Creation run
@@ -16,7 +17,7 @@ rule "Create Run and ReadSets Nanopore"
 		run.sequencingStartDate=runStartDate;
 		run.state=new State("N","ngl-sq");
 	
-		run.containerSupportCode=$experiment.outputContainerSupportCodes.toArray()[0].toString();
+		run.containerSupportCode=$outputContainerUsed.code;
    		//run.projectCodes = $experiment.projectCodes; //done with readset creation
     	//run.sampleCodes = $experiment.sampleCodes; //done with readset creation
    		run.traceInformation=new TraceInformation();
@@ -36,7 +37,12 @@ rule "Create Run and ReadSets Nanopore"
 		run.treatments.put("minknowBasecalling",treatment);
 		
 		//Add properties
-		run.properties.put("flowcellChemistry",$experiment.instrumentProperties.get("flowcellChemistry"));
+		if($instrumentUsed.typeCode.equals("promethION")){
+			run.properties.put("flowcellChemistry",$outputContainerUsed.instrumentProperties.get("flowcellChemistry"));
+		}else{
+			run.properties.put("flowcellChemistry",$experiment.instrumentProperties.get("flowcellChemistry"));
+		}
+		
 		
 		insert(run);			
 end
@@ -82,6 +88,20 @@ rule "Update type Run RMKIB"
 	then
 		Logger.debug("typeCode RMKIB");
 		$run.typeCode="RMKIB";	
+		$run.categoryCode="nanopore";
+		update($run);
+end
+
+rule "Update type Run PROMETHION"
+	@nglSQ( workflow )
+	dialect "java"
+	salience 900
+	no-loop
+	when 
+	$run:Run(typeCode==null,$instrumentTypeCode:instrumentUsed.typeCode,$instrumentTypeCode=="promethION")
+	then
+		Logger.debug("typeCode RPROMETHION");
+		$run.typeCode="RPROMETHION";	
 		$run.categoryCode="nanopore";
 		update($run);
 end

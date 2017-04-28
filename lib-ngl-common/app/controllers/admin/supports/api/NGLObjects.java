@@ -104,11 +104,13 @@ public class NGLObjects extends APICommonController<NGLObject>{
 		if(null != q){
 			List<NGLObject> r = MongoDBDAO.find(collectionName, NGLObject.class, q, getKeys()).toList();
 			r.forEach(o -> {
+				Logger.debug("treat"+o.code);
 				o.collectionName = collectionName;
 				o.contentPropertyNameUpdated = form.contentPropertyNameUpdated;
 				o.currentValue = form.contentProperties.get(form.contentPropertyNameUpdated).get(0);
 				o.projectCode = form.projectCode;
-				o.sampleCode = form.sampleCode;				
+				o.sampleCode = form.sampleCode;	
+				o.nbOccurrences = mappingCollectionUpdates.get(collectionName).getNbOccurrence(o);
 			});
 			return r;
 		}else{

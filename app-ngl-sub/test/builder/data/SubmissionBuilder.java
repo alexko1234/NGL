@@ -42,7 +42,7 @@ public class SubmissionBuilder {
 		
 	public SubmissionBuilder withSubmissionDate(Date submissionDate)
 	{
-		submission.submissionDate=submissionDate;
+		submission.creationDate=submissionDate;
 		return this;
 	}
 	

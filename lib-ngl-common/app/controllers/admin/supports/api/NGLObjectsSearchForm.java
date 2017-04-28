@@ -15,6 +15,9 @@ public class NGLObjectsSearchForm extends ListForm implements IValidation{
 	
 	public List<String> collectionNames;
 	
+	public List<String> codes;
+	public String codeRegex;
+	
 	public String projectCode;
 	public String sampleCode;
 	

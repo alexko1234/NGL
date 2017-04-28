@@ -7,6 +7,7 @@ import java.util.List;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
+import mail.MailServiceException;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
@@ -43,4 +44,5 @@ public interface ILimsRunServices {
 	
 	public Sample findSampleToCreate(String sampleCode);
 	
+	public void sendMailFVQC(ReadSet readSet) throws MailServiceException;
 }
