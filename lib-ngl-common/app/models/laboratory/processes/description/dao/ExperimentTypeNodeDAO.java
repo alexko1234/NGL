@@ -73,7 +73,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		return initializeMapping(sqlCommon + " order by id DESC").execute();
 	}
 
-	private void insertPrevious(
+	public void insertPrevious(
 			List<ExperimentTypeNode> previousExperimentType, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removePrevious(id);
@@ -119,9 +119,13 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	 /**
+	  * Update previousExperimentNode
+	  */
 	@Override
-	public void update(ExperimentTypeNode value) throws DAOException {
-		throw new UnsupportedOperationException();
+	public void update(ExperimentTypeNode etn) throws DAOException {
+		insertPrevious(etn.previousExperimentType,etn.id,false);
+		//throw new UnsupportedOperationException();
 	}
 
 	@Override
