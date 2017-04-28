@@ -45,6 +45,8 @@ public class User extends Model<User>{
 		public List<Team> teams;
 		public List<Application> applications;
 		
+		public Boolean active ;
+		
 		@JsonIgnore
 		public static UserFinder find = new UserFinder();
 		

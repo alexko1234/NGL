@@ -40,6 +40,10 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		String sql = "SELECT login "+
 				"FROM user WHERE login='"+login+"' AND password='"+password+"'";
 		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("login", login);
+		parameters.put("password", password);
+		
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 		List<User> us =  this.jdbcTemplate.query(sql, mapper);
 		
@@ -49,6 +53,10 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	public String  getUserPassword(String login) throws DAOException{
 		String sql = "SELECT login , password "+
 				"FROM user WHERE login='"+login+"' ";
+		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("login", login);
+		
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 		List<User> users =  this.jdbcTemplate.query(sql, mapper);
 		if(users != null && users.size() == 1){
@@ -59,6 +67,22 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		
 		//return null ;
 	}	
+	
+	public boolean isUserActive(String login) throws DAOException{
+		String sql = "SELECT active "+
+				"FROM user WHERE login = '"+login+"' ";
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("login", login);
+		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
+		Logger.debug("UserDAO - isUserActive : requête SQL : " + sql + "  for " + login);
+		List<User> users =  this.jdbcTemplate.query(sql, mapper, parameters);
+		
+		if(users != null && users.size() == 1){
+			return users.get(0).active;
+		}
+		return false;
+	}
+	
 	
 	public boolean isUserAccessApplication(String login, String application){
 		if(!login.equals("") && getUserId(login) != 0){
@@ -185,11 +209,23 @@ public class UserDAO extends AbstractDAOMapping<User> {
 	@Override
 	public long save(User 	user) throws NotImplementedException{
 		
-		return 0;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("login", user.code);
+		parameters.put("firstname", user.firstname);
+		parameters.put("lastname", user.lastname);
+		parameters.put("email", user.email);
+		parameters.put("password", user.password);
+		parameters.put("technicaluser", user.technicaluser);
+		parameters.put("active", user.active);
+		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
+		user.id = newId;
+		return user.id;
 	}
 
 	@Override
 	public void update(User user) throws NotImplementedException{
+		String sql = "UPDATE user SET firstname=?, lastname=?, email=?, password = ?, technicaluser = ?, active=? WHERE id=?";
+		jdbcTemplate.update(sql, user.firstname, user.lastname, user.email, user.password,user.technicaluser,user.active, user.id);
 
 	}
 }
