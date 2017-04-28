@@ -161,8 +161,7 @@ containers.table.dispatch = Orientation
 containers.table.libProcessType = Type Banque	
 containers.table.libProcessTypeCodes = Type librairie
 containers.table.libProcessTypeCode = Type Processus Banque (Code)
-# NOTE FDS: 2 decalarations pour size : c'est la premiere ou la derniere qui gagne ???
-containers.table.size = Taille banque (pb)
+containers.table.sizeLong = Taille librairie (pb)
 containers.table.size = Taille
 containers.table.treeOfLife = Arbre de vie
 containers.table.properties = Autres Propriétés
@@ -445,6 +444,8 @@ experiments.button.plate.copyMode.title = Copy position container en entrée ver
 
 experiments.button.plate.copyVolume = Copy volume container en entrée vers container en sortie
 experiments.button.plate.copyVolumeTo = Copy volume container en entrée vers
+experiments.button.plate.copySizeTo = Copy taille container en entrée vers
+
 experiments.chooseNextExperimentCategory=Tous les containers de sortie poursuivent vers la même expérience
 experiments.chooseOputContainerState=L''expérience suivante est différente selon les containers de sortie
 
@@ -579,7 +580,7 @@ experiments.msg.import.sheet.missing = L''onglet ''{0}'' est manquant
 experiments.msg.import.header-label.missing = ligne {0}: Champ d''entête ou label ''{1}'' manquant
 experiments.msg.import.value.missing = ligne {0}: Valeur ''{1}'' manquante
 experiments.msg.import.value.unexpected= ligne {0}: La valeur de ''{1}'': ''{2}''  n''est pas celle attendue: ''{3}'' 
-experiments.msg.import.position.unkwnown = ligne {0}: La position ''{1}'' ne correspond pas à un format de plaque connu
+experiments.msg.import.position.unkwown = ligne {0}: La position ''{1}'' ne correspond pas à un format de plaque connu
 experiments.msg.import.position.outofbonds = ligne {0}: La position ''{1}'' ne correspond pas au format {2}-puits
 experiments.msg.import.position.duplicate = ligne {0}: La position ''{1}'' est dupliquée; 
 experiments.msg.import.tag.missing = Pas de tag pour la position ''{0}''

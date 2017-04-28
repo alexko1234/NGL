@@ -119,6 +119,53 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
+	//  28/04/2017 NGL-980: ajout colonne inputContainer size.... en position 4.5
+	columns.push({
+		"header" : Messages("containers.table.sizeLong"),
+		"property" : "inputContainer.size.value",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 4.5,
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
+	});
 	$scope.atmService.data.setColumnsConfig(columns);
+	
+	//28/04/2017 NGL-980: ajout d'un bouton supplementaire pour copier la size dans le facteur correctif
+	var config = $scope.atmService.data.getConfig();
+	config.otherButtons= {
+	        active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+	        complex:true,
+	        template:''
+	        	+'<div class="btn-group" style="margin-left:5px">'
+	        	+'<button class="btn btn-default" ng-click="copySizeToCorrFactor()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copySizeTo")+ ' facteur correctif'
+	        	+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Taille </button>'                	                	
+	        	+'</div>'
+	};
+	$scope.atmService.data.setConfig(config );	
+	
+	$scope.copySizeToCorrFactor = function(){
+		var data = $scope.atmService.data.displayResult;		
+		data.forEach(function(value){
+			if (value.data.inputContainer.size ) {				
+				//console.log('copy inputContainer.size => inputContainerUsed.experimentProperties.correctionFactorLibrarySize');
+				value.data.inputContainerUsed.experimentProperties.correctionFactorLibrarySize = value.data.inputContainer.size ;
+			}
+		})		
+	};
+	
+	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable...
+	// detecter qu'une modification de facteur corectif a eut lieu
+	$scope.updatePropertyFromUDT = function(value, col){
+		//console.log("update from property : "+col.property);
+		if(col.property === 'inputContainerUsed.experimentProperties.correctionFactorLibrarySize.value'){
+			$scope.messages.clear();
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "Le facteur de correction a été modifié: n'oubliez pas de réimporter le fichier pour recalculer la concentration";
+			$scope.messages.showDetails = false;
+			$scope.messages.open();
+		}
+	};
 	
 }]);
