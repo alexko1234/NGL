@@ -612,7 +612,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
 				MeasureUnit.find.findByCode("nM"), 
 				MeasureUnit.find.findByCode("nM"),
-				"single", 11, true, null, "2"));	
+				"single", 13, true, null, "2"));	
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (facteur correctif)", "correctionFactorLibrarySize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), 

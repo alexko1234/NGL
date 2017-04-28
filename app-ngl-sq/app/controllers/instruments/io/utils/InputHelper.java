@@ -21,7 +21,7 @@ public class InputHelper {
 	public static boolean isPlatePosition(ContextValidation contextValidation, String position, int plFormat, int lineNum){
 
 		if ((position.length() < 2) || (position.length() > 3 )) {
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.unkwnown", lineNum, position);
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.unknown", lineNum, position);
 			return false;
 		}
 		
