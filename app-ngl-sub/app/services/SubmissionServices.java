@@ -1131,7 +1131,7 @@ public class SubmissionServices {
 		} else {
 			throw new SraException("readset.typeCode inconnu " + typeCode);
 		}
-		experiment.typePlatform = typeCode;
+		experiment.typePlatform = typeCode.toUpperCase();
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
 		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
 

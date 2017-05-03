@@ -3,6 +3,8 @@ package services;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import models.sra.submit.common.instance.Sample;
@@ -294,6 +296,7 @@ public class XmlServices {
 		if (submission == null) {
 			return;
 		}
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss");
 		// On accede au run via l'experiment:
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
@@ -318,10 +321,12 @@ public class XmlServices {
 				if (StringUtils.isNotBlank(run.accession)) {
 					chaine = chaine + "accession=\"" + run.accession + "\" ";
 				}
-				chaine =  chaine + "run_date=\""+ run.runDate+"\"  run_center=\""+run.runCenter+ "\" ";
+				
+				//Format date
+				chaine =  chaine + "run_date=\""+ formatter.format(run.runDate)+"\"  run_center=\""+run.runCenter+ "\" ";
 				chaine = chaine + ">\n";
 				chaine = chaine + "    <EXPERIMENT_REF refname=\"" + experimentCode +"\">" +"</EXPERIMENT_REF>\n";
-				chaine = chaine + "    <DATABLOCK>\n";
+				chaine = chaine + "    <DATA_BLOCK>\n";
 				chaine = chaine + "      <FILES>\n";
 				for (RawData rawData: run.listRawData) {
 					String fileType = rawData.extention;
@@ -330,14 +335,15 @@ public class XmlServices {
 					} else {
 						fileType.replace(".gz", "");
 					}
-					chaine = chaine + "        <FILE>filename=\"" + rawData.relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\"</FILE>\n";
+					chaine = chaine + "        <FILE filename=\"" + rawData.relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\">\n";
 					if ( run.listRawData.size() == 2 ) {
 						chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
 						chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";
 					}
+					chaine = chaine +"</FILE>\n";
 				}
 				chaine = chaine + "      </FILES>\n";
-				chaine = chaine + "    </DATABLOCK>\n";
+				chaine = chaine + "    </DATA_BLOCK>\n";
 				chaine = chaine + "  </RUN>\n";
 				}
 				chaine = chaine + "</RUN_SET>\n";
@@ -369,7 +375,7 @@ public class XmlServices {
 		
 		chaine = chaine + ">\n";	
 		chaine = chaine + "    <CONTACTS>\n";
-		chaine = chaine + "      <CONTACT>  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
+		chaine = chaine + "      <CONTACT name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
 		chaine = chaine + "    </CONTACTS>\n";
 			
 		chaine = chaine + "    <ACTIONS>\n";
