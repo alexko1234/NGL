@@ -129,7 +129,7 @@ public class XmlServices {
 				chaine = chaine + "        <RELATED_STUDY>\n";
 				chaine = chaine + "          <RELATED_LINK>\n";
 				chaine = chaine + "            <DB>ENA</DB>\n";
-				chaine = chaine + "            <ID>" + study.bioProjectId + "<ID>\n";
+				chaine = chaine + "            <ID>" + study.bioProjectId + "</ID>\n";
 				chaine = chaine + "          </RELATED_LINK>\n";
 				chaine = chaine + "          <IS_PRIMARY>false</IS_PRIMARY>\n";
 				chaine = chaine + "        </RELATED_STUDY>\n";
