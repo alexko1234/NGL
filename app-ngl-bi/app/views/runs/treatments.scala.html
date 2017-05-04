@@ -77,7 +77,7 @@
   <div class="panel-body">
 <form class="form-horizontal" ng-controller="RunMinknowBasecallingCtrl">
 		<div class="row">
-			<div class="col-md-3 col-lg-3">
+			<div class="col-md-5 col-lg-5">
 				<div ng-switch on="isEditMode()">
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.minKnowVersion")){					
 					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowBasecalling.default.minKnowVersion.value"></p>
