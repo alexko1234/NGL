@@ -296,7 +296,7 @@ public class XmlServices {
 		if (submission == null) {
 			return;
 		}
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		// On accede au run via l'experiment:
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
