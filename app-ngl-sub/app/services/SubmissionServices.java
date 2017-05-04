@@ -1271,7 +1271,7 @@ public class SubmissionServices {
 								} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
 										||libProcessTypeCodeValue.equalsIgnoreCase("H")||libProcessTypeCodeValue.equalsIgnoreCase("L")
 										||libProcessTypeCodeValue.equalsIgnoreCase("Z")||libProcessTypeCodeValue.equalsIgnoreCase("MI")
-										||libProcessTypeCodeValue.equalsIgnoreCase("K")||libProcessTypeCodeValue.equalsIgnoreCase("DA")){
+										||libProcessTypeCodeValue.equalsIgnoreCase("K")||libProcessTypeCodeValue.equalsIgnoreCase("DA") ||libProcessTypeCodeValue.equalsIgnoreCase("U")){
 									experiment.libraryLayoutOrientation = "forward-reverse";
 								} else {
 									throw new SraException("Pour le readSet " + readSet +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
