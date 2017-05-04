@@ -317,7 +317,7 @@ public class XmlServices {
 				//output_buffer.write("//\n");
 				String runCode = run.code;
 				System.out.println("Ecriture du run " + runCode);
-				chaine = chaine + "  <Run alias=\""+ runCode + "\" ";
+				chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
 				if (StringUtils.isNotBlank(run.accession)) {
 					chaine = chaine + "accession=\"" + run.accession + "\" ";
 				}
