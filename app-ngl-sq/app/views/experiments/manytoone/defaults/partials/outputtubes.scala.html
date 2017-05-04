@@ -16,7 +16,12 @@
 			</th>
 			<th>
 				<button ng-click="atmService.data.hideAllATM()"  ng-if="!atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
-				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
+				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose"  class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>	
+				<!-- 04/05/2017 NGL-1197 ajout bouton copie volume pour CHAQUE ATM -->
+				<button class="btn btn-default btn-xs btn-block"  ng-click="copyVolumeToEngaged()" 
+				                                                  data-toggle="tooltip" title="@Messages("experiments.button.plate.copyVolumeTo") volume engag&eacute;"
+				                                                  ng-show="isNewState()">
+					<i class="fa fa-files-o"></i>						
 			</th>
 			<th>
 				@Messages("containers.table.code")
@@ -199,7 +204,13 @@
 				<button class="btn btn-default btn-xs btn-block"  ng-click="atmService.data.deleteATM($parent.$parent.$index)" ng-show="isNewState()">
 					<i class="fa fa-trash-o"></i>
 					<!-- i class="fa fa-eye"></i-->
-				</button>			
+				</button>
+				<!-- 03/05/2017 NGL-1197 ajout bouton copie volume pour CHAQUE ATM -->
+				<button class="btn btn-default btn-xs btn-block"  ng-click="copyVolumeToEngaged($parent.$parent.$index)" 
+				                                                  data-toggle="tooltip" title="@Messages("experiments.button.plate.copyVolumeTo")  volume engag&eacute;"
+				                                                  ng-show="isNewState()">
+					<i class="fa fa-files-o"></i>
+				</button>						
 			</td>	
 			
 				<td>

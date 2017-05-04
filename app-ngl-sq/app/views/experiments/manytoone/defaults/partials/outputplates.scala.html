@@ -17,7 +17,13 @@
 			</th>
 			<th>
 				<button ng-click="atmService.data.hideAllATM()"  ng-if="!atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
-				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
+				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose"  class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>	
+				<!-- 04/05/2017 NGL-1197 ajout bouton copie volume pour TOUS ATM -->
+				<button class="btn btn-default btn-xs btn-block"  ng-click="copyVolumeToEngaged()" 
+				                                                  data-toggle="tooltip" title="@Messages("experiments.button.plate.copyVolumeTo") volume engag&eacute;"
+				                                                  ng-show="isNewState()">
+					<i class="fa fa-files-o"></i>
+				</button>						
 			</th>
 			<th>
 				@Messages("containers.table.code")
@@ -77,7 +83,7 @@
 			<th>
 				<button ng-click="atmService.data.hideAllATM()"  ng-if="!atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
 				<button ng-click="atmService.data.showAllATM()"  ng-if="atmService.data.isAllATMViewClose" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
-			</th>
+			</th>		
 		</tr>
 		
 		<!--26/10/2016 FDS ajout TR; 14/11/2016 ne rien afficher du tout si pas edit mode... -->
@@ -160,12 +166,17 @@
 				<!-- ng-if add a new child scope so we need to use $parent.$parent.$index -->
 				<button class="btn btn-default btn-xs btn-block"  ng-click="atmService.data.toggleATM($parent.$parent.$index)">
 					<i class="fa fa-eye-slash"></i>
-					<!-- i class="fa fa-eye"></i-->
 				</button>
-				<button class="btn btn-default btn-xs btn-block"  ng-click="atmService.data.deleteATM($parent.$parent.$index)" ng-show="isNewState()">
+				<button class="btn btn-default btn-xs btn-block"  ng-click="atmService.data.deleteATM($parent.$parent.$index)"
+				                                                  ng-show="isNewState()">
 					<i class="fa fa-trash-o"></i>
-					<!-- i class="fa fa-eye"></i-->
-				</button>			
+				</button>
+				<!-- 03/05/2017 NGL-1197 ajout bouton copie volume pour CHAQUE ATM -->
+				<button class="btn btn-default btn-xs btn-block"  ng-click="copyVolumeToEngaged($parent.$parent.$index)" 
+				                                                  data-toggle="tooltip" title="@Messages("experiments.button.plate.copyVolumeTo") volume engag&eacute;"
+				                                                  ng-show="isNewState()">
+					<i class="fa fa-files-o"></i>
+				</button>				
 			</td>	
 			
 				<td>
@@ -204,8 +215,7 @@
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.percentage | number" />						 
 						<div ng-switch-when="true">
-							<input class="form-control input-sm" 
-								type="text"
+							<input class="form-control input-sm" type="text"
 								ng-model="inputContainerUsed.percentage"
 								ng-change="update(atm, inputContainerUsed, 'inputContainerUseds['+$index+'].percentage')" 
 								title='@Messages("containers.table.percentage")'

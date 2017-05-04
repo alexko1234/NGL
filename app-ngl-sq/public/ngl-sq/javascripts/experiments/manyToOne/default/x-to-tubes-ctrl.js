@@ -390,6 +390,34 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		};
 	};
 	
+	// 03/05/2017 NGL-1197
+	$scope.copyVolumeToEngaged = function(index){
+		if (index){
+			copyVolumeAtm(index);
+		}else {
+			var atm=$scope.atmService.data.atm;
+			for (index = 0; index < atm.length; ++index) {
+				copyVolumeAtm(index);
+			}
+		}
+	}
+	
+	copyVolumeAtm = function (idx){
+		 $scope.atmService.data.atm[idx].inputContainerUseds.forEach(function(icu){
+				console.log('ATM '+ idx+ ':copy InputContainerUsed.volume =>  inputContainerUsed.experimentProperties.inputVolume.value');
+				var properties = {}; 
+				icu.experimentProperties=properties;
+				//icu.experimentProperties.inputVolume=icu.volume; // probleme les 2 champs deviennent liés...
+				//essai angular.copy...OUI!!!
+				var vol=angular.copy(icu.volume); 
+				// 04/05/2017 attention, copier seulement si propriété présente !!!
+				if ( vol ){
+				  icu.experimentProperties.inputVolume=vol;
+		 		}
+			});
+	}
+
+	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",				
