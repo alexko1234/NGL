@@ -902,7 +902,57 @@ analyses.treatments.gapClosing_ba.GCpercent = % GC
 analyses.treatments.gapClosing_ba.numberOfN = Nombre de N
 analyses.treatments.gapClosing_ba.percentOfN = % N
 
+analyses.treatments.wholeGenome = Whole Genome
+analyses.treatments.wholeGenome.statAnalysis = Statistiques de l'analyse
+analyses.treatments.wholeGenome.gender= Sex
+analyses.treatments.wholeGenome.coveredGenomeSize = Taille Couv. Genome
+analyses.treatments.wholeGenome.coveragePercent=Couverture %
+analyses.treatments.wholeGenome.n50 = n50
+analyses.treatments.wholeGenome.largestContigSize = Taille + gdContig
+analyses.treatments.wholeGenome.coverageMean = Couv. Moy
+analyses.treatments.wholeGenome.coverageMedian = Couv. Med
+analyses.treatments.wholeGenome.Q1Coverage = Couv. Q1
+analyses.treatments.wholeGenome.iqr = IQR
+analyses.treatments.wholeGenome.outlierPercent = % Outlier
+analyses.treatments.wholeGenome.humanReferenceGenome = Version Génome
+analyses.treatments.wholeGenome.pipelineVersion = Version Pipeline
 
+analyses.treatments.wholeGenome.regionPercent=Pourcentage de régions couvertes
+analyses.treatments.wholeGenome.cov5xRegionPercent=% Region 5
+analyses.treatments.wholeGenome.cov10xRegionPercent=% Region 10
+analyses.treatments.wholeGenome.cov20xRegionPercent=% Region 20
+analyses.treatments.wholeGenome.cov30xRegionPercent=% Region 30
+analyses.treatments.wholeGenome.cov40xRegionPercent=% Region 40
+
+analyses.treatments.wholeGenome.noCoveredPercent=Pourcentage de non couverture par chromosome
+analyses.treatments.wholeGenome.chr01NoCovered=Chr1
+analyses.treatments.wholeGenome.chr02NoCovered=Chr2
+analyses.treatments.wholeGenome.chr03NoCovered=Chr3
+analyses.treatments.wholeGenome.chr04NoCovered=Chr4
+analyses.treatments.wholeGenome.chr05NoCovered=Chr5
+analyses.treatments.wholeGenome.chr06NoCovered=Chr6
+analyses.treatments.wholeGenome.chr07NoCovered=Chr7
+analyses.treatments.wholeGenome.chr08NoCovered=Chr8
+analyses.treatments.wholeGenome.chr09NoCovered=Chr9
+analyses.treatments.wholeGenome.chr10NoCovered=Chr10
+analyses.treatments.wholeGenome.chr11NoCovered=Chr11
+analyses.treatments.wholeGenome.chr12NoCovered=Chr12
+analyses.treatments.wholeGenome.chr13NoCovered=Chr13
+analyses.treatments.wholeGenome.chr14NoCovered=Chr14
+analyses.treatments.wholeGenome.chr15NoCovered=Chr15
+analyses.treatments.wholeGenome.chr16NoCovered=Chr16
+analyses.treatments.wholeGenome.chr17NoCovered=Chr17
+analyses.treatments.wholeGenome.chr18NoCovered=Chr18
+analyses.treatments.wholeGenome.chr19NoCovered=Chr19
+analyses.treatments.wholeGenome.chr20NoCovered=Chr20
+analyses.treatments.wholeGenome.chr21NoCovered=Chr21
+analyses.treatments.wholeGenome.chr22NoCovered=Chr22
+analyses.treatments.wholeGenome.chrXNoCovered=ChrX
+analyses.treatments.wholeGenome.chrYNoCovered=ChrY
+
+analyses.treatments.wholeGenome.info=Informations générales
+analyses.treatments.wholeGenome.fastqFiles=ReadSets
+analyses.treatments.wholeGenome.filePath=Path Fichier
 ############
 #
 # Balance Sheets
