@@ -227,8 +227,9 @@ public class XmlServices {
 				// Les champs title et libraryName sont considerés comme obligatoires
 				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
 				chaine = chaine + "    <STUDY_REF ";
-				if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
-					chaine = chaine + "    <STUDY_REF refname=\"" + experiment.studyCode +"\"";
+				//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
+				if (StringUtils.isNotBlank(experiment.studyCode)) { 
+					chaine = chaine + " refname=\"" + experiment.studyCode +"\"";
 				}
 				if (StringUtils.isNotBlank(experiment.studyAccession)){
 					chaine = chaine + " accession=\""+experiment.studyAccession + "\"";
@@ -238,7 +239,8 @@ public class XmlServices {
 				chaine = chaine + "      <DESIGN>\n";
 				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
 				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
-				if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) { 
+				//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
+				if (StringUtils.isNotBlank(experiment.sampleCode)){
 					chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
 				}
 				if (StringUtils.isNotBlank(experiment.sampleAccession)){
