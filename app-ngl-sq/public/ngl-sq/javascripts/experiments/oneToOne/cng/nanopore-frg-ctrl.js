@@ -115,7 +115,7 @@ angular.module('home').controller('NanoporeFrgCtrlCNG',['$scope', '$parse','atmT
 			         },
 			         // au CNG il faut "outputContainerUsed.locationOnContainerSupport.code" + edit: true
 			         {
-			        	 "header":Messages("containers.table.code")+"TEST",
+			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code",
 			        	 "order":true,
 						 "edit":true,
