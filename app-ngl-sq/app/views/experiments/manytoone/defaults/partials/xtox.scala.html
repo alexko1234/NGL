@@ -29,10 +29,15 @@
 			</div>
 			<!-- OutputContainers table -->
 			<div class="row">
-				<div class="col-md-10 col-lg-10 flowcellTable">
-				@outputplates()
+			<div class="col-md-12 col-lg-12 flowcellTable"  ng-switch="atmService.outputContainerSupportCategoryCode">
+	            <div ng-switch-when="96-well-plate">
+				   @outputplates()
 				</div>
-			</div>		
+				<div ng-switch-when="tube">
+				   @outputtubes()
+				</div>
+			</div>
+		</div>	
 		</div>
 		</div>
 		</div>		
