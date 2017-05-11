@@ -333,7 +333,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false,
-				DescriptionFactory.newValues("kraken","megablast_megan"),"single"));
+				DescriptionFactory.newValues("kraken","megablast_megan","sortmerna2.1"),"single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Organisme","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "single"));
