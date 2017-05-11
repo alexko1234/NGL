@@ -125,7 +125,8 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, 
 				null, "single", 1, true, null, null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, null, "single", 1, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true,
+				null, null, "single", 1, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Destination finale", "finalDestination", LevelService.getLevels(Level.CODE.Container), String.class, true, null, 
 				getTaraPacificFinalDestination(), "single", 3, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
@@ -142,6 +143,15 @@ public class ImportServiceCNS extends AbstractImportService {
 		
 		propertyDefinitions.add(newPropertiesDefinition("Provenance", "origin", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
 				null, "single", 7, true, null, null));
+		
+		//Nouvelles prop d'import
+		propertyDefinitions.add(newPropertiesDefinition("Ile", "island", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificIslandValues(), "single", 7, true, null, null));		
+		propertyDefinitions.add(newPropertiesDefinition("Colonie", "colony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificColonyValues(), "single", 8, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Site", "site", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificSiteValues(), "single", 9, true, null, null));		
+		
 		return propertyDefinitions;
 	}
 	
