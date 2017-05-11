@@ -26,6 +26,16 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		        	 "extraHeaders":{0:"Solution Stock"}
 		         },	
 		         {
+		        	 "header":Messages("containers.table.workName"),
+		        	 "property":"containers.table.workName",
+		        	 "order":true,
+					 "edit":false,
+					 "hide":true,
+		        	 "type":"text",
+		        	 "position":1.2,
+		        	 "extraHeaders":{0:"Solution Stock"}
+		         },	
+		         {
 		        	"header":Messages("containers.table.tags"),
 		 			"property": "inputContainer.contents",
 		 			"filter": "getArray:'properties.tag.value'| unique",

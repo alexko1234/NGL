@@ -23,6 +23,16 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 		        	 "type":"text",
 		        	 "position":1,
 		        	 "extraHeaders":{0:"solution stock"}
+		         },
+		         {
+		        	 "header":Messages("containers.table.workName"),
+		        	 "property":"containers.table.workName",
+		        	 "order":true,
+					 "edit":false,
+					 "hide":true,
+		        	 "type":"text",
+		        	 "position":1.2,
+		        	 "extraHeaders":{0:"solution stock"}
 		         },	
 		         {
 		        	"header":Messages("containers.table.tags"),
