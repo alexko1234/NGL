@@ -553,6 +553,7 @@ readsets.treatments.taxonomy.keywordBilan.nbSeq = Nb Seq.
 readsets.treatments.taxonomy.taxonBilan = Bilan par taxon
 readsets.treatments.taxonomy.taxonBilanMitochondrion = Bilan par taxon (Vs mitochondrion database)
 readsets.treatments.taxonomy.taxonBilanPlastid = Bilan par taxon (Vs plastid database)
+readsets.treatments.taxonomy.taxonBilanContamination = Bilan par contaminant (Vs nt database)
 readsets.treatments.taxonomy.taxonBilan.taxon = Taxon
 readsets.treatments.taxonomy.taxonBilan.percent = %
 readsets.treatments.taxonomy.taxonBilan.nbSeq = Nb Seq.
@@ -1120,6 +1121,7 @@ filterTaxonBilan=Seuil Taxon (% vs rRNA tot.)
 filterTaxonBilanTaxo=Seuil Taxon (% vs nt)
 filterTaxonBilanMitochondrion=Seuil Taxon (% vs mitochondrion)
 filterTaxonBilanPlastid=Seuil Taxon (% vs plastid)
+filtertaxonBilanContamination=Seuil Taxon (% vs nt)
 ###############
 #
 #authorisation users
