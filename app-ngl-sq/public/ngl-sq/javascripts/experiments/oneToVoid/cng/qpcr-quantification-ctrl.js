@@ -150,7 +150,8 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		data.forEach(function(value){
 			if (value.data.inputContainer.size ) {				
 				//console.log('copy inputContainer.size => inputContainerUsed.experimentProperties.correctionFactorLibrarySize');
-				value.data.inputContainerUsed.experimentProperties.correctionFactorLibrarySize = value.data.inputContainer.size ;
+				value.data.inputContainerUsed.experimentProperties.correctionFactorLibrarySize.value = value.data.inputContainer.size.value ;
+				value.data.inputContainerUsed.experimentProperties.correctionFactorLibrarySize.unit = value.data.inputContainer.size.unit ;				
 			}
 		})		
 	};
