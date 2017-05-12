@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -13,6 +14,7 @@ import models.laboratory.parameter.index.IlluminaIndex;
 import models.laboratory.parameter.index.NanoporeIndex;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.description.dao.ExperimentTypeNodeDAO;
 import models.laboratory.sample.description.SampleType;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
@@ -20,6 +22,7 @@ import models.utils.dao.DAOHelpers;
 
 import org.mongojack.DBQuery;
 
+import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import fr.cea.ig.MongoDBDAO;
@@ -29,6 +32,9 @@ public abstract class AbstractExperimentService {
 	
 		public void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 			DAOHelpers.removeAll(ProcessType.class, ProcessType.find);
+			//remove all previous before delete ExpTypeNode
+			Spring.getBeanOfType(ExperimentTypeNodeDAO.class).removeAllPrevious();
+			
 			DAOHelpers.removeAll(ExperimentTypeNode.class, ExperimentTypeNode.find);
 	
 			DAOHelpers.removeAll(ExperimentType.class, ExperimentType.find);
