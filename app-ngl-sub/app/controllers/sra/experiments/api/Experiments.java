@@ -91,11 +91,15 @@ public class Experiments extends DocumentController<Experiment> {
 		if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
 			queries.add(DBQuery.in("code", form.listExperimentCodes));
 		}	
+		if (StringUtils.isNotBlank(form.experimentCode)) { //all
+			queries.add(DBQuery.in("code", form.experimentCode));
+		}
 		
 		// ajout pour interface release study :
 		if (StringUtils.isNotBlank(form.studyCode)) { //all
 			queries.add(DBQuery.in("studyCode", form.studyCode));
 		}
+		
 		// end ajout .
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
