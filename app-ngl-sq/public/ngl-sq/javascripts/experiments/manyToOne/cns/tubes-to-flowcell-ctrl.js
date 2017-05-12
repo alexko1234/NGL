@@ -26,7 +26,7 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 		         },
 		         {
 		        	 "header":Messages("containers.table.workName"),
-		        	 "property":"containers.table.workName",
+		        	 "property":"inputContainer.properties.workName.value",			        	
 		        	 "order":true,
 					 "edit":false,
 					 "hide":true,
