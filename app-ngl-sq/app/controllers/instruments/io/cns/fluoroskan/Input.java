@@ -36,8 +36,8 @@ public class Input extends AbstractInput {
 		Logger.debug("Start Contextvalidation Error "+ plateCodeInExp +", "+ plateCodeInFile );
 		
 		if(plateCodeInExp.equals(plateCodeInFile)){
-						
-			String codePropertiesConcDil = null ;
+		
+			String codePropertiesConcDil = 	null  ;
 			String codePropertiesConcFinal = null ;
 			String codePropertiesDilFactor = null ;
 
@@ -67,6 +67,8 @@ public class Input extends AbstractInput {
 					contextValidation.addErrors("Erreur gamme", "Code gamme non géré : "+typeQC);	
 				}
 				
+			}else{
+				codePropertiesConcDil = "concentration1" ;
 			}
 			
 			final String codePropertiesConcDilf = codePropertiesConcDil ;
@@ -97,7 +99,9 @@ public class Input extends AbstractInput {
 						PropertySingleValue concentrationDil = getPSV(icu,codePropertiesConcDilf);
 						concentrationDil.value = results.get(key);
 						concentrationDil.unit = "ng/µl";
-						computeFinalConcentration(icu, concentrationDil, codePropertiesDilFactorf, codePropertiesConcFinalf);
+						if(null != codePropertiesDilFactorf &&  null != codePropertiesConcFinalf){
+							computeFinalConcentration(icu, concentrationDil, codePropertiesDilFactorf, codePropertiesConcFinalf);
+						}
 					});
 			}
 			
