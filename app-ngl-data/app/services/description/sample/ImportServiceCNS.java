@@ -193,7 +193,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("to-check", "to check"));
 		values.add(DescriptionFactory.newValue("Nice", "Nice"));
 		values.add(DescriptionFactory.newValue("Banyuls", "Banyuls"));
-		
+		values.add(DescriptionFactory.newValue("LOCEAN", "LOCEAN"));
 		return values;	
 	}
 
