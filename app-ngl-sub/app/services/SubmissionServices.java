@@ -1423,7 +1423,13 @@ public class SubmissionServices {
 					System.out.println("raw data directory"+rawData.directory);
 					rawData.relatifName = runInstanceFile.fullname;
 					//System.out.println ("rawData.relatifName = " +rawData.relatifName);
-					String cns_directory= rawData.directory.replace("/ccc/genostore/count007/fg0001/rawdata/", "/env/cns/proj/");
+					String cns_directory =rawData.directory;
+					if(rawData.directory.startsWith("/ccc/genostore")){
+						int index = rawData.directory.indexOf("/rawdata/");
+						String lotseq_dir = rawData.directory.substring(index + 9);
+						cns_directory="/env/cns/proj/"+lotseq_dir;
+					}
+					//String cns_directory= rawData.directory.replace("/ccc/genostore/count007/fg0001/rawdata/", "/env/cns/proj/");
 					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
 					if(fileCible.exists()){
 						System.out.println("le fichier "+ fileCible +"existe bien");
