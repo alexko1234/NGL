@@ -291,12 +291,72 @@ public class ImportServiceCNS extends AbstractImportService {
 		return values;	
 	}
 
+	
+	private static List<Value> getTaraPacificIslandValues() {
+		List<Value> values = new ArrayList<Value>();
+
+		// toutes les OA-001 à 150
+		 for(int i = 0; i <= 150 ; i++){
+			 
+				if(i < 10){
+					values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
+				}else if(i > 99){
+					values.add(DescriptionFactory.newValue("20"+i, "OA-"+i));
+				}else{
+					values.add(DescriptionFactory.newValue("200"+i, "OA-0"+i));
+				}
+				
+			}
+			
+			values.add(DescriptionFactory.newValue("20999", "OA-999"));
+
+		// Tous les I
+		for (int i = 0; i <= 20; i++) {
+			String ile = (i < 10) ? "0" + i : "" + i;
+			values.add(DescriptionFactory.newValue("I" + ile, "I" + ile));
+		}
+
+		return values;
+	}
+
+	private static List<Value> getTaraPacificColonyValues() {
+		List<Value> values = new ArrayList<Value>();
+
+		for (int k = 1; k <= 40; k++) {
+			String colonie = (k < 10) ? "0" + k : "" + k;
+			values.add(DescriptionFactory.newValue("C" + colonie, "C" + colonie));
+		}
+		for (int k = 1; k <= 20; k++) {
+			String fish = (k < 10) ? "0" + k : "" + k;
+			values.add(DescriptionFactory.newValue("F" + fish, "F" + fish));
+		}
+		for (int k = 1; k <= 5; k++) {
+			String fish = (k < 10) ? "0" + k : "" + k;
+			values.add(DescriptionFactory.newValue("M" + fish, "M" + fish));
+		}
+
+		return values;
+	}
+
+	private static List<Value> getTaraPacificSiteValues() {
+		List<Value> values = new ArrayList<Value>();
+
+		for (int j = 1; j <= 4; j++) {
+			String site = "0" + j;
+			values.add(DescriptionFactory.newValue("S" + site, "S" + site));
+		}
+		
+		return values;
+	}
+
 	private static List<Value> getTaraPacificStationValues(){
 		List<Value> values = new ArrayList<Value>();
 		//Miami first reception end june 
 		//toutes les OA-001 à 150
 				
-		for(int i = 0; i <= 150 ; i++){
+
+		  for(int i = 0; i <= 150 ; i++){
+		 
 			if(i < 10){
 				values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
 			}else if(i > 99){
@@ -306,7 +366,9 @@ public class ImportServiceCNS extends AbstractImportService {
 			}
 			
 		}
+		
 		values.add(DescriptionFactory.newValue("20999", "OA-999"));
+		
 		//Panama second recption first august
 		//toutes les stations des îles 01 à 20, pour les sites 01 à 04, pour les colonies 01 à 40
 		//version 6 et version 9 I01S01 et I01S01C01 à I01S01C40
