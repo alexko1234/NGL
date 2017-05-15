@@ -113,21 +113,9 @@ public class ProtocolServiceCNG {
 		// 30/03/2017 ajout protocoles pour Nanopore
 			
 		//cdna-synthesis
-		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production",
+		lp.add(newProtocol("1d-strand-switching","1D strand switching ","path1","1","production",
 				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-		        /* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
-		           concatMap(newPSV("rnaLibProtocol","Smarter V4"),
-						  newPSV("strandOrientation","unstranded"),
-						  newPSV("cDNAsynthesisType","oligodT"))));
-			    */	
-		
-		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-				/* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
-				   concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),
-					      newPSV("strandOrientation","unstranded"),
-						  newPSV("cDNAsynthesisType","random + oligodT"))));
-			    */	
+		     
 		
 		//nanopore-frg 
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", 
