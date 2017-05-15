@@ -313,19 +313,16 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 			$scope.experiment.instrument.typeCode =null; // pas suffisant pour bloquer la page..
 			$scope.atmService = null; //empeche la page de se charger...
+			$scope.experimentTypeTemplate = null;
 		} else {
 			// plaques uniqt mais il y a une limite !! combien ??
 			if ( supports.length > 4 ){ 
 				$scope.messages.setError(Messages('experiments.input.error.maxSupports', 4));
 				$scope.atmService = null; //empeche la page de se charger...
+				$scope.experimentTypeTemplate = null;
 			}
 		}
 	}
 	
-	// ajout 26/04/2017: du coup il faut un watch sur $scope.experiment.instrument.typeCode pour effacer un eventuel message d'erreur precedent
-	$scope.$watch("experiment.instrument.typeCode" , function(newValue, OldValue){
-		if ($scope.experiment.instrument.typeCode === 'cBotV2'){
-			$scope.messages.clear();
-		}
-	});	
+	
 }]);

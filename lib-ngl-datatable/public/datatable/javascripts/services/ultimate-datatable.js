@@ -305,7 +305,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     this.computePaginationList();
                     this.computeDisplayResult();
                     var that = this;
-                    this.computeDisplayResultTimeOut.finally(function() {
+                    this.computeDisplayResultTimeOut.then(function() {
                         that.setSpinner(false);
                     });
                 }
@@ -327,9 +327,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         $http.get(url(), {
                             params: this.getParams(params),
                             datatable: this
-                        }).success(function(data, status, headers, config) {
-                            config.datatable._setData(data.data, data.recordsNumber);
-                            that.computeDisplayResultTimeOut.finally(function() {
+                        }).then(function(resp) {
+                            resp.config.datatable._setData(resp.data.data, resp.data.recordsNumber);
+                            that.computeDisplayResultTimeOut.then(function() {
                                 that.setSpinner(false);
                             });
                         });
@@ -582,6 +582,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         console.log("edit is active, you lost all modification !!");
                         this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
                     }
+
                     this.computeGroup();
                     this.sortAllResult(); //sort all the result                    
                     this.computePaginationList(); //redefined pagination
@@ -1267,7 +1268,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         isEdit = line.edit && this.config.edit.all;
                     } else {
                     	var nbEditableColumns = $filter('filter')(this.config.columns, {"edit":true}).length; 
-                    	
                         isEdit = (this.config.edit.columnMode && this.config.edit.start && nbEditableColumns > 0);
                     }
                 }
@@ -1411,11 +1411,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         var valueFunction = this.getValueFunction(this.config.save.value);
                         httpConfig.index = i;
                         return $http[method](urlFunction(value), valueFunction(value), httpConfig).
-                        success(function(data, status, headers, config) {
-                            config.datatable.saveRemoteOneElement(status, data, config.index);
-                        }).
-                        error(function(data, status, headers, config) {
-                            config.datatable.saveRemoteOneElement(status, data, config.index);
+                        then(function(resp) {
+                            resp.config.datatable.saveRemoteOneElement(resp.status, resp.data, resp.config.index);
+                            return resp;
+                        }, function(resp) {
+                            resp.config.datatable.saveRemoteOneElement(resp.status, resp.data, resp.config.index);
+                            return resp;
                         });
 
                     }
@@ -1571,16 +1572,17 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             index: i,
                             value: value
                         })
-                        .success(function(data, status, headers, config) {
-                            config.datatable.config.remove.ids.success.push(config.index);
-                            config.datatable.config.remove.number--;
-                            config.datatable.removeFinish();
-                        })
-                        .error(function(data, status, headers, config) {
-                            config.datatable.config.remove.ids.errors.push(config.value);
-                            config.datatable.config.remove.error++;
-                            config.datatable.config.remove.number--;
-                            config.datatable.removeFinish();
+                        .then(function(resp) {
+                            resp.config.datatable.config.remove.ids.success.push(resp.config.index);
+                            resp.config.datatable.config.remove.number--;
+                            resp.config.datatable.removeFinish();
+                            return resp;
+                        }, function(resp) {
+                            resp.config.datatable.config.remove.ids.errors.push(resp.config.value);
+                            resp.config.datatable.config.remove.error++;
+                            resp.config.datatable.config.remove.number--;
+                            resp.config.datatable.removeFinish();
+                            return resp;
                         });
                 } else {
                     throw 'no url define for save !';
@@ -1765,7 +1767,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             isShowToolbar: function() {
                 return (this.isShowToolbarButtons() || this.isShowToolbarPagination() || this.isShowToolbarResults());
             },
-            
             isShowToolbarBottom: function() {
                 return (this.isShowToolbarPagination() && this.config.pagination.bottom && this.config.pagination.numberRecordsPerPage >= this.config.pagination.numberRecordsPerPageForBottomdisplay);
             },
@@ -2015,8 +2016,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             setColumnsConfigWithUrl: function() {
                 $http.get(this.config.columnsUrl, {
                     datatable: this
-                }).success(function(data, status, headers, config) {
-                    config.datatable.setColumnsConfig(data);
+                }).then(function(resp) {
+                    resp.config.datatable.setColumnsConfig(resp.data);
+                    return resp;
                 });
             },
             getColumnsConfig: function() {
@@ -2333,7 +2335,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         	if(Array.isArray(colValue) && colValue.length === 1  && colValue[0].search
                                         			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue[0]+'"';
-                                        	} else if(!Array.isArray(colValue) && colValue.search
+                                        	}else if(!Array.isArray(colValue) && colValue.search
                                         			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue+'"';
                                         	} else if(!Array.isArray(colValue) || (Array.isArray(colValue) && colValue.length === 1)){
@@ -2656,7 +2658,7 @@ angular.module('ultimateDataTableServices')
 		      
 		 }
 		};
-    	}]);;angular.module('ultimateDataTableServices').
+}]);;angular.module('ultimateDataTableServices').
 directive('udtBtselect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
@@ -3036,10 +3038,10 @@ directive("udtCell", function(){
 	    				if(colType==="date"){
 	    					return 'udt-date-timestamp';
 	    				}
+
 	    				return '';
 	    			};
 					
-
 	    			scope.udtTableFunctions.getValidationClass = function(formName, col){
 	    				
 	    				if(scope.udtTable.config.save.enableValidation
@@ -3148,7 +3150,6 @@ directive("udtCell", function(){
                                          }
                                     });
                                 }
-
 			    				return currentScope.$eval(column.property+currentScope.udtTableFunctions.getFilter(column)+currentScope.udtTableFunctions.getFormatter(column), value.data);
 			    			}else if(value.line.group){
 			    				var v = currentScope.$eval("group."+column.id, value.data);
@@ -3478,11 +3479,13 @@ directive('udtTable', function(){
   		    		if(scope.udtTable && scope["datatableForm"]){
   		    			scope.udtTable.formController = scope["datatableForm"];
   		    		}
+					
   		    		scope.$watch("udtTable", function(newValue, oldValue) {
   		    			if(newValue && newValue !== oldValue && scope["datatableForm"]){
   		    				scope.udtTable.formController = scope["datatableForm"];
   		    			}
 		            });
+					
   		    		scope.udtTableFunctions.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
   		    			scope.udtModalImage = {};
   		    			scope.udtModalImage.modalImage = imageData;
@@ -3523,14 +3526,14 @@ directive('udtTable', function(){
 	    			};
 	    			scope.udtTableFunctions.getThClass = function(col, currentScope){
 	    				var clazz = '';
-	    				if(angular.isFunction(col.thClass)){
+	    				if(col && angular.isFunction(col.thClass)){
 	    					clazz = col.thClass(col);
-	    				} else if(angular.isString(col.thClass)){
+	    				} else if(col && angular.isString(col.thClass)){
 	    					//we try to evaluation the string against the scope
 	    					clazz =  currentScope.$eval(col.thClass) || col.thClass;
 	    				}
-	    				if(col.required != undefined && (angular.isFunction(col.required) && col.required()) 
-	    						|| (!angular.isFunction(col.required) && col.required)){
+	    				if((col && col.required != undefined && (angular.isFunction(col.required) && col.required()))
+	    						|| (col && !angular.isFunction(col.required) && col.required)){
 	    					clazz = clazz +' required';
 	    				}
 	    				return clazz;
@@ -3647,9 +3650,8 @@ directive('udtToolbar', function(){
   		    	link: function(scope, element, attr) {
   		    	}
     		};
-    	});
-;angular.module('ultimateDataTableServices').
-directive('udtToolbarBottom', function(){ 
+    	})
+.directive('udtToolbarBottom', function(){ 
     		return {
     			restrict: 'A',
   		    	replace:true,
@@ -3696,7 +3698,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 			    	
 			    	scope.udtTableFunctions.cancel = function(){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.cancel()}).then(function(){
+		    			$timeout(function(){scope.udtTable.cancel()}).finally(function(){
 		    				scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false); 
 							});	   		    				
@@ -3707,7 +3709,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 			    	
 		    		scope.udtTableFunctions.setNumberRecordsPerPage = function(elt){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setNumberRecordsPerPage(elt)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setNumberRecordsPerPage(elt)}).finally(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.pagination.mode)){
 		    					scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false); 
@@ -3720,7 +3722,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.setPageNumber = function(page){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setPageNumber(page)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setPageNumber(page)}).finally(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.pagination.mode)){
 								scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false); 
@@ -3731,14 +3733,14 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.setEdit = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setEdit(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setEdit(column)}).finally(function(){
 		    				scope.udtTable.setSpinner(false);  		    				
 		    			});		    			
 		    		};
 		    		
 		    		scope.udtTableFunctions.setOrderColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setOrderColumn(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setOrderColumn(column)}).finally(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.order.mode)){
 								scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false);  		    			
@@ -3750,14 +3752,14 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.setHideColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setHideColumn(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setHideColumn(column)}).finally(function(){
 		    				scope.udtTable.setSpinner(false);  		    				
 		    			});
 		    		};
 		    		
 		    		scope.udtTableFunctions.setGroupColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setGroupColumn(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setGroupColumn(column)}).finally(function(){
 							scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false);
 							});  		    				
@@ -3767,14 +3769,14 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.exportCSV = function(exportType){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.exportCSV(exportType)}).then(function(){
+		    			$timeout(function(){scope.udtTable.exportCSV(exportType)}).finally(function(){
 		    				scope.udtTable.setSpinner(false);  		    				
 		    			});
 		    		};
 		    		
 		    		scope.udtTableFunctions.updateShowOnlyGroups = function(){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.updateShowOnlyGroups()}).then(function(){
+		    			$timeout(function(){scope.udtTable.updateShowOnlyGroups()}).finally(function(){
 							scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false); 
 							});									

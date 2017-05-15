@@ -119,6 +119,13 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	}
 
+	
+	public void removeAllPrevious(){
+		String sql = "DELETE FROM previous_nodes";
+		jdbcTemplate.update(sql);
+	}
+	
+	
 	 /**
 	  * Update previousExperimentNode
 	  */
