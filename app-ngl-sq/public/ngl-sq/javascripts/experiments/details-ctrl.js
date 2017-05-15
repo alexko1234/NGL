@@ -465,7 +465,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.changeInstrumentType = function(){
-		
+		$scope.messages.clear();
 		if($scope.experiment && $scope.experiment.instrument && $scope.experiment.instrument.typeCode){
 			var instrumentTypeCode = $scope.experiment.instrument.typeCode;
 			$scope.experiment.instrument = {};
@@ -483,9 +483,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.loadTemplate = function(){
 		if($scope.experimentType && $scope.experiment.instrument && $scope.experiment.instrument.outContainerSupportCategoryCode){
 			$scope.experimentTypeTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod.toLowerCase(),
-					$scope.experiment.instrument.outContainerSupportCategoryCode,
-					$scope.experimentType.category.code,
-					$scope.experimentType.code).url;
+			$scope.experiment.instrument.outContainerSupportCategoryCode,
+			$scope.experimentType.category.code,
+			$scope.experimentType.code).url;
 		}else{
 			$scope.experimentTypeTemplate =  undefined;
 		}				
