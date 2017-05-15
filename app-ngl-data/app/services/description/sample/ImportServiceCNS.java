@@ -299,16 +299,16 @@ public class ImportServiceCNS extends AbstractImportService {
 		 for(int i = 0; i <= 150 ; i++){
 			 
 				if(i < 10){
-					values.add(DescriptionFactory.newValue("2000"+i, "OA-00"+i));
+					values.add(DescriptionFactory.newValue("OA-00"+i, "OA-00"+i));
 				}else if(i > 99){
-					values.add(DescriptionFactory.newValue("20"+i, "OA-"+i));
+					values.add(DescriptionFactory.newValue("OA-"+i, "OA-"+i));
 				}else{
-					values.add(DescriptionFactory.newValue("200"+i, "OA-0"+i));
+					values.add(DescriptionFactory.newValue("OA-0"+i, "OA-0"+i));
 				}
 				
 			}
 			
-			values.add(DescriptionFactory.newValue("20999", "OA-999"));
+			values.add(DescriptionFactory.newValue("OA-999", "OA-999"));
 
 		// Tous les I
 		for (int i = 0; i <= 20; i++) {
