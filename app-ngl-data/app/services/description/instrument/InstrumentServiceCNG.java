@@ -207,24 +207,42 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		l.add(newInstrumentUsedType("Mastercycler Nexus", "mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler"), getMasterNexusProperties(), 
+				getInstruments(
+						createInstrument("mastercycler-nexus1", "Mastercycler Nexus 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus2", "Mastercycler Nexus 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus3", "Mastercycler Nexus 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("Mastercycler Nexus Gradient", "mastercycler-nexus-gradient", InstrumentCategory.find.findByCode("thermocycler"), getMasterNexusProperties(), 
+				getInstruments(
+						createInstrument("mastercycler-nexus-gradient1", "Mastercycler Nexus Gradient 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		
+		
 		/** covaris **/
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("cov1", "Cov1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("covaris1", "Covaris 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		l.add(newInstrumentUsedType("Covaris LE220", "covaris-le220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("cov2", "Cov2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("covaris2", "Covaris 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 		
 		l.add(newInstrumentUsedType("Covaris E220", "covaris-e220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("cov3", "Cov3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("covaris3", "Covaris 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -354,18 +372,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		/** nanopore sequencers **/
 		// FDS ajout 30/03/2017 : NGL-1225 ( Nanopore )
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),
-				getInstrumentMinIon(), 
-				getContainerSupportCategories(new String[]{"tube"}), 
-				getContainerSupportCategories(new String[]{"flowcell-1"}), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(), 
-				getInstrumentMKI(), 
-				getContainerSupportCategories(new String[]{"tube"}), 
-				getContainerSupportCategories(new String[]{"flowcell-1"}), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
 		l.add(newInstrumentUsedType("Mk1B", "mk1b", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),
 				getInstrumentMKIB(), 
 				getContainerSupportCategories(new String[]{"tube"}), 
@@ -537,6 +543,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
+	private static List<PropertyDefinition> getMasterNexusProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		
+		l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+                null, "single",null,true, null,null));
+
+		return l;
+	}
 	
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
@@ -841,31 +856,20 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
-	private List<Instrument> getInstrumentMKI() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		// LISTE ????
-
-		return instruments;
-	}
+	
+	
+	
 	
 	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
-	private List<Instrument> getInstrumentMKIB() throws DAOException {
+	private static List<Instrument> getInstrumentMKIB() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		// LISTE ????
-		
-		return instruments;
-	}
-	
-	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
-	private static List<Instrument> getInstrumentMinIon() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN18834", "MN18834", null, true, "/env/ig/atelier/nanopore/cng/MN18834xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19240", "MN19240", null, true, "/env/ig/atelier/nanopore/cng/MN19240xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19270", "MN19270", null, true, "/env/ig/atelier/nanopore/cng/MN19270xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN18834", "MN18834", null, true, "/env/ig/atelier/nanopore/cng/MN18834", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19240", "MN19240", null, true, "/env/ig/atelier/nanopore/cng/MN19240", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19270", "MN19270", null, true, "/env/ig/atelier/nanopore/cng/MN19270", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19813", "MN19813", null, true, "/env/ig/atelier/nanopore/cng/MN19813xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
+		instruments.add(createInstrument("MN19802","MN19802", null, true, "/env/ig/atelier/nanopore/cng/MN19802", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				instruments.add(createInstrument("MN19190","MN19190", null, true, "/env/ig/atelier/nanopore/cng/MN19190", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
 	

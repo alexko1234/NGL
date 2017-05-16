@@ -21,7 +21,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				columnMode:true
 			},
 			group:{
-				active:true
+				active:true,
+				showOnlyGroups:true
 			},
 			save:{
 				active:Permissions.check("writing")?true:false,
