@@ -109,7 +109,6 @@ public class ProtocolServiceCNG {
 													   "wg-chromium-lib-prep")));
 		
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		// 30/03/2017 ajout protocoles pour Nanopore
 			
 		//cdna-synthesis
@@ -166,8 +165,6 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 
-		}
-		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
@@ -185,13 +182,9 @@ public class ProtocolServiceCNG {
 		
 		
 		//------------Experiences de Purification-----------------------------
-		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		// 30/03/2017 ajout Protocole pour Sizing ...EN COURS
 		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));	
-
-		}
-		
 		
 		
 		for(Protocol protocole:lp){
