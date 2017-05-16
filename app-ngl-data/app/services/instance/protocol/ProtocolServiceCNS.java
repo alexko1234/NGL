@@ -97,6 +97,8 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","R9-Long Read")),false));
 		lp.add(newProtocol("R9-1D","R9-1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
 				concatMap(newPSV("libraryProtocol","R9-1D")),false));
+		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","direct RNAsequencing")),false));
 		
 		
 		lp.add(newProtocol("map005-depot","MAP005_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
