@@ -115,7 +115,7 @@ public class Nanopore extends AbstractDeclaration{
 		l.add(newExperimentType("Synthèse cDNA","cdna-synthesis","cDNA",1700,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyCdnaSynthesis(),
-				getInstrumentUsedTypes("covaris-e210","covaris-le220","covaris-e220","mastercycler-nexus","mastercycler-nexus-gradient"),
+				getInstrumentUsedTypes("mastercycler-nexus","mastercycler-nexus-gradient"),
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -123,7 +123,7 @@ public class Nanopore extends AbstractDeclaration{
 		l.add(newExperimentType("Fragmentation Nanopore","nanopore-frg","FRG",1800,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyFragmentationNanopore(), 
-				getInstrumentUsedTypes("eppendorf-5424","mastercycler-nexus"),
+				getInstrumentUsedTypes("covaris-e210","covaris-le220","covaris-e220","eppendorf-5424","mastercycler-nexus"),
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
