@@ -212,7 +212,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"filter":"codes:'resolution'",
 			"position" : 12.5,
 			"order" :true,
-			"edit" : (mainService.getHomePage() === 'state')?false:true,
+			"edit" : true,
 			"hide" : true,
 			"choiceInList":true,
 		    "listStyle":"bt-select-multiple",

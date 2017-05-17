@@ -473,6 +473,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             if(column.id != that.config.group.by.id){                        	
 	                        	var propertyGetter = column.property;
 	                            propertyGetter += that.getFilter(column);
+	                            propertyGetter += that.getFormatter(column);
+	                            
 	                            var columnGetter = $parse(propertyGetter);
 	                            var columnSetter = $parse("group." + column.id);
 	
@@ -493,7 +495,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                    console.log("computeGroup Error : " + e);
 	                                }
 	                            } else if ('unique' === column.groupMethod) {
-	                                var result = $filter('udtUnique')(groupData, column.property);
+	                                var result = $filter('udtUnique')(groupData, propertyGetter);
 	                                if (result.length > 1) {
 	                                    result = '#MULTI';
 	                                } else if (result.length === 1) {
@@ -505,8 +507,11 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                            } else if ('countDistinct' === column.groupMethod) {
 	                                var result = $filter('udtCountdistinct')(groupData, propertyGetter);
 	                                columnSetter.assign(group, result);
-	                            } else if ('collect' === column.groupMethod) {
-	                                var result = $filter('udtCollect')(groupData, propertyGetter);
+	                            } else if (column.groupMethod.startsWith('collect')) {
+	                            	var params = column.groupMethod.split(":");
+	                            	var unique = (params.length === 2 && params[1] === 'true')?true:false;
+	                            	
+	                                var result = $filter('udtCollect')(groupData, propertyGetter,unique);
 	                                columnSetter.assign(group, result);
 	                            } else {
 	                                console.error("groupMethod is not managed " + column.groupMethod);
@@ -3156,8 +3161,8 @@ directive("udtCell", function(){
 			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
 			    					return v;
 			    				}else if(angular.isDefined(v) ){
-			    					//not filtered properties because used during the compute
-			    					return currentScope.$eval("group."+column.id+currentScope.udtTableFunctions.getFormatter(column), value.data);
+			    					//no filtered and no formatter properties because used during the compute
+			    					return currentScope.$eval("group."+column.id, value.data);
 			    				}else{
 			    					return undefined;
 			    				}
@@ -3795,8 +3800,8 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
        		    } 		    		
     		};
 }]);;angular.module('ultimateDataTableServices').
-filter('udtCollect', ['$parse',function($parse) {
-    	    return function(array, key) {
+filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
+    	    return function(array, key, unique) {
     	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
@@ -3822,6 +3827,11 @@ filter('udtCollect', ['$parse',function($parse) {
     	    		}
     	    		
     	    	});
+    	    	
+    	    	if(unique){
+    	    		possibleValues = $filter('udtUnique')(possibleValues);
+    	    	}
+    	    	
     	    	return possibleValues;    	    	
     	    };
     	}]);;angular.module('ultimateDataTableServices').
