@@ -13,6 +13,7 @@
 
 # Home page
 GET     /                           									controllers.main.tpl.Main.home()
+GET     /tpl/js-routes                         							controllers.main.tpl.Main.javascriptRoutes()
 
 #containerSupports tpl
 GET 	/supports/scanner/home											controllers.containers.tpl.ContainerSupports.homeScanner()

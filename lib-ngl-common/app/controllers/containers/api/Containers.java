@@ -137,7 +137,7 @@ public class Containers extends CommonController {
 
 				return ok(Json.toJson(los));
 			}else{
-				MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query);
+				MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
 
 				return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");	
 			}

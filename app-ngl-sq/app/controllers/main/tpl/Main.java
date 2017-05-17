@@ -122,8 +122,10 @@ public class Main extends CommonController{
    public static Result javascriptRoutes() {
  	    response().setContentType("text/javascript");
  	    return ok(	  	      
- 	        Routes.javascriptRouter("jsRoutes"  	       
- 	        // Routes	  	         	        
+ 	        Routes.javascriptRouter("jsRoutes",  	       
+ 	        		controllers.experiments.api.routes.javascript.Experiments.list(),
+ 	        		controllers.containers.api.routes.javascript.Containers.list(),
+ 	        		controllers.processes.api.routes.javascript.Processes.list()
  	      )
  	    );
  	  }

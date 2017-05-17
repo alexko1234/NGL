@@ -4,6 +4,7 @@ index.title = Welcome to NGL-SQ
 #home
 home.experiments.ip = Experiences en cours
 home.experiments.new = Experiences à nouveau
+home.experiments.dispatch = Experiences avec des containers à Dispatch en attente
 home.processes.ip = Processus en cours
 home.processes.new = Processus à nouveau
 

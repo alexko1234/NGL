@@ -1,6 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$filter', 'datatable' , 
+	function($scope, $http, $filter, datatable) {
 
 	var datatableExperimentConfig = {
 			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},
@@ -238,6 +239,43 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 		
 		$scope.processNDatatable = datatable(datatableProcessNConfig);			
 		$scope.processNDatatable.search({stateCodes:["N"]});
+		
+		
+		$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"stateCodes":"IW-D","list":true}}).then(function(result){
+			var containerCodes = result.data.map(function(container){return container.code;});
+			console.log("nb containers"+containerCodes.length);
+			
+			$http.get(jsRoutes.controllers.processes.api.Processes.list().url, {params:{"outputContainerCodes":containerCodes,"includes":"experimentCodes"}}).then(function(result){
+				console.log("nb processes"+result.data.length);
+				
+				var extractDate = function(value){
+					return value.split(/(\d+_\d+)/)[1];
+				}
+			
+				var experimentCodes = result.data.map(function(process){
+					return $filter('orderBy')(process.experimentCodes, extractDate,true)[0];
+				})
+				experimentCodes = $filter('unique')(experimentCodes);
+				console.log("nb experimentCode"+experimentCodes.length);
+				
+				$scope.experimentDispatchDatatable = datatable(datatableExperimentConfig);			
+				$scope.experimentDispatchDatatable.search({codes:experimentCodes});
+				
+				var params = "";
+				experimentCodes.forEach(function(code){
+					params +="codes="+code+"&"
+				}, params);
+				params.replace(/&$/,"");
+				
+				
+				$scope.getExperimentCodesParams = function(){
+					return params
+				}
+			});
+			
+			
+		});
+		
 }]);
 
 
