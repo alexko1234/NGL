@@ -528,8 +528,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
-				                       newValues("PCR FREE PROD NGS FINAL"), "PCR FREE PROD NGS FINAL", "single"));
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
+                null, "single",null,true, null,null));
+
 		return l;
 	}
 	
@@ -611,8 +612,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//    ses propriétés sont la somme des propriétés de chacun (Attention au noms de propriété communs...)
 	private static List<PropertyDefinition> getCovarisAndScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		
-		l.addAll(getCovarisProperties());
+		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
+                newValues("PCR FREE PROD NGS FINAL"), "PCR FREE PROD NGS FINAL", "single"));
+
+		//l.addAll(getCovarisProperties());
 		l.addAll(getScicloneNGSXProperties());
 		
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
