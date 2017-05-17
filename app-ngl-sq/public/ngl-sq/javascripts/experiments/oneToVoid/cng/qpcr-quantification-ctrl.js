@@ -140,7 +140,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 	        template:''
 	        	+'<div class="btn-group" style="margin-left:5px">'
 	        	+'<button class="btn btn-default" ng-click="copySizeToCorrFactor()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copySizeTo")+ ' facteur correctif'
-	        	+'"  ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Taille </button>'                	                	
+	        	+'"   ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Taille </button>'                	                	
 	        	+'</div>'
 	};
 	$scope.atmService.data.setConfig(config );	
@@ -150,10 +150,15 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		data.forEach(function(value){
 			if (value.data.inputContainer.size ) {				
 				//console.log('copy inputContainer.size => inputContainerUsed.experimentProperties.correctionFactorLibrarySize');
-				value.data.inputContainerUsed.experimentProperties.correctionFactorLibrarySize.value = value.data.inputContainer.size.value ;
-				value.data.inputContainerUsed.experimentProperties.correctionFactorLibrarySize.unit = value.data.inputContainer.size.unit ;				
+				$parse("inputContainerUsed.experimentProperties.correctionFactorLibrarySize").assign(value.data, angular.copy(value.data.inputContainer.size));
+							
 			}
-		})		
+		})
+		$scope.messages.clear();
+		$scope.messages.clazz = "alert alert-warning";
+		$scope.messages.text = "Le facteur de correction a été modifié: n'oubliez pas de sauvegarder et de réimporter le fichier pour recalculer la concentration";
+		$scope.messages.showDetails = false;
+		$scope.messages.open();
 	};
 	
 	// updatePropertyFromUDT  est automatiqut defini pour les colonnes injectees dans le datatable...
@@ -163,7 +168,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		if(col.property === 'inputContainerUsed.experimentProperties.correctionFactorLibrarySize.value'){
 			$scope.messages.clear();
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Le facteur de correction a été modifié: n'oubliez pas de réimporter le fichier pour recalculer la concentration";
+			$scope.messages.text = "Le facteur de correction a été modifié: n'oubliez pas de sauvegarder et de réimporter le fichier pour recalculer la concentration";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
 		}
