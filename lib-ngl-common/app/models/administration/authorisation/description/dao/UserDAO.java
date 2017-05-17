@@ -59,7 +59,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		
 		BeanPropertyRowMapper<User> mapper = new BeanPropertyRowMapper<User>(User.class);
 		List<User> users =  this.jdbcTemplate.query(sql, mapper);
-		if(users != null && users.size() == 1){
+		if(users != null && users.size() == 1 && users.get(0).password != null){
 			return users.get(0).password.toString();
 		}else{
 			return null;
@@ -77,7 +77,7 @@ public class UserDAO extends AbstractDAOMapping<User> {
 		Logger.debug("UserDAO - isUserActive : requête SQL : " + sql + "  for " + login);
 		List<User> users =  this.jdbcTemplate.query(sql, mapper, parameters);
 		
-		if(users != null && users.size() == 1){
+		if(users != null && users.size() == 1 ){
 			return users.get(0).active;
 		}
 		return false;
