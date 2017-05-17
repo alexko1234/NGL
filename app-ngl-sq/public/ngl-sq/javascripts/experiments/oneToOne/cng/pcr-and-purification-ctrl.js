@@ -249,6 +249,15 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			extraHeaders:{
 				number:2,
 				dynamic:true,
+			},
+			otherButtons: {
+                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+                complex:true,
+                template:''
+                	+'<div class="btn-group" style="margin-left:5px">'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' volume engagé'
+                	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
+                	+'</div>'
 			}
 	};
 
@@ -312,8 +321,15 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 		}
 		
 		//ne plus faire...datatable.setData(dataMain);
-	}
-	
+	};
+	$scope.copyVolumeInToExp = function(){
+		
+		var data = $scope.atmService.data.displayResult;		
+		data.forEach(function(value){
+			$parse("inputContainerUsed.experimentProperties.inputVolume").assign(value.data, angular.copy(value.data.inputContainer.volume));			
+		})		
+	};
+		
 	//Init
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod

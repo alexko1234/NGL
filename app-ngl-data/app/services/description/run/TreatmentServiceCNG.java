@@ -150,12 +150,10 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "110"));*/
 
-		if(!ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			l.add(DescriptionFactory.newTreatmentType("Whole Genome","whole-genome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "wholeGenome", 
+		l.add(DescriptionFactory.newTreatmentType("Whole Genome","whole-genome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "wholeGenome", 
 				getWholeGenomePropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "110"));
-		}
 		
 		l.add(DescriptionFactory.newTreatmentType("RNAseq","rna-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "RNASeq", 
 				getRnaSeqTreatmentPropertyDefinitions(), 

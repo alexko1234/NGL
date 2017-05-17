@@ -305,7 +305,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		// !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket (ajouter mainService dans le controller)
 		// $parse marche pas ici.... var tmp = $scope.$parse("getBasket().get()|getArray:'support.categoryCode'|unique",mainService); 
 		var categoryCodes = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
-		var supports = $scope.$eval("getBasket().get()|getArray:'support.code'",mainService);
+		var supports = $scope.$eval("getBasket().get()|getArray:'support.code'|unique",mainService);
 		
 		if ( ((categoryCodes.length === 1) && ( categoryCodes[0] ==="tube")) || (categoryCodes.length > 1) ){
 			                          // only tubes                                      mixte
@@ -313,19 +313,16 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 			$scope.experiment.instrument.typeCode =null; // pas suffisant pour bloquer la page..
 			$scope.atmService = null; //empeche la page de se charger...
+			$scope.experimentTypeTemplate = null;
 		} else {
 			// plaques uniqt mais il y a une limite !! combien ??
 			if ( supports.length > 4 ){ 
 				$scope.messages.setError(Messages('experiments.input.error.maxSupports', 4));
 				$scope.atmService = null; //empeche la page de se charger...
+				$scope.experimentTypeTemplate = null;
 			}
 		}
 	}
 	
-	// ajout 26/04/2017: du coup il faut un watch sur $scope.experiment.instrument.typeCode pour effacer un eventuel message d'erreur precedent
-	$scope.$watch("experiment.instrument.typeCode" , function(newValue, OldValue){
-		if ($scope.experiment.instrument.typeCode === 'cBotV2'){
-			$scope.messages.clear();
-		}
-	});	
+	
 }]);

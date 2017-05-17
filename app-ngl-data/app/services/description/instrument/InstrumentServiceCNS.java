@@ -461,7 +461,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.4-spot-on"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.5-spot-on"));
        
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
@@ -480,7 +480,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	        		null, "single", 48, true, null, null));
 	       
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, true, null, 
-        		null, "single", 49, true, "R9.4-spot-on", null));
+        		null, "single", 49, true, "R9.5-spot-on", null));
         
         propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
         		getPromethionPosition(), "single", 50, true, null, null));
@@ -544,7 +544,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getNanoporeSequencerPropertiesUAT() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"R9.4-spot-on"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"R9.5-spot-on"));
        
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));

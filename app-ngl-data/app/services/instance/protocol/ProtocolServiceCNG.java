@@ -109,25 +109,12 @@ public class ProtocolServiceCNG {
 													   "wg-chromium-lib-prep")));
 		
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		// 30/03/2017 ajout protocoles pour Nanopore
 			
 		//cdna-synthesis
-		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production",
+		lp.add(newProtocol("1d-strand-switching","1D strand switching ","path1","1","production",
 				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-		        /* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
-		           concatMap(newPSV("rnaLibProtocol","Smarter V4"),
-						  newPSV("strandOrientation","unstranded"),
-						  newPSV("cDNAsynthesisType","oligodT"))));
-			    */	
-		
-		lp.add(newProtocol("ovation_rnaseq_system_v2","Ovation RNAseq system v2","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("cdna-synthesis")));
-				/* proprietes de niveau contents, pas necessaire au CNG pour l'instant...
-				   concatMap(newPSV("rnaLibProtocol","Ovation RNAseq system v2"),
-					      newPSV("strandOrientation","unstranded"),
-						  newPSV("cDNAsynthesisType","random + oligodT"))));
-			    */	
+		     
 		
 		//nanopore-frg 
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", 
@@ -178,8 +165,6 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 
-		}
-		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
@@ -197,13 +182,9 @@ public class ProtocolServiceCNG {
 		
 		
 		//------------Experiences de Purification-----------------------------
-		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		// 30/03/2017 ajout Protocole pour Sizing ...EN COURS
 		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));	
-
-		}
-		
 		
 		
 		for(Protocol protocole:lp){

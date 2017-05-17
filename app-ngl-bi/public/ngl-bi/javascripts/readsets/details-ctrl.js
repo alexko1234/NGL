@@ -191,6 +191,7 @@
 		$scope.filterTaxonBilanDefault=0.2;
 		$scope.filterTaxonBilanMitochondrion=0.2;
 		$scope.filterTaxonBilanPlastid=0.2;
+		$scope.filtertaxonBilanContamination=0.2;
 		
 		mainService.stopEditMode();
 		if(isValuationMode()){
