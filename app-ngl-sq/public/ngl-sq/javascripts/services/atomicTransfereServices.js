@@ -1094,12 +1094,17 @@ angular.module('atomicTransfereServices', [])
 					}
 				},
 				
-				deleteATM : function(rowIndex){
-					this.inputContainers = this.inputContainers.concat(this.atm[rowIndex].inputContainerUseds);
+				deleteATM : function(atm){
+					this.inputContainers = this.inputContainers.concat(atm.inputContainerUseds);
+					
+					var rowIndex = this.atm.findIndex(function(_atm){
+						return(_atm.viewIndex === atm.viewIndex);
+					})
+					
 					this.atm.splice(rowIndex,1);					
 					this.updateDatatable();
 					this.inputContainersByLine = [];
-					
+					this.atm = $filter('orderBy')(this.atm,'viewIndex');
 					this.atm.forEach(function(atm, index){
 						atm.viewIndex = index+1;
 					});
