@@ -110,6 +110,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		});
 	};
 	var saveInProgress = false;
+	var contentPropertyDefinitionMap = {};	
+	var containerPropertyDefinitionMap = {};	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -134,8 +136,42 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.initGraph();
 			}
 		});
+		
+		
+		$http.get(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,{params:{'levelCode':'Content'}}).then(function(response) {
+			
+			response.data.forEach(function(pdef){
+					this[pdef.code]=pdef;
+			}, contentPropertyDefinitionMap);
+			
+		});
+		
+		$http.get(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,{params:{'levelCode':'Container'}}).then(function(response) {
+			
+			response.data.forEach(function(pdef){
+					this[pdef.code]=pdef;
+			}, containerPropertyDefinitionMap);
+			
+		});
 	}
 	init();
+	
+	$scope.getContentPropertyDefinitionValueType = function(key){
+		var propertyDef = contentPropertyDefinitionMap[key];
+		if(propertyDef){
+			return propertyDef.valueType;
+		}
+		return null;
+	};
+	
+	$scope.getContainerPropertyDefinitionValueType = function(key){
+		var propertyDef = containerPropertyDefinitionMap[key];
+		if(propertyDef){
+			return propertyDef.valueType;
+		}
+		return null;
+	}
+	
 	
 	var containerNodes = undefined;
 	$scope.initGraph = function(){

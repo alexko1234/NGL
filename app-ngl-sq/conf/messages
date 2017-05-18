@@ -163,6 +163,7 @@ containers.table.libProcessTypeCodes = Type librairie
 containers.table.libProcessTypeCode = Type Processus Banque (Code)
 containers.table.sizeLong = Taille librairie (pb)
 containers.table.size = Taille
+containers.table.sizeqc = Taille QC
 containers.table.treeOfLife = Arbre de vie
 containers.table.properties = Autres Propriétés
 containers.table.comments = Commentaires

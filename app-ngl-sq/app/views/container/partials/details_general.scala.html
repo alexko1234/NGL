@@ -98,7 +98,7 @@
 					</div>
 				</div-->				
 			}
-			@columnLabelValue(Messages("containers.table.size")){
+			@columnLabelValue(Messages("containers.table.sizeqc")){
 				<div ng-switch on="isEditMode()">
 					<p ng-switch-when="false" class="form-control-static">
 						<span ng-bind="container.size.value|number" />
@@ -120,9 +120,11 @@
 					<div ng-repeat="(key, value) in container.properties">
 						<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 						<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />	
-						<div class="col-md-6 col-lg-6">
-							<p class="form-control-static" ng-if="key.includes('Date') || key.includes('date')" ng-bind="value.value|date:'@Messages("date.format")'"/>
-							<p class="form-control-static" ng-if="!(key.includes('Date') || key.includes('date'))" ng-bind="value.value"/>	
+						<div class="col-md-6 col-lg-6" ng-switch="getContainerPropertyDefinitionValueType(key)">
+							<p class="form-control-static" ng-switch-when="java.lang.String"  ng-bind="value.value|codes:'value.'+key:false"/>
+							<p class="form-control-static" ng-switch-when="java.lang.Boolean" ng-bind="value.value|codes:'boolean':false" />
+							<p class="form-control-static" ng-switch-when="java.util.Date" ng-bind="value.value|date:'@Messages("date.format")'" />
+							<p class="form-control-static" ng-switch-default ng-bind="value.value|number" />
 						</div>
 					</div>
 				</div>
@@ -199,7 +201,12 @@
 							<div ng-repeat="(key, value) in content.properties">
 								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'"></label>
-								<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value|codes:'value.'+key:false" /></div>
+								<div class="col-md-6 col-lg-6" ng-switch="getContentPropertyDefinitionValueType(key)">
+									<p class="form-control-static" ng-switch-when="java.lang.String"  ng-bind="value.value|codes:'value.'+key:false"/>
+									<p class="form-control-static" ng-switch-when="java.lang.Boolean" ng-bind="value.value|codes:'boolean':false" />
+									<p class="form-control-static" ng-switch-when="java.util.Date" ng-bind="value.value|date:'@Messages("date.format")'" />
+									<p class="form-control-static" ng-switch-default ng-bind="value.value|number" />
+								</div>
 								
 							</div>
 						</td>
