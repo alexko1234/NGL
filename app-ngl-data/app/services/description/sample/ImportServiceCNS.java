@@ -145,7 +145,7 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, "single", 7, true, null, null));
 		
 		//Nouvelles prop d'import
-		propertyDefinitions.add(newPropertiesDefinition("Ile / OA-", "island", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Ile / Env", "island", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificIslandValues(), "single", 7, true, null, null));		
 		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "colony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificColonyValues(), "single", 8, true, null, null));
