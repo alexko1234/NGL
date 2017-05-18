@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$filter', 'datatable' , 
-	function($scope, $http, $filter, datatable) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filter', 'datatable' , 
+	function($scope, $http, $q, $filter, datatable) {
 
 	var datatableExperimentConfig = {
 			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},
@@ -245,16 +245,27 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$filter', '
 			var containerCodes = result.data.map(function(container){return container.code;});
 			console.log("nb containers"+containerCodes.length);
 			
-			$http.get(jsRoutes.controllers.processes.api.Processes.list().url, {params:{"outputContainerCodes":containerCodes,"includes":"experimentCodes"}}).then(function(result){
-				console.log("nb processes"+result.data.length);
+			var promises = [];
+			promises[0] = $http.get(jsRoutes.controllers.processes.api.Processes.list().url, {params:{"outputContainerCodes":containerCodes,"stateCode":"IP","includes":"experimentCodes"}});
+			promises[1] = $http.get(jsRoutes.controllers.processes.api.Processes.list().url, {params:{"inputContainerCodes":containerCodes,"stateCode":"IP","includes":"experimentCodes"}});
+			
+			
+			$q.all(promises).then(function(results){
 				
 				var extractDate = function(value){
 					return value.split(/(\d+_\d+)/)[1];
 				}
+				var experimentCodes = [];
+				experimentCodes = experimentCodes.concat(results[0].data.map(function(process){
+						return $filter('orderBy')(process.experimentCodes,extractDate,true)[0];
+					})										
+				);
+				experimentCodes = experimentCodes.concat(results[1].data.map(function(process){
+					return $filter('orderBy')(process.experimentCodes,extractDate,true)[0];
+				 })										
+				);
 			
-				var experimentCodes = result.data.map(function(process){
-					return $filter('orderBy')(process.experimentCodes, extractDate,true)[0];
-				})
+				
 				experimentCodes = $filter('unique')(experimentCodes);
 				console.log("nb experimentCode"+experimentCodes.length);
 				
@@ -266,7 +277,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$filter', '
 					params +="codes="+code+"&"
 				}, params);
 				params.replace(/&$/,"");
-				
 				
 				$scope.getExperimentCodesParams = function(){
 					return params
