@@ -199,7 +199,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : true,
 			"hide" : true,
 			"groupMethod" : "unique",
-			"format" : Messages("datetime.format"),
+			"format" : Messages("datetime-hour.format"),
 			"type" : "date"
 		});
 		columns.push({
@@ -209,7 +209,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : true,
 			"hide" : true,
 			"filter" : "filters:'F'|get:'date'",
-			"format" : Messages("datetime.format"),
+			"format" : Messages("datetime-hour.format"),
 			"groupMethod" : "unique",
 			"type" : "date"
 		});
