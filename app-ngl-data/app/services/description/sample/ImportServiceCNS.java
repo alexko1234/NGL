@@ -322,11 +322,11 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<Value> getTaraPacificColonyValues() {
 		List<Value> values = new ArrayList<Value>();
 
-		for (int k = 1; k <= 40; k++) {
+		for (int k = 0; k <= 40; k++) {
 			String colonie = (k < 10) ? "0" + k : "" + k;
 			values.add(DescriptionFactory.newValue("C" + colonie, "C" + colonie));
 		}
-		for (int k = 1; k <= 20; k++) {
+		for (int k = 0; k <= 20; k++) {
 			String fish = (k < 10) ? "0" + k : "" + k;
 			values.add(DescriptionFactory.newValue("F" + fish, "F" + fish));
 		}
@@ -341,7 +341,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<Value> getTaraPacificSiteValues() {
 		List<Value> values = new ArrayList<Value>();
 
-		for (int j = 1; j <= 4; j++) {
+		for (int j = 0; j <= 4; j++) {
 			String site = "0" + j;
 			values.add(DescriptionFactory.newValue("S" + site, "S" + site));
 		}
