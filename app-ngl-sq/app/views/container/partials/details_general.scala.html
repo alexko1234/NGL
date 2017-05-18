@@ -197,15 +197,13 @@
 						<td ng-bind="content.sampleTypeCode|codes:'type'" />
 						<td>
 							<div ng-repeat="(key, value) in content.properties">
-								<div ng-if="value._type == 'object_list'">
-									<object-list value-ng-model="value" key-ng-model="key"/>
+								<property-value key-ng-model="key" value-ng-model="value"/>
+								<!-- <div ng-if="value._type == 'object_list'">
+									<object-list value-ng-model="value" key-ng-model="key" format-ng-model="line"/>
 								</div>
 								<div ng-if="value._type == 'single'">
 									<single value-ng-model="value" key-ng-model="key"/>
-									<!-- <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
-									<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'"></label>
-									<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value|codes:'value.'+key:false" /></div> -->
-								</div>
+								</div> -->
 							</div>
 						</td>
 					</tr>
