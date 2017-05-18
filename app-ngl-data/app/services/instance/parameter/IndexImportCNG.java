@@ -34,6 +34,7 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 	@Override
 	public void runImport() throws SQLException, DAOException {
 		importIndexIllumina(limsServices,contextError);  //01/03/2017 chgt de nom + remise des params....
+		createIndexChromium(contextError);
 	}
 
 	//01/03/2017 chgt de nom + remise des params....
@@ -60,4 +61,32 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 		logger.info("end loading indexes");
 	}
 	
+	public static void createIndexChromium(ContextValidation contextValidation) throws DAOException{
+		
+		IndexImportUtils.getChromiumIndex().forEach((k,v)-> {
+			Index index = getChromiumIndex(k,  v);
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+				//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+			} else {
+				//Logger.info("index : "+ index.code + " already exists !!");
+			}
+		});			
+		
+	}
+
+	private static Index getChromiumIndex(String code, String seq) {
+		Index index = new IlluminaIndex();
+		
+		index.code = code;
+		index.name = code;
+		index.shortName = code;
+		index.sequence = seq ;  //Voir plus tard: il y a 4 sequences pour les POOL-INDEX...Chromium
+		index.categoryCode = "POOL-INDEX";
+		index.supplierName = new HashMap<String,String>();
+		index.supplierName.put("10x Genomics", code);
+		index.traceInformation=new TraceInformation("ngl-data");
+		
+		return index;
+	}
 }
