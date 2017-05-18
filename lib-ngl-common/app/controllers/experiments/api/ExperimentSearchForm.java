@@ -41,6 +41,8 @@ public class ExperimentSearchForm extends ListForm{
 	public String instrumentCode;
 	public Set<String> instrumentCodes;
 	
+	public Set<String> protocolCodes;
+	
 	
 	public Set<String> sampleTypeCodes;
 	public Map<String, List<String>> atomicTransfertMethodsInputContainerUsedsContentsProperties = new HashMap<String, List<String>>();
