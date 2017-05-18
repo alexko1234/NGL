@@ -5,17 +5,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.asm.Type;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.stereotype.Repository;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-
-import org.springframework.asm.Type;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.stereotype.Repository;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 
@@ -26,7 +25,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
 				"SELECT id,code,name,required,required_state,editable,active,type,display_format,display_order,default_value,description,"
 						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
-				+" FROM property_definition as t",true);
+						+" FROM property_definition as t",true);
 	}
 
 	public List<PropertyDefinition> findByCommonInfoType(long idCommonInfoType)
@@ -41,30 +40,22 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		throw new DAOException("Must be inserted with commonInfoType id");
 	}
 
-	/**
-	 * Particular sql with two code must be implemented
-	 */
-	public PropertyDefinition findByCode(String code) throws DAOException
-	{
-		throw new UnsupportedOperationException("PropertyDefinition does not have a unique code, pass bu type to retrieve PropertyDefinitions");
-	}
-	
 	public PropertyDefinition findUnique(String code, Level.CODE levelCode){
-		
+
 		String sql = 
 				"select distinct pd.code, pd.type, pd.property_value_type" 
-				+"	from  property_definition pd"
-				+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
-				+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
-				+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
-				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
-			    +"	inner join object_type ot on ot.id = cit.fk_object_type"
-			    +" where pd.code = ?";
-		
+						+"	from  property_definition pd"
+						+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
+						+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
+						+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
+						+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
+						+"	inner join object_type ot on ot.id = cit.fk_object_type"
+						+" where pd.code = ?";
+
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR), new SqlParameter("pd.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString(), code);
-		
-		
+
+
 		if(l.size() == 1){
 			return l.get(0);
 		}else{
@@ -72,24 +63,40 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 			return null;
 		}		
 	}
-	
+
 	public List<PropertyDefinition> findUnique(Level.CODE levelCode){
-		
+
 		String sql = 
 				"select distinct pd.code, pd.type, pd.property_value_type" 
-				+"	from  property_definition pd"
-				+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
-				+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
-				+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
-				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
-			    +"	inner join object_type ot on ot.id = cit.fk_object_type order by pd.code";
-			    
-		
+						+"	from  property_definition pd"
+						+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
+						+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
+						+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
+						+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
+						+"	inner join object_type ot on ot.id = cit.fk_object_type order by pd.code";
+
+
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString());
 		return l;
 	}
 	
+	public List<PropertyDefinition> findUnique(){
+
+		String sql = 
+				"select distinct pd.code, pd.type, pd.property_value_type" 
+						+"	from  property_definition pd"
+						+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
+						+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
+						+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
+						+"	inner join object_type ot on ot.id = cit.fk_object_type order by pd.code";
+
+
+		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true);
+		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute();
+		return l;
+	}
+
 	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType) throws DAOException
 	{
 		if(null == propertyDefinition.levels || propertyDefinition.levels.size()==0){

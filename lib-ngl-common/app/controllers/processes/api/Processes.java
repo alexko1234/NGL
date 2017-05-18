@@ -210,6 +210,8 @@ public class Processes extends DocumentController<Process> {
 			queryElts.add(DBQuery.or(DBQuery.in("inputContainerCode",processesSearch.containerCodes), DBQuery.in("outputContainerCodes",processesSearch.containerCodes)));
 		} else if(CollectionUtils.isNotEmpty(processesSearch.outputContainerCodes)){
 			queryElts.add(DBQuery.in("outputContainerCodes",processesSearch.outputContainerCodes));
+		} else if(CollectionUtils.isNotEmpty(processesSearch.inputContainerCodes)){
+			queryElts.add(DBQuery.in("inputContainerCode",processesSearch.inputContainerCodes));
 		}
 		
 		if (CollectionUtils.isNotEmpty(processesSearch.stateResolutionCodes)) { //all

@@ -28,6 +28,8 @@ public class PropertyDefinitions extends APICommonController<PropertyDefinition>
 		List<PropertyDefinition> values = new ArrayList<PropertyDefinition>(0);
 		if(null != filledForm.get("levelCode")){
 			values = PropertyDefinition.find.findUnique(Level.CODE.valueOf(filledForm.get("levelCode")));
+		}else{
+			values = PropertyDefinition.find.findUnique();
 		}
 		
 		if(filledForm.get("datatable") != null){
@@ -42,6 +44,7 @@ public class PropertyDefinitions extends APICommonController<PropertyDefinition>
 			return ok(Json.toJson(values));
 		}				
 	}
+	
 	
 	
 }

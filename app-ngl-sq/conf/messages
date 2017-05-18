@@ -522,6 +522,11 @@ reagents.table.description = Description
 
 button.newexperiment = Créer une expérience
 
+#property_definition list object
+property_definition.loadingReport = Bilan chargement
+property_definition.qcFlowcell = QC Flowcell
+
+
 #baskets
 baskets = Panier
 baskets.new = Créer un panier

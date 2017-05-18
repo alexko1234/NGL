@@ -103,6 +103,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$scope.messages.clear();
 		mainService.startEditMode();		
 	}
+	
+	$scope.getPropertyDefinition = function(key){
+		$http.get(jsRoutes.controllers.common.api.PropertyDefinitions.get(key).url).then(function(response) {
+			var propertyDefinitions = {};			
+		});
+	}
 
 	var updateData = function(){
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
@@ -133,6 +139,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}else if('treeoflife' ===  mainService.get('containerActiveTab')){
 				$scope.initGraph();
 			}
+			
 		});
 	}
 	init();

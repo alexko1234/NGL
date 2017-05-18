@@ -27,7 +27,7 @@ public class ProcessesSearchForm extends ListForm{
 	public Set<String> containerCodes;
 	
 	public Set<String> outputContainerCodes;
-	
+	public Set<String> inputContainerCodes;
 	
 	public String stateCode;
 	public Set<String> stateCodes;

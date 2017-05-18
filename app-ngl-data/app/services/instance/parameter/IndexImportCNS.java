@@ -50,16 +50,17 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		
 	}
 	
-	public static void createIndexNanopore(ContextValidation contextValidation){
-		
-			for(int i = 1 ; i <= 12 ; i++){
-				Index index = getNanoporeIndex(i);				
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
-					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
-				}
+	public static void createIndexNanopore(ContextValidation contextValidation) {
+
+		for (int i = 1; i <= 12; i++) {
+			Index index = getNanoporeIndex(i);
+			if (!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class,
+					index.code)) {
+				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME, index, contextValidation);
 			}
-			
 		}
+
+	}
 
 	private static Index getNanoporeIndex(int i) {
 		Index index = new NanoporeIndex();
@@ -77,30 +78,20 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 	
 	public static void createIndexChromium(ContextValidation contextValidation) throws DAOException{
 		
-		for ( int row = 1; row <=8; row++){
-			for(int col = 1 ; col <= 12 ; col++){
-				Index index = getChromiumIndex(row,col);				
-				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
-					//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
-					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
-				} else {
-					//Logger.info("index : "+ index.code + " already exists !!");
-				}
+		IndexImportUtils.getChromiumIndex().forEach((k,v)-> {
+			Index index = getChromiumIndex(k,  v);
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+				//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+			} else {
+				//Logger.info("index : "+ index.code + " already exists !!");
 			}
-		}
+		});			
+		
 	}
 
-	// FDS 16/03/2017 !!! si on remplace la sequence par qq chose (ici un nom) il faut que la longueur soit la meme
-	// sinon lors du pooling, une regle drools de validation va generer une erreur
-	//==> utiliser le format A01 et non A1 pour la position !!! seulement pour la sequence
-	private static Index getChromiumIndex(int row, int col) {
+	private static Index getChromiumIndex(String code, String seq) {
 		Index index = new IlluminaIndex();
-		
-		String code = "SI-GA-"+ (char)(64 + row);
-		String seq=code;
-		if (col < 10 ) { seq = seq +"0"; }
-		code=code + col;
-		seq=seq+ col;
 		
 		index.code = code;
 		index.name = code;
