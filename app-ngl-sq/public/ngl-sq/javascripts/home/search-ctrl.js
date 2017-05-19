@@ -270,8 +270,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 				console.log("nb experimentCode"+experimentCodes.length);
 				
 				$scope.experimentDispatchDatatable = datatable(datatableExperimentConfig);			
-				$scope.experimentDispatchDatatable.search({codes:experimentCodes});
-				
+				if(experimentCodes.length > 0){
+					$scope.experimentDispatchDatatable.search({codes:experimentCodes});
+				}
 				var params = "";
 				experimentCodes.forEach(function(code){
 					params +="codes="+code+"&"
