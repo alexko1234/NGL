@@ -88,7 +88,13 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 	public static void validateNextState(Process process, State nextState, ContextValidation contextValidation) {
 		CommonValidationHelper.validateState(ObjectType.CODE.Process, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(process.state.code)){
-			if("F".equals(nextState.code)
+			String nextStateCode = nextState.code;
+			String currentStateCode = process.state.code;
+			
+			if("IP".equals(currentStateCode) && 
+					!nextStateCode.equals("F")){
+				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );			
+			}else if("F".equals(nextStateCode)
 					&& process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 				Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", process.outputContainerCodes))
 					.sort("traceInformation.creationDate", Sort.DESC).limit(1).toList().get(0);
