@@ -1,13 +1,13 @@
 package workflows.container;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
-import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE;
+import static validation.common.instance.CommonValidationHelper.*;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.utils.InstanceConstants;
-
+import models.laboratory.processes.instance.Process;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
+import workflows.process.ProcWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
@@ -29,6 +30,8 @@ public class ContWorkflows extends Workflows<Container> {
 
 	@Autowired
 	ContSupportWorkflows contSupportWorkflows;
+	@Autowired
+	ProcWorkflows procSupportWorkflows;
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
@@ -63,11 +66,25 @@ public class ContWorkflows extends Workflows<Container> {
 			} else if (null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() > 1) {
 				Logger.error("several fromTransformationTypeCodes not managed");
 			}
-
+			//put all process to F when pass container A-* to IS, UA or IW-P
+			String previousStateCode = (String)validation.getObject(FIELD_PREVIOUS_STATE_CODE);
+			if(previousStateCode.startsWith("A")){
+				validation.addKeyToRootKeyName("processes");
+				MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", container.processCodes))
+				.getCursor().forEach(process -> {
+					validation.addKeyToRootKeyName(process.code);
+					procSupportWorkflows.setState(validation, process, getNewState("F", validation.getUser()));
+					validation.removeKeyFromRootKeyName(process.code);
+				});
+				validation.removeKeyFromRootKeyName("processes");
+			}
+			
 			container.processCodes = null;
 			container.processTypeCodes = null;
 			container.contents.parallelStream().forEach(c -> {c.processProperties = null;c.processComments = null;});
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
+			
+			
 			
 			/*
 			if(unsetFromExperimentTypeCodes){
@@ -119,6 +136,7 @@ public class ContWorkflows extends Workflows<Container> {
 		ContainerValidationHelper.validateNextState(container, nextState, currentCtxValidation);
 		if(!currentCtxValidation.hasErrors() && !nextState.code.equals(container.state.code)){
 			applyPreStateRules(currentCtxValidation, container, nextState);
+			currentCtxValidation.putObject(FIELD_PREVIOUS_STATE_CODE , container.state.code);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
 			//TODO GA improve performance to validate only field impacted by state
 			//container.validate(currentCtxValidation); //in comment because no field are state dependant

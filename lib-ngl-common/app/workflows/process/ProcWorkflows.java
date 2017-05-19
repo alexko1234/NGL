@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.processes.instance.ProcessValidationHelper;
 import workflows.Workflows;
 import fr.cea.ig.MongoDBDAO;
 @Service
@@ -62,7 +63,7 @@ public class ProcWorkflows extends Workflows<Process> {
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
 		currentCtxValidation.setUpdateMode();
 		
-		CommonValidationHelper.validateState(ObjectType.CODE.Process, nextState, currentCtxValidation);
+		ProcessValidationHelper.validateNextState(process, nextState, currentCtxValidation);
 		if(!currentCtxValidation.hasErrors() && !nextState.code.equals(process.state.code)){
 			applyPreStateRules(currentCtxValidation, process, nextState);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);

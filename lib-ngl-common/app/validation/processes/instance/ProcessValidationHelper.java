@@ -1,19 +1,25 @@
 package validation.processes.instance;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.SampleOnInputContainer;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
 
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult.Sort;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -79,5 +85,24 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 		}
 	}
 	
-	
+	public static void validateNextState(Process process, State nextState, ContextValidation contextValidation) {
+		CommonValidationHelper.validateState(ObjectType.CODE.Process, nextState, contextValidation);
+		if(!contextValidation.hasErrors() && !nextState.code.equals(process.state.code)){
+			if("F".equals(nextState.code)
+					&& process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
+				Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", process.outputContainerCodes))
+					.sort("traceInformation.creationDate", Sort.DESC).limit(1).toList().get(0);
+				if(!Arrays.asList("UA","IS","IW-P").contains(container.state.code)){
+					contextValidation.addErrors("outputContainerCodes."+container.code, ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
+				}
+			}else if("F".equals(nextState.code)
+					&& (process.outputContainerCodes == null || process.outputContainerCodes.size() == 0)){
+				Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", process.inputContainerCode));
+				if(!Arrays.asList("UA","IS","IW-P").contains(container.state.code)){
+					contextValidation.addErrors("outputContainerCodes."+container.code, ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
+				}
+			}
+		}
+				
+	}
 }
