@@ -36,9 +36,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	
 	public void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<AnalysisType> l = new ArrayList<AnalysisType>();	
-		if(!ConfigFactory.load().getString("ngl.env").equals("PROD")) {
-			l.add(DescriptionFactory.newAnalysisType("Whole genome analysis","WG-analysis",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
-		}
+		l.add(DescriptionFactory.newAnalysisType("Whole genome analysis","WG-analysis",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
 	
