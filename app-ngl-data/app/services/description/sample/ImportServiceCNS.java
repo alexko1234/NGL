@@ -126,7 +126,7 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, "single", 1, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true,
-				null, null, "single", 1, true, null, null));
+				null, null, "single", 2, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Destination finale", "finalDestination", LevelService.getLevels(Level.CODE.Container), String.class, true, null, 
 				getTaraPacificFinalDestination(), "single", 3, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
@@ -134,7 +134,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		
 		
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, false, null, 
-				getTaraPacificStationValues(), "single", 4, true, null, null));
+				getTaraPacificStationValues(), "single", 5, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
 				null, "single", 5, true, null, null));
 		
@@ -146,11 +146,11 @@ public class ImportServiceCNS extends AbstractImportService {
 		
 		//Nouvelles prop d'import
 		propertyDefinitions.add(newPropertiesDefinition("Ile / Env", "island", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				getTaraPacificIslandValues(), "single", 7, true, null, null));		
+				getTaraPacificIslandValues(), "single", 8, true, null, null));		
 		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "colony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				getTaraPacificColonyValues(), "single", 8, true, null, null));
+				getTaraPacificColonyValues(), "single", 9, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Site", "site", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				getTaraPacificSiteValues(), "single", 9, true, null, null));		
+				getTaraPacificSiteValues(), "single", 10, true, null, null));		
 		
 		return propertyDefinitions;
 	}
@@ -162,25 +162,34 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, "single", 1, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, null, 
-				getTaraPacificStationValues(), "single", 1, true, null, null));
+				getTaraPacificStationValues(), "single", 2, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Filtre TARA", "taraFilterCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				getTaraPacificFilterValues(), "single", 2, true, null, null));
+				getTaraPacificFilterValues(), "single", 3, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Environnement TARA Pacific", "taraEnvironment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				getTaraPacificEnvironmentValues(), "single", 3, true, null, null));
+				getTaraPacificEnvironmentValues(), "single", 4, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Protocole TARA Pacific", "taraProtocol", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				getTaraPacificProtocolValues(), "single", 4, true, null, null));
+				getTaraPacificProtocolValues(), "single", 5, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Destination finale", "finalDestination", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
-				null, "single", 5, true, null, null));
+				null, "single", 6, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, 
-				null, "single", 1, true, null, null));
+				null, "single",71, true, null, null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Provenance", "origin", LevelService.getLevels(Level.CODE.Container), String.class, false, null, 
-				null, "single", 7, true, null, null));
+				null, "single", 8, true, null, null));
+		
+		//Nouvelles prop to update
+		propertyDefinitions.add(newPropertiesDefinition("Ile / Env", "island", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificIslandValues(), "single", 9, true, null, null));		
+		propertyDefinitions.add(newPropertiesDefinition("Colonie / Poisson", "colony", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificColonyValues(), "single", 10, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Site", "site", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificSiteValues(), "single", 11, true, null, null));		
+		
 		
 		return propertyDefinitions;
 	}
