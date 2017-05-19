@@ -252,7 +252,9 @@
 						</div>
 					</div>
 				</td>
-				<td ng-repeat="property in inputContainerProperties track by $index">
+				<td ng-repeat="property in inputContainerProperties track by $index"
+					ng-class="valuationService.valuationCriteriaClass(inputContainerUsed, experiment.status.criteriaCode, 'experimentProperties.'+property.code+'.value')"
+					>
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.experimentProperties[property.code].value | number" />						 
 						<div ng-switch-when="true">
@@ -316,6 +318,7 @@
 					</div>						
 				</td>
 				<td  rowspan="{{atm.inputContainerUseds.length}}"  ng-if="$parent.$index === 0" 
+					ng-class="valuationService.valuationCriteriaClass(atm.outputContainerUseds[0], experiment.status.criteriaCode, 'experimentProperties.'+property.code+'.value')"
 					ng-repeat="property in outputContainerProperties track by $index">
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value" />						 

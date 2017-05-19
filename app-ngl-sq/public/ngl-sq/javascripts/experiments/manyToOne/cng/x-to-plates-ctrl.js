@@ -1,5 +1,5 @@
 // FDS 21/06/2016 dupliqué depuis manyToOne.experiments.cns.x-to-tubes avec modifs
-angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '$filter',
+angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '$filter', 
                                                                function($scope, $http, $parse, $filter) {
 
 	//-----------------------------------------reutilisables ailleurs ??----------------------------------------------------------
