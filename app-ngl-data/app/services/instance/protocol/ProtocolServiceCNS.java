@@ -103,10 +103,15 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("map005-on-bead-depot","MAP005 sur billes_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
 		lp.add(newProtocol("map006-depot","MAP006_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
 		lp.add(newProtocol("map006-low-input-depot","MAP006 low input_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),false));
-		lp.add(newProtocol("R9-1D-depot","R9-1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot"),
-				concatMap(newPSV("libraryProtocol","R9-1D")),false));
-		lp.add(newProtocol("R9-2D-depot","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot"),
-				concatMap(newPSV("libraryProtocol","R9-2D")),false));
+		
+		lp.add(newProtocol("R9-1D-depot","R9-1D-depot","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),
+				null,false));
+		
+		lp.add(newProtocol("R9-2D-depot","R9-2D-depot","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),
+				null,false));
+		
+		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","direct RNAsequencing"))));
 		
 		//lp.add(newProtocol("map005-preCR","MAP005 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
 		//lp.add(newProtocol("map006-preCR","MAP006 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));

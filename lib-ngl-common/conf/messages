@@ -1,6 +1,9 @@
 #format date
 datetime.format=dd/MM/yyyy HH:mm:ss
+datetime-hour.format=dd/MM/yyyy HH:mm
 date.format=dd/MM/yyyy
+
+
 
 #page field label
 page.search.label.search = Recherche

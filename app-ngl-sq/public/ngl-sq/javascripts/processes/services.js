@@ -129,6 +129,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : true,
 			"choiceInList":true,
 		    "listStyle":"bt-select-multiple",
+		    "groupMethod" : "collect:true",
 		    "possibleValues":"searchService.lists.get('processResolutions')",
 			"type" : "text"
 		});
@@ -138,7 +139,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"filter" : "codes:'type'",
 			"order" : true,
 			"hide" : false,
-			"groupMethod" : "unique",
+			"groupMethod" : "collect:true",
 			"position" : 8,
 			"type" : "text"
 		});
@@ -150,7 +151,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"position" : 8.5,
 			"filter":"unique",
-			"groupMethod" : "unique",
+			"groupMethod" : "collect:true",
 			"filter":"orderBy",
 			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
@@ -163,7 +164,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"position" : 9,
 			"filter":"unique",
-			"groupMethod" : "unique",
+			"groupMethod" : "collect:true",
 			"filter":"orderBy",
 			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
@@ -176,7 +177,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"position" : 10,
 			"filter" : "unique",
-			"groupMethod" : "unique",
+			"groupMethod" : "collect:true",
 			"filter":"orderBy:searchService.extractDate",
 			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
 			"type" : "text"
@@ -197,7 +198,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 12,
 			"order" : true,
 			"hide" : true,
-			"format" : Messages("datetime.format"),
+			"groupMethod" : "unique",
+			"format" : Messages("datetime-hour.format"),
 			"type" : "date"
 		});
 		columns.push({
@@ -206,8 +208,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 12,
 			"order" : true,
 			"hide" : true,
-			"filter" : "filter:'F'|get:'date'",
-			"format" : Messages("datetime.format"),
+			"filter" : "filters:'F'|get:'date'",
+			"format" : Messages("datetime-hour.format"),
+			"groupMethod" : "unique",
 			"type" : "date"
 		});
 		columns.push({
@@ -216,6 +219,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 13,
 			"order" : true,
 			"hide" : true,
+			"groupMethod" : "unique",
 			"type" : "text"
 		});
 		columns.push({
@@ -226,6 +230,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : false,
 			"edit" : true,
 			"hide" : true,
+			"groupMethod" : "unique",
 			"type" : "text"
 		});
 		return columns;

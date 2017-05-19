@@ -238,6 +238,10 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instrumentCodes));
 		}
 		
+		if(CollectionUtils.isNotEmpty(experimentSearch.protocolCodes)){
+			queryElts.add(DBQuery.in("protocolCode", experimentSearch.protocolCodes));
+		}
+		
 		// FDS 21/08/2015 ajout filtrage sur les types d'echantillon
 		if(CollectionUtils.isNotEmpty(experimentSearch.sampleTypeCodes)){
 			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.sampleTypeCode", experimentSearch.sampleTypeCodes));

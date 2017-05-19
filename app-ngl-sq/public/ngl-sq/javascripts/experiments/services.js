@@ -198,6 +198,7 @@
 				lists.refresh.experimentTypes({categoryCode:"transformation"}, "fromTransformations");
 				lists.refresh.reportConfigs({pageCodes:["experiments-addcolumns"]}, "experiments-addcolumns");
 				lists.refresh.filterConfigs({pageCodes:["experiments-search-addfilters"]}, "experiments-search-addfilters");
+				lists.refresh.protocols({}, 'all-protocols');
 				//lists.refresh.instruments();
 				lists.refresh.resolutions({objectTypeCode:"Experiment",distinct:true});
 				isInit=true;
@@ -406,6 +407,9 @@
 					if(lists.get("experiments-search-addfilters") && lists.get("experiments-search-addfilters").length === 1){
 						var formFilters = [];
 						var allFilters = angular.copy(lists.get("experiments-search-addfilters")[0].filters);
+						
+						/* add static filters here*/
+						allFilters.push({property:"protocolCode",html:"<div bt-select multiple=true filter=true placeholder='"+Messages("experiments.select.protocols")+"' class='form-control' ng-model='searchService.form.protocolCodes' bt-options='protocol.code as protocol.name for protocol in searchService.lists.get(\"all-protocols\")'></div>",position:allFilters.length+1});
 						var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 						for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 							formFilters.push(allFilters.splice(0, nbElementByColumn));	    								

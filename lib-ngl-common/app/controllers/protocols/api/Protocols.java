@@ -71,12 +71,6 @@ public class Protocols extends CommonController{
 
 	}
 	
-	public static List<Protocol> findProtocols (String experimentCode){
-		
-		List<Protocol> lp = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.in("experimentTypeCodes", experimentCode)).toList();
-		
-		return lp;
-	}
 
 	/**
 	 * Construct the protocol query
