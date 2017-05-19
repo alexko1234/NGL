@@ -27,7 +27,7 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 			keyNgModel : '='
 		},
 		template : '<div ng-if="valueNgModel._type == \'object_list\'">'
-						+'<object-list value-ng-model="valueNgModel" key-ng-model="keyNgModel" format-ng-model="paragraph"/>'
+						+'<object-list value-ng-model="valueNgModel" key-ng-model="keyNgModel" format-ng-model="table"/>'
 					+'</div>'
 					+'<div ng-if="valueNgModel._type == \'single\'">'
 						+'<single value-ng-model="valueNgModel" key-ng-model="keyNgModel"/>'
@@ -56,11 +56,36 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 							+'<p ng-repeat="(keyProp,valueProp) in property"> <label class="control-label">{{keyProp|codes:\'property_definition.\'+keyNgModel}}</label> : <value value-ng-model=valueProp key-ng-model=keyProp key-prop-def-ng-model=keyNgModel+\'.\'+keyProp/></p>'
 							+'</div>'
 						+'</div>'
+					  +'</div>'
+					  +'<div ng-if="format == \'table\'">'
+					  		+'<label class="col-md-6 col-lg-6 control-label">{{keyNgModel|codes:\'property_definition\'}}</label>'
+					  		+'<div class="col-md-6 col-lg-6">'
+					  		+'<table class="table table-condensed table-hover table-bordered">'
+					  		+'<thead>'
+					  			+'<tr>'
+					  				+'<th ng-repeat="key in keys">{{key|codes:\'property_definition.\'+keyNgModel}}</th>'
+					  			+'</tr>'
+					  		+'</thead>'
+					  		+'<tbody>'
+					  			+'<tr ng-repeat="property in valueNgModel.value">'
+					  				+'<td ng-repeat="key in keys"><value value-ng-model=property[key] key-ng-model=key key-prop-def-ng-model=keyNgModel+\'.\'+key/></td>'
+					  			+'</tr>'
+					  		+'</tbody>'
+					  		+'</table>'
+					  		+'</div>'
 					  +'</div>',
 			link : function(scope, element, attr){
 				scope.format="line";
 				if(attr.formatNgModel && attr.formatNgModel !== "line"){
 					scope.format = attr.formatNgModel;
+				}
+				if(scope.format == "table"){
+					scope.keys = [];
+					for(index=0; index <scope.valueNgModel.value.length; index++){
+						scope.keys = scope.keys.concat(Object.keys(scope.valueNgModel.value[index]).filter(function(i){
+							return scope.keys.indexOf(i) == -1;
+						}));
+					}
 				}
 			}
 		};
