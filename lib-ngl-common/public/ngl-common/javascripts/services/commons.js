@@ -986,7 +986,8 @@ angular.module('commonsServices', []).
 	      		    		}
 	      		    		*/
 	      		    		if(filterValue){
-	      		    			filter = filterValue;
+	      		    			var pName = optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),'');
+	      		    			filter[pName] = filterValue;
 	      		    		}
 	      		    		
 	      		    		
