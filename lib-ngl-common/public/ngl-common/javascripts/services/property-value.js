@@ -86,7 +86,6 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 							return scope.keys.indexOf(i) == -1;
 						}));
 					}
-					console.log("keys "+scope.keys);
 				}
 			}
 		};
