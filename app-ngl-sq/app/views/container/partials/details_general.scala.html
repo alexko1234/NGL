@@ -118,13 +118,7 @@
 			<div class="row">
 				<div class="col-md-12 col-lg-12">
 					<div ng-repeat="(key, value) in container.properties">
-						<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
-						<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />	
-						<div class="col-md-6 col-lg-6" ng-switch="getContainerPropertyDefinitionValueType(key)">
-							<p class="form-control-static" ng-switch-when="java.lang.String"  ng-bind="value.value|codes:'value.'+key:false"/>
-							<p class="form-control-static" ng-switch-when="java.lang.Boolean" ng-bind="value.value|codes:'boolean':false" />
-							<p class="form-control-static" ng-switch-when="java.util.Date" ng-bind="value.value|date:'@Messages("date.format")'" />
-							<p class="form-control-static" ng-switch-default ng-bind="value.value|number" />
+							<property-value key-ng-model="key" value-ng-model="value"/>
 						</div>
 					</div>
 				</div>
@@ -200,12 +194,6 @@
 						<td>
 							<div ng-repeat="(key, value) in content.properties">
 								<property-value key-ng-model="key" value-ng-model="value"/>
-								<!-- <div ng-if="value._type == 'object_list'">
-									<object-list value-ng-model="value" key-ng-model="key" format-ng-model="line"/>
-								</div>
-								<div ng-if="value._type == 'single'">
-									<single value-ng-model="value" key-ng-model="key"/>
-								</div> -->
 							</div>
 						</td>
 					</tr>

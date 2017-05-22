@@ -50,7 +50,13 @@
 			<p class="form-control-static" ng-bind="readset.sampleOnContainer.percentage"></p>
 		}
 		
-		<div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties" ng-if="value._type == 'single'">
+		
+		<div ng-repeat="(key, value) in readset.sampleOnContainer.properties">
+			<property-value key-ng-model="key" value-ng-model="value"/>
+		</div>
+		
+		
+		<!-- <div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties" ng-if="value._type == 'single'">
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 		    <label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'"></label>
 		    <div class="col-md-6 col-lg-6">
@@ -59,7 +65,7 @@
 		</div>		
 		<div ng_if="readset.typeCode=='rsnanopore'">
 		@details_addinfo_nanopore()		
-		</div>
+		</div> -->
 	}
 	
 	</div>

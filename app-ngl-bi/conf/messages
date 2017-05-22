@@ -1122,6 +1122,11 @@ filterTaxonBilanTaxo=Seuil Taxon (% vs nt)
 filterTaxonBilanMitochondrion=Seuil Taxon (% vs mitochondrion)
 filterTaxonBilanPlastid=Seuil Taxon (% vs plastid)
 filtertaxonBilanContamination=Seuil Taxon (% vs nt)
+
+#property_definition list object
+property_definition.loadingReport = Bilan chargement
+property_definition.qcFlowcell = QC Flowcell
+
 ###############
 #
 #authorisation users

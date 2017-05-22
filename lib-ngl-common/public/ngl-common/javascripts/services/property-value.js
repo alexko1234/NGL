@@ -113,8 +113,14 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 						+'<span ng-switch-when="java.util.Date">'
 							+'<span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false|date:\'dd/MM/yyyy\'" />'
 						+'</span>'
+						+'<span ng-switch-when="java.lang.String">'
+							+'<span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false" />'
+						+'</span>'
+						+'<span ng-switch-when="java.lang.Boolean">'
+							+'<span ng-bind="valueNgModel|codes:\'boolean\':false" />'
+						+'</span>'
 						+'<span ng-switch-default>'
-				   			+'<span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false" />'
+				   			+'<span ng-bind="valueNgModel|number" />'
 				   		+'</span>'
 				   +'</span>' ,
 		link : function(scope, element, attr){
