@@ -26,10 +26,10 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 			valueNgModel :'=',
 			keyNgModel : '='
 		},
-		template : '<div ng-if="valueNgModel._type == \'object_list\'">'
+		template : '<div ng-if="valueNgModel._type === \'object_list\'">'
 						+'<object-list value-ng-model="valueNgModel" key-ng-model="keyNgModel" format-ng-model="table"/>'
 					+'</div>'
-					+'<div ng-if="valueNgModel._type == \'single\'">'
+					+'<div ng-if="valueNgModel._type === \'single\'">'
 						+'<single value-ng-model="valueNgModel" key-ng-model="keyNgModel"/>'
 					+'</div>'
 		};
@@ -41,7 +41,7 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 			keyNgModel : '=',
 			formatNgModel : '=',
 		},
-			template :'<div ng-if="format == \'line\'" ng-repeat="property in valueNgModel.value">'
+			template :'<div ng-if="format === \'line\'" ng-repeat="property in valueNgModel.value">'
 						+'<div class="row">'
 							+'<label class="col-md-6 col-lg-6 control-label">{{keyNgModel|codes:\'property_definition\'}}</label>'
 							+'<div class="col-md-6 col-lg-6">'
@@ -49,7 +49,7 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 							+'</div>'
 						+'</div>'
 					  +'</div>'
-					  +'<div ng-if="format == \'paragraph\'" ng-repeat="property in valueNgModel.value">'
+					  +'<div ng-if="format === \'paragraph\'" ng-repeat="property in valueNgModel.value">'
 						+'<div class="row">'
 							+'<label class="col-md-6 col-lg-6 control-label">{{keyNgModel|codes:\'property_definition\'}}</label>'
 							+'<div class="col-md-6 col-lg-6">'
@@ -57,7 +57,7 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 							+'</div>'
 						+'</div>'
 					  +'</div>'
-					  +'<div ng-if="format == \'table\'">'
+					  +'<div ng-if="format === \'table\'">'
 					  		+'<label class="col-md-6 col-lg-6 control-label">{{keyNgModel|codes:\'property_definition\'}}</label>'
 					  		+'<div class="col-md-6 col-lg-6">'
 					  		+'<table class="table table-condensed table-hover table-bordered">'
@@ -109,20 +109,14 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 			keyPropDefNgModel : '=',
 			keyNgModel : '='
 		},					
-		template :'<span ng-switch on="propertyDefinitions.get(keyPropDefNgModel).valueType">'
-						+'<span ng-switch-when="java.util.Date">'
-							+'<span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false|date:\'dd/MM/yyyy\'" />'
-						+'</span>'
-						+'<span ng-switch-when="java.lang.String">'
-							+'<span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false" />'
-						+'</span>'
-						+'<span ng-switch-when="java.lang.Boolean">'
-							+'<span ng-bind="valueNgModel|codes:\'boolean\':false" />'
-						+'</span>'
-						+'<span ng-switch-default>'
-				   			+'<span ng-bind="valueNgModel|number" />'
-				   		+'</span>'
-				   +'</span>' ,
+		template :
+				'<div ng-if="propertyDefinitions.get(keyPropDefNgModel).choiceInList"><span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false"/></div>'
+				+'<div ng-if="!propertyDefinitions.get(keyPropDefNgModel).choiceInList" ng-switch on="propertyDefinitions.get(keyPropDefNgModel).valueType">'
+					+'<span ng-switch-when="java.lang.String" ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false" />'
+					+'<span ng-switch-when="java.lang.Boolean" ng-bind="valueNgModel|codes:\'boolean\':false" />'
+					+'<span ng-switch-when="java.util.Date" ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false|date:\''+Messages("date.format")+'\'" />'
+					+'<span ng-switch-default ng-bind="valueNgModel|number" >'	
+				 +'</div>' ,
 		link : function(scope, element, attr){
 			scope.propertyDefinitions = propertyDefinitions;
 		}

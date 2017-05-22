@@ -90,9 +90,10 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 			propertyDefinition.possibleValues = values;
 		}else{ //pd.code, pd.type, pd.property_value_type, pd.choice_in_list
 			propertyDefinition.code = rs.getString("code");
-			//propertyDefinition.choiceInList = rs.getBoolean("choice_in_list");
+			propertyDefinition.choiceInList = rs.getBoolean("choice_in_list");
 			propertyDefinition.valueType = rs.getString("type");
 			propertyDefinition.propertyValueType = rs.getString("property_value_type");
+			
 		}
 		return propertyDefinition;
 	}

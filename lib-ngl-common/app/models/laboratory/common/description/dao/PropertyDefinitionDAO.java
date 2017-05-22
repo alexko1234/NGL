@@ -43,15 +43,17 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	public PropertyDefinition findUnique(String code, Level.CODE levelCode){
 
 		String sql = 
-				"select distinct pd.code, pd.type, pd.property_value_type" 
+				"select pd.code, pd.type, pd.property_value_type, "
+						+ " case when count(distinct pd.choice_in_list) = 1 then pd.choice_in_list"
+						+ " else 1 end as 'choice_in_list'" 
 						+"	from  property_definition pd"
 						+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
 						+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
 						+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
 						+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
 						+"	inner join object_type ot on ot.id = cit.fk_object_type"
-						+" where pd.code = ?";
-
+						+" where pd.code = ?"
+						+" group by pd.code, pd.type, pd.property_value_type";
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR), new SqlParameter("pd.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString(), code);
 
@@ -67,14 +69,16 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	public List<PropertyDefinition> findUnique(Level.CODE levelCode){
 
 		String sql = 
-				"select distinct pd.code, pd.type, pd.property_value_type" 
+				"select pd.code, pd.type, pd.property_value_type, "
+						+ " case when count(distinct pd.choice_in_list) = 1 then pd.choice_in_list"
+						+ " else 1 end as 'choice_in_list'" 
 						+"	from  property_definition pd"
 						+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
 						+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
 						+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
 						+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
-						+"	inner join object_type ot on ot.id = cit.fk_object_type order by pd.code";
-
+						+"	inner join object_type ot on ot.id = cit.fk_object_type "
+						+" group by pd.code, pd.type, pd.property_value_type order by pd.code";
 
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR));
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString());
@@ -84,13 +88,15 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	public List<PropertyDefinition> findUnique(){
 
 		String sql = 
-				"select distinct pd.code, pd.type, pd.property_value_type" 
+				"select pd.code, pd.type, pd.property_value_type, "
+						+ " case when count(distinct pd.choice_in_list) = 1 then pd.choice_in_list"
+						+ " else 1 end as 'choice_in_list'" 
 						+"	from  property_definition pd"
 						+"	inner join common_info_type cit on cit.id = pd.fk_common_info_type "
 						+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
 						+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
-						+"	inner join object_type ot on ot.id = cit.fk_object_type order by pd.code";
-
+						+"	inner join object_type ot on ot.id = cit.fk_object_type"
+						+" group by pd.code, pd.type, pd.property_value_type  order by pd.code";
 
 		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true);
 		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute();
