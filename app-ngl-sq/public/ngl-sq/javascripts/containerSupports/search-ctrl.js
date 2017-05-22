@@ -88,7 +88,13 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 			},
 			edit:{
 				active:Permissions.check("writing")?true:false,
-				columnMode:true
+				columnMode:true,
+				lineMode:function(value){
+					return (value.state.code === 'IS' 
+							|| value.state.code === 'UA'
+							||	value.state.code === 'IW-P'
+							||	value.state.code.startsWith('A'));
+				}
 			},
 			save:{
 				active:Permissions.check("writing")?true:false,

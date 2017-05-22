@@ -94,6 +94,9 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 			if("IP".equals(currentStateCode) && 
 					!nextStateCode.equals("F")){
 				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );			
+			}else if("F".equals(currentStateCode) && 
+					!nextStateCode.equals("F")){
+				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );			
 			}else if("F".equals(nextStateCode)
 					&& process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 				Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", process.outputContainerCodes))
@@ -101,7 +104,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 				if(!Arrays.asList("UA","IS","IW-P").contains(container.state.code)){
 					contextValidation.addErrors("outputContainerCodes."+container.code, ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 				}
-			}else if("F".equals(nextState.code)
+			}else if("F".equals(nextStateCode)
 					&& (process.outputContainerCodes == null || process.outputContainerCodes.size() == 0)){
 				Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", process.inputContainerCode));
 				if(!Arrays.asList("UA","IS","IW-P").contains(container.state.code)){

@@ -419,12 +419,13 @@ public class Processes extends DocumentController<Process> {
 		DynamicForm deleteForm = form();
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		
-		if(!process.state.code.equals("N")){
-			contextValidation.addErrors("process", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
+		if(process.state.code.equals("IP")){
+			contextValidation.addErrors("process.state.code", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}else if(CollectionUtils.isNotEmpty(process.experimentCodes)){
-			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		}else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)){
-			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
+			contextValidation.addErrors("process.experimentCodes", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
+		}else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)
+				 && !"IW-P".equals(container.state.code)){
+			contextValidation.addErrors("process.inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}
 
 		if(!contextValidation.hasErrors()){
