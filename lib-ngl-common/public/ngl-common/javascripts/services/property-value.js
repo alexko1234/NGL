@@ -105,16 +105,17 @@ angular.module('commonsServices').factory('propertyDefinitions', ['$http', funct
 		restrict : 'EA',
 		scope : {
 			valueNgModel :'=',
-			//For property type object_list who property key in description table is different because of concatenation of parent key and property key
+			//For property type object_list concatenation of parent key and property key
 			keyPropDefNgModel : '=',
+			//property key
 			keyNgModel : '='
 		},					
 		template :
-				'<div ng-if="propertyDefinitions.get(keyPropDefNgModel).choiceInList"><span ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false"/></div>'
+				'<div ng-if="propertyDefinitions.get(keyPropDefNgModel).choiceInList"><span ng-bind="valueNgModel|codes:\'value.\'+keyPropDefNgModel:false"/></div>'
 				+'<div ng-if="!propertyDefinitions.get(keyPropDefNgModel).choiceInList" ng-switch on="propertyDefinitions.get(keyPropDefNgModel).valueType">'
-					+'<span ng-switch-when="java.lang.String" ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false" />'
+					+'<span ng-switch-when="java.lang.String" ng-bind="valueNgModel|codes:\'value.\'+keyPropDefNgModel:false" />'
 					+'<span ng-switch-when="java.lang.Boolean" ng-bind="valueNgModel|codes:\'boolean\':false" />'
-					+'<span ng-switch-when="java.util.Date" ng-bind="valueNgModel|codes:\'value.\'+keyNgModel:false|date:\''+Messages("date.format")+'\'" />'
+					+'<span ng-switch-when="java.util.Date" ng-bind="valueNgModel|date:\''+Messages("date.format")+'\'" />'
 					+'<span ng-switch-default ng-bind="valueNgModel|number" >'	
 				 +'</div>' ,
 		link : function(scope, element, attr){
