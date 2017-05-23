@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -592,7 +593,32 @@ public class ReadSets extends ReadSetsController{
 	public static Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+				.map(filledForm->{
+					ReadSetBatchElement element = filledForm.get();
+					ReadSet readSet = getReadSet(element.data.code);
+					if(null != readSet){
+						ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+						ctxVal.setUpdateMode();
+						manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
+						if (!ctxVal.hasErrors()) {
+							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+									DBQuery.and(DBQuery.is("code", readSet.code)),
+									DBUpdate.set("productionValuation", element.data.productionValuation)
+									.set("bioinformaticValuation", element.data.bioinformaticValuation)
+									.set("traceInformation", getUpdateTraceInformation(readSet)));							
+							readSet = getReadSet(readSet.code);
+							Workflows.nextReadSetState(ctxVal, readSet);
+							return new DatatableBatchResponseElement(OK, readSet, element.index);
+						}else {
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+						}
+					}else {
+						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+					}
+				}).collect(Collectors.toList());
+		
+		/*List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 
 		for(Form<ReadSetBatchElement> filledForm: filledForms){
 			ReadSetBatchElement element = filledForm.get();
@@ -617,7 +643,7 @@ public class ReadSets extends ReadSetsController{
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
 
-		}		
+		}	*/	
 		return ok(Json.toJson(response));
 	}
 
