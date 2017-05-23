@@ -98,7 +98,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":51,
+			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }, 
 			         {
@@ -108,7 +108,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":52,
+			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -192,7 +192,8 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
-		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		$scope.atmService.viewToExperimentOneToOne($scope.experiment);		
+		calcOutputQuantityToAttribute($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -239,13 +240,27 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 		};
 	};
 	
-	//defined default output unit
-	atmService.defaultOutputUnit = {
-			volume : "µL",
-			concentration : "ng/µl",
-			quantity : "ng"			
-	}
-	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	
+	var calcOutputQuantityToAttribute = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			var ocu = atm.outputContainerUseds[0]; 
+				
+				if (ocu.concentration && ocu.volume ){
+					var outputVol = ocu.volume.value;
+					var outputConc = ocu.concentration.value;
+							
+						var getter = $parse("quantity.value");
+						var outputQtty= outputVol * outputConc;
+						console.log("call calcOutputQuantityToAttributes outputQuantity: " + outputQtty);
+						
+						getter.assign(ocu,outputQtty)
+						
+					}else{
+							oci.quantity = null;
+				}			
+		}				
+	};
+	
 }]);

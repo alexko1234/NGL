@@ -86,21 +86,11 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "required":true,
+						 "required":false,
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
-			        	 "header":Messages("containers.table.quantity")+ " (ng)",
-			        	 "property":"outputContainerUsed.quantity.value",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":51,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }, 
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µl)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -163,7 +153,8 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 	        	withoutEdit: true,
 	        	showButton:false,
 	        	changeClass:false,
-	        	mode:'local'
+	        	mode:'local',
+	        	
 			},
 			hide:{
 				active:true
@@ -193,6 +184,7 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		calcInputQuantityToContentProperties($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -248,4 +240,28 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+
+
+	var calcInputQuantityToContentProperties = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			var icu = atm.inputContainerUseds[0]; 
+				
+				if (icu.concentration && icu.experimentProperties.inputVolume ){
+					var inputVol = icu.experimentProperties.inputVolume.value;
+					var inputConc = icu.concentration.value;
+							
+						var getter = $parse("experimentProperties.inputQuantity.value");
+						var inputQtty= inputVol * inputConc;
+						console.log("call calcInputQuantityToContentProperties inputQuantity: " + inputQtty);
+						
+						getter.assign(icu,inputQtty)
+						
+					}else{
+							icu.experimentProperties.inputQuantity = null;
+				}			
+		}				
+	};
+	
+
 }]);
