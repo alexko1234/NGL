@@ -39,6 +39,9 @@
 			
 			
 		}
+		@formGroup{
+			<bt-input type="text" class="form-control" input-ng-model="searchService.form.regexSupportCode" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")'></bt-input>
+		}
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="searchService.form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in searchService.lists.getValuations()"></div>
 		}
@@ -74,6 +77,7 @@
 		@formGroup{	
 			<input type="text" class="form-control" ng-model="searchService.form.productionValuationUser" typeahead="productionValuationUser.name as productionValuationUser.name for productionValuationUser in searchService.lists.getUsers() | filter:$viewValue | limitTo:20"  placeholder='@Messages("search.placeholder.valuationReadSetUser")' title='@Messages("search.placeholder.valuationReadSetUser")'>
 		}
+		
 	}					
 }
 

@@ -201,6 +201,12 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.regex("sampleCode", Pattern.compile(form.regexSampleCode)));
 		}
 
+		if(CollectionUtils.isNotEmpty(form.supportCodes)){
+			queries.add(DBQuery.in("sampleOnContainer.containerSupportCode", form.supportCodes));
+		}else if(StringUtils.isNotBlank(form.regexSupportCode)){
+			queries.add(DBQuery.regex("sampleOnContainer.containerSupportCode", Pattern.compile(form.regexSupportCode)));
+		}
+		
 		if (CollectionUtils.isNotEmpty(form.instrumentCodes)) { //all
 			queries.add(DBQuery.regex("runCode", Pattern.compile(findRegExpFromStringList(form.instrumentCodes))));
 		}
