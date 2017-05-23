@@ -171,7 +171,7 @@ public class QualityControl extends AbstractDeclaration {
 			.map(et -> getPET(et.code, -1))
 			.collect(Collectors.toList());
 		pets.add(getPET("ext-to-qc-transfert-purif",-1));
-		pets.add(getPET("fluo-quantification",0));
+		//pets.add(getPET("fluo-quantification",0));
 		return pets;		
 	}
 	
@@ -223,6 +223,12 @@ public class QualityControl extends AbstractDeclaration {
 			.filter(e -> !e.code.contains("depot"))
 			.map(et -> getExperimentTypeNodes(et.code).get(0))
 			.collect(Collectors.toList());
+		
+		pets.add(getExperimentTypeNodes("ext-to-qc-transfert-purif").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-dna-sample-valuation").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-rna-sample-valuation").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-amplicon-sample-valuation").get(0));
+		
 		return pets;		
 	}
 	
