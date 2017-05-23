@@ -80,7 +80,7 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
-			         {
+			        /* {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
@@ -100,7 +100,7 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 			        	 "type":"number",
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }, 
+			         }, */
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µl)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -108,7 +108,7 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":52,
+			        	 "position":53,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -128,10 +128,10 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"textarea",
-			        	 "position":590,
+			        	 "position":54,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
+			       /*  {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
@@ -140,7 +140,7 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 			        	 "type":"text",
 			        	 "position":600,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }			        
+			         }	*/		        
 			         ],
 			compact:true,
 			pagination:{
@@ -193,6 +193,7 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		copyPropertiesToAttributes($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -239,6 +240,31 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 		};
 	};
 	
+		
+	var copyPropertiesToAttributes = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			var ocu = atm.outputContainerUseds[0]; 
+		
+				if (ocu.experimentProperties&& ocu.experimentProperties.ligationConcentration ){
+					
+					if (  ocu.experimentProperties.ligationQuantity ){
+						var outputLigQtty = ocu.experimentProperties.ligationQuantity.value;
+						var getter = $parse("quantity");
+						
+						getter.assign(ocu, {value:outputLigQtty, unit:"ng"})
+						
+					}
+					var outputLigConc = ocu.experimentProperties.ligationConcentration.value;						
+					var getter = $parse("concentration");
+					getter.assign(ocu, {value:outputLigConc, unit:"ng/µl"});
+				}else{
+					ocu.quantity = null;
+					ocu.concentration=null;
+				}			
+		}				
+	};
+	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
@@ -248,4 +274,5 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+
 }]);
