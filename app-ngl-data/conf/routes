@@ -103,6 +103,9 @@ GET		/migration-switch-container			controllers.migration.SwitchContainer.migrati
 
 GET		/cns/migration-error-flowcellChemistry	controllers.migration.cns.MigrationUpdateFlowcellChemistryNanopore.migration(fileName: java.lang.String)
 GET 	/cns/migration-projects					controllers.migration.MigrationProjet.migration()
+GET 	/cns/migration-tara-station				controllers.migration.cns.MigrationSampleTaraStation.migration()
+
+
 
 GET 	/migration-process-properties			controllers.migration.MigrationProcessProperties.migration()
 
