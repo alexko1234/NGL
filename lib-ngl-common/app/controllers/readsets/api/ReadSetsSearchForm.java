@@ -50,8 +50,10 @@ public class ReadSetsSearchForm extends ListForm{
 	
 	public String code;
 	public Set<String> codes;
+	public Set<String> supportCodes;
 	public String regexCode;
 	public String regexSampleCode;
+	public String regexSupportCode;
     
     public Set<String> instrumentCodes;	
     public Set<String> productionResolutionCodes;

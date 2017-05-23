@@ -83,6 +83,7 @@ search.placeholder.run.valid = Evaluation run
 search.placeholder.readset.states = Etats readset
 search.placeholder.readset.regexCode = Regex code readset
 search.placeholder.readset.types = Types readset (techno)
+search.placeholder.containerSupport = Regex pour code support
 
 search.placeholder.productionValid = Eval. QC
 search.placeholder.bioinformaticValid  = Eval. bioinfo
