@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -230,6 +231,7 @@ public abstract class CommonController extends Controller{
 	}
 	
 	protected static BasicDBObject getIncludeKeys(String[] keys) {
+		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
 		for(String key : keys){
 		    values.put(key, 1);
@@ -238,6 +240,7 @@ public abstract class CommonController extends Controller{
     }
 	
 	protected static BasicDBObject getExcludeKeys(String[] keys) {
+		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
 		for(String key : keys){
 		    values.put(key, 0);

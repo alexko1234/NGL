@@ -1,7 +1,7 @@
 package views.components.datatable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,7 +19,6 @@ public class DatatableForm {
 		return "REMOTE".equalsIgnoreCase(paginationMode);
 	}
 	
-	public List<String> excludes = new ArrayList<String>(0);
-	public List<String> includes = new ArrayList<String>(0);
-	
-}
+	public Set<String> excludes = new TreeSet<String>();
+	public Set<String> includes = new TreeSet<String>();
+	}

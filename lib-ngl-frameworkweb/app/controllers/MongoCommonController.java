@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -134,6 +136,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	}
 	
 	protected BasicDBObject getIncludeKeys(String[] keys) {
+		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
 		for(String key : keys){
 		    values.put(key, 1);
@@ -142,6 +145,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
     }
 	
 	protected BasicDBObject getExcludeKeys(String[] keys) {
+		Arrays.sort(keys, Collections.reverseOrder());
 		BasicDBObject values = new BasicDBObject();
 		for(String key : keys){
 		    values.put(key, 0);
