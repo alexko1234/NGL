@@ -240,7 +240,15 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 		};
 	};
 	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",
+			concentration : "ng/µl",
+			quantity : "ng"			
+	}
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
+	$scope.atmService = atmService;
 	
 	var calcOutputQuantityToAttribute = function(experiment){
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){

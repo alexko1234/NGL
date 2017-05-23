@@ -80,7 +80,7 @@ angular.module('home').controller('NanoporePrePcrLigationCtrl',['$scope', '$pars
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
-			         {
+			     /*    {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
@@ -110,7 +110,7 @@ angular.module('home').controller('NanoporePrePcrLigationCtrl',['$scope', '$pars
 			        	 "type":"number",
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+			         },*/
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -193,6 +193,7 @@ angular.module('home').controller('NanoporePrePcrLigationCtrl',['$scope', '$pars
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		calcInputQuantityToContentProperties($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -248,4 +249,28 @@ angular.module('home').controller('NanoporePrePcrLigationCtrl',['$scope', '$pars
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	
+	var calcInputQuantityToContentProperties = function(experiment){
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			var icu = atm.inputContainerUseds[0]; 
+				
+				if (icu.concentration && icu.experimentProperties.inputVolume ){
+					var inputVol = icu.experimentProperties.inputVolume.value;
+					var inputConc = icu.concentration.value;
+							
+						var getter = $parse("experimentProperties.inputQuantity.value");
+						var inputQtty= inputVol * inputConc;
+						console.log("call calcInputQuantityToContentProperties inputQuantity: " + inputQtty);
+						
+						getter.assign(icu,inputQtty)
+						
+					}else{
+							icu.experimentProperties.inputQuantity = null;
+				}			
+		}				
+	};
+	
+	
 }]);
