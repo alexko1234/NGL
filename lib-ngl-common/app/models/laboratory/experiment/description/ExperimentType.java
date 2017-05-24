@@ -62,6 +62,10 @@ public class ExperimentType extends CommonInfoType{
 			return ((ExperimentTypeDAO)getInstance()).findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(code, processTypeCode);
 		}
 		
+		public List<ExperimentType> findNextExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(String code, String processTypeCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findNextExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(code, processTypeCode);
+		}
+		
 		public List<ExperimentType> findByCategoryCode(String categoryCode) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCode(categoryCode);
 		}
@@ -86,8 +90,8 @@ public class ExperimentType extends CommonInfoType{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodesWithoutOneToVoid(categoryCodes);
 		}	
 
-		public List<ExperimentType> findByPreviousExperimentTypeCode(String previousExperimentTypeCode) throws DAOException{
-			return ((ExperimentTypeDAO)getInstance()).findByPreviousExperimentTypeCode(previousExperimentTypeCode);
+		public List<ExperimentType> findNextExperimentTypeCode(String previousExperimentTypeCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findNextExperimentTypeCode(previousExperimentTypeCode);
 		}
 		
 		public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{

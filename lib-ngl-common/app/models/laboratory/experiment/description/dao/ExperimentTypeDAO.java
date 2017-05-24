@@ -21,6 +21,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
 //import play.Logger;
 import play.api.modules.spring.Spring;
 
@@ -181,12 +182,29 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				"					inner join common_info_type as current_pt on current_pt.id = current_pet.fk_process_type and current_pt.code=?"+
 				" where current_t.code=? and previous_pet.position_in_process = current_pet.position_in_process-1";
 
+		Logger.debug(sql);
+		
 		return initializeMapping(sql, new SqlParameter("previous_cpt.code", Types.VARCHAR),
 				new SqlParameter("current_pt.code", Types.VARCHAR),new SqlParameter("current_t.code", Types.VARCHAR)).execute(processTypeCode, processTypeCode, code);
 	}
 	
-	
+	public List<ExperimentType> findNextExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(String code, String processTypeCode) throws DAOException{
 
+		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+ 
+		" 		inner join process_experiment_type as next_pet on next_pet.fk_experiment_type = t.id"+      
+		" 			inner join process_type as next_pt on next_pt.id = next_pet.fk_process_type"+                 
+		" 				inner join common_info_type as next_cpt on next_cpt.id = next_pt.fk_common_info_type and next_cpt.code=?"+
+		" 		inner join experiment_type_node as previous_node on previous_node.fk_experiment_type = t.id"+        
+		" 			inner join previous_nodes as pn on pn.fk_node = previous_node.id"+               
+		" 				inner join experiment_type_node as current_node on current_node.id = pn.fk_previous_node"+                         
+		" 		inner join common_info_type as current_t on current_t.id = current_node.fk_experiment_type"+                              
+		" 			inner join process_experiment_type as current_pet on current_pet.fk_experiment_type = current_t.id"+                                      
+		" 				inner join common_info_type as current_pt on current_pt.id = current_pet.fk_process_type and current_pt.code=?"+ 
+		" 		where current_t.code=? and next_pet.position_in_process = current_pet.position_in_process+1";
+		return initializeMapping(sql, new SqlParameter("next_cpt.code", Types.VARCHAR),
+				new SqlParameter("current_pt.code", Types.VARCHAR),new SqlParameter("current_t.code", Types.VARCHAR)).execute(processTypeCode, processTypeCode, code);
+	}
+	
 	public List<ExperimentType> findSatelliteExperimentByNodeId(Long id) throws DAOException {
 
 		String sql = sqlCommon + "inner join satellite_experiment_type as s ON s.fk_experiment_type=t.id "+
@@ -255,7 +273,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
 	}
 	
-	public List<ExperimentType> findByPreviousExperimentTypeCode(String previousExperimentTypeCode) throws DAOException{
+	public List<ExperimentType> findNextExperimentTypeCode(String previousExperimentTypeCode) throws DAOException{
 		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
 				" inner join previous_nodes as p on p.fk_node = n.id "+
 				" inner join experiment_type_node as np on np.id = p.fk_previous_node "+
@@ -265,6 +283,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
 	}
 	
+	@Deprecated
 	public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{
 		String sql = sqlCommon
 				+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
@@ -277,5 +296,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" where ce.code=? and cp.code=?";
 		return initializeMapping(sql, new SqlParameter("ce.code", Types.VARCHAR), new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode, processTypeCode);
 	}
-		
+	
+	
+	
 }
