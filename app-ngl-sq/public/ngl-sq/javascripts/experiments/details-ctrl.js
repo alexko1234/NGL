@@ -2109,14 +2109,16 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		columns.push({
 			"header" : Messages("containers.table.valuationqc.copyToInput"),
 			"property" : "inputContainerUseds[0].copyValuationToInput",
-			"filter" : "codes:'valuation'",
+			"filter" : "codes:'containers.table.valuationqc.copyToInput.value'",
 			"order" : true,
 			"edit" : true,
 			"hide" : false,
 			"type" : "text",
 			"choiceInList" : true,
 			"listStyle" : 'bt-select',
-			"possibleValues" : 'lists.getValuations()',
+			"possibleValues" : [{code:"TRUE", name:Messages("containers.table.valuationqc.copyToInput.value.TRUE")}, 
+				{code:"FALSE", name:Messages("containers.table.valuationqc.copyToInput.value.FALSE")},
+				{code:"UNSET", name:Messages("containers.table.valuationqc.copyToInput.value.UNSET")}],
 			"position" : 30.1,
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});

@@ -67,18 +67,6 @@ public class Main extends CommonController{
 			sb.append("\"").append(cl.tableName).append(".").append(cl.code)
 			.append("\":\"").append(cl.label).append("\",");
 		}
-		sb.append("\"valuation.TRUE\":\"Oui\",");
-		sb.append("\"valuation.FALSE\":\"Non\",");
-		sb.append("\"valuation.UNSET\":\"---\",");
-		
-		sb.append("\"status.TRUE\":\"OK\",");
-		sb.append("\"status.FALSE\":\"KO\",");
-		sb.append("\"status.UNSET\":\"---\",");
-		
-		sb.append("\"boolean.TRUE\":\"Oui\",");
-		sb.append("\"boolean.FALSE\":\"Non\",");
-		sb.append("\"boolean.UNSET\":\"---\",");
-		
 		
 		List<ValuationCriteria> criterias = MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList();
 		for(ValuationCriteria vc:  criterias){

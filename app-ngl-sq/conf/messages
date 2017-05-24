@@ -206,6 +206,10 @@ containers.table.valuation.valid = Valide
 containers.table.valuationqc.valid = Valide ? (QC courant)
 containers.table.valuationqc.comment = Commentaire éval..
 containers.table.valuationqc.copyToInput = Copier validité dans validité finale du container ?
+containers.table.valuationqc.copyToInput.value.TRUE = copie
+containers.table.valuationqc.copyToInput.value.FALSE = pas de copie
+containers.table.valuationqc.copyToInput.value.UNSET = ---
+
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
 containers.placeholder.user = Container créé par
