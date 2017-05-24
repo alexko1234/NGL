@@ -58,18 +58,18 @@ public class MigrationSampleTaraStation extends CommonController {
 						PropertySingleValue island = new PropertySingleValue(taraStationName.substring(0, 3));
 						PropertySingleValue site = new PropertySingleValue(taraStationName.substring(3, 6));
 						PropertySingleValue colony = new PropertySingleValue(taraStationName.substring(6, 9));
-						sample.properties.put("island", island);
-						sample.properties.put("site", site);
-						sample.properties.put("colony", colony);					
+						sample.properties.put("taraIsland", island);
+						sample.properties.put("taraSite", site);
+						sample.properties.put("taraColony", colony);					
 					}else if(taraStationName != null && taraStationName.length() == 6 && !taraStationName.startsWith("OA")){
 						PropertySingleValue island = new PropertySingleValue(taraStationName.substring(0, 3));
 						PropertySingleValue site = new PropertySingleValue(taraStationName.substring(3, 6));
-						sample.properties.put("island", island);
-						sample.properties.put("site", site);
+						sample.properties.put("taraIsland", island);
+						sample.properties.put("taraSite", site);
 									
 					}else if(taraStationName != null && taraStationName.length() == 6 && taraStationName.startsWith("OA")){
 						PropertySingleValue island = new PropertySingleValue(taraStationName);
-						sample.properties.put("island", island);					
+						sample.properties.put("taraIsland", island);					
 					}else if(taraStationName == null){
 						Logger.error("Not found taraStationName for"+taraStationCodePV.value.toString());
 					}
