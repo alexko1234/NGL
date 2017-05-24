@@ -146,7 +146,7 @@ public class ProcWorkflowHelper {
 			
 			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query);
 			if(containersWithTag.size() > 0){
-				return containersWithTag.getCursor().next().contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString();
+				return containersWithTag.cursor.next().contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString();
 			}else{
 				return null;
 			}
@@ -188,7 +188,7 @@ public class ProcWorkflowHelper {
 		
 			//update readsets with new process property values
 			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes).in("sampleCode", process.sampleCodes).in("projectCode", process.projectCodes))
-				.getCursor()
+				.cursor
 				.forEach(readset -> {
 					if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
 							|| (null != tag && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 

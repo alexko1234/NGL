@@ -71,7 +71,7 @@ public class ContWorkflows extends Workflows<Container> {
 			if(previousStateCode.startsWith("A")){
 				validation.addKeyToRootKeyName("processes");
 				MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", container.processCodes))
-				.getCursor().forEach(process -> {
+				.cursor.forEach(process -> {
 					validation.addKeyToRootKeyName(process.code);
 					procSupportWorkflows.setState(validation, process, getNewState("F", validation.getUser()));
 					validation.removeKeyFromRootKeyName(process.code);

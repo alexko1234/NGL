@@ -185,15 +185,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				new SqlParameter("current_pt.code", Types.VARCHAR),new SqlParameter("current_t.code", Types.VARCHAR)).execute(processTypeCode, processTypeCode, code);
 	}
 	
-	public List<ExperimentType> findNextExperimentTypeForAnExperimentTypeCode(String code) throws DAOException{
-
-		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
-				" inner join previous_nodes as p on p.fk_previous_node = n.id "+
-				" inner join experiment_type_node as np on np.id = p.fk_node "+
-				" inner join  common_info_type as cp on cp.id = np.fk_experiment_type "+
-				" where t.code=?";
-		return initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR)).execute(code);
-	}
+	
 
 	public List<ExperimentType> findSatelliteExperimentByNodeId(Long id) throws DAOException {
 
@@ -268,21 +260,22 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				" inner join previous_nodes as p on p.fk_node = n.id "+
 				" inner join experiment_type_node as np on np.id = p.fk_previous_node "+
 				" inner join  common_info_type as cp on cp.id = np.fk_experiment_type "+
-				" where cp.code=?";
-		
+				" where cp.code=?";				
 		//Logger.debug(sql);
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode);
 	}
-	@Deprecated
+	
 	public List<ExperimentType> findByPreviousExperimentTypeCodeInProcessTypeContext(String previousExperimentTypeCode, String processTypeCode) throws DAOException{
-		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
+		String sql = sqlCommon
+				+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
 				" inner join previous_nodes as p on p.fk_node = n.id "+
 				" inner join experiment_type_node as np on np.id = p.fk_previous_node "+
-				" inner join  common_info_type as ce on ce.id = np.fk_experiment_type "+
+				" inner join common_info_type as ce on ce.id = np.fk_experiment_type "+
 				" inner join process_experiment_type as pet ON pet.fk_experiment_type=c.id "+
 			    " inner join process_type as pt on pt.id = pet.fk_process_type "+
 			    " inner join common_info_type as cp on cp.id=pt.fk_common_info_type "+
 				" where ce.code=? and cp.code=?";
 		return initializeMapping(sql, new SqlParameter("ce.code", Types.VARCHAR), new SqlParameter("cp.code", Types.VARCHAR)).execute(previousExperimentTypeCode, processTypeCode);
 	}
+		
 }

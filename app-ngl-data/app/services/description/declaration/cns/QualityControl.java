@@ -171,7 +171,7 @@ public class QualityControl extends AbstractDeclaration {
 			.map(et -> getPET(et.code, -1))
 			.collect(Collectors.toList());
 		pets.add(getPET("ext-to-qc-transfert-purif",-1));
-		//pets.add(getPET("fluo-quantification",0));
+		pets.add(getPET("fluo-quantification",0));
 		return pets;		
 	}
 	
