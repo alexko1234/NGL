@@ -473,8 +473,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             if(column.id != that.config.group.by.id){                        	
 	                        	var propertyGetter = column.property;
 	                            propertyGetter += that.getFilter(column);
-	                            propertyGetter += that.getFormatter(column);
-	                            
+	                            if ('sum' !== column.groupMethod && 'average' !== column.groupMethod) {
+	                            	propertyGetter += that.getFormatter(column);
+	                            }
 	                            var columnGetter = $parse(propertyGetter);
 	                            var columnSetter = $parse("group." + column.id);
 	
@@ -2345,7 +2346,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         		colValue = '"'+colValue+'"';
                                         	} else if(!Array.isArray(colValue) || (Array.isArray(colValue) && colValue.length === 1)){
                                         		colValue = '"'+colValue+'"';
-                                        	}                                   	
+                                        	} else if(Array.isArray(colValue)){
+                                        		colValue = '"'+colValue.join()+'"';
+                                        	}                                 	
                                         }
                                         
 										
