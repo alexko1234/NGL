@@ -464,7 +464,8 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Bactérie","TAXO-bacteria", TAXOrC,(short) 8)); 
 		l.add(InstanceFactory.newResolution("Fungi","TAXO-fungi", TAXOrC,(short) 9));
 		l.add(InstanceFactory.newResolution("OK post clean rRNA","TAXO-postCleanrRNA", TAXOrC,(short) 10));
-				
+		l.add(InstanceFactory.newResolution("Contaminant amplicon","TAXO-contaAmplicon", TAXOrC,(short) 11));
+					
 		// RIBO
 		l.add(InstanceFactory.newResolution("% rRNA élevé","RIBO-percEleve", resolutionCategories.get("RIBO"),(short) 1));
 		
