@@ -39,9 +39,7 @@
 			
 			
 		}
-		@formGroup{
-			<bt-input type="text" class="form-control" input-ng-model="searchService.form.regexSupportCode" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")'></bt-input>
-		}
+		
 		@formGroup{					
 			<div class="form-control" bt-select ng-model="searchService.form.bioinformaticValidCode" placeholder="@Messages("search.placeholder.bioinformaticValid")" bt-options="valid.code as valid.name for valid in searchService.lists.getValuations()"></div>
 		}
@@ -50,6 +48,9 @@
 			<div  class="form-control" bt-select ng-model="searchService.form.bioinformaticResolutionCodes" multiple="true" placeholder="@Messages("search.placeholder.bioinformaticResolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()"></div>														
 		}
 		
+		@formGroup{
+			<bt-input type="text" class="form-control" input-ng-model="searchService.form.regexSupportCode" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")'></bt-input>
+		}
 		
 	}
 	@columnSearchForm{
