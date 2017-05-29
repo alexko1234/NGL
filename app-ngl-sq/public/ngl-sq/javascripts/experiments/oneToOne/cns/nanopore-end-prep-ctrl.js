@@ -184,7 +184,7 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		calcInputQuantityToContentProperties($scope.experiment);
+	//	calcInputQuantityToContentProperties($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -241,8 +241,16 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 	
 	$scope.atmService = atmService;
 
-
-	var calcInputQuantityToContentProperties = function(experiment){
+	
+	$scope.calcInputQuantityToContentProperties = function(value, col){
+		console.log("update from property : "+col.property+"value"+value.data);
+		
+		if (col.property === 'inputContainerUsed.experimentProperties.inputVolume ){
+			
+		}
+	}
+		
+/*	var calcInputQuantityToContentProperties = function(experiment){
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
 			var atm = experiment.atomicTransfertMethods[i];
 			var icu = atm.inputContainerUseds[0]; 
@@ -261,7 +269,7 @@ angular.module('home').controller('NanoporeEndPrepCtrl',['$scope', '$parse', 'at
 							icu.experimentProperties.inputQuantity = null;
 				}			
 		}				
-	};
+	};*/
 	
 
 }]);
