@@ -102,12 +102,21 @@ public class OutputHelper {
 		return index;
 	}
 	
-	public static String getSequence(Index index, TagModel tagModel, String instrumentTypeCode){
+	public static String getSequence(Index index, TagModel tagModel, String instrumentTypeCode) {
+		return 	getSequence(index, tagModel, instrumentTypeCode, null);
+	}
+	
+	
+	public static String getSequence(Index index, TagModel tagModel, String instrumentTypeCode, Integer position){
+		
 		if("NONE".equals(tagModel.tagType)){
 			return null;
 		}else if("SINGLE-INDEX".equals(tagModel.tagType)){
 			if(null == index || "MID".equals(index.categoryCode)){
 				return getIndex(null, tagModel.maxTag1Size);
+			} else if("POOL-INDEX".equals(index.categoryCode)) {
+				String [] sequences = index.sequence.split("-");
+				return getIndex(sequences[position], tagModel.maxTag1Size);
 			} else {
 				return getIndex(index.sequence, tagModel.maxTag1Size);
 			}
@@ -117,6 +126,9 @@ public class OutputHelper {
 				sequence = StringUtils.repeat("N", tagModel.maxTag1Size)+"-"+StringUtils.repeat("N", tagModel.maxTag2Size);
 			}else if("SINGLE-INDEX".equals(index.categoryCode)){
 				sequence = getIndex(index.sequence, tagModel.maxTag1Size)+"-"+getIndex(null, tagModel.maxTag2Size);
+			}else if("POOL-INDEX".equals(index.categoryCode)) {
+				String [] sequences = index.sequence.split("-");
+				sequence = getIndex(sequences[position], tagModel.maxTag1Size)+"-"+getIndex(null, tagModel.maxTag2Size);
 			}else {
 				String[] sequences = index.sequence.split("-",2);
 				sequence = getIndex(sequences[0], tagModel.maxTag1Size)+"-"+getIndex(sequences[1], tagModel.maxTag2Size);
@@ -140,6 +152,8 @@ public class OutputHelper {
 			return sequence;
 		}
 	}
+	
+	
 	
 	public static String getSequence(Index index){
 		if(index != null && !index.categoryCode.equals("MID")){
