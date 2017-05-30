@@ -303,7 +303,6 @@ public class Submissions extends DocumentController<Submission>{
 			Tools tools = new Tools();
 			// Recuperer readSetCodes à partir du fichier utilisateur :		
 			readSetCodes = tools.loadReadSet(inputStreamUserFileReadSet);	
-			
 			if (readSetCodes.isEmpty()) {
 				// Recuperer readSetCodes à partir de la selection de readset des utilisateurs			
 				readSetCodes = submissionsCreationForm.readSetCodes; 

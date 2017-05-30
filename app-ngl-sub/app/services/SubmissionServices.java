@@ -293,7 +293,7 @@ public class SubmissionServices {
 				//System.out.println("!!!!!!!!!!!!!         readSetCode = " + readSetCode);
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 				if (readSet == null) {
-					throw new SraException("Le readSet " + readSet.code + " n'existe pas dans database");
+					throw new SraException("Le readSet " + readSetCode + " n'existe pas dans database");
 				} else if ((readSet.submissionState == null)||(StringUtils.isBlank(readSet.submissionState.code))) {
 					throw new SraException("Le readSet " + readSet.code + " n'a pas de submissionState.code");
 				} else if(!readSet.submissionState.code.equalsIgnoreCase("NONE")){
