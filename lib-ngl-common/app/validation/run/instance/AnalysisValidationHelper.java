@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.mongojack.DBQuery;
 
+import com.mongodb.BasicDBObject;
+
 import fr.cea.ig.MongoDBDAO;
 
 import models.laboratory.common.description.Level;
@@ -39,7 +41,23 @@ public class AnalysisValidationHelper extends CommonValidationHelper {
 		BusinessValidationHelper.validateRequiredInstanceCodes(contextValidation, analysis.readSetCodes, "masterReadSetCodes", ReadSet.class,InstanceConstants.READSET_ILLUMINA_COLL_NAME,false);
 		
 		if("N".equals(analysis.state.code)){
-			validateReadSetsState(analysis.masterReadSetCodes, "masterReadSetCodes", "IW-BA", contextValidation);
+			//validateReadSetsState(analysis.masterReadSetCodes, "masterReadSetCodes", "IW-BA", contextValidation);
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("code", 1);
+			keys.put("state", 1);
+			int i=0;
+			for(String code : analysis.masterReadSetCodes){
+				//Get readSet
+				ReadSet readSetMaster = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, code, keys);
+				if(!readSetMaster.state.code.equals("IW-BA") && !readSetMaster.state.code.equals("IP-BA")){
+					contextValidation.addErrors("masterReadSetCodes["+i+"]", ValidationConstants.ERROR_BADSTATE_MSG, code);
+				}else if(readSetMaster.state.code.equals("IP-BA") && MongoDBDAO.checkObjectExist(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
+						DBQuery.and(DBQuery.is("state.code","IP-BA"),DBQuery.in("masterReadSetCodes", code)))){
+					contextValidation.addErrors("masterReadSetCodes["+i+"]", ValidationConstants.ERROR_BADSTATE_MSG, code);
+				}
+				i++;
+				
+			}
 		}else if("IP-BA".equals(analysis.state.code)){
 			validateReadSetsState(analysis.masterReadSetCodes, "masterReadSetCodes", "IP-BA", contextValidation);
 		}
