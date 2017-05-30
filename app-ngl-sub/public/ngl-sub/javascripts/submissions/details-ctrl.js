@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routeParams' , 'mainService', 'lists', 'tabService','messages','datatable',
-                                                  function($http, $scope, $routeParams, mainService, lists, tabService, messages, datatable) { 
+angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routeParams' , '$q', 'mainService', 'lists', 'tabService','messages','datatable',
+                                                  function($http, $scope, $routeParams, $q, mainService, lists, tabService, messages, datatable) { 
 
 
 
@@ -439,8 +439,33 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				// initialisation de la variable sraVariables.libraryLayoutOrientation utilisee dans experimentsDTConfig
 				$scope.sraVariables.libraryLayoutOrientation = data;
 			});	
+			
+			if($scope.submission.refSampleCodes.length>0){
+				var nbElementByBatch = Math.ceil($scope.submission.refSampleCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+	            var queries = [];
+	            for (var i = 0; i < 6 && $scope.submission.refSampleCodes.length > 0; i++) {
+	                var subSampleCodes = $scope.submission.refSampleCodes.splice(0, nbElementByBatch);
+	                queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:subSampleCodes}}) );
+	            }
+	            $q.all(queries).then(function(results) {
+					var allData = [];
+					results.forEach(function(result){
+						allData = allData.concat(result.data);
+					});
+					
+					$scope.samples = allData;
+					
+					console.log("$scope.submission.sampleCodes: " + $scope.submission.sampleCodes);
+					console.log("$scope.samples :" + $scope.samples);
+
+					//Init datatable
+					$scope.sampleDT = datatable(samplesDTConfig);
+					$scope.sampleDT.setData($scope.samples, $scope.samples.length);
+	            });
+			}
+			
 			//Get samples
-			$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			/*$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
 					{
 					$scope.samples = data;
 			
@@ -450,9 +475,47 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					//Init datatable
 					$scope.sampleDT = datatable(samplesDTConfig);
 					$scope.sampleDT.setData($scope.samples, $scope.samples.length);
+					});*/
+			
+			if($scope.submission.experimentCodes.length>0){
+				var nbElementByBatch = Math.ceil($scope.submission.experimentCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+	            var queries = [];
+	            for (var i = 0; i < 6 && $scope.submission.experimentCodes.length > 0; i++) {
+	                var subExperimentCodes = $scope.submission.experimentCodes.splice(0, nbElementByBatch);
+	                queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:subExperimentCodes}}) );
+	            }
+	            $q.all(queries).then(function(results) {
+					var allData = [];
+					results.forEach(function(result){
+						allData = allData.concat(result.data);
 					});
+					
+					$scope.experiments = allData;
+					//Init datatable
+					$scope.experimentDT = datatable(experimentsDTConfig);
+					$scope.experimentDT.setData($scope.experiments, $scope.experiments.length);
+					//Get Runs
+					$scope.runDT = datatable(runsDTConfig);
+					// Comme on a un seul run par experiment, on n'a pas besoin de boucler pour recuperer les données :
+					$scope.runDT.setData($scope.experiments, $scope.experiments.length);
+					
+					
+					// Get RawDatas : construction de la liste des rawData puis injection dans datatable :
+					var maListRawDatas = [];
+					for (var i=0; i<$scope.experiments.length; i++) {
+						var run = $scope.experiments[i].run;
+						for (var j=0; j<run.listRawData.length; j++) {
+							maListRawDatas.push(run.listRawData[j]);
+						}
+					}
+					
+					$scope.rawDataDT = datatable(rawDatasDTConfig);
+					$scope.rawDataDT.setData(maListRawDatas, maListRawDatas.length);
+					});	
+			}
+			
 			//Get experiments (and runs)
-			$http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:$scope.submission.experimentCodes}}).success(function(data)
+			/*$http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:$scope.submission.experimentCodes}}).success(function(data)
 					{
 					$scope.experiments = data;
 					//Init datatable
@@ -475,7 +538,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					
 					$scope.rawDataDT = datatable(rawDatasDTConfig);
 					$scope.rawDataDT.setData(maListRawDatas, maListRawDatas.length);
-					});			
+					});		*/	
 		
 		});
 		
