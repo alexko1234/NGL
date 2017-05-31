@@ -593,12 +593,14 @@ public class ReadSets extends ReadSetsController{
 	public static Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
+		final String user = getCurrentUser();
+		
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 				.map(filledForm->{
 					ReadSetBatchElement element = filledForm.get();
 					ReadSet readSet = getReadSet(element.data.code);
 					if(null != readSet){
-						ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
 						ctxVal.setUpdateMode();
 						manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
 						if (!ctxVal.hasErrors()) {
@@ -606,7 +608,7 @@ public class ReadSets extends ReadSetsController{
 									DBQuery.and(DBQuery.is("code", readSet.code)),
 									DBUpdate.set("productionValuation", element.data.productionValuation)
 									.set("bioinformaticValuation", element.data.bioinformaticValuation)
-									.set("traceInformation", getUpdateTraceInformation(readSet)));							
+									.set("traceInformation", getUpdateTraceInformation(readSet,user)));							
 							readSet = getReadSet(readSet.code);
 							Workflows.nextReadSetState(ctxVal, readSet);
 							return new DatatableBatchResponseElement(OK, readSet, element.index);
@@ -711,12 +713,12 @@ public class ReadSets extends ReadSetsController{
 	private static void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
 		if (productionVal.valid != readSet.productionValuation.valid) {
 			productionVal.date = new Date();
-			productionVal.user = getCurrentUser();
+			productionVal.user = ctxVal.getUser();
 			ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
 		}
 		if (bioinfoVal.valid != readSet.bioinformaticValuation.valid) {
 			bioinfoVal.date = new Date();
-			bioinfoVal.user = getCurrentUser();
+			bioinfoVal.user = ctxVal.getUser();
 			ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);
 		}
 	}
