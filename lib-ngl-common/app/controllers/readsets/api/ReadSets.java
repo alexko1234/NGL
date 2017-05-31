@@ -43,9 +43,11 @@ import models.utils.ListObject;
 import play.Logger;
 import play.Play;
 import play.data.Form;
+import play.i18n.Lang;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.BodyParser;
+import play.mvc.Http;
 import play.mvc.Result;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -541,6 +543,7 @@ public class ReadSets extends ReadSetsController{
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
 		
 		
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
@@ -556,7 +559,7 @@ public class ReadSets extends ReadSetsController{
 						if (!ctxVal.hasErrors()) {
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
 						}else {
-							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 						}
 					}else {
 						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
@@ -596,6 +599,7 @@ public class ReadSets extends ReadSetsController{
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
 		
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 				.map(filledForm->{
@@ -615,7 +619,7 @@ public class ReadSets extends ReadSetsController{
 							Workflows.nextReadSetState(ctxVal, readSet);
 							return new DatatableBatchResponseElement(OK, readSet, element.index);
 						}else {
-							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 						}
 					}else {
 						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
@@ -660,6 +664,7 @@ public class ReadSets extends ReadSetsController{
 
 
 		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
 		
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 				.map(filledForm->{
@@ -678,7 +683,7 @@ public class ReadSets extends ReadSetsController{
 									.set("traceInformation", getUpdateTraceInformation(readSet, user)));								
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
 						}else {
-							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 						}
 					}else {
 						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
