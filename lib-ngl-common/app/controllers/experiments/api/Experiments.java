@@ -164,9 +164,13 @@ public class Experiments extends DocumentController<Experiment>{
 			keys.append("code", 1);
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerQuery,keys).toList();
 			
-			for(Container p : containers){
-				containerCodes.add(p.code);
-			}			
+			if(containers.size() == 0){
+				containerCodes.add("########"); //to force to have zero results
+			}else{
+				for(Container p : containers){
+					containerCodes.add(p.code);
+				}	
+			}				
 		}
 		
 		if(StringUtils.isNotBlank(experimentSearch.containerCode)){			
