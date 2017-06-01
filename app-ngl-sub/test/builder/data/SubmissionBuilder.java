@@ -34,12 +34,7 @@ public class SubmissionBuilder {
 		return this;
 	}
 	
-	public SubmissionBuilder withSubmissionTmpDirectory(String submissionTmpDirectory)
-	{
-		submission.submissionTmpDirectory=submissionTmpDirectory;
-		return this;
-	}
-		
+	
 	public SubmissionBuilder withSubmissionDate(Date submissionDate)
 	{
 		submission.creationDate=submissionDate;
