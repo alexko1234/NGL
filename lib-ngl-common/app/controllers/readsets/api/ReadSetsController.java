@@ -13,20 +13,25 @@ import fr.cea.ig.MongoDBResult;
 
 public class ReadSetsController extends CommonController {
 
-    protected static ReadSet getReadSet(String code) {
-    	ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, code);
-    	return readSet;
-    }
-   
-    protected static ReadSet getReadSet(String code, String...keys) {
-    	ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", code), getIncludeKeys(keys));
-    	return readSet;
-    }
-    
-    protected static TraceInformation getUpdateTraceInformation(ReadSet readSet) {
+	protected static ReadSet getReadSet(String code) {
+		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, code);
+		return readSet;
+	}
+
+	protected static ReadSet getReadSet(String code, String...keys) {
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", code), getIncludeKeys(keys));
+		return readSet;
+	}
+
+	protected static TraceInformation getUpdateTraceInformation(ReadSet readSet) {
 		TraceInformation ti = readSet.traceInformation;
 		ti.setTraceInformation(getCurrentUser());
 		return ti;
 	}
-	
+
+	protected static TraceInformation getUpdateTraceInformation(ReadSet readSet, String user) {
+		TraceInformation ti = readSet.traceInformation;
+		ti.setTraceInformation(user);
+		return ti;
+	}
 }

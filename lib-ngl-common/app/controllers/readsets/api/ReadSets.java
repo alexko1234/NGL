@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,9 +43,11 @@ import models.utils.ListObject;
 import play.Logger;
 import play.Play;
 import play.data.Form;
+import play.i18n.Lang;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.BodyParser;
+import play.mvc.Http;
 import play.mvc.Result;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -539,27 +542,30 @@ public class ReadSets extends ReadSetsController{
 	public static Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-
-		for(Form<ReadSetBatchElement> filledForm: filledForms){
-			ReadSetBatchElement element = filledForm.get();
-			ReadSet readSet = getReadSet(element.data.code);
-			if(null != readSet){
-				State state = element.data.state;
-				state.date = new Date();
-				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				Workflows.setReadSetState(ctxVal, readSet, state);
-				if (!ctxVal.hasErrors()) {
-					response.add(new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
-				}
-			}else {
-				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
-			}
-
-		}		
+		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
+		
+		
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+				.map(filledForm->{
+					ReadSetBatchElement element = filledForm.get();
+					ReadSet readSet = getReadSet(element.data.code);
+					if(null != readSet){
+						State state = element.data.state;
+						state.date = new Date();
+						state.user = user;
+						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+						Workflows.setReadSetState(ctxVal, readSet, state);
+						if (!ctxVal.hasErrors()) {
+							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
+						}else {
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+						}
+					}else {
+						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+					}
+				}).collect(Collectors.toList());
+		
 		return ok(Json.toJson(response));
 	}
 
@@ -592,32 +598,35 @@ public class ReadSets extends ReadSetsController{
 	public static Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-
-		for(Form<ReadSetBatchElement> filledForm: filledForms){
-			ReadSetBatchElement element = filledForm.get();
-			ReadSet readSet = getReadSet(element.data.code);
-			if(null != readSet){
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				ctxVal.setUpdateMode();
-				manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
-				if (!ctxVal.hasErrors()) {
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-							DBQuery.and(DBQuery.is("code", readSet.code)),
-							DBUpdate.set("productionValuation", element.data.productionValuation)
-							.set("bioinformaticValuation", element.data.bioinformaticValuation)
-							.set("traceInformation", getUpdateTraceInformation(readSet)));							
-					readSet = getReadSet(readSet.code);
-					Workflows.nextReadSetState(ctxVal, readSet);
-					response.add(new DatatableBatchResponseElement(OK, readSet, element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
-				}
-			}else {
-				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
-			}
-
-		}		
+		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
+		
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+				.map(filledForm->{
+					ReadSetBatchElement element = filledForm.get();
+					ReadSet readSet = getReadSet(element.data.code);
+					if(null != readSet){
+						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+						ctxVal.setUpdateMode();
+						manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
+						if (!ctxVal.hasErrors()) {
+							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+									DBQuery.and(DBQuery.is("code", readSet.code)),
+									DBUpdate.set("productionValuation", element.data.productionValuation)
+									.set("bioinformaticValuation", element.data.bioinformaticValuation)
+									.set("traceInformation", getUpdateTraceInformation(readSet,user)));							
+							readSet = getReadSet(readSet.code);
+							Workflows.nextReadSetState(ctxVal, readSet);
+							return new DatatableBatchResponseElement(OK, readSet, element.index);
+						}else {
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+						}
+					}else {
+						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+					}
+				}).collect(Collectors.toList());
+		
+		
 		return ok(Json.toJson(response));
 	}
 
@@ -653,31 +662,34 @@ public class ReadSets extends ReadSetsController{
 	public static Result propertiesBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 
-		for(Form<ReadSetBatchElement> filledForm: filledForms){
-			ReadSetBatchElement element = filledForm.get();
-			ReadSet readSet = getReadSet(element.data.code);
-			if(null != readSet){
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-				Map<String, PropertyValue> properties = element.data.properties;
-				ctxVal.setUpdateMode();
-				ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
+		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
+		
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+				.map(filledForm->{
+					ReadSetBatchElement element = filledForm.get();
+					ReadSet readSet = getReadSet(element.data.code);
+					if(null != readSet){
+						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+						Map<String, PropertyValue> properties = element.data.properties;
+						ctxVal.setUpdateMode();
+						ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
-				if(!ctxVal.hasErrors()){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-							DBQuery.and(DBQuery.is("code", readSet.code)),
-							DBUpdate.set("properties", element.data.properties)
-							.set("traceInformation", getUpdateTraceInformation(readSet)));								
-					response.add(new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
-				}
-			}else {
-				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
-			}
-
-		}		
+						if(!ctxVal.hasErrors()){
+							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+									DBQuery.and(DBQuery.is("code", readSet.code)),
+									DBUpdate.set("properties", element.data.properties)
+									.set("traceInformation", getUpdateTraceInformation(readSet, user)));								
+							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
+						}else {
+							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+						}
+					}else {
+						return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+					}
+				}).collect(Collectors.toList());
+		
 		return ok(Json.toJson(response));
 	}
 
@@ -685,12 +697,12 @@ public class ReadSets extends ReadSetsController{
 	private static void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
 		if (productionVal.valid != readSet.productionValuation.valid) {
 			productionVal.date = new Date();
-			productionVal.user = getCurrentUser();
+			productionVal.user = ctxVal.getUser();
 			ReadSetValidationHelper.validateValuation(readSet.typeCode, productionVal, ctxVal);
 		}
 		if (bioinfoVal.valid != readSet.bioinformaticValuation.valid) {
 			bioinfoVal.date = new Date();
-			bioinfoVal.user = getCurrentUser();
+			bioinfoVal.user = ctxVal.getUser();
 			ReadSetValidationHelper.validateValuation(readSet.typeCode, bioinfoVal, ctxVal);
 		}
 	}

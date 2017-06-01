@@ -82,6 +82,11 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "30,83"));
 
+		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQuality", 
+				getReadQualityNanoporePropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes( Constants.CODE.CNG), "30,83,84"));
+		
 		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", 
 				getDuplicatesPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 

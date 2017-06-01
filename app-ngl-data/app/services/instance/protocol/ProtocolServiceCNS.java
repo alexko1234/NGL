@@ -207,6 +207,10 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("smarter_stranded","Smarter Stranded_ptr_sox155_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter Stranded"),newPSV("strandOrientation","forward"),newPSV("cDNAsynthesisType","random"))));
+		
+		lp.add(newProtocol("rna_neb_u2_stranded","RNA NEB_U2 Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
+				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+		
 		/*
 		lp.add(newProtocol("indac","Indac","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
 				concatMap(newPSV("rnaLibProtocol","indac"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","?"))));
