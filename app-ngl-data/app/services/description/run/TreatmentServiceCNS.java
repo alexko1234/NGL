@@ -81,6 +81,11 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getReadQualityPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "30,83,84"));
+		
+		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQuality", 
+				getReadQualityNanoporePropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "30,83,84"));
 
 		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean,duplicatesTrim", 
 				getDuplicatesPropertyDefinitions(), 
@@ -333,7 +338,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false,
-				DescriptionFactory.newValues("kraken","megablast_megan","sortmerna2.1"),"single"));
+				DescriptionFactory.newValues("kraken","megablast_megan","sortmerna2.1","centrifuge1.0.3.b"),"single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Organisme","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "single"));

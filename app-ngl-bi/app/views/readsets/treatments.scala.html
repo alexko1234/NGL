@@ -9,6 +9,10 @@
 	@_treatments.ngsrgNanopore()
 }
 
+@if(code == "read-quality-nanopore"){
+	@_treatments.readQualityNanopore()
+}
+
 @if(code == "duplicates") {
 	@_treatments.duplicates()	
 }

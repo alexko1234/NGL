@@ -615,6 +615,7 @@ readsets.treatments.merging = Merging
 readsets.treatments.readQualityRaw = Read Quality (vs RAW)
 readsets.treatments.readQualityClean = Read Quality (vs CLEAN)
 readsets.treatments.readQualityTrim = Read Quality (vs TRIM)
+readsets.treatments.readQuality = Read Quality
 readsets.treatments.contaminationColi = Contam. Coli
 readsets.treatments.contaminationVector = Contam. Vecteur
 readsets.treatments.contaminationPhiX = Contam. PhiX
