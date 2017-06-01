@@ -95,7 +95,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 			        	 "header":Messages("containers.table.quantity")+ " (ng)",
 			        	 "property":"outputContainerUsed.quantity.value",
 			        	 "order":true,
-						 "edit":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":52,
@@ -249,6 +249,15 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	
+	$scope.calcOutputQuantityToAttribute=function(value){
+		if(value!=null & value !=undefined){
+			calculOutputQuantityFromValue(value.data);
+	   }
+	};
+	
+	
 	
 	var calcOutputQuantityToAttribute = function(experiment){
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){

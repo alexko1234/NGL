@@ -591,7 +591,7 @@ public class Nanopore extends AbstractDeclaration{
 					getExperimentTypes("aliquoting")).save();
 			newExperimentTypeNode("nanopore-frg",
 					getExperimentTypes("nanopore-frg").get(0),false, false,false,
-					getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot","ext-to-nanopore-process-library","ext-to-nanopore-process-dev","ext-to-nanopore-process-dev-2"),getExperimentTypes("nanopore-sizing"),null,
+					getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot","ext-to-nanopore-process-library","ext-to-nanopore-process-dev","ext-to-nanopore-process-dev-2"),null,null,
 					getExperimentTypes("aliquoting","pool-tube")).save();	
 			
 			newExperimentTypeNode("nanopore-dna-reparation",
@@ -982,7 +982,7 @@ public class Nanopore extends AbstractDeclaration{
 			propertyDefinitions.add(newPropertiesDefinition(
 					"Qté engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class,
 					false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), 
-					"single",11,true, null, null));		
+					"single",11,false, null, null));		
 			
 			return propertyDefinitions;
 		}
@@ -998,7 +998,7 @@ public class Nanopore extends AbstractDeclaration{
 			propertyDefinitions.add(newPropertiesDefinition(
 					"Qté engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class,
 					false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), 
-					"single",11,true, null, null));		
+					"single",11,false, null, null));		
 			
 			return propertyDefinitions;
 		}
@@ -1052,7 +1052,7 @@ public class Nanopore extends AbstractDeclaration{
 			propertyDefinitions.add(newPropertiesDefinition(
 					"Qté engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class,
 					false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), 
-					"single",11,true, null, null));		
+					"single",11,false, null, null));		
 			
 			propertyDefinitions.add(newPropertiesDefinition(
 					"Profil","migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),Image.class,

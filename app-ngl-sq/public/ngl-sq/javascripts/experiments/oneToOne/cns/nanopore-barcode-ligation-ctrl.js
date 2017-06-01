@@ -88,7 +88,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 						 "hide":true,
 						 "required":true,
 			        	 "type":"number",
-			        	 "position":50,
+			        	 "position":50.2,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -98,7 +98,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":51,
+			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }, 
 			         {
@@ -108,7 +108,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":52,
+			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -224,6 +224,47 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+					
+		if (col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
+			computeInputQuantityToContentProperties(value.data);
+		}
+	}
+	
+	
+	  var computeInputQuantityToContentProperties  = function(udtData){
+		     var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
+	         var inputQtty = getter(udtData);
+	   
+	        var compute = {
+	                inputvolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+	                concentration : $parse("inputContainerUsed.concentration.value")(udtData),
+	                isReady:function(){
+	                    return (this.inputvolume && this.concentration);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(inputvolume * concentration)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   inputQtty = Math.round(result*10)/10;               
+	               }else{
+	            	   inputQtty = undefined;
+	               }   
+	               getter.assign(udtData, inputQtty);
+	              
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to inputQtty");
+	           }
+	  }
+	
+		
 	
 	//Init		
 

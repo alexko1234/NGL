@@ -62,17 +62,17 @@ public class ProtocolServiceCNS {
 		
 		
 		//Nanopore
-		lp.add(newProtocol("R9-1D-ligation","R9-1D ligation","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("R9-1D-ligation","R9-1D ligation","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-1D ligation"))));
-		lp.add(newProtocol("R9-1D-transposition","R9-1D transposition","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("R9-1D-transposition","R9-1D transposition","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-1D transposition"))));
-		lp.add(newProtocol("R9-Long-Read 1D","R9-Long Read 1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("R9-Long-Read 1D","R9-Long Read 1D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-Long Read 1D"))));
-		lp.add(newProtocol("R9-Long-Read 2D","R9-Long Read 2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("R9-Long-Read 2D","R9-Long Read 2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-Long Read 2D"))));
-		lp.add(newProtocol("R9-Low-input","R9-Low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("R9-Low-input","R9-Low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-Low input"))));
-		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-2D"))));
 		
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));

@@ -128,9 +128,19 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"textarea",
-			        	 "position":54,
+			        	 "position":540,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
+			         {
+			        	 "header":Messages("containers.table.stateCode"),
+			        	 "property":"outputContainer.state.code | codes:'state'",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":600,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         }	
 			       /*  {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -240,6 +250,43 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 		};
 	};
 	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+					
+		if (col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
+			computeInputQuantityToContentProperties(value.data);
+		}
+	}
+	
+	
+	  var computeInputQuantityToContentProperties  = function(udtData){
+		     var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
+	         var inputQtty = getter(udtData);
+	   
+	        var compute = {
+	                inputvolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+	                concentration : $parse("inputContainerUsed.concentration.value")(udtData),
+	                isReady:function(){
+	                    return (this.inputvolume && this.concentration);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(inputvolume * concentration)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   inputQtty = Math.round(result*10)/10;               
+	               }else{
+	            	   inputQtty = undefined;
+	               }   
+	               getter.assign(udtData, inputQtty);
+	              
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to inputQtty");
+	           }
+	  }
 		
 	var copyPropertiesToAttributes = function(experiment){
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
