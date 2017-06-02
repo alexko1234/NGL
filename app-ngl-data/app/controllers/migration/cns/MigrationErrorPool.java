@@ -13,7 +13,6 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
-import models.laboratory.processes.instance.*;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 

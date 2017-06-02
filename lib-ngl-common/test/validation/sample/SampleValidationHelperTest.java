@@ -77,10 +77,7 @@ public class SampleValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleType("BAC","default-import",null, contextValidation);
 		
-		Map<String,String> config = AbstractTests.fakeConfiguration();
-		config.remove("institute");
-		config.put("institute","CNS");	
-		DescriptionHelper.initInstitute();
+		
 		
 		// the sampleType and the importType are defined in the db
 		assertThat(contextValidation.errors.size()).isEqualTo(3);
@@ -88,22 +85,9 @@ public class SampleValidationHelperTest extends AbstractTests {
 		assertThat(contextValidation.errors.toString()).contains("isFragmented");
 		assertThat(contextValidation.errors.toString()).contains("taxonSize");
 		
-		config = AbstractTests.fakeConfiguration();
-		config.remove("institute");
-		config.put("institute","CNG");
-		DescriptionHelper.initInstitute();
 		
-		//only the import type exists so the sample type generate a error 
-		assertThat(contextValidation.errors.size()).isEqualTo(3);
-		assertThat(contextValidation.errors.toString()).contains("isAdapters");
-		assertThat(contextValidation.errors.toString()).contains("isFragmented");
-		assertThat(contextValidation.errors.toString()).contains("taxonSize");
 
 		
-		config = AbstractTests.fakeConfiguration();
-		config.remove("institute");
-		config.put("institute","CNS,CNG");
-		DescriptionHelper.initInstitute();
 	}
 	
 	

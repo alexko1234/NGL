@@ -77,7 +77,7 @@ public class ContainerTests extends AbstractTests {
 		//good given ContentPercentage
 		ContainerHelper.calculPercentageContent(cnt.contents, 80.0);
 		contextValidation.displayErrors(logger);
-		assertThat(c1.percentage).isEqualTo(1.6);
+		assertThat(c1.percentage).isEqualTo(2.00);
 		assertThat(c2.percentage).isEqualTo(80.0);
 		assertThat(c3.percentage).isEqualTo(80.0);
 		assertThat(c4.percentage).isEqualTo(240.0);	
