@@ -89,16 +89,18 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 						 "required":true,
 			        	 "type":"number",
 			        	 "position":50.2,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.quantity")+ " (ng)",
 			        	 "property":"outputContainerUsed.quantity.value",
 			        	 "order":true,
-						 "edit":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":52,
+			        	 "watch":true,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }, 
 			         {
@@ -109,6 +111,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":51,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -229,41 +232,41 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 					
-		if (col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
+		if (col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'  ){
 			computeInputQuantityToContentProperties(value.data);
+			
 		}
 	}
 	
 	
 	  var computeInputQuantityToContentProperties  = function(udtData){
-		     var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
-	         var inputQtty = getter(udtData);
+		     var getter = $parse("outputContainerUsed.quantity.value");
+	         var outputQtty = getter(udtData);
 	   
 	        var compute = {
-	                inputvolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
-	                concentration : $parse("inputContainerUsed.concentration.value")(udtData),
+	                outputvolume : $parse("outputContainerUsed.volume.value")(udtData),
+	                concentration : $parse("outputContainerUsed.concentration.value")(udtData),
 	                isReady:function(){
-	                    return (this.inputvolume && this.concentration);
+	                    return (this.outputvolume && this.concentration);
 	                }
 	            };
 	           
 	           if(compute.isReady()){
-	               var result = $parse("(inputvolume * concentration)")(compute);
+	               var result = $parse("(outputvolume * concentration)")(compute);
 	               console.log("result = "+result);
 	              
 	               if(angular.isNumber(result) && !isNaN(result)){
-	            	   inputQtty = Math.round(result*10)/10;               
+	            	   outputQtty = Math.round(result*10)/10;           
 	               }else{
-	            	   inputQtty = undefined;
+	            	   outputQtty = undefined;
 	               }   
-	               getter.assign(udtData, inputQtty);
+	               getter.assign(udtData, outputQtty);
 	              
 	           }else{
 	               getter.assign(udtData, undefined);
-	               console.log("not ready to inputQtty");
+	               console.log("not ready to outputQtty");
 	           }
 	  }
-	
 		
 	
 	//Init		

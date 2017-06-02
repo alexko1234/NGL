@@ -89,6 +89,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":80,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         //pass by copie of dynamic properties
@@ -110,6 +111,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":90,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -243,6 +245,47 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+					
+		if (col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'  ){
+			computeInputQuantityToContentProperties(value.data);
+			
+		}
+	}
+	
+	
+	  var computeInputQuantityToContentProperties  = function(udtData){
+		     var getter = $parse("outputContainerUsed.experimentProperties.postFrgQuantity.value");
+	         var outputQtty = getter(udtData);
+	   
+	        var compute = {
+	                outputvolume : $parse("outputContainerUsed.volume.value")(udtData),
+	                concentration : $parse("outputContainerUsed.concentration.value")(udtData),
+	                isReady:function(){
+	                    return (this.outputvolume && this.concentration);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(outputvolume * concentration)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   outputQtty = Math.round(result*10)/10;               
+	               }else{
+	            	   outputQtty = undefined;
+	               }   
+	               getter.assign(udtData, outputQtty);
+	              
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to outputQtty");
+	           }
+	  }
+	
+
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	

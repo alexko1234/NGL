@@ -89,6 +89,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 						 "required":true,
 			        	 "type":"number",
 			        	 "position":50,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -99,6 +100,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":52,
+			        	 "watch":true,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }, 
 			         {
@@ -109,6 +111,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":51,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)"  ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -193,7 +196,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);		
-		calcOutputQuantityToAttribute($scope.experiment);
+	//	calcOutputQuantityToAttribute($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -246,38 +249,51 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 			concentration : "ng/µl",
 			quantity : "ng"			
 	}
-	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-	$scope.atmService = atmService;
 	
 	
-	$scope.calcOutputQuantityToAttribute=function(value){
-		if(value!=null & value !=undefined){
-			calculOutputQuantityFromValue(value.data);
-	   }
-	};
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+					
+		if (col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'  ){
+			computeInputQuantityToContentProperties(value.data);
+			
+		}
+	}
 	
 	
-	
-	var calcOutputQuantityToAttribute = function(experiment){
-		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
-			var atm = experiment.atomicTransfertMethods[i];
-			var ocu = atm.outputContainerUseds[0]; 
-				
-				if (ocu.concentration && ocu.volume ){
-					var outputVol = ocu.volume.value;
-					var outputConc = ocu.concentration.value;
-							
-						var getter = $parse("quantity.value");
-						var outputQtty= outputVol * outputConc;
-						console.log("call calcOutputQuantityToAttributes outputQuantity: " + outputQtty);
-						
-						getter.assign(ocu,outputQtty)
-						
-					}else{
-							oci.quantity = null;
-				}			
-		}				
-	};
+	  var computeInputQuantityToContentProperties  = function(udtData){
+		     var getter = $parse("outputContainerUsed.quantity.value");
+	         var outputQtty = getter(udtData);
+	   
+	        var compute = {
+	                outputvolume : $parse("outputContainerUsed.volume.value")(udtData),
+	                concentration : $parse("outputContainerUsed.concentration.value")(udtData),
+	                isReady:function(){
+	                    return (this.outputvolume && this.concentration);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(outputvolume * concentration)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   outputQtty = Math.round(result*10)/10;           
+	               }else{
+	            	   outputQtty = undefined;
+	               }  
+	               
+	               getter.assign(udtData, outputQtty);
+	               console.log("result = testtttt");
+	                  
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to outputQtty");
+	           }
+	  }
+		atmService.experimentToView($scope.experiment, $scope.experimentType);
+
+		$scope.atmService = atmService;
+		
 	
 }]);
