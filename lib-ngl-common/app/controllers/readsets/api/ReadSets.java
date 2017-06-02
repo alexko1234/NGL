@@ -238,6 +238,12 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.in("sampleOnContainer.sampleTypeCode", form.sampleTypeCodes));
 		}
 
+		if(CollectionUtils.isNotEmpty(form.archiveIds)){
+			queries.add(DBQuery.in("archiveId", form.archiveIds));
+		}else if(StringUtils.isNotBlank(form.regexArchiveId)){
+			queries.add(DBQuery.regex("archiveId", Pattern.compile(form.regexArchiveId)));
+		}
+		
 		//TODO must be change to used a generic system (see below)
 		/*
 		if (StringUtils.isNotBlank(form.isSentCCRT)) {

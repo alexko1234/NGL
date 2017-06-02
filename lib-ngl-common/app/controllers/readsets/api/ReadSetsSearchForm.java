@@ -64,6 +64,10 @@ public class ReadSetsSearchForm extends ListForm{
     
     public String location;
     
+    public String regexArchiveId;
+    public Set<String> archiveIds;
+    
+    
     public Set<String> existingFields, notExistingFields;
     
     //public String isSentCCRT, isSentCollaborator;
