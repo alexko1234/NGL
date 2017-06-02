@@ -202,10 +202,9 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
-	}
- 
- if($scope.experiment.typeCode !== "chip-migration-rna-evaluation"){
-	columns.push({
+	
+	 
+	 columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",
 			"order" : false,
@@ -217,9 +216,33 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				0 : Messages("experiments.inputs")
 			}
 		});
- }
- 
-	if($scope.experiment.typeCode === "chip-migration-rna-evaluation"){
+	 
+	 columns.push({
+			"header" : Messages("containers.table.tags"),
+			"property" : "inputContainer.contents",
+			"order" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 7.2,
+			"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+
+		}); 
+	 
+	 columns.push({
+			"header" :  Messages("containers.table.quantity.unit"),
+			"property" : "inputContainerUsed.experimentProperties.quantity1.unit",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 19.1,			
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
+		});
+	 
+ } else if($scope.experiment.typeCode === "chip-migration-rna-evaluation"){
 		columns.push({		
 			"header" : Messages("containers.table.libraryToDo"),
 			"property" : "inputContainerUsed.contents",
@@ -233,33 +256,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				0 : Messages("experiments.inputs")
 			}
 		});
-	}else{
-		columns.push({
-			"header" :  Messages("containers.table.quantity.unit"),
-			"property" : "inputContainerUsed.experimentProperties.quantity1.unit",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 19.1,			
-			"extraHeaders" : {0 : Messages("experiments.inputs")}
-		});
-	}
-		/*	
-	columns.push({
-			"header" : Messages("containers.table.tags"),
-			"property" : "inputContainer.contents",
-			"order" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 9.2,
-			"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-
-		}); 
-	*/
+}
+		
 	$scope.atmService.data.setColumnsConfig(columns);
 
 	

@@ -33,9 +33,12 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		createIndexIllumina(limsServices,contextError);
 		createIndexNanopore(contextError);
 		createIndexChromium(contextError);
+		createIndexNEBNext(contextError);
 	}
 
 	
+	
+
 	public static void createIndexIllumina(LimsCNSDAO limsServices,ContextValidation contextValidation) throws SQLException, DAOException{
 		
 	List<Index> indexs = limsServices.findIndexIlluminaToCreate(contextValidation) ;
@@ -100,6 +103,48 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		index.categoryCode = "POOL-INDEX";
 		index.supplierName = new HashMap<String,String>();
 		index.supplierName.put("10x Genomics", code);
+		index.traceInformation=new TraceInformation("ngl-data");
+		
+		return index;
+	}
+	
+	
+	private void createIndexNEBNext(ContextValidation contextValidation) {
+		List<Index> indexes = new ArrayList<Index>();
+		
+		indexes.add(getNEBNextIndex("NEBNext1", "ATCACG", "IND1"));
+		indexes.add(getNEBNextIndex("NEBNext2", "CGATGT", "IND2"));
+		indexes.add(getNEBNextIndex("NEBNext3", "TTAGGC", "IND3"));
+		indexes.add(getNEBNextIndex("NEBNext4", "TGACCA", "IND4"));
+		indexes.add(getNEBNextIndex("NEBNext5", "ACAGTG", "IND5"));
+		indexes.add(getNEBNextIndex("NEBNext6", "GCCAAT", "IND6"));
+		indexes.add(getNEBNextIndex("NEBNext7", "CAGATC", "IND7"));
+		indexes.add(getNEBNextIndex("NEBNext8", "ACTTGA", "IND8"));
+		indexes.add(getNEBNextIndex("NEBNext9", "GATCAG", "IND9"));
+		indexes.add(getNEBNextIndex("NEBNext10", "TAGCTT", "IND10"));
+		indexes.add(getNEBNextIndex("NEBNext11", "GGCTAC", "IND11"));
+		indexes.add(getNEBNextIndex("NEBNext12", "CTTGTA", "IND12"));
+		
+		indexes.forEach(index-> {
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+				//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);
+				InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+			} else {
+				//Logger.info("index : "+ index.code + " already exists !!");
+			}
+		});			
+	}
+	
+	private static Index getNEBNextIndex(String code, String seq, String shortName) {
+		Index index = new IlluminaIndex();
+		
+		index.code = code;
+		index.name = code;
+		index.shortName = shortName;
+		index.sequence = seq ; 
+		index.categoryCode = "SINGLE-INDEX";
+		index.supplierName = new HashMap<String,String>();
+		index.supplierName.put("NEB", code);
 		index.traceInformation=new TraceInformation("ngl-data");
 		
 		return index;

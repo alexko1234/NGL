@@ -267,7 +267,7 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Type de déplétion", "depletionMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
 				DescriptionFactory.newValues("pas de déplétion","déplétion rRNA prok","déplétion rRNA plante"),	null,null,null,"single", 14, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole synthese cDNA", "cDNAsynthesisMethod", LevelService.getLevels(Level.CODE.Process), String.class, true, null, 
-				DescriptionFactory.newValues("TruSeq Stranded poly A","TruSeq Stranded Proc","Smarter Stranded", "RNA NEB_U2 Stranded"), null,null,null,"single", 15, true, null, null));
+				DescriptionFactory.newValues("TruSeq Stranded poly A","TruSeq Stranded Proc","Smarter Stranded", "RNA NEB_U2 Stranded", "InDA-C Ovation Universal RNA-Seq"), null,null,null,"single", 15, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());

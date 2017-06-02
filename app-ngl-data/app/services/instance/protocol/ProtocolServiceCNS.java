@@ -168,6 +168,11 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_16S_V1V2V3","Tag 16S_V1V2V3","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		
+		
+		
 		
 		lp.add(newProtocol("amplif_ptr_sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
 		lp.add(newProtocol("amplif_nebnext_ultraii_ptr_151_1","Amplif_NebNext_UltraII ptr 151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
@@ -210,6 +215,12 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("rna_neb_u2_stranded","RNA NEB_U2 Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+		
+		lp.add(newProtocol("inda-c_ovation_universal_rna-seq","InDA-C Ovation Universal RNA-Seq","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
+				concatMap(newPSV("rnaLibProtocol","InDA-C Ovation Universal RNA-Seq"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random + oligodT"))));
+		
+		
+		
 		
 		/*
 		lp.add(newProtocol("indac","Indac","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library"), 
