@@ -21,6 +21,7 @@ public abstract class AbstractTestsSRA {
 	protected final String userTest="user_test";
 	@BeforeClass
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
+		System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-sub-test-sra.conf"));
 		app = getFakeApplication();
 		Helpers.start(app);
 	}
@@ -33,41 +34,11 @@ public abstract class AbstractTestsSRA {
 
 	
 	public static FakeApplication getFakeApplication(){
-		return fakeApplication(fakeConfiguration());
+		return fakeApplication();
 	}
 	
 	
-	public static Map<String,String> fakeConfiguration(){
-		Map<String,String> config = new HashMap<String,String>();
-		
-		config.put("evolutionplugin", "disabled");
-		config.put("db.default.driver", "com.mysql.jdbc.Driver");
-		// pour charger l'historique en dev
-		
-		// pour charger l'historique en dev :
-		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
-		config.put("db.default.user", "NGL_user");
-		config.put("db.default.password", "NGL_passwd");
-		config.put("mongodb.database","CNS-NGL");
-		config.put("mongodb.credentials","ngl:ngl");
-		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
-
-		
-		config.put("db.default.partitionCount", "1");
-		config.put("db.default.maxConnectionsPerPartition", "10");
-		config.put("db.default.minConnectionsPerPartition", "1");
-		config.put("db.default.logStatements", "true");
-		config.put("db.default.jndiName", "ngl");
-			
-		config.put("ehcacheplugin", "disabled");
-		config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
-		config.put("accessionReporting.email.subject.success", "TEST ngl-sub : Ebi Accession Reporting success");		          
-		config.put("accessionReporting.email.subject.error", "TEST ngl-sub : Ebi Accession Reporting errors");
-		config.put("institute", "CNS");
 	
-		return config;
-		
-	}
 	
 	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName,String code)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {

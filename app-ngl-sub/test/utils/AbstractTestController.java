@@ -19,6 +19,7 @@ protected static FakeApplication app;
 	
 	@BeforeClass
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
+		System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-sub-test-controller.conf"));
 		app = getFakeApplication();
 		Helpers.start(app);
 	}
@@ -31,38 +32,8 @@ protected static FakeApplication app;
 
 	
 	public static FakeApplication getFakeApplication(){
-		return fakeApplication(fakeConfiguration());
+		return fakeApplication();
 	}
 	
-	
-	public static Map<String,String> fakeConfiguration(){
-		Map<String,String> config = new HashMap<String,String>();
-		
-		config.put("evolutionplugin", "disabled");
-		config.put("db.default.driver", "com.mysql.jdbc.Driver");
-		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
-		config.put("db.default.user", "NGL_user");
-		config.put("db.default.password", "NGL_passwd");
-		config.put("db.default.partitionCount", "1");
-		config.put("db.default.maxConnectionsPerPartition", "10");
-		config.put("db.default.minConnectionsPerPartition", "1");
-		config.put("db.default.logStatements", "true");
-		config.put("db.default.jndiName", "ngl");
-				
-		config.put("mongodb.database","NGL-TESTU");
-		config.put("mongodb.credentials","testu:testu");
-		config.put("mongodb.servers","mongodev.genoscope.cns.fr:27017");
-//		config.put("mongodb.servers","mongouat.genoscope.cns.fr:27018");
-		//config.put("ehcacheplugin", "disabled");
-		
-		//config.put("playjongo.uri", "mongodb://ngl:ngl@mongouat.genoscope.cns.fr:27018/CNS-NGL");
-		//config.put("playjongo.gridfs.enabled","false");
-		
-		config.put("institute", "CNS");
-		config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
-
-		return config;
-		
-	}
 	
 }

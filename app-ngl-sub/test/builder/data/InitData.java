@@ -14,9 +14,9 @@ import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 import play.Logger;
-import utils.AbstractTestData;
+import utils.AbstractTestController;
 
-public class InitData extends AbstractTestData{
+public class InitData extends AbstractTestController{
 
 
 	@Test

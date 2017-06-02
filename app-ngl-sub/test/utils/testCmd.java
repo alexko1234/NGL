@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class testCmd extends AbstractTests {
+public class testCmd extends AbstractTestsSRA {
 	
 	@Test
 	public void test() throws IOException {
