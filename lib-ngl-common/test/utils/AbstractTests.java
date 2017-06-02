@@ -25,6 +25,7 @@ public abstract class AbstractTests {
 	protected static Map<String,String> config = new HashMap<String,String>();
 	@BeforeClass
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
+		System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-common-test.conf"));
 		app = getFakeApplication();
 		Helpers.start(app);
 		DescriptionHelper.initInstitute();
@@ -39,7 +40,7 @@ public abstract class AbstractTests {
 
 	
 	public static FakeApplication getFakeApplication(){
-		return fakeApplication(fakeConfiguration());
+		return fakeApplication();
 	}
 	
 	
