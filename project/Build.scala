@@ -59,7 +59,13 @@ object ApplicationBuild extends Build {
   
    object Resolvers {        
    	import BuildSettings._
-        val nexusig = "Nexus repository" at "https://gsphere.genoscope.cns.fr/nexus/content/groups/public/" 
+        var location = sys.env.getOrElse("NGL_LOCATION", default = "external")
+   	
+   	    val nglgithub	= "NGL GitHub Repo" at "https://institut-de-genomique.github.io/NGL-Dependencies/"    
+   	    val nexusoss = "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public/"
+		val mavencentral = "Maven central" at "http://central.maven.org/maven2/"
+   	    val nexusig = "Nexus repository" at "https://gsphere.genoscope.cns.fr/nexus/content/groups/public/" 
+        val nexus = if(location.equalsIgnoreCase("external")) Seq(nexusoss,mavencentral,nglgithub) else Seq(nexusig,nglgithub)	
         val nexusigrelease = "releases"  at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/releases"
         val nexusigsnapshot = "snapshots" at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/snapshots"
         val nexusigpublish = if (buildVersion.endsWith("SNAPSHOT")) nexusigsnapshot else nexusigrelease				
@@ -150,7 +156,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here
     version := libDatatableVersion,
     libraryDependencies ++= ngldatatableDependencies,
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     sbt.Keys.fork in Test := false,
     publishTo := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
@@ -168,7 +174,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here     
     version := libFrameworkWebVersion,
     libraryDependencies ++= nglframeworkwebDependencies,
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     sbt.Keys.fork in Test := false,
     publishTo := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
@@ -187,7 +193,7 @@ object ApplicationBuild extends Build {
     version := appVersion,
     libraryDependencies ++= nglcommonDependencies,
 
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     resolvers += "julienrf.github.com" at "http://julienrf.github.com/repo/",
     sbt.Keys.fork in Test := false,
     publishTo := Some(nexusigpublish),
@@ -197,7 +203,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here      
     version := biVersion,
     libraryDependencies ++= nglbiDependencies,
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
@@ -205,7 +211,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here 
     version := appVersion,
     libraryDependencies ++= ngldataDependencies,
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
@@ -213,7 +219,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here      
     version := sqVersion,
     libraryDependencies ++= nglsqDependencies,
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
@@ -221,7 +227,7 @@ object ApplicationBuild extends Build {
     // Add your own project settings here    
     version := subVersion,
     libraryDependencies ++= nglsubDependencies,
-    resolvers := Seq(nexusig),
+    resolvers := nexus,
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 /*    
@@ -229,7 +235,7 @@ object ApplicationBuild extends Build {
              // Add your own project settings here   
 		version := appVersion,
 		libraryDependencies ++= nglauthDependencies,			 
-             resolvers := Seq(nexusig),
+             resolvers := nexus,
              publishArtifact in makePom := false,
              publishTo := Some(nexusigpublish)
    ).dependsOn(nglcommon)
@@ -237,7 +243,7 @@ object ApplicationBuild extends Build {
    val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
 		// Add your own project settings here  
 		version := appVersion,				
-		resolvers := Seq(nexusig),
+		resolvers := nexus,
 		publishArtifact in makePom := false,
 		publishTo := Some(nexusigpublish)
           
@@ -247,7 +253,7 @@ object ApplicationBuild extends Build {
        // Add your own project settings here
 	   version := appVersion,
 		libraryDependencies ++= nglplaquesDependencies,	
-       resolvers := Seq(nexusig),
+       resolvers := nexus,
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)
     ).dependsOn(nglcommon % "test->test;compile->compile")
@@ -257,7 +263,7 @@ object ApplicationBuild extends Build {
        // Add your own project settings here      
 	     version := appVersion,
 		libraryDependencies ++= ngldevguideDependencies,
-       resolvers := Seq(nexusig),
+       resolvers := nexus,
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish) 
     ).dependsOn(nglcommon % "test->test;compile->compile")
@@ -266,7 +272,7 @@ object ApplicationBuild extends Build {
        // Add your own project settings here   
 		version := projectsVersion,
 		libraryDependencies ++= nglprojectsDependencies,   
-       resolvers := Seq(nexusig),
+       resolvers := nexus,
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)
      ).dependsOn(nglcommon % "test->test;compile->compile")
@@ -275,7 +281,7 @@ object ApplicationBuild extends Build {
        // Add your own project settings here   
 		version := reagentsVersion,
 		libraryDependencies ++= nglreagentsDependencies,   
-       resolvers := Seq(nexusig),
+       resolvers := nexus,
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)
      ).dependsOn(nglcommon % "test->test;compile->compile")
@@ -284,7 +290,7 @@ object ApplicationBuild extends Build {
    val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.PlayJava).settings(
       // Add your own project settings here     
 		version := appVersion,			  
-      resolvers := Seq(nexusig),
+      resolvers := nexus,
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
