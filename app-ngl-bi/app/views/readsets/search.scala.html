@@ -159,7 +159,7 @@
 	<form class="well well-small">
 			<div class="row">
 			<div class="col-md-2 col-lg-2" ng-repeat="columns in searchService.getAddColumnsToForm()">
-			  		<div class="checkbox" ng-repeat="column in columns">
+			  		<div class="checkbox" ng-repeat="column in columns | filter:{header:regexColumn}">
 				    <label>
 				      <input type="checkbox" ng-model="column.select"> {{column.header}}
 				    </label>
@@ -175,8 +175,9 @@
 						<i class="fa fa-undo"></i>
 					</button>												 	
 				</div>	
-				
-				<input type="text" class="form-control" ng-model="searchService.regexColumn" placeholder='@Messages("search.placeholder.readset.regexColumn")' ng-change="searchService.refreshAdditionalColumns()">
+				}
+				@formGroup{
+				<input type="text" class="form-control" ng-model="regexColumn" placeholder='@Messages("search.placeholder.readset.regexColumn")'>
 				}					
 			}
 			</div>			
