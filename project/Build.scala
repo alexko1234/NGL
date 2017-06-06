@@ -220,6 +220,9 @@ object ApplicationBuild extends Build {
     version := sqVersion,
     libraryDependencies ++= nglsqDependencies,
     resolvers := nexus,
+	//publishArtifact in (Compile, packageDoc) := false,
+    //publishArtifact in packageDoc := false,
+    sources in (Compile,doc) := Seq.empty,
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
