@@ -442,6 +442,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (this.config.group.active && this.config.group.by) {
                     var propertyGroupGetter = this.config.group.by.property;
                     propertyGroupGetter += this.getFilter(this.config.group.by);
+                    propertyGroupGetter += this.getFormatter(this.config.group.by);
                     if(this.config.group.by=="all"){
                     	propertyGroupGetter="all";
                     }
@@ -497,16 +498,23 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                }
 	                            } else if ('unique' === column.groupMethod) {
 	                                var result = $filter('udtUnique')(groupData, propertyGetter);
-	                                if (result.length > 1) {
+	                                if (!angular.isArray(result)) {
+	                                    result = columnGetter(result);
+	                                } else if (angular.isArray(result) && result.length > 1) {
 	                                    result = '#MULTI';
-	                                } else if (result.length === 1) {
+	                                } else if (angular.isArray(result) && result.length === 1) {
 	                                    result = columnGetter(result[0]);
 	                                } else {
 	                                    result = undefined;
 	                                }
 	                                columnSetter.assign(group, result);
 	                            } else if ('countDistinct' === column.groupMethod) {
-	                                var result = $filter('udtCountdistinct')(groupData, propertyGetter);
+	                                var result = $filter('udtCount')(groupData, propertyGetter,true);
+	                                columnSetter.assign(group, result);
+	                            } else if (column.groupMethod.startsWith('count')) {
+	                            	var params = column.groupMethod.split(":");
+	                            	var distinct = (params.length === 2 && params[1] === 'true')?true:false;
+	                            	var result = $filter('udtCount')(groupData, propertyGetter,distinct);
 	                                columnSetter.assign(group, result);
 	                            } else if (column.groupMethod.startsWith('collect')) {
 	                            	var params = column.groupMethod.split(":");
@@ -555,7 +563,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (this.config.group.active) {
                     var columnId;
                     column === 'all' ? columnId = 'all' : columnId = column.id;
- 		    		if(this.config.group.by === undefined || this.config.group.by.property !== column.property){
+ 		    		if(this.config.group.by === undefined || this.config.group.by.id !== column.id){
 						this.config.group.start = true;
                         if (columnId === "all") {
                             this.config.group.by = columnId;
@@ -3164,7 +3172,7 @@ directive("udtCell", function(){
 			    				//if error in group function
 			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
 			    					return v;
-			    				}else if(angular.isDefined(v) ){
+			    				}else if(angular.isDefined(v)){
 			    					//no filtered and no formatter properties because used during the compute
 			    					return currentScope.$eval("group."+column.id, value.data);
 			    				}else{
@@ -3849,8 +3857,8 @@ filter('udtConvert', ['udtConvertValueServices', function(udtConvertValueService
     			return input;
     		}
 }]);;angular.module('ultimateDataTableServices').
-filter('udtCountdistinct', ['$parse',function($parse) {
-    	    return function(array, key) {
+filter('udtCount', ['$parse',function($parse) {
+    	    return function(array, key, distinct) {
     	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
@@ -3861,11 +3869,11 @@ filter('udtCountdistinct', ['$parse',function($parse) {
     	    	angular.forEach(array, function(element){
     	    		if (angular.isObject(element)) {
     	    			var currentValue = $parse(key)(element);
-    	    			if(undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
+    	    			if(distinct && undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
        	    				possibleValues.push(currentValue);
-    	    			}
-    	    			
-    	    			
+    	    			}else if(!distinct && undefined !== currentValue && null !== currentValue){
+    	    				possibleValues.push(currentValue);
+    	    			}    	    			
     	    		}else if (!params.key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
@@ -3911,22 +3919,25 @@ filter('udtUnique', ['$parse', function($parse) {
     		      collection = (angular.isObject(collection)) ? toArray(collection) : collection;
 
     		      if (isUndefined(property)) {
-    		        return collection.filter(function (elm, pos, self) {
-    		          return self.indexOf(elm) === pos;
-    		        })
+    		    	  var results =  collection.filter(function (elm, pos, self) {
+						  return self.indexOf(elm) === pos;
+					  })
+					  return (results.length === 1)?results[0]:results;
     		      }
     		      //store all unique members
     		      var uniqueItems = [],
     		          get = $parse(property);
 
-    		      return collection.filter(function (elm) {
-    		        var prop = get(elm);
-    		        if(some(uniqueItems, prop)) {
-    		          return false;
-    		        }
-    		        uniqueItems.push(prop);
-    		        return true;
-    		      });
+				  var results = collection.filter(function (elm) {
+					var prop = get(elm);
+					if(some(uniqueItems, prop)) {
+					  return false;
+					}
+					uniqueItems.push(prop);
+					return true;
+				  });
+					  
+				  return (results.length === 1)?results[0]:results;
 
     		      //checked if the unique identifier is already exist
     		      function some(array, member) {
