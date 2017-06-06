@@ -351,11 +351,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 		return values;
 	}
 	
-/*	public static  List<Value> getBanqueProcessTypeN(){
+	public static  List<Value> getBanqueProcessTypeN(){
 		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("N", "N - Mate Pair"));
+		values.add(DescriptionFactory.newValue("N", "N - Mate-pair Nextera"));
 		return values;
 	}
-	*/
+	
 
 }

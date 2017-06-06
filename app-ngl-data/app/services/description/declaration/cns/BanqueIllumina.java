@@ -319,7 +319,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 		List<Value> libProcessTypeCodes = new ArrayList<Value>();
 		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDA());
 		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
-	//	libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeN());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeN());
 		
 		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
 		
