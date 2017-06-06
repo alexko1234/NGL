@@ -121,7 +121,7 @@ public class XmlServices {
 			chaine = chaine + ">\n";
 			chaine = chaine + "    <DESCRIPTOR>\n";
 			chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
-			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ study.existingStudyType +"\"/>\n";
+			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ VariableSRA.mapExistingStudyType.get(study.existingStudyType) +"\"/>\n";
 			chaine = chaine + "      <STUDY_ABSTRACT>" + study.studyAbstract + "</STUDY_ABSTRACT>\n";
 			chaine = chaine + "      <CENTER_PROJECT_NAME>" + study.centerProjectName+"</CENTER_PROJECT_NAME>\n"; 
 			//if (study.bioProjectId != 0) {
@@ -255,8 +255,8 @@ public class XmlServices {
 				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection) + "</LIBRARY_SELECTION>\n";
 				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
 				
-				chaine = chaine + "              <"+ experiment.libraryLayout;	
-				if("PAIRED".equals(experiment.libraryLayout)) {
+				chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout.get(experiment.libraryLayout);	
+				if("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
 					chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
 				}
 				chaine = chaine + " />\n";
@@ -282,9 +282,9 @@ public class XmlServices {
 				}
 				chaine = chaine + "      </DESIGN>\n";
 				chaine = chaine + "      <PLATFORM>\n";
-				chaine = chaine + "        <" + experiment.typePlatform + ">\n";
-				chaine = chaine + "          <INSTRUMENT_MODEL>" + experiment.instrumentModel + "</INSTRUMENT_MODEL>\n";
-				chaine = chaine + "        </" + experiment.typePlatform + ">\n";
+				chaine = chaine + "        <" + VariableSRA.mapTypePlatform.get(experiment.typePlatform) + ">\n";
+				chaine = chaine + "          <INSTRUMENT_MODEL>" + VariableSRA.mapInstrumentModel.get(experiment.instrumentModel) + "</INSTRUMENT_MODEL>\n";
+				chaine = chaine + "        </" + VariableSRA.mapTypePlatform.get(experiment.typePlatform) + ">\n";
 				chaine = chaine + "      </PLATFORM>\n";
 				chaine = chaine + "  </EXPERIMENT>\n";
 			}

@@ -1527,8 +1527,12 @@ public class SubmissionServices {
 						
 					} else {
 						// todo : verifier qu'on ne detruit que des experiments en new ou uservalidate
-						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
-						//System.out.println("deletion dans base pour experiment "+experimentCode);
+						if ("N".equals(experiment.state.code) ||"V-SUB".equals(experiment.state.code) ||"NR".equals(experiment.state.code)){
+							MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
+							//System.out.println("deletion dans base pour experiment "+experimentCode);
+						} else {
+							System.out.println(experimentCode + " non delété dans base car status = " + experiment.state.code);
+						}
 					}
 				}
 			}
