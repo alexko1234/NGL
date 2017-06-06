@@ -260,6 +260,8 @@
 				additionalColumns:[],
 				additionalFilters:[],
 				selectedAddColumns:[],
+				regexColumn:undefined,
+				
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -373,6 +375,15 @@
 							formColumns.push([]);
 						}
 						this.additionalColumns = formColumns;
+					}
+				},
+				
+				refreshAdditionalColumns:function(){
+					if(this.additionalColumns.length === 0){
+						this.initAdditionalColumns();
+					}
+					if(this.regexColumn && this.additionalColumns.length>0){
+						console.log("Refresh additionnal column");
 					}
 				},
 				
