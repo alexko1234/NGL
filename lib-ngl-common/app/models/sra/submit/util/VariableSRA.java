@@ -222,6 +222,7 @@ public interface VariableSRA {
 			put("hiseq2500","Illumina HiSeq 2500");
 			put("illumina hiseq 2000","Illumina HiSeq 2000");
 			put("hiseq2000","Illumina HiSeq 2000");
+			put("illumina hiseq 2000","Illumina HiSeq 2000");
 			put("illumina hiseq 1500","Illumina HiSeq 1500");
 			put("hiseq1500","Illumina HiSeq 1500");
 			put("illumina hiseq 1000","Illumina HiSeq 1000");

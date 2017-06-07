@@ -121,7 +121,7 @@ public class XmlServices {
 			chaine = chaine + ">\n";
 			chaine = chaine + "    <DESCRIPTOR>\n";
 			chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
-			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ VariableSRA.mapExistingStudyType.get(study.existingStudyType) +"\"/>\n";
+			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ VariableSRA.mapExistingStudyType.get(study.existingStudyType.toLowerCase()) +"\"/>\n";
 			chaine = chaine + "      <STUDY_ABSTRACT>" + study.studyAbstract + "</STUDY_ABSTRACT>\n";
 			chaine = chaine + "      <CENTER_PROJECT_NAME>" + study.centerProjectName+"</CENTER_PROJECT_NAME>\n"; 
 			//if (study.bioProjectId != 0) {
@@ -232,7 +232,7 @@ public class XmlServices {
 					chaine = chaine + " refname=\"" + experiment.studyCode +"\"";
 				}
 				if (StringUtils.isNotBlank(experiment.studyAccession)){
-					chaine = chaine + " accession=\""+experiment.studyAccession + "\"";
+					chaine = chaine + " accession=\"" + experiment.studyAccession + "\"";
 				}
 				chaine = chaine + ">" +"</STUDY_REF>\n";
 				
@@ -250,12 +250,12 @@ public class XmlServices {
 				
 				chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
 				chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
-				chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy.get(experiment.libraryStrategy) + "</LIBRARY_STRATEGY>\n";
-				chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource.get(experiment.librarySource) + "</LIBRARY_SOURCE>\n";
-				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection) + "</LIBRARY_SELECTION>\n";
+				chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy.get(experiment.libraryStrategy.toLowerCase()) + "</LIBRARY_STRATEGY>\n";
+				chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource.get(experiment.librarySource.toLowerCase()) + "</LIBRARY_SOURCE>\n";
+				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection.toLowerCase()) + "</LIBRARY_SELECTION>\n";
 				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
 				
-				chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout.get(experiment.libraryLayout);	
+				chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout.get(experiment.libraryLayout.toLowerCase());	
 				if("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
 					chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
 				}
@@ -282,9 +282,9 @@ public class XmlServices {
 				}
 				chaine = chaine + "      </DESIGN>\n";
 				chaine = chaine + "      <PLATFORM>\n";
-				chaine = chaine + "        <" + VariableSRA.mapTypePlatform.get(experiment.typePlatform) + ">\n";
-				chaine = chaine + "          <INSTRUMENT_MODEL>" + VariableSRA.mapInstrumentModel.get(experiment.instrumentModel) + "</INSTRUMENT_MODEL>\n";
-				chaine = chaine + "        </" + VariableSRA.mapTypePlatform.get(experiment.typePlatform) + ">\n";
+				chaine = chaine + "        <" + VariableSRA.mapTypePlatform.get(experiment.typePlatform.toLowerCase()) + ">\n";
+				chaine = chaine + "          <INSTRUMENT_MODEL>" + VariableSRA.mapInstrumentModel.get(experiment.instrumentModel.toLowerCase()) + "</INSTRUMENT_MODEL>\n";
+				chaine = chaine + "        </" + VariableSRA.mapTypePlatform.get(experiment.typePlatform.toLowerCase()) + ">\n";
 				chaine = chaine + "      </PLATFORM>\n";
 				chaine = chaine + "  </EXPERIMENT>\n";
 			}
@@ -332,17 +332,23 @@ public class XmlServices {
 				chaine = chaine + "      <FILES>\n";
 				for (RawData rawData: run.listRawData) {
 					String fileType = rawData.extention;
+					String relatifName = rawData.relatifName;
+					if (!relatifName.endsWith(".gz")){
+						if (rawData.gzipForSubmission) {
+							relatifName = relatifName + ".gz";
+						}
+					}
 					if (fileType.equalsIgnoreCase("fastq.gz")){
 						fileType = "fastq";
 					} else {
-						fileType.replace(".gz", "");
+						fileType = fileType.replace(".gz", "");
 					}
-					chaine = chaine + "        <FILE filename=\"" + rawData.relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\">\n";
+					chaine = chaine + "        <FILE filename=\"" + relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\">\n";
 					if ( run.listRawData.size() == 2 ) {
 						chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
 						chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";
 					}
-					chaine = chaine +"</FILE>\n";
+					chaine = chaine + "        </FILE>\n";
 				}
 				chaine = chaine + "      </FILES>\n";
 				chaine = chaine + "    </DATA_BLOCK>\n";
@@ -431,7 +437,7 @@ public class XmlServices {
 		
 		chaine = chaine + ">\n";	
 		chaine = chaine + "    <CONTACTS>\n";
-		chaine = chaine + "      <CONTACT>  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
+		chaine = chaine + "      <CONTACT  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
 		chaine = chaine + "    </CONTACTS>\n";
 			
 		chaine = chaine + "    <ACTIONS>\n";
