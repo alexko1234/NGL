@@ -296,7 +296,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 			
 			/** Transfert, ordered by display order **/
-			// NOTE: pas de Node a creer pour experiences type transfert 
+			// NOTE: pas de Node a creer pour experiences type transfert...sauf cas particuliers
 			
 			l.add(newExperimentType("Aliquot","aliquoting",null, 10300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
@@ -579,6 +579,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				false,false,false,
 				getExperimentTypeNodes("prepa-flowcell",
 						               "prepa-fc-ordered"), // previous nodes
+				null, // pas de purif
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+		
+		// FDS 06/06/2017: NGL-1447 => le noeud "tubes-to-plate" doit etre declaré pour les process commencant par un transfert
+		// quels previous faut-il exactement ????? test ajout des ext-to...
+		newExperimentTypeNode("tubes-to-plate",getExperimentTypes("tubes-to-plate").get(0),
+				false,false,false,
+				getExperimentTypeNodes("lib-normalization",
+									   "normalization-and-pooling",
+									   "ext-to-prepa-fc-ordered",
+									   "ext-to-denat-dil-lib"), // previous nodes
 				null, // pas de purif
 				null, // pas qc
 				null  // pas tranfert
