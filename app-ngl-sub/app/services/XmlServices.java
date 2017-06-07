@@ -234,7 +234,7 @@ public class XmlServices {
 				if (StringUtils.isNotBlank(experiment.studyAccession)){
 					chaine = chaine + " accession=\"" + experiment.studyAccession + "\"";
 				}
-				chaine = chaine + ">" +"</STUDY_REF>\n";
+				chaine = chaine + "/>\n"; 
 				
 				chaine = chaine + "      <DESIGN>\n";
 				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
