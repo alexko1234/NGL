@@ -327,7 +327,7 @@ public class XmlServices {
 				//Format date
 				chaine =  chaine + "run_date=\""+ formatter.format(run.runDate)+"\"  run_center=\""+run.runCenter+ "\" ";
 				chaine = chaine + ">\n";
-				chaine = chaine + "    <EXPERIMENT_REF refname=\"" + experimentCode +"\">" +"</EXPERIMENT_REF>\n";
+				chaine = chaine + "    <EXPERIMENT_REF refname=\"" + experimentCode + "\"/>\n";
 				chaine = chaine + "    <DATA_BLOCK>\n";
 				chaine = chaine + "      <FILES>\n";
 				for (RawData rawData: run.listRawData) {
