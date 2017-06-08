@@ -208,7 +208,7 @@ public class UpdateReportingData extends AbstractImportData {
 	private Map<String, PropertyValue> filterProperties(
 			Map<String, PropertyValue> properties) {
 		return properties.entrySet().parallelStream()
-				.filter(entry -> !entry.getValue()._type.equals(PropertyValue.imgType)
+				.filter(entry -> entry.getValue() != null && !entry.getValue()._type.equals(PropertyValue.imgType)
 						&& !entry.getValue()._type.equals(PropertyValue.fileType))
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 	}
