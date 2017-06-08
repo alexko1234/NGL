@@ -305,7 +305,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     this.computePaginationList();
                     this.computeDisplayResult();
                     var that = this;
-                    this.computeDisplayResultTimeOut.finally(function() {
+                    this.computeDisplayResultTimeOut.then(function() {
                         that.setSpinner(false);
                     });
                 }
@@ -327,9 +327,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         $http.get(url(), {
                             params: this.getParams(params),
                             datatable: this
-                        }).success(function(data, status, headers, config) {
-                            config.datatable._setData(data.data, data.recordsNumber);
-                            that.computeDisplayResultTimeOut.finally(function() {
+                        }).then(function(resp) {
+                            resp.config.datatable._setData(resp.data.data, resp.data.recordsNumber);
+                            that.computeDisplayResultTimeOut.then(function() {
                                 that.setSpinner(false);
                             });
                         });
@@ -442,6 +442,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (this.config.group.active && this.config.group.by) {
                     var propertyGroupGetter = this.config.group.by.property;
                     propertyGroupGetter += this.getFilter(this.config.group.by);
+                    propertyGroupGetter += this.getFormatter(this.config.group.by);
                     if(this.config.group.by=="all"){
                     	propertyGroupGetter="all";
                     }
@@ -450,7 +451,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     var groupValues = this.allResult.reduce(function(array, value) {
                     	var groupValue = "all";
                     	if(propertyGroupGetter !== "all"){
-                    		groupValue = groupGetter(value).toString();
+                    		groupValue = groupGetter(value);
+                    		if(groupValue !== null && groupValue !== undefined){
+                    			groupValue = groupValue.toString();
+                    		}else{
+                    			groupValue = "";
+                    		}
                     	}
                         if (!array[groupValue]) {
                             array[groupValue] = [];
@@ -473,6 +479,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             if(column.id != that.config.group.by.id){                        	
 	                        	var propertyGetter = column.property;
 	                            propertyGetter += that.getFilter(column);
+	                            if ('sum' !== column.groupMethod && 'average' !== column.groupMethod) {
+	                            	propertyGetter += that.getFormatter(column);
+	                            }
 	                            var columnGetter = $parse(propertyGetter);
 	                            var columnSetter = $parse("group." + column.id);
 	
@@ -493,20 +502,30 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                    console.log("computeGroup Error : " + e);
 	                                }
 	                            } else if ('unique' === column.groupMethod) {
-	                                var result = $filter('udtUnique')(groupData, column.property);
-	                                if (result.length > 1) {
+	                                var result = $filter('udtUnique')(groupData, propertyGetter);
+	                                if (!angular.isArray(result)) {
+	                                    result = columnGetter(result);
+	                                } else if (angular.isArray(result) && result.length > 1) {
 	                                    result = '#MULTI';
-	                                } else if (result.length === 1) {
+	                                } else if (angular.isArray(result) && result.length === 1) {
 	                                    result = columnGetter(result[0]);
 	                                } else {
 	                                    result = undefined;
 	                                }
 	                                columnSetter.assign(group, result);
 	                            } else if ('countDistinct' === column.groupMethod) {
-	                                var result = $filter('udtCountdistinct')(groupData, propertyGetter);
+	                                var result = $filter('udtCount')(groupData, propertyGetter,true);
 	                                columnSetter.assign(group, result);
-	                            } else if ('collect' === column.groupMethod) {
-	                                var result = $filter('udtCollect')(groupData, propertyGetter);
+	                            } else if (column.groupMethod.startsWith('count')) {
+	                            	var params = column.groupMethod.split(":");
+	                            	var distinct = (params.length === 2 && params[1] === 'true')?true:false;
+	                            	var result = $filter('udtCount')(groupData, propertyGetter,distinct);
+	                                columnSetter.assign(group, result);
+	                            } else if (column.groupMethod.startsWith('collect')) {
+	                            	var params = column.groupMethod.split(":");
+	                            	var unique = (params.length === 2 && params[1] === 'true')?true:false;
+	                            	
+	                                var result = $filter('udtCollect')(groupData, propertyGetter,unique);
 	                                columnSetter.assign(group, result);
 	                            } else {
 	                                console.error("groupMethod is not managed " + column.groupMethod);
@@ -549,7 +568,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (this.config.group.active) {
                     var columnId;
                     column === 'all' ? columnId = 'all' : columnId = column.id;
- 		    		if(this.config.group.by === undefined || this.config.group.by.property !== column.property){
+ 		    		if(this.config.group.by === undefined || this.config.group.by.id !== column.id){
 						this.config.group.start = true;
                         if (columnId === "all") {
                             this.config.group.by = columnId;
@@ -582,6 +601,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         console.log("edit is active, you lost all modification !!");
                         this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
                     }
+
                     this.computeGroup();
                     this.sortAllResult(); //sort all the result                    
                     this.computePaginationList(); //redefined pagination
@@ -1267,7 +1287,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         isEdit = line.edit && this.config.edit.all;
                     } else {
                     	var nbEditableColumns = $filter('filter')(this.config.columns, {"edit":true}).length; 
-                    	
                         isEdit = (this.config.edit.columnMode && this.config.edit.start && nbEditableColumns > 0);
                     }
                 }
@@ -1411,11 +1430,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         var valueFunction = this.getValueFunction(this.config.save.value);
                         httpConfig.index = i;
                         return $http[method](urlFunction(value), valueFunction(value), httpConfig).
-                        success(function(data, status, headers, config) {
-                            config.datatable.saveRemoteOneElement(status, data, config.index);
-                        }).
-                        error(function(data, status, headers, config) {
-                            config.datatable.saveRemoteOneElement(status, data, config.index);
+                        then(function(resp) {
+                            resp.config.datatable.saveRemoteOneElement(resp.status, resp.data, resp.config.index);
+                            return resp;
+                        }, function(resp) {
+                            resp.config.datatable.saveRemoteOneElement(resp.status, resp.data, resp.config.index);
+                            return resp;
                         });
 
                     }
@@ -1571,16 +1591,17 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             index: i,
                             value: value
                         })
-                        .success(function(data, status, headers, config) {
-                            config.datatable.config.remove.ids.success.push(config.index);
-                            config.datatable.config.remove.number--;
-                            config.datatable.removeFinish();
-                        })
-                        .error(function(data, status, headers, config) {
-                            config.datatable.config.remove.ids.errors.push(config.value);
-                            config.datatable.config.remove.error++;
-                            config.datatable.config.remove.number--;
-                            config.datatable.removeFinish();
+                        .then(function(resp) {
+                            resp.config.datatable.config.remove.ids.success.push(resp.config.index);
+                            resp.config.datatable.config.remove.number--;
+                            resp.config.datatable.removeFinish();
+                            return resp;
+                        }, function(resp) {
+                            resp.config.datatable.config.remove.ids.errors.push(resp.config.value);
+                            resp.config.datatable.config.remove.error++;
+                            resp.config.datatable.config.remove.number--;
+                            resp.config.datatable.removeFinish();
+                            return resp;
                         });
                 } else {
                     throw 'no url define for save !';
@@ -1765,7 +1786,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             isShowToolbar: function() {
                 return (this.isShowToolbarButtons() || this.isShowToolbarPagination() || this.isShowToolbarResults());
             },
-            
             isShowToolbarBottom: function() {
                 return (this.isShowToolbarPagination() && this.config.pagination.bottom && this.config.pagination.numberRecordsPerPage >= this.config.pagination.numberRecordsPerPageForBottomdisplay);
             },
@@ -2015,8 +2035,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             setColumnsConfigWithUrl: function() {
                 $http.get(this.config.columnsUrl, {
                     datatable: this
-                }).success(function(data, status, headers, config) {
-                    config.datatable.setColumnsConfig(data);
+                }).then(function(resp) {
+                    resp.config.datatable.setColumnsConfig(resp.data);
+                    return resp;
                 });
             },
             getColumnsConfig: function() {
@@ -2333,12 +2354,14 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         	if(Array.isArray(colValue) && colValue.length === 1  && colValue[0].search
                                         			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue[0]+'"';
-                                        	} else if(!Array.isArray(colValue) && colValue.search
+                                        	}else if(!Array.isArray(colValue) && colValue.search
                                         			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
                                         		colValue = '"'+colValue+'"';
                                         	} else if(!Array.isArray(colValue) || (Array.isArray(colValue) && colValue.length === 1)){
                                         		colValue = '"'+colValue+'"';
-                                        	}                                   	
+                                        	} else if(Array.isArray(colValue)){
+                                        		colValue = '"'+colValue.join()+'"';
+                                        	}                                 	
                                         }
                                         
 										
@@ -2656,7 +2679,7 @@ angular.module('ultimateDataTableServices')
 		      
 		 }
 		};
-    	}]);;angular.module('ultimateDataTableServices').
+}]);;angular.module('ultimateDataTableServices').
 directive('udtBtselect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
@@ -3036,10 +3059,10 @@ directive("udtCell", function(){
 	    				if(colType==="date"){
 	    					return 'udt-date-timestamp';
 	    				}
+
 	    				return '';
 	    			};
 					
-
 	    			scope.udtTableFunctions.getValidationClass = function(formName, col){
 	    				
 	    				if(scope.udtTable.config.save.enableValidation
@@ -3148,16 +3171,15 @@ directive("udtCell", function(){
                                          }
                                     });
                                 }
-
 			    				return currentScope.$eval(column.property+currentScope.udtTableFunctions.getFilter(column)+currentScope.udtTableFunctions.getFormatter(column), value.data);
 			    			}else if(value.line.group){
 			    				var v = currentScope.$eval("group."+column.id, value.data);
 			    				//if error in group function
 			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
 			    					return v;
-			    				}else if(angular.isDefined(v) ){
-			    					//not filtered properties because used during the compute
-			    					return currentScope.$eval("group."+column.id+currentScope.udtTableFunctions.getFormatter(column), value.data);
+			    				}else if(angular.isDefined(v)){
+			    					//no filtered and no formatter properties because used during the compute
+			    					return currentScope.$eval("group."+column.id, value.data);
 			    				}else{
 			    					return undefined;
 			    				}
@@ -3478,11 +3500,13 @@ directive('udtTable', function(){
   		    		if(scope.udtTable && scope["datatableForm"]){
   		    			scope.udtTable.formController = scope["datatableForm"];
   		    		}
+					
   		    		scope.$watch("udtTable", function(newValue, oldValue) {
   		    			if(newValue && newValue !== oldValue && scope["datatableForm"]){
   		    				scope.udtTable.formController = scope["datatableForm"];
   		    			}
 		            });
+					
   		    		scope.udtTableFunctions.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
   		    			scope.udtModalImage = {};
   		    			scope.udtModalImage.modalImage = imageData;
@@ -3523,14 +3547,14 @@ directive('udtTable', function(){
 	    			};
 	    			scope.udtTableFunctions.getThClass = function(col, currentScope){
 	    				var clazz = '';
-	    				if(angular.isFunction(col.thClass)){
+	    				if(col && angular.isFunction(col.thClass)){
 	    					clazz = col.thClass(col);
-	    				} else if(angular.isString(col.thClass)){
+	    				} else if(col && angular.isString(col.thClass)){
 	    					//we try to evaluation the string against the scope
 	    					clazz =  currentScope.$eval(col.thClass) || col.thClass;
 	    				}
-	    				if(col.required != undefined && (angular.isFunction(col.required) && col.required()) 
-	    						|| (!angular.isFunction(col.required) && col.required)){
+	    				if((col && col.required != undefined && (angular.isFunction(col.required) && col.required()))
+	    						|| (col && !angular.isFunction(col.required) && col.required)){
 	    					clazz = clazz +' required';
 	    				}
 	    				return clazz;
@@ -3647,9 +3671,8 @@ directive('udtToolbar', function(){
   		    	link: function(scope, element, attr) {
   		    	}
     		};
-    	});
-;angular.module('ultimateDataTableServices').
-directive('udtToolbarBottom', function(){ 
+    	})
+.directive('udtToolbarBottom', function(){ 
     		return {
     			restrict: 'A',
   		    	replace:true,
@@ -3696,7 +3719,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 			    	
 			    	scope.udtTableFunctions.cancel = function(){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.cancel()}).then(function(){
+		    			$timeout(function(){scope.udtTable.cancel()}).finally(function(){
 		    				scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false); 
 							});	   		    				
@@ -3707,7 +3730,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 			    	
 		    		scope.udtTableFunctions.setNumberRecordsPerPage = function(elt){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setNumberRecordsPerPage(elt)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setNumberRecordsPerPage(elt)}).finally(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.pagination.mode)){
 		    					scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false); 
@@ -3720,7 +3743,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.setPageNumber = function(page){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setPageNumber(page)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setPageNumber(page)}).finally(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.pagination.mode)){
 								scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false); 
@@ -3731,14 +3754,14 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.setEdit = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setEdit(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setEdit(column)}).finally(function(){
 		    				scope.udtTable.setSpinner(false);  		    				
 		    			});		    			
 		    		};
 		    		
 		    		scope.udtTableFunctions.setOrderColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setOrderColumn(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setOrderColumn(column)}).finally(function(){
 		    				if(!scope.udtTable.isRemoteMode(scope.udtTable.config.order.mode)){
 								scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 									scope.udtTable.setSpinner(false);  		    			
@@ -3750,14 +3773,14 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.setHideColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setHideColumn(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setHideColumn(column)}).finally(function(){
 		    				scope.udtTable.setSpinner(false);  		    				
 		    			});
 		    		};
 		    		
 		    		scope.udtTableFunctions.setGroupColumn = function(column){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.setGroupColumn(column)}).then(function(){
+		    			$timeout(function(){scope.udtTable.setGroupColumn(column)}).finally(function(){
 							scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false);
 							});  		    				
@@ -3767,14 +3790,14 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    		
 		    		scope.udtTableFunctions.exportCSV = function(exportType){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.exportCSV(exportType)}).then(function(){
+		    			$timeout(function(){scope.udtTable.exportCSV(exportType)}).finally(function(){
 		    				scope.udtTable.setSpinner(false);  		    				
 		    			});
 		    		};
 		    		
 		    		scope.udtTableFunctions.updateShowOnlyGroups = function(){
 		    			scope.udtTable.setSpinner(true);
-		    			$timeout(function(){scope.udtTable.updateShowOnlyGroups()}).then(function(){
+		    			$timeout(function(){scope.udtTable.updateShowOnlyGroups()}).finally(function(){
 							scope.udtTable.computeDisplayResultTimeOut.finally(function(){
 								scope.udtTable.setSpinner(false); 
 							});									
@@ -3795,8 +3818,8 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
        		    } 		    		
     		};
 }]);;angular.module('ultimateDataTableServices').
-filter('udtCollect', ['$parse',function($parse) {
-    	    return function(array, key) {
+filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
+    	    return function(array, key, unique) {
     	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
@@ -3822,6 +3845,11 @@ filter('udtCollect', ['$parse',function($parse) {
     	    		}
     	    		
     	    	});
+    	    	
+    	    	if(unique){
+    	    		possibleValues = $filter('udtUnique')(possibleValues);
+    	    	}
+    	    	
     	    	return possibleValues;    	    	
     	    };
     	}]);;angular.module('ultimateDataTableServices').
@@ -3834,8 +3862,8 @@ filter('udtConvert', ['udtConvertValueServices', function(udtConvertValueService
     			return input;
     		}
 }]);;angular.module('ultimateDataTableServices').
-filter('udtCountdistinct', ['$parse',function($parse) {
-    	    return function(array, key) {
+filter('udtCount', ['$parse',function($parse) {
+    	    return function(array, key, distinct) {
     	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
@@ -3846,11 +3874,11 @@ filter('udtCountdistinct', ['$parse',function($parse) {
     	    	angular.forEach(array, function(element){
     	    		if (angular.isObject(element)) {
     	    			var currentValue = $parse(key)(element);
-    	    			if(undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
+    	    			if(distinct && undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
        	    				possibleValues.push(currentValue);
-    	    			}
-    	    			
-    	    			
+    	    			}else if(!distinct && undefined !== currentValue && null !== currentValue){
+    	    				possibleValues.push(currentValue);
+    	    			}    	    			
     	    		}else if (!params.key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
@@ -3896,22 +3924,25 @@ filter('udtUnique', ['$parse', function($parse) {
     		      collection = (angular.isObject(collection)) ? toArray(collection) : collection;
 
     		      if (isUndefined(property)) {
-    		        return collection.filter(function (elm, pos, self) {
-    		          return self.indexOf(elm) === pos;
-    		        })
+    		    	  var results =  collection.filter(function (elm, pos, self) {
+						  return self.indexOf(elm) === pos;
+					  })
+					  return (results.length === 1)?results[0]:results;
     		      }
     		      //store all unique members
     		      var uniqueItems = [],
     		          get = $parse(property);
 
-    		      return collection.filter(function (elm) {
-    		        var prop = get(elm);
-    		        if(some(uniqueItems, prop)) {
-    		          return false;
-    		        }
-    		        uniqueItems.push(prop);
-    		        return true;
-    		      });
+				  var results = collection.filter(function (elm) {
+					var prop = get(elm);
+					if(some(uniqueItems, prop)) {
+					  return false;
+					}
+					uniqueItems.push(prop);
+					return true;
+				  });
+					  
+				  return (results.length === 1)?results[0]:results;
 
     		      //checked if the unique identifier is already exist
     		      function some(array, member) {
