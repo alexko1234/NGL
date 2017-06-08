@@ -67,6 +67,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":6,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -86,7 +87,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "required":true,
+						 "required":false,
 			        	 "type":"number",
 			        	 "position":50.2,
 			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
@@ -196,6 +197,7 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		removeTagCategoryIfNeeded($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -233,16 +235,17 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 		console.log("update from property : "+col.property);
 					
 		if (col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'  ){
-			computeInputQuantityToContentProperties(value.data);
-			
+			computeOutputQuantityToContentProperties(value.data);			
+		}else if (col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'  ){
+			computeInputQuantityToContentProperties(value.data);			
 		}
 	}
 	
 	
-	  var computeInputQuantityToContentProperties  = function(udtData){
+	  var computeOutputQuantityToContentProperties  = function(udtData){
 		     var getter = $parse("outputContainerUsed.quantity.value");
 	         var outputQtty = getter(udtData);
-	   
+	         console.log("computeOutputQuantityToContentProperties");
 	        var compute = {
 	                outputvolume : $parse("outputContainerUsed.volume.value")(udtData),
 	                concentration : $parse("outputContainerUsed.concentration.value")(udtData),
@@ -268,6 +271,49 @@ angular.module('home').controller('NanoporeBarcodeLigationCtrl',['$scope', '$par
 	           }
 	  }
 		
+	  var computeInputQuantityToContentProperties  = function(udtData){
+		     var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
+	         var inputQtty = getter(udtData);
+	         console.log("computeInputQuantityToContentProperties");
+	        var compute = {
+	                inputvolume : $parse("inputContainerUsed.volume.value")(udtData),
+	                concentration : $parse("inputContainerUsed.concentration.value")(udtData),
+	                isReady:function(){
+	                    return (this.inputvolume && this.concentration);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(inputvolume * concentration)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   inputQtty = Math.round(result*10)/10;           
+	               }else{
+	            	   inputQtty = undefined;
+	               }   
+	               getter.assign(udtData, inputQtty);
+	              
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to InputQtty");
+	           }
+	  }
+	  
+		var removeTagCategoryIfNeeded = function(experiment){
+			if(null !== experiment.atomicTransfertMethods && undefined !== experiment.atomicTransfertMethods){
+				experiment.atomicTransfertMethods.forEach(function(atm){
+					var tagCategory = $parse("outputContainerUseds[0].experimentProperties.tagCategory")(atm);
+					var tag = $parse("outputContainerUseds[0].experimentProperties.tag")(atm);
+					
+					if((tag === null || tag === undefined) && 
+							tagCategory !== null && tagCategory !== undefined 
+							){
+						atm.outputContainerUseds[0].experimentProperties.tagCategory = undefined;
+					}
+				})
+			}
+		};
 	
 	//Init		
 

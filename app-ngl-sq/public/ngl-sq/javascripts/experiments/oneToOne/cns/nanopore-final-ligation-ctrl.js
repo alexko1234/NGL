@@ -108,7 +108,8 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":53,
+			        	 "position":51.5,
+			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -253,8 +254,10 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 					
-		if (col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
+		if (col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){		
 			computeInputQuantityToContentProperties(value.data);
+		}else if (col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.experimentProperties.ligationConcentration.value'  ){
+			computeOutputQuantityToContentProperties(value.data);
 		}
 	}
 	
@@ -262,8 +265,7 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 	  var computeInputQuantityToContentProperties  = function(udtData){
 		     var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
 	         var inputQtty = getter(udtData);
-	   
-	        var compute = {
+	         var compute = {
 	                inputvolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
 	                concentration : $parse("inputContainerUsed.concentration.value")(udtData),
 	                isReady:function(){
@@ -311,6 +313,37 @@ angular.module('home').controller('NanoporeFinalLigationCtrl',['$scope', '$parse
 				}			
 		}				
 	};
+	
+	
+	  var computeOutputQuantityToContentProperties  = function(udtData){
+		     var getter = $parse("outputContainerUsed.experimentProperties.ligationQuantity.value");
+	         var outputQtty = getter(udtData);
+	   
+	        var compute = {
+	                outputvolume : $parse("outputContainerUsed.volume.value")(udtData),
+	                concentration : $parse("outputContainerUsed.experimentProperties.ligationConcentration.value")(udtData),
+	                isReady:function(){
+	                    return (this.outputvolume && this.concentration);
+	                }
+	            };
+	           
+	           if(compute.isReady()){
+	               var result = $parse("(outputvolume * concentration)")(compute);
+	               console.log("result = "+result);
+	              
+	               if(angular.isNumber(result) && !isNaN(result)){
+	            	   outputQtty = Math.round(result*10)/10;           
+	               }else{
+	            	   outputQtty = undefined;
+	               }  
+	               
+	               getter.assign(udtData, outputQtty);
+	                  
+	           }else{
+	               getter.assign(udtData, undefined);
+	               console.log("not ready to outputQtty");
+	           }
+	  }
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {

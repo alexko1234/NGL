@@ -86,7 +86,7 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "required":true,
+						 "required":false,
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
@@ -255,13 +255,13 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 		console.log("update from property : "+col.property);
 					
 		if (col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'  ){
-			computeInputQuantityToContentProperties(value.data);
+			computeOutputQuantityToContentProperties(value.data);
 			
 		}
 	}
 	
 	
-	  var computeInputQuantityToContentProperties  = function(udtData){
+	  var computeOutputQuantityToContentProperties  = function(udtData){
 		     var getter = $parse("outputContainerUsed.quantity.value");
 	         var outputQtty = getter(udtData);
 	   
@@ -284,7 +284,6 @@ angular.module('home').controller('NanoporePcrCtrl',['$scope', '$parse', 'atmToS
 	               }  
 	               
 	               getter.assign(udtData, outputQtty);
-	               console.log("result = testtttt");
 	                  
 	           }else{
 	               getter.assign(udtData, undefined);

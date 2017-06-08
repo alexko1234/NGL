@@ -110,7 +110,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("R9-2D-depot","R9-2D-depot","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot"),
 				null,false));
 		
-		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","direct RNAsequencing"))));
 		
 		//lp.add(newProtocol("map005-preCR","MAP005 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
@@ -265,7 +265,7 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-end-prep","nanopore-pcr","nanopore-barcode-ligation","nanopore-pre-pcr-ligation","aliquoting","nanopore-final-ligation")));
+			lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-end-prep","nanopore-pcr","nanopore-barcode-ligation","nanopore-pre-pcr-ligation","aliquoting")));
 			
 				
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
