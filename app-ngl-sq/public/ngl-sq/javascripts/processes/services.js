@@ -331,6 +331,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 							column.position = (5+(propertyDefinition.displayOrder/1000));
 							column.defaultValues = propertyDefinition.defaultValue;
 							column.format = propertyDefinition.displayFormat;
+							column.order=true;
 							
 							if(column.choiceInList){
 								if(propertyDefinition.possibleValues.length > 100){
