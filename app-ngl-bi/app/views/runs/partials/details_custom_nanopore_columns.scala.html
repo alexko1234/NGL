@@ -62,7 +62,7 @@
 			}
 			
 			@views.html.helper.columnLabelValue(Messages("runs.containerSupportCode")){
-				<p class="form-control-static">{{run.containerSupportCode}}</p>
+				<p class="form-control-static"><a href="#" ng-click="goToSeq()">{{run.containerSupportCode}}</a></p>
 			}
 			
 			@views.html.helper.columnLabelValue(Messages("runs.flowcellVersion")){

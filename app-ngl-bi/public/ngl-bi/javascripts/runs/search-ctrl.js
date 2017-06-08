@@ -141,5 +141,3 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 		
 }]);
-
-

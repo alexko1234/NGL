@@ -333,6 +333,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		//$scope.modalTop = $scope.modalTop - 50; //height of header and footer
 	}
 	
+	 $scope.goToSeq=function(){
+		var value = AppURL("sq");
+		//Get code experiment 
+		//for run.categoryCode=illumina experiment.typeCode=prepa-flowcell; run.categoryCode=nanopore typeCode=nanopore-depot; opgen opgen-depot
+		//experiment.instrument.containerSupportCode.value
+		//api/experiments
+		
+		$window.open(value+"/supports/"+$scope.run.containerSupportCode, 'seq');
+	}
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;

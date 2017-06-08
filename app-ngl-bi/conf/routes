@@ -73,6 +73,7 @@ GET     /assets/*file              					controllers.Assets.at(path="/public", fi
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 GET		/permissions.js								controllers.main.tpl.Main.jsPermissions()
+GET		/app-url.js									controllers.main.tpl.Main.jsAppURL()
 #GET    /api/js-routes.js        	        		controllers.main.tpl.Main.apiJavascriptRoutes()
 
 
