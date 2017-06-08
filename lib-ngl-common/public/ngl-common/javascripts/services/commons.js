@@ -1,4 +1,4 @@
- "use strict";
+"use strict";
 
 angular.module('commonsServices', []).
     	factory('messages', function(){
@@ -1220,15 +1220,16 @@ angular.module('commonsServices', []).
 				  collection = (angular.isObject(collection)) ? toArray(collection) : collection;
 				  if(collection !== undefined && collection !== null){
 					  if (isUndefined(property)) {
-						return collection.filter(function (elm, pos, self) {
-						  return self.indexOf(elm) === pos;
-						})
+						  var results =  collection.filter(function (elm, pos, self) {
+							  return self.indexOf(elm) === pos;
+						  })
+						  return (results.length === 1)?results[0]:results;
 					  }
 					  //store all unique members
 					  var uniqueItems = [],
 						  get = $parse(property);
 				
-					  return collection.filter(function (elm) {
+					  var results = collection.filter(function (elm) {
 						var prop = get(elm);
 						if(some(uniqueItems, prop)) {
 						  return false;
@@ -1236,6 +1237,8 @@ angular.module('commonsServices', []).
 						uniqueItems.push(prop);
 						return true;
 					  });
+					  
+					  return (results.length === 1)?results[0]:results;
 				  }
 				  //checked if the unique identifier is already exist
 				  function some(array, member) {
