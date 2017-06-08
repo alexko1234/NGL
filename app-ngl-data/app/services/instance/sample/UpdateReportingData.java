@@ -57,7 +57,7 @@ public class UpdateReportingData extends AbstractImportData {
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		Logger.debug("Start reporting synchro");
 		
-		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).sort("traceInformation.creationDate", Sort.DESC).limit(5000)
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
 			.cursor.forEach(sample -> {
 				updateProcesses(sample);
 				if(sample.processes != null && sample.processes.size() > 0){
