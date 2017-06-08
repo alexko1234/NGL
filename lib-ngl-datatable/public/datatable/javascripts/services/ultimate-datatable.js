@@ -451,7 +451,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     var groupValues = this.allResult.reduce(function(array, value) {
                     	var groupValue = "all";
                     	if(propertyGroupGetter !== "all"){
-                    		groupValue = groupGetter(value).toString();
+                    		groupValue = groupGetter(value);
+                    		if(groupValue !== null && groupValue !== undefined){
+                    			groupValue = groupValue.toString();
+                    		}else{
+                    			groupValue = "";
+                    		}
                     	}
                         if (!array[groupValue]) {
                             array[groupValue] = [];
