@@ -18,8 +18,8 @@ public class SampleReadSet {
 	public String runTypeCode;
 	public Date runSequencingStartDate;
 	
-	public Valuation productionValuation = new Valuation();    //TODO rename to QCValuation
-	public Valuation bioinformaticValuation = new Valuation(); //TODO rename to bioinformaticUsable
-	public Map<String,Treatment> treatments = new HashMap<String,Treatment>();
+	public Valuation productionValuation;    //TODO rename to QCValuation
+	public Valuation bioinformaticValuation; //TODO rename to bioinformaticUsable
+	public Map<String,Treatment> treatments;
 	
 }

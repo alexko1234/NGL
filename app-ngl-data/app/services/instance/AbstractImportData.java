@@ -40,7 +40,7 @@ public abstract class AbstractImportData implements Runnable{
 		contextError.clear();
 		contextError.addKeyToRootKeyName("import");
 		logger.info("ImportData execution :"+name);
-
+		long t1 = System.currentTimeMillis();
 		try{
 			contextError.setCreationMode();
 			runImport();
@@ -55,10 +55,11 @@ public abstract class AbstractImportData implements Runnable{
 			/* Display error messages  */
 			contextError.displayErrors(logger);
 			/* Logger send an email */
+			long t2 = System.currentTimeMillis();
 			if(error){
 				logger.error("ImportData End Error");
 			}else {
-				logger.info("ImportData End");
+				logger.info("ImportData End - "+(t2-t1)/1000+" s");
 			}
 			MDC.remove("name");
 		}

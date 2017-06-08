@@ -11,10 +11,10 @@ public class SampleExperiment {
 	public String code;
 	public String typeCode;
 	public String categoryCode;
-	public State state = new State();
-	public Valuation status = new Valuation();
+	public State state;
+	public Valuation status;
 	
-	public TraceInformation traceInformation = new TraceInformation();
+	public TraceInformation traceInformation;
 	public String protocolCode;
 	public Map<String,PropertyValue> properties;
 	

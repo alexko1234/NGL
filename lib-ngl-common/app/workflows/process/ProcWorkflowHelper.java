@@ -34,7 +34,7 @@ import fr.cea.ig.MongoDBResult;
 public class ProcWorkflowHelper {
 
 	
-	private static final String TAG_PROPERTY_NAME = "tag";
+	public static final String TAG_PROPERTY_NAME = "tag";
 	@Autowired
 	ContWorkflows contWorkflows;
 	
@@ -128,11 +128,11 @@ public class ProcWorkflowHelper {
 
 
 	/**
-	 * Find the tag assign during process or exsiting at the beginning of processe
+	 * Find the tag assign during process or existing at the beginning of process
 	 * @param process
 	 * @return
 	 */
-	private String getTagAssignFromProcessContainers(Process process) {
+	public String getTagAssignFromProcessContainers(Process process) {
 		
 		if(process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)){
 			return process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString();
