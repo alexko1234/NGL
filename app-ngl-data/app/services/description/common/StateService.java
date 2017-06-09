@@ -99,17 +99,17 @@ public class StateService {
 		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "VBA"));		
 		
 		
-		l.add(newState("Soumission Validée utilisateur", "V-SUB", true, 2000, StateCategory.find.findByCode("V"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission Validée utilisateur", "V-SUB", true, 2000, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 		l.add(newState("Soumission en attente", "IW-SUB", true, 2001, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 		l.add(newState("Soumission en cours", "IP-SUB", true, 2002, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 		l.add(newState("Soumission terminée", "F-SUB", true, 2003, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
-		l.add(newState("Soumission en echec", "FE-SUB", true, 2004, StateCategory.find.findByCode("FE"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
-		l.add(newState("Configuration utilisée dans une soumission", "U-SUB", true, 2005, StateCategory.find.findByCode("U"), getObjectTypes(ObjectType.CODE.SRAConfiguration.name()), true, null));		
+		l.add(newState("Soumission en echec", "FE-SUB", true, 2004, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Configuration utilisée dans une soumission", "U-SUB", true, 2005, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRAConfiguration.name()), true, null));		
 
-		l.add(newState("Soumission pour release à New", "N-R", true, 2006, StateCategory.find.findByCode("N-R"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true, null));
-		l.add(newState("Soumission pour release study en attente", "IW-SUB-R", true, 2007, StateCategory.find.findByCode("IW-R"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
-		l.add(newState("Soumission pour release study en cours", "IP-SUB-R", true, 2008, StateCategory.find.findByCode("IP-R"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
-		l.add(newState("Soumission pour release study en echec", "FE-SUB-R", true, 2009, StateCategory.find.findByCode("FE-R"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission pour release à New", "N-R", true, 2006, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.ReadSet.name()), true, null));
+		l.add(newState("Soumission pour release study en attente", "IW-SUB-R", true, 2007, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission pour release study en cours", "IP-SUB-R", true, 2008, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission pour release study en echec", "FE-SUB-R", true, 2009, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 
 		DAOHelpers.saveModels(State.class, l, errors);
 	}
