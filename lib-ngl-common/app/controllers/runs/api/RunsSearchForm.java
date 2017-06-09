@@ -27,6 +27,8 @@ public class RunsSearchForm extends ListForm {
     public List<String> sampleCodes;
     public String sampleCode;
     
+    public String containerSupportCode;
+    
     public String validCode;
 
     public Date fromDate;

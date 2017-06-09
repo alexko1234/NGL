@@ -334,13 +334,30 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	
 	 $scope.goToSeq=function(){
-		var value = AppURL("sq");
-		//Get code experiment 
-		//for run.categoryCode=illumina experiment.typeCode=prepa-flowcell; run.categoryCode=nanopore typeCode=nanopore-depot; opgen opgen-depot
-		//experiment.instrument.containerSupportCode.value
-		//api/experiments
+		$scope.value = AppURL("sq");
 		
-		$window.open(value+"/supports/"+$scope.run.containerSupportCode, 'seq');
+		//Get typeCode
+		$scope.typeCodeExp = undefined;
+		if($scope.run.categoryCode === "nanopore"){
+			$scope.typeCodeExp="nanopore-depot";
+		}else if($scope.run.categoryCode === "opgen"){
+			$scope.typeCodeExp="opgen-depot";
+		}else if($scope.run.categoryCode === "illumina"){
+			$scope.typeCodeExp="prepa-flowcell";
+		}
+		
+		if($scope.typeCodeExp !== undefined){
+			$http.get(jsRoutes.controllers.experiments.api.Experiments.list().url,{params:{typeCode:$scope.typeCodeExp,containerSupportCode:$scope.run.containerSupportCode}}).success(function(data) {
+				var experiment = data;
+				if(experiment.length==1){
+					$window.open($scope.value+"/experiments/"+experiment[0].code, 'seq');
+				}else{
+					$window.open($scope.value+"/supports/"+$scope.run.containerSupportCode, 'seq');
+				}
+			});
+		}else{
+			$window.open($scope.value+"/supports/"+$scope.run.containerSupportCode, 'seq');
+		}
 	}
 	var init = function(){
 		$scope.messages = messages();

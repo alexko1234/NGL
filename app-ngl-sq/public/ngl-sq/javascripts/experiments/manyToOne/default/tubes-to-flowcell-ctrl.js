@@ -1,224 +1,224 @@
-angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
-                                                               function($scope, $parse, $filter, atmToDragNDrop) {
-	
+angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', '$http','$window','atmToDragNDrop',
+	function($scope, $parse, $filter, $http, $window, atmToDragNDrop) {
+
 	$scope.isRoadMapAvailable = true;
-	
+
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[  
-					 {
-			        	 "header":Messages("containers.table.support.number"),
-			        	 "property":"atomicTransfertMethod.line",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":0,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },	
-			         {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":2,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
-				     },
-				     {
-			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainer.sampleCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":3,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
-				     },
-				     {
-			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
-			        	 "property":"inputContainer.fromTransformationTypeCodes",
-			        	 "filter":"unique | codes:'type'",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "position":4,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         					 
-					 {
-			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":5,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"inputContainerUsed.concentration.unit",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":5.5,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainerUsed.volume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":6,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":7,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.percentage"),
-			        	 "property":"inputContainerUsed.percentage",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":40,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"outputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"number",
-			        	 "position":50,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"outputContainerUsed.concentration.unit",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":50.5,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.volume")+" (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"number",
-			        	 "position":51,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"outputContainerUsed.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":400,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.stateCode"),
-			        	 "property":"outputContainer.state.code | codes:'state'",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":500,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }
-			         ],
-			compact:true,
-			pagination:{
-				active:false
-			},		
-			search:{
-				active:false
-			},
-			order:{
-				mode:'local', //or 
-				active:true,
-				by:"atomicTransfertMethod.line"
-			},
-			remove:{
-				active:false,
-			},
-			save:{
-				active:true,
-				withoutEdit: true,
-				mode:'local',
-				showButton:false,
-				changeClass:false,
-				callback:function(datatable){
-					copyFlowcellCodeToDT(datatable);
+				{
+					"header":Messages("containers.table.support.number"),
+					"property":"atomicTransfertMethod.line",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"position":0,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},	
+				{
+					"header":Messages("containers.table.code"),
+					"property":"inputContainer.code",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"position":1,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.projectCodes"),
+					"property": "inputContainer.projectCodes",
+					"order":false,
+					"hide":true,
+					"type":"text",
+					"position":2,
+					"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.sampleCodes"),
+					"property": "inputContainer.sampleCodes",
+					"order":false,
+					"hide":true,
+					"type":"text",
+					"position":3,
+					"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.fromTransformationTypeCodes"),
+					"property":"inputContainer.fromTransformationTypeCodes",
+					"filter":"unique | codes:'type'",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					"position":4,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+
+				{
+					"header":Messages("containers.table.concentration"),
+					"property":"inputContainerUsed.concentration.value",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"number",
+					"position":5,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.concentration.unit"),
+					"property":"inputContainerUsed.concentration.unit",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"position":5.5,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.volume") + " (µL)",
+					"property":"inputContainerUsed.volume.value",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"number",
+					"position":6,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.state.code"),
+					"property":"inputContainer.state.code",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"filter":"codes:'state'",
+					"position":7,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.percentage"),
+					"property":"inputContainerUsed.percentage",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"number",
+					"position":40,
+					"extraHeaders":{0:Messages("experiments.inputs")}
+				},
+				{
+					"header":Messages("containers.table.concentration"),
+					"property":"outputContainerUsed.concentration.value",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"number",
+					"position":50,
+					"extraHeaders":{0:Messages("experiments.outputs")}
+				},
+				{
+					"header":Messages("containers.table.concentration.unit"),
+					"property":"outputContainerUsed.concentration.unit",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"position":50.5,
+					"extraHeaders":{0:Messages("experiments.outputs")}
+				},
+				{
+					"header":Messages("containers.table.volume")+" (µL)",
+					"property":"outputContainerUsed.volume.value",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"number",
+					"position":51,
+					"extraHeaders":{0:Messages("experiments.outputs")}
+				},
+				{
+					"header":Messages("containers.table.code"),
+					"property":"outputContainerUsed.code",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"position":400,
+					"extraHeaders":{0:Messages("experiments.outputs")}
+				},
+				{
+					"header":Messages("containers.table.stateCode"),
+					"property":"outputContainer.state.code | codes:'state'",
+					"order":true,
+					"edit":false,
+					"hide":true,
+					"type":"text",
+					"position":500,
+					"extraHeaders":{0:Messages("experiments.outputs")}
 				}
-			},
-			hide:{
-				active:true
-			},
-			mergeCells:{
-	        	active:true 
-	        },
-			
-			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP') || Permissions.check("admin")),
-				columnMode:true
-			},
-			messages:{
-				active:false,
-				columnMode:true
-			},
-			exportCSV:{
-				active:true,
-				showButton:true,
-				delimiter:";",
-				start:false
-			},
-			extraHeaders:{
-				number:2,
-				dynamic:true,
-			}
+				],
+				compact:true,
+				pagination:{
+					active:false
+				},		
+				search:{
+					active:false
+				},
+				order:{
+					mode:'local', //or 
+					active:true,
+					by:"atomicTransfertMethod.line"
+				},
+				remove:{
+					active:false,
+				},
+				save:{
+					active:true,
+					withoutEdit: true,
+					mode:'local',
+					showButton:false,
+					changeClass:false,
+					callback:function(datatable){
+						copyFlowcellCodeToDT(datatable);
+					}
+				},
+				hide:{
+					active:true
+				},
+				mergeCells:{
+					active:true 
+				},
+
+				edit:{
+					active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP') || Permissions.check("admin")),
+					columnMode:true
+				},
+				messages:{
+					active:false,
+					columnMode:true
+				},
+				exportCSV:{
+					active:true,
+					showButton:true,
+					delimiter:";",
+					start:false
+				},
+				extraHeaders:{
+					number:2,
+					dynamic:true,
+				}
 	};	
-	
+
 	$scope.dragInProgress=function(value){
 		$scope.dragIt=value;
 	};
-	
+
 	$scope.getDroppableClass=function(){
 		if($scope.dragIt){
 			return "dropZoneHover";
@@ -226,17 +226,17 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			return "";
 		}
 	}
-	
+
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tubes-to-flowcell");		
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateConcentration($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
-	
+
 
 	var copyFlowcellCodeToDT = function(datatable){
-		
+
 		var dataMain = datatable.getData();
 		//copy flowcell code to output code
 		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
@@ -252,14 +252,14 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			}				
 			//datatable.setData(dataMain);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Update concentration of output if all input are same value and unit
 	 */
 	$scope.updateConcentration = function(experiment){
-		
+
 		//prendre la propriété atm.inputContainerUseds[0].experimentProperties.finalConcentration2 de l'input pour la comparaison
 		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
 			var atm = experiment.atomicTransfertMethods[j];
@@ -281,7 +281,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 					}
 				}
 			}
-			
+
 			var inputContainerUsed = atm.inputContainerUseds[0];
 			if(isSame && inputContainerUsed.experimentProperties && inputContainerUsed.experimentProperties.finalConcentration2){	
 				if(null === inputContainerUsed.experimentProperties.finalConcentration2.unit 
@@ -294,33 +294,33 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			}			
 		}		
 	};
-	
+
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");
-		
+
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
-		
-		
+
+
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
-	
-	
+
+
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");
 		$scope.atmService.data.$atmToSingleDatatable.data.cancel();
-				
+
 	});
-	
+
 	$scope.$on('activeEditMode', function(e) {
 		console.log("call event activeEditMode");
 		$scope.atmService.data.$atmToSingleDatatable.data.selectAll(true);
 		$scope.atmService.data.$atmToSingleDatatable.data.setEdit();
 	});
-	
+
 	//To display sample and tag in one cell
 	$scope.getSampleAndTags = function(container){
 		var sampleCodeAndTags = [];
@@ -331,9 +331,9 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		});
 		return sampleCodeAndTags;
 	};
-	
+
 	$scope.getDisplayMode = function(atm, rowIndex){
-		
+
 		if(atm && atm.inputContainerUseds && atm.inputContainerUseds.length === 0){
 			return "empty";
 		}else if(atm && atm.inputContainerUseds && atm.inputContainerUseds.length > 0 && $scope.rows[rowIndex]){
@@ -342,12 +342,12 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			return "compact";
 		}		
 	};
-	
+
 	$scope.isAllOpen = true;
 	if(!$scope.isCreationMode()){
 		$scope.isAllOpen = false;
 	}
-	
+
 	//TODO used container_support_category in future
 	//init number of lane
 	var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
@@ -359,9 +359,9 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		for(var i = 0; i < laneCount; i++){
 			$scope.rows[i] = $scope.isAllOpen;
 		}
-		
+
 	}
-	
+
 	$scope.hideRowAll = function(){
 		for (var i=0; i<$scope.rows.length;i++){	
 			$scope.rows[i] = false;
@@ -375,16 +375,16 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		}	    
 		$scope.isAllOpen = true;
 	};
-	
+
 	$scope.toggleRow = function(rowIndex){
 		$scope.rows[rowIndex] = !$scope.rows[rowIndex];
 	};
-	
-	
+
+
 	//init global ContainerOut Properties outside datatable
 	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
 	$scope.outputContainerValues = {};
-	
+
 	$scope.updateAllOutputContainerProperty = function(property){
 		var value = $scope.outputContainerValues[property.code];
 		var setter = $parse("outputContainerUseds[0].experimentProperties."+property.code+".value").assign;
@@ -396,12 +396,12 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		}
 		$scope.changeValueOnFlowcellDesign();
 	};
-	
+
 	$scope.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();
 	};
-	
-	
+
+
 	//init atmService
 	var atmService = atmToDragNDrop($scope, laneCount, datatableConfig);
 	//defined new atomictransfertMethod
@@ -414,14 +414,26 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			outputContainerUseds:new Array(0)
 		};		
 	};
-	
+
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
 			concentration:"nM"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
+
 	$scope.atmService = atmService;
+
+	//init list runs
+	if($scope.experiment.instrumentProperties.containerSupportCode!==undefined && $scope.experiment.instrumentProperties.containerSupportCode!==null){
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCode:$scope.experiment.instrumentProperties.containerSupportCode.value}}).success(function(data) {
+			$scope.runs = data;
+		});
+	}
 	
+	$scope.goToBi = function(code){
+		$scope.value = AppURL("bi");
+		$window.open($scope.value+"/runs/"+code, 'bi');
+	};
+
 }]);

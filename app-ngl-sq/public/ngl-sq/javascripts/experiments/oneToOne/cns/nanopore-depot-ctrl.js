@@ -1,5 +1,5 @@
-angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
-                                                               function($scope, $parse,  atmToSingleDatatable, datatable) {
+angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', '$http','$window','atmToSingleDatatable', 'datatable',
+                                                               function($scope, $parse,  $http, $window, atmToSingleDatatable, datatable) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
@@ -456,5 +456,18 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.datatableQcFlowcell.setData(qcFlowcellDefault);
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	//init list runs
+	if($scope.experiment.instrumentProperties.containerSupportCode!==undefined && $scope.experiment.instrumentProperties.containerSupportCode!==null){
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCode:$scope.experiment.instrumentProperties.containerSupportCode.value}}).success(function(data) {
+			$scope.runs = data;
+		});
+	}
+	
+	$scope.goToBi = function(code){
+		$scope.value = AppURL("bi");
+		$window.open($scope.value+"/runs/"+code, 'bi');
+	};
+
 	
 }]);

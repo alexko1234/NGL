@@ -484,6 +484,7 @@ experiments.select.intrumentCategory = Type de contenant
 experiments.select.experimentTypeCode = Type d''expérience
 experiments.select.outContainerSupportCategoryCode = Type de sortie
 experiments.select.state = Etats expérience
+experiments.select.run = Runs
 search.placeholder.valuation = Evaluation
 
 experiments.table.code = Code Expérience

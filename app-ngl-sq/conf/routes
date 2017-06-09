@@ -60,3 +60,4 @@ GET     /messages.js                									controllers.main.tpl.Main.jsMessage
 GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()
 GET		/permissions.js													controllers.main.tpl.Main.jsPermissions()
 GET		/printTag.js													controllers.main.tpl.Main.jsPrintTag()
+GET		/app-url.js														controllers.main.tpl.Main.jsAppURL()

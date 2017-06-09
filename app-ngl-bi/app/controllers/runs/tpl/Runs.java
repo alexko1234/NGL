@@ -87,7 +87,8 @@ public class Runs extends CommonController {
   	      		controllers.resolutions.api.routes.javascript.Resolutions.list(),
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),	      		
-  	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list()
+  	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
+  	      		controllers.experiments.api.routes.javascript.Experiments.list()
   	      )	  	      
   	    );
   	  }

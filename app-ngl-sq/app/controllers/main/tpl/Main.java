@@ -45,6 +45,11 @@ public class Main extends CommonController{
    public static Result jsPermissions() {
       return ok(listPermissions()).as("application/javascript");
    }
+   
+   public static Result jsAppURL(){
+	   return ok(getAppURL()).as("application/javascript");
+   }
+   
    private static String listPermissions() {
 	   List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
 	   StringBuilder sb = new StringBuilder();
@@ -110,6 +115,20 @@ public class Main extends CommonController{
 		sb.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 		return sb.toString();
 	}
+   
+   private static String getAppURL(){
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("function AppURL (app){");
+	   sb.append("if(app===\"sq\") return ");
+	   sb.append("\""+Play.application().configuration().getString("sq.url")+"\";");
+	   sb.append("else if(app===\"bi\") return ");
+	   sb.append("\""+Play.application().configuration().getString("bi.url")+"\";");
+	   sb.append("else if(app===\"project\") return ");
+	   sb.append("\""+Play.application().configuration().getString("project.url")+"\";");
+	   sb.append("}");
+	   return sb.toString();
+   }
+   
    
    public static Result javascriptRoutes() {
  	    response().setContentType("text/javascript");
