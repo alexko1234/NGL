@@ -41,6 +41,7 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
+
 import services.instance.AbstractImportData;
 import workflows.process.ProcWorkflowHelper;
 import static workflows.process.ProcWorkflowHelper.TAG_PROPERTY_NAME;
@@ -59,11 +60,15 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
 			.cursor.forEach(sample -> {
-				updateProcesses(sample);
-				if(sample.processes != null && sample.processes.size() > 0){
-					Logger.debug("update sample "+sample.code);
-					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
-				}				
+				try{
+					updateProcesses(sample);
+					if(sample.processes != null && sample.processes.size() > 0){
+						Logger.debug("update sample "+sample.code);
+						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
+					}	
+				}catch(Throwable e){
+					logger.error("Sample : "+sample.code);
+				}
 			});
 		
 	}
