@@ -28,9 +28,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				return true;
 		}
 		return false;
-	}
+	};
 	
+	$scope.isRequiredForState=function(stateCode){
+		return (($scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  && stateCode === 'N')
+				|| (!$scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  && (stateCode === 'N' || stateCode === 'IP'))
+				|| ($parse('experiment.state.code')($scope) !== "N" && stateCode !== 'N'));
 		
+	};
+	
 	$scope.updateInstrumentProperty = function(pName){
 		$scope.$broadcast('updateInstrumentProperty', pName);
 	};

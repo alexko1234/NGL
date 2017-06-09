@@ -87,7 +87,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "required":false,
+						 "required":$scope.isRequiredForState("F"),
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
@@ -216,8 +216,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			var dtConfig = $scope.atmService.data.getConfig();
 			dtConfig.edit.byDefault = false;
 			$scope.atmService.data.setConfig(dtConfig);
-		}
-		
+		}		
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
