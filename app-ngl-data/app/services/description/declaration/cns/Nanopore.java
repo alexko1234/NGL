@@ -708,7 +708,7 @@ public class Nanopore extends AbstractDeclaration{
 				false, null, null ,"img",50,true,null,null));
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Taille réelle","measuredLibrarySize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, 
-				true, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),
+				true, "F",null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),
 				"single",60,true,null,null));	
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Qté finale FRG","postFrgQuantity",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class,
