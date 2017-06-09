@@ -758,7 +758,7 @@ public class SubmissionServices {
 			System.out.println("\n end displayErrors dans SubmissionServices::createNewSubmission :");
 			
 			// enlever les samples, experiments et submission qui ont ete crées par le service et remettre
-			// readSet.submissionState à NONE, et si studyCode utilisé par cette seule soumission remettre studyCode.stat.code=N
+			// readSet.submissionState à NONE, et si studyCode utilisé par cette seule soumission remettre studyCode.state.code=N
 			// et si config utilisé par cette seule soumission remettre configCode.state.code=N
 			cleanDataBase(submission.code, contextValidation);		
 			throw new SraException("SubmissionServices::initPrimarySubmission::probleme validation  voir log: ");
@@ -1469,9 +1469,8 @@ public class SubmissionServices {
 	// Ne delete pas le study et la config associée car saisis par l'utilisateur qui peut vouloir les utiliser pour une prochaine soumission
 	public static void cleanDataBase(String submissionCode, ContextValidation contextValidation) throws SraException {
 		System.out.println("Recherche objet submission dans la base pour "+ submissionCode);
-	
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		if (submission==null){
 			System.out.println("Aucun objet submission dans la base pour "+ submissionCode);
 			return;
@@ -1479,27 +1478,13 @@ public class SubmissionServices {
 			System.out.println("objet submission dans database pour "+ submissionCode);
 			System.out.println("submission.accession dans cleanDataBase "+ submission.accession);
 		}
-		// On verifie que la donnée n'est pas connu de l'EBI avant de detruire
+
+		// Si la soumission est connu de l'EBI on ne pourra pas l'enlever de la base :
 		if (StringUtils.isNotBlank(submission.accession)){
 			System.out.println("objet submission avec AC : submissionCode = "+ submissionCode + " et submissionAC = "+ submission.accession);
 			return;
 		} 
 
-		if (! submission.refSampleCodes.isEmpty()) {	
-			for (String sampleCode : submission.refSampleCodes){
-				// verifier que sample n'est pas utilisé par autre objet submission avant destruction
-				// normalement sample crees dans init de type external avec state=F-SUB ou sample avec state='N'
-				List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("refSampleCodes", sampleCode)).toList();
-				if (submissionList.size() > 1) {
-					for (Submission sub: submissionList) {
-						System.out.println(sampleCode + " utilise par objet Submission " + sub.code);
-					}
-				} else {
-					MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
-					System.out.println("deletion dans base pour sample "+sampleCode);
-				}
-			}
-		}
 
 		if (! submission.experimentCodes.isEmpty()) {
 			for (String experimentCode : submission.experimentCodes) {
@@ -1517,17 +1502,16 @@ public class SubmissionServices {
 							DBQuery.is("code", experiment.readSetCode),
 							DBUpdate.set("submissionState.code", "NONE").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
 					//System.out.println("submissionState.code remis à 'N' pour le readSet "+experiment.readSetCode);
-			
+
 					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("experimentCodes", experimentCode)).toList();
 					if (submissionList.size() > 1) {
 						for (Submission sub: submissionList) {
-							//System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
+							System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
 						}
-						throw new SraException(experimentCode + " utilise par plusieurs objets submissions");
-						
+						throw new SraException(experimentCode + " utilise par plusieurs objets submissions");	
 					} else {
 						// todo : verifier qu'on ne detruit que des experiments en new ou uservalidate
-						if ("N".equals(experiment.state.code) ||"V-SUB".equals(experiment.state.code) ||"NR".equals(experiment.state.code)){
+						if ("N".equals(experiment.state.code) ||"V-SUB".equals(experiment.state.code)){
 							MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 							//System.out.println("deletion dans base pour experiment "+experimentCode);
 						} else {
@@ -1536,55 +1520,77 @@ public class SubmissionServices {
 					}
 				}
 			}
+		}
+
+		if (! submission.refSampleCodes.isEmpty()) {	
+			for (String sampleCode : submission.refSampleCodes){
+				// verifier que sample n'est pas utilisé par autre objet submission avant destruction
+				// normalement sample crees dans init de type external avec state=F-SUB ou sample avec state='N'
+				List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("refSampleCodes", sampleCode)).toList();
+				if (submissionList.size() > 1) {
+					for (Submission sub: submissionList) {
+						System.out.println(sampleCode + " utilise par objet Submission " + sub.code);
+					}
+				} else {
+					MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
+					System.out.println("deletion dans base pour sample "+sampleCode);
+				}
+			}
+		}
+
+		// verifier que la config à l'etat used n'est pas utilisé par une autre soumission avant de remettre son etat à 'N'
+		// update la configuration pour le statut en remettant le statut new si pas utilisé par ailleurs :
+		List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("configCode", submission.configCode)).toList();
+		if (submissionList.size() <= 1) {
+			MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
+					DBQuery.is("code", submission.configCode),
+					DBUpdate.set("state.code", "N").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
+			System.out.println("state.code remis à 'N' pour configuration "+submission.configCode);
+		}
 
 
-			// verifier que la config à l'etat used n'est pas utilisé par une autre soumission avant de remettre son etat à 'N'
-			// update la configuration pour le statut en remettant le statut new si pas utilisé par ailleurs :
-			List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("configCode", submission.configCode)).toList();
-			if (submissionList.size() <= 1) {
-				MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
-						DBQuery.is("code", submission.configCode),
+		
+
+		// verifier que le study à l'etat userValidate n'est pas utilisé par une autre soumission avant de remettre son etat à 'N'
+		if (StringUtils.isNotBlank(submission.studyCode)){
+			List <Submission> submissionList2 = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("studyCode", submission.studyCode)).toList();
+			if (submissionList2.size() <= 1) {
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+						DBQuery.is("code", submission.studyCode),
 						DBUpdate.set("state.code", "N").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
-				System.out.println("state.code remis à 'N' pour configuration "+submission.configCode);
-			}
-			// verifier que le study à l'etat userValidate n'est pas utilisé par une autre soumission avant de remettre son etat à 'N'
-			if (StringUtils.isNotBlank(submission.studyCode)){
-				List <Submission> submissionList2 = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("studyCode", submission.studyCode)).toList();
-				if (submissionList2.size() <= 1) {
-					MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-							DBQuery.is("code", submission.studyCode),
-							DBUpdate.set("state.code", "N").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	
-					System.out.println("state.code remis à 'N' pour study "+submission.studyCode);
-				}	
-			}
-			
-			if (! submission.refStudyCodes.isEmpty()) {	
-				for (String studyCode : submission.refStudyCodes){
-					// verifier que study n'est pas utilisé par autre objet submission avant destruction
-					// normalement study crees dans init de type external avec state=F-SUB ou study avec state='N'
-					List <Submission> submissionList2 = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("refStudyCodes", studyCode)).toList();
-					if (submissionList2.size() > 1) {
-						for (Submission sub: submissionList2) {
-							System.out.println(studyCode + " utilise par objet Submission " + sub.code);
-						}
-					} else {
-						AbstractStudy study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.AbstractStudy.class, studyCode);
-						if (study != null){
+				System.out.println("state.code remis à 'N' pour study "+submission.studyCode);
+			}	
+		}
+
+		if (! submission.refStudyCodes.isEmpty()) {	
+			// On ne peut detruire que des ExternalStudy crées et utilisés seulement par la soumission courante.
+			for (String studyCode : submission.refStudyCodes){
+				// verifier que study n'est pas utilisé par autre objet submission avant destruction
+				// normalement study crees dans init de type external avec state=F-SUB ou study avec state='N'
+				List <Submission> submissionList2 = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("refStudyCodes", studyCode)).toList();
+				if (submissionList2.size() > 1) {
+					for (Submission sub: submissionList2) {
+						System.out.println(studyCode + " utilise par objet Submission " + sub.code);
+					}
+				} else {
+					AbstractStudy study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.AbstractStudy.class, studyCode);
+					if (study != null){
+						if ( ExternalStudy.class.isInstance(study)) {
 							// on ne veut enlever que les external_study cree par cette soumission, si internalStudy cree, on veut juste le remettre avec bon state.
+							//System.out.println("Recuperation dans base du study avec Ac = " + studyAc +" qui est du type externalStudy ");
 							if("F-SUB".equalsIgnoreCase(study.state.code) ){
-								MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Sample.class, studyCode);		
-								System.out.println("deletion dans base pour sample "+studyCode);
+								MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);		
+								System.out.println("deletion dans base pour study "+studyCode);
 							}
 						}
 					}
 				}
 			}
-			
-			System.out.println("deletion dans base pour submission "+submissionCode);
-			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		}
-	}
 
+		System.out.println("deletion dans base pour submission "+submissionCode);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
+	}
 	
 }
 
