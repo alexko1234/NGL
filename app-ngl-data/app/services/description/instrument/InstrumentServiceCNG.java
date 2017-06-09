@@ -870,9 +870,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19240", "MN19240", null, true, "/env/ig/atelier/nanopore/cng/MN19240", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19270", "MN19270", null, true, "/env/ig/atelier/nanopore/cng/MN19270", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19813", "MN19813", null, true, "/env/ig/atelier/nanopore/cng/MN19813xxxxxx", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19813", "MN19813", null, true, "/env/ig/atelier/nanopore/cng/MN19813", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19802","MN19802", null, true, "/env/ig/atelier/nanopore/cng/MN19802", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				instruments.add(createInstrument("MN19190","MN19190", null, true, "/env/ig/atelier/nanopore/cng/MN19190", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19190","MN19190", null, true, "/env/ig/atelier/nanopore/cng/MN19190", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
 	

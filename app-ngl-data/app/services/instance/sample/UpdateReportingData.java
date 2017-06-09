@@ -1,6 +1,8 @@
 package services.instance.sample;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 
 import controllers.migration.OneToVoidContainer;
@@ -57,19 +60,25 @@ public class UpdateReportingData extends AbstractImportData {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		Logger.debug("Start reporting synchro");
-		
-		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
-			.cursor.forEach(sample -> {
-				try{
-					updateProcesses(sample);
-					if(sample.processes != null && sample.processes.size() > 0){
-						Logger.debug("update sample "+sample.code);
-						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
-					}	
-				}catch(Throwable e){
-					logger.error("Sample : "+sample.code);
-				}
-			});
+		try{
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date d = sdf.parse("2016-07-07");
+			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
+				.cursor.forEach(sample -> {
+					try{
+						updateProcesses(sample);
+						if(sample.processes != null && sample.processes.size() > 0){
+							Logger.debug("update sample "+sample.code);
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
+						}	
+					}catch(Throwable e){
+						logger.error("Sample : "+sample.code);
+					}
+				});
+		}catch(Throwable e){
+			logger.error("Error date : "+e);
+		}
 		
 	}
 
@@ -99,6 +108,7 @@ public class UpdateReportingData extends AbstractImportData {
 				sampleProcess.experiments = experiments;
 			}
 		}
+		
 		if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 			List<SampleReadSet> readsets = updateReadSets(sample, process);
 			if(readsets != null && readsets.size() > 0){
@@ -222,7 +232,13 @@ public class UpdateReportingData extends AbstractImportData {
 	private List<SampleReadSet> updateReadSets(Sample sample, Process process) {
 		List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
 		String tag = procWorkflowHelper.getTagAssignFromProcessContainers(process);
-		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes).in("sampleCode", process.sampleCodes).in("projectCode", process.projectCodes))
+		
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
+		
+		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
+				DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes).in("sampleCode", process.sampleCodes).in("projectCode", process.projectCodes),
+				keys)
 		.cursor
 		.forEach(readset -> {
 			if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
@@ -246,7 +262,7 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		sampleReadSet.productionValuation = readset.productionValuation;   
 		sampleReadSet.bioinformaticValuation = readset.bioinformaticValuation; 
-		sampleReadSet.treatments = filterTreaments(readset.treatments);
+		//sampleReadSet.treatments = filterTreaments(readset.treatments);
 		return sampleReadSet;
 	}
 
