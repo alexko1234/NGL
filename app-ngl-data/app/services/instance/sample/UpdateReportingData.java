@@ -102,7 +102,7 @@ public class UpdateReportingData extends AbstractImportData {
 		if(process.properties != null && process.properties.size() > 0){
 			sampleProcess.properties= process.properties;			
 		}
-		process.currentExperimentTypeCode = process.currentExperimentTypeCode;
+		sampleProcess.currentExperimentTypeCode = process.currentExperimentTypeCode;
 		if(process.experimentCodes != null && process.experimentCodes.size() > 0){
 			List<SampleExperiment> experiments  = updateExperiments(process);
 			if(experiments != null && experiments.size() > 0){
