@@ -290,8 +290,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("prepa-fc-ordered",6),
 						getPET("illumina-depot",7)), 		
 				getExperimentTypes("frag-and-purif").get(0),          //first experiment type    
-				getExperimentTypes("illumina-depot").get(0),         //last  experiment type
-				getExperimentTypes("ext-to-capture-process").get(0), //void  experiment type
+				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
+				getExperimentTypes("ext-to-capt-lib-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 09/06/2017 NGL-1201: prorcessus Capture reprise 1 (PCR-precapture-->depot)
@@ -308,9 +308,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("normalization-and-pooling",3),	
 						getPET("prepa-fc-ordered",4),
 						getPET("illumina-depot",5)), 		
-				getExperimentTypes("capt-pre-pcr").get(0),                    //first experiment type    
+				getExperimentTypes("precapt-pcr").get(0),                     //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
-				getExperimentTypes("ext-to-capture-process-reprise1").get(0), //void  experiment type
+				getExperimentTypes("ext-to-capt-lib-process-rep-pre").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 09/06/2017 NGL-1201: prorcessus Capture reprise 2 (PCR-postcapture-->depot)
@@ -325,9 +325,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("normalization-and-pooling",1),	
 						getPET("prepa-fc-ordered",2),
 						getPET("illumina-depot",3)), 		
-				getExperimentTypes("capt-and-indexing").get(0),               //first experiment type    
-				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
-				getExperimentTypes("ext-to-capture-process-reprise2").get(0), //void  experiment type
+				getExperimentTypes("pcr-and-purification").get(0),             //first experiment type    
+				getExperimentTypes("illumina-depot").get(0),                   //last  experiment type
+				getExperimentTypes("ext-to-capt-lib-process-rep-post").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		}
 		

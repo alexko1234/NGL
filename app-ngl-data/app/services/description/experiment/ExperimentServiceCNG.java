@@ -610,7 +610,6 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null
 				).save();
 		
-		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (2)
 		newExperimentTypeNode("ext-to-capture-pcr-indexing-fc-ord-process", getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord-process").get(0), 
 				false, false, false, 
@@ -646,7 +645,6 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null,
 				null
 				).save();		
-		
 } // END DEV
 				
 		/** other nodes **/
@@ -780,7 +778,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				getExperimentTypes("aliquoting","pool") // tranfert
 				).save();
 
-		
 		//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
 		new Nanopore().getExperimentTypeNode();
 			
@@ -843,7 +840,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null, // pas qc
 				null  // pas transfert
 				).save();
-
 		
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){		
 		//FDS ajout 06/07/2017 NGL-1201: processus capture
@@ -1449,7 +1445,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 		//TODO attente specs 
 		return propertyDefinitions;
-	}
+	}	
 	
 	//FDS ajout 06/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsQCquantity() {

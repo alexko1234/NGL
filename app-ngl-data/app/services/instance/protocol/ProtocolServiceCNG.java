@@ -169,7 +169,19 @@ public class ProtocolServiceCNG {
 		
 		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
-
+		
+		
+		// 09/06/2017 ajout protocoles pour capture..... TEST....
+		lp.add(newProtocol("sureSelect-XT-2","sureSelect-XT-2","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("prep-capt")));
+		
+		lp.add(newProtocol("sureSelect-XT-3","sureSelect-XT-3","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("prep-capt")));
+		
+		lp.add(newProtocol("sureSelect-XT-200","sureSelect-XT-200","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("prep-capt")));
+		
+		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));
@@ -187,7 +199,7 @@ public class ProtocolServiceCNG {
 		
 		
 		//------------Experiences de Purification-----------------------------
-		// 30/03/2017 ajout Protocole pour Sizing ...EN COURS
+		// 30/03/2017 ajout Protocole pour Sizing 
 		lp.add(newProtocol("nanopore-sizing-ptr","sizing nanopore","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-sizing")));	
 		
