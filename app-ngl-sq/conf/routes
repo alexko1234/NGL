@@ -49,6 +49,13 @@ GET		/tpl/experiments/get-template/:atomicType/:outputCategoryCode/:experimentCa
 GET		/tpl/experiments/search/:experimentTypeCode												controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
 GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()		
 
+#samples tpl
+GET 	/samples/:homecode/home										controllers.samples.tpl.Samples.home(homecode:java.lang.String)
+GET		/samples/:code												controllers.samples.tpl.Samples.get(code: java.lang.String)
+GET		/tpl/samples/search											controllers.samples.tpl.Samples.search()
+GET		/tpl/samples/details										controllers.samples.tpl.Samples.details()
+GET		/tpl/samples/js-routes										controllers.samples.tpl.Samples.javascriptRoutes()
+
 #tags api
 GET 	/printing/:homecode/home										controllers.printing.tpl.Printing.home(homecode:java.lang.String)
 GET		/tpl/printing/js-routes											controllers.printing.tpl.Printing.javascriptRoutes()

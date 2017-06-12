@@ -5,7 +5,9 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -19,6 +21,7 @@ import models.utils.instance.ExperimentHelper;
 import models.utils.instance.SampleHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -34,6 +37,7 @@ import views.components.datatable.DatatableResponse;
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
+import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
@@ -67,6 +71,17 @@ public class Samples extends DocumentController<Sample>{
 		Query query = DBQuery.empty();
 		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		
+		if(CollectionUtils.isNotEmpty(samplesSearch.codes)){
+			queryElts.add(DBQuery.in("code", samplesSearch.codes));
+		}else if(StringUtils.isNotBlank(samplesSearch.code)){
+			queryElts.add(DBQuery.is("code", samplesSearch.code));
+		}else if(StringUtils.isNotBlank(samplesSearch.codeRegex)){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(samplesSearch.codeRegex)));
+		}
+		
+		
+		
 		if(StringUtils.isNotBlank(samplesSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCode));
 		}
@@ -78,6 +93,34 @@ public class Samples extends DocumentController<Sample>{
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}
+		
+		
+		if(null != samplesSearch.fromDate){
+			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", samplesSearch.fromDate));
+		}
+
+		if(null != samplesSearch.toDate){
+			queryElts.add(DBQuery.lessThan("traceInformation.creationDate", (DateUtils.addDays(samplesSearch.toDate, 1))));
+		}
+		
+		if(CollectionUtils.isNotEmpty(samplesSearch.createUsers)){
+			queryElts.add(DBQuery.in("traceInformation.createUser", samplesSearch.createUsers));
+		}else if(StringUtils.isNotBlank(samplesSearch.createUser)){
+			queryElts.add(DBQuery.is("traceInformation.createUser", samplesSearch.createUser));
+		}
+		
+		if(StringUtils.isNotBlank(samplesSearch.commentRegex)){
+			queryElts.add(DBQuery.elemMatch("comments", DBQuery.regex("comment", Pattern.compile(samplesSearch.commentRegex))));
+		}
+		
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"));
+
+		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
+		
+		
+		if(queryElts.size() > 0){
+			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		}		
 		
 		return query;
 	}

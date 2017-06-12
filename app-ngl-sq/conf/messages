@@ -627,8 +627,23 @@ samples.table.name = Name
 samples.table.typeCode = Type
 samples.table.importTypeCode = Import type
 samples.table.sample = Echantillon
+samples.table.referenceCollab = Ref. collaborateur
+samples.table.taxonCode = Taxon ID
+samples.table.ncbiScientifiName = Taxon
+#Samples
+samples.title = Echantillons
+samples.menu = Echantillons
+samples.menu.search = Rechercher
+samples.tabs.search = Recherche Echantillon
+samples.table.code = Echantillon
+samples.table.projectCodes = Projet(s)
+samples.table.creationDate = Date de création
+samples.table.createUser = Création échantillon
+samples.table.state = Etat
 
-
+samples.placeholder.fromDate = Echantillon depuis le (jj/mm/aaaa)
+samples.placeholder.toDate = Echantillon jusqu''au (jj/mm/aaaa)
+samples.placeholder.createUser = Echantillon créé par
 ###############
 #
 # administration
