@@ -73,11 +73,11 @@ public class UpdateReportingData extends AbstractImportData {
 							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
 						}	
 					}catch(Throwable e){
-						logger.error("Sample : "+sample.code);
+						logger.error("Sample : "+sample.code+" - "+e,e);
 					}
 				});
 		}catch(Throwable e){
-			logger.error("Error date : "+e);
+			logger.error("Error date : "+e,e);
 		}
 		
 	}
@@ -102,6 +102,7 @@ public class UpdateReportingData extends AbstractImportData {
 		if(process.properties != null && process.properties.size() > 0){
 			sampleProcess.properties= process.properties;			
 		}
+		process.currentExperimentTypeCode = process.currentExperimentTypeCode;
 		if(process.experimentCodes != null && process.experimentCodes.size() > 0){
 			List<SampleExperiment> experiments  = updateExperiments(process);
 			if(experiments != null && experiments.size() > 0){
@@ -165,7 +166,7 @@ public class UpdateReportingData extends AbstractImportData {
 				atm.inputContainerUseds.forEach(icu -> {
 					if(null != atm.outputContainerUseds){
 						atm.outputContainerUseds.forEach(ocu ->{
-							if(containerCodes.containsAll(Arrays.asList(icu.code, ocu.code))){
+							if(ocu.code != null && containerCodes.containsAll(Arrays.asList(icu.code, ocu.code))){
 								SampleExperiment sampleExperiment = new SampleExperiment();
 								sampleExperiment.code = experiment.code;
 								sampleExperiment.typeCode= experiment.typeCode;
@@ -177,6 +178,18 @@ public class UpdateReportingData extends AbstractImportData {
 								sampleExperiment.traceInformation= experiment.traceInformation;
 								sampleExperiment.protocolCode = experiment.protocolCode;
 								sampleExperiment.properties = computeExperimentProperties(experiment, icu, ocu);
+								sampleExperiments.add(sampleExperiment);
+							}else if(containerCodes.contains(icu.code)){
+								SampleExperiment sampleExperiment = new SampleExperiment();
+								sampleExperiment.code = experiment.code;
+								sampleExperiment.typeCode= experiment.typeCode;
+								sampleExperiment.categoryCode= experiment.categoryCode;
+								sampleExperiment.state= experiment.state;
+								sampleExperiment.state.historical=null;
+								sampleExperiment.status= experiment.status;
+								sampleExperiment.traceInformation= experiment.traceInformation;
+								sampleExperiment.protocolCode = experiment.protocolCode;
+								sampleExperiment.properties = computeExperimentProperties(experiment, icu, null);
 								sampleExperiments.add(sampleExperiment);
 							}
 						});

@@ -233,10 +233,10 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				this.additionalColumns=[];
 				this.selectedAddColumns=[];
 				
-				if(lists.get("containers-addcolumns") && lists.get("containers-addcolumns").length === 1){
+				if(lists.get("samples-addcolumns") && lists.get("samples-addcolumns").length === 1){
 					var formColumns = [];
 					//we used the order in the document to order column in display and not the position value !!!!
-					var allColumns = angular.copy(lists.get("containers-addcolumns")[0].columns);
+					var allColumns = angular.copy(lists.get("samples-addcolumns")[0].columns);
 					var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
 					for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
 						formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
@@ -302,9 +302,9 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			initAdditionalFilters:function(){
 				this.additionalFilters=[];
 				
-				if(lists.get("containers-search-addfilters") && lists.get("containers-search-addfilters").length === 1){
+				if(lists.get("samples-search-addfilters") && lists.get("samples-search-addfilters").length === 1){
 					var formFilters = [];
-					var allFilters = angular.copy(lists.get("containers-search-addfilters")[0].filters);
+					var allFilters = angular.copy(lists.get("samples-search-addfilters")[0].filters);
 					
 					/* add static filters here*/
 					allFilters.push({property:"comments.comment",html:"<textarea class='form-control' ng-model='searchService.form.commentRegex' placeholder='"+Messages("search.placeholder.commentRegex")+"' title='"+Messages("search.placeholder.commentRegex")+"'></textarea>",position:allFilters.length+1});
