@@ -339,15 +339,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		//Get typeCode
 		$scope.typeCodeExp = undefined;
 		if($scope.run.categoryCode === "nanopore"){
-			$scope.typeCodeExp="nanopore-depot";
+			$scope.typeCodeExp=["nanopore-depot"];
 		}else if($scope.run.categoryCode === "opgen"){
-			$scope.typeCodeExp="opgen-depot";
+			$scope.typeCodeExp=["opgen-depot"];
 		}else if($scope.run.categoryCode === "illumina"){
-			$scope.typeCodeExp="prepa-flowcell";
+			$scope.typeCodeExp=["prepa-flowcell","prepa-fc-ordered"];
 		}
 		
 		if($scope.typeCodeExp !== undefined){
-			$http.get(jsRoutes.controllers.experiments.api.Experiments.list().url,{params:{typeCode:$scope.typeCodeExp,containerSupportCode:$scope.run.containerSupportCode}}).success(function(data) {
+			$http.get(jsRoutes.controllers.experiments.api.Experiments.list().url,{params:{typeCodes:$scope.typeCodeExp,containerSupportCode:$scope.run.containerSupportCode}}).success(function(data) {
 				var experiment = data;
 				if(experiment.length==1){
 					$window.open($scope.value+"/experiments/"+experiment[0].code, 'seq');

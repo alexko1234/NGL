@@ -12,6 +12,7 @@ public class ExperimentSearchForm extends ListForm{
 	public String code;
 	public Set<String> codes;
 	public String typeCode;
+	public Set<String> typeCodes;
 	public String categoryCode;
 	public String projectCode;
 	public Set<String> projectCodes;

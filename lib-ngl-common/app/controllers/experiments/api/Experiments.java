@@ -130,7 +130,9 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
 		}
 		
-		if(StringUtils.isNotBlank(experimentSearch.typeCode)){
+		if(CollectionUtils.isNotEmpty(experimentSearch.typeCodes)){
+			queryElts.add(DBQuery.in("typeCode", experimentSearch.typeCodes));
+		}else if(StringUtils.isNotBlank(experimentSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", experimentSearch.typeCode));
 		}
 
