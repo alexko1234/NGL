@@ -1223,7 +1223,9 @@ angular.module('commonsServices', []).
 						  var results =  collection.filter(function (elm, pos, self) {
 							  return self.indexOf(elm) === pos;
 						  })
-						  return (results.length === 1)?results[0]:results;
+						  
+						  //return (results.length === 1)?results[0]:results;
+						  return results;
 					  }
 					  //store all unique members
 					  var uniqueItems = [],
@@ -1238,7 +1240,8 @@ angular.module('commonsServices', []).
 						return true;
 					  });
 					  
-					  return (results.length === 1)?results[0]:results;
+					  //return (results.length === 1)?results[0]:results;
+					  return results;
 				  }
 				  //checked if the unique identifier is already exist
 				  function some(array, member) {
