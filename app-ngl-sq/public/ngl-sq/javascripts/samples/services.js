@@ -85,7 +85,19 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"groupMethod":"unique"
 		});
 		
-		
+		/*
+		columns.push({
+			"header":"Processus Categories",
+			"headerTpl":"<div bt-select placeholder='Select Processus Category' multiple=true class='form-control' ng-model='column.headerForm.processCategoryCode' bt-options='processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()' ></div></div>",
+			"property":"processes",
+			"order":false,
+			"hide":true,
+			"position":16,
+			"type":"text",
+			"watch":true,
+			"render": "<display-sample-processes dsp-processes='cellValue' dsp-process-category-codes='col.headerForm.processCategoryCode'/>"			
+		});
+		*/
 		return columns;
 	};
 	
@@ -365,5 +377,71 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 	};
 
 	return searchService;				
-}
-]);
+}]).directive('displaySampleProcesses', [ '$parse', '$filter', function($parse, $filter) {
+	return {
+		restrict : 'EA',
+		scope : {
+			dspProcesses :'=',
+			dspProcessCategoryCodes : '='
+		},
+		template: "<ul class='list-group' style='margin-bottom:0px'>"
+				+" 	<li  ng-repeat='(typeCode, values) in processesByTypeCode' class='list-group-item'>"
+				+" 	{{typeCode|codes:'type'}} :  "
+				+"  <a ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind='getReadSets(p)'>"
+				+"  </a>"
+				+ "<span class='badge' ng-bind='values.length'></span>"
+				+"  </li>"
+				+" </ul>"
+		,
+		link : function(scope, element, attr, ctrl) {
+			
+			
+			scope.getProcessClass = function(process){
+				if(process.state.code === 'N'){
+					return "label label-default";
+				}else if(process.state.code === 'IP'){
+					return "label label-warning"
+				}else if(process.state.code === 'F'){
+					return "label label-primary"
+				}
+			};
+			
+			scope.getReadSets = function(process){
+				if(process.readsets && process.readsets.length > 0){
+					return "rs";
+				}else{
+					return "  ";
+				}
+			}
+			
+			scope.$parent.$watch(attr.dspProcessCategoryCodes, function(newValue, oldValue){
+	    	     if(oldValue !== newValue){		    		
+	    	    	 init(scope.dspProcesses, newValue);
+	    	     }		    	  
+	      }, true);
+			
+			var init = function(dspProcesses, dspProcessCategoryCodes){
+				var filterProcesses = dspProcesses;
+				if(dspProcessCategoryCodes && dspProcessCategoryCodes.length > 0){
+					filterProcesses = []
+					for(var i = 0; i < dspProcessCategoryCodes.length; i++){
+						filterProcesses = filterProcesses.concat($filter('filter')(scope.dspProcesses, {categoryCode:dspProcessCategoryCodes[i]}));
+					}					
+				}
+				
+				//organize by typeCode
+				var processesByTypeCode = {};
+				if(filterProcesses && filterProcesses.length > 0){
+					filterProcesses.forEach(function(p){
+						if(!processesByTypeCode[p.typeCode]){
+							processesByTypeCode[p.typeCode] = [];
+						}
+						processesByTypeCode[p.typeCode].push(p);
+					}, processesByTypeCode)
+				}
+				scope.processesByTypeCode = processesByTypeCode;
+			};
+			init(scope.dspProcesses, scope.dspProcessCategoryCodes);
+		}
+	}
+}]);

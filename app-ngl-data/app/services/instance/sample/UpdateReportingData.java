@@ -34,6 +34,7 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.reporting.SampleExperiment;
 import models.laboratory.sample.instance.reporting.SampleProcess;
+import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 import models.laboratory.sample.instance.reporting.SampleReadSet;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
@@ -61,8 +62,6 @@ public class UpdateReportingData extends AbstractImportData {
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		Logger.debug("Start reporting synchro");
 		try{
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date d = sdf.parse("2016-07-07");
 			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
 			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
 				.cursor.forEach(sample -> {
@@ -70,7 +69,8 @@ public class UpdateReportingData extends AbstractImportData {
 						updateProcesses(sample);
 						if(sample.processes != null && sample.processes.size() > 0){
 							Logger.debug("update sample "+sample.code);
-							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics));
 						}	
 					}catch(Throwable e){
 						logger.error("Sample : "+sample.code+" - "+e,e);
@@ -88,7 +88,19 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		sample.processes = processes.parallelStream()
 					.map(process -> convertToSampleProcess(sample, process))
-					.collect(Collectors.toList());		
+					.collect(Collectors.toList());	
+		computeStatistics(sample);
+	}
+
+	private void computeStatistics(Sample sample) {
+		if(null != sample.processes){
+			
+			sample.processesStatistics = new SampleProcessesStatistics();	
+			sample.processesStatistics.processTypeCodes = sample.processes.stream().collect(Collectors.groupingBy(p -> p.typeCode, Collectors.counting()));
+			sample.processesStatistics.processCategoryCodes = sample.processes.stream().collect(Collectors.groupingBy(p -> p.categoryCode, Collectors.counting()));
+		
+			sample.processesStatistics.readSetTypeCodes = sample.processes.stream().filter(p -> p.readsets != null).map(p -> p.readsets).flatMap(List::stream).collect(Collectors.groupingBy(r -> r.typeCode, Collectors.counting()));
+		}
 	}
 
 	private SampleProcess convertToSampleProcess(Sample sample, Process process) {
