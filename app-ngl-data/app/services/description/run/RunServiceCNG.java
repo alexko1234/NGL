@@ -78,6 +78,7 @@ public class RunServiceCNG  extends AbstractRunService{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("localDataDeleted","localDataDeleted",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		
 		//use only for dynamic filters and dynamic properties
+		// !! Look also in ImportServiceCNG.java for libProcessTypeCode !!!
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
 				getLibProcessTypeCodeValues(), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Category d'index","tagCategory",LevelService.getLevels(Level.CODE.Content), String.class, false, getTagCategories(), "single"));
@@ -155,7 +156,6 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("FG","FG - GROSeq"));
          values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
          values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
-         values.add(DescriptionFactory.newValue("FJ","FJ - RRBSeq"));  // ajout 12/06/2017
          values.add(DescriptionFactory.newValue("HIC","HIC - HiC"));
          
          // codes for RNA sequencing
