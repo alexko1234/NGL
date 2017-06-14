@@ -88,7 +88,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="transfertRawData" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="ncftpputSyntax">
-			<Executable path="/usr/local/aspera/connect/bin/ascp" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
+			<Executable path="ascp" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
 			<Slurm job="ascpJob" part="normal" account="soumissions"/>
 		</ExecutableSpecification>
 		
