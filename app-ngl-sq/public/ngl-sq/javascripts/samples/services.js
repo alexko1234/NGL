@@ -407,8 +407,10 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			};
 			
 			scope.getReadSets = function(process){
-				if(process.readsets && process.readsets.length > 0){
-					return "rs";
+				if(process.readsets && process.readsets.length > 1){
+					return process.readsets.length+"rs";
+				}else if(process.readsets && process.readsets.length === 1){
+					return process.readsets.length+"rs";
 				}else{
 					return "  ";
 				}
@@ -425,7 +427,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				if(dspProcessCategoryCodes && dspProcessCategoryCodes.length > 0){
 					filterProcesses = []
 					for(var i = 0; i < dspProcessCategoryCodes.length; i++){
-						filterProcesses = filterProcesses.concat($filter('filter')(scope.dspProcesses, {categoryCode:dspProcessCategoryCodes[i]}));
+						filterProcesses = filterProcesses.concat($filter('filter')(scope.dspProcesses, {categoryCode:dspProcessCategoryCodes[i]},true));
 					}					
 				}
 				
