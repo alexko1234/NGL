@@ -88,7 +88,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 		/*
 		columns.push({
 			"header":"Processus Categories",
-			"headerTpl":"<div bt-select placeholder='Select Processus Category' multiple=true class='form-control' ng-model='column.headerForm.processCategoryCode' bt-options='processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()' ></div></div>",
+			"headerTpl":"<div bt-select placeholder='Select Processus Category' multiple=true class='form-control' ng-model='column.headerForm.processCategoryCode' bt-options='processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()' style='display:inline-block'></div></div><legend-sample-processes/>",
 			"property":"processes",
 			"order":false,
 			"hide":true,
@@ -398,11 +398,13 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			
 			scope.getProcessClass = function(process){
 				if(process.state.code === 'N'){
-					return "label label-default";
+					return "label label-info";
 				}else if(process.state.code === 'IP'){
 					return "label label-warning"
-				}else if(process.state.code === 'F'){
+				}else if(process.state.code === 'F' && process.experiments && process.experiments.length > 0){
 					return "label label-primary"
+				}else if(process.state.code === 'F' && (!process.experiments || process.experiments.length === 0)){
+					return "label label-default"
 				}
 			};
 			
@@ -410,7 +412,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				if(process.readsets && process.readsets.length > 1){
 					return process.readsets.length+"rs";
 				}else if(process.readsets && process.readsets.length === 1){
-					return process.readsets.length+"rs";
+					return "rs";
 				}else{
 					return "  ";
 				}
@@ -445,5 +447,28 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			};
 			init(scope.dspProcesses, scope.dspProcessCategoryCodes);
 		}
-	}
+	};
+}]).directive('legendSampleProcesses', [ '$parse', '$filter', function($parse, $filter) {
+	return {
+		restrict : 'EA',
+		template:'<a id="legendSampleProcesses" class="btn btn-info btn-xs">?</a>',
+		link : function(scope, element, attr, ctrl) {
+			
+			var options = {
+					placement : "top",
+					title : Messages('legendSampleProcesses.title'),
+					html:true,
+					content : '<ul class="list-group">'
+							+'	<li class="list-group-item"><a class="label label-primary"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.primary')+'</li>'
+							+'	<li class="list-group-item"><a class="label label-primary"  style="margin-right:2px">rs</a> : '+Messages('legendSampleProcesses.label.primary.rs')+'</li>'							
+							+'	<li class="list-group-item"><a class="label label-warning"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.warning')+'</li>'
+							+'	<li class="list-group-item"><a class="label label-info"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.info')+'</li>'
+							+'	<li class="list-group-item"><a class="label label-default"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.default')+'</li>'							
+							+'</ul>',
+					trigger : "click"					
+			};
+			
+			angular.element("#legendSampleProcesses").popover(options);
+		}
+	};
 }]);

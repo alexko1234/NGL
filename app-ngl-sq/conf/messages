@@ -656,3 +656,12 @@ admin.supports.menu.contentupdate = Mise à jour propriété content
 admin.supports.switch-index.tabs.search = Recherche des objets NGL
 authorisation.userroles.page = Gestion des roles utilisateurs
 authorisation.users.page.tab.search = Recherche des utilisateurs
+
+
+##Display Sample Processes Legend
+legendSampleProcesses.title = Légende
+legendSampleProcesses.label.primary = Processus terminé
+legendSampleProcesses.label.primary.rs = Processus terminé avec RS
+legendSampleProcesses.label.warning = Processus en cours
+legendSampleProcesses.label.info = Processus à nouveau
+legendSampleProcesses.label.default = Processus terminé sans exp.
