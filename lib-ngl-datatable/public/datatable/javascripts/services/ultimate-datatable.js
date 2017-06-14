@@ -1,4 +1,4 @@
-/*! ultimate-datatable version 3.3.1-SNAPSHOT 2016-10-11 
+/*! ultimate-datatable version 3.3.1-SNAPSHOT 2017-06-14 
  Ultimate DataTable is distributed open-source under CeCILL FREE SOFTWARE LICENSE. Check out http://www.cecill.info/ for more information about the contents of this license.
 */
 "use strict";
@@ -1790,7 +1790,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             isShowToolbarBottom: function() {
                 return (this.isShowToolbarPagination() && this.config.pagination.bottom && this.config.pagination.numberRecordsPerPage >= this.config.pagination.numberRecordsPerPageForBottomdisplay);
             },
-
             isShowToolbarButtons: function() {
                 return (this.isShowCRUDButtons() || this.isShowHideButtons() || this.isShowAddButtons() || this.isShowShowButtons() || this.isShowExportCSVButton() || this.isShowOtherButtons());
             },
@@ -2019,7 +2018,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         if(null === columns[i].headerTpl || undefined === columns[i].headerTpl){
                         	columns[i].headerTpl = '<span class="header" ng-model="udtTable" ng-bind="udtTableFunctions.messages.Messages(column.header)"/>';
                         }
-                                                    
                     }
 
 
@@ -3851,11 +3849,9 @@ filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
     	    		}
     	    		
     	    	});
-    	    	
     	    	if(unique){
     	    		possibleValues = $filter('udtUnique')(possibleValues);
     	    	}
-    	    	
     	    	return possibleValues;    	    	
     	    };
     	}]);;angular.module('ultimateDataTableServices').
@@ -3930,16 +3926,15 @@ filter('udtUnique', ['$parse', function($parse) {
     		      collection = (angular.isObject(collection)) ? toArray(collection) : collection;
 
     		      if (isUndefined(property)) {
-    		    	  var results =  collection.filter(function (elm, pos, self) {
+    		        return collection.filter(function (elm, pos, self) {
 						  return self.indexOf(elm) === pos;
 					  })
-					  return (results.length === 1)?results[0]:results;
     		      }
     		      //store all unique members
     		      var uniqueItems = [],
     		          get = $parse(property);
 
-				  var results = collection.filter(function (elm) {
+    		      return collection.filter(function (elm) {
 					var prop = get(elm);
 					if(some(uniqueItems, prop)) {
 					  return false;
@@ -3948,8 +3943,6 @@ filter('udtUnique', ['$parse', function($parse) {
 					return true;
 				  });
 					  
-				  return (results.length === 1)?results[0]:results;
-
     		      //checked if the unique identifier is already exist
     		      function some(array, member) {
     		        /*
