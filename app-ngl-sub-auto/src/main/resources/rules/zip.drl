@@ -61,6 +61,25 @@ rule "Set parameter for command line Zip"
 			$job.setParameterValue("endArg", ">"+jobResource.getProperty("submissionDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
 end
 
+rule "POST DONE EXECUTION of zip : Update relatifName of RawData"
+	@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 200
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "ZipFile", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		//Raw Data from DB
+		JobResource jobResource = $job.getUniqueJobResource("inputRawDataZip");
+		JSONDevice jsonDevice = new JSONDevice();
+		String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),"bot");
+		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "relatifName", jobResource.getProperty("fileName")+".gz");
+		String JSONRawDataModify2 = jsonDevice.modifyJSON(JSONRawDataModify, "extention", "fastq.gz");
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas",JSONRawDataModify2, "bot");
+		log.debug("Result "+jsonResult);
+end
+
 rule "add resources in internalRefMd5 to fire md5"
 	@BirdsRule( addResources ) 
 	dialect 'java'
@@ -77,7 +96,7 @@ rule "add resources in internalRefMd5 to fire md5"
 		JobResource jobResource = $job.getUniqueJobResource("inputRawDataZip");
 		JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
 		ResourceProperties resourceProperties = outputResource.getResourceProperties();
-	  	resourceProperties.setProperty("fileName",jobResource.getProperty("fileName"));
+	  	resourceProperties.setProperty("fileName",jobResource.getProperty("fileName")+".gz");
 	  	resourceProperties.setProperty("directory",jobResource.getProperty("directory"));
 	  	resourceProperties.setProperty("experimentCode",jobResource.getProperty("experimentCode"));
 	  	resourceProperties.setProperty("submissionDirectory",jobResource.getProperty("submissionDirectory"));
