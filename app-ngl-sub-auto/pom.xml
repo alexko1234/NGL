@@ -363,6 +363,7 @@
                         <goal>run</goal>
                     </goals>
                 </execution>
+                <!-- Suppression birdsProject.properties car connexion base de données dans github 
                 <execution>
                     <id>Deploy properties</id>
                     <phase>deploy</phase>
@@ -375,7 +376,7 @@
                     <goals>
                         <goal>run</goal>
                     </goals>
-                </execution>
+                </execution> -->
             </executions>
         	 </plugin>
         	 
