@@ -46,19 +46,19 @@ public class Bionano extends AbstractDeclaration{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 
-		l.add(newExperimentType("Irys Prep NLRS","irys-nlrs-prep",null,3100,
+		l.add(newExperimentType("Bionano Prep NLRS","irys-nlrs-prep",null,3100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
-		l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,3200,
+		l.add(newExperimentType(" Préparation Bionano CHIP","irys-chip-preparation",null,3200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
 				getInstrumentUsedTypes("irys-hand"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
 		l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,3300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionDepotBionano(),
-				getInstrumentUsedTypes("IRYS"),"OneToVoid", 
+				getInstrumentUsedTypes("IRYS","SAPHYR"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
 		return l;
@@ -86,7 +86,7 @@ public class Bionano extends AbstractDeclaration{
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l=new ArrayList<ProcessType>();
 
-		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", 
+		l.add(DescriptionFactory.newProcessType("NLRS, Bionano chip, dépôt", "bionano-nlrs-process", 
 				ProcessCategory.find.findByCode("mapping"), 101, 
 				getPropertyDefinitionsBionano(), 
 				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),
@@ -96,7 +96,7 @@ public class Bionano extends AbstractDeclaration{
 						getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", 
+		l.add(DescriptionFactory.newProcessType("Bionano Chip, dépôt", "bionano-chip-process", 
 				ProcessCategory.find.findByCode("mapping"), 102, 
 				getPropertyDefinitionsBionano(),
 				Arrays.asList(getPET("ext-to-bionano-chip-process",-1),
@@ -173,7 +173,7 @@ public class Bionano extends AbstractDeclaration{
 	
 	private List<PropertyDefinition> getPropertyDefinitionPreparationIrysChip() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",51,true,"8", null));		
+		//propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",51,true,"8", null));		
 		return propertyDefinitions;
 	}
 
@@ -193,6 +193,8 @@ public class Bionano extends AbstractDeclaration{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeLabelDensity",LevelService.getLevels(Level.CODE.ContainerIn), File.class, false, "file", 12));
 
 		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true,DescriptionFactory.newValues("BspQI","Bsm1","BbvCI","BsrD1","BssSI","STAIN"), null, "single",13));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true,DescriptionFactory.newValues("BspQI","Bsm1","BbvCI","BsrD1","BssSI"), null, "single",13));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Unités d'enzyme","enzymeUnit", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null, null, null, null,"single", 14, true));
 		
@@ -240,7 +242,7 @@ public class Bionano extends AbstractDeclaration{
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",11, true));
 		propertyDefinitions.add(newPropertiesDefinition("Nombre de cycles","nbCycles", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null, null, null, null,"single", 12, true));
 		//Image 
-		propertyDefinitions.add(newPropertiesDefinition("Photo zone pillar","pillarRegionPicture", LevelService.getLevels(Level.CODE.ContainerIn),Image.class, false, null, null, null, null,"img", 13, true));
+	//	propertyDefinitions.add(newPropertiesDefinition("Photo zone pillar","pillarRegionPicture", LevelService.getLevels(Level.CODE.ContainerIn),Image.class, false, null, null, null, null,"img", 13, true));
 		propertyDefinitions.add(newPropertiesDefinition("Voltage","voltage", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null, null, null, null,"single", 14, true));
 		propertyDefinitions.add(newPropertiesDefinition("Nb d'optimisations","nbOfOptimizations", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, DescriptionFactory.newValues("2","3","4"), null, null, null,"single", 15, true));
 		
