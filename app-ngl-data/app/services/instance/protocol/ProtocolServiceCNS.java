@@ -74,6 +74,9 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","R9-Low input"))));
 		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
 				concatMap(newPSV("libraryProtocol","R9-2D"))));
+		lp.add(newProtocol("1D2-library","Banque 1D²","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-2D"))));
+
 		
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
