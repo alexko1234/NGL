@@ -39,14 +39,14 @@ public class SRAFilesUtil {
 		return param;
 	}
 	
-	public static void createWGSFile(String fileName, Set<ResourceProperties> rps) throws IOException
+	public static void createWGSFile(String directoryPath, String fileName, Set<ResourceProperties> rps) throws IOException
 	{
 		//Create file 
 		BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
 		//Write relatifPathName for each resource properties
 		for(ResourceProperties rp : rps)
 		{
-			out.write(rp.get("relatifName")+"\n");
+			out.write(directoryPath+File.separator+rp.get("relatifName")+"\n");
 		}
 		out.close();
 	}

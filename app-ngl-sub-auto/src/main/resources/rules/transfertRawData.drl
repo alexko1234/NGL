@@ -65,7 +65,7 @@ rule "update localDirectoryPath parameter"
 			log.debug("Size of rawData : "+rps.size());
 			String directoryPath = $job.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory");
 			String filePath = $job.getParameterValue("fileList").getValue().replace("%directoryPath%",directoryPath);
-			SRAFilesUtil.createWGSFile(filePath, rps);
+			SRAFilesUtil.createWGSFile(directoryPath, filePath, rps);
 			log.debug("set parameter value");
 			//Get input resource
 			$job.setParameterValue("fileList", filePath);

@@ -1,6 +1,8 @@
 #created on: Jul 7, 2014
 package birds
 
+import java.util.Date;
+
 rule "Define variable lineParmeter for sendXML specification"
 	@BirdsRule(fsRule)
 	dialect 'java'
@@ -17,7 +19,7 @@ rule "Define variable lineParmeter for sendXML specification"
        updateParameterXML("xmlSamples",$job);
        updateParameterXML("xmlExperiments",$job);
        updateParameterXML("xmlRuns",$job);
-       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionDate%",$job.getUniqueJobResource("subToSend").getProperty("submissionDate")));
+       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionCode%",$job.getUniqueJobResource("subToSend").getProperty("code")));
        $job.setParameterValue("OptionCD",$job.getParameterValue("OptionCD").getValue().replace("%submissionDirectory%",$job.getUniqueJobResource("subToSend").getProperty("submissionDirectory")));
 	
 end
@@ -68,8 +70,15 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		//Get unique resource 
 		String state = resourcePropertiesSet.iterator().next().get("state.code");
 		log.debug("State from treatment AC "+state);
-		if(state.equals("FE-SUB"))
+		if(state.equals("FE-SUB")){
 			$job.setExecutionState(Job.ERROR_STATUS);
+		}else{
+			//update submission date property
+			String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/submissions/"+codeSubmission,"bot");
+			String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submissionDate", new Date().toString());
+			String jsonResultUpdate = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission,JSONRawDataModify, "bot");
+			log.debug("Updated submission "+jsonResultUpdate);
+		}
 end
 
 #create function to replace value in parameter with evaluate null value

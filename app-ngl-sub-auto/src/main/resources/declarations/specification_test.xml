@@ -96,7 +96,7 @@ H:\birdsSpec.xsd">
 			<KeyValueElement key="-i" value="~/.ssh/ebi.sra" parameterName="cert"/>
 			<KeyValueElement key="-l" value="300M" parameterName="optionl"/>
 			<KeyValueElement key="-k" value="2" parameterName="optionk"/>
-			<KeyValueElement key="--file-list" value="%directoryPath%/list_aspera_WGS" parameterName="fileList"/>
+			<KeyValueElement key="--file-list" value="%directoryPath%/list_aspera" parameterName="fileList"/>
 			<KeyValueElement key="--mode" value="send" parameterName="mode"/>
 			<KeyValueElement key="--host" value="webin.ebi.ac.uk" parameterName="hostName"/>
 			<KeyValueElement key="--user" value="Webin-9" parameterName="userEBI"/>
