@@ -252,15 +252,20 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 20/02/2017 NGL-1167: processus Chromium 10x WG
-		l.add(DescriptionFactory.newProcessType("Prep Chromium WG", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
+		// FDS modification 13/06/2017 NGL-1473: allongement du processus-> illumina depot (renommage ..FC ordonnée)
+		l.add(DescriptionFactory.newProcessType("Prep Chromium WG (FC ordonnée)", "wg-chromium-lib-process", ProcessCategory.find.findByCode("library"),
 				4,
 				getPropertyDefinitionsWgChromium(), 
 				Arrays.asList(
 						getPET("ext-to-wg-chromium-lib-process",-1), //ordered list of experiment type in process type
 						getPET("chromium-gem-generation",0),
-						getPET("wg-chromium-lib-prep",1) ), 
+						getPET("wg-chromium-lib-prep",1), 
+						getPET("lib-normalization",2),
+						getPET("normalization-and-pooling",2),
+						getPET("prepa-fc-ordered",3),
+						getPET("illumina-depot",4)), 			
 				getExperimentTypes("chromium-gem-generation").get(0),        //first experiment type    
-				getExperimentTypes("wg-chromium-lib-prep").get(0),           //last  experiment type
+				getExperimentTypes("illumina-depot").get(0),                 //last  experiment type
 				getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		

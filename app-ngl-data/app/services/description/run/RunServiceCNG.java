@@ -78,6 +78,7 @@ public class RunServiceCNG  extends AbstractRunService{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("localDataDeleted","localDataDeleted",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		
 		//use only for dynamic filters and dynamic properties
+		// !! Look also in ImportServiceCNG.java for libProcessTypeCode !!!
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
 				getLibProcessTypeCodeValues(), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Category d'index","tagCategory",LevelService.getLevels(Level.CODE.Content), String.class, false, getTagCategories(), "single"));
@@ -109,6 +110,8 @@ public class RunServiceCNG  extends AbstractRunService{
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
+        
+         // codes for Captures
          values.add(DescriptionFactory.newValue("CA","CA - DefCap008_Rg"));
          values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
          values.add(DescriptionFactory.newValue("CB","CB - DefCap005_Ex"));
@@ -135,11 +138,15 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
          values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
          values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022"));
+         
+         // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
          values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));
+         
+         // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
          values.add(DescriptionFactory.newValue("FB","FB - ChipSeq"));
          values.add(DescriptionFactory.newValue("FC","FC - MeDipSeq/Depl"));
@@ -150,6 +157,8 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
          values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
          values.add(DescriptionFactory.newValue("HIC","HIC - HiC"));
+         
+         // codes for RNA sequencing
          values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
          values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
          values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
