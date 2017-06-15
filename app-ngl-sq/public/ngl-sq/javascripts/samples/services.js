@@ -377,7 +377,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 	};
 
 	return searchService;				
-}]).directive('displaySampleProcesses', [ '$parse', '$filter', function($parse, $filter) {
+}]).directive('displaySampleProcesses', [ '$parse', '$filter', '$window', function($parse, $filter, $window) {
 	return {
 		restrict : 'EA',
 		scope : {
@@ -387,9 +387,9 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 		template: "<ul class='list-group' style='margin-bottom:0px'>"
 				+" 	<li  ng-repeat='(typeCode, values) in processesByTypeCode' class='list-group-item'>"
 				+" 	{{typeCode|codes:'type'}} :  "
-				+"  <a ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind='getReadSets(p)'>"
+				+"  <a href='#' ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-click='goTo(p,$event)' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind='getInfo(p)'>"
 				+"  </a>"
-				+ "<span class='badge' ng-bind='values.length'></span>"
+				+ "<span class='badge' ng-bind='values.length' ng-click='goToAllProcesses(values,$event)'></span>"
 				+"  </li>"
 				+" </ul>"
 		,
@@ -408,14 +408,42 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				}
 			};
 			
-			scope.getReadSets = function(process){
+			scope.getInfo = function(process){
 				if(process.readsets && process.readsets.length > 1){
 					return process.readsets.length+"rs";
 				}else if(process.readsets && process.readsets.length === 1){
 					return "rs";
+				}else if(process.progressInPercent){
+					return process.progressInPercent;
 				}else{
 					return "  ";
 				}
+			}
+			
+			scope.goTo = function(process,$event){
+				if(process.readsets && process.readsets.length > 1){
+					var params = "";
+					process.readsets.forEach(function(readset){
+						params +="codes="+readset.code+"&";
+					}, params);
+					$window.open(AppURL("bi")+"/readsets/search/home?codes="+params, 'readsets');
+				}else if(process.readsets && process.readsets.length === 1){
+					$window.open(AppURL("bi")+"/readsets/"+process.readsets[0].code, 'readset');
+				}else{
+					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&typeCode="+process.typeCode, 'processes');
+				}	
+				$event.stopPropagation();
+			}
+			
+			scope.goToAllProcesses = function(processes,$event){
+				if(processes && processes.length > 1){
+					var params = "";
+					processes.forEach(function(p){
+						params +="codes="+p.code+"&";
+					}, params);
+					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?"+params+"&typeCode="+processes[0].typeCode, 'processes');
+				}	
+				$event.stopPropagation();
 			}
 			
 			scope.$parent.$watch(attr.dspProcessCategoryCodes, function(newValue, oldValue){

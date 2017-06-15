@@ -81,7 +81,9 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.regex("code", Pattern.compile(samplesSearch.codeRegex)));
 		}
 		
-		
+		if(StringUtils.isNotBlank(samplesSearch.referenceCollabRegex)){
+			queryElts.add(DBQuery.regex("referenceCollab", Pattern.compile(samplesSearch.referenceCollabRegex)));
+		}
 		
 		if(StringUtils.isNotBlank(samplesSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCode));

@@ -64,6 +64,10 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.search();
 	}
 	
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}
+	
 	
 }]);
 

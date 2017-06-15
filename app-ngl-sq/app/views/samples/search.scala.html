@@ -4,7 +4,11 @@
 @form() = {
 	@columnSearchForm{			
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code +' ('+project.name+')'  for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>
+			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>
+		}
+		
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.referenceCollabRegex" placeholder='@Messages("samples.placeholder.referenceCollabRegex")'>
 		}		
 	}
 	@columnSearchForm{

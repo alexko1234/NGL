@@ -66,7 +66,7 @@ public class UpdateReportingData extends AbstractImportData {
 		Logger.debug("Start reporting synchro");
 		try{
 			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-			.sort("traceInformation.creationDate", Sort.DESC).limit(5000)
+			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
 				.cursor.forEach(sample -> {
 					try{
 						updateProcesses(sample);
@@ -141,7 +141,7 @@ public class UpdateReportingData extends AbstractImportData {
 					.in("state.code", Arrays.asList("IP","F"))).count();
 			
 			sampleProcess.progressInPercent = (new BigDecimal((nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue())*100.00)).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
-			Logger.debug("progressInPercent : "+(nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue()));
+			//Logger.debug("progressInPercent : "+(nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue()));
 		}else{
 			sampleProcess.progressInPercent = null;			
 		}

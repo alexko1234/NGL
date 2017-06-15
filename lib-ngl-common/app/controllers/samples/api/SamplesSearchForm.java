@@ -21,4 +21,6 @@ public class SamplesSearchForm extends ListForm{
 	public String commentRegex;
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	public Map<String, Boolean> existingFields;
+	public String referenceCollabRegex;
+	
 }
