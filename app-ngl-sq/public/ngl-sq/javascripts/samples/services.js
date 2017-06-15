@@ -426,7 +426,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 					process.readsets.forEach(function(readset){
 						params +="codes="+readset.code+"&";
 					}, params);
-					$window.open(AppURL("bi")+"/readsets/search/home?codes="+params, 'readsets');
+					$window.open(AppURL("bi")+"/readsets/search/home?"+params, 'readsets');
 				}else if(process.readsets && process.readsets.length === 1){
 					$window.open(AppURL("bi")+"/readsets/"+process.readsets[0].code, 'readset');
 				}else{
