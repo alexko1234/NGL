@@ -1,5 +1,6 @@
 package services.instance.sample;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
@@ -36,6 +38,7 @@ import models.laboratory.sample.instance.reporting.SampleExperiment;
 import models.laboratory.sample.instance.reporting.SampleProcess;
 import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 import models.laboratory.sample.instance.reporting.SampleReadSet;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Treatment;
@@ -63,7 +66,7 @@ public class UpdateReportingData extends AbstractImportData {
 		Logger.debug("Start reporting synchro");
 		try{
 			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
+			.sort("traceInformation.creationDate", Sort.DESC).limit(5000)
 				.cursor.forEach(sample -> {
 					try{
 						updateProcesses(sample);
@@ -83,7 +86,7 @@ public class UpdateReportingData extends AbstractImportData {
 	}
 
 	private void updateProcesses(Sample sample) {
-		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("sampleOnInputContainer.sampleCode", sample.code))
+		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("sampleCodes", sample.code))
 				.toList();
 		
 		sample.processes = processes.parallelStream()
@@ -128,8 +131,34 @@ public class UpdateReportingData extends AbstractImportData {
 				sampleProcess.readsets = readsets;
 			}
 		}
+		List<String> transformationCodes = getTransformationCodesForProcessTypeCode(process);
+		//extract only transformation
+		
+		Integer nbExp = 0;
+		if(process.experimentCodes != null && process.experimentCodes.size() > 0 && transformationCodes != null && transformationCodes.size() > 0){
+			nbExp = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes)
+					.in("typeCode", transformationCodes)
+					.in("state.code", Arrays.asList("IP","F"))).count();
+			
+			sampleProcess.progressInPercent = (new BigDecimal((nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue())*100.00)).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+			Logger.debug("progressInPercent : "+(nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue()));
+		}else{
+			sampleProcess.progressInPercent = null;			
+		}
 		
 		return sampleProcess;
+	}
+	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
+	private List<String> getTransformationCodesForProcessTypeCode(Process process) {
+		List<String> transformationCodes;
+		if(transformationCodesByProcessTypeCode.containsKey(process.typeCode)){
+			transformationCodes = transformationCodesByProcessTypeCode.get(process.typeCode);
+		}else{
+			transformationCodes =ExperimentType.find.findByProcessTypeCode(process.typeCode,true).stream().map(e -> e.code).collect(Collectors.toList());
+			transformationCodesByProcessTypeCode.put(process.typeCode, transformationCodes);
+		}
+		
+		return transformationCodes;
 	}
 
 

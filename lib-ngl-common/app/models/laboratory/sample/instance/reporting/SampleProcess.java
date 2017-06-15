@@ -18,5 +18,7 @@ public class SampleProcess {
 	public String currentExperimentTypeCode;
 	public List<SampleExperiment> experiments;
 	public List<SampleReadSet> readsets;
+	
+	public Integer progressInPercent;
 }
  
