@@ -283,6 +283,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Main", "irys-hand", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip-2"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("Main", "hand-OutTube", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("Cryobroyeur", "cryobroyeur", InstrumentCategory.find.findByCode("sample-prep-system"),  getCryobroyeurProperties(),getInstrumentCryobroyeur() 
 				,getContainerSupportCategories(new String[]{"tube","bottle","bag"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 

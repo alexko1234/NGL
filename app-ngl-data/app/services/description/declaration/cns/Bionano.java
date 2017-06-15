@@ -48,7 +48,7 @@ public class Bionano extends AbstractDeclaration{
 
 		l.add(newExperimentType("Bionano Prep NLRS","irys-nlrs-prep",null,3100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
-				getInstrumentUsedTypes("hand"),"OneToOne", 
+				getInstrumentUsedTypes("hand-OutTube"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
 		l.add(newExperimentType(" Préparation Bionano CHIP","irys-chip-preparation",null,3200,
