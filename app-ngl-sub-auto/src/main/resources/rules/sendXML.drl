@@ -1,6 +1,8 @@
 #created on: Jul 7, 2014
 package birds
 
+import java.util.Date;
+
 rule "Define variable lineParmeter for sendXML specification"
 	@BirdsRule(fsRule)
 	dialect 'java'
@@ -17,7 +19,8 @@ rule "Define variable lineParmeter for sendXML specification"
        updateParameterXML("xmlSamples",$job);
        updateParameterXML("xmlExperiments",$job);
        updateParameterXML("xmlRuns",$job);
-       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionDate%",$job.getUniqueJobResource("subToSend").getProperty("submissionDate")));
+       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionCode%",$job.getUniqueJobResource("subToSend").getProperty("code")));
+       $job.setParameterValue("OptionCD",$job.getParameterValue("OptionCD").getValue().replace("%submissionDirectory%",$job.getUniqueJobResource("subToSend").getProperty("submissionDirectory")));
 	
 end
 
@@ -32,11 +35,11 @@ rule "Syntax order command line for sendXML specification"
 		log.debug("Syntax sendXML : curl https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D -k -F \"SAMPLE=@sampleXml\" -F \"RUN=@runXml\" -F \"SUBMISSION=@submissionXML\" -F \"STUDY=@studyXML\" -F \"EXPERIMENT=@experimentXML\" ");
 		String parameterLine = $strategy.getParameterValue().get("optK")+" ";
 		for (String key : $strategy.getParameterValue().keySet()) {
-			if(!key.equals("optK") && !key.equals("listAC") && !$strategy.getParameterValue().get(key).equals("-F null"))
+			if(!key.equals("optK") && !key.equals("listAC") && !$strategy.getParameterValue().get(key).equals("-F null") && !key.equals("OptionCD"))
 	         parameterLine += $strategy.getParameterValue().get(key) + " ";
 	    }
 		//Add redirect to AC file
-		$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine +" > "+$strategy.getParameterValue().get("listAC"));
+		$strategy.setCommandLine($strategy.getParameterValue().get("OptionCD")+";"+$strategy.getExecutableName() + " " + parameterLine +" > "+$strategy.getParameterValue().get("listAC"));
 		log.debug("command line : " + $strategy.getCommandLine());
 		
 		modify($strategy) {}
@@ -55,11 +58,11 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		JobResource jobResource = $job.getUniqueJobResource("subToSend");
 		String codeSubmission = jobResource.getProperty("code");
 		String pathAC = jobResource.getProperty("submissionDirectory")+File.separator+$job.getParameterValue("listAC").getValue();
-		File fileAC = new File(pathAC);
+		//File fileAC = new File(pathAC);
 		log.debug("path AC="+pathAC);
 		JSONDevice jsonDevice = new JSONDevice();
 		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc";
-		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc", fileAC, "bot");
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?fileNameAc="+pathAC, "{}", "bot");
 		log.debug("Result "+jsonResult);
 		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
 		log.debug("Resource Properties "+resourcePropertiesSet);
@@ -67,8 +70,15 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		//Get unique resource 
 		String state = resourcePropertiesSet.iterator().next().get("state.code");
 		log.debug("State from treatment AC "+state);
-		if(state.equals("FE-SUB"))
+		if(state.equals("FE-SUB")){
 			$job.setExecutionState(Job.ERROR_STATUS);
+		}else{
+			//update submission date property
+			String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/submissions/"+codeSubmission,"bot");
+			String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submissionDate", new Date().toString());
+			String jsonResultUpdate = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission,JSONRawDataModify, "bot");
+			log.debug("Updated submission "+jsonResultUpdate);
+		}
 end
 
 #create function to replace value in parameter with evaluate null value

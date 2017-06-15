@@ -3,6 +3,7 @@ package controllers.samples.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -45,9 +46,9 @@ import fr.cea.ig.MongoDBResult;
 public class Samples extends DocumentController<Sample>{
 	
 	final Form<Sample> sampleForm = form(Sample.class);
-	
+	final static List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
 	public Samples() {
-		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);	
+		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);	
 	}
 	
 	
@@ -80,7 +81,9 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.regex("code", Pattern.compile(samplesSearch.codeRegex)));
 		}
 		
-		
+		if(StringUtils.isNotBlank(samplesSearch.referenceCollabRegex)){
+			queryElts.add(DBQuery.regex("referenceCollab", Pattern.compile(samplesSearch.referenceCollabRegex)));
+		}
 		
 		if(StringUtils.isNotBlank(samplesSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCode));

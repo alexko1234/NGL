@@ -132,11 +132,18 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		commonInfoTypeDAO.remove(experimentType);
 	}
 
-	public List<ExperimentType> findByProcessTypeId(long id) throws DAOException
+	public List<ExperimentType> findByProcessTypeCode(String processTypeCode, boolean onlyPositivePosition) throws DAOException
 	{
-		String sql = sqlCommon + "inner join process_experiment_type as p ON p.fk_experiment_type=c.id "+
-				"where p.fk_process_type = ?";
-		return initializeMapping(sql, new SqlParameter("p.fk_process_type", Type.LONG)).execute(id);		
+		String sql = sqlCommon + "inner join process_experiment_type as pet ON pet.fk_experiment_type=c.id "
+				+"                inner join process_type as pt on pt.id = pet.fk_process_type"
+				+"                inner join common_info_type as cpt on cpt.id=pt.id"
+				
+				+" where cpt.code = ?";
+	
+		if(onlyPositivePosition){
+			sql = sql +" and pet.position_in_process > -1";
+		}
+		return initializeMapping(sql, new SqlParameter("pt.code", Types.VARCHAR)).execute(processTypeCode);		
 	}
 
 	public List<String> findVoidProcessExperimentTypeCode(String processTypeCode){

@@ -74,14 +74,9 @@ angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable
 		tabService.addTabs({label:Messages('samples.tabs.search'),href:jsRoutes.controllers.samples.tpl.Samples.home("search").url,remove:true});
 		tabService.activeTab(0);
 	}
-	if(angular.isUndefined($scope.getForm())){
-		$scope.form = {};
-		mainService.setForm($scope.form);
-	}
 	
 	$scope.searchService = samplesSearchService;
 	$scope.searchService.init($routeParams, datatableConfig)
-	
 	if($scope.searchService.isRouteParam){
 		$scope.search();
 	}	

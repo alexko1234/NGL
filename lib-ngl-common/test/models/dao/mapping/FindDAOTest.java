@@ -237,7 +237,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertEquals(0, lstr.size()); 
 		//internal fct
 		ExperimentTypeDAO etDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-		etDAO.findByProcessTypeId(pt.id);
+		etDAO.findByProcessTypeCode(pt.code, false);
 	}
 
 	

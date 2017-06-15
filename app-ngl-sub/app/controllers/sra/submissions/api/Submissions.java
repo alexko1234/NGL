@@ -195,33 +195,28 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 
-	public Result treatmentAc(String code)
+	public Result treatmentAc(String code, String fileNameAc)
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
-		Form<File> filledForm = getFilledForm(pathForm, File.class);
+	//	Form<File> filledForm = getFilledForm(pathForm, File.class);
 		if (submission == null) {
-			filledForm.reject("Submission with code "+code, " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest("Submission with code "+code, " not exist");
 		}
-		Logger.debug("filledForm "+filledForm);
-		File ebiFileAc = filledForm.get();
+		//Logger.debug("filledForm "+filledForm);
+		File ebiFileAc =new File(fileNameAc);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		try {
 			submission = FileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
-
+			return badRequest("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
 		} catch (SraException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
 		} catch (MailServiceException e) {
 			//return badRequest(e.getMessage());
-			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
 		}
 		return ok(Json.toJson(submission));
 	}

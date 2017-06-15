@@ -15,8 +15,10 @@ public class SampleProcess {
 	public TraceInformation traceInformation;
 	
 	public Map<String,PropertyValue> properties;
-	
+	public String currentExperimentTypeCode;
 	public List<SampleExperiment> experiments;
 	public List<SampleReadSet> readsets;
+	
+	public Integer progressInPercent;
 }
  

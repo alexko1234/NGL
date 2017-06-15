@@ -20,7 +20,7 @@ rule "Set parameter for command line md5"
 			log.debug("Set parameter for md5 command");
 			//Get input resource
 			JobResource jobResource = $job.getUniqueJobResource("inputRawDataMd5");
-			$job.setParameterValue("fileZipped", jobResource.getProperty("submissionDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
+			$job.setParameterValue("fileZipped", jobResource.getProperty("submissionDirectory")+File.separator+jobResource.getProperty("fileName"));
 end
 
 rule "POST DONE EXECUTION of md5 : Update MD5 of RawData"
@@ -46,7 +46,7 @@ rule "POST DONE EXECUTION of md5 : Update MD5 of RawData"
 		//Raw Data from DB
 		JSONDevice jsonDevice = new JSONDevice();
 		String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),"bot");
-		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submittedMd5", md5);
+		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "md5", md5);
 		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas",JSONRawDataModify, "bot");
 		log.debug("Result "+jsonResult);
 end

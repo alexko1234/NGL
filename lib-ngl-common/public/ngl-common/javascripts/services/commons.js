@@ -985,14 +985,26 @@ angular.module('commonsServices', []).
 	      		    			getter.assign(filter, filterValue);
 	      		    		}
 	      		    		*/
+	      		    		/* old with property system
 	      		    		if(filterValue){
 	      		    			var pName = optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),'');
 	      		    			filter[pName] = filterValue;
 	      		    		}
-	      		    		
+	      		    		*/
+	      		    		if(filterValue){
+	      		    			filterValue=filterValue.toLowerCase();
+	      		    		}
+	      		    		var functionFilter = function(value, index, array){
+	      		    			if(filterValue){
+	      		    				var label = scope.itemLabel(value).toLowerCase();
+	      		    				var result = label.match(filterValue);
+	      		    				if(null == result)return false;	      		    				
+	      		    			}
+	      		    			return true;	      		    			
+	      		    		};
 	      		    		
 	      		    		//Then here the filter will be empty if the filterValue is undefined
-	      		    		return $filter('limitTo')($filter('filter')(items, filter), 20);
+	      		    		return $filter('limitTo')($filter('filter')(items, functionFilter), 20);
 	      		    	 }else{
 	      		    		return items;
 	      		    	 }

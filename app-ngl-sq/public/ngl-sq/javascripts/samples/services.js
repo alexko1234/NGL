@@ -85,7 +85,19 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"groupMethod":"unique"
 		});
 		
-		
+		/*
+		columns.push({
+			"header":"Processus Categories",
+			"headerTpl":"<div bt-select placeholder='Select Processus Category' multiple=true class='form-control' ng-model='column.headerForm.processCategoryCode' bt-options='processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()' style='display:inline-block'></div></div><legend-sample-processes/>",
+			"property":"processes",
+			"order":false,
+			"hide":true,
+			"position":16,
+			"type":"text",
+			"watch":true,
+			"render": "<display-sample-processes dsp-processes='cellValue' dsp-process-category-codes='col.headerForm.processCategoryCode'/>"			
+		});
+		*/
 		return columns;
 	};
 	
@@ -233,10 +245,10 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				this.additionalColumns=[];
 				this.selectedAddColumns=[];
 				
-				if(lists.get("containers-addcolumns") && lists.get("containers-addcolumns").length === 1){
+				if(lists.get("samples-addcolumns") && lists.get("samples-addcolumns").length === 1){
 					var formColumns = [];
 					//we used the order in the document to order column in display and not the position value !!!!
-					var allColumns = angular.copy(lists.get("containers-addcolumns")[0].columns);
+					var allColumns = angular.copy(lists.get("samples-addcolumns")[0].columns);
 					var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
 					for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
 						formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
@@ -302,9 +314,9 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			initAdditionalFilters:function(){
 				this.additionalFilters=[];
 				
-				if(lists.get("containers-search-addfilters") && lists.get("containers-search-addfilters").length === 1){
+				if(lists.get("samples-search-addfilters") && lists.get("samples-search-addfilters").length === 1){
 					var formFilters = [];
-					var allFilters = angular.copy(lists.get("containers-search-addfilters")[0].filters);
+					var allFilters = angular.copy(lists.get("samples-search-addfilters")[0].filters);
 					
 					/* add static filters here*/
 					allFilters.push({property:"comments.comment",html:"<textarea class='form-control' ng-model='searchService.form.commentRegex' placeholder='"+Messages("search.placeholder.commentRegex")+"' title='"+Messages("search.placeholder.commentRegex")+"'></textarea>",position:allFilters.length+1});
@@ -365,5 +377,126 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 	};
 
 	return searchService;				
-}
-]);
+}]).directive('displaySampleProcesses', [ '$parse', '$filter', '$window', function($parse, $filter, $window) {
+	return {
+		restrict : 'EA',
+		scope : {
+			dspProcesses :'=',
+			dspProcessCategoryCodes : '='
+		},
+		template: "<ul class='list-group' style='margin-bottom:0px'>"
+				+" 	<li  ng-repeat='(typeCode, values) in processesByTypeCode' class='list-group-item'>"
+				+" 	{{typeCode|codes:'type'}} :  "
+				+"  <a href='#' ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-click='goTo(p,$event)' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind='getInfo(p)'>"
+				+"  </a>"
+				+ "<span class='badge' ng-bind='values.length' ng-click='goToAllProcesses(values,$event)'></span>"
+				+"  </li>"
+				+" </ul>"
+		,
+		link : function(scope, element, attr, ctrl) {
+			
+			
+			scope.getProcessClass = function(process){
+				if(process.state.code === 'N'){
+					return "label label-info";
+				}else if(process.state.code === 'IP'){
+					return "label label-warning"
+				}else if(process.state.code === 'F' && process.experiments && process.experiments.length > 0){
+					return "label label-primary"
+				}else if(process.state.code === 'F' && (!process.experiments || process.experiments.length === 0)){
+					return "label label-default"
+				}
+			};
+			
+			scope.getInfo = function(process){
+				if(process.readsets && process.readsets.length > 1){
+					return process.readsets.length+"rs";
+				}else if(process.readsets && process.readsets.length === 1){
+					return "rs";
+				}else if(process.progressInPercent){
+					return process.progressInPercent;
+				}else{
+					return "  ";
+				}
+			}
+			
+			scope.goTo = function(process,$event){
+				if(process.readsets && process.readsets.length > 1){
+					var params = "";
+					process.readsets.forEach(function(readset){
+						params +="codes="+readset.code+"&";
+					}, params);
+					$window.open(AppURL("bi")+"/readsets/search/home?"+params, 'readsets');
+				}else if(process.readsets && process.readsets.length === 1){
+					$window.open(AppURL("bi")+"/readsets/"+process.readsets[0].code, 'readset');
+				}else{
+					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&typeCode="+process.typeCode, 'processes');
+				}	
+				$event.stopPropagation();
+			}
+			
+			scope.goToAllProcesses = function(processes,$event){
+				if(processes && processes.length > 1){
+					var params = "";
+					processes.forEach(function(p){
+						params +="codes="+p.code+"&";
+					}, params);
+					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?"+params+"&typeCode="+processes[0].typeCode, 'processes');
+				}	
+				$event.stopPropagation();
+			}
+			
+			scope.$parent.$watch(attr.dspProcessCategoryCodes, function(newValue, oldValue){
+	    	     if(oldValue !== newValue){		    		
+	    	    	 init(scope.dspProcesses, newValue);
+	    	     }		    	  
+	      }, true);
+			
+			var init = function(dspProcesses, dspProcessCategoryCodes){
+				var filterProcesses = dspProcesses;
+				if(dspProcessCategoryCodes && dspProcessCategoryCodes.length > 0){
+					filterProcesses = []
+					for(var i = 0; i < dspProcessCategoryCodes.length; i++){
+						filterProcesses = filterProcesses.concat($filter('filter')(scope.dspProcesses, {categoryCode:dspProcessCategoryCodes[i]},true));
+					}					
+				}
+				
+				//organize by typeCode
+				var processesByTypeCode = {};
+				if(filterProcesses && filterProcesses.length > 0){
+					filterProcesses.forEach(function(p){
+						if(!processesByTypeCode[p.typeCode]){
+							processesByTypeCode[p.typeCode] = [];
+						}
+						processesByTypeCode[p.typeCode].push(p);
+					}, processesByTypeCode)
+				}
+				scope.processesByTypeCode = processesByTypeCode;
+			};
+			init(scope.dspProcesses, scope.dspProcessCategoryCodes);
+		}
+	};
+}]).directive('legendSampleProcesses', [ '$parse', '$filter', function($parse, $filter) {
+	return {
+		restrict : 'EA',
+		template:'<a id="legendSampleProcesses" class="btn btn-info btn-xs">?</a>',
+		link : function(scope, element, attr, ctrl) {
+			
+			var options = {
+					placement : "top",
+					title : Messages('legendSampleProcesses.title'),
+					html:true,
+					content : '<ul class="list-group">'
+							+'	<li class="list-group-item"><a class="label label-primary"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.primary')+'</li>'
+							+'	<li class="list-group-item"><a class="label label-primary"  style="margin-right:2px">rs</a> : '+Messages('legendSampleProcesses.label.primary.rs')+'</li>'							
+							+'	<li class="list-group-item"><a class="label label-warning"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.warning')+'</li>'
+							+'	<li class="list-group-item"><a class="label label-info"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.info')+'</li>'
+							+'	<li class="list-group-item"><a class="label label-default"  style="margin-right:2px"> </a> : '+Messages('legendSampleProcesses.label.default')+'</li>'							
+							+'</ul>',
+					trigger : "click"					
+			};
+			
+			angular.element("#legendSampleProcesses").popover(options);
+		}
+	};
+}]);

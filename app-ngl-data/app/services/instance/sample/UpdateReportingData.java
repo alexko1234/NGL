@@ -1,5 +1,6 @@
 package services.instance.sample;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,13 +29,16 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.reporting.SampleExperiment;
 import models.laboratory.sample.instance.reporting.SampleProcess;
+import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 import models.laboratory.sample.instance.reporting.SampleReadSet;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Treatment;
@@ -61,8 +65,6 @@ public class UpdateReportingData extends AbstractImportData {
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		Logger.debug("Start reporting synchro");
 		try{
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			Date d = sdf.parse("2016-07-07");
 			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
 			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
 				.cursor.forEach(sample -> {
@@ -70,25 +72,38 @@ public class UpdateReportingData extends AbstractImportData {
 						updateProcesses(sample);
 						if(sample.processes != null && sample.processes.size() > 0){
 							Logger.debug("update sample "+sample.code);
-							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), DBUpdate.set("processes", sample.processes));
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics));
 						}	
 					}catch(Throwable e){
-						logger.error("Sample : "+sample.code);
+						logger.error("Sample : "+sample.code+" - "+e,e);
 					}
 				});
 		}catch(Throwable e){
-			logger.error("Error date : "+e);
+			logger.error("Error date : "+e,e);
 		}
 		
 	}
 
 	private void updateProcesses(Sample sample) {
-		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("sampleOnInputContainer.sampleCode", sample.code))
+		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("sampleCodes", sample.code))
 				.toList();
 		
 		sample.processes = processes.parallelStream()
 					.map(process -> convertToSampleProcess(sample, process))
-					.collect(Collectors.toList());		
+					.collect(Collectors.toList());	
+		computeStatistics(sample);
+	}
+
+	private void computeStatistics(Sample sample) {
+		if(null != sample.processes){
+			
+			sample.processesStatistics = new SampleProcessesStatistics();	
+			sample.processesStatistics.processTypeCodes = sample.processes.stream().collect(Collectors.groupingBy(p -> p.typeCode, Collectors.counting()));
+			sample.processesStatistics.processCategoryCodes = sample.processes.stream().collect(Collectors.groupingBy(p -> p.categoryCode, Collectors.counting()));
+		
+			sample.processesStatistics.readSetTypeCodes = sample.processes.stream().filter(p -> p.readsets != null).map(p -> p.readsets).flatMap(List::stream).collect(Collectors.groupingBy(r -> r.typeCode, Collectors.counting()));
+		}
 	}
 
 	private SampleProcess convertToSampleProcess(Sample sample, Process process) {
@@ -102,6 +117,7 @@ public class UpdateReportingData extends AbstractImportData {
 		if(process.properties != null && process.properties.size() > 0){
 			sampleProcess.properties= process.properties;			
 		}
+		sampleProcess.currentExperimentTypeCode = process.currentExperimentTypeCode;
 		if(process.experimentCodes != null && process.experimentCodes.size() > 0){
 			List<SampleExperiment> experiments  = updateExperiments(process);
 			if(experiments != null && experiments.size() > 0){
@@ -115,8 +131,34 @@ public class UpdateReportingData extends AbstractImportData {
 				sampleProcess.readsets = readsets;
 			}
 		}
+		List<String> transformationCodes = getTransformationCodesForProcessTypeCode(process);
+		//extract only transformation
+		
+		Integer nbExp = 0;
+		if(process.experimentCodes != null && process.experimentCodes.size() > 0 && transformationCodes != null && transformationCodes.size() > 0){
+			nbExp = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes)
+					.in("typeCode", transformationCodes)
+					.in("state.code", Arrays.asList("IP","F"))).count();
+			
+			sampleProcess.progressInPercent = (new BigDecimal((nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue())*100.00)).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+			//Logger.debug("progressInPercent : "+(nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue()));
+		}else{
+			sampleProcess.progressInPercent = null;			
+		}
 		
 		return sampleProcess;
+	}
+	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
+	private List<String> getTransformationCodesForProcessTypeCode(Process process) {
+		List<String> transformationCodes;
+		if(transformationCodesByProcessTypeCode.containsKey(process.typeCode)){
+			transformationCodes = transformationCodesByProcessTypeCode.get(process.typeCode);
+		}else{
+			transformationCodes =ExperimentType.find.findByProcessTypeCode(process.typeCode,true).stream().map(e -> e.code).collect(Collectors.toList());
+			transformationCodesByProcessTypeCode.put(process.typeCode, transformationCodes);
+		}
+		
+		return transformationCodes;
 	}
 
 
@@ -165,7 +207,7 @@ public class UpdateReportingData extends AbstractImportData {
 				atm.inputContainerUseds.forEach(icu -> {
 					if(null != atm.outputContainerUseds){
 						atm.outputContainerUseds.forEach(ocu ->{
-							if(containerCodes.containsAll(Arrays.asList(icu.code, ocu.code))){
+							if(ocu.code != null && containerCodes.containsAll(Arrays.asList(icu.code, ocu.code))){
 								SampleExperiment sampleExperiment = new SampleExperiment();
 								sampleExperiment.code = experiment.code;
 								sampleExperiment.typeCode= experiment.typeCode;
@@ -177,6 +219,18 @@ public class UpdateReportingData extends AbstractImportData {
 								sampleExperiment.traceInformation= experiment.traceInformation;
 								sampleExperiment.protocolCode = experiment.protocolCode;
 								sampleExperiment.properties = computeExperimentProperties(experiment, icu, ocu);
+								sampleExperiments.add(sampleExperiment);
+							}else if(containerCodes.contains(icu.code)){
+								SampleExperiment sampleExperiment = new SampleExperiment();
+								sampleExperiment.code = experiment.code;
+								sampleExperiment.typeCode= experiment.typeCode;
+								sampleExperiment.categoryCode= experiment.categoryCode;
+								sampleExperiment.state= experiment.state;
+								sampleExperiment.state.historical=null;
+								sampleExperiment.status= experiment.status;
+								sampleExperiment.traceInformation= experiment.traceInformation;
+								sampleExperiment.protocolCode = experiment.protocolCode;
+								sampleExperiment.properties = computeExperimentProperties(experiment, icu, null);
 								sampleExperiments.add(sampleExperiment);
 							}
 						});

@@ -11,6 +11,8 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.sample.instance.tree.SampleLife;
 import models.utils.InstanceConstants;
 import models.laboratory.sample.instance.reporting.SampleProcess;
+import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
+
 import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
@@ -62,6 +64,7 @@ public class Sample extends DBObject implements IValidation{
 	public SampleLife life;
 	
 	public List<SampleProcess> processes;
+	public SampleProcessesStatistics processesStatistics;
 	
 	public Sample(){
 		this.traceInformation=new TraceInformation();

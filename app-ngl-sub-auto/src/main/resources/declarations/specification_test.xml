@@ -88,7 +88,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="transfertRawData" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="ncftpputSyntax">
-			<Executable path="ascp" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
+			<Executable path="/env/cns/submit_traces/SRA/NGL_test/script/test.sh" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
 			<Slurm job="ascpJob" part="normal" account="soumissions"/>
 		</ExecutableSpecification>
 		
@@ -124,7 +124,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="createXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
 			<!-- TODO call REST API NGL-SUB -->
-			<Executable path="curl f -A bot -X PUT http://appprod.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
+			<Executable path="curl f -A bot -X PUT http://localhost:9000/sra/submissions/%code%/xml"/>
 		</ExecutableSpecification>
 		
 		<InputsSpecification>
@@ -145,7 +145,7 @@ H:\birdsSpec.xsd">
 	<!-- Treatment : call EBI services to send xml files -->
 	<Treatment name="sendXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="sendXMLSyntax">
-			<Executable path="curl -f https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D" />
+			<Executable path="/env/cns/submit_traces/SRA/NGL_test/script/test.sh" />
 		</ExecutableSpecification>
 		<ParametersSpecification>
 			<KeyValueElement key="-F" value="&quot;SUBMISSION=@%xmlSubmission%&quot;" parameterName="xmlSubmission"/>
@@ -154,7 +154,8 @@ H:\birdsSpec.xsd">
 			<KeyValueElement key="-F" value="&quot;EXPERIMENT=@%xmlExperiments%&quot;" parameterName="xmlExperiments"/>
 			<KeyValueElement key="-F" value="&quot;RUN=@%xmlRuns%&quot;" parameterName="xmlRuns"/>
 			<LineElement line="-k" parameterName="optK" />
-			<LineElement line="listAC_%submissionCode%.txt" parameterName="listAC"/>
+			<LineElement line="listAC_%submissionDate%.txt" parameterName="listAC"/>
+			<LineElement line="cd %submissionDirectory%" parameterName="OptionCD"/>
 			
 		</ParametersSpecification>
 		<InputsSpecification>

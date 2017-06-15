@@ -9,6 +9,8 @@ import validation.IValidation;
 public class Column implements IValidation{
 	
 	public String header; //text or message key
+	public String headerTpl; //template html
+	
 	public String property; //angular expression
 	public String type; //number, string see datatable
 	public Boolean order;
