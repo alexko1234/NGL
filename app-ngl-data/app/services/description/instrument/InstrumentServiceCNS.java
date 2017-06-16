@@ -280,10 +280,13 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("SAPHYR", "SAPHYR", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentSAPHYR() 
 				,getContainerSupportCategories(new String[]{"saphyr-chip"}), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Main", "irys-hand", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
-				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip-2"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(newInstrumentUsedType("Main", "irys-hand", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentBionanoHand() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip-2","saphyr-chip"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Main", "hand-OutTube", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
+		//l.add(newInstrumentUsedType("Main", "saphyr-hand", InstrumentCategory.find.findByCode("hand"), getSaphyrChipProperties(),getInstrumentBionanoHand() 
+			//	,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"saphyr-chip"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Main", "hand-OutTube", InstrumentCategory.find.findByCode("hand"), null,getInstrumentHand() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Cryobroyeur", "cryobroyeur", InstrumentCategory.find.findByCode("sample-prep-system"),  getCryobroyeurProperties(),getInstrumentCryobroyeur() 
@@ -412,9 +415,15 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return l;
 	}
 		
-	private List<Instrument> getInstrumentHand() throws DAOException {
+	private List<Instrument> getInstrumentBionanoHand() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("irys-hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return instruments;
+	}
+	
+	private List<Instrument> getInstrumentHand() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
@@ -436,6 +445,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Irys CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getSaphyrChipProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Code Saphyr CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
 		return propertyDefinitions;
 	}
 
