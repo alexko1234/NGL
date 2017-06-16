@@ -634,12 +634,15 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             },
             addGroup: function(displayResultTmp) {
                 var displayResult = [];
+                
                 var propertyGroupGetter = this.config.group.by.property;
                 propertyGroupGetter += this.getFilter(this.config.group.by);
+                propertyGroupGetter += this.getFormatter(this.config.group.by);
                 if(this.config.group.by=="all"){
-                	propertyGroupGetter = "all";
+                	propertyGroupGetter="all";
                 }
                 var groupGetter = $parse(propertyGroupGetter);
+                
                 var groupConfig = this.config.group;
                 displayResultTmp.forEach(function(element, index, array) {
                     /* previous mode */
