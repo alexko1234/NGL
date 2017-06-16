@@ -165,7 +165,7 @@ public abstract class AbstractTreatmentService {
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MAX)","poreQualityMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MOYENNE)","poreQualityAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKnow","minknowVersion", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKnow","minknowVersion", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), String.class, false, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases 1D forward","1DForward.basesPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases 1D reverse","1DReverse.basesPercent", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Double.class, false, "object"));
