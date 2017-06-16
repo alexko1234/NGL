@@ -140,7 +140,7 @@ public class UpdateReportingData extends AbstractImportData {
 					.in("typeCode", transformationCodes)
 					.in("state.code", Arrays.asList("IP","F"))).count();
 			
-			sampleProcess.progressInPercent = (new BigDecimal((nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue())*100.00)).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+			sampleProcess.progressInPercent = (new BigDecimal((nbExp.floatValue() / Integer.valueOf(nbExpPositionInProcessType.get(process.typeCode)).floatValue())*100.00)).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
 			//Logger.debug("progressInPercent : "+(nbExp.floatValue() / Integer.valueOf(transformationCodes.size()).floatValue()));
 		}else{
 			sampleProcess.progressInPercent = null;			
@@ -149,6 +149,8 @@ public class UpdateReportingData extends AbstractImportData {
 		return sampleProcess;
 	}
 	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
+	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<String, Integer>(); 
+			
 	private List<String> getTransformationCodesForProcessTypeCode(Process process) {
 		List<String> transformationCodes;
 		if(transformationCodesByProcessTypeCode.containsKey(process.typeCode)){
@@ -156,6 +158,9 @@ public class UpdateReportingData extends AbstractImportData {
 		}else{
 			transformationCodes =ExperimentType.find.findByProcessTypeCode(process.typeCode,true).stream().map(e -> e.code).collect(Collectors.toList());
 			transformationCodesByProcessTypeCode.put(process.typeCode, transformationCodes);
+			
+			Integer nbPos = ExperimentType.find.countDistinctExperimentPositionInProcessType(process.typeCode);
+			nbExpPositionInProcessType.put(process.typeCode, nbPos);
 		}
 		
 		return transformationCodes;

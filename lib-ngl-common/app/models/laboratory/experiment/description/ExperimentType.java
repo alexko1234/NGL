@@ -101,7 +101,9 @@ public class ExperimentType extends CommonInfoType{
 		public List<ExperimentType> findByProcessTypeCode(String processTypeCode, boolean onlyPositivePosition) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByProcessTypeCode(processTypeCode, onlyPositivePosition);
 		}
-		
+		public Integer countDistinctExperimentPositionInProcessType(String processTypeCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).countDistinctExperimentPositionInProcessType(processTypeCode);
+		}
 	}
 	
 }

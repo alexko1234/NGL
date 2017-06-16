@@ -145,6 +145,21 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		}
 		return initializeMapping(sql, new SqlParameter("pt.code", Types.VARCHAR)).execute(processTypeCode);		
 	}
+	
+	
+	public Integer countDistinctExperimentPositionInProcessType(String processTypeCode) throws DAOException{
+		String sql = "SELECT count(distinct pet.position_in_process) "+sqlCommonFrom
+				+ "inner join process_experiment_type as pet ON pet.fk_experiment_type=c.id "
+				+"                inner join process_type as pt on pt.id = pet.fk_process_type"
+				+"                inner join common_info_type as cpt on cpt.id=pt.id"
+				
+				+" where cpt.code = ? and pet.position_in_process > -1";
+		
+		int result = jdbcTemplate.queryForInt(sql, processTypeCode);
+		
+		return Integer.valueOf(result);
+		
+	}
 
 	public List<String> findVoidProcessExperimentTypeCode(String processTypeCode){
 		String query = "SELECT distinct t.code "+sqlCommonFrom+
