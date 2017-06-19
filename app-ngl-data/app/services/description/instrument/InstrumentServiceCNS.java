@@ -39,6 +39,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Quantification par fluorométrie","fluorometer"));
 		l.add(newInstrumentCategory("Appareil de qPCR","qPCR-system"));
 		l.add(newInstrumentCategory("Electrophorèse sur puce","chip-electrophoresis"));
+		l.add(newInstrumentCategory("Electrophorèse sur gel","gel-electrophoresis"));
 		
 		l.add(newInstrumentCategory("Main","hand"));
 		l.add(newInstrumentCategory("CBot","cbot"));
@@ -306,6 +307,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Nanodrop", "nanodrop", InstrumentCategory.find.findByCode("spectrophotometer"),  null,getInstrumentNanodrop() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		
+		l.add(newInstrumentUsedType("Pippin Pulse", "pippin-pulse", InstrumentCategory.find.findByCode("gel-electrophoresis"),  
+				null, getInstrumentPippinPulse()
+				,getContainerSupportCategories(new String[]{"tube"}), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
@@ -923,6 +929,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private List<Instrument> getInstrumentNanodrop() {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("nanodrop1","Nanodrop 1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
+		return instruments;	}
+	
+	
+	private List<Instrument> getInstrumentPippinPulse() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("pippin-pulse-1","Pippin Pulse 1", null, true, "path", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		return instruments;	}
 	
 }

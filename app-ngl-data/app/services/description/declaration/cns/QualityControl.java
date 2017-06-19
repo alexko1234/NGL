@@ -113,7 +113,11 @@ public class QualityControl extends AbstractDeclaration {
 		// TODO Auto-generated method stub
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		
+		l.add(newExperimentType("Electrophorèse en champ pulsé","pulsed-field-electrophoresis", null,20200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPulsedFieldElectrophoresis(), 
+				getInstrumentUsedTypes("hand"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+	
 		return l;
 	}
 
@@ -570,7 +574,36 @@ public class QualityControl extends AbstractDeclaration {
 		
 		return propertyDefinitions;
 	}
-
+	
+	
+	private List<PropertyDefinition> getPropertyDefinitionsPulsedFieldElectrophoresis() {
+		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 13, true, null,null));
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("final aliquot", "aliquoteVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
+		
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("% bas poids moléculaire", "lowMolecularWeightPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
+				"single", 16, true, null, null));
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
+				"single", 17, true, null,null));
+		
+		return propertyDefinitions;
+	}
 
 	
 }
