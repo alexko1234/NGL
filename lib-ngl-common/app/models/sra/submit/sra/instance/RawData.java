@@ -12,7 +12,7 @@ public class RawData  implements IValidation {
 	public String location;
 	
 	public Boolean gzipForSubmission = false;
-	//public String submittedMd5;
+	public String submittedMd5;
 	
 	// todo : verifier avec fred pourquoi il n'y a pas de md5 pour certaines données.
 	@Override
