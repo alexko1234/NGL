@@ -33,11 +33,11 @@ public class Bionano extends AbstractDeclaration{
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		//Bionano
-		l.add(newExperimentType("Ext to NLRS, Irys chip, dépôt","ext-to-bionano-nlrs-process",null,-1,
+		l.add(newExperimentType("Ext to NLRS, Bionano chip, dépôt","ext-to-bionano-nlrs-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Ext to Irys Chip, dépôt","ext-to-bionano-chip-process",null,-1,
+		l.add(newExperimentType(" Ext to Bionano Chip, dépôt","ext-to-bionano-chip-process",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
