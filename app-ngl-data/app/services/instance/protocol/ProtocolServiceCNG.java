@@ -171,15 +171,18 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
 		
-		// 09/06/2017 ajout protocoles pour capture..... TEST....
+// EN COURS 09/06/2017 ajout protocoles pour capture.
 		lp.add(newProtocol("sureSelect-XT-2","sureSelect-XT-2","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("prep-capt")));
+				InstanceFactory.setExperimentTypeCodes("frag-and-purif",
+						                               "prep-capt-sureselect")));   //  pour toutes les experiences du process capture ?????
 		
 		lp.add(newProtocol("sureSelect-XT-3","sureSelect-XT-3","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("prep-capt")));
+				InstanceFactory.setExperimentTypeCodes("frag-and-purif",
+													   "prep-capt-sureselect")));   //  pour toutes les experiences  du process capture ?????
 		
 		lp.add(newProtocol("sureSelect-XT-200","sureSelect-XT-200","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("prep-capt")));
+				InstanceFactory.setExperimentTypeCodes("frag-and-purif",
+													   "prep-capt-sureselect")));   //  pour toutes les experiences  du process capture ?????
 		
 		
 		//------------Experiences de Control Qualité------------------------------

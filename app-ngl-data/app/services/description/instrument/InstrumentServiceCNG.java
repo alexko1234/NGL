@@ -226,9 +226,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		/** covaris **/
+		// FDS 16/06/2017 plus utilisé=> inactiver
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("covaris1", "Covaris 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("covaris1", "Covaris 1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
@@ -257,10 +258,16 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-			
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
 				getInstruments(
 						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"tube"}),null, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+// EN COURS FDS 16/06/2016 -- NL-1201 : Ajout fluorometer quant-iT                //// tube ou plaques ????????//
+		l.add(newInstrumentUsedType("Quant-iT", "quant-it", InstrumentCategory.find.findByCode("fluorometer"), getQuantitProperties(), 
+				getInstruments(
+						createInstrument("quant-it1", "Quant-iT1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -555,6 +562,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
+				                       newValues("HS", "BR"), "single"));		
+		return l;
+	}
+	
+	// FDS 16/06/2017 -- NGL-1201 (capture); pour l 'instant les kits sont les memes que pour le qubit !!!
+	private static List<PropertyDefinition> getQuantitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 

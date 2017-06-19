@@ -273,53 +273,57 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.addAll(new Nanopore().getProcessType());
 
 //EN COURS...
+// suite reunion 16/06/2017 avec Doris  separation prod/dev ??; distinction fournisseurs ??
+		// potentiellement :
+		//      "capture-sureselect-lib-process-dev", "capture-illumina-lib-process-dev"
+        //      "capture-sureselect-lib-process-prod","capture-illumina-lib-process-prod"
 		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-		// FDS ajout 09/06/2017 NGL-1201: prorcessus Capture principal (frag-->depot)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture", "capture-lib-process", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 09/06/2017 NGL-1201: processus Capture Sureselect principal (frag-->depot)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture SureSelect (FC ordonnée) - prod", "capt-sureselect-lib-process-prod", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
-						getPET("ext-to-capt-lib-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-capt-sureselect-lib-process-prod",-1), //ordered list of experiment type in process type
 						getPET("frag-and-purif",0),
-						getPET("prep-capt",1),
-						getPET("precapt-pcr",2),
-						getPET("capt-and-indexing",3),
+						getPET("prep-capt-sureselect",1),
+						getPET("precapt-pcr-sureselect",2),
+						getPET("capt-and-indexing-sureselect",3),
 						getPET("pcr-and-purification",4),
 						getPET("lib-normalization",5),
 						getPET("normalization-and-pooling",5),	
 						getPET("prepa-fc-ordered",6),
 						getPET("illumina-depot",7)), 		
-				getExperimentTypes("frag-and-purif").get(0),          //first experiment type    
-				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
-				getExperimentTypes("ext-to-capt-lib-process").get(0), //void  experiment type
+				getExperimentTypes("frag-and-purif").get(0),                          //first experiment type    
+				getExperimentTypes("illumina-depot").get(0),                          //last  experiment type
+				getExperimentTypes("ext-to-capt-sureselect-lib-process-prod").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 09/06/2017 NGL-1201: prorcessus Capture reprise 1 (PCR-precapture-->depot)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture (reprise pre)", "capture-lib-process-rep-pre", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 09/06/2017 NGL-1201: processus Capture Sureselect reprise Pre (PCR-precapture-->depot)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture SureSelect (reprise pre) - prod", "capt-sureselect-lib-process-prod-rep-pre", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), // besoin ???
 				Arrays.asList(
-						getPET("ext-to-capt-lib-process-rep-pre",-1), //ordered list of experiment type in process type
-						getPET("prep-capt",-1), 
-						getPET("precapt-pcr",0),
-						getPET("capt-and-indexing",1),
+						getPET("ext-to-capt-sureselect-lib-process-prod-rep-pre",-1), //ordered list of experiment type in process type
+						getPET("prep-capt-sureselect",-1), 
+						getPET("precapt-pcr-sureselect",0),
+						getPET("capt-and-indexing-sureselect",1),
 						getPET("pcr-and-purification",2),
 						getPET("lib-normalization",3),
 						getPET("normalization-and-pooling",3),	
 						getPET("prepa-fc-ordered",4),
 						getPET("illumina-depot",5)), 		
-				getExperimentTypes("precapt-pcr").get(0),                     //first experiment type    
-				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
-				getExperimentTypes("ext-to-capt-lib-process-rep-pre").get(0), //void  experiment type
+				getExperimentTypes("precapt-pcr-sureselect").get(0),                     //first experiment type    
+				getExperimentTypes("illumina-depot").get(0),                             //last  experiment type
+				getExperimentTypes("ext-to-capt-sureselect-lib-process-prod-rep-pre").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 09/06/2017 NGL-1201: prorcessus Capture reprise 2 (PCR-postcapture-->depot)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture (reprise post)", "capture-lib-process-rep-post", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 09/06/2017 NGL-1201: processus Capture Sureselect reprise Post (PCR-postcapture-->depot)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture SureSelect (reprise post) - prod", "capt-sureselect-lib-process-prod-rep-post", ProcessCategory.find.findByCode("library"),
 				7,
 				getPropertyDefinitionsCapture(), // besoin ???
 				Arrays.asList(
-						getPET("ext-to-capt-lib-process-rep-post",-1), //ordered list of experiment type in process type
-						getPET("capt-and-indexing",-1), 
+						getPET("ext-to-capt-sureselect-lib-process-prod-rep-post",-1), //ordered list of experiment type in process type
+						getPET("capt-and-indexing-sureselect",-1), 
 						getPET("pcr-and-purification",0),
 						getPET("lib-normalization",1),
 						getPET("normalization-and-pooling",1),	
@@ -327,7 +331,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("illumina-depot",3)), 		
 				getExperimentTypes("pcr-and-purification").get(0),             //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                   //last  experiment type
-				getExperimentTypes("ext-to-capt-lib-process-rep-post").get(0), //void  experiment type
+				getExperimentTypes("ext-to-capt-sureselect-lib-process-prod-rep-post").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		}
 		
@@ -565,7 +569,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	//FDS ajout 09/06/2017 pour JIRA NGL-1201: processus capture
+// EN COURS FDS ajout 09/06/2017 pour JIRA NGL-1201: processus capture
 	private static List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
@@ -577,12 +581,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 09/06/2017 pour JIRA NGL-1201: processus capture
+// EN COURS FDS ajout 09/06/2017 pour JIRA NGL-1201: processus capture
 	private static List<Value> getCaptureLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
         // dans RunServiceCNG le nom reprend le code...
-        values.add(DescriptionFactory.newValue("XX","XX - ????????"));   
+        values.add(DescriptionFactory.newValue("CP","CP - Agilent : V5"));
+        values.add(DescriptionFactory.newValue("CS","CS - Agilent : V5+UTR"));
+        values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6"));
+        values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR"));
+        values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic"));
+        values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome"));
+        values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome"));   
          
         return values;
 	}
