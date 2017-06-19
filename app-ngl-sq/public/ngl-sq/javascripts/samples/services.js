@@ -88,14 +88,18 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 		/*
 		columns.push({
 			"header":"Processus Categories",
-			"headerTpl":"<div bt-select placeholder='Select Processus Category' multiple=true class='form-control' ng-model='column.headerForm.processCategoryCode' bt-options='processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()' style='display:inline-block'></div></div><legend-sample-processes/>",
+			"headerTpl":"<div bt-select placeholder='Select Processus Category' multiple=true class='form-control' ng-model='column.headerForm.processCategoryCode' bt-options='processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()' style='display:inline-block'></div></div>"
+				+" <div class='checkbox'><label><input type='checkbox' ng-model='column.headerForm.showRS'> ReadSets</label></div>"
+				+" <div class='checkbox'><label><input type='checkbox' ng-model='column.headerForm.showPercent'> %</label></div>"
+				+" <legend-sample-processes/>"
+				,
 			"property":"processes",
 			"order":false,
 			"hide":true,
 			"position":16,
 			"type":"text",
 			"watch":true,
-			"render": "<display-sample-processes dsp-processes='cellValue' dsp-process-category-codes='col.headerForm.processCategoryCode'/>"			
+			"render": "<display-sample-processes dsp-processes='cellValue' dsp-process-category-codes='col.headerForm.processCategoryCode' dsp-show-rs='col.headerForm.showRS' dsp-show-percent='col.headerForm.showPercent'/>"			
 		});
 		*/
 		return columns;
@@ -382,7 +386,9 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 		restrict : 'EA',
 		scope : {
 			dspProcesses :'=',
-			dspProcessCategoryCodes : '='
+			dspProcessCategoryCodes : '=',
+			dspShowRs : '=',
+			dspShowPercent : '='
 		},
 		template: "<ul class='list-group' style='margin-bottom:0px'>"
 				+" 	<li  ng-repeat='(typeCode, values) in processesByTypeCode' class='list-group-item'>"
@@ -394,7 +400,6 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				+" </ul>"
 		,
 		link : function(scope, element, attr, ctrl) {
-			
 			
 			scope.getProcessClass = function(process){
 				if(process.state.code === 'N'){
@@ -409,11 +414,11 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			};
 			
 			scope.getInfo = function(process){
-				if(process.readsets && process.readsets.length > 1){
+				if(scope.dspShowRs && process.readsets && process.readsets.length > 1){
 					return process.readsets.length+"rs";
-				}else if(process.readsets && process.readsets.length === 1){
+				}else if(scope.dspShowRs && process.readsets && process.readsets.length === 1){
 					return "rs";
-				}else if(process.progressInPercent){
+				}else if(scope.dspShowPercent && process.progressInPercent){
 					return process.progressInPercent;
 				}else{
 					return "  ";
@@ -421,13 +426,13 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			}
 			
 			scope.goTo = function(process,$event){
-				if(process.readsets && process.readsets.length > 1){
+				if(scope.dspShowRs && process.readsets && process.readsets.length > 1){
 					var params = "";
 					process.readsets.forEach(function(readset){
 						params +="codes="+readset.code+"&";
 					}, params);
 					$window.open(AppURL("bi")+"/readsets/search/home?"+params, 'readsets');
-				}else if(process.readsets && process.readsets.length === 1){
+				}else if(scope.dspShowRs && process.readsets && process.readsets.length === 1){
 					$window.open(AppURL("bi")+"/readsets/"+process.readsets[0].code, 'readset');
 				}else{
 					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&typeCode="+process.typeCode, 'processes');
@@ -450,7 +455,20 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 	    	     if(oldValue !== newValue){		    		
 	    	    	 init(scope.dspProcesses, newValue);
 	    	     }		    	  
-	      }, true);
+			}, true);
+			
+			scope.$parent.$watch(attr.dspShowRs, function(newValue, oldValue){
+	    	     if(oldValue !== newValue){		    		
+	    	    	 scope.dspShowRs = newValue;
+	    	     }		    	  
+			}, true);
+			
+			scope.$parent.$watch(attr.dspShowPercent, function(newValue, oldValue){
+	    	     if(oldValue !== newValue){		    		
+	    	    	 scope.dspShowPercent = newValue;
+	    	     }		    	  
+			}, true);
+			
 			
 			var init = function(dspProcesses, dspProcessCategoryCodes){
 				var filterProcesses = dspProcesses;
@@ -479,7 +497,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 }]).directive('legendSampleProcesses', [ '$parse', '$filter', function($parse, $filter) {
 	return {
 		restrict : 'EA',
-		template:'<a id="legendSampleProcesses" class="btn btn-info btn-xs">?</a>',
+		template:'<a id="legendSampleProcesses" class="btn btn-info btn-xs">?</a>'			,
 		link : function(scope, element, attr, ctrl) {
 			
 			var options = {

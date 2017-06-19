@@ -148,7 +148,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
 	}
 
-	@Test
+	//@Test
 	public void FileAcServicesSuccess() throws IOException, SraException, MailServiceException {
 		// Creation d'une soumission "test_AC_cns_AWK" avec status en attente des numeros d'accession : 
 		String submissionCode="test_AC_cns_AWK";
@@ -166,7 +166,8 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		
 	}
 	
-	@Test
+	
+	//@Test
 	public void FileAcServicesEchec() throws IOException, SraException, MailServiceException {
 
 		// Creation d'une soumission "test_AC_cns_AWK" avec status en attente des numeros d'accession : 
@@ -182,5 +183,13 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		Assert.assertTrue(!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 		deleteDataSetForFileAcServices();
 
+	}
+	@Test
+	public void FileAcServicesReal() throws IOException, SraException, MailServiceException {
+		String code = "CNS_BCU_BLK_266H23OI3";
+		String user = "william";
+		ContextValidation ctxVal = new ContextValidation(user);
+		File fileEbi = new File("/env/cns/home/sgas/test/listAc_CNS_BCU_BLK_266H23OI3.txt");
+		Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
 	}
 }

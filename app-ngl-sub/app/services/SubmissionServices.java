@@ -67,11 +67,11 @@ import java.io.StringReader;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-
 import play.api.modules.spring.Spring;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
+//import specs2.run;
 
 
 
@@ -838,26 +838,54 @@ public class SubmissionServices {
 		try {
 			// creation repertoire de soumission :
 			File dataRep = createDirSubmission(submission);
-			
 			// creation liens donnees brutes vers repertoire de soumission
 			for (String experimentCode: submission.experimentCodes) {
 				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
 				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-				if (p.archive){
-					throw new SraException("Impossible d'activer la soumission avec le projet " + p.code + " avec archive=true");
-				}
+	
 				System.out.println("exp = "+ expElt.code);
+				
 				for (RawData rawData :expElt.run.listRawData) {
-					if (StringUtils.isBlank(rawData.location)) {
-						throw new SraException(" Dans activatePrimarySubmission" + rawData.relatifName + " avec location non renseignée");				
+					// Partie de code deportée dans activate : on met la variable location à CNS
+					// si les données sont physiquement au CNS meme si elles sont aussi au CCRT
+					// et on change le chemin pour remplacer /ccc/genostore/.../rawdata par /env/cns/proj/ 
+					String cns_directory = rawData.directory;
+					if(rawData.directory.startsWith("/ccc/genostore")){
+						int index = rawData.directory.indexOf("/rawdata/");
+						String lotseq_dir = rawData.directory.substring(index + 9);
+						cns_directory="/env/cns/proj/"+lotseq_dir;
+					}
+					
+					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
+					if(fileCible.exists()){
+						System.out.println("le fichier "+ fileCible +"existe bien");
+						rawData.location = "CNS";
+						rawData.directory = cns_directory;
+					} else {
+						System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
+						if ("CNS".equalsIgnoreCase(readSet.location)) {
+							if (p.archive){
+								throw new SraException(rawData.relatifName + " n'existe pas sur les disques CNS, et Projet " + p.code + " avec archive=true, et readSet= " + readSet.code + " avec location = CNS");
+							} else {
+								throw new SraException(rawData.relatifName + " n'existe pas sur les disques CNS, et Projet " + p.code + " avec archive=false, et readSet " + readSet.code  + " localisée au CNS");
+							}
+						} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
+							rawData.location = readSet.location;
+						} else {
+							throw new SraException(rawData.relatifName + " avec location inconnue => " + readSet.location);
+						}
+					}
+					if (rawData.extention.equalsIgnoreCase("fastq")) {
+						rawData.gzipForSubmission = true;
+					} else {
+						rawData.gzipForSubmission = false;
 					}
 					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
 					// donnée est au CNS et si elle n'est pas à zipper
 					if ("CNS".equalsIgnoreCase(rawData.location) && ! rawData.gzipForSubmission) {
 						System.out.println("run = "+ expElt.run.code);
-						File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
 						File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
 						if(fileLien.exists()){
 							fileLien.delete();
@@ -877,6 +905,10 @@ public class SubmissionServices {
 						System.out.println("Donnée "+ rawData.relatifName + " localisée au " + rawData.location);
 					}
 				}
+				// sauver dans base la liste des rawData avec bonne location et bon directory:
+				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME,  Experiment.class, 
+					DBQuery.is("code", experimentCode),
+					DBUpdate.set("run.listRawData", expElt.run.listRawData));
 			}
 		} catch (SraException e) {
 			throw new SraException(" Dans activatePrimarySubmission" + e);			
@@ -1422,34 +1454,11 @@ public class SubmissionServices {
 					rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
 					System.out.println("raw data directory"+rawData.directory);
 					rawData.relatifName = runInstanceFile.fullname;
-					//System.out.println ("rawData.relatifName = " +rawData.relatifName);
-					String cns_directory =rawData.directory;
-					if(rawData.directory.startsWith("/ccc/genostore")){
-						int index = rawData.directory.indexOf("/rawdata/");
-						String lotseq_dir = rawData.directory.substring(index + 9);
-						cns_directory="/env/cns/proj/"+lotseq_dir;
-					}
-					//String cns_directory= rawData.directory.replace("/ccc/genostore/count007/fg0001/rawdata/", "/env/cns/proj/");
-					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
-					if(fileCible.exists()){
-						System.out.println("le fichier "+ fileCible +"existe bien");
-						rawData.location = "CNS";
-					} else {
-						System.out.println("le fichier "+ fileCible +"n'existe pas");
-						rawData.location = readSet.location;
-					}
+					rawData.location = readSet.location;
 					run.listRawData.add(rawData);
 					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
 						//System.out.println("Recuperation du md5 pour" + rawData.relatifName ");
 						rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
-					}
-					// Si donnée à compresser pour soumission, mettre boolean à true (et calculer submittedMd5 apres compression) 
-					// si donnée à soumettre sans compression gzipForSubmission =  false et submittedMd5 == md5
-					if (rawData.extention.equalsIgnoreCase("fastq")) {
-						rawData.gzipForSubmission = true;
-					} else {
-						rawData.gzipForSubmission = false;
-						rawData.submittedMd5 = rawData.md5;
 					}
 					Set<String> listKeys = runInstanceFile.properties.keySet();
 					

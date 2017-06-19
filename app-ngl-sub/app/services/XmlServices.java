@@ -333,16 +333,7 @@ public class XmlServices {
 				for (RawData rawData: run.listRawData) {
 					String fileType = rawData.extention;
 					String relatifName = rawData.relatifName;
-					if (!relatifName.endsWith(".gz")){
-						if (rawData.gzipForSubmission) {
-							relatifName = relatifName + ".gz";
-						}
-					}
-					if (fileType.equalsIgnoreCase("fastq.gz")){
-						fileType = "fastq";
-					} else {
-						fileType = fileType.replace(".gz", "");
-					}
+					fileType = fileType.replace(".gz", "");
 					chaine = chaine + "        <FILE filename=\"" + relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rawData.md5 + "\">\n";
 					if ( run.listRawData.size() == 2 ) {
 						chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";

@@ -88,7 +88,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":12.5,
+			        	 "position":17,
 			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -110,7 +110,7 @@ angular.module('home').controller('NanoporeFrgCtrl',['$scope', '$parse','atmToSi
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":13.5,
+			        	 "position":18,
 			        	 "editDirectives":' udt-change="updatePropertyFromUDT(value,col)" ',
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },

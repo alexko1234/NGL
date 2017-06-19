@@ -10,6 +10,7 @@ public class RawData  implements IValidation {
 	public String extention;              // extention .fastq, .fastq.gz, .sff
 	public String md5;
 	public String location;
+	
 	public Boolean gzipForSubmission = false;
 	public String submittedMd5;
 	
