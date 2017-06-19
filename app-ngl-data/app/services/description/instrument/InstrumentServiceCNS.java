@@ -444,7 +444,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Code Irys CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Code CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
 		return propertyDefinitions;
 	}
 	
