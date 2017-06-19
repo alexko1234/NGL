@@ -579,25 +579,31 @@ public class QualityControl extends AbstractDeclaration {
 	private List<PropertyDefinition> getPropertyDefinitionsPulsedFieldElectrophoresis() {
 		
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 13, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
+				false, null,null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),
+				"single", 13, true, null,null));
+				
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
+				false, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
+				"single", 12, true, null,null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
+				false, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
+				"single", 12, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("final aliquot", "aliquoteVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class,
+				false, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
+				"single", 12, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume EB", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("final aliquot", "aliquoteVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 12, true, null,null));
-		
-		
-		
-		propertyDefinitions.add(newPropertiesDefinition("% bas poids moléculaire", "lowMolecularWeightPercent", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 				
-				"single", 16, true, null, null));
-		
-		
+		 propertyDefinitions.add(newPropertiesDefinition(
+					"Photo de gel","electrophoresisGelPhoto", LevelService.getLevels(Level.CODE.ContainerIn),Image.class,
+					 true, null,null,"img",51,true,null,null));	
+		 
+		 propertyDefinitions.add(newPropertiesDefinition(
+					"Taille estimée des molécules","moleculeEstimatedSize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, 
+					false, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
+					"single",60,false,null,null));	
+	
 		propertyDefinitions.add(newPropertiesDefinition("Volume sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
 				"single", 17, true, null,null));
