@@ -110,6 +110,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("cBot Melisse", "cBot-Melisse", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))), 
 				getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 
 		
 		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
@@ -286,9 +287,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		//l.add(newInstrumentUsedType("Main", "saphyr-hand", InstrumentCategory.find.findByCode("hand"), getSaphyrChipProperties(),getInstrumentBionanoHand() 
 			//	,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"saphyr-chip"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Main", "hand-OutTube", InstrumentCategory.find.findByCode("hand"), null,getInstrumentHand() 
-				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+	
 		l.add(newInstrumentUsedType("Cryobroyeur", "cryobroyeur", InstrumentCategory.find.findByCode("sample-prep-system"),  getCryobroyeurProperties(),getInstrumentCryobroyeur() 
 				,getContainerSupportCategories(new String[]{"tube","bottle","bag"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
@@ -421,11 +420,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	private List<Instrument> getInstrumentHand() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		return instruments;
-	}
+
 
 	private List<Instrument> getInstrumentCryobroyeur() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
