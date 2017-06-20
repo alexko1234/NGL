@@ -148,9 +148,8 @@ angular.module('ngl-sq.samplesServices')
 			value:'=presentSampleProcesses',
 			inverse:'='
 		},
-		template:'<button type="button" ng-class="getClass()" ng-if="value != null && value != undefined" ng-switch="value">'
-						+'<i ng-switch-when="1" class="fa fa-check" aria-hidden="true"></i>'
-						+'<i ng-switch-when="0" class="fa fa-times" aria-hidden="true"></i>'
+		template:'<button type="button" ng-class="getButtonClass()" ng-if="value != null && value != undefined">'
+						+'<i ng-class="getIconClass()" aria-hidden="true"></i>'						
 					+'</button>',
 		link : function(scope, element, attr, ctrl) {
 			
@@ -160,10 +159,19 @@ angular.module('ngl-sq.samplesServices')
 				scope.inverse  = true;
 			}
 			
-			scope.getClass = function(){
-				if((scope.value === 1 && !scope.inverse ) || (scope.value === 0 && scope.inverse )){
+			scope.getIconClass = function(){
+				if((scope.value === 1 && !scope.inverse) || (scope.value === 0 && scope.inverse)){
+					return "fa fa-check";
+				}else if((scope.value === 0 && !scope.inverse) || (scope.value === 1 && scope.inverse)){
+					return "fa fa-times";
+				}
+				
+			}
+			
+			scope.getButtonClass = function(){
+				if(scope.value === 1 ){
 					return 'btn btn-success btn-xs';
-				}else if((scope.value === 0 && !scope.inverse ) || (scope.value === 1 && scope.inverse )){
+				}else if(scope.value === 0){
 					return 'btn btn-danger btn-xs';
 				}
 				
