@@ -638,7 +638,7 @@ samples.tabs.search = Recherche Echantillon
 samples.table.code = Echantillon
 samples.table.projectCodes = Projet(s)
 samples.table.creationDate = Date de création
-samples.table.createUser = Création échantillon
+samples.table.createUser = Créé par
 samples.table.state = Etat
 
 samples.placeholder.fromDate = Echantillon depuis le (jj/mm/aaaa)

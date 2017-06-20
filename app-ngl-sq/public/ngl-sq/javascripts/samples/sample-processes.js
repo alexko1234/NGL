@@ -148,9 +148,10 @@ angular.module('ngl-sq.samplesServices')
 			value:'=presentSampleProcesses',
 			inverse:'='
 		},
-		template:'<button type="button" ng-class="getButtonClass()" ng-if="value != null && value != undefined">'
+		template:'<button type="button" ng-class="getButtonClass()" ng-if="value != null && value != undefined && value <= 1">'
 						+'<i ng-class="getIconClass()" aria-hidden="true"></i>'						
-					+'</button>',
+					+'</button>'
+					+'<span ng-if="value > 1" ng-bind="value"></span>',
 		link : function(scope, element, attr, ctrl) {
 			
 			if(null == scope.inverse || undefined == scope.inverse  || scope.inverse  === false || scope.inverse  === 'false'){
