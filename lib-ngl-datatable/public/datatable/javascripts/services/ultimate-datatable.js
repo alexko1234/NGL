@@ -3162,7 +3162,8 @@ directive("udtCell", function(){
 			    			if(column.watch === true){
                                 scope.$watch("value.data."+column.property, function(newValue, oldValue) {
                                     if ( newValue !== oldValue ) {
-                                        scope.cellValue = getDisplayFunction(column, false);
+                                        //scope.cellValue = getDisplayFunction(column, false);
+                                        scope.cellValue = newValue;
                                      }
                                 });
                             }
