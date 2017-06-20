@@ -488,7 +488,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	
 	                            if ('sum' === column.groupMethod || 'average' === column.groupMethod) {
 	                                var result = groupData.reduce(function(value, element) {
-	                                    return value += columnGetter(element);
+	                                    element.col = column; //add in experimental feature
+	                                	return value += columnGetter(element);
 	                                }, 0);
 	
 	                                if ('average' === column.groupMethod) result = result / groupData.length;
@@ -3171,7 +3172,8 @@ directive("udtCell", function(){
 			    				if(column.watch === true){
                                     scope.$watch("value.data."+column.property+currentScope.udtTableFunctions.getFilter(column)+currentScope.udtTableFunctions.getFormatter(column), function(newValue, oldValue) {
                                         if ( newValue !== oldValue ) {
-                                            scope.cellValue = getDisplayFunction(column, false);
+                                            //scope.cellValue = getDisplayFunction(column, false);
+                                        	scope.cellValue = newValue;
                                          }
                                     });
                                 }
