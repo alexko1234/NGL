@@ -194,6 +194,13 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 	});
 	//Init		
 
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(newValue, oldValue){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";		
+	});	
+	
+	$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
