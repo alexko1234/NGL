@@ -1,7 +1,6 @@
 angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
-	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	$scope.dispatchConfiguration.orderBy = "container.sampleCodes";
 	
 	var config = $scope.atmService.data.getConfig();
@@ -39,17 +38,6 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 		
 	});
 	
-	$scope.$watch("gel2",function(imgNew, imgOld){
-		if(imgNew){			
-			
-			angular.forEach($scope.atmService.data.displayResult, function(dr){
-				$parse('inputContainerUsed.experimentProperties.electrophoresisGelPhoto2').assign(dr.data, this);
-			}, imgNew);
-			
-		}
-		angular.element('#importFile2')[0].value = null;
-		
-	});
 	
 	$scope.button = {
 			isShow:function(){
@@ -59,7 +47,6 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
 	
-	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.sampleTypes"),
 		"property" : "inputContainer.contents",
@@ -78,7 +65,6 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 	columns.push({
 		"header" : Messages("containers.table.concentration"),
 		"property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
-		//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 		"order" : true,
 		"edit" : false,
 		"hide" : true,
@@ -102,18 +88,7 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 		}
 	});
 	
-/*	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
-		columns.push({
-			"header" : Messages("containers.table.workName"),
-			"property" : "inputContainer.properties.workName.value",
-			"order" : true,
-			"edit" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 3.1,
-			"extraHeaders" : {0 : Messages("experiments.inputs")}
-		});
-	}*/
+
 	
 	columns.push({
 		"header" : Messages("containers.table.libraryToDo"),
@@ -130,15 +105,7 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 	});
 	
 	
-/*	columns.push({
-		"header":Messages("containers.table.size")+ " (pb)",
-		"property": "inputContainerUsed.size.value",
-		"order":false,
-		"hide":true,
-		"type":"text",
-		"position":11,
-		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
-	});*/
+
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 
