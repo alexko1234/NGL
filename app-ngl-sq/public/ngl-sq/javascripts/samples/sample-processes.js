@@ -36,10 +36,7 @@ angular.module('ngl-sq.samplesServices')
 				if(scope.dspShowRs && process.readsets && process.readsets.length > 1){
 					value =  process.readsets.length+"rs";					
 				}else if(scope.dspShowRs && process.readsets && process.readsets.length === 1){
-					value =  "rs";
-					if(process.readsets[0].bioinformaticValuation.valid === 'FALSE'){
-						value =  "<span style='color:black'>rs</span>";
-					}					
+					value =  "rs";									
 				}else if(scope.dspShowPercent && process.progressInPercent){
 					value =  process.progressInPercent;
 				}else{
