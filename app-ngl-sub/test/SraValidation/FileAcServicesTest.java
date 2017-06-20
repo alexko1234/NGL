@@ -161,6 +161,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		String user = "william";
 		ContextValidation ctxVal = new ContextValidation(user);
 		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
+		
 		Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 		deleteDataSetForFileAcServices();
 		
@@ -184,6 +185,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		deleteDataSetForFileAcServices();
 
 	}
+	
 	@Test
 	public void FileAcServicesReal() throws IOException, SraException, MailServiceException {
 		String code = "CNS_BCU_BLK_266H23OI3";
@@ -191,5 +193,6 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		ContextValidation ctxVal = new ContextValidation(user);
 		File fileEbi = new File("/env/cns/home/sgas/test/listAc_CNS_BCU_BLK_266H23OI3.txt");
 		Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+		Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA960789"));
 	}
 }

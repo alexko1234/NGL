@@ -302,7 +302,7 @@ public class SubmissionsTest extends AbstractTestController{
 		Logger.info(contentAsString(result));
 	}
 
-	@Test
+	/*@Test
 	public void shouldTreatmentAC() throws ClientProtocolException, IOException
 	{
 
@@ -314,5 +314,5 @@ public class SubmissionsTest extends AbstractTestController{
 		Submission submissionSubmited = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, subCode2);
 		Logger.info("submission submited "+submissionSubmited);
 		assertThat(submissionSubmited.state.code).isEqualTo("submitted");
-	}
+	}*/
 }

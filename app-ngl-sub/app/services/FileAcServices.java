@@ -87,6 +87,7 @@ public class FileAcServices  {
 	
 
 	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+		System.out.println("coucou");
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
@@ -113,12 +114,14 @@ public class FileAcServices  {
 		String expediteur = Play.application().configuration().getString("accessionReporting.email.from"); 
 
 		String dest = Play.application().configuration().getString("accessionReporting.email.to");   
+		System.out.println("destinataires = "+ dest);
 		String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
 		
 		//Logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
 		
 		String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
 		Set<String> destinataires = new HashSet<String>();
+		
 		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
 
 		String sujet = null;
@@ -136,7 +139,8 @@ public class FileAcServices  {
 		String ebiStudyCode = null;
 		String errorStatus = "FE-SUB";
 		String okStatus = "F-SUB";
-		
+		Boolean ebiSuccess = false;
+	
 		while ((lg = inputBuffer.readLine()) != null) {
 			if (lg.startsWith("<?")){
 				// ignorer
@@ -145,64 +149,77 @@ public class FileAcServices  {
 			} else {
 				Boolean resultAC = false;
 				//System.out.println("ligne = '"+ lg+"'");
-				String pattern_string = "<RECEIPT\\s+receiptDate=\"(\\S+)\"\\s+submissionFile=\"(\\S+)\"\\s+success=\"true\"";
-				java.util.regex.Pattern pattern = Pattern.compile(pattern_string);
-				Matcher m = pattern.matcher(lg);
-				if ( ! m.find() ) {
-					//System.out.println("ligne RECEIPT absente dans '"+lg+"'");
-					// mettre status à jour
-					updateStateSubmission(ctxVal, submission, errorStatus); 
-					message = "Absence de la ligne RECEIPT ... pour  " + submissionCode + " dans fichier "+ ebiFileAc.getPath();
-					sujet = "Probleme parsing fichier des AC : ";
-					//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
-				    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
-					return submission;
-				} 
-				//System.out.println("Traitement des AC :");
-				String [] tab = lg.split(">");
-				String patternAc = "<(\\S+)\\s+accession=\"(\\S+)\"\\s+alias=\"(\\S+)\"";
-				java.util.regex.Pattern pAc = Pattern.compile(patternAc);
+				
+				if (! ebiSuccess) {
+					String pattern_string = "<RECEIPT\\s+receiptDate=\"(\\S+)\"\\s+submissionFile=\"(\\S+)\"\\s+success=\"true\"";
+					java.util.regex.Pattern pattern = Pattern.compile(pattern_string);
+					Matcher m = pattern.matcher(lg);
+					if (  m.find() ) {
+						ebiSuccess = true;
+					}
+				} else {
+					//System.out.println("Traitement des AC :");
+					String [] tab = lg.split(">");
+					String patternAc = "<(\\S+)\\s+accession=\"(\\S+)\"\\s+alias=\"(\\S+)\"";
+					java.util.regex.Pattern pAc = Pattern.compile(patternAc);
 
 
-				for(String info : tab) {
-					//System.out.println(info);
-					Matcher mAc = pAc.matcher(info);
-					// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
-					if ( ! mAc.find() ) {
-						// autre ligne que AC.
-					} else {
-						//System.out.println("type='"+mAc.group(1)+"', accession='"+mAc.group(2)+"', alias='"+ mAc.group(3)+"'" );
-						if (mAc.group(1).equalsIgnoreCase("RUN")){
-							//System.out.println("insertion dans mapRun de "+ mAc.group(3) + " et "+ mAc.group(2));
-							mapRuns.put(mAc.group(3), mAc.group(2));
-						} else if (mAc.group(1).equalsIgnoreCase("EXPERIMENT")){
-							//System.out.println("insertion dans mapExperiment de " + mAc.group(3) + " et "+ mAc.group(2));
-							mapExperiments.put(mAc.group(3), mAc.group(2));
-						} else if (mAc.group(1).equalsIgnoreCase("SAMPLE")){
-							//System.out.println("insertion dans mapSample de " + mAc.group(3) + " et "+ mAc.group(2));
-							mapSamples.put(mAc.group(3), mAc.group(2));
-						} else if (mAc.group(1).equalsIgnoreCase("STUDY")){
-							ebiStudyCode = mAc.group(3);
-							studyAc = mAc.group(2);
-							//System.out.println("insertion dans mapStudy de " + mAc.group(3) + " et "+ mAc.group(2));
-						} else if (mAc.group(1).equalsIgnoreCase("SUBMISSION")){
-							ebiSubmissionCode = mAc.group(3);
-							submissionAc =  mAc.group(2);
-							//System.out.println("insertion dans mapSubmission de "  + mAc.group(3) + " et "+ mAc.group(2));
+					for(String info : tab) {
+						//System.out.println(info);
+						Matcher mAc = pAc.matcher(info);
+						// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
+						if ( ! mAc.find() ) {
+							// autre ligne que AC.
 						} else {
+							//System.out.println("type='"+mAc.group(1)+"', accession='"+mAc.group(2)+"', alias='"+ mAc.group(3)+"'" );
+							if (mAc.group(1).equalsIgnoreCase("RUN")){
+								System.out.println("insertion dans mapRun de "+ mAc.group(3) + " et "+ mAc.group(2));
+								mapRuns.put(mAc.group(3), mAc.group(2));
+							} else if (mAc.group(1).equalsIgnoreCase("EXPERIMENT")){
+								System.out.println("insertion dans mapExperiment de " + mAc.group(3) + " et "+ mAc.group(2));
+								mapExperiments.put(mAc.group(3), mAc.group(2));
+							} else if (mAc.group(1).equalsIgnoreCase("SAMPLE")){
+								System.out.println("insertion dans mapSample de " + mAc.group(3) + " et "+ mAc.group(2));
+								mapSamples.put(mAc.group(3), mAc.group(2));
+							} else if (mAc.group(1).equalsIgnoreCase("STUDY")){
+								ebiStudyCode = mAc.group(3);
+								studyAc = mAc.group(2);
+								System.out.println("insertion dans mapStudy de " + mAc.group(3) + " et "+ mAc.group(2));
+							} else if (mAc.group(1).equalsIgnoreCase("SUBMISSION")){
+								ebiSubmissionCode = mAc.group(3);
+								submissionAc =  mAc.group(2);
+								System.out.println("insertion dans mapSubmission de "  + mAc.group(3) + " et "+ mAc.group(2));
+							} else {
 
-						}
+							}
+						}	
 					}
 				}
 			}
 		}
 		
+		if (! ebiSuccess ) {
+			System.out.println("ligne RECEIPT absente dans '"+lg+"'");
+			// mettre status à jour
+			updateStateSubmission(ctxVal, submission, errorStatus); 
+			message = "Absence de la ligne RECEIPT ... pour  " + submissionCode + " dans fichier "+ ebiFileAc.getPath();
+			sujet = "Probleme parsing fichier des AC : ";
+			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+			mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
+			return submission;
+		}
+		
+		
 		// Mise à jour des objets :
 		Boolean error = false;
 		sujet = "Probleme parsing fichier des AC : ";
 		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileAc.getPath() + "</br>";
-		destinataires.add(submission.state.user);
-		
+		String destinataire = submission.state.user;
+		if(!destinataire.endsWith("@genoscope.cns.fr")) {
+			destinataire = destinataire + "@genoscope.cns.fr";
+		}
+		destinataires.add(destinataire);
+	
 		if (StringUtils.isBlank(ebiSubmissionCode)) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
 		    message += "- ne contient pas ebiSubmissionCode \n";
@@ -313,7 +330,9 @@ public class FileAcServices  {
 		State state = new State(okStatus, user);
 		
 		submissionWorkflows.setState(ctxVal, submission, state);
-	
+		System.out.println("expediteur =" + expediteur);
+		System.out.println("destinataires =" + destinataires);
+		System.out.println("subjectSuccess =" + subjectSuccess);
 		mailService.sendMail(expediteur, destinataires, subjectSuccess, new String(message.getBytes(), "iso-8859-1"));
 		return submission;
 	}
