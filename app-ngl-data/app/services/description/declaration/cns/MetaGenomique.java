@@ -90,10 +90,11 @@ public class MetaGenomique extends AbstractDeclaration {
      protected List<ProcessType> getProcessTypeCommon() {
              List<ProcessType> l = new ArrayList<ProcessType>();
 
-             l.add(DescriptionFactory.newProcessType("(Meta)Génomique", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
+             l.add(DescriptionFactory.newProcessType("(Meta)Génomique ou reprise à partir cDNA", "metagenomic-process", ProcessCategory.find.findByCode("library"), 31,
                              getPropertiesMetaGenomique(),
                              Arrays.asList(getPET("ext-to-metagenomic-process",-1)
-                                             ,getPET("dna-rna-extraction",-1)
+                            		 		 , getPET("cdna-synthesis",-1)
+                                             , getPET("dna-rna-extraction",-1)
                                              , getPET("fragmentation",0)
                                              , getPET("dna-illumina-indexed-library",1)
                                              , getPET("pcr-amplification-and-purification",2)
@@ -190,8 +191,12 @@ public class MetaGenomique extends AbstractDeclaration {
 
 
 	private List<PropertyDefinition> getPropertiesMetaGenomique() {
+		List<Value> libProcessTypeCodes = getLibProcessDA();
+		libProcessTypeCodes.addAll(MetaTProcess.getBanqueProcessTypeMetaRA());
+		
+		
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, getLibProcessDA(), 
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, libProcessTypeCodes, 
 				null,null,null,"single", 13, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Protocole banque DNA", "dnaLibraryProtocol", LevelService.getLevels(Level.CODE.Process), String.class, true, null, DescriptionFactory.newValues("NEB Ultra 2","low cost","super low cost"), 
 				null,null,null,"single", 14, true, null, null));

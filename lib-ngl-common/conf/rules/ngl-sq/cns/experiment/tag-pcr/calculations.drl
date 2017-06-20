@@ -55,6 +55,8 @@ rule "Set good project code for Amplicon"
 			outputProjectCode.value = "CAN";
 		}else if("CBB".equals($inputProjectCode)){
 			outputProjectCode.value = "CBC";
+		}else if("CAT".equals($inputProjectCode)){
+			outputProjectCode.value = "CBR";
 		}else{
 			outputProjectCode.value = null;
 		}

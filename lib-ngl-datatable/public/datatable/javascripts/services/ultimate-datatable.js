@@ -636,12 +636,15 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             },
             addGroup: function(displayResultTmp) {
                 var displayResult = [];
+                
                 var propertyGroupGetter = this.config.group.by.property;
                 propertyGroupGetter += this.getFilter(this.config.group.by);
+                propertyGroupGetter += this.getFormatter(this.config.group.by);
                 if(this.config.group.by=="all"){
-                	propertyGroupGetter = "all";
+                	propertyGroupGetter="all";
                 }
                 var groupGetter = $parse(propertyGroupGetter);
+                
                 var groupConfig = this.config.group;
                 displayResultTmp.forEach(function(element, index, array) {
                     /* previous mode */
@@ -2273,7 +2276,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     //calcule results ( code extracted from method computeDisplayResult() )
                     var displayResultTmp = [];
                     if (this.isGroupActive()) {
-                    	this.allResult = $filter('orderBy')(this.allResult, this.config.group.by.property);
+                    	var orderProperty = this.config.group.by.property;
+                        orderProperty += (this.config.group.by.filter) ? '|' + this.config.group.by.filter : '';
+                        var orderSense = (this.config.order.reverse) ? '-' : '+';
+                        this.allResult = $filter('orderBy')(this.allResult, orderSense + orderProperty);
                     }
                     angular.forEach(this.allResult, function(value, key) {
                         var line = {
@@ -3879,6 +3885,7 @@ filter('udtCount', ['$parse',function($parse) {
     	    	angular.forEach(array, function(element){
     	    		if (angular.isObject(element)) {
     	    			var currentValue = $parse(key)(element);
+    	    			if(angular.isArray(currentValue) && currentValue.length === 1)currentValue = currentValue[0];
     	    			if(distinct && undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
        	    				possibleValues.push(currentValue);
     	    			}else if(!distinct && undefined !== currentValue && null !== currentValue){

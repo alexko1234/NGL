@@ -4,6 +4,7 @@ import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -194,6 +195,11 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
 				getTagCategoriesIllumina(), null,null,null,"single", 15, false, null,null));
 
+		//Experiments
+				propertyDefinitions.add(newPropertiesDefinition(
+						"Schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
+						false, null, null , "img",17,true,null,null));
+
 		
 		return propertyDefinitions;
 	}
@@ -271,6 +277,9 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Ratio ampure post-pcr", "postPcrAmpureVolume", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
 				null,null,null,"single", 16, true, null, null));
 		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
+		
+	
+		
 		return propertyDefinitions;
 	}
 

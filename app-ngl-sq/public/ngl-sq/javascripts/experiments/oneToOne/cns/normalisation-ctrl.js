@@ -213,7 +213,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
                 complex:true,
                 template:  ''
                 	+$scope.plateUtils.templates.buttonLineMode()
-                	+$scope.plateUtils.templates.buttonColumnMode()                	   
+                	+$scope.plateUtils.templates.buttonColumnMode()     
+                	+$scope.plateUtils.templates.buttonCopyPosition()
             }
 			
 	};
@@ -404,7 +405,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		var getLine = function(line){
 			if($scope.experiment.instrument.outContainerSupportCategoryCode 
 					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
-				return line;
+				return undefined;
 			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
 				return undefined;
