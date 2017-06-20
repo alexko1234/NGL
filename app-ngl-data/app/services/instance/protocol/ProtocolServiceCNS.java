@@ -74,6 +74,9 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","R9-Low input"))));
 		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-2D"))));
+		lp.add(newProtocol("1D2-library","Banque 1D²","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","R9-2D"))));
+
 		
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
@@ -121,8 +124,13 @@ public class ProtocolServiceCNS {
 		*/
 		
 		lp.add(newProtocol("irys-prep-nlrs-300-900","Irys Prep Labelling NLRS (300/900)","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep","irys-chip-preparation")));
-		lp.add(newProtocol("bionano_standard_ptr","ptr_standard","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
-		lp.add(newProtocol("optimization","optimisation","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
+		lp.add(newProtocol("saphyr-prep-nlrs","Saphyr Prep Labelling NLRS","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep","irys-chip-preparation")));
+		
+		lp.add(newProtocol("depot_irys","Depot IRYS","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));	
+		lp.add(newProtocol("depot_saphyr","Depot SAPHYR","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
+		
+		//lp.add(newProtocol("bionano_standard_ptr","ptr_standard","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
+		//lp.add(newProtocol("optimization","optimisation","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
 		
 		//lp.add(newProtocol("fragmentation_ptr_sox140_1","Fragmentation_ptr_sox140_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("fragmentation")));
 		//lp.add(newProtocol("bqspri_ptr_sox142_1","BqSPRI_ptr_sox142_1","path2","1","production", InstanceFactory.setExperimentTypeCodes("librairie-indexing", "librairie-dualindexing")));
