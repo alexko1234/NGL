@@ -134,8 +134,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
-		if (ConfigFactory.load().getString("ngl.env").equals("XXXXXXX") ){
-		// FDS 20/06/2017 NE PAS LIVRER EN PRODUCTION le processus modifié pour "2000/2500" car la normalisation en plaque n'est pas gérée 
+		if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
+		// FDS 20/06/2017 NE PAS LIVRER EN PRODUCTION le processus modifié pour "2000/2500" car la normalisation en plaque n'est pas gérée pour l'instant...
 			
 		// FDS 02/06/2017: NGL-1447 =>  duplication  "2000/2500_Prep FC, dépôt" avec tranfert en experience de niveau 0
 		// => il faut declarer ce noeud 0 dans experimentService !!	
