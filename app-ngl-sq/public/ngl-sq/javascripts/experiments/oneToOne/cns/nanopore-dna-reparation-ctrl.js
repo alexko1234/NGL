@@ -87,7 +87,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "required":$scope.isRequiredForState("F"),
+						 "required":"isRequired('F')",
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}

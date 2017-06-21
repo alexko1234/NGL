@@ -14,7 +14,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			return undefined;
 		}
 	}
-	
+	/*
 	$scope.isRequired=function(propertyDefinition){
 		if($scope.experiment !== undefined){
 		if(propertyDefinition.required 
@@ -29,6 +29,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}
 		return false;
 	};
+	*/
+	$scope.isRequired=function(requiredState){
+		if($scope.experiment !== undefined){
+			if(($scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  
+								&& requiredState === 'N')
+						|| (!$scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  
+								&& (requiredState === null || requiredState === 'N' || requiredState === 'IP'))
+						|| (($parse('experiment.state.code')($scope) === "IP" || $parse('experiment.state.code')($scope) === "F"))
+					){
+				return true;	
+			}				
+		}
+		return false;
+	};
+	
 	
 	$scope.isRequiredForState=function(stateCode){
 		return (($scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  && stateCode === 'N')
