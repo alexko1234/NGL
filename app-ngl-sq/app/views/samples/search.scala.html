@@ -16,14 +16,22 @@
 			<div class="form-control" bt-select ng-model="searchService.form.codes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
 		}
 		
-		
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.existingTransformationTypeCodes" placeholder="@Messages("samples.placeholder.existingTransformationTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation')">
+			</div>
+		}
 	}
 	
 	@columnSearchForm{		
 		
-			@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("samples.placeholder.fromDate")' title='@Messages("samples.placeholder.fromDate")'>					
-		
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("samples.placeholder.fromDate")' title='@Messages("samples.placeholder.fromDate")'>							
+		}
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.notExistingTransformationTypeCodes" placeholder="@Messages("samples.placeholder.notExistingTransformationTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation')">
+			</div>
 		}
 		
 	}

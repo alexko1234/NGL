@@ -120,6 +120,11 @@ public class Samples extends DocumentController<Sample>{
 
 		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
 		
+		if(CollectionUtils.isNotEmpty(samplesSearch.existingTransformationTypeCodes)){
+			queryElts.add(DBQuery.in("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCodes));
+		}else if(CollectionUtils.isNotEmpty(samplesSearch.notExistingTransformationTypeCodes)){
+			queryElts.add(DBQuery.notIn("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCodes));
+		}
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

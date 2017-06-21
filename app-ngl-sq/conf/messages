@@ -644,7 +644,9 @@ samples.table.state = Etat
 samples.placeholder.fromDate = Echantillon depuis le (jj/mm/aaaa)
 samples.placeholder.toDate = Echantillon jusqu''au (jj/mm/aaaa)
 samples.placeholder.createUser = Echantillon créé par
-samples.placeholder.referenceCollabRegex = Regex Ref. Collab.
+samples.placeholder.referenceCollabRegex = Regex réf. collab.
+samples.placeholder.notExistingTransformationTypeCodes = N''éxiste pas type d'exp. 
+samples.placeholder.existingTransformationTypeCodes = Existe type d'exp.
 ###############
 #
 # administration

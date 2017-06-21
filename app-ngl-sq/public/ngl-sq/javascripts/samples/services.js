@@ -141,7 +141,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			lists.refresh.projects();
 			lists.refresh.processCategories();
 			lists.refresh.processTypes();
-			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false});
+			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false},"transformation");
 			lists.refresh.states({objectTypeCode:"Sample"});
 			lists.refresh.users();
 			lists.refresh.reportConfigs({pageCodes:["samples"+"-"+mainService.getHomePage()]});

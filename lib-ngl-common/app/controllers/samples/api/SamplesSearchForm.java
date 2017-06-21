@@ -23,4 +23,7 @@ public class SamplesSearchForm extends ListForm{
 	public Map<String, Boolean> existingFields;
 	public String referenceCollabRegex;
 	
+	public List<String> existingTransformationTypeCodes;
+	public List<String> notExistingTransformationTypeCodes;
+	
 }

@@ -21,4 +21,3 @@ public class SampleProcess {
 	
 	public Integer progressInPercent;
 }
- 
