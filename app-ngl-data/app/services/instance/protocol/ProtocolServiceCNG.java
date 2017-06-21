@@ -154,7 +154,7 @@ public class ProtocolServiceCNG {
 		
 		lp.add(newProtocol("1D2-library","Banque 1D²","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-library"),
-				concatMap(newPSV("libraryProtocol","R9-2D"))));
+				concatMap(newPSV("libraryProtocol","Banque 1D²"))));
 		
 		//nanopore-depot
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", 

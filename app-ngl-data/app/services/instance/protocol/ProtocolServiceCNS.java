@@ -74,10 +74,9 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","R9-Low input"))));
 		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","R9-2D"))));
-		lp.add(newProtocol("1D2-library","Banque 1D²","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
-				concatMap(newPSV("libraryProtocol","R9-2D"))));
+		lp.add(newProtocol("1D2-library","Banque 1D²","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
+				concatMap(newPSV("libraryProtocol","Banque 1D²"))));
 
-		
 		lp.add(newProtocol("R9-depot","R9-dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("R9-depot-SpotON","R9-dépôt-SpotON","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		 
@@ -115,6 +114,9 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","direct RNAsequencing"))));
+		
+		
+		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-end-prep","nanopore-pcr","nanopore-barcode-ligation","nanopore-pre-pcr-ligation","aliquoting")));
 		
 		//lp.add(newProtocol("map005-preCR","MAP005 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
 		//lp.add(newProtocol("map006-preCR","MAP006 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
@@ -270,7 +272,6 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("qcard-qc","QC_qcard","path7","1","production", InstanceFactory.setExperimentTypeCodes("qcard")));	
 
 		
-		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-end-prep","nanopore-pcr","nanopore-barcode-ligation","nanopore-pre-pcr-ligation","aliquoting")));
 		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
