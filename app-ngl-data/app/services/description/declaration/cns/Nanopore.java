@@ -451,7 +451,7 @@ public class Nanopore extends AbstractDeclaration{
 		
 		newExperimentTypeNode("nanopore-frg",
 				getExperimentTypes("nanopore-frg").get(0),false, false,false,
-				getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot","ext-to-nanopore-process-library","ext-to-nanopore-process-dev","ext-to-nanopore-process-dev-2"),null,null,
+				getExperimentTypeNodes("dna-rna-extraction","ext-to-nanopore-frg-lib-depot","ext-to-nanopore-frg-rep-lib-depot","ext-to-nanopore-process-library","ext-to-nanopore-process-dev","ext-to-nanopore-process-dev-2"),getExperimentTypes("nanopore-sizing"),null,
 				getExperimentTypes("aliquoting","pool-tube")).save();	
 	
 		newExperimentTypeNode("nanopore-dna-reparation",
