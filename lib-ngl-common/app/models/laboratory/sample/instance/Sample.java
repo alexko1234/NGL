@@ -1,5 +1,6 @@
 package models.laboratory.sample.instance;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,6 +66,7 @@ public class Sample extends DBObject implements IValidation{
 	
 	public List<SampleProcess> processes;
 	public SampleProcessesStatistics processesStatistics;
+	public Date processesUpdatedDate;
 	
 	public Sample(){
 		this.traceInformation=new TraceInformation();

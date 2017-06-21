@@ -64,6 +64,7 @@ public class UpdateReportingData extends AbstractImportData {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		Logger.debug("Start reporting synchro");
+		Date date = new Date();
 		try{
 			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
 			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
@@ -73,7 +74,7 @@ public class UpdateReportingData extends AbstractImportData {
 						if(sample.processes != null && sample.processes.size() > 0){
 							Logger.debug("update sample "+sample.code);
 							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics));
+									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
 						}	
 					}catch(Throwable e){
 						logger.error("Sample : "+sample.code+" - "+e,e);
@@ -321,6 +322,17 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		sampleReadSet.productionValuation = readset.productionValuation;   
 		sampleReadSet.bioinformaticValuation = readset.bioinformaticValuation; 
+		
+		if(!readset.typeCode.equals("rsnanopore")){
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("code", 1);
+			keys.put("treatments.ngsrg", 1);
+			
+			ReadSet rs = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class, readset.code, keys);
+			sampleReadSet.treatments = rs.treatments;
+		}
+		
+		
 		//sampleReadSet.treatments = filterTreaments(readset.treatments);
 		return sampleReadSet;
 	}
