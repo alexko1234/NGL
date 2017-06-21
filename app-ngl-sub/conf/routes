@@ -97,7 +97,7 @@ PUT		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments
 # ExperimentsRawData
 #-------------------
 GET		/api/sra/experiments/rawDatas						@controllers.sra.experiments.api.ExperimentsRawDatas.list()
-PUT		/api/sra/experiments/:code/rawDatas					@controllers.sra.experiments.api.ExperimentsRawDatas.update(code: java.lang.String, relatifName: java.lang.String)
+PUT		/api/sra/experiments/:code/rawDatas/:relatifName	@controllers.sra.experiments.api.ExperimentsRawDatas.update(code: java.lang.String, relatifName: java.lang.String)
 GET		/api/sra/experiments/:code/rawDatas/:relatifName	@controllers.sra.experiments.api.ExperimentsRawDatas.get(code: java.lang.String, relatifName: java.lang.String)
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
