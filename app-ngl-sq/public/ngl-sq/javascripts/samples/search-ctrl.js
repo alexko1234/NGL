@@ -66,7 +66,9 @@ angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable
 	$scope.reset = function(){
 		$scope.searchService.resetForm();		
 	};
-	
+	$scope.goToReadSet = function(code){
+		$window.open(AppURL("bi")+"/readsets/"+code, 'readset');
+	}
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){

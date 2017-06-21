@@ -1433,8 +1433,14 @@ angular.module('commonsServices', []).
     	}]).filter('flatArray', function(){
     		return function(array, property){
     			var flatArray = [];
-    			for(var i=0;i<array.length;i++){
-    				flatArray = flatArray.concat(array[i][property]);
+    			if(angular.isArray(array)){
+	    			for(var i=0;i<array.length;i++){
+	    				if(null != property && undefined != property){
+	    					flatArray = flatArray.concat(array[i][property]);
+	    				}else{
+	    					flatArray = flatArray.concat(array[i]);
+	    				}
+	    			}
     			}
     			return flatArray;
     		}

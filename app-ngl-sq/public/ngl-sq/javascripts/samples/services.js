@@ -84,8 +84,21 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"type":"text",
 			"groupMethod":"unique"
 		});
-		
 		/*
+		columns.push({
+			"header":"ReadSets",
+			"property":"processes",
+			"filter":"getArray:'readsets'|flatArray",
+			"order":false,
+			"hide":true,
+			"position":22,
+			"type":"text",
+			"render":"<table ng-if=\"cellValue.length > 0\" class='table table-condensed'>\n<tr><th>Code</th><th>Etat</th><th>Valid QC</th><th>Valid BioInfo</th><th>CR QC</th></tr>\n<tr ng-repeat=\"r in ::cellValue|orderBy:'runSequencingStartDate' track by $index\">\n<td> <a href=\"#\" ng-click=\"goToReadSet(r.code)\" ng-bind=\"::r.code\"></a></td>\n<td ng-bind=\"::r.state.code|codes:'state'\"></td>\n<td ng-bind=\"::r.productionValuation.valid|codes:'valuation'\"></td>\n<td ng-bind=\"::r.bioinformaticValuation.valid|codes:'valuation'\"></td>\n<td><span ng-repeat=\"r in ::r.productionValuation.resolutionCodes\" ng-bind=\"r|codes:'resolution'\"></span></td>\n</tr></table>"
+						
+		});
+		
+		
+		
 		columns.push({
 			"header":"Processus Type Present",
 			"headerTpl":"<div bt-select placeholder='Select Processus Type' class='form-control' ng-model='column.headerForm.processTypeCode' bt-options='processType.code as processType.name for processType in searchService.lists.getProcessTypes()' style='display:inline-block'></div></div>",
