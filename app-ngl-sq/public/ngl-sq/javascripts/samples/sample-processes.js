@@ -11,7 +11,7 @@ angular.module('ngl-sq.samplesServices')
 		template: "<ul class='list-group' style='margin-bottom:0px'>"
 				+" 	<li  ng-repeat='(typeCode, values) in processesByTypeCode' class='list-group-item'>"
 				+" 	{{typeCode|codes:'type'}} :  "
-				+"  <a href='#' ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-click='goTo(p,$event)' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind-html='getInfo(p)'>"
+				+"  <a href='#' role='button' ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-click='goTo(p,$event)' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind-html='getInfo(p)'>"
 				+"  </a>"
 				+ "<span class='badge' ng-bind='values.length' ng-click='goToAllProcesses(values,$event)'></span>"
 				+"  </li>"
@@ -184,8 +184,8 @@ angular.module('ngl-sq.samplesServices')
 			inverse = true;
 		}
 		
-		if(null != filters && undefined != filters && filters.length > 0
-				&& null != processes && undefined != processes){
+		if(null !== filters && undefined !== filters && filters.length > 0
+				&& null !== processes && undefined !== processes){
 			if (!angular.isArray(filters)) filters = [filters];
 			var filteredData = [];
 			for(var i = 0; i < filters.length; i++){
@@ -206,6 +206,9 @@ angular.module('ngl-sq.samplesServices')
 					|| (filteredData.length === 0 && inverse)){return 1;}
 			else {return 0;}		
 			
+		}else if(null !== filters && undefined !== filters && 
+				(null === processes || undefined === processes)){
+			return 0;
 		}else{
 			return undefined;
 		}

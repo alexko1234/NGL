@@ -405,7 +405,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		var getLine = function(line){
 			if($scope.experiment.instrument.outContainerSupportCategoryCode 
 					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
-				return undefined;
+				return line;
 			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
 				return undefined;
