@@ -36,7 +36,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"hide":true,
 			"position":3,
 			"type":"text",			
-			"groupMethod":"collect"
+			"groupMethod":"collect:true"
 		});
 		columns.push({
 			"header":Messages("samples.table.referenceCollab"),
@@ -54,7 +54,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"hide":true,
 			"position":5,
 			"type":"text",			
-			"groupMethod":"collect"
+			"groupMethod":"collect:true"
 		});	
 		columns.push({
 			"header":Messages("samples.table.ncbiScientifiName"),
@@ -63,7 +63,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"hide":true,
 			"position":6,
 			"type":"text",			
-			"groupMethod":"collect"
+			"groupMethod":"collect:true"
 		});	
 		
 		columns.push({
