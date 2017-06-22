@@ -64,8 +64,10 @@ public class SRAFilesUtil {
 	{
 		Set<ResourceProperties> rpsRawDataFilter = new HashSet<ResourceProperties>();
 		for(ResourceProperties rp : rpsRawData){
-			if(rp.getProperty("gzipForSubmission").equals("true"))
+			if(rp.getProperty("gzipForSubmission").equals("true")){
+				rp.put("relatifName", rp.getProperty("relatifName").replace(".gz", ""));
 				rpsRawDataFilter.add(rp);
+			}
 		}
 		return rpsRawDataFilter;
 	}

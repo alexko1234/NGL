@@ -74,9 +74,12 @@ rule "POST DONE EXECUTION of zip : Update relatifName of RawData"
 		JobResource jobResource = $job.getUniqueJobResource("inputRawDataZip");
 		JSONDevice jsonDevice = new JSONDevice();
 		String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),"bot");
+		log.debug("Result JSON RawData"+JSONRawData);
 		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "relatifName", jobResource.getProperty("fileName")+".gz");
+		log.debug("Result JSON RawDataModify"+JSONRawDataModify);
 		String JSONRawDataModify2 = jsonDevice.modifyJSON(JSONRawDataModify, "extention", "fastq.gz");
-		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas",JSONRawDataModify2, "bot");
+		log.debug("Result JSON RawDataModify"+JSONRawDataModify2);
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),JSONRawDataModify2, "bot");
 		log.debug("Result "+jsonResult);
 end
 
