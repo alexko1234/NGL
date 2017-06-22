@@ -21,7 +21,9 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
+	@Override
+	public void removeOutputContainerCode(){
+		// TODO Auto-generated method stub
+	}
 
 }

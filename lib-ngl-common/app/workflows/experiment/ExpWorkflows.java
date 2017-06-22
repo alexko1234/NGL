@@ -120,8 +120,9 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		errorValidation.setContextObjects(validation.getContextObjects());
 		
 		if("N".equals(nextState.code)){
-			
-		} else if("IP".equals(nextState.code)){			
+			//
+		} else if("IP".equals(nextState.code)){	
+			expWorkflowsHelper.removeOutputContainerCode(exp, errorValidation);
 			expWorkflowsHelper.deleteSamplesIfNeeded(exp, errorValidation); //TODO Need to clean the output container and replace new sample by old sample
 		}else if("F".equals(nextState.code)){
 			expWorkflowsHelper.deleteOutputContainerSupports(exp, errorValidation);

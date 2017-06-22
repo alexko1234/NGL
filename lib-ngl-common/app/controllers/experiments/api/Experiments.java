@@ -306,13 +306,21 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
-		workflows.applyPreStateRules(ctxVal, input, input.state);		
+		long t1 = System.currentTimeMillis();
+		workflows.applyPreStateRules(ctxVal, input, input.state);
+		long t2 = System.currentTimeMillis();
 		ExperimentHelper.doCalculations(input, calculationsRules);
-		
+		long t3 = System.currentTimeMillis();
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
+			long t4 = System.currentTimeMillis();
 			input = saveObject(input);
+			long t5 = System.currentTimeMillis();
 			workflows.applySuccessPostStateRules(ctxVal, input);
+			long t6 = System.currentTimeMillis();
+			
+			//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4)+" - "+(t6-t4));
+			
 			return ok(Json.toJson(input));
 		} else {
 			workflows.applyErrorPostStateRules(ctxVal, input, input.state);
@@ -343,14 +351,21 @@ public class Experiments extends DocumentController<Experiment>{
 			if(!objectInDB.state.code.equals(input.state.code)){
 				return badRequest("you cannot change the state code. Please used the state url ! ");
 			}
+			long t1 = System.currentTimeMillis();
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
 			ExperimentHelper.doCalculations(input, calculationsRules);
+			long t2 = System.currentTimeMillis();
 			workflows.applyPreValidateCurrentStateRules(ctxVal, input);
+			long t3 = System.currentTimeMillis();
 			input.validate(ctxVal);			
 			if (!ctxVal.hasErrors()) {	
 				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
+				long t4 = System.currentTimeMillis();
 				updateObject(input);	
+				long t5 = System.currentTimeMillis();
+				//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));
+				
 				return ok(Json.toJson(input));
 			}else {
 				return badRequest(filledForm.errorsAsJson());			

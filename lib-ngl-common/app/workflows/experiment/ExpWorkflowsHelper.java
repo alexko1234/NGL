@@ -1483,7 +1483,12 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	
+	public void removeOutputContainerCode(Experiment exp, ContextValidation errorValidation) {
+		exp.atomicTransfertMethods.stream().forEach(atm -> atm.removeOutputContainerCode());
+		
+	}
+
+
 
 	
 

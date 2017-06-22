@@ -4,6 +4,7 @@ import java.util.List;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
+import play.Logger;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ContainerUsedValidationHelper;
@@ -56,7 +57,7 @@ public class OutputContainerUsed extends AbstractContainerUsed{
 		ContainerUsedValidationHelper.validateInstrumentProperties(instrumentProperties, Level.CODE.ContainerOut, contextValidation);
 		
 		long t9 = System.currentTimeMillis();
-		/*
+		
 		Logger.debug("OutputContainerUsed validate \n "
 				+"1 = "+(t1-t0)+" ms\n"
 				+"2 = "+(t2-t1)+" ms\n"
@@ -69,7 +70,7 @@ public class OutputContainerUsed extends AbstractContainerUsed{
 				+"9 = "+(t9-t8)+" ms\n"				
 				+"10 = "+(t9-t0)+" ms\n"				
 				);
-		*/		
+				
 	}
 
 	

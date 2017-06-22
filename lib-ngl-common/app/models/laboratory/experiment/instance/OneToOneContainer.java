@@ -57,6 +57,10 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			});
 		}
 	}
+	@Override
+	public void removeOutputContainerCode(){
+		outputContainerUseds.forEach(ocu -> ocu.code = null);
+	}
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
