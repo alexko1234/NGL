@@ -8,8 +8,16 @@
 		}
 		
 		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.existingProcessTypeCode" placeholder="@Messages("samples.placeholder.existingProcessTypeCode")" 
+				bt-options="p.code as p.name for p in searchService.lists.getProcessTypes()" ng-change="searchService.changeExistingProcessType()">
+			</div>
+		}	
+		
+		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.referenceCollabRegex" placeholder='@Messages("samples.placeholder.referenceCollabRegex")'>
-		}		
+		}	
+		
+		
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -17,10 +25,17 @@
 		}
 		
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.existingTransformationTypeCodes" placeholder="@Messages("samples.placeholder.existingTransformationTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation')">
+			<div class="form-control" bt-select ng-model="searchService.form.notExistingProcessTypeCode" placeholder="@Messages("samples.placeholder.notExistingProcessTypeCode")" 
+				bt-options="p.code as p.name for p in searchService.lists.getProcessTypes()">
 			</div>
 		}
+		
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.taxonCode" placeholder='@Messages("samples.placeholder.taxonCode")' title='@Messages("samples.placeholder.taxonCode")'>
+					
+		}	
+		
+		
 	}
 	
 	@columnSearchForm{		
@@ -29,22 +44,41 @@
 			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("samples.placeholder.fromDate")' title='@Messages("samples.placeholder.fromDate")'>							
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.notExistingTransformationTypeCodes" placeholder="@Messages("samples.placeholder.notExistingTransformationTypeCodes")" 
+			<div class="form-control" bt-select ng-model="searchService.form.existingTransformationTypeCode" placeholder="@Messages("samples.placeholder.existingTransformationTypeCode")" 
 				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation')">
 			</div>
-		}
+		}	
+	
+		
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.ncbiScientificNameRegex" placeholder='@Messages("samples.placeholder.ncbiScientificNameRegex")' title='@Messages("samples.placeholder.ncbiScientificNameRegex")'>
+					
+		}	
+		
 		
 	}
 	@columnSearchForm{	
 		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("samples.placeholder.toDate")' title='@Messages("samples.placeholder.toDate")'>
 					
-		}		
+		}	
+		
+		@formGroup{
+		
+		}
+		
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.notExistingTransformationTypeCode" placeholder="@Messages("samples.placeholder.notExistingTransformationTypeCode")" 
+				bt-options="expType.code as expType.name for expType in searchService.lists.get('transformation')">
+			</div>
+		}	
+		
 	}
 	@columnSearchForm{
 		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("samples.placeholder.createUser")' title='@Messages("samples.placeholder.createUser")'>	
-		}		
+		}	
+		
 	}
 			
 }

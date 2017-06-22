@@ -41,7 +41,7 @@ public class Nanopore extends AbstractDeclaration{
 		List<ProcessType> l=new ArrayList<ProcessType>();
 				
 		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", 
-				ProcessCategory.find.findByCode("sequencing"),61 , 
+				ProcessCategory.find.findByCode("sequencing"),62 , 
 				null,
 				Arrays.asList(getPET("ext-to-nanopore-run",-1), 
 						getPET("nanopore-library",-1), 
@@ -151,7 +151,7 @@ public class Nanopore extends AbstractDeclaration{
 	                DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		 
 		 l.add(DescriptionFactory.newProcessType("Nanopore DEV v2", "nanopore-process-dev-2",
-                 ProcessCategory.find.findByCode("nanopore-library"),600,
+                 ProcessCategory.find.findByCode("nanopore-library"),61,
 	                getPropertyDefinitionsNanoporeFragmentation(),
 	                Arrays.asList(getPET("ext-to-nanopore-process-dev-2",-1),
 	                       

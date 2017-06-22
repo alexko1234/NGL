@@ -275,18 +275,12 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 				}
 			},
 
-			changeProcessType : function(){
-				if(this.form.processCategory){
-					this.search();
+			changeExistingProcessType : function(){
+				this.form.existingTransformationTypeCode = undefined;
+				if(this.form.existingProcessTypeCode){
+					lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:false,processTypeCode:this.form.existingProcessTypeCode},"transformation");
 				}else{
-					this.form.processType = undefined;	
-				}
-			},
-
-			changeProcessCategory : function(){
-				this.form.processTypeCode = undefined;
-				if(this.form.processCategory){
-					lists.refresh.processTypes({"categoryCode":this.form.processCategory});
+					lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false},"transformation");
 				}
 			},
 			initAdditionalColumns : function(){

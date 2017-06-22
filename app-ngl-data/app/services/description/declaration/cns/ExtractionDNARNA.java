@@ -129,7 +129,7 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 
 	
 		l.add(DescriptionFactory.newProcessType("Séparation ARN (17-200 et >200nt) à partir d'ARN total", "small-and-large-isolation-process", 
-				ProcessCategory.find.findByCode("sample-prep"), 3,
+				ProcessCategory.find.findByCode("sample-prep"), 4,
 				null, 
 				Arrays.asList(
 						getPET("ext-to-small-and-large-isolation-process",-1),

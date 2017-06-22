@@ -173,7 +173,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 	}
 	
 	public List<ProcessType> findAllLight() throws DAOException {
-		ProcessTypeMappingQuery mapping = (ProcessTypeMappingQuery)initializeMapping(sqlCommon);
+		ProcessTypeMappingQuery mapping = (ProcessTypeMappingQuery)initializeMapping(sqlCommon+" order by display_order");
 		mapping.lightVersion = true;
 		return mapping.execute();
 	}

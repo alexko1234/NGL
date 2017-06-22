@@ -23,7 +23,14 @@ public class SamplesSearchForm extends ListForm{
 	public Map<String, Boolean> existingFields;
 	public String referenceCollabRegex;
 	
-	public List<String> existingTransformationTypeCodes;
-	public List<String> notExistingTransformationTypeCodes;
+	public String existingTransformationTypeCode;
+	public String notExistingTransformationTypeCode;
+	public String existingProcessTypeCode;
+	public String notExistingProcessTypeCode;
+	
+	public List<String> protocolCodes;
+	public String ncbiScientificNameRegex;
+	public String taxonCode;
+	
 	
 }

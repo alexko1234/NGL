@@ -116,15 +116,40 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.elemMatch("comments", DBQuery.regex("comment", Pattern.compile(samplesSearch.commentRegex))));
 		}
 		
+		if(StringUtils.isNotBlank(samplesSearch.taxonCode)){
+			queryElts.add(DBQuery.is("taxonCode", samplesSearch.taxonCode));
+		}
+		
+		if(StringUtils.isNotBlank(samplesSearch.ncbiScientificNameRegex)){
+			queryElts.add(DBQuery.regex("ncbiScientificName", Pattern.compile(samplesSearch.ncbiScientificNameRegex)));
+		}
+		
+		
+		if(StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)
+				&& StringUtils.isNotBlank(samplesSearch.notExistingTransformationTypeCode)){
+			queryElts.add(DBQuery.and(DBQuery.is("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCode)
+					,DBQuery.notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode)));		
+		}else if(StringUtils.isNotBlank(samplesSearch.existingProcessTypeCode)
+				&& StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)){
+			queryElts.add(DBQuery.elemMatch("processes", DBQuery.is("typeCode",samplesSearch.existingProcessTypeCode).is("experiments.typeCode",samplesSearch.existingTransformationTypeCode)));		
+		}else if(StringUtils.isNotBlank(samplesSearch.existingProcessTypeCode)){
+			queryElts.add(DBQuery.is("processes.typeCode",samplesSearch.existingProcessTypeCode));
+		}else if(StringUtils.isNotBlank(samplesSearch.notExistingProcessTypeCode)){
+			queryElts.add(DBQuery.notEquals("processes.typeCode",samplesSearch.notExistingProcessTypeCode));
+		}else if(StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)){
+			queryElts.add(DBQuery.is("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCode));
+		}else if(StringUtils.isNotBlank(samplesSearch.notExistingTransformationTypeCode)){
+			queryElts.add(DBQuery.notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode));
+		}
+		
+		if(CollectionUtils.isNotEmpty(samplesSearch.protocolCodes)){
+			queryElts.add(DBQuery.in("processes.experiments.protocolCode",samplesSearch.protocolCodes));
+		}
+		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"));
 
 		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
 		
-		if(CollectionUtils.isNotEmpty(samplesSearch.existingTransformationTypeCodes)){
-			queryElts.add(DBQuery.in("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCodes));
-		}else if(CollectionUtils.isNotEmpty(samplesSearch.notExistingTransformationTypeCodes)){
-			queryElts.add(DBQuery.notIn("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCodes));
-		}
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

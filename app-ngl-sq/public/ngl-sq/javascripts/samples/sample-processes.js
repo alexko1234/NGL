@@ -158,18 +158,32 @@ angular.module('ngl-sq.samplesServices')
 			}
 			
 			scope.getIconClass = function(){
+				/* v1
 				if((scope.value === 1 && !scope.inverse) || (scope.value === 0 && scope.inverse)){
 					return "fa fa-check";
 				}else if((scope.value === 0 && !scope.inverse) || (scope.value === 1 && scope.inverse)){
+					return "fa fa-times";
+				}
+				*/
+				if(scope.value === 1 ){
+					return "fa fa-check";
+				}else if(scope.value === 0 ){
 					return "fa fa-times";
 				}
 				
 			}
 			
 			scope.getButtonClass = function(){
+				/* v1
 				if(scope.value === 1 ){
 					return 'btn btn-success btn-xs';
 				}else if(scope.value === 0){
+					return 'btn btn-danger btn-xs';
+				}
+				*/
+				if((scope.value === 1 && !scope.inverse) || (scope.value === 0 && scope.inverse)){
+					return 'btn btn-success btn-xs';
+				}else if((scope.value === 0 && !scope.inverse) || (scope.value === 1 && scope.inverse)){
 					return 'btn btn-danger btn-xs';
 				}
 				
@@ -208,7 +222,8 @@ angular.module('ngl-sq.samplesServices')
 			
 		}else if(null !== filters && undefined !== filters && 
 				(null === processes || undefined === processes)){
-			return 0;
+			if(!inverse)return 0;
+			else return 1;
 		}else{
 			return undefined;
 		}

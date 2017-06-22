@@ -645,8 +645,12 @@ samples.placeholder.fromDate = Echantillon depuis le (jj/mm/aaaa)
 samples.placeholder.toDate = Echantillon jusqu''au (jj/mm/aaaa)
 samples.placeholder.createUser = Echantillon créé par
 samples.placeholder.referenceCollabRegex = Regex réf. collab.
-samples.placeholder.notExistingTransformationTypeCodes = N''existe pas type d''exp. 
-samples.placeholder.existingTransformationTypeCodes = Existe type d''exp.
+samples.placeholder.notExistingTransformationTypeCode = N''existe pas type d''exp. 
+samples.placeholder.existingTransformationTypeCode = Existe type d''exp.
+samples.placeholder.notExistingProcessTypeCode = N''existe pas type processus. 
+samples.placeholder.existingProcessTypeCode = Existe type processus.
+samples.placeholder.ncbiScientificNameRegex = Regex taxon
+samples.placeholder.taxonCode = Taxon ID
 ###############
 #
 # administration
