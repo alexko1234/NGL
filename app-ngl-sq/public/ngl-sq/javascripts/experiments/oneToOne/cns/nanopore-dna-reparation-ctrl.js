@@ -81,7 +81,8 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
-			         {
+			    /* Ajout d'une nouvelle prop pour gerer le cas où la colonne n'est jamais éditée alors que le champs est oblogatoire
+			     *     {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µl)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
@@ -91,7 +92,7 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+			         },*/
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µl)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -225,6 +226,17 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 		$scope.atmService.data.selectAll(true);
 		$scope.atmService.data.setEdit();
 	});
+	
+	
+	var copyConcPropertiesToOutputContainerUsedConcentration = function(datatable){
+		var data = datatable.getData();
+		angular.forEach(data, function(value){
+			var conc = $parse("outputContainerUsed.experimentProperties.outputConcentration")(value);
+			$parse("outputContainerUsed.concentration").assign(value, conc);
+			
+			
+		})
+	} ;
 	
 	//Init		
 
