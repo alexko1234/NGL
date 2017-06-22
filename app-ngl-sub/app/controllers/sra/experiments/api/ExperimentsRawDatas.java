@@ -57,14 +57,14 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 		return badRequest("No rawData for experiment "+code+" file "+relatifName);
 	}
 	
-	public Result update(String code)
+	public Result update(String code, String relatifName)
 	{
 		Form<RawData> filledForm = getFilledForm(rawDataForm, RawData.class);
 		RawData rawData = filledForm.get();
 		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
 		List<RawData> newRawDatas = new ArrayList<RawData>();
 		for(RawData rawDataDB : experiment.run.listRawData){
-			if(rawDataDB.relatifName.equals(rawData.relatifName))
+			if(rawDataDB.relatifName.equals(relatifName))
 				newRawDatas.add(rawData);
 			else
 				newRawDatas.add(rawDataDB);
