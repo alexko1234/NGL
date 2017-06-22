@@ -227,16 +227,23 @@ angular.module('home').controller('nanoporeDnaReparationCtrl',['$scope', '$parse
 		$scope.atmService.data.setEdit();
 	});
 	
-	
-	var copyConcPropertiesToOutputContainerUsedConcentration = function(datatable){
-		var data = datatable.getData();
-		angular.forEach(data, function(value){
-			var conc = $parse("outputContainerUsed.experimentProperties.outputConcentration")(value);
-			$parse("outputContainerUsed.concentration").assign(value, conc);
-			
-			
-		})
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'outputContainerUsed.experimentProperties.outputConcentration.value'){
+			copyConcentration(value.data);
+		}
 	} ;
+	
+	var copyConcentration = function(udtData){
+		if	( $parse("outputContainerUsed.experimentProperties.outputConcentration.value")(udtData)) {
+			
+			var getter = $parse("outputContainerUsed.experimentProperties.outputConcentration.value");
+			var outputConc = getter(udtData);
+			$parse("outputContainerUsed.concentration.value").assign(udtData, outputConc);	
+		}
+	}
+	
 	
 	//Init		
 

@@ -641,8 +641,8 @@ public class Nanopore extends AbstractDeclaration{
 				false, null, null ,"single",12,true,null,null));
 		
 		 propertyDefinitions.add(newPropertiesDefinition("Concentration","outputConcentration",LevelService.getLevels(Level.CODE.ContainerOut), Double.class,
-					false, "F",null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
-					"single",50,false, null, null));
+					true, "F",null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),
+					"single",50,true, null, null));
 			
 		
 		//Experiments
