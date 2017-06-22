@@ -35,7 +35,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			if(($scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  
 								&& requiredState === 'N')
 						|| (!$scope.isCreationMode() && $parse('experiment.state.code')($scope) === "N"  
-								&& (requiredState === null || requiredState === 'N' || requiredState === 'IP'))
+								&& (requiredState === null || requiredState === undefined || requiredState === 'N' || requiredState === 'IP'))
 						|| (($parse('experiment.state.code')($scope) === "IP" || $parse('experiment.state.code')($scope) === "F"))
 					){
 				return true;	

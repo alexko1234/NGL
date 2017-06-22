@@ -68,7 +68,11 @@ angular.module('atomicTransfereServices', [])
     				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);
     				
     				if(propertyDefinition.required){
-	    				column.required="isRequired('"+propertyDefinition.requiredState+"')";	    				
+    					if(null != propertyDefinition.requiredState || undefined != propertyDefinition.requiredState){
+    						column.required="isRequired('"+propertyDefinition.requiredState+"')";	    				
+    					}else{
+    						column.required="isRequired()";
+    					}
     				}
     				column.property = propertyNamePrefix+propertyDefinition.code+propertyNameSuffix;
     				column.edit = propertyDefinition.editable;
