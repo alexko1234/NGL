@@ -61,7 +61,7 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 			};
 			
 			scope.setTextareaNgModel = function(){
-				var values = scope.textareaValue.split(/\s*[,;\n]\s*/);
+				var values = scope.textareaValue.split(/\s*[,;\n\t]\s*/);
 				scope.textareaNgModel = values;
 			}
 			

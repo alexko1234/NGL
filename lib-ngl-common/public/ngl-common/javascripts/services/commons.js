@@ -939,7 +939,7 @@ angular.module('commonsServices', []).
 	      		     };
 	      		     scope.setTextareaValue = function(values, $event){
 	      		    	if(multiple){
-      		    			var selectedValues = values.split(/\s*[,;\n]\s*/);
+      		    			var selectedValues = values.split(/\s*[,;\n\t]\s*/);
       		    			ngModelCtrl.$setViewValue(selectedValues);
       		    			ngModelCtrl.$render();      		    			
       		    	  	}	      		    	 	      		    	 
@@ -1045,7 +1045,7 @@ angular.module('commonsServices', []).
       		    	 //return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];
       		    	  return $parse(optionsConfig.modelMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
       		      };
-      		      
+      		      scope.textareaValue = undefined;
       		      scope.$watch(ngModelValue, function(newValue, oldValue){
       		    	     if(newValue!= undefined && newValue !== null && oldValue !== newValue){		    		
       		    	    	 render();
