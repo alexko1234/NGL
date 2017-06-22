@@ -20,14 +20,14 @@
 			</tr>
 		</thead>
 		<tbody>
-		<tr ng-repeat='obj in @("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1."+keyBilan+".value")' ng-if='obj.percent>@(filterKeyBilan)'>
+		<tr ng-repeat='obj in @("readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1']."+keyBilan+".value")' ng-if='obj.percent>@(filterKeyBilan)'>
 			<td>									
 				 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
 			</td>
 			<td>
 				 {{obj.nbSeq | number}}													
 			</td>
-			<td ng-class='highLight(@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].read1."+keyBilan+".value")|filter:\''+obj.taxon+'\'|sum:\'percent\'')'>
+			<td>
 				{{ obj.percent | number:2}} @Messages("unit.percent")												
 			</td>
 		</tr>

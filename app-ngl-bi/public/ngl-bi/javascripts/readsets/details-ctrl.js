@@ -117,8 +117,13 @@
 		var b = true;
 		if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && (trtCode != undefined)) {
 			var treatments = $scope.readset.treatments;
-			if (!angular.isDefined(treatments[trtCode].read1.phylogeneticTree) ||
-					( angular.isDefined(treatments[trtCode].read1.phylogeneticTree.value) && (treatments[trtCode].read1.phylogeneticTree.value == null) ) ) {
+			if (angular.isDefined(treatments[trtCode].read1) && (!angular.isDefined(treatments[trtCode].read1.phylogeneticTree) ||
+					( angular.isDefined(treatments[trtCode].read1.phylogeneticTree.value) && (treatments[trtCode].read1.phylogeneticTree.value == null) ) )) {
+				b = false;
+			}
+			
+			if (angular.isDefined(treatments[trtCode].pairs) && (!angular.isDefined(treatments[trtCode].pairs.phylogeneticTree) ||
+					( angular.isDefined(treatments[trtCode].pairs.phylogeneticTree.value) && (treatments[trtCode].pairs.phylogeneticTree.value == null) ) )) {
 				b = false;
 			}
 		}
@@ -128,7 +133,11 @@
 	
 	$scope.getKrona = function(trtCode) {
 		if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments)  && (trtCode != undefined)) {
-			return "data:text/html;base64,"+$scope.readset.treatments["taxonomy"].read1.krona.value;
+			
+			if($scope.readset.treatments["taxonomy"].pairs != undefined)
+				return "data:text/html;base64,"+$scope.readset.treatments["taxonomy"].pairs.krona.value;
+			else
+				return "data:text/html;base64,"+$scope.readset.treatments["taxonomy"].read1.krona.value;
 		}
 	}
 	
