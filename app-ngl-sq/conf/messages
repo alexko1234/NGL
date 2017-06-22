@@ -651,6 +651,7 @@ samples.placeholder.notExistingProcessTypeCode = N''existe pas type processus.
 samples.placeholder.existingProcessTypeCode = Existe type processus.
 samples.placeholder.ncbiScientificNameRegex = Regex taxon
 samples.placeholder.taxonCode = Taxon ID
+samples.placeholder.typeCodes = Types échantillon
 ###############
 #
 # administration

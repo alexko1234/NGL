@@ -161,6 +161,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			lists.refresh.reportConfigs({pageCodes:["samples-addcolumns"]}, "samples-addcolumns");
 			lists.refresh.filterConfigs({pageCodes:["samples-search-addfilters"]}, "samples-search-addfilters");
 			lists.refresh.resolutions({"objectTypeCode":"Sample"}, "sampleResolutions");
+			lists.refresh.protocols({}, 'all-protocols');
 			isInit=true;
 		}
 	};
@@ -361,7 +362,8 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 					var allFilters = angular.copy(lists.get("samples-search-addfilters")[0].filters);
 					
 					/* add static filters here*/
-					allFilters.push({property:"comments.comment",html:"<textarea class='form-control' ng-model='searchService.form.commentRegex' placeholder='"+Messages("search.placeholder.commentRegex")+"' title='"+Messages("search.placeholder.commentRegex")+"'></textarea>",position:allFilters.length+1});
+					//allFilters.push({property:"comments.comment",html:"<textarea class='form-control' ng-model='searchService.form.commentRegex' placeholder='"+Messages("search.placeholder.commentRegex")+"' title='"+Messages("search.placeholder.commentRegex")+"'></textarea>",position:allFilters.length+1});
+					allFilters.push({property:"processes.experiments.protocolCode",html:"<div bt-select multiple=true filter=true placeholder='"+Messages("experiments.select.protocols")+"' class='form-control' ng-model='searchService.form.experimentProtocolCodes' bt-options='protocol.code as protocol.name for protocol in searchService.lists.get(\"all-protocols\")'></div>",position:allFilters.length+1});
 					
 					
 					var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns

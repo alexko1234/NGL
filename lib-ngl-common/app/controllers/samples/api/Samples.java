@@ -81,6 +81,10 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.regex("code", Pattern.compile(samplesSearch.codeRegex)));
 		}
 		
+		if(CollectionUtils.isNotEmpty(samplesSearch.typeCodes)){
+			queryElts.add(DBQuery.in("typeCode", samplesSearch.typeCodes));
+		}
+		
 		if(StringUtils.isNotBlank(samplesSearch.referenceCollabRegex)){
 			queryElts.add(DBQuery.regex("referenceCollab", Pattern.compile(samplesSearch.referenceCollabRegex)));
 		}
@@ -142,8 +146,8 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode));
 		}
 		
-		if(CollectionUtils.isNotEmpty(samplesSearch.protocolCodes)){
-			queryElts.add(DBQuery.in("processes.experiments.protocolCode",samplesSearch.protocolCodes));
+		if(CollectionUtils.isNotEmpty(samplesSearch.experimentProtocolCodes)){
+			queryElts.add(DBQuery.in("processes.experiments.protocolCode",samplesSearch.experimentProtocolCodes));
 		}
 		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"));

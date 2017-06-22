@@ -14,6 +14,7 @@ public class SamplesSearchForm extends ListForm{
 	public Set<String> codes;
 	public String projectCode;
 	public List<String> projectCodes;
+	public List<String> typeCodes;
 	public Date fromDate;
 	public Date toDate;
 	public String createUser; 
@@ -28,7 +29,7 @@ public class SamplesSearchForm extends ListForm{
 	public String existingProcessTypeCode;
 	public String notExistingProcessTypeCode;
 	
-	public List<String> protocolCodes;
+	public List<String> experimentProtocolCodes;
 	public String ncbiScientificNameRegex;
 	public String taxonCode;
 	

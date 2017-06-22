@@ -59,7 +59,8 @@ public class Samples extends CommonController{
 			      		controllers.samples.tpl.routes.javascript.Samples.search(),
 			      		controllers.samples.tpl.routes.javascript.Samples.details(),
 			      		controllers.samples.tpl.routes.javascript.Samples.home(),
-			      		controllers.processes.tpl.routes.javascript.Processes.home()
+			      		controllers.processes.tpl.routes.javascript.Processes.home(),
+			      		controllers.protocols.api.routes.javascript.Protocols.list()
 						)	  	      
 				);
 	}
