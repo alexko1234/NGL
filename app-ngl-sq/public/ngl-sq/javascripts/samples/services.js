@@ -45,7 +45,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"hide":true,
 			"position":4,
 			"type":"text",			
-			"groupMethod":"collect"
+			"groupMethod":"count:true"
 		});	
 		columns.push({
 			"header":Messages("samples.table.taxonCode"),
