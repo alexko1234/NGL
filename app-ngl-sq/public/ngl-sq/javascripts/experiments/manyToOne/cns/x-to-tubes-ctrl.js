@@ -36,6 +36,10 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 
 	};
 	
+	$scope.showSrcDest = function(){
+		return ($scope.experiment.typeCode !== 'pool' || ($scope.experiment.typeCode === 'pool' && $scope.experiment.instrument.typeCode !== 'biomek-fx'));
+	}
+	
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
 		if(propertyName === 'outputContainerUseds[0].concentration.value' ||
