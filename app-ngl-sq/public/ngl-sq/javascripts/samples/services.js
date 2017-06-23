@@ -9,7 +9,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 		columns.push({
 			"header":Messages("samples.table.projectCodes"),
 			"property":"projectCodes",
-			"order":false,
+			"order":true,
 			"hide":true,
 			"group":true,
 			"position":1,					
