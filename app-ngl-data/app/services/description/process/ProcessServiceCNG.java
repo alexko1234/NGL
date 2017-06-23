@@ -133,10 +133,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-denat-dil-lib").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		
-		if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 		// FDS 20/06/2017 NE PAS LIVRER EN PRODUCTION le processus modifié pour "2000/2500" car la normalisation en plaque n'est pas gérée pour l'instant...
-			
+		if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 		// FDS 02/06/2017: NGL-1447 =>  duplication  "2000/2500_Prep FC, dépôt" avec tranfert en experience de niveau 0
 		// => il faut declarer ce noeud 0 dans experimentService !!	
 		l.add(DescriptionFactory.newProcessType("Transfert puis 2000/2500_Dénat, prep FC, dépôt", "tf-illumina-run", ProcessCategory.find.findByCode("sequencing"),
@@ -184,9 +182,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		
-		if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-		// FDS 20/06/2017 Celui la est a livrer en production !
 			
 		// FDS 02/06/2017: NGL-1447 =>  duplication 4000/X5 (prep FC ordonnée) avec tranfert en experience de niveau 0
 		// => il faut declarer ce noeud 0 dans experimentService !!
@@ -204,7 +199,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),          //last  experiment type
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-		}
 
 		// FDS ajout 31/05/2016 JIRA NGL-1025: processus long type "library"; 18/01/2017 JIRA NGL-1259 renommer en rna-lib-process
 		l.add(DescriptionFactory.newProcessType("Prep lib RNAseq", "rna-lib-process", ProcessCategory.find.findByCode("library"),
