@@ -74,6 +74,7 @@ public class QualityControl extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		
 		l.add(newExperimentType("Ext to Eval ADN à réception","ext-to-dna-sample-valuation",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -133,7 +134,7 @@ public class QualityControl extends AbstractDeclaration {
 	protected List<ProcessType> getProcessTypeCommon() {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", 
+		l.add(DescriptionFactory.newProcessType("QC puis satellites", "qc-transfert-purif", 
 				ProcessCategory.find.findByCode("satellites"), 1020,
 				null, 
 				getPETForQCTransfertPurif(), 
@@ -161,6 +162,7 @@ public class QualityControl extends AbstractDeclaration {
 				getExperimentTypes("fluo-quantification").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), getExperimentTypes("ext-to-amplicon-sample-valuation").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+			
 		return l;
 	}
 	
@@ -174,6 +176,7 @@ public class QualityControl extends AbstractDeclaration {
 		pets.add(getPET("fluo-quantification",0));
 		return pets;		
 	}
+	
 	
 	@Override
 	protected List<ProcessType> getProcessTypeDEV() {
@@ -203,6 +206,7 @@ public class QualityControl extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-qc-transfert-purif", AbstractExperimentService.getExperimentTypes("ext-to-qc-transfert-purif").get(0), false, false, false, 
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 		
+			
 		newExperimentTypeNode("ext-to-dna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-dna-sample-valuation").get(0), false, false, false, 
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
 		newExperimentTypeNode("ext-to-rna-sample-valuation", AbstractExperimentService.getExperimentTypes("ext-to-rna-sample-valuation").get(0), false, false, false, 

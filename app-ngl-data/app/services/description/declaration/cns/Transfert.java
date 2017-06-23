@@ -5,6 +5,7 @@ import static services.description.DescriptionFactory.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -12,6 +13,9 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ExperimentTypeNode;
+import models.laboratory.processes.description.ProcessCategory;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import services.description.Constants;
@@ -19,6 +23,7 @@ import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
+import services.description.experiment.AbstractExperimentService;
 
 public class Transfert extends AbstractDeclaration {
 
@@ -73,6 +78,10 @@ public class Transfert extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-transfert-qc-purif",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		return l;
 	}
@@ -97,7 +106,25 @@ public class Transfert extends AbstractDeclaration {
 	@Override
 	protected void getExperimentTypeNodeCommon() {
 		// TODO Auto-generated method stub
+		newExperimentTypeNode("ext-to-transfert-qc-purif", AbstractExperimentService.getExperimentTypes("ext-to-transfert-qc-purif").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("aliquoting"),getExperimentTypes("fluo-quantification")).save();		
 		
+		
+	}
+	
+	private List<ExperimentTypeNode> getETForFluoQuantification(){
+		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
+			.stream()
+			.filter(e -> !e.code.contains("depot"))
+			.map(et -> getExperimentTypeNodes(et.code).get(0))
+			.collect(Collectors.toList());
+		
+		pets.add(getExperimentTypeNodes("ext-to-transfert-qc-purif").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-dna-sample-valuation").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-rna-sample-valuation").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-amplicon-sample-valuation").get(0));
+		
+		return pets;		
 	}
 	
 	@Override
@@ -120,8 +147,17 @@ public class Transfert extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
+		List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		
+		l.add(DescriptionFactory.newProcessType("Transfert puis satellites", "transfert-qc-purif", 
+				ProcessCategory.find.findByCode("satellites"), 1020,
+				null, 
+				getPETForTransfertQCPurif(), 
+				getExperimentTypes("aliquoting").get(0), getExperimentTypes("ext-to-transfert-qc-purif").get(0), getExperimentTypes("ext-to-transfert-qc-purif").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		// TODO Auto-generated method stub
-		return null;
+		return l;
 	}
 	
 	@Override
@@ -142,6 +178,17 @@ public class Transfert extends AbstractDeclaration {
 		
 	}
 
+	private List<ProcessExperimentType> getPETForTransfertQCPurif(){
+		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getPET(et.code, -1))
+			.collect(Collectors.toList());
+		pets.add(getPET("ext-to-transfert-qc-purif",-1));
+		pets.add(getPET("fluo-quantification",0));
+		return pets;		
+	}
+	
+	
 	private static List<PropertyDefinition> getPropertyDefinitionNormalisation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
