@@ -27,7 +27,12 @@
 	
 	<logger name="org.hibernate" level="ERROR"  />
 	<logger name="bitronix.tm" level="ERROR"  />
-
+	<logger name="org.apache" level="ERROR" />
+	<logger name="org.hibernate.tool" level="ERROR" />
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="com.mchange.v2" level="ERROR" />
+	
+	<logger name="ngl.sub.rules" level="DEBUG" />
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
 	</root>
