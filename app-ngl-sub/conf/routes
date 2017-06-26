@@ -30,7 +30,7 @@ GET		/api/sra/submissions/:code						@controllers.sra.submissions.api.Submission
 # Creation des fichiers xml pour l'objet submission :
 PUT		/sra/submissions/:code/xml						@controllers.sra.submissions.api.Submissions.createXml(code: java.lang.String)
 # Traitement des AC et mise a jour du status de l'objet submission :
-PUT		/sra/submissions/:code/ebiAc					@controllers.sra.submissions.api.Submissions.treatmentAc(code: java.lang.String, fileNameAc: java.lang.String) 
+PUT		/sra/submissions/:code/ebiAc/:fileNameAc		@controllers.sra.submissions.api.Submissions.treatmentAc(code: java.lang.String, fileNameAc: java.lang.String) 
 
 
 
