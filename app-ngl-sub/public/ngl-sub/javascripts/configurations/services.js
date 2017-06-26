@@ -109,7 +109,7 @@ var getColumns = function(){
 						edit:true,
 						order:false,
 						choiceInList:true,
-						listStyle:'bt-select-multiple',
+						//listStyle:'bt-select-multiple',
 						possibleValues:'consultationService.sraVariables.strategySample',
 					});	
 		columns.push({property:"strategyStudy",
@@ -119,7 +119,7 @@ var getColumns = function(){
 						edit:true,
 						order:false,
 						choiceInList:true,
-						listStyle:'bt-select-multiple',
+						//listStyle:'bt-select-multiple',
 						possibleValues:'consultationService.sraVariables.strategyStudy',
 					});	
 		columns.push({property:"librarySelection",
@@ -129,7 +129,7 @@ var getColumns = function(){
 			        	edit:true,
 						order:false,
 				    	choiceInList:true,
-				    	listStyle:'bt-select-multiple',
+				    	//listStyle:'bt-select-multiple',
 				    	possibleValues:'consultationService.sraVariables.librarySelection',
 				    });	
 		columns.push({property:"libraryStrategy",
@@ -139,7 +139,7 @@ var getColumns = function(){
 						edit:true,
 						order:false,
 						choiceInList:true,
-						listStyle:'bt-select-multiple',
+						//listStyle:'bt-select-multiple',
 						possibleValues:'consultationService.sraVariables.libraryStrategy',
 				    });	
 		columns.push({property:"librarySource",
@@ -149,7 +149,7 @@ var getColumns = function(){
 						edit:true,
 						order:false,
 						choiceInList:true,
-						listStyle:'bt-select-multiple',
+						//listStyle:'bt-select-multiple',
 						possibleValues:'consultationService.sraVariables.librarySource',
 					});	
 		columns.push({property:"libraryConstructionProtocol",
