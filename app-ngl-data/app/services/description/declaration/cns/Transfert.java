@@ -78,7 +78,7 @@ public class Transfert extends AbstractDeclaration {
 				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-transfert-qc-purif",null,-1,
+		l.add(newExperimentType("Ext to TF / Eval / purif","ext-to-transfert-qc-purif",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -109,10 +109,12 @@ public class Transfert extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-transfert-qc-purif", AbstractExperimentService.getExperimentTypes("ext-to-transfert-qc-purif").get(0), false, false, false, 
 				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("aliquoting"),getExperimentTypes("fluo-quantification")).save();		
 		
-		
+		newExperimentTypeNode("tubes-to-plate",getExperimentTypes("tubes-to-plate").get(0),false, false,false,
+				getETForTubeToPlaque()
+				,null,null,null).save();
 	}
 	
-	private List<ExperimentTypeNode> getETForFluoQuantification(){
+	private List<ExperimentTypeNode> getETForTubeToPlaque(){
 		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
 			.stream()
 			.filter(e -> !e.code.contains("depot"))
@@ -154,7 +156,7 @@ public class Transfert extends AbstractDeclaration {
 				ProcessCategory.find.findByCode("satellites"), 1020,
 				null, 
 				getPETForTransfertQCPurif(), 
-				getExperimentTypes("aliquoting").get(0), getExperimentTypes("ext-to-transfert-qc-purif").get(0), getExperimentTypes("ext-to-transfert-qc-purif").get(0), 
+				getExperimentTypes("tubes-to-plate").get(0), getExperimentTypes("ext-to-transfert-qc-purif").get(0), getExperimentTypes("ext-to-transfert-qc-purif").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		// TODO Auto-generated method stub
 		return l;
@@ -184,7 +186,7 @@ public class Transfert extends AbstractDeclaration {
 			.map(et -> getPET(et.code, -1))
 			.collect(Collectors.toList());
 		pets.add(getPET("ext-to-transfert-qc-purif",-1));
-		pets.add(getPET("fluo-quantification",0));
+		pets.add(getPET("tubes-to-plate",0));
 		return pets;		
 	}
 	
