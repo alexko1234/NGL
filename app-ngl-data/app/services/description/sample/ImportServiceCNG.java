@@ -66,9 +66,8 @@ public class ImportServiceCNG extends AbstractImportService {
 	}
 	
 	// FDS 20/06/2017 NGL-1472
-	// normalement les librairies non indexees et poolees n'existent pas.....
+	
 	private List<PropertyDefinition> getLibraryReceptionPropertyDefinitions ( boolean isIndexed, boolean isPooled) {
-		
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		// propriétés communes 
@@ -81,8 +80,7 @@ public class ImportServiceCNG extends AbstractImportService {
 				null,null,null,"single", 5, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
-		
-		
+			
 		// librairies indexees
 		if (isIndexed) {
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
@@ -90,12 +88,13 @@ public class ImportServiceCNG extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 				getTagCategories(), null,null,null,"single", 4, false, null,null));	
 		
-			/*
+			/* librairies poolées....plus tard ???
 			if (isPooled) {
-	        // % au sein du pool
+	           // propiété "% au sein du pool" a définir 
 			}
 			 */
 		}
+		// pas de else: normalement les librairies non indexees et poolees n'existent pas...
 		
 		return propertyDefinitions;
 	}
