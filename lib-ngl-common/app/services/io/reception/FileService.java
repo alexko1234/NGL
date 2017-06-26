@@ -194,9 +194,13 @@ public abstract class FileService {
 		if(csc.nbLine == 1 && csc.nbColumn == 1){
 			code= support.code;
 		}else if(csc.nbLine > 1 && csc.nbColumn == 1){
+			container.support.line = container.support.line.toUpperCase();
 			code=support.code+"_"+container.support.line;
 
 		}else if(csc.nbLine > 1 && csc.nbColumn > 1){
+			container.support.line = container.support.line.toUpperCase();
+			container.support.column = container.support.column.toUpperCase();
+			
 			code=support.code+"_"+container.support.line+container.support.column;
 		}
 
