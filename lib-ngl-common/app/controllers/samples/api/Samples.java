@@ -128,22 +128,37 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.regex("ncbiScientificName", Pattern.compile(samplesSearch.ncbiScientificNameRegex)));
 		}
 		
+		if(StringUtils.isNotBlank(samplesSearch.existingProcessTypeCode)
+				&& StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)
+				&& StringUtils.isNotBlank(samplesSearch.notExistingTransformationTypeCode)){
+			queryElts.add(DBQuery.elemMatch("processes", DBQuery.is("typeCode",samplesSearch.existingProcessTypeCode)
+					.and(DBQuery.is("experiments.typeCode",samplesSearch.existingTransformationTypeCode), DBQuery.notEquals("experiments.typeCode",samplesSearch.notExistingTransformationTypeCode))));
 		
-		if(StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)
+		}else if(StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)
 				&& StringUtils.isNotBlank(samplesSearch.notExistingTransformationTypeCode)){
 			queryElts.add(DBQuery.and(DBQuery.is("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCode)
 					,DBQuery.notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode)));		
+		
 		}else if(StringUtils.isNotBlank(samplesSearch.existingProcessTypeCode)
 				&& StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)){
 			queryElts.add(DBQuery.elemMatch("processes", DBQuery.is("typeCode",samplesSearch.existingProcessTypeCode).is("experiments.typeCode",samplesSearch.existingTransformationTypeCode)));		
+					
+		}else if(StringUtils.isNotBlank(samplesSearch.existingProcessTypeCode)
+				&& StringUtils.isNotBlank(samplesSearch.notExistingTransformationTypeCode)){
+			queryElts.add(DBQuery.elemMatch("processes", DBQuery.is("typeCode",samplesSearch.existingProcessTypeCode).notEquals("experiments.typeCode",samplesSearch.notExistingTransformationTypeCode)));		
+		
 		}else if(StringUtils.isNotBlank(samplesSearch.existingProcessTypeCode)){
 			queryElts.add(DBQuery.is("processes.typeCode",samplesSearch.existingProcessTypeCode));
+		
 		}else if(StringUtils.isNotBlank(samplesSearch.notExistingProcessTypeCode)){
 			queryElts.add(DBQuery.notEquals("processes.typeCode",samplesSearch.notExistingProcessTypeCode));
+		
 		}else if(StringUtils.isNotBlank(samplesSearch.existingTransformationTypeCode)){
 			queryElts.add(DBQuery.is("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCode));
+		
 		}else if(StringUtils.isNotBlank(samplesSearch.notExistingTransformationTypeCode)){
 			queryElts.add(DBQuery.notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode));
+		
 		}
 		
 		if(CollectionUtils.isNotEmpty(samplesSearch.experimentProtocolCodes)){
