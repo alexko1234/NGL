@@ -69,6 +69,12 @@ public class QualityControl extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
 				getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+		l.add(newExperimentType("Electrophorèse en champ pulsé","pulsed-field-electrophoresis", null,20200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPulsedFieldElectrophoresis(), 
+				getInstrumentUsedTypes("pippin-pulse"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+	
 		
 		l.add(newExperimentType("Ext to Eval / TF / purif","ext-to-qc-transfert-purif",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -111,14 +117,7 @@ public class QualityControl extends AbstractDeclaration {
 	@Override
 	protected List<ExperimentType> getExperimentTypeDEV() {
 		// TODO Auto-generated method stub
-		List<ExperimentType> l = new ArrayList<ExperimentType>();
-		
-		l.add(newExperimentType("Electrophorèse en champ pulsé","pulsed-field-electrophoresis", null,20200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPulsedFieldElectrophoresis(), 
-				getInstrumentUsedTypes("pippin-pulse"),"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-	
-		return l;
+		return null;
 	}
 
 
@@ -597,11 +596,10 @@ public class QualityControl extends AbstractDeclaration {
 				"single", 11, true, null,null));
 		
 		 propertyDefinitions.add(newPropertiesDefinition("Photo de gel","electrophoresisGelPhoto", LevelService.getLevels(Level.CODE.ContainerIn),Image.class,
-					 true, null,null,"img",13,true,null,null));	
+					 true, "F",null,"img",13,true,null,null));	
 		 
-		 propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules","moleculeEstimatedSize",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), Integer.class, 
-					true, null,null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
-					"single",16,false,null,null));	
+		 propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules","moleculeEstimatedSize",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class, 
+					true, "F",null, "single",16,true,null,null));	
 	
 		propertyDefinitions.add(newPropertiesDefinition("Volume en sortie", "volume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, 
 				true, "F", null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),

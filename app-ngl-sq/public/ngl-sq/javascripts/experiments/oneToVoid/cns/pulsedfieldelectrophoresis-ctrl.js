@@ -26,7 +26,7 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 	};
 	
 
-	$scope.$watch("gel1",function(imgNew, imgOld){
+	$scope.$watch("gel",function(imgNew, imgOld){
 		if(imgNew){			
 			
 			angular.forEach($scope.atmService.data.displayResult, function(dr){
