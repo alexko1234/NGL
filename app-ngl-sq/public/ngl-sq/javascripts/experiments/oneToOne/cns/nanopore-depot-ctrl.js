@@ -458,8 +458,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', '$htt
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	//init list runs
-	if($scope.experiment.instrumentProperties.containerSupportCode!==undefined && $scope.experiment.instrumentProperties.containerSupportCode!==null){
-		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCode:$scope.experiment.instrumentProperties.containerSupportCode.value}}).success(function(data) {
+	var containerSupportCode = $parse("instrumentProperties.containerSupportCode")($scope.experiment)
+	if(containerSupportCode != null && containerSupportCode != undefined){
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCode:containerSupportCode.value}}).success(function(data) {
 			$scope.runs = data;
 		});
 	}
