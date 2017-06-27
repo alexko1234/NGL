@@ -8,8 +8,11 @@ import java.util.Map;
 
 import org.mongojack.DBQuery;
 
+import play.Logger;
+
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.parameter.index.Index;
+import models.laboratory.parameter.Parameter;// TEST
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -58,19 +61,24 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 	}
 
 	private Index getIndex(ContextValidation contextValidation, String sequence, String code) {
+		String additionalErrInfo="'"+sequence+"'/'"+code+"'";
+		Logger.debug("DEBUG FDS : "+additionalErrInfo);
+		
+
 		DBQuery.Query q = DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("sequence", sequence);
 		if(null != code){
 			q.is("code", code);
 		}
 		
-		Index index = null;
+		Index index = null; 
 		List<Index> indexes= MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Index.class, q).toList();
+		
 		if(indexes.size() == 1){
 			index = indexes.get(0);
 		}else if(indexes.size() == 0){
-			contextValidation.addErrors(headerValue, ERROR_NOTEXISTS_MSG);
+			contextValidation.addErrors(headerValue, ERROR_NOTEXISTS_MSG, additionalErrInfo);
 		}else{
-			contextValidation.addErrors(headerValue, ERROR_SEVERAL_RESULT_MSG);
+			contextValidation.addErrors(headerValue, ERROR_SEVERAL_RESULT_MSG, additionalErrInfo);
 		}
 		return index;
 	}

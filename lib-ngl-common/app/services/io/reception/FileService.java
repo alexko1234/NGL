@@ -23,6 +23,7 @@ import models.laboratory.reception.instance.ObjectFieldConfiguration;
 import models.laboratory.reception.instance.PropertiesFieldConfiguration;
 import models.laboratory.reception.instance.PropertyValueFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration;
+import models.laboratory.reception.instance.TagExcelFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
@@ -322,9 +323,21 @@ public abstract class FileService {
 			propertyNames.stream().forEach(_pName ->{
 				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
 			});
+		}else if(TagExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+			updateTagExcelConfigurationHeader((TagExcelFieldConfiguration)afc);
 		}
 	}
 
+	private void updateTagExcelConfigurationHeader(TagExcelFieldConfiguration efc) {
+		if(this.headerByIndex.containsKey(efc.cellSequence) && this.headerByIndex.containsKey(efc.cellCode)){
+			efc.headerValue = this.headerByIndex.get(efc.cellSequence)+" / "+this.headerByIndex.get(efc.cellCode);
+		}else if(this.headerByIndex.containsKey(efc.cellSequence)){
+			efc.headerValue = this.headerByIndex.get(efc.cellSequence);
+		}else{
+			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellSequence);
+		}
+	}
+	
 	private void updateExcelConfigurationHeader(ExcelFieldConfiguration efc) {
 		if(this.headerByIndex.containsKey(efc.cellPosition)){
 			efc.headerValue = this.headerByIndex.get(efc.cellPosition);
