@@ -298,6 +298,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
+		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate)
+		l.add(newInstrumentUsedType("bravoworkstation","Bravo WorkStation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpMotionProperties(), 
+				getInstruments(
+						createInstrument("bravows1", "Bravo WorkStation-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("bravows2", "Bravo WorkStation-2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 
 		l.add(newInstrumentUsedType("Covaris E210 + Sciclone NGSX", "covaris-e210-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
