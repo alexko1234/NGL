@@ -67,32 +67,36 @@ public class UpdateReportingData extends AbstractImportData {
 		Logger.debug("Start reporting synchro");
 		Integer skip = 0;
 		Date date = new Date();
-		try{
 			MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
 			Integer nbResult = result.count(); 
 			while(skip < nbResult){
-				long t1 = System.currentTimeMillis();
-				MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-					.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(5000)
-					.cursor.forEach(sample -> {
-						try{
-							updateProcesses(sample);
-							if(sample.processes != null && sample.processes.size() > 0){
-								Logger.debug("update sample "+sample.code);
-								MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-										DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
-							}	
-						}catch(Throwable e){
-							logger.error("Sample : "+sample.code+" - "+e,e);
-						}
-					});
-				skip = skip+5000;
-				long t2 = System.currentTimeMillis();
-				Logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				try{
+					
+					long t1 = System.currentTimeMillis();
+					MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(5000)
+						.cursor.forEach(sample -> {
+							try{
+								updateProcesses(sample);
+								if(sample.processes != null && sample.processes.size() > 0){
+									Logger.debug("update sample "+sample.code);
+									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
+								}	
+							}catch(Throwable e){
+								contextError.addErrors(sample.code, e.getMessage());
+								logger.error("Sample : "+sample.code+" - "+e,e);
+							}
+						});
+					skip = skip+5000;
+					long t2 = System.currentTimeMillis();
+					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				}catch(Throwable e){
+					contextError.addErrors("Error", e.getMessage());
+					logger.error("Error : "+e,e);
+				}
 			}
-		}catch(Throwable e){
-			logger.error("Error : "+e,e);
-		}
+		
 		
 	}
 
