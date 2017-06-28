@@ -69,11 +69,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		l.addAll(new Opgen().getExperimentType());
 	//	l.addAll(new Nanopore().getExperimentType());
 		l.addAll(new Bionano().getExperimentType());
-		l.addAll(new Purif().getExperimentType());
-		l.addAll(new Transfert().getExperimentType());
-		l.addAll(new QualityControl().getExperimentType());
-		l.addAll(new Transfert().getExperimentType());
-		
+			l.addAll(new QualityControl().getExperimentType());
+			l.addAll(new Transfert().getExperimentType());
+			l.addAll(new Purif().getExperimentType());
+			
 		l.addAll(new ExtractionDNARNA().getExperimentType());
 		l.addAll(new MetaBarCoding().getExperimentType());
 		l.addAll(new MetaGenomique().getExperimentType());
@@ -130,8 +129,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		new RunIllumina().getExperimentTypeNode();
 		
 		new QualityControl().getExperimentTypeNode();
-		new Purif().getExperimentTypeNode();
 		new Transfert().getExperimentTypeNode();
+		new Purif().getExperimentTypeNode();
 		
 		
 		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	

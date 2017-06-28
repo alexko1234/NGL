@@ -41,8 +41,8 @@ public class ImportDataCNS{
 	    
 		new RunExtImportCNS(Duration.create(10,TimeUnit.MINUTES),Duration.create(12,TimeUnit.HOURS));
 
-		new SolutionStockImportCNS(Duration.create(30,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
-		new UpdateSolutionStockCNS(Duration.create(20,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
+		//new SolutionStockImportCNS(Duration.create(30,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
+		//new UpdateSolutionStockCNS(Duration.create(20,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
 		
 		//Update NCBI scientificName and lineage for Sample
 		new UpdateSampleNCBITaxonCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));

@@ -496,6 +496,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	
 	                                if (isNaN(result)) {
 	                                    result = "#ERROR";
+	                                }else{
+	                                	//result = $filter("number")(result);
+	                                	result = $parse(result.toString()+that.getFormatter(column))(result);
 	                                }
 	
 	                                try {
