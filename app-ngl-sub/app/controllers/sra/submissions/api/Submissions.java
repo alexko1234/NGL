@@ -63,6 +63,7 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
+	final static Form<SubmissionsACForm> submissionsACForm = form(SubmissionsACForm.class);
 	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 	final static Form<State> stateForm = form(State.class);
 
@@ -195,7 +196,7 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 
-	public Result treatmentAc(String code, String fileNameAc)
+	public Result treatmentAc(String code)
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
@@ -203,8 +204,12 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			return badRequest("Submission with code "+code, " not exist");
 		}
+		Form<SubmissionsACForm> submissionsACFilledForm = filledFormQueryString(submissionsACForm, SubmissionsACForm.class);
+		SubmissionsACForm submissionsACForm = submissionsACFilledForm.get();
+		
+		
 		//Logger.debug("filledForm "+filledForm);
-		File ebiFileAc =new File(fileNameAc);
+		File ebiFileAc =new File(submissionsACForm.fileNameAC);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		try {
 			submission = FileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
