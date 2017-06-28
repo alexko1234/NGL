@@ -129,6 +129,8 @@ public class UpdateReportingData extends AbstractImportData {
 		sampleProcess.state= process.state;
 		sampleProcess.state.historical=null;
 		sampleProcess.traceInformation= process.traceInformation;
+		sampleProcess.sampleOnInputContainer = process.sampleOnInputContainer;
+		
 		if(process.properties != null && process.properties.size() > 0){
 			sampleProcess.properties= process.properties;			
 		}
@@ -336,7 +338,7 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		sampleReadSet.productionValuation = readset.productionValuation;   
 		sampleReadSet.bioinformaticValuation = readset.bioinformaticValuation; 
-		
+		sampleReadSet.sampleOnContainer = readset.sampleOnContainer; 
 		if(!readset.typeCode.equals("rsnanopore")){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("code", 1);
