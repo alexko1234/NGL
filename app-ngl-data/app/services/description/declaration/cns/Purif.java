@@ -6,6 +6,7 @@ import static services.description.DescriptionFactory.newPropertiesDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
@@ -13,12 +14,16 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ExperimentTypeNode;
+import models.laboratory.processes.description.ProcessCategory;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.declaration.AbstractDeclaration;
+import services.description.experiment.AbstractExperimentService;
 
 public class Purif extends AbstractDeclaration {
 
@@ -51,6 +56,10 @@ public class Purif extends AbstractDeclaration {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), getPropertyDefinitionsSpinColumnPurification(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+		
+		l.add(newExperimentType("Ext to Purif / eval / TF","ext-to-purif-qc-transfert",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
 		return l;
@@ -108,8 +117,18 @@ public class Purif extends AbstractDeclaration {
 
 	@Override
 	protected List<ProcessType> getProcessTypeCommon() {
+	List<ProcessType> l = new ArrayList<ProcessType>();
+		
+		
+		l.add(DescriptionFactory.newProcessType("Purif puis satellites", "purif-qc-transfert", 
+				ProcessCategory.find.findByCode("satellites"), 1020,
+				null, 
+				getPETForPurifQCTransfert(), 
+				getExperimentTypes("rrna-depletion").get(0), getExperimentTypes("ext-to-purif-qc-transfert").get(0), getExperimentTypes("ext-to-purif-qc-transfert").get(0), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		// TODO Auto-generated method stub
-		return null;
+		return l;
+
 	}
 
 	
@@ -133,11 +152,34 @@ public class Purif extends AbstractDeclaration {
 
 	@Override
 	protected void getExperimentTypeNodeCommon() {
+		newExperimentTypeNode("ext-to-purif-qc-transfert", AbstractExperimentService.getExperimentTypes("ext-to-purif-qc-transfert").get(0), false, false, false, 
+				null, getExperimentTypes("dnase-treatment","rrna-depletion"), getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();		
+	
+		
 		//GA 07/11/2016 USED FOR PROCESS who start with ampure
 		newExperimentTypeNode("post-pcr-ampure",getExperimentTypes("post-pcr-ampure").get(0),false, false,false,
 				getExperimentTypeNodes("pcr-amplification-and-purification")
 				,null,null,null).save();
 		
+
+		newExperimentTypeNode("rrna-depletion",getExperimentTypes("rrna-depletion").get(0),false, false,false,
+				getETForRrnaDepletion()
+				,null,null,null).save();
+	}
+	
+	private List<ExperimentTypeNode> getETForRrnaDepletion(){
+		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
+			.stream()
+			.filter(e -> !e.code.contains("depot"))
+			.map(et -> getExperimentTypeNodes(et.code).get(0))
+			.collect(Collectors.toList());
+		
+		pets.add(getExperimentTypeNodes("ext-to-purif-qc-transfert").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-dna-sample-valuation").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-rna-sample-valuation").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-amplicon-sample-valuation").get(0));
+		
+		return pets;		
 	}
 	
 	@Override
@@ -159,5 +201,14 @@ public class Purif extends AbstractDeclaration {
 		
 	}
 
+	private List<ProcessExperimentType> getPETForPurifQCTransfert(){
+		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getPET(et.code, -1))
+			.collect(Collectors.toList());
+		pets.add(getPET("ext-to-purif-qc-transfert",-1));
+		pets.add(getPET("rrna-depletion",0));
+		return pets;		
+	}
 
 }

@@ -28,4 +28,5 @@ public interface ValidationConstants {
 	
 	public static final String ERROR_BADSIZEARRAY = "error.badsizearray";
 		
+	public static final String ERROR_SEVERAL_RESULT_MSG = "error.severalresult";
 }

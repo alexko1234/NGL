@@ -33,5 +33,5 @@ public class SamplesSearchForm extends ListForm{
 	public String ncbiScientificNameRegex;
 	public String taxonCode;
 	
-	
+	public Map<String, List<String>> experimentProperties = new HashMap<String, List<String>>();
 }
