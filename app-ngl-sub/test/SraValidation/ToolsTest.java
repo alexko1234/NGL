@@ -10,21 +10,30 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Date;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import models.sra.submit.common.instance.Study;
+import models.utils.InstanceConstants;
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import fr.cea.ig.MongoDBDAO;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
+
 import java.util.Calendar;
+
 import utils.AbstractTestsSRA;
 
 public class ToolsTest extends AbstractTestsSRA {
@@ -37,13 +46,31 @@ public class ToolsTest extends AbstractTestsSRA {
 		System.out.println("annee = " + year);
 		System.out.println("date = " + date);
 
+		System.out.println("getDate =" + new Date());
 		calendar.add(Calendar.YEAR, 2);
-		Date date_release  = calendar.getTime();
+		Date release_date  = calendar.getTime();
 		int year_release = calendar.get(Calendar.YEAR);
 		System.out.println("annee_release = " + year_release);
-		System.out.println("date_release = " + date_release);
-
+		System.out.println("date_release = " + release_date);
+		String user = "william";
 		
+		MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+				DBQuery.is("code", "STUDY_BCU_25TG2F0LD"),
+				DBUpdate.set("accession", "toto").set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));
+		
+		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "STUDY_BCU_25TG2F0LD");	
+		
+		System.out.println("apres requete");
+		
+		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", "STUDY_BCU_25TG2F0LD")){
+			System.out.println("le study avec  : code=" +study.code + " existe bien dans base");
+		}
+		System.out.println("dans study : code=" +study.code);
+		System.out.println("dans study : accession=" +study.accession);
+
+		System.out.println("dans study : firstSubmissionDate=" +study.firstSubmissionDate);
+		System.out.println("dans study : release_date=" +study.releaseDate);
+
 		/* deprecated :
 		Date release = calendar.get
 		//Date date = new Date();

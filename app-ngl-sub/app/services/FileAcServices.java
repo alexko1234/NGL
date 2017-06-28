@@ -294,13 +294,13 @@ public class FileAcServices  {
 				
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode).notExists("accession"),
-				DBUpdate.set("accession", submissionAc).set("submissionDate", date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
+				DBUpdate.set("accession", submissionAc).set("submissionDate", date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));	
 
-		if (StringUtils.isNotBlank(ebiStudyCode)) {
+		if (StringUtils.isNotBlank(ebiStudyCode)) {	
 			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", ebiStudyCode).notExists("accession"),
-					DBUpdate.set("accession", studyAc).set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
+					DBUpdate.set("accession", studyAc).set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));
 		}
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
@@ -308,7 +308,7 @@ public class FileAcServices  {
 			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 		
+					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 		
 		}
 		for(Entry<String, String> entry : mapExperiments.entrySet()) {
 			String code = entry.getKey();
@@ -317,7 +317,7 @@ public class FileAcServices  {
 
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 	
+					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 	
 		}
 		for(Entry<String, String> entry : mapRuns.entrySet()) {
 			String code = entry.getKey();

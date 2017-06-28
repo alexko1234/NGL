@@ -151,7 +151,10 @@ public class XmlServices {
 		if (submission == null) {
 			return;
 		}
-
+		// Si demande de release pas d'ecriture de sample.
+		if (submission.release) {
+			return;
+		}
 		if (! submission.sampleCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
@@ -203,6 +206,10 @@ public class XmlServices {
 	}
 	public static void writeExperimentXml (Submission submission, File outputFile) throws IOException, SraException {
 		if (submission == null) {
+			return;
+		}
+		// Si demande de release pas d'ecriture d'experiment.
+		if (submission.release) {
 			return;
 		}
 		if (! submission.experimentCodes.isEmpty()) {	
@@ -296,6 +303,10 @@ public class XmlServices {
 	}
 	public static void writeRunXml (Submission submission, File outputFile) throws IOException, SraException {
 		if (submission == null) {
+			return;
+		}
+		// Si demande de release pas d'ecriture de run
+		if (submission.release) {
 			return;
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

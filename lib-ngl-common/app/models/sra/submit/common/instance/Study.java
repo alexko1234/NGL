@@ -27,7 +27,7 @@ public class Study extends AbstractStudy {
 	public String description = "";    
 	public int bioProjectId;           // doit etre mis à 0 si absent.
 	public String existingStudyType;   // required et constraint 
-	public String firstSubmissionDate;   // date de premiere soumission du study.
+	public Date firstSubmissionDate;   // date de premiere soumission du study.
  	public String accession = null;      // numeros d'accession attribué par ebi */
   	public Date releaseDate;             // required, date de mise à disposition en public par l'EBI
   	public String centerName = VariableSRA.centerName;        // required pour nos stats valeur fixee à GSC */

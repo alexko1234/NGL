@@ -110,7 +110,7 @@ public class SubmissionServices {
 
 		// updater dans base si besoin le study pour le statut 'N-R' 
 		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
-			study.state.code = "";
+			study.state.code = "N-R";
 			study.traceInformation.modifyDate = new Date();
 			study.traceInformation.modifyUser = user;
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
@@ -161,17 +161,22 @@ public class SubmissionServices {
 		submission.release = true;
 		
 		
-		if (study!=null){	
+		if (study != null){	
 			// mettre à jour l'objet submission pour le study  :
 			if (! submission.refStudyCodes.contains("study.code")){
 				submission.refStudyCodes.add(study.code);
 			}
-			
 			submission.studyCode = study.code;
-
 			if ( ! study.state.code.equals("F-SUB")) {
 				throw new SraException("Study " + study.code + " avec status incompatible avec demande de release " + study.state.code );
 			} 
+			if (StringUtils.isBlank((CharSequence) study.releaseDate)){
+				throw new SraException("Study " + study.code + " non renseigné dans base pour date de release" );
+			}
+			if (study.releaseDate.before(new Date())){
+				throw new SraException("release date du Study " + study.releaseDate + " inferieure à date du jour: (" + new Date()+") => Le study doit deja etre public à l'EBI");
+			}
+			
 		}
 		
 		submission.state = new State("N-R", user);
