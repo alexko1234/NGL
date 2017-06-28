@@ -62,7 +62,7 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 
 	private Index getIndex(ContextValidation contextValidation, String sequence, String code) {
 		String additionalErrInfo="'"+sequence+"'/'"+code+"'";
-		Logger.debug("DEBUG FDS : "+additionalErrInfo);
+		//Logger.debug("index sequence/code : "+additionalErrInfo);
 		
 
 		DBQuery.Query q = DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("sequence", sequence);
