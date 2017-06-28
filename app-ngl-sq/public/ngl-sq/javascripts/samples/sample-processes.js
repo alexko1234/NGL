@@ -228,4 +228,41 @@ angular.module('ngl-sq.samplesServices')
 			return undefined;
 		}
 	};
+}]).filter('isConditions',['$filter',function ($filter) {
+	return function (processes, conditions, alternateConditions) { //$or between conditions and alternateConditions
+		if(null == conditions || undefined == conditions) return;
+		if(null == processes || undefined == processes)return 0;
+		if(!angular.isArray(conditions)) conditions = [conditions];
+		if(null != alternateConditions && undefined != alternateConditions && !angular.isArray(alternateConditions)) alternateConditions = [alternateConditions];
+		
+		var check = function(condition){
+			var results = $filter('filter')([this], condition.criteria);
+			if((results.length > 0 && condition.expected === true)
+					|| (results.length === 0 && condition.expected === false)){
+				return true;
+			}else{
+				return false;
+			}
+		};
+		
+		var process = processes.find(function(process){
+			var test = conditions.every(check, process);
+			
+			return test;
+		});
+		
+		if((process === null || process == undefined) && alternateConditions !== null && alternateConditions !== undefined){
+			process = processes.find(function(process){
+				var test = alternateConditions.every(check, process);
+				return test;
+			});
+		}
+		
+		if(process){
+			console.log("process = "+process.code);
+			return 1;
+		}else return 0;
+		
+	};
+
 }]);
