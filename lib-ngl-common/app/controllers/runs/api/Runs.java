@@ -152,7 +152,9 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.in("typeCode", form.typeCodes));
 		}
 		
-		if(StringUtils.isNotBlank(form.containerSupportCode)){
+		if(CollectionUtils.isNotEmpty(form.containerSupportCodes)){
+			queries.add(DBQuery.in("containerSupportCode", form.containerSupportCodes));
+		}else if(StringUtils.isNotBlank(form.containerSupportCode)){
 			queries.add(DBQuery.is("containerSupportCode", form.containerSupportCode));
 		}
 		
