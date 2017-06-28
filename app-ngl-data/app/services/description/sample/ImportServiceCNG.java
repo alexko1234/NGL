@@ -1,6 +1,5 @@
 package services.description.sample;
 
-import static services.description.DescriptionFactory.newImportType;
 import static services.description.DescriptionFactory.*;
 
 import java.util.ArrayList;
@@ -10,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.sample.description.ImportCategory;
@@ -20,6 +21,7 @@ import play.data.validation.ValidationError;
 import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.common.MeasureService;
 
 public class ImportServiceCNG extends AbstractImportService {
 
@@ -29,15 +31,18 @@ public class ImportServiceCNG extends AbstractImportService {
 		l.add(saveImportCategory("Sample Import", "sample-import"));
 		DAOHelpers.saveModels(ImportCategory.class, l, errors);
 	}
-
 	
-	public void saveImportTypes(
-			Map<String, List<ValidationError>> errors) throws DAOException {
+	public void saveImportTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ImportType> l = new ArrayList<ImportType>();
 		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newImportType("Import tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newImportType("Import plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import aliquots tubes", "tube-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import aliquots plaques", "plate-from-bank-reception", ImportCategory.find.findByCode("sample-import"), getBankReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		
+		// FDS 20/06/2017 NGL-1472
+		// A PREVOIR ??? l.add(newImportType("Import librairies non indexées",     "library-reception",     ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(false,false), getInstitutes(Constants.CODE.CNG)));
+		l.add(newImportType("Import librairies indexées (non poolées)", "library-idx-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true,false), getInstitutes(Constants.CODE.CNG)));
+		// A PREVOIR !!! l.add(newImportType("Import librairies indexées (poolées)", "library-idx-pool-reception",ImportCategory.find.findByCode("sample-import"), getLibraryReceptionPropertyDefinitions(true,true), getInstitutes(Constants.CODE.CNG)));
 		
 		// GA/FDS 14/06/2017 CONTOURNEMENT de la creation des libProcessTypecodes dans NGLBI ce qui pose des problemes dans le cas ISOPROD
 		// creer un ImportType bidon pour declarer la propriété libProcessTypecodes et sa liste de valeurs...
@@ -60,7 +65,48 @@ public class ImportServiceCNG extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
+	// FDS 20/06/2017 NGL-1472
 	
+	private List<PropertyDefinition> getLibraryReceptionPropertyDefinitions ( boolean isIndexed, boolean isPooled) {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		// propriétés communes 
+		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, 
+				null, "single", 1, false, null, null));	
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+				null,null,null,"single", 5, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 17, false, null,null));		
+			
+		// librairies indexees
+		if (isIndexed) {
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 3, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				getTagCategories(), null,null,null,"single", 4, false, null,null));	
+		
+			/* librairies poolées....plus tard ???
+			if (isPooled) {
+	           // propiété "% au sein du pool" a définir 
+			}
+			 */
+		}
+		// pas de else: normalement les librairies non indexees et poolees n'existent pas...
+		
+		return propertyDefinitions;
+	}
+	
+	// FDS 20/06/2017 ajouté pour NGL-1472
+	private static List<Value> getTagCategories(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
+		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
+		values.add(DescriptionFactory.newValue("MID", "MID"));
+		values.add(DescriptionFactory.newValue("POOL-INDEX", "POOL-INDEX"));
+		return values;	
+	}
 	
 	// GA/FDS 14/06/2017 (reprise dans RunServiceCNG.java )
 	private static List<PropertyDefinition> getLibProcessTypecodePropertyDefinitions() throws DAOException {
@@ -70,7 +116,7 @@ public class ImportServiceCNG extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
-	// GA/FDS 14/06/2017 (reprise dans RunServiceCNG.java )
+	// GA/FDS 14/06/2017 (copié depuis RunServiceCNG.java mais est-ce encore necessaire dans RunServiceCNG.java ???)
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
