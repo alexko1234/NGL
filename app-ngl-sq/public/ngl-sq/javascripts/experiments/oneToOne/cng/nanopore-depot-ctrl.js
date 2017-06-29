@@ -448,9 +448,11 @@ angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', 'a
 	
 	//init list runs
 	
-	$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCodes:$scope.experiment.outputContainerSupportCodes}}).success(function(data) {
-		$scope.runs = data;
-	});
+	if(angular.isArray($scope.experiment.outputContainerSupportCodes) && $scope.experiment.outputContainerSupportCodes.length > 0){
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCodes:$scope.experiment.outputContainerSupportCodes}}).success(function(data) {
+			$scope.runs = data;
+		});
+	}
 	
 	$scope.goToBi = function(code){
 		var value = AppURL("bi");
