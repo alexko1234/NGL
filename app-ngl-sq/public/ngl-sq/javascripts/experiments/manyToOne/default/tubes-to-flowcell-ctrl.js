@@ -433,8 +433,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	}
 	
 	$scope.goToBi = function(code){
-		$scope.value = AppURL("bi");
-		$window.open($scope.value+"/runs/"+code, 'bi');
+		var value = AppURL("bi");
+		$window.open(value+"/runs/"+code, 'bi');
 	};
 
 }]);
