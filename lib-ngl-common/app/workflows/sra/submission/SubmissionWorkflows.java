@@ -134,7 +134,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
 				DBQuery.is("code", object.code),
 				DBUpdate.set("state", object.state).set("traceInformation", object.traceInformation));
-			if (! object.state.code.equalsIgnoreCase("N") && object.state.code.equalsIgnoreCase("N-R")){
+			if (! object.state.code.equalsIgnoreCase("N") && !object.state.code.equalsIgnoreCase("N-R")){
 				applySuccessPostStateRules(contextValidation, object);
 			}
 		}

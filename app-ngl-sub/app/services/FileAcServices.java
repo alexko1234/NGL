@@ -369,7 +369,7 @@ public class FileAcServices  {
 			String ac = entry.getValue();
 			message += "runCode = " + code + ",   AC = "+ ac  + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
-					DBQuery.is("run.code", code).notExists("accession"),
+					DBQuery.is("run.code", code).notExists("run.accession"),
 					DBUpdate.set("run.accession", ac)); 			
 		}
 		State state = new State(okStatus, user);
