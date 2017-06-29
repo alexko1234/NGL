@@ -6,6 +6,7 @@ import java.util.Map;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.processes.instance.SampleOnInputContainer;
 
 public class SampleProcess {
 	public String code;
@@ -13,6 +14,7 @@ public class SampleProcess {
 	public String categoryCode;
 	public State state;
 	public TraceInformation traceInformation;
+	public SampleOnInputContainer sampleOnInputContainer;
 	
 	public Map<String,PropertyValue> properties;
 	public String currentExperimentTypeCode;
