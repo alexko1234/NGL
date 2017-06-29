@@ -26,18 +26,7 @@ angular.module('home').controller('PulsedFieldElectrophoresisCtrl',['$scope', '$
 	};
 	
 
-	$scope.$watch("gel",function(imgNew, imgOld){
-		if(imgNew){			
-			
-			angular.forEach($scope.atmService.data.displayResult, function(dr){
-				$parse('inputContainerUsed.experimentProperties.electrophoresisGelPhoto').assign(dr.data, this);
-			}, imgNew);
-			
-		}
-		angular.element('#importFile1')[0].value = null;
-		
-	});
-	
+
 	
 	$scope.button = {
 			isShow:function(){
