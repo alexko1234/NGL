@@ -379,10 +379,6 @@ public class XmlServices {
 		
 		System.out.println("Ecriture du submission " + submission.code);
 		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
-		if (StringUtils.isNotBlank(submission.accession)) {
-			chaine = chaine + "accession=\"" + submission.accession + "\" ";
-		}
-		
 		chaine = chaine + ">\n";	
 		chaine = chaine + "    <CONTACTS>\n";
 		chaine = chaine + "      <CONTACT name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
@@ -390,10 +386,6 @@ public class XmlServices {
 			
 		chaine = chaine + "    <ACTIONS>\n";
 		// soumission systematique en confidential meme si study deja public
-		/*if (!submission.release)  {
-			chaine = chaine + "      <ACTION>\n        <HOLD/>\n      </ACTION>\n";
-		}
-        */
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
 		}
@@ -433,10 +425,6 @@ public class XmlServices {
 		
 		System.out.println("Ecriture du submission " + submission.code);
 		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
-		if (StringUtils.isNotBlank(submission.accession)) {
-			chaine = chaine + "accession=\"" + submission.accession + "\" ";
-		}
-		
 		chaine = chaine + ">\n";	
 		chaine = chaine + "    <CONTACTS>\n";
 		chaine = chaine + "      <CONTACT  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";

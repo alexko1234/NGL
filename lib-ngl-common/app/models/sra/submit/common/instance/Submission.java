@@ -33,7 +33,7 @@ public class Submission extends DBObject implements IValidation {
  	public String accession = null;       // numeros d'accession attribué par ebi */
 	public Date creationDate = null;
 	public Date submissionDate = null;
-
+	public String creationUser = null;
 	public List<String> refStudyCodes = new ArrayList<String>();  // Liste de tous les codes des AbstractStudy (ExternalStudy et Study) referencés par cette soumission, pas forcement à soumettre à l'EBI.
 	public List<String> refSampleCodes = new ArrayList<String>(); // liste de tous les codes des AbstractSamples (ExternalSample ou Sample) references par cette soumission, pas forcement a soumettre à l'EBI.
 	//public List<String> refReadSetCodes = new ArrayList<String>(); // liste des codes des readSet references par cette soumission(pas de soumission).
@@ -74,6 +74,7 @@ public class Submission extends DBObject implements IValidation {
 		this.creationDate = courantDate;
 		this.traceInformation = new TraceInformation();
 		this.traceInformation.setTraceInformation(user);
+		this.creationUser = user;
 		for (String projectCode: projectCodes) {
 			if (StringUtils.isNotBlank(projectCode)) {
 				this.projectCodes.add(projectCode);

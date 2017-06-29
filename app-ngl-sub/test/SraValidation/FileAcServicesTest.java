@@ -35,7 +35,6 @@ import org.junit.Test;
 
 public class FileAcServicesTest  extends AbstractTestsSRA {
 
-	
 	public static void deleteDataSetForFileAcServices()throws SraException {
 		String studyCode = "test_AC_study_AWK";
 		String configCode = "test_AC_conf_AWK";
@@ -188,10 +187,10 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 	
 	@Test
 	public void FileAcServicesReal() throws IOException, SraException, MailServiceException {
-		String code = "CNS_BCU_BLK_266H23OI3";
+		String code = "CNS_ART_254F1QHOV";
 		String user = "william";
 		ContextValidation ctxVal = new ContextValidation(user);
-		File fileEbi = new File("/env/cns/home/sgas/test/listAc_CNS_BCU_BLK_266H23OI3.txt");
+		File fileEbi = new File("/env/cns/home/sgas/test/list_AC_04_05_2017.txt");
 		Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
 		Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA960789"));
 	}

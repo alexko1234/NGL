@@ -27,11 +27,29 @@ import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import com.typesafe.config.ConfigFactory;
 
 import java.util.Date;
 
-import javax.mail.MessagingException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.apache.commons.lang3.StringUtils;
+
 
 import mail.MailServiceException;
 import mail.MailServices;
@@ -125,9 +143,7 @@ public class FileAcServices  {
 		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
 
 		String sujet = null;
-		
-		
-		
+
 		
 		Map<String, String> mapSamples = new HashMap<String, String>(); 
 		Map<String, String> mapExperiments = new HashMap<String, String>(); 
@@ -139,64 +155,90 @@ public class FileAcServices  {
 		String ebiStudyCode = null;
 		String errorStatus = "FE-SUB";
 		String okStatus = "F-SUB";
-		Boolean ebiSuccess = false;
-	
-		while ((lg = inputBuffer.readLine()) != null) {
-			if (lg.startsWith("<?")){
-				// ignorer
-			} else if (lg.matches("^\\s*$")) {
-				// ignorer
-			} else {
-				Boolean resultAC = false;
-				//System.out.println("ligne = '"+ lg+"'");
+		Boolean ebiSuccess = false;	
+		
+		/*
+		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
+		 */
+		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		try {
+			/*
+			 * Etape 2 : création d'un parseur
+			 */
+			final DocumentBuilder builder = factory.newDocumentBuilder();
+			/*
+			 * Etape 3 : création d'un Document
+			 */
+			
+			final Document document= builder.parse(ebiFileAc);
+			//Affiche du prologue
+			System.out.println("*************PROLOGUE************");
+			System.out.println("version : " + document.getXmlVersion());
+			System.out.println("encodage : " + document.getXmlEncoding());      
+			System.out.println("standalone : " + document.getXmlStandalone());
+			/*
+			 * Etape 4 : récupération de l'Element racine
+			 */
+			final Element racine = document.getDocumentElement();
+			//Affichage de l'élément racine
+			System.out.println("\n*************RACINE************");
+			System.out.println(racine.getNodeName());
+			System.out.println("success = " + racine.getAttribute("success"));
+			//System.out.println(((Node) racine).getNodeName());
+			//System.out.println("success = " + ((DocumentBuilderFactory) racine).getAttribute("success"));
+			/*
+			 * Etape 5 : récupération des samples
+			 */
+			
+
+			
+			final NodeList racineNoeuds = racine.getChildNodes();
+			final int nbRacineNoeuds = racineNoeuds.getLength();
+			
+			
+			
+			if( racine.getAttribute("success").equalsIgnoreCase ("true")){
+				ebiSuccess = true;
+			}
+			for (int i = 0; i<nbRacineNoeuds; i++) {
 				
-				if (! ebiSuccess) {
-					String pattern_string = "<RECEIPT\\s+receiptDate=\"(\\S+)\"\\s+submissionFile=\"(\\S+)\"\\s+success=\"true\"";
-					java.util.regex.Pattern pattern = Pattern.compile(pattern_string);
-					Matcher m = pattern.matcher(lg);
-					if (  m.find() ) {
-						ebiSuccess = true;
-					}
-				} else {
-					//System.out.println("Traitement des AC :");
-					String [] tab = lg.split(">");
-					String patternAc = "<(\\S+)\\s+accession=\"(\\S+)\"\\s+alias=\"(\\S+)\"";
-					java.util.regex.Pattern pAc = Pattern.compile(patternAc);
-
-
-					for(String info : tab) {
-						//System.out.println(info);
-						Matcher mAc = pAc.matcher(info);
-						// Appel de find obligatoire pour pouvoir récupérer $1 ...$n
-						if ( ! mAc.find() ) {
-							// autre ligne que AC.
-						} else {
-							//System.out.println("type='"+mAc.group(1)+"', accession='"+mAc.group(2)+"', alias='"+ mAc.group(3)+"'" );
-							if (mAc.group(1).equalsIgnoreCase("RUN")){
-								System.out.println("insertion dans mapRun de "+ mAc.group(3) + " et "+ mAc.group(2));
-								mapRuns.put(mAc.group(3), mAc.group(2));
-							} else if (mAc.group(1).equalsIgnoreCase("EXPERIMENT")){
-								System.out.println("insertion dans mapExperiment de " + mAc.group(3) + " et "+ mAc.group(2));
-								mapExperiments.put(mAc.group(3), mAc.group(2));
-							} else if (mAc.group(1).equalsIgnoreCase("SAMPLE")){
-								System.out.println("insertion dans mapSample de " + mAc.group(3) + " et "+ mAc.group(2));
-								mapSamples.put(mAc.group(3), mAc.group(2));
-							} else if (mAc.group(1).equalsIgnoreCase("STUDY")){
-								ebiStudyCode = mAc.group(3);
-								studyAc = mAc.group(2);
-								System.out.println("insertion dans mapStudy de " + mAc.group(3) + " et "+ mAc.group(2));
-							} else if (mAc.group(1).equalsIgnoreCase("SUBMISSION")){
-								ebiSubmissionCode = mAc.group(3);
-								submissionAc =  mAc.group(2);
-								System.out.println("insertion dans mapSubmission de "  + mAc.group(3) + " et "+ mAc.group(2));
-							} else {
-
-							}
-						}	
+				if(racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+					
+					final Element elt = (Element) racineNoeuds.item(i);
+					//Affichage d'un elt :
+					System.out.println("\n*************Elt************");
+					
+					String alias = elt.getAttribute("alias");
+					String accession = elt.getAttribute("accession");
+					
+					System.out.println("alias : " + alias);
+					System.out.println("accession : " + accession);
+					if(elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
+						ebiSubmissionCode = elt.getAttribute("alias");	
+						submissionAc = elt.getAttribute("accession");
+					} else if(elt.getTagName().equalsIgnoreCase("STUDY")) {
+						ebiStudyCode = elt.getAttribute("alias");	
+						studyAc = elt.getAttribute("accession");
+				    } else if(elt.getTagName().equalsIgnoreCase("SAMPLE")) {
+				    	mapSamples.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
+					} else if(elt.getTagName().equalsIgnoreCase("EXPERIMENT")) {
+				    	mapExperiments.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
+					} else if(elt.getTagName().equalsIgnoreCase("RUN")) {
+						mapRuns.put(elt.getAttribute("alias"), elt.getAttribute("accession"));
+					} else {
+						
 					}
 				}
-			}
-		}
+				
+				
+			}  // end for  
+		} catch (final ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (final SAXException e) {
+			e.printStackTrace();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		} 
 		
 		if (! ebiSuccess ) {
 			System.out.println("ligne RECEIPT absente dans '"+lg+"'");
@@ -214,11 +256,14 @@ public class FileAcServices  {
 		Boolean error = false;
 		sujet = "Probleme parsing fichier des AC : ";
 		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileAc.getPath() + "</br>";
-		String destinataire = submission.state.user;
-		if(!destinataire.endsWith("@genoscope.cns.fr")) {
-			destinataire = destinataire + "@genoscope.cns.fr";
+		String destinataire = submission.creationUser;
+		
+		if (StringUtils.isNotBlank(destinataire)) {
+			if(!destinataire.endsWith("@genoscope.cns.fr")) {
+				destinataire = destinataire + "@genoscope.cns.fr";
+			}
+			destinataires.add(destinataire);
 		}
-		destinataires.add(destinataire);
 	
 		if (StringUtils.isBlank(ebiSubmissionCode)) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
