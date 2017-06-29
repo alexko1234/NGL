@@ -290,6 +290,16 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("hand"),
 					"OneToVoid", false,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			
+			// FDS 21/02/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur.
+			//  n'est associee a aucun noeud ???
+			l.add(newExperimentType("QC Exterieur","external-qc", null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsExternalQC(), 
+					getInstrumentUsedTypes("hand"),
+					"OneToVoid", false, 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 			
 			/** Purification, ordered by display order **/
@@ -1123,6 +1133,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("ng/µl"),
 				MeasureUnit.find.findByCode("ng/µl"),
 				"single", 13, true, null,null));
+		
+		return propertyDefinitions;
+		
+	}
+	
+	// FDS 21/02/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur.
+	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode("pb"),"single", 16, true, null,null));
 		
 		return propertyDefinitions;
 		

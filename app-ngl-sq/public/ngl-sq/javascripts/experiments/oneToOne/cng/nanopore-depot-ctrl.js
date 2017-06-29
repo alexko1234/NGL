@@ -446,4 +446,18 @@ angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', 'a
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
+	//init list runs
+	
+	if(angular.isArray($scope.experiment.outputContainerSupportCodes) && $scope.experiment.outputContainerSupportCodes.length > 0){
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:{containerSupportCodes:$scope.experiment.outputContainerSupportCodes}}).success(function(data) {
+			$scope.runs = data;
+		});
+	}
+	
+	$scope.goToBi = function(code){
+		var value = AppURL("bi");
+		$window.open(value+"/runs/"+code, 'bi');
+	};
+
+	
 }]);

@@ -47,6 +47,10 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		this.defaultKeys = defaultKeys;
 	}
 
+	protected T getObject(String code, BasicDBObject keys) {
+    	return MongoDBDAO.findByCode(collectionName, type, code, keys);
+    }
+	
 	protected T getObject(String code) {
     	return MongoDBDAO.findByCode(collectionName, type, code);
     }
@@ -235,7 +239,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	
 	
 	public Result get(String code) {
-		T o =  getObject(code);		
+		DatatableForm form = filledFormQueryString(DatatableForm.class);
+		T o =  getObject(code, getKeys(updateForm(form)));		
 		if(o == null) {
 			return notFound();
 		} 
@@ -330,7 +335,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		}
 	}
 	
-	protected DatatableForm updateForm(ListForm form) {
+	protected DatatableForm updateForm(DatatableForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			if(null != defaultKeys){

@@ -22,6 +22,7 @@ import com.mongodb.MongoException;
 
 import controllers.migration.OneToVoidContainer;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
 import models.laboratory.common.instance.PropertyValue;
@@ -64,25 +65,38 @@ public class UpdateReportingData extends AbstractImportData {
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
 		Logger.debug("Start reporting synchro");
+		Integer skip = 0;
 		Date date = new Date();
-		try{
-			MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-			.sort("traceInformation.creationDate", Sort.DESC)//.limit(5000)
-				.cursor.forEach(sample -> {
-					try{
-						updateProcesses(sample);
-						if(sample.processes != null && sample.processes.size() > 0){
-							Logger.debug("update sample "+sample.code);
-							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
-						}	
-					}catch(Throwable e){
-						logger.error("Sample : "+sample.code+" - "+e,e);
-					}
-				});
-		}catch(Throwable e){
-			logger.error("Error date : "+e,e);
-		}
+			MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
+			Integer nbResult = result.count(); 
+			while(skip < nbResult){
+				try{
+					
+					long t1 = System.currentTimeMillis();
+					MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(5000)
+						.cursor.forEach(sample -> {
+							try{
+								updateProcesses(sample);
+								if(sample.processes != null && sample.processes.size() > 0){
+									Logger.debug("update sample "+sample.code);
+									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
+								}	
+							}catch(Throwable e){
+								contextError.addErrors(sample.code, e.getMessage());
+								logger.error("Sample : "+sample.code+" - "+e,e);
+							}
+						});
+					skip = skip+5000;
+					long t2 = System.currentTimeMillis();
+					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
+				}catch(Throwable e){
+					contextError.addErrors("Error", e.getMessage());
+					logger.error("Error : "+e,e);
+				}
+			}
+		
 		
 	}
 
@@ -115,6 +129,8 @@ public class UpdateReportingData extends AbstractImportData {
 		sampleProcess.state= process.state;
 		sampleProcess.state.historical=null;
 		sampleProcess.traceInformation= process.traceInformation;
+		sampleProcess.sampleOnInputContainer = process.sampleOnInputContainer;
+		
 		if(process.properties != null && process.properties.size() > 0){
 			sampleProcess.properties= process.properties;			
 		}
@@ -322,7 +338,7 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		sampleReadSet.productionValuation = readset.productionValuation;   
 		sampleReadSet.bioinformaticValuation = readset.bioinformaticValuation; 
-		
+		sampleReadSet.sampleOnContainer = readset.sampleOnContainer; 
 		if(!readset.typeCode.equals("rsnanopore")){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("code", 1);

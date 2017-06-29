@@ -84,7 +84,25 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 			"type":"text",
 			"groupMethod":"unique"
 		});
+		
 		/*
+		columns.push({
+			"header":"Check condition",
+			"property":"processes",
+			"filter":"isConditions:[{criteria:{experiments:{typeCode:'cdna-synthesis'}},expected:true},{criteria:{experiments:{typeCode:'dna-illumina-indexed-library'}},expected:true}]:[{criteria:{experiments:{typeCode:'rna-illumina-indexed-library'}},expected:true}]",
+			//"filter":"isConditions:[{criteria:{typeCode:'tag-pcr'},expected:false}, {criteria:{typeCode:'cdna-synthesis'},expected:false},{criteria:{typeCode:'dna-illumina-indexed-library'},expected:true}]",
+			//"filter":"isConditions:[{criteria:{typeCode:'tag-pcr',properties:{targetedRegion:{value:'18S_V9'}}},expected:true}, {criteria:{typeCode:'dna-illumina-indexed-library'},expected:true}]",
+			"order":false,
+			"hide":true,
+			"watch":true,
+			"position":16,
+			"type":"text",
+			"watch":true,
+			"render":"<div present-sample-processes='cellValue'/>"
+						
+		});
+		
+		
 		
 		columns.push({
 			"header":"ReadSets",
