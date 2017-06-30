@@ -1,5 +1,5 @@
-angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
-                                                               function($scope, $parse,  atmToSingleDatatable, datatable) {
+angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', '$http', 'atmToSingleDatatable', 'datatable',
+                                                               function($scope, $parse, $http, atmToSingleDatatable, datatable) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
@@ -144,9 +144,9 @@ angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', 'a
 				active:true
 			},
 			edit:{
-				active: false,
-				showButton: false,
-				byDefault:false,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
 			messages:{

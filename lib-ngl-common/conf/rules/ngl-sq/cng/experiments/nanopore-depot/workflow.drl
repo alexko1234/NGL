@@ -121,7 +121,10 @@ rule "Create ReadSet"
  		 
 		ReadSet readSet=new ReadSet();
 		readSet.typeCode="rsnanopore";
-		readSet.code=$content.projectCode+"_ONT_"+"_"+$content.sampleCode+$laneNumber+"_"+$run.containerSupportCode;
+		
+		String shortProjectCode = $content.projectCode.charAt(0)+$content.projectCode.split("_",2)[1];
+		
+		readSet.code=shortProjectCode+"_ONT_"+"_"+$content.sampleCode+$laneNumber+"_"+$run.containerSupportCode;
 		if($content.properties.containsKey("tag")){
 			readSet.code=readSet.code+"."+$content.properties.get("tag").value;
 		}
