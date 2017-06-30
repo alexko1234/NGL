@@ -489,7 +489,9 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                            if ('sum' === column.groupMethod || 'average' === column.groupMethod) {
 	                                var result = groupData.reduce(function(value, element) {
 	                                    element.col = column; //add in experimental feature
-	                                	return value += columnGetter(element);
+	                                	value += columnGetter(element);
+										element.col = undefined;
+										return value;
 	                                }, 0);
 	
 	                                if ('average' === column.groupMethod) result = result / groupData.length;
@@ -497,7 +499,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                if (isNaN(result)) {
 	                                    result = "#ERROR";
 	                                }else{
-	                                	//result = $filter("number")(result);
 	                                	result = $parse(result.toString()+that.getFormatter(column))(result);
 	                                }
 	
@@ -3174,7 +3175,6 @@ directive("udtCell", function(){
 			    			if(column.watch === true){
                                 scope.$watch("value.data."+column.property, function(newValue, oldValue) {
                                     if ( newValue !== oldValue ) {
-                                        //scope.cellValue = getDisplayFunction(column, false);
                                         scope.cellValue = newValue;
                                      }
                                 });
@@ -3185,7 +3185,6 @@ directive("udtCell", function(){
 			    				if(column.watch === true){
                                     scope.$watch("value.data."+column.property+currentScope.udtTableFunctions.getFilter(column)+currentScope.udtTableFunctions.getFormatter(column), function(newValue, oldValue) {
                                         if ( newValue !== oldValue ) {
-                                            //scope.cellValue = getDisplayFunction(column, false);
                                         	scope.cellValue = newValue;
                                          }
                                     });
