@@ -144,9 +144,9 @@ angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', '$
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-				byDefault:($scope.isCreationMode()),
+				active: false,
+				showButton: false,
+				byDefault:false,
 				columnMode:true
 			},
 			messages:{
