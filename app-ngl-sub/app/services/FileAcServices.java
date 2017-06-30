@@ -67,6 +67,7 @@ import fr.cea.ig.MongoDBDAO;
 public class FileAcServices  {
 	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
+	/*
 	public static void updateStateSubmission(ContextValidation ctxVal, Submission submission, String status) {
 		submission.state.code = status;
 		String user = ctxVal.getUser();
@@ -102,10 +103,9 @@ public class FileAcServices  {
 				
 		}
 	}
-	
+	*/
 
 	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
-		System.out.println("coucou");
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
@@ -121,8 +121,7 @@ public class FileAcServices  {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		String lg = null;
-		String ligne;
+		
 
 		// Get global parameters for email => utiliser Play.application().configuration().getString plutot que
 		// ConfigFactory.load().getString pour recuperer les parametres pour avoir les surcharges de AbstractTest si 
@@ -156,7 +155,14 @@ public class FileAcServices  {
 		String errorStatus = "FE-SUB";
 		String okStatus = "F-SUB";
 		Boolean ebiSuccess = false;	
-		
+		// On ne prend pas ctxVal.getUser, car methode lancé par birds,pas très informatif
+		String user;
+		if (StringUtils.isNotBlank(submission.creationUser)) {
+			user = submission.creationUser;
+		} else {
+			user = ctxVal.getUser();
+		}
+
 		/*
 		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
 		 */
@@ -241,12 +247,11 @@ public class FileAcServices  {
 		} 
 		
 		if (! ebiSuccess ) {
-			System.out.println("ligne RECEIPT absente dans '"+lg+"'");
+			System.out.println("success=true absent du fichier  " + ebiFileAc);
 			// mettre status à jour
-			updateStateSubmission(ctxVal, submission, errorStatus); 
+			State errorState = new State(errorStatus, user);
+			submissionWorkflows.setState(ctxVal, submission, errorState);
 			message = "Absence de la ligne RECEIPT ... pour  " + submissionCode + " dans fichier "+ ebiFileAc.getPath();
-			sujet = "Probleme parsing fichier des AC : ";
-			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
 			mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
 			return submission;
 		}
@@ -316,7 +321,8 @@ public class FileAcServices  {
 			//System.out.println("ERROR" + message);
 			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
 		    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
-			updateStateSubmission(ctxVal, submission, "FE-SUB");
+			State errorState = new State(okStatus, user);
+			submissionWorkflows.setState(ctxVal, submission, errorState);
 			return submission;
 		} else {
 			//System.out.println("OK");
@@ -330,8 +336,8 @@ public class FileAcServices  {
 		
 		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
 		submission.accession=submissionAc;
-		String user = ctxVal.getUser();
-				
+		
+
 		Calendar calendar = Calendar.getInstance();
 		Date date  = calendar.getTime();		
 		calendar.add(Calendar.YEAR, 2);
@@ -372,9 +378,10 @@ public class FileAcServices  {
 					DBQuery.is("run.code", code).notExists("run.accession"),
 					DBUpdate.set("run.accession", ac)); 			
 		}
-		State state = new State(okStatus, user);
 		
+		State state = new State(okStatus, user);
 		submissionWorkflows.setState(ctxVal, submission, state);
+		
 		System.out.println("expediteur =" + expediteur);
 		System.out.println("destinataires =" + destinataires);
 		System.out.println("subjectSuccess =" + subjectSuccess);
