@@ -82,6 +82,7 @@ GET 	/cns/migration-container-error-input				controllers.migration.cns.Migration
 GET 	/cns/migration-experiment-input-tree-properties-upgrade	controllers.migration.cns.MigrationInputExperimentPropertiesTreeOfLifeUpgrade.migration(experimentTypeCode: java.lang.String,newKeyProperty: java.lang.String)
 
 GET 	/cns/migration-readSet-minknowBasecalling		controllers.migration.cns.MigrationReadSetMinknowBasecalling.migration()
+GET 	/cns/migration-rawData-submission		controllers.migration.cns.MigrationRawDataMd5Submission.migration(projectCode: java.lang.String)
 
 GET		/cng/migration-sequencing				controllers.migration.cng.AddSequencingProgramType.migration()
 GET		/cng/migration-content-extended			controllers.migration.cng.MigrationContentExtended.migration()
