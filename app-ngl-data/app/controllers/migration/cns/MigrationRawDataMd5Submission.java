@@ -51,9 +51,13 @@ public class MigrationRawDataMd5Submission extends CommonController{
 			String line = "";
 			while ((line = reader.readLine()) != null) {
 				Logger.debug("Line "+line);
-				String[] tabLine = line.split(" ");
+				String[] tabLine = line.split("  ");
+				Logger.debug("tab 0 "+tabLine[0]);
+				Logger.debug("tab 1 "+tabLine[1]);
 				String md5 = tabLine[0];
+				
 				String codeRawData = tabLine[1].substring(tabLine[1].lastIndexOf("/")+1);
+				Logger.debug("Code rawData "+codeRawData+" = "+md5);
 				mapMd5.put(codeRawData, md5);
 			}
 			return mapMd5;
