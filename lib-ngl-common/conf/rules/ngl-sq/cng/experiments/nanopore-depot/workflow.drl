@@ -124,7 +124,7 @@ rule "Create ReadSet"
 		
 		String shortProjectCode = $content.projectCode.charAt(0)+$content.projectCode.split("_",2)[1];
 		
-		readSet.code=shortProjectCode+"_ONT_"+$content.sampleCode+$laneNumber+"_"+$run.containerSupportCode;
+		readSet.code=shortProjectCode+"_ONT_"+$content.sampleCode+"_"+$laneNumber+"_"+$run.containerSupportCode;
 		if($content.properties.containsKey("tag")){
 			readSet.code=readSet.code+"."+$content.properties.get("tag").value;
 		}
