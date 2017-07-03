@@ -201,13 +201,13 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Spri_select","Spri select","path2","1","production",InstanceFactory.setExperimentTypeCodes("spri-select")));
 		
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq_super_low cost"))));
+				concatMap(newPSV("libraryProtocol","Bq Super low cost"))));
 		lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq_low cost"))));
+				concatMap(newPSV("libraryProtocol","Bq low cost"))));
 		lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq_super_low cost"))));
+				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II"))));
 		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq_NEB Reagent"))));
+				concatMap(newPSV("libraryProtocol","Bq NEB Reagent"))));
 		
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter V4"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
@@ -258,11 +258,13 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("zymoclean-dna","Zymoclean DNA","path2","1","production",InstanceFactory.setExperimentTypeCodes("spin-column-purification")));
 		lp.add(newProtocol("qiaamp-dna","QIAamp DNA","path2","1","production",InstanceFactory.setExperimentTypeCodes("spin-column-purification")));
 		
-		lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","pcr-amplification-and-purification")));
+		lp.add(newProtocol("chromium-10x","Chromium 10x","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","pcr-amplification-and-purification"),
+				concatMap(newPSV("libraryProtocol","Chromium 10x"))));
 		
 		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));
 		
-		lp.add(newProtocol("Bq_PCR_free","Bq_PCR_free","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation")));
+		lp.add(newProtocol("Bq_PCR_free","Bq_PCR_free","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
+				concatMap(newPSV("libraryProtocol","Bq PCR free"))));
 		
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
 		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
