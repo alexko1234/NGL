@@ -8,11 +8,10 @@ import java.util.Map;
 
 import org.mongojack.DBQuery;
 
-import play.Logger;
+//import play.Logger;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.parameter.index.Index;
-import models.laboratory.parameter.Parameter;// TEST
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -22,7 +21,8 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 	
 	public String headerValue;
 	public Integer cellSequence;
-	public Integer cellCode;
+	//public Integer cellCode; 04/07/2017 FDS utiliser le Name et pas le code
+	public Integer cellName;
 	
 	public Boolean tagCategory = Boolean.FALSE;
 	
@@ -34,14 +34,14 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 	public void populateField(Field field, Object dbObject, Map<Integer, String> rowMap,
 			ContextValidation contextValidation, Action action) throws Exception {
 
-		if(rowMap.containsKey(cellSequence) && rowMap.containsKey(cellCode)){
+		if(rowMap.containsKey(cellSequence) && rowMap.containsKey(cellName)){
 			String sequence = rowMap.get(cellSequence);
-			String code = rowMap.get(cellCode);
+			String name = rowMap.get(cellName);
 			
 			//Get Index
-			Index index = getIndex(contextValidation, sequence, code);
+			Index index = getIndex(contextValidation, sequence, name);
 			if(null != index && !tagCategory.booleanValue()){
-				populateField(field, dbObject, index.code);
+				populateField(field, dbObject, index.name);
 			}else if(null != index && tagCategory.booleanValue()){
 				populateField(field, dbObject, index.categoryCode);
 			}
@@ -51,7 +51,7 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 			
 			Index index = getIndex(contextValidation, sequence, null);
 			if(null != index && !tagCategory.booleanValue()){
-				populateField(field, dbObject, index.code);
+				populateField(field, dbObject, index.name);
 			}else if(null != index && tagCategory.booleanValue()){
 				populateField(field, dbObject, index.categoryCode);
 			}
@@ -60,14 +60,14 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 		}
 	}
 
-	private Index getIndex(ContextValidation contextValidation, String sequence, String code) {
-		String additionalErrInfo="'"+sequence+"'/'"+code+"'";
-		//Logger.debug("index sequence/code : "+additionalErrInfo);
-		
-
+	//04/07/2017 FDS utiliser le name et pas le code
+	private Index getIndex(ContextValidation contextValidation, String sequence, String name) {
+		String additionalErrInfo="'"+sequence+"'/'"+name+"'";
+		//Logger.debug("index sequence/name : "+additionalErrInfo);	
+        
 		DBQuery.Query q = DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("sequence", sequence);
-		if(null != code){
-			q.is("code", code);
+		if(null != name){
+			q.is("name", name);
 		}
 		
 		Index index = null; 
