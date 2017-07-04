@@ -34,7 +34,8 @@ public class Tools {
 			String ligne = "";
 			String pattern_string = "^\\s*\"*([^\"]+)\\s*\"*";
 			Pattern p = Pattern.compile(pattern_string);
-			String pattern_string_c = "([^#]*)#";
+			//String pattern_string_c = "([^#]*)#";
+			String pattern_string_c = "^\\s*#.*";
 			Pattern p_c = Pattern.compile(pattern_string_c);
 			boolean legend = false;	
 			while ((ligne = input_buffer.readLine()) != null) {					
@@ -42,11 +43,14 @@ public class Tools {
 					legend = true;
 					continue;
 				}
+				if (this.clean(ligne).equalsIgnoreCase("lotseqname")) {
+					legend = true;
+					continue;
+				}
 				// ignorer ce qui suit le signe de commentaire
 				Matcher m_c = p_c.matcher(ligne);
-				if (!m_c.find()) {
-				} else {
-					ligne = m_c.group(1);
+				if (m_c.find()) {
+					continue;
 				}
 				// ignorer lignes sans caracteres visibles
 				if (ligne.matches("^\\s*$")){
@@ -58,7 +62,8 @@ public class Tools {
 					throw new SraException("Probleme de format avec la ligne : '" + ligne +"'");
 				}
 				String readSetCode = m.group(1); //readSetCode
-				//log.debug("readSetCode = "+ readSetCode);
+				readSetCode = clean(readSetCode);
+				//System.out.println("readSetCode = '"+ readSetCode +"'");
 				if (! listReadSet.contains(readSetCode)){
 					listReadSet.add(readSetCode);
 				}
@@ -70,7 +75,7 @@ public class Tools {
 		return listReadSet;
 	}
 	
-	public Map<String, String> loadLotSeqName(File fileSelectLotSeqName) throws SraException {
+/*	public Map<String, String> loadLotSeqName(File fileSelectLotSeqName) throws SraException {
 		Map<String, String> mapLotSeqName = new HashMap<String, String>();
 		if (fileSelectLotSeqName.exists()) {
 			//log.debug("Fichier de selection des lotSeqName existe bien : " + selectLotSeqName);
@@ -90,7 +95,6 @@ public class Tools {
 			try {
 				while ((ligne = input_buffer.readLine()) != null) {					
 					if (this.clean(ligne).equalsIgnoreCase("lotseqname")) {
-						legend = true;
 						continue;
 					}
 					// ignorer ce qui suit le signe de commentaire
@@ -119,7 +123,7 @@ public class Tools {
 		}		
 		return mapLotSeqName;
 	}
-
+*/
 	public Map<String, String> loadMd5File(File md5File) throws SraException {
 		Map<String, String> mapMd5 = new HashMap<String, String>();
 
@@ -172,7 +176,7 @@ public class Tools {
 	public String clean(String chaine) {
 		String cleanChaine = chaine;
 
-		String pattern = "^\\s*\"*\\s*([^\\s\"]+.*)";;  // si chaine ne contient aucun caractere visible
+		String pattern = "^\\s*\"*\\s*([^\\s\"]+.*)"; // si chaine ne contient aucun caractere visible
 		java.util.regex.Pattern p = Pattern.compile(pattern);		
 
 
@@ -185,7 +189,6 @@ public class Tools {
 			//log.debug("$1="+ms.group(1));
 			cleanChaine = m.group(1);
 			//log.debug("ok m1, cleanChaine='"+cleanChaine+"'");
-
 		} 
 
 		Matcher m2 = p2.matcher(cleanChaine);

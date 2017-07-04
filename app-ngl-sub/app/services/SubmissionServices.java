@@ -1562,13 +1562,10 @@ public class SubmissionServices {
 			System.out.println("state.code remis à 'N' pour configuration "+submission.configCode);
 		}
 
-
-		
-
 		// verifier que le study à l'etat userValidate n'est pas utilisé par une autre soumission avant de remettre son etat à 'N'
 		if (StringUtils.isNotBlank(submission.studyCode)){
 			List <Submission> submissionList2 = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("studyCode", submission.studyCode)).toList();
-			if (submissionList2.size() <= 1) {
+			if (submissionList2.size() == 1) {
 				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 						DBQuery.is("code", submission.studyCode),
 						DBUpdate.set("state.code", "N").set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));	

@@ -149,7 +149,7 @@ public class ToolsTest extends AbstractTestsSRA {
 		return listSamples;
 	}		
 	
-	@Test
+	//@Test
 	public void testfileAc()throws IOException {
 		File xmlFile = new File("/env/cns/home/sgas/test/listAc_CNS_BCU_BLK_266H23OI3.txt");
 		List<Sample> listSamples = new ArrayList<Sample>();
@@ -210,6 +210,7 @@ public class ToolsTest extends AbstractTestsSRA {
 		}
 		System.out.println("name :" + name +" et relatifName="+ relatifName);
 	}
+	
 	//@Test
 	public void SymbolicLinkSuccess() throws IOException  {
 		String nameDirectory = "/env/cns/submit_traces/SRA/NGL_test/tests_liens/linkTest4";
