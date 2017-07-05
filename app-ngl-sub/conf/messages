@@ -92,6 +92,7 @@ submissions.msg.details=Détail de la soumission
 submissions.msg.consultation=Recherche des soumission
 submissions.code=Code
 submissions.state=Etat
+submissions.creationDate=Date de création
 userFileReadSet=userFileReadSet :
 userFileExperiments=userFileExperiments :
 userFileCloneToAc= * userFileCloneToAc :

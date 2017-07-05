@@ -86,15 +86,15 @@ var getColumns = function(){
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
-			        	});*/ 	
-			columns.push({property:"accession",
+			        	});*/ 				
+			   columns.push({property:"accession",
 			        	header: Messages("study.accession"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
 			        	});	
-			/*columns.push({property:"releaseDate",
+			 /*columns.push({property:"releaseDate",
 			        	header: "study.releaseDate",
 			        	type :Date,		    	  	
 			        	order:false,

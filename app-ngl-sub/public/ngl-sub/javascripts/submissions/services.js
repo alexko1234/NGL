@@ -240,6 +240,11 @@
 						header: Messages("submissions.state"),
 						type :"text",
 						order:true});	
+		columns.push({	property:"creationDate",
+						header: Messages("submissions.creationDate"),
+						type :"Date",
+						order:true});	
+										
 		return columns;
 	};
 
