@@ -21,6 +21,7 @@ public class ContainersSearchForm extends ListForm{
 	public String sampleCode;
 	public Set<String> sampleCodes;
 	public Set<String> sampleTypeCodes;
+	public String ncbiScientificNameRegex;
 	public String categoryCode;
 	public String nextExperimentTypeCode;
 	public String processTypeCode;
