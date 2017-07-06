@@ -66,16 +66,16 @@ public class ImportServiceCNG extends AbstractImportService {
 	}
 	
 	// FDS 20/06/2017 NGL-1472
-	
 	private List<PropertyDefinition> getLibraryReceptionPropertyDefinitions ( boolean isIndexed, boolean isPooled) {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		// propriétés communes 
 		propertyDefinitions.add(newPropertiesDefinition("Gender", "gender", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				Arrays.asList(newValue("0","unknown"),newValue("1","male"),newValue("2","female")), null,null,null,"single", 17, false, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, false, null, 
 				null, "single", 1, false, null, null));	
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, null, 
+		// essai ajout getExtLibProcessTypecodes
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null, getExtLibProcessTypecodesValues(), 
 				null,null,null,"single", 5, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
@@ -177,8 +177,26 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));
          values.add(DescriptionFactory.newValue("RG","RG - mRNASeq"));
          values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold"));
+         
+         // other
          values.add(DescriptionFactory.newValue("UN","UN - UKNOWN"));
         return values;
     } 
 	
+	// 04/07/2017 restreindre la possibilite d'erreur a l'import des fichier de librairies externes
+	// Liste a faire évoluer...
+	private static List<Value> getExtLibProcessTypecodesValues(){
+        List<Value> values = new ArrayList<Value>();
+        
+        values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
+        values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
+        values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
+        values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));
+        values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));
+        values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));
+        values.add(DescriptionFactory.newValue("RG","RG - mRNASeq"));
+        values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold"));
+
+        return values;
+	}
 }

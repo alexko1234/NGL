@@ -332,9 +332,10 @@ public abstract class FileService {
 		}
 	}
 
+	//FDS 04/07/2017 remplacer cellCode par cellName
 	private void updateTagExcelConfigurationHeader(TagExcelFieldConfiguration efc) {
-		if(this.headerByIndex.containsKey(efc.cellSequence) && this.headerByIndex.containsKey(efc.cellCode)){
-			efc.headerValue = this.headerByIndex.get(efc.cellSequence)+" / "+this.headerByIndex.get(efc.cellCode);
+		if(this.headerByIndex.containsKey(efc.cellSequence) && this.headerByIndex.containsKey(efc.cellName)){
+			efc.headerValue = this.headerByIndex.get(efc.cellSequence)+" / "+this.headerByIndex.get(efc.cellName);
 		}else if(this.headerByIndex.containsKey(efc.cellSequence)){
 			efc.headerValue = this.headerByIndex.get(efc.cellSequence);
 		}else{
