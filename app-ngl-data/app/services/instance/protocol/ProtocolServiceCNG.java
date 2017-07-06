@@ -172,17 +172,34 @@ public class ProtocolServiceCNG {
 		
 		
 // EN COURS 09/06/2017 ajout protocoles pour capture.
-		lp.add(newProtocol("sureSelect-XT-2","sureSelect-XT-2","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("frag-and-purif",
-						                               "prep-capt-sureselect")));   //  pour toutes les experiences du process capture ?????
+		// LISTE exacte à nous donner ! sureSelect XT 3µg ;  sureSelect XT 200ng ; XT2 1µg, XT2 100ng
+		lp.add(newProtocol("sureselect-xt-3µg"," sureSelect XT 3µg","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("fragmentation",
+						                               "sample-prep",
+						                               "pcr-and-purification",
+						                               "capture",
+						                               "pcr-indexing")));  
 		
-		lp.add(newProtocol("sureSelect-XT-3","sureSelect-XT-3","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("frag-and-purif",
-													   "prep-capt-sureselect")));   //  pour toutes les experiences  du process capture ?????
+		lp.add(newProtocol("sureselect-xt-200ng","sureSelect XT 200ng","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("fragmentation",
+								                       "sample-prep",
+								                       "pcr-and-purification",
+								                       "capture",
+								                       "pcr-indexing")));  
+
+		lp.add(newProtocol("xt2-1µg","XT2 1µg","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("fragmentation",
+								                       "sample-prep",
+								                       "pcr-and-purification",
+								                       "capture",
+								                       "pcr-indexing")));  
 		
-		lp.add(newProtocol("sureSelect-XT-200","sureSelect-XT-200","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("frag-and-purif",
-													   "prep-capt-sureselect")));   //  pour toutes les experiences  du process capture ?????
+		lp.add(newProtocol("xt2-100ng","XT2 100ng","path7","1","production", 
+				InstanceFactory.setExperimentTypeCodes("fragmentation",
+								                       "sample-prep",
+								                       "pcr-and-purification",
+								                       "capture",
+								                       "pcr-indexing")));  
 		
 		
 		//------------Experiences de Control Qualité------------------------------
