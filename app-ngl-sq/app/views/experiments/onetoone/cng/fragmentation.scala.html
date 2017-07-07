@@ -1,5 +1,5 @@
 @()
-<!-- ----------------------------------TEST ---------------------------------- -->
+<!--  copiee sur libnormalization -->
 <div class="col-md-12 col-lg-12" ng-controller="FragmentationCtrl">
   <div class="row margin-bottom-7">
     <form class="form-inline" role="form">
@@ -18,7 +18,7 @@
 			  </div>   
 	     </div>   
          <div class="form-group col-lg-6">
-		 <ng-switch on="mainService.isEditMode()"> 
+		 	  <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
                    <span class="form-control-static" ng-bind="outputContainerSupport.storageCode"></span> 
