@@ -131,16 +131,16 @@ experiment.sampleCode=Code Sample
 experiment.studyCode=Code Study
 experiment.title=Title
 #EBI label
-experiment.librarySelection= * Library Selection
-experiment.libraryStrategy= * Library Strategy
-experiment.librarySource= * Library Source
-experiment.libraryLayout= * Library Layout
+experiment.librarySelection= * Library_Selection
+experiment.libraryStrategy= * Library_Strategy
+experiment.librarySource= * Library_Source
+experiment.libraryLayout= * Library_Layout
 experiment.libraryLayoutNominalLength=Library Layout Nominal Length
-experiment.libraryLayoutOrientation=Library Layout Orientation
-experiment.libraryName= * Library Name
-experiment.libraryConstructionProtocol=Library Construction Protocol
+experiment.libraryLayoutOrientation=Library_Layout_Orientation
+experiment.libraryName= * Library_Name
+experiment.libraryConstructionProtocol=Library_Construction_Protocol
 experiment.typePlatform= * Type Platform
-experiment.instrumentModel= * Instrument Model
+experiment.instrumentModel= * Instrument_Model
 experiment.lastBaseCoord=Last Base Coordonée
 experiment.spotLength=SpotLength
 

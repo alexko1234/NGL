@@ -74,6 +74,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  hide:true,
 			        	  order:false,
 			        	  edit:true,
+			        	  editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
 			        	  choiceInList:false
 			        },
 			        {property:"description",
@@ -82,6 +83,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  hide:true,
 			        	  order:false,
 			        	  edit:true,
+			        	  editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
 			        	  choiceInList:false
 			        },
 			        {property:"clone",
@@ -195,6 +197,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 						type :"String",		    	  	
 						hide:true,
 						edit:true,
+						editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
 						order:false
 					},
 			        {property:"librarySelection",
