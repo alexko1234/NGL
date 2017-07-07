@@ -93,7 +93,7 @@ H:\birdsSpec.xsd">
 		</ExecutableSpecification>
 		
 		<ParametersSpecification>
-			<KeyValueElement key="-i" value="~/.ssh/ebi.sra" parameterName="cert"/>
+			<KeyValueElement key="-i" value="~/.ssh/ebi.rsa" parameterName="cert"/>
 			<KeyValueElement key="-l" value="300M" parameterName="optionl"/>
 			<KeyValueElement key="-k" value="2" parameterName="optionk"/>
 			<KeyValueElement key="--file-list" value="%directoryPath%/list_aspera" parameterName="fileList"/>
@@ -145,7 +145,7 @@ H:\birdsSpec.xsd">
 	<!-- Treatment : call EBI services to send xml files -->
 	<Treatment name="sendXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="sendXMLSyntax">
-			<Executable path="curl -f https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D" />
+			<Executable path="curl -f https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ENA%20Webin-9%20Axqw16nI" />
 		</ExecutableSpecification>
 		<ParametersSpecification>
 			<KeyValueElement key="-F" value="&quot;SUBMISSION=@%xmlSubmission%&quot;" parameterName="xmlSubmission"/>
