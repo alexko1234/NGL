@@ -255,20 +255,23 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("lightCycler1", "LightCycler1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("lightCycler2", "LightCycler2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("lightCycler3", "LightCycler3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), null, 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				null,                                                               // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
 				getInstruments(
 						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
-				getContainerSupportCategories(new String[]{"tube"}),null, 
+				getContainerSupportCategories(new String[]{"tube"}),
+				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-// EN COURS FDS 16/06/2016 -- NL-1201 : Ajout fluorometer quant-iT                //// tube ou plaques ????????//
+        // FDS 16/06/2016 -- NL-1201 : Ajout fluorometer quant-iT 
 		l.add(newInstrumentUsedType("Quant-iT", "quant-it", InstrumentCategory.find.findByCode("fluorometer"), getQuantitProperties(), 
 				getInstruments(
 						createInstrument("quant-it1", "Quant-iT1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
-				getContainerSupportCategories(new String[]{"tube"}),null, 
+				getContainerSupportCategories(new String[]{"96-well-plate"}),
+				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
@@ -299,7 +302,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate)
-		l.add(newInstrumentUsedType("bravoworkstation","Bravo WorkStation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpMotionProperties(), 
+		// FDS 10/072017 inversion code/name
+		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpMotionProperties(), 
 				getInstruments(
 						createInstrument("bravows1", "Bravo WorkStation-1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("bravows2", "Bravo WorkStation-2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),

@@ -171,8 +171,7 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
 		
-// EN COURS 09/06/2017 ajout protocoles pour capture.
-		// LISTE exacte à nous donner ! sureSelect XT 3µg ;  sureSelect XT 200ng ; XT2 1µg, XT2 100ng
+		// 10/07/2017 LISTE exacte à nous donner !
 		lp.add(newProtocol("sureselect-xt-3µg"," sureSelect XT 3µg","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("fragmentation",
 						                               "sample-prep",
@@ -187,14 +186,14 @@ public class ProtocolServiceCNG {
 								                       "capture",
 								                       "pcr-indexing")));  
 
-		lp.add(newProtocol("xt2-1µg","XT2 1µg","path7","1","production", 
+		lp.add(newProtocol("sureselect-xt2-1µg","sureSelect XT2 1µg","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("fragmentation",
 								                       "sample-prep",
 								                       "pcr-and-purification",
 								                       "capture",
 								                       "pcr-indexing")));  
 		
-		lp.add(newProtocol("xt2-100ng","XT2 100ng","path7","1","production", 
+		lp.add(newProtocol("sureselect-xt2-100ng","sureSelect XT2 100ng","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("fragmentation",
 								                       "sample-prep",
 								                       "pcr-and-purification",
