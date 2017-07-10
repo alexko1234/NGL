@@ -22,9 +22,6 @@
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.basecallerVersion")){
 					<p class="form-control-static">{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.basecallerVersion.value}}</p>
 				}
-				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-basecalling.configName")){
-					<p class="form-control-static">{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.configName.value}}</p>
-				}
 			
 			</div>
 		
