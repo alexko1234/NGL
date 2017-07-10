@@ -400,6 +400,16 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			}
 			
 		}
+		if(this.form.reportingQuery){
+			this.form.reportingQuery.trim();
+			if(this.form.reportingQuery.length > 0){
+				this.form.reporting=true;
+			}else{
+				this.form.reporting=false;
+			}
+		}else{
+			this.form.reporting=false;
+		}
 	};
 	
 	$scope.searchService.getAddColumnsToForm = function(){
