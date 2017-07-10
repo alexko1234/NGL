@@ -100,13 +100,17 @@ public class SubmissionServices {
 	}
 	
 	public String initReleaseSubmission(String studyCode, ContextValidation contextValidation) throws SraException {
+		System.out.println("Dans SubmissionServices.java.initReleaseSubmission");
 		String user = contextValidation.getUser();
 		Study study = null;
 		if (StringUtils.isNotBlank(studyCode)) {
 			study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
 				Study.class, DBQuery.and(DBQuery.is("code", studyCode)));
 		} 
+
+		System.out.println("en entree de initReleaseSubmission contextValidation.errors = "+contextValidation.errors);
 		Submission submission = createSubmissionEntityforRelease(study, user, study.projectCodes);
+		System.out.println("AVANT submission.validate="+contextValidation.errors);
 
 		// updater dans base si besoin le study pour le statut 'N-R' 
 		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
@@ -121,8 +125,11 @@ public class SubmissionServices {
 		// puis valider et sauver submission
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
-		submission.validate(contextValidation);
 		
+		System.out.println("AVANT submission.validate="+contextValidation.errors);
+
+		submission.validate(contextValidation);
+		System.out.println("APRES submission.validate="+contextValidation.errors);
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
 			submission.validate(contextValidation);
 			MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
@@ -162,24 +169,34 @@ public class SubmissionServices {
 		
 		
 		if (study != null){	
+			System.out.println("study != null");
+
 			// mettre à jour l'objet submission pour le study  :
 			if (! submission.refStudyCodes.contains("study.code")){
 				submission.refStudyCodes.add(study.code);
+				System.out.println("ajout de studyCode dans submission.refStudyCode");
+
 			}
 			submission.studyCode = study.code;
+			System.out.println("ajout de studyCode dans submission.studyCode");
+
 			if ( ! study.state.code.equals("F-SUB")) {
 				throw new SraException("Study " + study.code + " avec status incompatible avec demande de release " + study.state.code );
 			} 
-			if (StringUtils.isBlank((CharSequence) study.releaseDate)){
+			
+			if ( study.releaseDate == null){
 				throw new SraException("Study " + study.code + " non renseigné dans base pour date de release" );
 			}
 			if (study.releaseDate.before(new Date())){
 				throw new SraException("release date du Study " + study.releaseDate + " inferieure à date du jour: (" + new Date()+") => Le study doit deja etre public à l'EBI");
 			}
-			
+			System.out.println("fin de study != null");
 		}
-		
+		System.out.println("submissionCode="+ submission.code);
+
 		submission.state = new State("N-R", user);
+		System.out.println("en sortie submissionCode="+ submission.code);
+
 		return submission;
 	}
 	

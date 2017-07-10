@@ -306,7 +306,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	var init = function(){
 		$scope.mainService = mainService;
 
-		$scope.isReleasable=true;
+		$scope.isReleasable=false;
 		// si on souhaite affichage bouton si on vient du menu release :
 		//$scope.release=$scope.mainService.get("release");
 		
@@ -325,15 +325,25 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// On compare les date :
 		// $scope.study.releaseDate correspond à la date de release exprimée en milliseconde ecoulées depuis 01/01/1970 (Date Epoch) 
 		// Date.now() correspond à la date courante exprimee en ms depuis Epoch
-		
-		if (($scope.study.releaseDate > Date.now() && $scope.study.state.code=="F-SUB")) {
-			$scope.isReleasable = true;
-			console.log("donnée confidentielle");
-		} else {
+		if ( !$scope.study.releaseDate) {
 			$scope.isReleasable = false;
-			console.log("donnée publique");
+			console.log("study.releaseDate non renseigné");
+		} else {		
+			if ( $scope.study.state.code != "F-SUB"){
+				console.log("study.state.code avec status different de F-SUB : "+$scope.study.state.code);
+				$scope.isReleasable = false;
+			} else {
+				console.log("study.releaseDate" + $scope.study.releaseDate);
+				console.log("Date.now" + Date.now());
+				if ($scope.study.releaseDate > Date.now()){
+					$scope.isReleasable = true;
+					console.log("donnée confidentielle");
+				} else {
+					$scope.isReleasable = false;
+					console.log("donnée publique");
+				}
+			}
 		}
-		
 		
 		
 		/* Interressant pour le formatage :
@@ -386,7 +396,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	/* buttons section */
 	
 	$scope.userRelease = function(){
-		console.log("je suis dans le bouton userRelease");
+		console.log("je suis dans le bouton studies.details-ctrl.js.userRelease");
 		$http.put(jsRoutes.controllers.sra.studies.api.Studies.release($scope.study.code).url, $scope.study)
 			.success(function(data){
 		   		
