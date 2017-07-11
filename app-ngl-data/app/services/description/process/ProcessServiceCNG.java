@@ -273,9 +273,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.addAll(new Nanopore().getProcessType());
 
 //EN COURS 1201...
-		// 10/07/2017  NOUVEAU CHANGEMENT: 8 process !!!!
-		if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			
+
+if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+	    // 10/07/2017  NOUVEAU CHANGEMENT: 8 process !!!!	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
 		l.add(DescriptionFactory.newProcessType("Prep. Capture (4000/X5)", "capture-prep-fc-ord-process", ProcessCategory.find.findByCode("library"),
 				5,
@@ -357,7 +357,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				9,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
-						getPET("ext-to-capture-pcr-indexing-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-capture-pcr-indexing-fc-ord-process",-1), //ordered list of experiment type in process type
 						getPET("pcr-and-purification",-1),
 						getPET("capture",0),
 						getPET("pcr-indexing",1),
@@ -367,7 +367,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("illumina-depot",4)),
 				getExperimentTypes("capture").get(0),                             //first experiment type    
 				getExperimentTypes("pcr-indexing").get(0),                        //last  experiment type
-				getExperimentTypes("ext-to-capture-pcr-indexing-process").get(0), //void  experiment type
+				getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord-process").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/Miseq/NextSeq)
@@ -419,9 +419,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
 				getExperimentTypes("ext-to-pcr-indexing-fc-process").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		
-		} // END IF
+				
+} // END IF
 		
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
@@ -686,18 +685,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel",
 						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
-						null, "single" ,104, true, null, null));
+						null, "single" ,105, true, null, null));
 		
 		//N-plex: optionnel,niveau process uniquement
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nombre de Plex","nPlex",
 						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
-						null, "single" ,104, true, null, null));
+						null, "single" ,106, true, null, null));
 		
 		return propertyDefinitions;
 	}
 	
-	// FDS ajout 06/07/2017 pour JIRA NGL-1201: processus capture
+	// FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	private static List<PropertyDefinition> getPropertyDefinitionsCapturePcrIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
@@ -716,16 +715,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						LevelService.getLevels(Level.CODE.Process, Level.CODE.Content), String.class, true, "F",
 						getCaptureProtocolValues(), "single" ,103, null, null, null));
 
-		// ngsRunWorkLabel: ????
-		// plateWorkLabel: ???
-		//N-plex: ???
 		
 		return propertyDefinitions;
 	}
 	
 	
-	
-    // FDS ajout 06/07/2017 pour JIRA NGL-1201: processus capture
+    // FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par process getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	private static List<Value> getCaptureLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
@@ -742,7 +737,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	// FDS ajout 06/07/2017 pour JIRA NGL-1201: processus capture
+	// FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	private static List<Value>getCaptureBaitsValues() {
 		 List<Value> values = new ArrayList<Value>();
@@ -757,7 +752,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
     	return values;
 	}
 	
-	// FDS ajout 06/07/2017 pour JIRA NGL-1201: processus capture
+	// FDS ajout 11/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
 	private static List<Value>getCaptureProtocolValues() {
 		 List<Value> values = new ArrayList<Value>();
@@ -765,8 +760,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		 // LISTE exacte à nous donner ! sureSelect XT 3µg ; XT 200ng ; XT2 1µg, XT2 100ng
 		 values.add(DescriptionFactory.newValue("sureselect-xt-3µg","sureSelect XT 3µg"));
 		 values.add(DescriptionFactory.newValue("sureselect-xt-200ng","sureSelect XT 200ng"));
-		 values.add(DescriptionFactory.newValue("xt2-1µg","XT2 1µg"));
-		 values.add(DescriptionFactory.newValue("xt2-100ng","XT2 100ng"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt2-1µg","sureSelect XT2 1µg"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt2-100ng","sureSelect XT2 100ng"));
 		 
 	    return values;
 	}
