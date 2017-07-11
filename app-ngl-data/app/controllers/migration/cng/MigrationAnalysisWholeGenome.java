@@ -37,10 +37,10 @@ import fr.cea.ig.MongoDBDAO;
  */
 @Repository
 public class MigrationAnalysisWholeGenome extends CommonController {
-	
-	
+
+
 	public static Result migration() {
-		
+
 		//Get all analysis whole genome
 		List<Analysis> analysis = MongoDBDAO.find(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("typeCode", "WG-analysis")).toList();
 		analysis.stream().forEach(a->{
@@ -48,17 +48,19 @@ public class MigrationAnalysisWholeGenome extends CommonController {
 			String code = a.masterReadSetCodes.iterator().next();
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, code);
 			//get property
-			if(readSet.sampleOnContainer.properties.containsKey("expectedCoverage")){
-				String valueExpectedCoverage = (String)readSet.sampleOnContainer.properties.get("expectedCoverage").getValue();
-				a.properties.put("expectedCoverage", new PropertySingleValue(Double.parseDouble(valueExpectedCoverage.substring(0, valueExpectedCoverage.length()-1))));
-				MongoDBDAO.update(InstanceConstants.ANALYSIS_COLL_NAME, a);
+			if(readSet!=null){
+				if(readSet.sampleOnContainer.properties.containsKey("expectedCoverage")){
+					String valueExpectedCoverage = (String)readSet.sampleOnContainer.properties.get("expectedCoverage").getValue();
+					a.properties.put("expectedCoverage", new PropertySingleValue(Double.parseDouble(valueExpectedCoverage.substring(0, valueExpectedCoverage.length()-1))));
+					MongoDBDAO.update(InstanceConstants.ANALYSIS_COLL_NAME, a);
+				}
 			}
 		});
-		
-		
+
+
 		return ok();	
 	}
 
-	
+
 
 }
