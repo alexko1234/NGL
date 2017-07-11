@@ -50,8 +50,7 @@ public class MigrationExperimentProtocolProperties extends MigrationExperimentPr
 
 		//Get all inputQuantity to change to libraryInputQuantity
 		for(Experiment exp : experiments){
-			Logger.debug("Code experiment "+exp.code+" "+OneToOneContainer.class.getName());
-
+		//	Logger.debug("Code experiment "+exp.code+" "+OneToOneContainer.class.getName());
 
 			//Get protocol Name
 			PropertyValue propValue = new PropertySingleValue(null);
