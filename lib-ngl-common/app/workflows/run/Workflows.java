@@ -55,6 +55,7 @@ public class Workflows {
 	private static final String ruleFV="F_V_1";
 	private static final String ruleFVQC="F_VQC_1";
 	private static final String ruleIWBA="IW_BA_1";
+	private static final String ruleFBA="F_BA_1";
 	private static final String ruleAUA="A-UA_1";
 	private static final String ruleA="A_1";
 	private static final String ruleFTF="F_TF_1";
@@ -478,6 +479,8 @@ public class Workflows {
 				setReadSetState(contextValidation, readSet, nextStep);
 			}
 		}else if("F-BA".equals(analysis.state.code)){
+			//Call rules F-BA
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFBA, analysis),null);	
 			//update readset if necessary
 			for(String rsCode : analysis.masterReadSetCodes){
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
