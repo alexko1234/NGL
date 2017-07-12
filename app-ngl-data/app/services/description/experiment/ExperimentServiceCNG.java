@@ -163,7 +163,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 10/07/2017 NGL 1201: processus Capture principal (2000/2500/Miseq/NextSeq)
+			//FDS ajout 10/07/2017 NGL-1201: processus Capture principal (2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-fc-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -179,7 +179,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (1)(2000/2500/Miseq/NextSeq)
+			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (1)(2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -195,7 +195,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (2)(2000/2500/Miseq/NextSeq)
+			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (2)(2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -203,7 +203,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (3)(4000/X5 = FC ordonnée)
+			//FDS ajout 06/07/2017 NG-1201: processus Capture reprise (3)(4000/X5 = FC ordonnée)
 			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-fc-ord-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -211,7 +211,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (3)(2000/2500/Miseq/NextSeq)
+			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (3)(2000/2500/Miseq/NextSeq)
 			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-fc-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
@@ -255,11 +255,14 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
-		    //FDS dupliquer experience prep-pcr-free en prep-wg-nano; prod 26/09/2016; separer les proprietes de celles de prep-pcr-free ...
+		    //FDS dupliquer experience prep-pcr-free en prep-wg-nano; separer les proprietes de celles de prep-pcr-free ...
+// il faut supprimer "covaris-e210-and-sciclone-ngsx", ??????????????????
 		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
 				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				   getPropertyDefinitionsPrepWgNano(), 
-				   getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
+				   getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx",
+						                  "covaris-le220-and-sciclone-ngsx",
+						                  "covaris-e220-and-sciclone-ngsx"),
 				   "OneToOne", 
 				   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -321,7 +324,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Fragmentation + Purification","fragmentation",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsFragmentation(),
-					getInstrumentUsedTypes("hand","covaris-e210-and-sciclone-ngsx","covaris-e210", "covaris-le220", "covaris-e220"),
+					getInstrumentUsedTypes("hand", "covaris-e210-and-sciclone-ngsx","covaris-e210", "covaris-le220", "covaris-e220"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -351,10 +354,11 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 } // END DEV	
 			
 			/** Quality Control, ordered by display order **/
+            //NOTE: pas de Node a creer pour experiences type qualitycontrol
 			
 			// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
-			// 22/09/2016 modification du name => suppression profil mais garder code a cause existant
-			l.add(newExperimentType("LABCHIP_GX","labchip-migration-profile", null, 100,
+			// 22/09/2016 modification du name => suppression profil mais garder dans le code a cause existant ds base de données
+			l.add(newExperimentType("LABCHIP_GX","labchip-migration-profile", null, 10,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsChipMigration(), 
 					getInstrumentUsedTypes("labChipGX"),
@@ -362,14 +366,14 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 					
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
-			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null, 200,
+			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null, 20,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQPCR(), 
 					getInstrumentUsedTypes("qpcr-lightcycler-480II"),
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 			
-			l.add(newExperimentType("QC Miseq","miseq-qc", null, 300,
+			l.add(newExperimentType("QC Miseq","miseq-qc", null, 30,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQCMiseq(), 
 					getInstrumentUsedTypes("MISEQ-QC-MODE"),
@@ -377,42 +381,41 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS 21/02/2017 ajout -- JIRA NGL-1167: experiments pour Chromium
-			l.add(newExperimentType("Bioanalyzer","bioanalyzer-migration-profile", null, 400,
+			l.add(newExperimentType("Bioanalyzer","bioanalyzer-migration-profile", null, 40,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsBioanalyzer(), 
 					getInstrumentUsedTypes("agilent-2100-bioanalyzer"),
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			l.add(newExperimentType("QC Bank","bank-qc", null, 500,
+			//GA pour import; non affichée
+			l.add(newExperimentType("QC Bank","bank-qc", null, null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsBankQC(), 
 					getInstrumentUsedTypes("hand"),
 					"OneToVoid", false,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-			
-			// FDS 21/02/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur.
-			//  n'est associee a aucun noeud ???
-		    l.add(newExperimentType("QC Exterieur","external-qc", null,1000,
-			    ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()),
-			    getPropertyDefinitionsExternalQC(),
-			    getInstrumentUsedTypes("hand"),
-			    "OneToVoid", false,
-			    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
+
+		    // FDS 21/06/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur; non listée
+		    l.add(newExperimentType("QC Exterieur","external-qc", null, null,
+				    ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()),
+				    getPropertyDefinitionsExternalQC(),
+				    getInstrumentUsedTypes("hand"),
+				    "OneToVoid", false,
+				    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+	    
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			//FDS 06/07/2017 ajout NGL 1201: qc pour process Capture
-			l.add(newExperimentType("Fluo Quantification","qc-fluorometer", null, 600,
+			//FDS 06/07/2017 ajout NGL-1201: qc pour process Capture
+			l.add(newExperimentType("Fluo Quantification","qc-fluorometer", null, 50,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQCquantity(), 
 					getInstrumentUsedTypes("quant-it"), 
-					"OneToVoid", false,
+					"OneToVoid",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 } // END DEV	
 			
 			/** Purification, ordered by display order **/
-            // 0 pour l'instant
-			
+                            /*vide*/
 			
 			/** Transfert, ordered by display order **/
 			// NOTE: pas de Node a creer pour experiences type transfert...sauf cas particuliers
@@ -656,7 +659,8 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("qpcr-quantification",
-						           "labchip-migration-profile","miseq-qc"), // qc
+						           "labchip-migration-profile",
+						           "miseq-qc"), // qc
 				getExperimentTypes("aliquoting")  // transfert
 				).save();	
 		
@@ -677,7 +681,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 				     	
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){		
-	        //Les 2 premiers nodes pour process Capture doivent obligatoirement etre crees AVANT pcr-and-purification !!
+	    //Les 2 premiers nodes pour process Capture doivent obligatoirement etre crees AVANT pcr-and-purification !!
 		//FDS ajout 11/07/2017 NGL-1201: processus capture
 		newExperimentTypeNode("fragmentation",getExperimentTypes("fragmentation").get(0),
 				false,false,false,
@@ -715,6 +719,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		//FDS commun WG_NANO et RNAseq
 		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
 				true,false,false,
+				
 				getExperimentTypeNodes("library-prep",
 						               "prep-wg-nano"), // previous nodes
 				null, // pas de purif
@@ -836,7 +841,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		newExperimentTypeNode("tubes-to-plate",getExperimentTypes("tubes-to-plate").get(0),
 				false,false,false,
 				getExperimentTypeNodes("lib-normalization",
-								   "normalization-and-pooling",
+								       "normalization-and-pooling",
 									   "ext-to-prepa-fc-ordered",
 									   "ext-to-denat-dil-lib"), // previous nodes
 				null, // pas de purif

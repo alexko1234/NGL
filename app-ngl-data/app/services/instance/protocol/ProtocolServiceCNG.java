@@ -170,37 +170,14 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("R9-on-bead-spotOn-depot","R9-dépôt-SpotON sur billes","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		
-		
-		// 10/07/2017 LISTE exacte à nous donner !
-		lp.add(newProtocol("sureselect-xt-3µg"," sureSelect XT 3µg","path7","1","production", 
+		// 12/07/2017 ajout protocoles pour Capture
+		lp.add(newProtocol("1-dna-a-2-sop-agil-capture-sciclone","1_DNA_A_2_SOP_AGIL_Capture_Sciclone","path7","1","production", 
 				InstanceFactory.setExperimentTypeCodes("fragmentation",
 						                               "sample-prep",
 						                               "pcr-and-purification",
 						                               "capture",
 						                               "pcr-indexing")));  
-		
-		lp.add(newProtocol("sureselect-xt-200ng","sureSelect XT 200ng","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("fragmentation",
-								                       "sample-prep",
-								                       "pcr-and-purification",
-								                       "capture",
-								                       "pcr-indexing")));  
 
-		lp.add(newProtocol("sureselect-xt2-1µg","sureSelect XT2 1µg","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("fragmentation",
-								                       "sample-prep",
-								                       "pcr-and-purification",
-								                       "capture",
-								                       "pcr-indexing")));  
-		
-		lp.add(newProtocol("sureselect-xt2-100ng","sureSelect XT2 100ng","path7","1","production", 
-				InstanceFactory.setExperimentTypeCodes("fragmentation",
-								                       "sample-prep",
-								                       "pcr-and-purification",
-								                       "capture",
-								                       "pcr-indexing")));  
-		
-		
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("miseq-qc")));

@@ -72,6 +72,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 	}
 	
+	// NOTE FDS 12/07/2017: mettre le booleen 'active' a false sur un instrument deja existant n'est pas suffisant, il y a un cache (??)
+	// => modifier dans la base de donnees
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();		
@@ -187,6 +189,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		/** thermocyclers **/
+// GRAND MENAGE A FAIRE !!!!
+		
 		// FDS a renommer pour etre coherent avec thermocyclers-and-liquid-handling-robot ????/
 		l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
 				getInstruments(
@@ -200,9 +204,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul ( input tubes ou plaques / output tubes ou  plaques)
+		//FDS 12/07/2017 il existe un 2eme Nexus-SX1 pour l'instant inutilisé
 		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1", "mastercycler-nsx1", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
 				getInstruments(
-						createInstrument("mastercycler1", "Mastercycler 1 (Nexus SX1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler1", "Mastercycler 1 (Nexus SX1)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler2", "Mastercycler 2 (Nexus SX1)", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -219,14 +225,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Mastercycler Nexus Gradient", "mastercycler-nexus-gradient", InstrumentCategory.find.findByCode("thermocycler"), getMasterNexusProperties(), 
 				getInstruments(
 						createInstrument("mastercycler-nexus-gradient1", "Mastercycler Nexus Gradient 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
-						getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
 		
 		/** covaris **/
-		// FDS 16/06/2017 plus utilisé=> inactiver
+		// FDS 16/06/2017 Covaris E210 plus utilisé=> inactiver
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("covaris1", "Covaris 1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
@@ -312,10 +318,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		// FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/plaque output) 
+		// FDS 12/07/2017 Covaris E210 plus utilisé=> inactiver
 		l.add(newInstrumentUsedType("Covaris E210 + Sciclone NGSX", "covaris-e210-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSXProperties(), 
 				getInstruments(
-						createInstrument("covaris1-and-ngs1", "Covaris1 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("covaris1-and-ngs2", "Covaris1 / NGS-2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("covaris1-and-ngs1", "Covaris1 / NGS-1", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("covaris1-and-ngs2", "Covaris1 / NGS-2", null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
