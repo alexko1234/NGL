@@ -259,7 +259,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 	//	propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
 		//		null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","libraryInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),Double.class, false, null,
+		propertyDefinitions.add(newPropertiesDefinition("Qté engagée dans bq","libraryInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),Double.class, false, null,
 				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",13, true,null,null));
 
 		
