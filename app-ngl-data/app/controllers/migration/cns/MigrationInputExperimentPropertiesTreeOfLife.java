@@ -74,7 +74,7 @@ public class MigrationInputExperimentPropertiesTreeOfLife extends MigrationExper
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		}
 
-
+		Logger.debug("migration MigrationInputExperimentPropertiesTreeOfLife "+experimentTypeCode+" keyProperty "+ keyProperty +" keyProperty "+ newKeyProperty+" done!");
 
 		return ok();
 	}
