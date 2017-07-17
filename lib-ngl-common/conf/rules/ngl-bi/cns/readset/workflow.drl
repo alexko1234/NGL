@@ -164,27 +164,16 @@ rule "Find Fungi for taxonomy treatment"
 			fungiKeyword.put("percent",fungiPercentValue);
 			fungiKeyword.put("nbSeq",Integer.valueOf(value));
 			keywordBilan.add(fungiKeyword);
-			if("taxonomy".equals($treatmentTaxo.code)){
-				if($treatmentTaxo.results.get("read1")!=null){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.is("code", $readset.code),
-						DBUpdate.set("treatments.taxonomy.read1.keywordBilan.value", keywordBilan));
-				}else if($treatmentTaxo.results.get("pairs")!=null){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.is("code", $readset.code),
-						DBUpdate.set("treatments.taxonomy.pairs.keywordBilan.value", keywordBilan));
-				}
-			}else{
-				if($treatmentTaxo.results.get("read1")!=null){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.is("code", $readset.code),
-						DBUpdate.set("treatments.taxonomyKraken.read1.keywordBilan.value", keywordBilan));
-				}else if($treatmentTaxo.results.get("pairs")!=null){
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.is("code", $readset.code),
-						DBUpdate.set("treatments.taxonomyKraken.pairs.keywordBilan.value", keywordBilan));
-				}
+			if($treatmentTaxo.results.get("read1")!=null){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", $readset.code),
+					DBUpdate.set("treatments.taxonomy.read1.keywordBilan.value", keywordBilan));
+			}else if($treatmentTaxo.results.get("pairs")!=null){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", $readset.code),
+					DBUpdate.set("treatments.taxonomy.pairs.keywordBilan.value", keywordBilan));
 			}
+			
 		}
 end
 
