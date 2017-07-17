@@ -24,6 +24,8 @@ import javax.xml.xpath.XPathFactory;
 
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 
 import org.junit.Assert;
@@ -40,6 +42,7 @@ import play.libs.ws.WSResponse;
 
 import java.util.Calendar;
 
+import services.XmlServices;
 import utils.AbstractTestsSRA;
 
 import org.w3c.dom.Document;
@@ -155,7 +158,20 @@ public class ToolsTest extends AbstractTestsSRA {
 		List<Sample> listSamples = new ArrayList<Sample>();
 		listSamples = xmlToSample(xmlFile);
 	}
-	
+
+	@Test
+	public void testRelease()throws IOException {
+		Submission submission = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_ARH_27B9362NT")));
+		XmlServices xmlServices = new XmlServices();
+		try {
+			xmlServices.writeAllXml(submission.code);
+		} catch (SraException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	//@Test
 	public void testDates()throws IOException {

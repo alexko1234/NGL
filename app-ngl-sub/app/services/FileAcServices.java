@@ -330,18 +330,18 @@ public class FileAcServices  {
 		
 		// Mise à jour dans la base de la soumission et de ses objets pour les AC :
 		ctxVal.setUpdateMode();
-		sujet = "Liste des AC attribues pour la soumission "  + submissionCode ;
-		message = "Liste des AC attribues pour la soumission "  + submissionCode + " : </br></br>";
-		String retourChariot = "</br>";
-		
-		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
-		submission.accession=submissionAc;
-		
 
 		Calendar calendar = Calendar.getInstance();
 		Date date  = calendar.getTime();		
 		calendar.add(Calendar.YEAR, 2);
 		Date release_date  = calendar.getTime();
+		
+		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" </br></br>";
+		String retourChariot = "</br>";
+		
+		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
+		submission.accession=submissionAc;
+		
 				
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode).notExists("accession"),

@@ -311,6 +311,7 @@ public class XmlServices {
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		// On accede au run via l'experiment:
+		
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
@@ -341,6 +342,7 @@ public class XmlServices {
 				chaine = chaine + "    <EXPERIMENT_REF refname=\"" + experimentCode + "\"/>\n";
 				chaine = chaine + "    <DATA_BLOCK>\n";
 				chaine = chaine + "      <FILES>\n";
+			
 				for (RawData rawData: run.listRawData) {
 					String fileType = rawData.extention;
 					String relatifName = rawData.relatifName;
@@ -386,6 +388,7 @@ public class XmlServices {
 			
 		chaine = chaine + "    <ACTIONS>\n";
 		// soumission systematique en confidential meme si study deja public
+		chaine = chaine + "      <ACTION>\n        <HOLD/>\n      </ACTION>\n";
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
 		}
@@ -409,14 +412,20 @@ public class XmlServices {
 	}
 
 
-	public static void writeSubmissionReleaseXml (Submission submission, File outputFile) throws IOException {
+	public static void writeSubmissionReleaseXml (Submission submission, File outputFile) throws IOException, SraException {
+		
 		if (submission == null) {
-			return;
+			throw new SraException("Aucune soumission en argument");
 		}
 		if(StringUtils.isBlank(submission.studyCode)){
-			return;
+			throw new SraException("Impossible de faire la soumission pour release " + submission.code + " sans studyCode");
+
 		}
-		
+		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);	
+		if(StringUtils.isBlank(study.accession)){
+			throw new SraException("Impossible de releaser le study " + study.code + " sans numeros d'accession");
+		}
+
 		// ouvrir fichier en ecriture
 		System.out.println("Creation du fichier " + outputFile);
 		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
@@ -432,7 +441,7 @@ public class XmlServices {
 			
 		chaine = chaine + "    <ACTIONS>\n";
 		
-		chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + submission.studyCode + "\"/>\n      </ACTION>\n";
+		chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + study.accession + "\"/>\n      </ACTION>\n";
 		
 		chaine = chaine + "    </ACTIONS>\n";
 		
