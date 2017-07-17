@@ -20,8 +20,9 @@ import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-import controllers.readsets.api.ReadSetsSearchForm;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
+import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -45,7 +46,6 @@ import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
 import workflows.run.Workflows;
 /**
  * Controller around Run object
@@ -73,8 +73,7 @@ public class Runs extends RunsController {
 		
 		if(form.datatable){			
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			List<Run> runs = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Run>(runs, results.count())));
+			return ok(new MongoDBDatatableResponseChunks<Run>(results)).as("application/json");	
 		}else if(form.list){
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -82,14 +81,12 @@ public class Runs extends RunsController {
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			List<Run> runs = results.toList();			
-			return ok(Json.toJson(toListObjects(runs)));
+			return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
 		}else{
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);	
-			List<Run> runs = results.toList();
-			return ok(Json.toJson(runs));
+			return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
 		}
 	}
 
