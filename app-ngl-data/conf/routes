@@ -96,6 +96,7 @@ GET     /cng/migration-lanes                    controllers.migration.cng.Migrat
 
 GET     /cng/add-chromium-index                 controllers.migration.cng.AddIndexChromium.addIndex()
 GET     /cng/migration-sampletype               controllers.migration.cng.MigrationSampleType.migration()
+GET     /cng/migration-whole-genome             controllers.migration.cng.MigrationAnalysisWholeGenome.migration()
 
 GET		/cns/migration-transfert-ccrt			controllers.migration.cns.MigrationTransfertCCRT.migration()
 GET		/cng/migration-transfert-ccrt			controllers.migration.cng.MigrationTransfertCCRT.migration()

@@ -322,6 +322,10 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.in("contents.sampleTypeCode", containersSearch.sampleTypeCodes));
 		}
 
+		if(StringUtils.isNotBlank(containersSearch.ncbiScientificNameRegex)){
+			queryElts.add(DBQuery.regex("contents.ncbiScientificName", Pattern.compile(containersSearch.ncbiScientificNameRegex)));
+		}
+		
 		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
@@ -356,6 +360,7 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 		}
 
+		
 		if(CollectionUtils.isNotEmpty(containersSearch.supportCodes)){
 			queryElts.add(DBQuery.in("support.code", containersSearch.supportCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.supportCode)){
