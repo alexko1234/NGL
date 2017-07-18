@@ -16,6 +16,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
@@ -334,7 +335,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
 			l.add(newExperimentType("Sample prep (pré-capture)","sample-prep",null,660,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-					getPropertyDefinitionsPrepCapture(),
+					getPropertyDefinitionsSamplePrepCapture(),
 					getInstrumentUsedTypes("sciclone-ngsx"),
 					"OneToMany",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -1395,7 +1396,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 	}
 	
 	// GA
-	private List<PropertyDefinition> getPropertyDefinitionsBankQC() {
+	private List<PropertyDefinition> getPropertyDefinitionsBankQC() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
@@ -1414,7 +1415,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 	}
 
 	// FDS 21/06/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur.
-	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
+	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -1428,35 +1429,73 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 	}
 	
-	//FDS ajout 11/07/2017 NGL-1201
-	private List<PropertyDefinition> getPropertyDefinitionsPrepCapture() {
+	//FDS ajout 18/07/2017 NGL-1201
+	private List<PropertyDefinition> getPropertyDefinitionsSamplePrepCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
-		//TODO attente specs 
+		// pas de propriétés pour l'instant...
+
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 11/07/2017 NGL-1201
-	private List<PropertyDefinition> getPropertyDefinitionsFragmentation() {
+	//FDS ajout 18/07/2017 NGL-1201
+	private List<PropertyDefinition> getPropertyDefinitionsFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//TODO attente specs 
+		// pas de propriétés pour l'instant...
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 11/07//2017 NGL-1201
-	private List<PropertyDefinition> getPropertyDefinitionsCapture() {
+	//FDS ajout 18/07//2017 NGL-1201
+	private List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+			
+		//InputContainer
+		// pas editable=> calculé
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"), 
+				"single",10, false,null,null));
 		
-		//TODO attente specs 
+		// editable
+		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), 
+				MeasureUnit.find.findByCode("ng"), 
+				MeasureUnit.find.findByCode("ng"),
+				"single",11,true,null,null));
+		
+		// valeur par defaut: celle qui se trouve dans processus dans expectedBaits ?
+		// pas editable => liste
+		// contents ???????????/
+		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, getCaptureBaitsValues(),
+				null, null, null,"single",12,false,null,null));
+		
+		//OuputContainer ????
+			
 		return propertyDefinitions;
+	
 	}
 	
-	//FDS ajout 11/07/2017 NGL-1201
+	//FDS ajout 18/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsPcrIndexing() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//TODO attente specs 
+		//OuputContainer
+		// proprietes de containerOut doivent etre propagees au content
+		// il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) ??????????????
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
+				"single", 30, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
+				"single", 31, true, null,null));	
+		
+		// valeur par defaut: 30 µL
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, "F", null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
+				MeasureUnit.find.findByCode("µL"), 
+				MeasureUnit.find.findByCode("µL"), 
+				"single",32, true, "30", null));
+		
 		return propertyDefinitions;
 	}
 	
@@ -1472,6 +1511,21 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				"single", 13, true, null,null));
 		
 		return propertyDefinitions;
+	}
+	
+	// FDS ajout 18/07/2017 pour JIRA NGL-1201: processus capture
+	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
+	// !! code dupliqué dans ProcessServiceCNG
+	private static List<Value>getCaptureBaitsValues() {
+		 List<Value> values = new ArrayList<Value>();
+		 
+		 values.add(DescriptionFactory.newValue("V5",    "V5"));
+		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));
+		 values.add(DescriptionFactory.newValue("V6",    "V6"));
+		 values.add(DescriptionFactory.newValue("V6+UTR","V6+UTR")); 
+		 /// values.add(DescriptionFactory.newValue("custom","custom"));  ???
+	
+    	return values;
 	}
 	
 }

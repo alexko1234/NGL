@@ -623,6 +623,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//PCR free
 		progList.add("TruSEQ_DNA_PCR_Free_Library_Prep");
 		progList.add("TruSEQ_DNA_PCR_Free_Library_Prep_DAP_Plate");
+		
+		//18/07/2017 ESSAI
+		progList.add("ESSAI: Fragmentation pour capture");
 
 		//transformer ArrayList progList en Array progList2 car newValue() prend un Array en argument !!
 		String progList2[] = new String[progList.size()];
@@ -652,12 +655,20 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//    ses propriétés sont la somme des propriétés de chacun (Attention au noms de propriété communs...)
 	private static List<PropertyDefinition> getCovarisAndScicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
-                newValues("PCR FREE PROD NGS FINAL"), "PCR FREE PROD NGS FINAL", "single"));
+		
+		// 18/07/2017 aussi utilise en Fragmentation/capture !!!
+		//l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
+        //        newValues("PCR FREE PROD NGS FINAL"),"PCR FREE PROD NGS FINAL", "single"));
+		
+		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+                newValues("PCR FREE PROD NGS FINAL",
+                		  "essai: Fragmentation"), 
+                		  "single", null, false ,null, null));
 
 		//l.addAll(getCovarisProperties());
 		l.addAll(getScicloneNGSXProperties());
 		
+		// optionnel
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 				null, null, null, null, "single", null, true ,null, null));
 		return l;
@@ -674,6 +685,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						  "1_HiseqCluster_Normalisation_V0",
 						  "1_HiseqCluster_Normalisation_gros_vol_tris"),
 						  "single", null, false ,null, null));
+		
 		return l;
 	}
 	

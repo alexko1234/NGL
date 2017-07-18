@@ -739,6 +739,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	
 	// FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	// utilisé par processus getPropertyDefinitionsCapture ET getPropertyDefinitionsCapturePcrIndexing
+	// !! code dupliqué dans ExperimentServiceCNG
 	private static List<Value>getCaptureBaitsValues() {
 		 List<Value> values = new ArrayList<Value>();
 		 
