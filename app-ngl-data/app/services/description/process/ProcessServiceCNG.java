@@ -277,11 +277,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	    // 10/07/2017  NOUVEAU CHANGEMENT: 8 process !!!!	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture (4000/X5)", "capture-prep-fc-ord-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture (4000/X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
-						getPET("ext-to-capture-prep-fc-ord-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-capture-prep-process-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("fragmentation",0),
 						getPET("sample-prep",1),
 						getPET("pcr-and-purification",2),
@@ -293,15 +293,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("illumina-depot",7)),           
 				getExperimentTypes("fragmentation").get(0),                      //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                     //last  experiment type
-				getExperimentTypes("ext-to-capture-prep-fc-ord-process").get(0), //void  experiment type
+				getExperimentTypes("ext-to-capture-prep-process-fc-ord").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture (2000/2500/Miseq/NextSeq)", "capture-prep-fc-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture (2000/2500/Miseq/NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
-						getPET("ext-to-capture-prep-fc-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-capture-prep-process-fc",-1), //ordered list of experiment type in process type
 						getPET("fragmentation",0),
 						getPET("sample-prep",1),
 						getPET("pcr-and-purification",2),
@@ -312,15 +312,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				    	getPET("illumina-depot",7)),   
 				getExperimentTypes("fragmentation").get(0),                   //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
-				getExperimentTypes("ext-to-capture-prep-fc-process").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-capture-prep-process-fc").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));  	
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1)  (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 1 (4000/X5)", "pcr-capture-pcr-indexing-fc-ord-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 1 (4000/X5)", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				7,
 				null,
 				Arrays.asList(
-						getPET("ext-to-pcr-capture-pcr-indexing-fc-ord-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-pcr-capture-pcr-indexing-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("sample-prep",-1), 
 						getPET("pcr-and-purification",0),
 						getPET("capture",1),
@@ -331,15 +331,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("illumina-depot",5)),           
 				getExperimentTypes("pcr-and-purification").get(0),				              //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                                   //last  experiment type
-				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-ord-process").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-ord").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 1 (2000/2500/Miseq/NextSeq)", "pcr-capture-pcr-indexing-fc-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 1 (2000/2500/Miseq/NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				8,
 				null,
 				Arrays.asList(
-						getPET("ext-to-pcr-capture-pcr-indexing-fc-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-pcr-capture-pcr-indexing-fc",-1), //ordered list of experiment type in process type
 						getPET("sample-prep",-1), 
 						getPET("pcr-and-purification",0),
 						getPET("capture",1),
@@ -349,15 +349,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				    	getPET("illumina-depot",5)),  
 				getExperimentTypes("pcr-and-purification").get(0),				          //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                              //last  experiment type
-				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-process").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 2 (4000/X5)", "capture-pcr-indexing-fc-ord-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 2 (4000/X5)", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				9,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
-						getPET("ext-to-capture-pcr-indexing-fc-ord-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-capture-pcr-indexing-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("pcr-and-purification",-1),
 						getPET("capture",0),
 						getPET("pcr-indexing",1),
@@ -367,15 +367,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("illumina-depot",4)),
 				getExperimentTypes("capture").get(0),                             //first experiment type    
 				getExperimentTypes("pcr-indexing").get(0),                        //last  experiment type
-				getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord-process").get(0), //void  experiment type
+				getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 2 (2000/2500/Miseq/NextSeq)", "capture-pcr-indexing-fc-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 2 (2000/2500/Miseq/NextSeq)", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				10,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
-						getPET("ext-to-capture-pcr-indexing-fc-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-capture-pcr-indexing-fc",-1), //ordered list of experiment type in process type
 						getPET("pcr-and-purification",-1),
 						getPET("capture",0),
 						getPET("pcr-indexing",1),
@@ -384,15 +384,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("illumina-depot",4)),
 				getExperimentTypes("capture").get(0),                                //first experiment type    
 				getExperimentTypes("pcr-indexing").get(0),                           //last  experiment type
-				getExperimentTypes("ext-to-capture-pcr-indexing-fc-process").get(0), //void  experiment type
+				getExperimentTypes("ext-to-capture-pcr-indexing-fc").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));					
 
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("PCR indexing (4000/X5)", "pcr-indexing-fc-ord-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("PCR indexing (4000/X5)", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				11,
 				null,
 				Arrays.asList(
-						getPET("ext-to-pcr-indexing-fc-ord-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-pcr-indexing-process-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("capture",-1),
 						getPET("pcr-indexing",0), 	
 						getPET("lib-normalization",1),
@@ -401,15 +401,15 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("illumina-depot",3)),
 				getExperimentTypes("pcr-indexing").get(0),                        //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                      //last  experiment type
-				getExperimentTypes("ext-to-pcr-indexing-fc-ord-process").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-pcr-indexing-process-fc-ord").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("PCR indexing (2000/2500/Miseq/NextSeq)", "pcr-indexing-fc-process", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("PCR indexing (2000/2500/Miseq/NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),
 				12,
 				null,
 				Arrays.asList(
-						getPET("ext-to-pcr-indexing-fc-process",-1), //ordered list of experiment type in process type
+						getPET("ext-to-pcr-indexing-process-fc",-1), //ordered list of experiment type in process type
 						getPET("capture",-1),
 						getPET("pcr-indexing",0), 
 						getPET("denat-dil-lib",1),
@@ -417,7 +417,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("illumina-depot",4)),
 				getExperimentTypes("pcr-indexing").get(0),                    //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
-				getExperimentTypes("ext-to-pcr-indexing-fc-process").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-pcr-indexing-process-fc").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 } // END IF
@@ -689,7 +689,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 		//N-plex: optionnel,niveau process uniquement
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Nombre de Plex","nPlex",
+				DescriptionFactory.newPropertiesDefinition("N-Plex","nPlex",
 						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
 						null, "single" ,106, true, null, null));
 		
@@ -742,11 +742,10 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	private static List<Value>getCaptureBaitsValues() {
 		 List<Value> values = new ArrayList<Value>();
 		 
-		 values.add(DescriptionFactory.newValue("V5","V5"));
+		 values.add(DescriptionFactory.newValue("V5",    "V5"));
 		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));
-		 values.add(DescriptionFactory.newValue("V6","V6"));
-		 values.add(DescriptionFactory.newValue("V6+UTR","V5"));
-		 
+		 values.add(DescriptionFactory.newValue("V6",    "V6"));
+		 values.add(DescriptionFactory.newValue("V6+UTR","V6+UTR")); 
 		 /// values.add(DescriptionFactory.newValue("custom","custom"));  ???
 	
     	return values;
@@ -758,9 +757,9 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		 List<Value> values = new ArrayList<Value>();
 		 
 		 // LISTE exacte à nous donner ! sureSelect XT 3µg ; XT 200ng ; XT2 1µg, XT2 100ng
-		 values.add(DescriptionFactory.newValue("sureselect-xt-3µg","sureSelect XT 3µg"));
-		 values.add(DescriptionFactory.newValue("sureselect-xt-200ng","sureSelect XT 200ng"));
-		 values.add(DescriptionFactory.newValue("sureselect-xt2-1µg","sureSelect XT2 1µg"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt-3µg",   "sureSelect XT 3µg"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt-200ng", "sureSelect XT 200ng"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt2-1µg",  "sureSelect XT2 1µg"));
 		 values.add(DescriptionFactory.newValue("sureselect-xt2-100ng","sureSelect XT2 100ng"));
 		 
 	    return values;

@@ -156,7 +156,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
 			//FDS ajout 10/07/2017 NGL 1201: processus Capture principal (4000/X5 = FC ordonnée)
-			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-fc-ord-process",null,-1,
+			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-process-fc-ord",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -164,7 +164,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 10/07/2017 NGL-1201: processus Capture principal (2000/2500/Miseq/NextSeq)
-			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-fc-process",null,-1,
+			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-process-fc",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -172,7 +172,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			
 			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (1)(4000/X5 = FC ordonnée)
-			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc-ord-process",null,-1,
+			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc-ord",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -180,7 +180,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (1)(2000/2500/Miseq/NextSeq)
-			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc-process",null,-1,
+			l.add(newExperimentType("Ext to Prep. Capture à partir sample prep sauvgarde","ext-to-pcr-capture-pcr-indexing-fc",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -188,7 +188,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			
 			//FDS ajout 06/07/2017 NGL 1201: processus Capture reprise (2)(4000/X5 = FC ordonnée)
-			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc-ord-process",null,-1,
+			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc-ord",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -196,7 +196,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (2)(2000/2500/Miseq/NextSeq)
-			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc-process",null,-1,
+			l.add(newExperimentType("Ext to Prep. Capture à partir pré Capture","ext-to-capture-pcr-indexing-fc",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -204,7 +204,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 06/07/2017 NG-1201: processus Capture reprise (3)(4000/X5 = FC ordonnée)
-			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-fc-ord-process",null,-1,
+			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-process-fc-ord",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -212,7 +212,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS ajout 06/07/2017 NGL-1201: processus Capture reprise (3)(2000/2500/Miseq/NextSeq)
-			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-fc-process",null,-1,
+			l.add(newExperimentType("Ext to PCR indexing à partir capture sauvgarde","ext-to-pcr-indexing-process-fc",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 					null, 
 					null,
@@ -226,7 +226,9 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Prep. PCR free","prep-pcr-free",null,500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPrepPcrFree(), 
-					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),
+					getInstrumentUsedTypes(//"covaris-e210-and-sciclone-ngsx", FDS 18/07/2017 plus utilisé (inactivéé dans instrumentService...)
+							               "covaris-le220-and-sciclone-ngsx",
+							               "covaris-e220-and-sciclone-ngsx"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -235,7 +237,9 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("PCR+purification","pcr-and-purification",null,700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPcrAndPurification(),
-					getInstrumentUsedTypes("mastercycler-epg-and-zephyr"), //// NGL-1201 liste a faire evoluer
+					getInstrumentUsedTypes("mastercycler-epg-and-zephyr",
+							               "mastercycler-epg-and-bravows"
+							), //// NGL-1201 liste a faire evoluer
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -256,12 +260,10 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		    //FDS dupliquer experience prep-pcr-free en prep-wg-nano; separer les proprietes de celles de prep-pcr-free ...
-// il faut supprimer "covaris-e210-and-sciclone-ngsx", ??????????????????
 		    l.add(newExperimentType("Prep. WG Nano","prep-wg-nano",null,500,
 				   ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				   getPropertyDefinitionsPrepWgNano(), 
-				   getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx",
-						                  "covaris-le220-and-sciclone-ngsx",
+				   getInstrumentUsedTypes("covaris-le220-and-sciclone-ngsx",
 						                  "covaris-e220-and-sciclone-ngsx"),
 				   "OneToOne", 
 				   DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -321,10 +323,11 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture
-			l.add(newExperimentType("Fragmentation + Purification","fragmentation",null,650,
+			l.add(newExperimentType("Fragmentation","fragmentation",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsFragmentation(),
-					getInstrumentUsedTypes("hand", "covaris-e210-and-sciclone-ngsx","covaris-e210", "covaris-le220", "covaris-e220"),
+					getInstrumentUsedTypes("covaris-e220-and-sciclone-ngsx",
+							               "covaris-le220-and-sciclone-ngsx"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -332,7 +335,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Sample prep (pré-capture)","sample-prep",null,660,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepCapture(),
-					getInstrumentUsedTypes("hand","sciclone-ngsx"),
+					getInstrumentUsedTypes("sciclone-ngsx"),
 					"OneToMany",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 						
@@ -340,16 +343,17 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Capture","capture",null,710,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
-					getInstrumentUsedTypes("hand","bravo-workstation"),
-					"OneToMany",
+					getInstrumentUsedTypes("bravo-workstation"),
+					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
 			l.add(newExperimentType("PCR+indexing (post-capture)","pcr-indexing",null,720,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPcrIndexing(),
-					getInstrumentUsedTypes("hand","bravo-workstation"),
-					"OneToMany",
+					getInstrumentUsedTypes("mastercycler-nexus-and-bravows",
+							               "mastercycler-epg-and-bravows"),
+					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 } // END DEV	
 			
@@ -578,7 +582,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture
-		newExperimentTypeNode("ext-to-capture-prep-fc-ord-process", getExperimentTypes("ext-to-capture-prep-fc-ord-process").get(0), 
+		newExperimentTypeNode("ext-to-capture-prep-process-fc-ord", getExperimentTypes("ext-to-capture-prep-process-fc-ord").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -587,7 +591,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture
-		newExperimentTypeNode("ext-to-capture-prep-fc-process", getExperimentTypes("ext-to-capture-prep-fc-process").get(0), 
+		newExperimentTypeNode("ext-to-capture-prep-process-fc", getExperimentTypes("ext-to-capture-prep-process-fc").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -596,7 +600,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (1)
-		newExperimentTypeNode("ext-to-pcr-capture-pcr-indexing-fc-ord-process", getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-ord-process").get(0), 
+		newExperimentTypeNode("ext-to-pcr-capture-pcr-indexing-fc-ord", getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-ord").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -605,7 +609,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (1)
-		newExperimentTypeNode("ext-to-pcr-capture-pcr-indexing-fc-process", getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-process").get(0), 
+		newExperimentTypeNode("ext-to-pcr-capture-pcr-indexing-fc", getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -615,7 +619,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (2)
-		newExperimentTypeNode("ext-to-capture-pcr-indexing-fc-ord-process", getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord-process").get(0), 
+		newExperimentTypeNode("ext-to-capture-pcr-indexing-fc-ord", getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -624,7 +628,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (2)
-		newExperimentTypeNode("ext-to-capture-pcr-indexing-fc-process", getExperimentTypes("ext-to-capture-pcr-indexing-fc-process").get(0), 
+		newExperimentTypeNode("ext-to-capture-pcr-indexing-fc", getExperimentTypes("ext-to-capture-pcr-indexing-fc").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -633,7 +637,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (3)
-		newExperimentTypeNode("ext-to-pcr-indexing-fc-ord-process", getExperimentTypes("ext-to-pcr-indexing-fc-ord-process").get(0), 
+		newExperimentTypeNode("ext-to-pcr-indexing-process-fc-ord", getExperimentTypes("ext-to-pcr-indexing-process-fc-ord").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -642,7 +646,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (3)
-		newExperimentTypeNode("ext-to-pcr-indexing-fc-process", getExperimentTypes("ext-to-pcr-indexing-fc-process").get(0), 
+		newExperimentTypeNode("ext-to-pcr-indexing-process-fc", getExperimentTypes("ext-to-pcr-indexing-process-fc").get(0), 
 				false, false, false, 
 				null, // no previous nodes
 				null,
@@ -685,8 +689,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		//FDS ajout 11/07/2017 NGL-1201: processus capture
 		newExperimentTypeNode("fragmentation",getExperimentTypes("fragmentation").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-capture-prep-fc-process",
-						               "ext-to-capture-prep-fc-ord-process"), // previous nodes
+				getExperimentTypeNodes("ext-to-capture-prep-process-fc",
+						               "ext-to-capture-prep-process-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("bioanalyzer-migration-profile",
 						           "labchip-migration-profile"),   // qc 
@@ -708,8 +712,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				getExperimentTypeNodes("library-prep",
 						               "prep-wg-nano",
 						               "sample-prep",
-						               "ext-to-pcr-capture-pcr-indexing-fc-process",
-						               "ext-to-pcr-capture-pcr-indexing-fc-ord-process"), // previous nodes
+						               "ext-to-pcr-capture-pcr-indexing-fc",
+						               "ext-to-pcr-capture-pcr-indexing-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("labchip-migration-profile",
 				                   "qc-fluorometer"),            // qc ajout "qc-fluorometer" pour process Capture ( UTILE ?? voir comment plus bas...)
@@ -855,8 +859,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		newExperimentTypeNode("capture",getExperimentTypes("capture").get(0),
 				false,false,false,
 				getExperimentTypeNodes("pcr-and-purification",
-						               "ext-to-capture-pcr-indexing-fc-process", 
-				 					   "ext-to-capture-pcr-indexing-fc-ord-process"),// previous nodes
+						               "ext-to-capture-pcr-indexing-fc", 
+				 					   "ext-to-capture-pcr-indexing-fc-ord"),// previous nodes
 				null, // pas de purif
 				null, // pas qc
 				null  // pas tranfert
@@ -866,8 +870,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		newExperimentTypeNode("pcr-indexing",getExperimentTypes("pcr-indexing").get(0),
 				false,false,false,
 				getExperimentTypeNodes("capture",
-						               "ext-to-pcr-indexing-fc-process",
-						               "ext-to-pcr-indexing-fc-ord-process"), // previous nodes
+						               "ext-to-pcr-indexing-process-fc",
+						               "ext-to-pcr-indexing-process-fc-ord"), // previous nodes
 				null, // pas de purif
 				null, // QUEL QC ??????????????????
 				null  // pas tranfert
