@@ -81,7 +81,8 @@ public class Runs extends RunsController {
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
+			List<Run> runs = results.toList();			
+			return ok(Json.toJson(toListObjects(runs)));
 		}else{
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
