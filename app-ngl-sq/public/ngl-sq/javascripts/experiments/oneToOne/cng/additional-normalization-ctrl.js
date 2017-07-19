@@ -1,5 +1,5 @@
-// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
-angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
+// FDS 19/07/2017 -- JIRA NGL-1519. Duplication avec qq differences: PAS DEFAUT pour volume, concentration
+angular.module('home').controller('AdditionalNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
                                                      function($scope, $parse, $http, atmToSingleDatatable){
 
 	var inputExtraHeaders=Messages("experiments.inputs");
@@ -193,23 +193,23 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
-			         { // Concentration; 08/11/2016 shortLabel
+			         { // Concentration
 			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "defaultValues":4,
+			        	 // "defaultValues":4,    PAS DEFAUT
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         { // Volume  avec valeur par defaut
+			         { // Volume
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-						 "defaultValues":15,
+						 //"defaultValues":15,   PAS DEFAUT  
 			        	 "position":130,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
