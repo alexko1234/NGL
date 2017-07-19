@@ -327,27 +327,38 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
             //27/03/2017 renommage "Tubes" en "Tubes ou Strips"
 			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10500,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			// renommage "Tubes ou Plaques" en "Tubes + Plaques
 			l.add(newExperimentType("Tubes + Plaques -> Plaque","x-to-plate",null,10800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-					
 			
-			// NOTE: toutes les experiences nanopores sont regroupées dans Nanopore.java
+			// FDS ajout 19/07/2017	NGL-1519: dupliquer "lib-normalization" en experience de type transfert	
+			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,10900,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
+					getPropertyDefinitionsLibNormalization(),
+					getInstrumentUsedTypes("hand","janus"), 
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+			
+			/** NOTE: toutes les experiences nanopores sont regroupées dans la classe Nanopore.java **/
 			l.addAll(new Nanopore().getExperimentType());
 			
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
