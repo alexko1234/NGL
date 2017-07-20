@@ -3173,13 +3173,13 @@ directive("udtCell", function(){
 			    	var getDisplayValue = function(column, value, onlyProperty, currentScope){
 			    		if(onlyProperty){
 			    			if(column.watch === true){
-                                scope.$watch("value.data."+column.property, function(newValue, oldValue) {
+                                scope.$watch("value.data."+column.property+currentScope.udtTableFunctions.getFilter(column), function(newValue, oldValue) {
                                     if ( newValue !== oldValue ) {
                                         scope.cellValue = newValue;
                                      }
                                 });
                             }
-			    			return currentScope.$eval(column.property, value.data);
+			    			return currentScope.$eval(column.property+currentScope.udtTableFunctions.getFilter(column), value.data);
 			    		}else{
 			    			if(!value.line.group && (column.url === undefined || column.url === null)){
 			    				if(column.watch === true){

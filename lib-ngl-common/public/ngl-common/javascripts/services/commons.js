@@ -1370,6 +1370,12 @@ angular.module('commonsServices', []).
     			array = array.concat(input);
     			return array;    			
     		}
+    	}).filter('arrayElt', function(){
+    		return function(array, position){
+    			if(!angular.isArray(array))return undefined;
+    			
+    			return array[position];    			    			
+    		}
     	}).filter('countDistinct', ['$parse',function($parse) {
     	    return function(array, key) {
     	    	if (!array || array.length === 0)return undefined;
