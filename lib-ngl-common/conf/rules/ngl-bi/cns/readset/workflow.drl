@@ -114,19 +114,29 @@ rule "Find Fungi for taxonomy treatment"
 			
 		String krona = null;
 		List<Map<String, ?>> keywordBilan = new ArrayList<Map<String, ?>>();
+		boolean createPropKeywordBilan = true;
 		if($treatmentTaxo.results.get("read1")!=null){
 			Logger.debug("Get from read1");
 			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
 			if($treatmentTaxo.results.get("read1").get("keywordBilan")!=null){
 				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+				createPropKeywordBilan=false;
 			}
 		}else if($treatmentTaxo.results.get("pairs")!=null){
 			Logger.debug("Get from pairs");
 			krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("pairs").get("krona")).value);
 			if($treatmentTaxo.results.get("pairs").get("keywordBilan")!=null){
 				keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("pairs").get("keywordBilan")).value;
+				createPropKeywordBilan=false;
 			}
 		}
+		if(createPropKeywordBilan){
+				PropertyObjectListValue pol = new PropertyObjectListValue(new ArrayList<Map<String, ?>>());
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", $readset.code),
+					DBUpdate.set("treatments.taxonomy.pairs.keywordBilan", pol));
+		}
+		
 		if(krona!=null){
 			Pattern p1 = Pattern.compile(".*<node name=\"Fungi\">\\s+<magnitude><val>(\\d+)</val></magnitude>.*", Pattern.DOTALL);
 			Matcher m1 = p1.matcher(krona);
