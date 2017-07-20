@@ -59,8 +59,16 @@ public class MigrationTaxonomyFungi extends CommonController{
 			List<Object> facts = new ArrayList<Object>();
 			facts.add(rs);				
 			rulesServices.callRules(Play.application().configuration().getString("rules.key"), "F_QC_1", facts);
+		
 			
+			//remove keywordBilan
+			/*Map<String, PropertyValue> propPairs = rs.treatments.get("taxonomy").results.get("pairs");
+			 propPairs.remove("keywordBilan");
+			 MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.is("code", rs.code),
+						DBUpdate.set("treatments.taxonomy.pairs", propPairs));*/
 		}
+		Logger.debug("End migration taxonomy fungi");
 		return ok();
 	}
 
