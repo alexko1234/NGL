@@ -155,6 +155,12 @@ public class RunIllumina extends AbstractDeclaration {
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
 						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single",400));	
+		
+		propertyDefinitions.add(
+				newPropertiesDefinition("Dev / Prod ?", "devProdContext", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
+						DescriptionFactory.newValues("PROD","DEV"),null,null,null,"single", 500, true, null, null)
+				);
+		
 		return propertyDefinitions;
 	}
 	
