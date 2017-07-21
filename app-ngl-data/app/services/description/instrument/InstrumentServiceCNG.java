@@ -626,6 +626,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		//18/07/2017 ESSAI
 		progList.add("ESSAI: Fragmentation pour capture");
+		progList.add("ESSAI: Prep. pour capture");
 
 		//transformer ArrayList progList en Array progList2 car newValue() prend un Array en argument !!
 		String progList2[] = new String[progList.size()];
@@ -662,7 +663,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 newValues("PCR FREE PROD NGS FINAL",
-                		  "essai: Fragmentation"), 
+                		  "ESSAI: Fragmentation"), 
                 		  "single", null, false ,null, null));
 
 		//l.addAll(getCovarisProperties());

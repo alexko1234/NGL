@@ -71,47 +71,38 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
-			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 //"property":"inputContainer.fromTransformationTypeCodes",  ///pourquoi ?????????????????????????
+			        	 "property":"inputContainerUsed.fromTransformationTypeCodes",
 			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			 			 "render":"<div list-resize='cellValue'  list-resize-min-size='3'>",
-			        	 "position":4,
+			        	 "position":6,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         /* pas de Tag ?????????????
 			         {
 			        	"header":Messages("containers.table.tags"),
-			 			"property": "inputContainer.contents",
+			 			//"property": "inputContainer.contents",
+			        	"property": "inputContainerUsed.contents",
 			 			"filter": "getArray:'properties.tag.value'| unique",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":4,
+			 			"position":7,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0:inputExtraHeaders}
-			         },	
-			         /* suppression demandee lors du test avant mise en prod 01/09/2016
-					 {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":5,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         */
+			         },	*/
 			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":6,
+			        	 "position":8,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         {
@@ -122,9 +113,50 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 						 "hide":true,
 			        	 "type":"text",
 						 "filter":"codes:'state'",
-			        	 "position":7,
+			        	 "position":9,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         {
+			        	 "header":"TEST RUN ",
+			        	 "property":"inputContainerUsed.contents.processProperties",
+			        	 "filter": "getArray: 'ngsRunWorkLabel.value'| unique",
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":10,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         {
+			        	 "header":"TEST RUN2 ",
+			        	 "property":"inputContainerUsed.contents",
+			        	 "filter": "getArray: 'processProperties.ngsRunWorkLabel.value'| unique",
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":11,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         {
+			        	 "header":"TEST RUN3 ",
+			        	 "property":"inputContainerUsed.contents.processProperties.ngsRunWorkLabel.value",
+			        	 "filter": "unique",
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":12,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         {
+			        	 "header":"OK ",
+			        	 "property":"inputContainerUsed.contents",
+			        	 "filter": "getArray: 'percentage'| unique",
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":13,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         
 			         // colonnes specifiques experience viennent ici...
 			         //--------------------- OUTPUT containers section -----------------------
 			         // 27/09/2016 ajout defaut value=30
