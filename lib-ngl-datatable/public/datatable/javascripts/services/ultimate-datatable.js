@@ -1778,6 +1778,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (this.config.cancel.active) {
                     /*cancel only edit and hide mode */
                     this.config.edit = angular.copy(this.configMaster.edit);
+                    this.config.edit.byDefault = false;
                     this.config.hide = angular.copy(this.configMaster.hide);
                     this.config.remove = angular.copy(this.configMaster.remove);
                     this.config.select = angular.copy(this.configMaster.select);
