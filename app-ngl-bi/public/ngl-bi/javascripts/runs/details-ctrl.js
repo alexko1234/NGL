@@ -92,7 +92,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				{  	"property":"laneNumber",
 					"header": Messages("readsets.laneNumber"),
 					"type":"text",
-					"order":false
+					"order":false,
+					"position":1
 				}, 
 				{  	"property":"code",
 					"header": Messages("readsets.code"),
@@ -100,61 +101,34 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						return '<a href="" ng-click="showReadSet(\''+value.code+'\')">'+value.code+'</a>';
 					},
 					"type":"text",
-					"order":false
+					"order":false,
+					"position":2
 				},
 				{	"property":"state.code",
 					"filter":"codes:'state'",
 					"header": Messages("readsets.stateCode"),
-					"type":"text"
+					"type":"text",
+					"position":3
 				},
 				{  	
 					"property":"sampleOnContainer.percentage",
 					"header": Messages("readsets.sampleOnContainer.percentPerLane"),
 					"type":"number",
 					"format":2,
-					"order":false
-				},
-			   	{  	"property":"treatments.ngsrg.default.validSeqPercent.value",
-			    	"header": Messages("readsets.treatments.ngsrg_illumina.validSeqPercent"),
-			    	"type":"number",
-			    	"format":2,
-			    	"order":false,
-			    	"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
-				},
-				{  	"property":"treatments.ngsrg.default.nbCluster.value",
-			    	"header": Messages("readsets.treatments.ngsrg_illumina.nbCluster"),
-			    	"type":"number",
-			    	"order":false,
-			    	"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
-				},
-				{  	"property":"treatments.ngsrg.default.nbBases.value",
-			    	"header": Messages("readsets.treatments.ngsrg_illumina.nbBases"),
-			    	"type":"number",
-			    	"order":false
-				},
-				{  	"property":"treatments.ngsrg.default.Q30.value",
-			    	"header": Messages("readsets.treatments.ngsrg_illumina.Q30"),
-			    	"type":"number",
-			    	"format":2,
-			    	"order":false,
-			    	"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
-				},
-				{  	"property":"treatments.ngsrg.default.qualityScore.value",
-			    	"header": Messages("readsets.treatments.ngsrg_illumina.qualityScore"),
-			    	"type":"number",
-			    	"format":2,
-			    	"order":false,
-			    	"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)"
-				},			
+					"order":false,
+					"position":4
+				},	
 				{	"property":"productionValuation.valid",
 					"header": Messages("readsets.productionValuation.valid"),
 					"filter":"codes:'valuation'",
-					"type":"text"
+					"type":"text",
+					"position":10
 				},			
 				{	"property":"bioinformaticValuation.valid",
 					"header": Messages("readsets.bioinformaticValuation.valid"),
 					"filter":"codes:'valuation'",
-					"type":"text"
+					"type":"text",
+					"position":11
 				}
 			    
 			]
@@ -409,7 +383,76 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}
 			
 			
-			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
+			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer","treatments.global"]}}).success(function(data) {
+				//Config depends on technology
+				if($scope.run.categoryCode === "nanopore"){
+					readSetsDTConfig.columns.push(
+					{	"property":"treatments.global.default.usefulSequencesPercent.value",
+			    		"header": Messages("readsets.treatments.global.usefulSequencesPercent"),
+			    		"type":"number",
+			    		"format":2,
+			    		"order":false,
+			    		"position":5
+			    		
+					},
+					{	"property":"treatments.global.default.usefulSequences.value",
+			    		"header": Messages("readsets.treatments.global.usefulSequences"),
+			    		"type":"number",
+			    		"order":false,
+			    		"position":6
+			    		
+					},
+					{	"property":"treatments.global.default.usefulBases.value",
+			    		"header": Messages("readsets.treatments.global.usefulBases"),
+			    		"type":"number",
+			    		"order":false,
+			    		"position":7
+			    		
+					});
+				}else{
+				
+					readSetsDTConfig.columns.push(
+					{	"property":"treatments.ngsrg.default.validSeqPercent.value",
+			    		"header": Messages("readsets.treatments.ngsrg_illumina.validSeqPercent"),
+			    		"type":"number",
+			    		"format":2,
+			    		"order":false,
+			    		"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)",
+			    		"position":5
+			    		
+					},
+					{  	"property":"treatments.ngsrg.default.nbCluster.value",
+			    		"header": Messages("readsets.treatments.ngsrg_illumina.nbCluster"),
+			    		"type":"number",
+			    		"order":false,
+			    		"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)",
+			    		"position":6
+					},
+					{  	"property":"treatments.ngsrg.default.nbBases.value",
+			    		"header": Messages("readsets.treatments.ngsrg_illumina.nbBases"),
+			    		"type":"number",
+			    		"order":false,
+			    		"position":7
+					},
+					{  	"property":"treatments.ngsrg.default.Q30.value",
+			    		"header": Messages("readsets.treatments.ngsrg_illumina.Q30"),
+			    		"type":"number",
+			    		"format":2,
+			    		"order":false,
+			    		"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)",
+			    		"position":8
+					},
+					{  	"property":"treatments.ngsrg.default.qualityScore.value",
+			    		"header": Messages("readsets.treatments.ngsrg_illumina.qualityScore"),
+			    		"type":"number",
+			    		"format":2,
+			    		"order":false,
+			    		"tdClass": "valuationService.valuationCriteriaClass({readsets:value.data}, run.valuation.criteriaCode, 'readsets.' + col.property)",
+			    		"position":9
+					});
+				
+				}
+				
 				$scope.readSetsDT = datatable(readSetsDTConfig);
 				$scope.readSetsDT.setData(data, data.length);	
 			});
