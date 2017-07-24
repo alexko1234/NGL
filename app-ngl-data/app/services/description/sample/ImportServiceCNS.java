@@ -269,7 +269,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("AS", "SEQ-AEROSOL_A>0.7"));
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
-		values.add(DescriptionFactory.newValue("E>2000", "SEQ-IMG-ethanol>2000"));
+		values.add(DescriptionFactory.newValue("E2000", "SEQ-IMG-ethanol>2000"));
 		values.add(DescriptionFactory.newValue("Undefined", "Undefined"));
 		return values;	
 	}
@@ -354,7 +354,10 @@ public class ImportServiceCNS extends AbstractImportService {
 			String site = "0" + j;
 			values.add(DescriptionFactory.newValue("S" + site, "S" + site));
 		}
-		
+		for (int j = 15; j <= 21; j++) {
+			String site = "" + j;
+			values.add(DescriptionFactory.newValue("S" + site, "S" + site));
+		}
 		return values;
 	}
 
@@ -408,6 +411,17 @@ public class ImportServiceCNS extends AbstractImportService {
 					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"1"+fish, "I"+ile+"S"+site+"F"+fish));					
 				}
 			}
+			
+			if(i == 11){
+				for(int j = 15; j <= 21; j++){
+					String site = ""+j;
+					for(int k = 1; k <= 20; k++){
+						String fish = (k < 10)?"0"+k:""+k;
+						values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"1"+fish, "I"+ile+"S"+site+"F"+fish));					
+					}
+				}
+			}
+			
 		}
 		
 		
