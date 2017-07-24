@@ -459,5 +459,10 @@ angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', '$
 		$window.open(value+"/runs/"+code, 'bi');
 	};
 
-	
+	if($scope.isCreationMode()){
+		var format = Messages("date.format").toUpperCase();
+		var date = moment().format(format);
+		date = moment(date, format).valueOf();
+		$parse("experimentProperties.runStartDate.value").assign($scope.experiment, date); 
+	}
 }]);
