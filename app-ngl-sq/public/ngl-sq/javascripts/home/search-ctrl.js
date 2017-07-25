@@ -268,9 +268,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 				return ($scope.processIPDatatable.allGroupResult)?$scope.processIPDatatable.allGroupResult.length:0;
 			}else{
 				return $scope.processIPDatatable.totalNumberRecords;
-			}
-			
-			
+			}			
 		};
 		
 		$scope.processNDatatable = datatable(datatableProcessNConfig);			

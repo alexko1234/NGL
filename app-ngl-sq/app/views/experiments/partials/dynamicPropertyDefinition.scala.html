@@ -70,13 +70,13 @@
 										ng-change="@{updateFunctionName}(propertyDef.code)"/>
 							
 							</div>
-								<div ng-switch-when="true" bt-select class="form-control" 
-									name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required"
-									ng-model="experiment.@{name}[propertyDef.code].value"
-									default-value="propertyDef.defaultValue" 									 
-			    					bt-options="opt.code as opt.name for opt in propertyDef.possibleValues" 
-			    					auto-select
-			    					ng-edit="mainService.isEditMode()"
-			    					ng-change="@{updateFunctionName}(propertyDef.code)">
-			    				</div>				    				
+							<div ng-switch-when="true" bt-select class="form-control" 
+								name="@{name}{{propertyDef.code}}" ng-required="propertyDef.required"
+								ng-model="experiment.@{name}[propertyDef.code].value"
+								default-value="propertyDef.defaultValue" 									 
+		    					bt-options="opt.code as opt.name for opt in propertyDef.possibleValues" 
+		    					auto-select
+		    					ng-edit="mainService.isEditMode()"
+		    					ng-change="@{updateFunctionName}(propertyDef.code)">
+		    				</div>				    				
 						</div>
