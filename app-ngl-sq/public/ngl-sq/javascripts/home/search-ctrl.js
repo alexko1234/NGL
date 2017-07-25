@@ -88,7 +88,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 	};
 	
 	var datatableProcessIPConfig = {
-			order :{by:'traceInformation.creationDate', reverse:true, mode:'local'},			
+			order :{by:'traceInformation.creationDate', mode:'local'},			
 			search:{
 				url:jsRoutes.controllers.processes.api.Processes.list()
 			},
@@ -99,25 +99,42 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 			select:{
 				active:false
 			},
+			group:{
+				active:true,
+				by:"inputContainerSupportCode",
+				showOnlyGroups: true
+			},
 			showTotalNumberRecords:false,
 			columns : [
+						{
+							"header":Messages("processes.table.inputContainerSupportCode"),
+							"property":"inputContainerSupportCode",
+							"position":0.5,
+							"type":"text"
+						},
 			           {
-						"header":Messages("processes.table.inputContainerCode"),
-						"property":"inputContainerCode",
-						"position":1,
-						"type":"text"
+							"header":Messages("processes.table.inputContainerCode"),
+							"property":"inputContainerCode",
+							"position":1,
+							"type":"text",
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+							"groupMethod":"collect"
 						},
 			           {
 							"header":Messages("processes.table.projectCode"),
 							"property":"projectCodes",
 							"position":2,
-							"type":"text"
+							"type":"text",
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+							"groupMethod":"collect:true"
 						},
 						{
 							"header":Messages("processes.table.sampleCode"),
 							"property":"sampleCodes",
 							"position":3,
-							"type":"text"
+							"type":"text",
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+							"groupMethod":"collect:true"
 						},
 			          
 			           {
@@ -125,14 +142,17 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 							"property":"typeCode",
 							"position":4,
 							"filter":"codes:'type'",
-							"type":"text"         
+							"type":"text" ,
+							"groupMethod":"unique"							
 						} ,
 						{
 							"header" : Messages("processes.table.currentExperimentTypeCode"),
 							"property" : "currentExperimentTypeCode",
 							"filter" : "codes:'type'",
 							"position" : 5,
-							"type" : "text"
+							"type" : "text",
+							"groupMethod":"unique"		
+							
 						},
 						{
 							"header" : Messages("processes.table.outputContainerSupportCodes"),
@@ -140,26 +160,31 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 							"position" : 6,
 							"filter":"unique",
 							"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
-							"type" : "text"
+							"type" : "text",
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+							"groupMethod":"collect:true"
 						},
 						{
 							"header" : Messages("processes.table.creationDate"),
 							"property" : "traceInformation.creationDate",
 							"position" : 7,
-							"format" : Messages("datetime.format"),
-							"type" : "date"
+							"format" : Messages("datetime-hour.format"),
+							"type" : "date",
+							"groupMethod":"unique"	
 						},
 						{
 							"header" : Messages("processes.table.createUser"),
 							"property" : "traceInformation.createUser",
 							"position" : 8,
-							"type" : "text"
+							"type" : "text",
+							"groupMethod":"unique"	
 						},
 						{
 							"header" : Messages("processes.table.comments"),
 							"property" : "comments[0].comment",
 							"position" : 9,
-							"type" : "text"
+							"type" : "text",
+							"groupMethod":"collect:true"	
 						}
 						
 						]
@@ -236,9 +261,23 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http', '$q', '$filt
 		
 		$scope.processIPDatatable = datatable(datatableProcessIPConfig);			
 		$scope.processIPDatatable.search({stateCodes:["IP"]});
+		$scope.processIPDatatable.getTotalNumberRecords = function(){
+			if($scope.processIPDatatable.config.group.active && $scope.processIPDatatable.config.group.start && !$scope.processIPDatatable.config.group.showOnlyGroups){
+				return $scope.processIPDatatable.totalNumberRecords + " - "+$scope.processIPDatatable.allGroupResult.length;
+			}else if($scope.processIPDatatable.config.group.active && $scope.processIPDatatable.config.group.start && $scope.processIPDatatable.config.group.showOnlyGroups){
+				return ($scope.processIPDatatable.allGroupResult)?$scope.processIPDatatable.allGroupResult.length:0;
+			}else{
+				return $scope.processIPDatatable.totalNumberRecords;
+			}
+			
+			
+		};
 		
 		$scope.processNDatatable = datatable(datatableProcessNConfig);			
 		$scope.processNDatatable.search({stateCodes:["N"]});
+		
+		
+		
 		
 		
 		$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"stateCodes":"IW-D","list":true}}).then(function(result){
