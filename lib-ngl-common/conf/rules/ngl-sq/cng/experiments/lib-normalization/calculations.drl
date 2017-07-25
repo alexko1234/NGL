@@ -40,30 +40,33 @@ rule "InputVolume in lib-normalization inputContainer"
    		Double bfVolume = 0.0;
    		Double inputConcentration = 0.0;
    		
-   		 // 15/04/2016 si concentration IN < concentration OUT : inutile d'essayer de faire des calculs--> vol engagé=15, buffer =0
-        // 25/04/2016 ET concentration OUT= concentration IN
-		if ( convertPVToDouble($inputConcentration) <= convertPVToDouble($outputConcentration)){	
-			inputConcentration = Double.parseDouble($inputConcentration.getValue().toString());
-			Logger.debug("Warning: concentration initiale "+ inputConcentration +" plus faible que la concentration de normalisation");
+        // 25/07/2017 suite a l'ajout de additionnal-normalization=> remise a plat:  
+        // si concentration OUT > concentration IN : inutile d'essayer de faire des calculs
+        //    => conc Out= conc IN, buffer=0, vol engagé=vol input
+        
+		if ( convertPVToDouble($outputConcentration) > convertPVToDouble($inputConcentration) ){	
+		    Logger.debug("Warning: concentration demandée > initiale ");
 		    
-		    if($inputContainerUsed.experimentProperties !=null && $inputContainerUsed.experimentProperties.containsKey("inputVolume")){
+		    Logger.debug("set output concentration to input concentration :"+inputConcentration );
+			$outputContainerUsed.concentration= $atomicTransfert.inputContainerUseds.get(0).getConcentration();
+		    
+		    if ($inputContainerUsed.experimentProperties !=null && $inputContainerUsed.experimentProperties.containsKey("inputVolume")){
 		    	engVolume=convertPVToDouble($inputContainerUsed.experimentProperties.get("inputVolume"));
-		    }else{
-		    	engVolume=15.0;
+		    	Logger.debug("set engVolume to inputVolume :"+ engVolume);
 		    }
-		    
+		    // else  si pas de inputVolume on ne peut pas recuperer sa valeur !!  
 		    
 	    } else {
 	    
 	    	// -1- calcul volume engagé
-        	Logger.debug("-1- InputVolume calculation");  
+        	Logger.debug("-1- volume engagé");  
         	Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
 
        		engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/convertPVToDouble($inputConcentration));
-        	Logger.debug("inputVolume="+ engVolume );
+        	Logger.debug("engVolume="+ engVolume );
         
 		   // -2- calcul volume de tampon : volume buffer= volume out - volume engagé
-			Logger.debug("-2- volume tampon= volumeout - volume engagé");
+			Logger.debug("-2- volume tampon= volume out - volume engagé");
 			
 			bfVolume = roundValue(convertPVToDouble($outputVolume) - engVolume );
 		    Logger.debug("bufferVolume="+bfVolume);
@@ -85,13 +88,6 @@ rule "InputVolume in lib-normalization inputContainer"
 			   $inputContainerUsed.experimentProperties.remove("inputVolume");
 		}	
 	    $inputContainerUsed.experimentProperties.put("inputVolume", psvEngVolume);
-	    
-	    // 25/04/2016 si concentration IN < concentration OUT :  remplacer la concentration OUT par concentration IN
-		if ( convertPVToDouble($inputConcentration) <= convertPVToDouble($outputConcentration)){
-			Logger.debug("sett output concentration to input concentration :"+inputConcentration );
-			// code from cns/pool-tube/calculation.drl
-	 	    $outputContainerUsed.concentration= $atomicTransfert.inputContainerUseds.get(0).getConcentration();
-		}	    
-	    
+	       
 		update($experiment);
 end
