@@ -1377,6 +1377,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		columns.push({
 	       	"header":Messages("containers.table.dispatch"),
 	    	"property":"dispatch",
+	    	"render":"<span ng-bind='getDispatchValue(cellValue)'></span>",
 	    	"order":false,
 			"edit":true,
 			"hide":false,
@@ -1797,6 +1798,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	dispatchValuesForExperimentType["all"] = [];
 	
 	var nextExperimentsForExperimentType = [];
+	
+	$scope.getDispatchValue = function(code){
+		return dispatchValues.find(function(dv){return (dv.code === code);}).name;		
+	};
 	
 	$scope.getDispatchValues = function(){
 		return dispatchValues;		
