@@ -1,6 +1,6 @@
-/* 30/06/2016 TEST EN COURS --------------- dupliqué a partir de pcr-and-purification-ctrl.js' */
+/* 30/06/2016 DEV  EN COURS --------------- dupliqué a partir de pcr-and-purification-ctrl.js' */
 
-angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('FragmentationCtrl2',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
 	// variables pour extraheaders
 	var inputExtraHeaders=Messages("experiments.inputs");
@@ -116,50 +116,9 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":9,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         {
-			        	 "header":"TEST RUN ",
-			        	 "property":"inputContainerUsed.contents.processProperties",
-			        	 "filter": "getArray: 'ngsRunWorkLabel.value'| unique",
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":10,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         {
-			        	 "header":"TEST RUN2 ",
-			        	 "property":"inputContainerUsed.contents",
-			        	 "filter": "getArray: 'processProperties.ngsRunWorkLabel.value'| unique",
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":11,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         {
-			        	 "header":"TEST RUN3 ",
-			        	 "property":"inputContainerUsed.contents.processProperties.ngsRunWorkLabel.value",
-			        	 "filter": "unique",
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":12,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         {
-			        	 "header":"OK ",
-			        	 "property":"inputContainerUsed.contents",
-			        	 "filter": "getArray: 'percentage'| unique",
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":13,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
 			         
 			         // colonnes specifiques experience viennent ici...
 			         //--------------------- OUTPUT containers section -----------------------
-			         // 27/09/2016 ajout defaut value=30
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -169,7 +128,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "defaultValues":30,
 			        	 "position":300,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
@@ -287,14 +245,15 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
                 complex:true,
                 template:''
                 	+'<div class="btn-group" style="margin-left:5px">'
-                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' volume engagé'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' volume container de sortie'
                 	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
                 	+'</div>'
 			}
 	};
 
 	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save");
+		console.log("call event save");	
+		setRobotRunCode();
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
@@ -329,6 +288,19 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		$scope.atmService.data.setEdit();
 	});
 	
+	// 25/07/2017
+	var setRobotRunCode =function (){
+		// si l'utilisateur n'a pas saisi de Nom de run (robotRunCode )=> utiliser la valeur definie au niveau processus
+		// idealement il faudrait recuperer cette valeur au chargement de la page mais c'est plus compliqué...
+		if( null === $scope.experiment.instrumentProperties.robotRunCode.value || undefined === $scope.experiment.instrumentProperties.robotRunCode.value){
+			alert ("Set instrumentProperties.robotRunCode...");
+			console.log("Set instrumentProperties.robotRunCode...");
+		    // utiliser plutot $parse('').assign() ???;
+			// !!!! il pourraity avoir plusieurs valeurs venant de plusieur processus...prendre celle du premier inputContainer !?
+		    $scope.experiment.instrumentProperties.robotRunCode.value = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].contents[0].processProperties.ngsRunWorkLabel.value;
+		}	
+	}
+	
 	// for save callback
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
@@ -351,14 +323,15 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				}
 			}
 		}
-		
 		//ne plus faire...datatable.setData(dataMain);
 	};
+	
+	// 25/07/2017 copier volume in vers volume out ... pourrait etre fait d'office ??
 	$scope.copyVolumeInToExp = function(){
 		
 		var data = $scope.atmService.data.displayResult;		
 		data.forEach(function(value){
-			$parse("inputContainerUsed.experimentProperties.inputVolume").assign(value.data, angular.copy(value.data.inputContainer.volume));			
+			$parse("outputContainerUsed.volume").assign(value.data, angular.copy(value.data.inputContainer.volume));			
 		})		
 	};
 		
