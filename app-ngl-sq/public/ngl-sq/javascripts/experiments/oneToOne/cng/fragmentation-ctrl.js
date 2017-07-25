@@ -328,6 +328,7 @@ angular.module('home').controller('FragmentationCtrl2',['$scope', '$parse', 'atm
 	
 	// 25/07/2017 copier volume in vers volume out ... pourrait etre fait d'office ??
 	$scope.copyVolumeInToExp = function(){
+		console.log("copyVolumeInToExp");
 		
 		var data = $scope.atmService.data.displayResult;		
 		data.forEach(function(value){
