@@ -67,50 +67,14 @@ import fr.cea.ig.MongoDBDAO;
 public class FileAcServices  {
 	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
-	/*
-	public static void updateStateSubmission(ContextValidation ctxVal, Submission submission, String status) {
-		submission.state.code = status;
-		String user = ctxVal.getUser();
-		// Mettre à jour objets submission et sous-objet study, sample et experiment pour status.
-		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
-				DBQuery.is("code", submission.code).notExists("accession"),
-				DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
-
-		if (StringUtils.isNotBlank(submission.studyCode)) {
-			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-					DBQuery.is("code", submission.code).notExists("accession"),
-					DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
-		}
-		if (submission.sampleCodes != null){
-			for (int i = 0; i < submission.sampleCodes.size() ; i++) {
-				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
-						DBQuery.is("code", submission.sampleCodes.get(i)).notExists("accession"),
-						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 			
-			}
-		}
-		if (submission.experimentCodes != null){
-			for (int i = 0; i < submission.experimentCodes.size() ; i++) {
-				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, submission.experimentCodes.get(i));
-				// Updater objet experiment :
-				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
-						DBQuery.is("code", submission.experimentCodes.get(i)).notExists("accession"),
-						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 			
-				// Updater objet readSet :
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
-						DBQuery.is("code", experiment.readSetCode),
-						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 			
-			}
-				
-		}
-	}
-	*/
-
 	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
-		
+		if (submission == null){
+			throw new SraException("soumission "+submission.code+" impossible à recuperer dans base");
+		}
 		if (! ebiFileAc.exists()){
 			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ ebiFileAc.getAbsolutePath());
 		}
@@ -381,11 +345,12 @@ public class FileAcServices  {
 		
 		State state = new State(okStatus, user);
 		submissionWorkflows.setState(ctxVal, submission, state);
-		
 		System.out.println("expediteur =" + expediteur);
 		System.out.println("destinataires =" + destinataires);
 		System.out.println("subjectSuccess =" + subjectSuccess);
 		mailService.sendMail(expediteur, destinataires, subjectSuccess, new String(message.getBytes(), "iso-8859-1"));
+		// Recuperer l'objet submission mis à jour pour le status :
+		submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		return submission;
 	}
 

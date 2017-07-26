@@ -13,23 +13,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
-import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
 import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -37,6 +34,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import services.FileAcServices;
+import services.ReleaseServices;
 import services.SubmissionServices;
 import services.Tools;
 import services.UserCloneTypeParser;
@@ -46,6 +44,9 @@ import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.SubmissionWorkflows;
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 public class Submissions extends DocumentController<Submission>{
 	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
@@ -63,7 +64,7 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	final static Form<SubmissionsACForm> submissionsACForm = form(SubmissionsACForm.class);
+	final static Form<SubmissionsFileForm> submissionsACForm = form(SubmissionsFileForm.class);
 	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 	final static Form<State> stateForm = form(State.class);
 
@@ -204,12 +205,12 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			return badRequest("Submission with code "+code, " not exist");
 		}
-		Form<SubmissionsACForm> submissionsACFilledForm = filledFormQueryString(submissionsACForm, SubmissionsACForm.class);
-		SubmissionsACForm submissionsACForm = submissionsACFilledForm.get();
+		Form<SubmissionsFileForm> submissionsACFilledForm = filledFormQueryString(submissionsACForm, SubmissionsFileForm.class);
+		SubmissionsFileForm submissionsACForm = submissionsACFilledForm.get();
 		
 		
 		//Logger.debug("filledForm "+filledForm);
-		File ebiFileAc =new File(submissionsACForm.fileNameAC);
+		File ebiFileAc =new File(submissionsACForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		try {
 			submission = FileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
@@ -222,6 +223,35 @@ public class Submissions extends DocumentController<Submission>{
 		} catch (MailServiceException e) {
 			//return badRequest(e.getMessage());
 			return badRequest("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
+		}
+		return ok(Json.toJson(submission));
+	}
+	public Result treatmentRelease(String code)
+	{
+		//Get Submission from DB 
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
+	//	Form<File> filledForm = getFilledForm(pathForm, File.class);
+		if (submission == null) {
+			return badRequest("Submission with code "+code, " not exist");
+		}
+		Form<SubmissionsFileForm> submissionsFilledForm = filledFormQueryString(submissionsACForm, SubmissionsFileForm.class);
+		SubmissionsFileForm submissionsForm = submissionsFilledForm.get();
+		
+		
+		//Logger.debug("filledForm "+filledForm);
+		File retourEbiRelease =new File(submissionsForm.fileName);
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
+		try {
+			submission = ReleaseServices.traitementRetourRelease(ctxVal, code, retourEbiRelease); 
+		} catch (IOException e) {
+			//return badRequest(e.getMessage());
+			return badRequest("Submission " + code + " et release file " +retourEbiRelease, e.getMessage());  // si solution filledForm.reject
+		} catch (SraException e) {
+			//return badRequest(e.getMessage());
+			return badRequest("Submission " + code + " et release file " +retourEbiRelease, e.getMessage());  // si solution filledForm.reject
+		} catch (MailServiceException e) {
+			//return badRequest(e.getMessage());
+			return badRequest("Submission " + code + " et release file " +retourEbiRelease, e.getMessage());  // si solution filledForm.reject
 		}
 		return ok(Json.toJson(submission));
 	}

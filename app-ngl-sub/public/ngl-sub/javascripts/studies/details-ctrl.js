@@ -305,6 +305,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	
 	var init = function(){
 		$scope.mainService = mainService;
+		$scope.messages = messages();
 
 		$scope.isReleasable=false;
 		// si on souhaite affichage bouton si on vient du menu release :
@@ -396,13 +397,17 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	/* buttons section */
 	
 	$scope.userRelease = function(){
+		$scope.messages.clear();
 		console.log("je suis dans le bouton studies.details-ctrl.js.userRelease");
 		$http.put(jsRoutes.controllers.sra.studies.api.Studies.release($scope.study.code).url, $scope.study)
 			.success(function(data){
-		   		
+		   		$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('studies.msg.release.success');
+				$scope.messages.open();
 			})
 			.error(function(data){
-				
+				$scope.messages.addDetails(data);
+				$scope.messages.setError("release");	
 			});	
 	};
 	

@@ -22,6 +22,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import mail.MailServiceException;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
@@ -42,6 +43,8 @@ import play.libs.ws.WSResponse;
 
 import java.util.Calendar;
 
+import services.FileAcServices;
+import services.ReleaseServices;
 import services.XmlServices;
 import utils.AbstractTestsSRA;
 
@@ -51,6 +54,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.apache.commons.lang3.StringUtils;
+
+import validation.ContextValidation;
+import play.Logger;
 
 public class ToolsTest extends AbstractTestsSRA {
 	
@@ -153,16 +159,20 @@ public class ToolsTest extends AbstractTestsSRA {
 	}		
 	
 	//@Test
-	public void testfileAc()throws IOException {
-		File xmlFile = new File("/env/cns/home/sgas/test/listAc_CNS_BCU_BLK_266H23OI3.txt");
-		List<Sample> listSamples = new ArrayList<Sample>();
-		listSamples = xmlToSample(xmlFile);
+	public void testfileAc()throws IOException, SraException, MailServiceException {
+		File fileEbi = new File("/env/cns/home/sgas/test/listAC_CNS_BDQ_BGX_BGU_27BB18OFB.txt.ok");
+		String user = "william";
+		ContextValidation ctxVal = new ContextValidation(user);
+		String submissionCode = "CNS_BDQ_BGX_BGU_27BB18OFB";
+		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
+		ctxVal.displayErrors(Logger.of("SRA"));
+
 	}
 
-	@Test
+	//@Test
 	public void testRelease()throws IOException {
 		Submission submission = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
-				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_ARH_27B9362NT")));
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BDQ_BGX_BGU_27QE299E7")));
 		XmlServices xmlServices = new XmlServices();
 		try {
 			xmlServices.writeAllXml(submission.code);
@@ -171,6 +181,15 @@ public class ToolsTest extends AbstractTestsSRA {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Test
+	public void testRetourRelease()throws IOException, SraException, MailServiceException {
+		String user = "william";
+		ContextValidation ctxVal = new ContextValidation(user);
+		String submissionCode = "CNS_BDQ_BGX_BGU_27QE299E7";
+		File retourEbiRelease = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/BDQ_BGX_BGU/26_07_2017/releaseResult");
+		Submission submission = ReleaseServices.traitementRetourRelease(ctxVal, submissionCode, retourEbiRelease); 
 	}
 	
 	//@Test
