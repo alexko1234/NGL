@@ -451,7 +451,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			computeFinalVolume(value.data);
 			computeBufferVolume(value.data);
 		}
-		
+		computeOutputQuantity(value.data);
 	}
 	//cOut * vOut / cIn : 
 	//outputContainerUsed.concentration.value * outputContainerUsed.volume.value / inputContainerUsed.concentration.value
@@ -510,7 +510,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("not ready to computeFinalVolume");
 		}
 		
-	}
+	};
 	//vOut - inputVolume
 	//outputContainerUsed.volume.value - inputContainerUsed.experimentProperties.inputVolume.value
 	var computeBufferVolume = function(udtData){
@@ -537,8 +537,37 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		}else{
 			console.log("not ready to computeBufferVolume");
 		}
-	}
+	};
 	
+	
+	var computeOutputQuantity = function(udtData){
+		var getter = $parse("outputContainerUsed.quantity");
+		var outputQuantity = getter(udtData);
+		
+		var compute = {
+				outputConc : $parse("outputContainerUsed.concentration.value")(udtData),
+				outputConcUnit : $parse("outputContainerUsed.concentration.unit")(udtData),
+				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				isReady:function(){
+					return (this.outputConc && this.outputConcUnit && this.outputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("outputConc * outputVol")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				outputQuantity.value = Math.round(result*10)/10;	
+				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'nmol':'ng';
+			}else{
+				outputQuantity = undefined;
+			}	
+			getter.assign(udtData, outputQuantity);
+		}else{
+			console.log("not ready to computeOutputQuantity");
+		}
+		
+	}
 	
 	var generateSampleSheetNormalisation = function(){
 		generateSampleSheet("normalisation");
