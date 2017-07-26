@@ -276,6 +276,36 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 			return type;
 		},
+		initCommonPropertiesDefinitions : function(typeCodes){
+			if(angular.isArray(typeCodes)){
+				var processTypes = typeCodes.map(function(typeCode){
+					return this.processTypesForCategories.find(function(pTypes){return (pTypes.code ===  typeCode);});
+				},this);
+				
+				var propertyDefCounter = {};
+				
+				processTypes.forEach(function(processType){
+					processType.propertiesDefinitions.forEach(function(pdef){
+						if( propertyDefCounter[pdef.code] === undefined){
+							pdef._number = 0;
+							propertyDefCounter[pdef.code] = pdef;
+						}
+						 propertyDefCounter[pdef.code]._number++;
+					});
+				});
+				var pdefs = [];
+				for(var key in propertyDefCounter){
+					if(propertyDefCounter[key]._number === processTypes.length){
+						propertyDefCounter[key]._number = undefined;
+						pdefs.push(propertyDefCounter[key])
+					}
+				}
+				this.commonPropertiesDefinitions = pdefs;
+			}else{
+				this.commonPropertiesDefinitions = [];
+			}
+			
+		},
 		setColumns : function() {
 			var columns = [];
 			
@@ -287,78 +317,68 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				columnsDefault = this.getDefaultColumns().concat(this.selectedAddColumns);
 
 			}
-			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1) {
-				var typeCode = this.form.typeCodes[0];
-			
-				$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(typeCode).url).success(function(data, status, headers, config) {
-					if (data != null) {
-						angular.forEach(data.propertiesDefinitions, function(propertyDefinition) {
-							
-							var getDisplayUnitFromProperty = function(propertyDefinition){
-								var unit = $parse("displayMeasureValue.value")(propertyDefinition);
-								if(undefined !== unit && null !== unit) return " ("+unit+")";
-								else return "";
-							};
-							var getPropertyColumnType = function(type){
-								if(type === "java.lang.String"){
-									return "text";
-								}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
-									return "number";
-								}else if(type === "java.util.Date"){
-									return "date";
-								}else if(type ==="java.io.File"){
-									return "file";
-								}else if(type ==="java.awt.Image"){
-									return "img";
-								}else if(type ==="java.lang.Boolean"){
-									return "boolean";	
-								}else{
-									throw 'not manage : '+type;
-								}
+			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
+				angular.forEach(this.commonPropertiesDefinitions, function(propertyDefinition) {
+					
+					var getDisplayUnitFromProperty = function(propertyDefinition){
+						var unit = $parse("displayMeasureValue.value")(propertyDefinition);
+						if(undefined !== unit && null !== unit) return " ("+unit+")";
+						else return "";
+					};
+					var getPropertyColumnType = function(type){
+						if(type === "java.lang.String"){
+							return "text";
+						}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
+							return "number";
+						}else if(type === "java.util.Date"){
+							return "date";
+						}else if(type ==="java.io.File"){
+							return "file";
+						}else if(type ==="java.awt.Image"){
+							return "img";
+						}else if(type ==="java.lang.Boolean"){
+							return "boolean";	
+						}else{
+							throw 'not manage : '+type;
+						}
 
-								return type;
-							};
-							
-							var column = {};
-							column.watch=true;
-							column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
-							column.required=propertyDefinition.required;
-							    				
-							column.property = "properties."+propertyDefinition.code+".value";
-							column.edit = (mainService.getHomePage() === 'state')?false:propertyDefinition.editable;
-							column.type = getPropertyColumnType(propertyDefinition.valueType);
-							column.choiceInList = propertyDefinition.choiceInList;
-							column.position = (5+(propertyDefinition.displayOrder/1000));
-							column.defaultValues = propertyDefinition.defaultValue;
-							column.format = propertyDefinition.displayFormat;
-							column.order=true;
-							
-							if(column.choiceInList){
-								if(propertyDefinition.possibleValues.length > 100){
-									column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
-								}else{
-									column.listStyle = "bt-select";
-								}
-								column.possibleValues = propertyDefinition.possibleValues; 
-								column.filter = "codes:'value."+propertyDefinition.code+"'";    					
-							}
-							
-							if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
-								column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
-										"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
-							}
-							
-							columns.push(column);
-						});
-						columns = columnsDefault.concat(columns);
-						datatable.setColumnsConfig(columns);
+						return type;
+					};
+					
+					var column = {};
+					column.watch=true;
+					column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
+					column.required=propertyDefinition.required;
+					    				
+					column.property = "properties."+propertyDefinition.code+".value";
+					column.edit = (mainService.getHomePage() === 'state')?false:propertyDefinition.editable;
+					column.type = getPropertyColumnType(propertyDefinition.valueType);
+					column.choiceInList = propertyDefinition.choiceInList;
+					column.position = (5+(propertyDefinition.displayOrder/1000));
+					column.defaultValues = propertyDefinition.defaultValue;
+					column.format = propertyDefinition.displayFormat;
+					column.order=true;
+					
+					if(column.choiceInList){
+						if(propertyDefinition.possibleValues.length > 100){
+							column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
+						}else{
+							column.listStyle = "bt-select";
+						}
+						column.possibleValues = propertyDefinition.possibleValues; 
+						column.filter = "codes:'value."+propertyDefinition.code+"'";    					
 					}
-	
-				}).error(function(data, status, headers, config) {
-					//console.log(data);
-					datatable.setColumnsConfig(columnsDefault);
-	
+					
+					if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
+						column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
+								"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
+					}
+					
+					columns.push(column);
 				});
+				columns = columnsDefault.concat(columns);
+				datatable.setColumnsConfig(columns);
+					
 			}else{
 				datatable.setColumnsConfig(columnsDefault);
 			}
@@ -400,8 +420,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 		resetForm : function() {
 			this.form = {};
-			this.additionalProcessFilters = [];
-			this.isProcessFiltered = false;	
+			this.changeProcessCategories();				
 		},
 
 		resetSampleCodes : function() {
@@ -444,8 +463,6 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		search : function() {
 			this.updateForm();
 			mainService.setForm(this.form);
-			searchService.datatable.setColumnsConfig(this.columnsDefault);
-			searchService.setColumns();
 			this.datatable.search(this.convertForm());
 
 		},
@@ -474,9 +491,10 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		},		
 		changeProcessCategories : function() {
 			this.additionalProcessFilters = [];
+			this.commonPropertiesDefinitions = [];
 			this.form.typeCodes = undefined;
 			this.processTypesForCategories=[];
-
+			this.setColumns();
 			if (this.form.categoryCodes && this.form.categoryCodes.length > 0) {
 				this.form.categoryCodes.forEach(function(code){
 					this.processTypesForCategories = this.processTypesForCategories.concat(this.processTypesByCategory[code])
@@ -488,17 +506,11 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		},
 
 		changeProcessTypeCode : function() {
-			if (angular.isDefined(this.form.categoryCodes)) {
-				/* old AdditionalProcessFilters
-				if(angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1){
-					lists.refresh.filterConfigs({
-						pageCodes : [ "process-" + this.form.typeCodes[0] ]
-					}, "process-" + this.form.typeCodes[0]);
-				}
-				*/				
-			} else {
+			if (!angular.isDefined(this.form.categoryCodes)) {	
 				this.form.typeCodes = undefined;
 			}
+			this.initCommonPropertiesDefinitions(this.form.typeCodes);
+			this.setColumns();			
 			this.initAdditionalProcessFilters();
 		},
 		//new version based on type properties
@@ -509,26 +521,19 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			var nbElementByColumn = undefined;
 			this.isProcessFiltered = false;	
 			
-			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1) {
-				//1 extract processType
-				var processType = this.processTypesForCategories.find(function(pTypes){return (pTypes.code ===  this.form.typeCodes[0]);},this);
-				
-				if(angular.isArray(processType.propertiesDefinitions) && processType.propertiesDefinitions.length > 0){
-					allFilters = processType.propertiesDefinitions.map(function(pDef){
-						var html = null;
-						if(pDef.choiceInList){
-							html = "<div class='form-control' multiple=true bt-select ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" bt-options='possibleValues.code as possibleValues.name for possibleValues in searchService.lists.getValues({propertyDefinitionCode:\""+pDef.code+"\"},\""+pDef.code+"\")'></div>";
-						}else{
-							html = "<input type='text' class='form-control' ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" title=\""+pDef.name+"\">"; 				             
-						}						
-						return {
-							html:html,
-							position:pDef.displayOrder
-						};
-					});
-				}
-				
-				
+			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
+				allFilters = this.commonPropertiesDefinitions.map(function(pDef){
+					var html = null;
+					if(pDef.choiceInList){
+						html = "<div class='form-control' multiple=true bt-select ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" bt-options='possibleValues.code as possibleValues.name for possibleValues in searchService.lists.getValues({propertyDefinitionCode:\""+pDef.code+"\"},\""+pDef.code+"\")'></div>";
+					}else{
+						html = "<input type='text' class='form-control' ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" title=\""+pDef.name+"\">"; 				             
+					}						
+					return {
+						html:html,
+						position:pDef.displayOrder
+					};
+				});				
 			} 
 			if (angular.isDefined(allFilters)) {
 				nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
@@ -543,35 +548,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			}
 			this.additionalProcessFilters = formFilters;
 			
-		},
-		//old version based on configuration
-		initAdditionalProcessFilters2 : function() {
-			this.additionalProcessFilters = [];
-			var formFilters = [];
-			var allFilters = undefined;
-			var nbElementByColumn = undefined;
-
-			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1 
-					&& lists.get("process-" + this.form.typeCodes[0]) && lists.get("process-" + this.form.typeCodes[0]).length === 1) {
-				allFilters = angular.copy(lists.get("process-" + this.form.typeCodes[0])[0].filters);
-				this.isProcessFiltered = true;
-			} else {
-				this.isProcessFiltered = false;
-			}
-			if (angular.isDefined(allFilters)) {
-				nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
-				for (var i = 0; i < 5 && allFilters.length > 0; i++) {
-					formFilters.push(allFilters.splice(0, nbElementByColumn));
-				}
-				//complete to 5 five element to have a great design 
-				while (formFilters.length < 5) {
-					formFilters.push([]);
-				}
-			}
-
-			this.additionalProcessFilters = formFilters;
-		},
-
+		},	
 		getAddProcessFiltersToForm : function() {
 			if (this.additionalProcessFilters !== undefined && this.additionalProcessFilters.length === 0) {
 				this.initAdditionalProcessFilters();
@@ -613,6 +590,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 					}
 				}
 			}
+			this.setColumns();
 			this.search();
 		},
 		resetDatatableColumns : function() {
