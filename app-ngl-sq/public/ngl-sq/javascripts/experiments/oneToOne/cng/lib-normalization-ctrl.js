@@ -81,16 +81,16 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
 			         { // libProcessType ajout 08/11/2016
-					 		"header":Messages("containers.table.libProcessType"),
-					 		"property": "inputContainer.contents",
-					 		//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
-					 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
-					 		"order":false,
-					 		"hide":true,
-					 		"type":"text",
-					 		"position":6.5,
-					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					 		"extraHeaders": {0: inputExtraHeaders}	 						 			
+					 	"header":Messages("containers.table.libProcessType"),
+					 	"property": "inputContainer.contents",
+					 	//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
+					 	"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+					 	"order":false,
+					 	"hide":true,
+					 	"type":"text",
+					 	"position":6.5,
+					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					 	"extraHeaders": {0: inputExtraHeaders}	 						 			
 					 },
 					 { //Tags
 					    "header":Messages("containers.table.tags"),
@@ -150,11 +150,12 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":10,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         // colonnes specifiques experience viennent ici.. Volume engagé, Volume tampon
+			         // colonnes specifiques experience viennent ici.. 
+			         //   => Volume engagé, Volume tampon
 			          
 			         //------------------------ OUTPUT containers section -------------------
 
-		            /* ne pas aficher les containercodes sauf pour DEBUG 
+		            /* ne pas afficher les containercodes sauf pour DEBUG 
 			         {
 			        	 "header":"[["+Messages("containers.table.code")+"]]",
 			        	 "property":"outputContainerUsed.code",
@@ -165,7 +166,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":100,
 			        	 "extraHeaders":{0:"outputExtraHeaders"}
 			         },*/
-			         { // barcode plaque sortie == support Container used code... faut Used 
+			         { // barcode plaque sortie 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
 			        	 "order":true,
@@ -197,19 +198,21 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 						 "edit":true,
+						 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'", // 26/07/2017 NGL-1519: ajout calculs en Javascript
 						 "hide":true,
 			        	 "type":"number",
 			        	 "defaultValues":4,
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         { // Volume  avec valeur par defaut
+			         { // Volume ; 26/07/2017 supression de la valeur par defaut....
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 						 "edit":true,
+						 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'",  // 26/07/2017 NGL-1519: ajout calculs en Javascript
 						 "hide":true,
 			        	 "type":"number",
-						 "defaultValues":15,
+						 //"defaultValues":15, 
 			        	 "position":130,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
@@ -303,8 +306,6 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				}
 			}
 		}
-		
-		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	$scope.$on('refresh', function(e) {
@@ -405,5 +406,77 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
+
+	// 26/07/2017: remplacer les calculs de calculation.drl par du javascript....
+	$scope.updatePropertyFromUDT = function(value, col){
+		//console.log("update from property : "+col.property);
+
+		if (( col.property === 'outputContainerUsed.concentration.value')||
+			( col.property === 'outputContainerUsed.volume.value')
+		){
+			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data); //OUI !!
+			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data); //OUI !!
+			var vol= $parse("inputContainerUsed.volume.value")(value.data); //OUI !!
+			
+			//console.log(">>>outputContainerUsed.concentration.value="+ outputConc );
+			//console.log(">>>inputContainerUsed.concentration.value="+ inputConc );
+
+			if ( outputConc > inputConc)
+			{
+				console.log("concentration out trop forte !!");
+				// forcer valeurs
+				$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(value.data, 0); 
+				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, vol);
+				$parse("outputContainerUsed.volume.value").assign(value.data, vol);
+				$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
+			} else {
+			    computeVolumes(value.data);
+			}
+		}
+	}
+	
+	// 26/07/2017: remplacer les calculs de volumes de calculation.drl par du javascript....
+	var computeVolumes = function(udtData){
+
+		var getterEngageVol= $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var getterBufferVol= $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
+
+		var compute = {
+				inputConc :  $parse("inputContainerUsed.concentration.value")(udtData), // pas forcement dispo ( si pas de QC avant)
+				outputConc:  $parse("outputContainerUsed.concentration.value")(udtData),
+				outputVol:   $parse("outputContainerUsed.volume.value")(udtData),
+			   
+				isReady:function(){
+					// attention division par 0 !
+					return (this.inputConc && this.outputConc && this.outputVol);
+				}
+		};
+		
+		if(compute.isReady()){
+
+			var engageVol=$parse("outputConc * outputVol  / inputConc")(compute);
+			// arrondir...
+			if(angular.isNumber(engageVol) && !isNaN(engageVol)){
+				engageVol = Math.round(engageVol*10)/10;				
+			}
+			console.log("vol engagé = "+engageVol);
+			
+			var bufferVol=$parse("outputVol")(compute) - engageVol;
+			// arrondir...
+			if(angular.isNumber(bufferVol) && !isNaN(bufferVol)){
+				bufferVol = Math.round(bufferVol*10)/10;	
+			}
+			console.log("vol buffer= "+ bufferVol);
+			
+			getterEngageVol.assign(udtData, engageVol);
+			getterBufferVol.assign(udtData, bufferVol);
+			
+		}else{
+			console.log("Impossible de calculer les volumes: valeurs manquantes");
+			getterEngageVol.assign(udtData, undefined);
+			getterBufferVol.assign(udtData, undefined);
+		}
+	}
+	
 	
 }]);
