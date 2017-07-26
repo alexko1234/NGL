@@ -400,6 +400,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 		resetForm : function() {
 			this.form = {};
+			this.additionalProcessFilters = [];
+			this.isProcessFiltered = false;	
 		},
 
 		resetSampleCodes : function() {
@@ -487,18 +489,63 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 		changeProcessTypeCode : function() {
 			if (angular.isDefined(this.form.categoryCodes)) {
+				/* old AdditionalProcessFilters
 				if(angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1){
 					lists.refresh.filterConfigs({
 						pageCodes : [ "process-" + this.form.typeCodes[0] ]
 					}, "process-" + this.form.typeCodes[0]);
-				}				
+				}
+				*/				
 			} else {
 				this.form.typeCodes = undefined;
 			}
 			this.initAdditionalProcessFilters();
 		},
-		
+		//new version based on type properties
 		initAdditionalProcessFilters : function() {
+			this.additionalProcessFilters = [];
+			var formFilters = [];
+			var allFilters = undefined;
+			var nbElementByColumn = undefined;
+			this.isProcessFiltered = false;	
+			
+			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1) {
+				//1 extract processType
+				var processType = this.processTypesForCategories.find(function(pTypes){return (pTypes.code ===  this.form.typeCodes[0]);},this);
+				
+				if(angular.isArray(processType.propertiesDefinitions) && processType.propertiesDefinitions.length > 0){
+					allFilters = processType.propertiesDefinitions.map(function(pDef){
+						var html = null;
+						if(pDef.choiceInList){
+							html = "<div class='form-control' multiple=true bt-select ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" bt-options='possibleValues.code as possibleValues.name for possibleValues in searchService.lists.getValues({propertyDefinitionCode:\""+pDef.code+"\"},\""+pDef.code+"\")'></div>";
+						}else{
+							html = "<input type='text' class='form-control' ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" title=\""+pDef.name+"\">"; 				             
+						}						
+						return {
+							html:html,
+							position:pDef.displayOrder
+						};
+					});
+				}
+				
+				
+			} 
+			if (angular.isDefined(allFilters)) {
+				nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+				for (var i = 0; i < 5 && allFilters.length > 0; i++) {
+					formFilters.push(allFilters.splice(0, nbElementByColumn));
+				}
+				//complete to 5 five element to have a great design 
+				while (formFilters.length < 5) {
+					formFilters.push([]);
+				}
+				this.isProcessFiltered = true;					
+			}
+			this.additionalProcessFilters = formFilters;
+			
+		},
+		//old version based on configuration
+		initAdditionalProcessFilters2 : function() {
 			this.additionalProcessFilters = [];
 			var formFilters = [];
 			var allFilters = undefined;
