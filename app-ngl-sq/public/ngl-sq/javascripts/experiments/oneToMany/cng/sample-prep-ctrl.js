@@ -1,8 +1,9 @@
-/* 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js
+/* 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js mais avec atmToGenerateMany
    25/07/2017 Ne pas faire apparaitre les volumes.... */
 
-angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                    function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'atmToGenerateMany',
+                                                        function($scope, $parse, atmToGenerateMany) {	
+	
 	// variables pour extraheaders
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
@@ -108,6 +109,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			         },
 			         
 			         // colonnes specifiques experience viennent ici...
+			         
 			         //--------------------- OUTPUT containers section -----------------------
 			         /* ne pas faire apparaitre les volumes...
 			         {
@@ -231,17 +233,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButtons: {
-				/* 25/07/2017 pas necessaire tant que les volumes ne sont pas affichés
-                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-                complex:true,
-                template:''
-                	+'<div class="btn-group" style="margin-left:5px">'
-                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' volume container de sortie'
-                	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
-                	+'</div>'
-                */
 			}
 	};
 
@@ -317,7 +308,29 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				}
 			}
 		}
-		//ne plus faire...datatable.setData(dataMain);
+		
+		//----------- il y en a un 2eme !!!
+		// NON PAS FAIRE COMME CA.......... VOIR GA.............
+		var outputContainerSupportCodeSpare = $scope.outputContainerSupportSpare.code;
+		var outputContainerSupportStorageCodeSpare = $scope.outputContainerSupportSpare.storageCode;
+
+		if ( null != outputContainerSupportCodeSpare && undefined != outputContainerSupportCodeSpare){
+			for(var i = 0; i < dataMain.length; i++){
+				
+				var atm = dataMain[i].atomicTransfertMethod;
+				var newContainerCodeSpare = outputContainerSupportCodeSpare+"_"+atm.line + atm.column;
+                
+				////!! ca va ecraser les precedent ????
+				$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCodeSpare);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCodeSpare);
+				
+				if( null != outputContainerSupportStorageCodeSpare && undefined != outputContainerSupportStorageCodeSpare){
+					!!!
+				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
+				}
+			}
+		}
+
 	};
 	
 	/* 25/07/2017 pas necessaire tant que les volumes ne sont pas demandés...
@@ -334,11 +347,12 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 	*/
 		
 	//Init
-	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	//    25/07/2017 faut 2 param a atmToGenerateMany !!!
+	var atmService = atmToGenerateMany($scope, datatableConfig, datatableConfig );
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(l,c){
 		return {
-			class:"OneToOne",
+			class:"OneToMany",
 			line: l, 
 			column: c, 				
 			inputContainerUseds:new Array(0), 
@@ -357,16 +371,26 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 	
 	$scope.atmService = atmService;
 	
-	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	
+	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
-		 //console.log("previous code: "+ $scope.outputContainerSupport.code);
+		 console.log("previous suportCode : "+ $scope.outputContainerSupport.code);
 	}
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
-		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
+		console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
+	// 25/07/2017 il en faut un deuxieme !!!
+	$scope.outputContainerSupportSpare = { code : null , storageCode : null};	
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
+		 $scope.outputContainerSupportSpare.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+		 console.log("previous supportCode spare: "+ $scope.outputContainerSupportSpare.code);
+	}
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
+		$scope.outputContainerSupportSpare.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+		console.log("previous storageCode spare: "+ $scope.outputContainerSupportSpare.storageCode);
+	}
 	
 }]);
