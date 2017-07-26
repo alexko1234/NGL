@@ -402,6 +402,7 @@ readsets.treatments.firstBaseReport.focusScoreTBottom = T Focus Score
 
 readsets.treatments.global.usefulSequences = Nb Séquences utiles
 readsets.treatments.global.usefulBases = Nb Bases utiles
+readsets.treatments.global.usefulSequencesPercent = % Nb sequences utiles
 
 readsets.treatments.ngsrg_illumina.nbCluster = Nb Séquences valides
 readsets.treatments.ngsrg_illumina.nbBases = Nb Bases
