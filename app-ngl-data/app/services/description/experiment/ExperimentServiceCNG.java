@@ -410,10 +410,10 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	    
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
-			//FDS 06/07/2017 ajout NGL-1201: qc pour process Capture
-			l.add(newExperimentType("Fluo Quantification","qc-fluorometer", null, 50,
+			//FDS 27/07/2017 ajout NGL-1201: qc pour process Capture
+			l.add(newExperimentType("Quant-iT","quantit-fluo-quantif", null, 50,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
-					getPropertyDefinitionsQCquantity(), 
+					getPropertyDefinitionsQuantIt(), 
 					getInstrumentUsedTypes("quant-it"), 
 					"OneToVoid",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
@@ -1470,11 +1470,10 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 		// valeur par defaut: celle qui se trouve dans processus dans expectedBaits ?
 		// pas editable => liste
-		// contents ???????????/
-		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, getCaptureBaitsValues(),
+		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
 				null, null, null,"single",12,false,null,null));
 		
-		//OuputContainer ????
+		//OuputContainer 
 			
 		return propertyDefinitions;
 	
@@ -1503,16 +1502,15 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout 06/07/2017 NGL-1201
-	private List<PropertyDefinition> getPropertyDefinitionsQCquantity() {
+	//FDS ajout27/07/2017 NGL-1201
+	private List<PropertyDefinition> getPropertyDefinitionsQuantIt() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		//TO VERIFY !!!
-		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Concentration (ng/µl)", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
 				MeasureUnit.find.findByCode("ng/µl"),
 				MeasureUnit.find.findByCode("ng/µl"),
-				"single", 13, true, null,null));
+				"single", 13, true, null,null));        //////////position a definir...
 		
 		return propertyDefinitions;
 	}

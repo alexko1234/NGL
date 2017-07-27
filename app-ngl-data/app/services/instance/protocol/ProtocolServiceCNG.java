@@ -176,7 +176,8 @@ public class ProtocolServiceCNG {
 						                               "sample-prep",
 						                               "pcr-and-purification",
 						                               "capture",
-						                               "pcr-indexing")));  
+						                               "pcr-indexing",
+						                               "quantit-fluo-quantif")));  
 
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 

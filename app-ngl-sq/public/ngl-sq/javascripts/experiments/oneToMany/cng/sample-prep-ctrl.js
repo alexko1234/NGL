@@ -1,5 +1,7 @@
 /* 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js mais avec atmToGenerateMany
-   25/07/2017 Ne pas faire apparaitre les volumes.... */
+  
+
+//NON---------------------------------PAS DU TOUT COMME CA................................
 
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'atmToGenerateMany',
                                                         function($scope, $parse, atmToGenerateMany) {	
