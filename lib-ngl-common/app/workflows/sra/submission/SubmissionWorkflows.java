@@ -137,9 +137,11 @@ public class SubmissionWorkflows extends Workflows<Submission>{
         // mais par CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 
 		// pour uniformiser avec reste du code ngl
 		System.out.println("dans setState");
+		System.out.println("contextValidation.error avant validateState " + contextValidation.errors);
 
 		CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 	
-		
+		System.out.println("contextValidation.error apres validateState " + contextValidation.errors);
+
 		if(!contextValidation.hasErrors()){
 			// Gerer l'historique des states :
 			object.state = updateHistoricalNextState(object.state, nextState);	

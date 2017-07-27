@@ -34,6 +34,8 @@ studies.tabs.rawData=RawData
 studies.msg.details-release=Objets liés au study :
 studies.msg.details-release-1=Study :
 studies.msg.details.states=state :
+studies.msg.release.success=Demande de release du study enregistrée
+
 study.title=Titre :
 study.state=Etat :
 study.abstract=Resume :

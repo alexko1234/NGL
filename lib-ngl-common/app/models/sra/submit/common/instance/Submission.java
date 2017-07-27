@@ -108,7 +108,9 @@ public class Submission extends DBObject implements IValidation {
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 		if (StringUtils.isNotBlank(this.state.code)){
 			if(this.state.code.equalsIgnoreCase("IW-SUB") 
+					||this.state.code.equalsIgnoreCase("IW-SUB-R")
 					||this.state.code.equalsIgnoreCase("IP-SUB")
+					||this.state.code.equalsIgnoreCase("IP-SUB-R")
 					|| this.state.code.equalsIgnoreCase("F-SUB")) {
 				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
 				ValidationHelper.required(contextValidation, this.creationDate , "creationDate");
@@ -129,6 +131,11 @@ public class Submission extends DBObject implements IValidation {
 			contextValidation.removeKeyFromRootKeyName("submission");
 			return;
 		} 
+		// Dans le cas d'une soumission pour une release, on n'applique pas le reste des validations
+		if (this.release){
+			return;
+		}
+		
 		if (StringUtils.isBlank(this.configCode)){
 			contextValidation.addErrors("submission non evaluable ", "sans configCode dans la soumission '" + this.code + "'");
 			contextValidation.removeKeyFromRootKeyName("submission");

@@ -5,7 +5,6 @@ import play.Routes;
 import play.mvc.Result;
 import views.html.studies.home;
 import views.html.studies.create;
-import views.html.studies.release;
 import views.html.studies.consultation;
 import views.html.studies.details;
 
@@ -25,10 +24,10 @@ public class Studies extends CommonController
 		return ok(consultation.render());
 	}	
 	
-	public static Result release() {
+	/*public static Result release() {
 		return ok(release.render());
 	}	
-
+	*/
 	public static Result get(String code) {
 		return ok(home.render("search"));
 	}

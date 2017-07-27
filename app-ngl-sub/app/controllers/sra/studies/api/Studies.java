@@ -49,7 +49,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 	
 	public Result release(String studyCode) throws SraException {
 		String user = this.getCurrentUser();
-		
+		System.out.println("Dans Studies.java.release ");
 		ContextValidation contextValidation = new ContextValidation(user);
 		SubmissionServices submissionServices = new SubmissionServices();
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
@@ -57,6 +57,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 		Study study = null;
 		try {
 			String submissionCode = submissionServices.initReleaseSubmission(studyCode, contextValidation);
+			System.out.println("Dans Studies.java.release submissionCode="+ submissionCode);
 			// creer le repertoire de soumission
 			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 		} catch (SraException e) {
