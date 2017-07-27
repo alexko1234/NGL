@@ -853,6 +853,9 @@ public class SubmissionServices {
 					
 		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
 		//submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
+		if (submission.release) {
+			submission.submissionDirectory = submission.submissionDirectory + "_release"; 
+		}
 		File dataRep = new File(submission.submissionDirectory);
 		System.out.println("Creation du repertoire de soumission : " + submission.submissionDirectory);
 		Logger.of("SRA").info("Creation du repertoire de soumission" + submission.submissionDirectory);

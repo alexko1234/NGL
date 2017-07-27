@@ -172,7 +172,8 @@ public class ToolsTest extends AbstractTestsSRA {
 	//@Test
 	public void testRelease()throws IOException {
 		Submission submission = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
-				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BDQ_BGX_BGU_27QE299E7")));
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BDQ_BGX_BGU_27RG1T269")));
+		
 		XmlServices xmlServices = new XmlServices();
 		try {
 			xmlServices.writeAllXml(submission.code);
@@ -187,8 +188,8 @@ public class ToolsTest extends AbstractTestsSRA {
 	public void testRetourRelease()throws IOException, SraException, MailServiceException {
 		String user = "william";
 		ContextValidation ctxVal = new ContextValidation(user);
-		String submissionCode = "CNS_BDQ_BGX_BGU_27QE299E7";
-		File retourEbiRelease = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/BDQ_BGX_BGU/26_07_2017/releaseResult");
+		String submissionCode = "CNS_BDQ_BGX_BGU_27RG1T269";
+		File retourEbiRelease = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/BDQ_BGX_BGU/24_07_2017/releaseResult");
 		Submission submission = ReleaseServices.traitementRetourRelease(ctxVal, submissionCode, retourEbiRelease); 
 	}
 	
