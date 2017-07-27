@@ -182,6 +182,8 @@ public class ProcWorkflowHelper {
 									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
+						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));
+						
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));						
 					});								
 			});
@@ -195,6 +197,7 @@ public class ProcWorkflowHelper {
 							&&  tag.equals(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
 						readset.traceInformation.setTraceInformation(validation.getUser());
 						readset.sampleOnContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
+						updatedProperties.forEach((k,v)-> readset.sampleOnContainer.properties.putIfAbsent(k, v));
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
 					}
 			});			

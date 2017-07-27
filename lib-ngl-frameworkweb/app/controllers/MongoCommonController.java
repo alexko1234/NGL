@@ -352,7 +352,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			public void onReady(Out<String> out) {
 				out.write("{\"recordsNumber\":"+all.count()+",");
 			    out.write("\"data\":[");
-			    Iterator<T> iter = all.getCursor();
+			    Iterator<T> iter = all.cursor;
 			    while(iter.hasNext()){
 			    	out.write(Json.toJson(iter.next()).toString());
 		            if(iter.hasNext())out.write(",");    	
@@ -367,7 +367,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return new StringChunks() {
 			@Override
 			public void onReady(Out<String> out) {
-				Iterator<T> iter = all.getCursor();
+				Iterator<T> iter = all.cursor;
 		    	out.write("[");
 			    while (iter.hasNext()) {
 			    	out.write(Json.toJson(iter.next()).toString());
@@ -384,7 +384,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return new StringChunks() {
 			@Override
 			public void onReady(Out<String> out) {
-				Iterator<T> iter = all.getCursor();
+				Iterator<T> iter = all.cursor;
 		    	out.write("[");
 			    while (iter.hasNext()) {
 			    	T o = iter.next();
