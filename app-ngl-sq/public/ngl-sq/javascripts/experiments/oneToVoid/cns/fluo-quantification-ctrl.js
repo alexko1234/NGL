@@ -38,13 +38,27 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
 
+	
+	columns.push({
+		"header" : Messages("containers.table.libProcessType"),
+		"property" : "inputContainer.contents",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 8,
+		"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
+	
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 8,
+		"position" : 9,
 		"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
@@ -59,7 +73,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		"edit" : false,
 		"hide" : true,
 		"type" : "number",
-		"position" : 9,
+		"position" : 10,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
@@ -67,33 +81,9 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	
 	
-	/*
-	columns.push({
-		"header" : Messages("containers.table.libProcessType"),
-		"property" : "inputContainer.contents",
-		"order" : false,
-		"hide" : true,
-		"type" : "text",
-		"position" : 9.1,
-		"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
-	});
+	
+	
 
-	columns.push({
-		"header" : Messages("containers.table.tags"),
-		"property" : "inputContainer.contents",
-		"order" : false,
-		"hide" : true,
-		"type" : "text",
-		"position" : 9.2,
-		"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
-
-	}); */
 	
 	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
 		columns.push({
@@ -110,7 +100,211 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 	
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorBR1.value'
+			|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilBR1.value'){
+			computeConcentrationBR1(value.data);
+    		computeConcentration1(value.data);
+	 	}else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS1.value'
+	 		|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS1.value'){
+			computeConcentrationHS1(value.data);
+    		computeConcentration1(value.data);
+	 	} else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS2.value'
+	 		|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS2.value'){
+        	computeConcentrationHS2(value.data);
+    		computeConcentration1(value.data);
+		}else if(col.property === 'inputContainerUsed.experimentProperties.calculationMethod.value'){
+    		computeConcentration1(value.data);
+    	}else if(col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
+    		computeQuantity1(value.data);
+    	}
+		
+	}
 	
+	
+	
+	var computeConcentrationBR1 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.concentrationBR1.value");
+		var concentration1 = getter(udtData);
+		var compute = {
+				conc1 : $parse("inputContainerUsed.experimentProperties.concentrationDilBR1.value")(udtData),
+				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactorBR1.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactorBR1.value")(udtData)).substring(2) : undefined ) ,
+				isReady:function(){
+					return (this.conc1 && this.dilution1);
+				}
+			};
+		
+		if(compute.isReady()){
+			
+			var result = $parse("(conc1 * dilution1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				concentration1 = Math.round(result*10)/10;				
+			}else{
+				concentration1 = undefined;
+			}	
+			getter.assign(udtData, concentration1);
+		}else{
+			getter.assign(udtData, undefined);
+			console.log("not ready to computeConcentrationBR1");
+		}
+		
+	}
+	
+	
+	var computeConcentrationHS1 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.concentrationHS1.value");
+		var concentration1 = getter(udtData);
+		var compute = {
+				conc1 : $parse("inputContainerUsed.experimentProperties.concentrationDilHS1.value")(udtData),
+				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactorHS1.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactorHS1.value")(udtData)).substring(2) : undefined ) ,
+				isReady:function(){
+					return (this.conc1 && this.dilution1);
+				}
+			};
+		
+		if(compute.isReady()){
+			
+			var result = $parse("(conc1 * dilution1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				concentration1 = Math.round(result*10)/10;				
+			}else{
+				concentration1 = undefined;
+			}	
+			getter.assign(udtData, concentration1);
+		}else{
+			getter.assign(udtData, undefined);
+			console.log("not ready to computeConcentrationHS1");
+		}
+		
+	}
+	
+	var computeConcentrationHS2 = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.concentrationHS2.value");
+		var concentration1 = getter(udtData);
+		var compute = {
+				conc1 : $parse("inputContainerUsed.experimentProperties.concentrationDilHS2.value")(udtData),
+				dilution1 :  (($parse("inputContainerUsed.experimentProperties.dilutionFactorHS2.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactorHS2.value")(udtData)).substring(2) : undefined ) ,
+				isReady:function(){
+					return (this.conc1 && this.dilution1);
+				}
+			};
+		
+		if(compute.isReady()){
+			
+			var result = $parse("(conc1 * dilution1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				concentration1 = Math.round(result*10)/10;				
+			}else{
+				concentration1 = undefined;
+			}	
+			getter.assign(udtData, concentration1);
+		}else{
+			getter.assign(udtData, undefined);
+			console.log("not ready to computeConcentrationHS2");
+		}
+		
+	}
+	
+	var computeConcentration1 = function(udtData){
+		
+		var getter = $parse("inputContainerUsed.experimentProperties.concentration1.value");
+		var concentration1 = getter(udtData);
+		
+		var calMethod=$parse("inputContainerUsed.experimentProperties.calculationMethod.value")(udtData);
+		if(calMethod){
+			console.log("CalMethod")
+			if(calMethod==="Moyenne des 2 HS"){
+				
+				var compute = {
+						inputConcHS1 : $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData),
+						inputConcHS2 : $parse("inputContainerUsed.experimentProperties.concentrationHS2.value")(udtData),
+						isReady:function(){
+							return (this.inputConcHS1 && this.inputConcHS2);
+						}
+					};
+				
+				if(compute.isReady()){
+					var result = $parse("(inputConcHS1 + inputConcHS2)/2")(compute);
+					console.log("result Moyenne des 2 HS = "+result);
+					if(angular.isNumber(result) && !isNaN(result)){
+						concentration1 = Math.round(result*10)/10;				
+					}else{
+						concentration1 = undefined;
+					}	
+					getter.assign(udtData, concentration1);
+				}else{
+					console.log("not ready to concentration CalMethod moyenne 2 HS");
+				}
+				
+			}else if(calMethod==="BR si > 25 et HS1 si BR <= 25"){
+				var compute = {
+						inputConcHS1 : $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData),
+						inputConcBR1 : $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData),
+						isReady:function(){
+							return (this.inputConcHS1 && this.inputConcBR1);
+						}
+					};
+				var concentration1;
+				if(compute.isReady()){
+					concentration1 = $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData) >25 ? $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData) :  $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData); 
+					console.log("result BR si > 25 et HS1 si BR <= 25 = "+result);
+				}else {
+					concentration1=undefined;
+				}
+					getter.assign(udtData,concentration1);
+				
+			}else if(calMethod==="BR 1 seul"){
+				getter.assign(udtData,$parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData));
+
+			}else if(calMethod==="HS 1 seul"){
+				getter.assign(udtData,$parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData));
+
+			}else if(calMethod==="HS 2 seul"){	
+				getter.assign(udtData,$parse("inputContainerUsed.experimentProperties.concentrationHS2.value")(udtData));
+			}else if(calMethod==="Non quantifiable"){	
+				getter.assign(udtData,$parse(undefined)(udtData));
+			}
+			else {	console.log("calMethod "+calMethod+" not implemented");}
+			
+			
+		}
+		
+		computeQuantity1(udtData);
+		
+	}
+	
+	var computeQuantity1 = function(udtData){
+		var getter= $parse("inputContainerUsed.experimentProperties.quantity1.value");
+		var quantity1=getter(udtData);
+		
+		var compute = {
+				inputVol1 : $parse("inputContainerUsed.experimentProperties.volume1.value")(udtData),
+				inputConc1 : $parse("inputContainerUsed.experimentProperties.concentration1.value")(udtData),
+				isReady:function(){
+					return (this.inputVol1 && this.inputConc1);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputVol1 * inputConc1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				quantity1 = Math.round(result*10)/10;				
+			}else{
+				quantity1 = undefined;
+			}	
+			getter.assign(udtData, quantity1);
+		}else{
+			console.log("not ready to computeQuantity1");
+		}
+
+	}
+	
+	/*
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
 		
@@ -148,7 +342,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		}
 		
 	}
-	
+	*/
 	
 	var importData = function(){
 		$scope.messages.clear();
