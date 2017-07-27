@@ -153,6 +153,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null,
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		
 			
 			/** Transformation, ordered by display order **/
 			
@@ -250,6 +251,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
+			
 			/** Quality Control, ordered by display order **/
 			
 			// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
@@ -289,8 +291,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsBankQC(), 
 					getInstrumentUsedTypes("hand"),
 					"OneToVoid", false,
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
 			// FDS 21/02/2017 ajout -- JIRA NGL-1472: necessiter d'ajouter QC provenant de collaborateur extérieur.
 			//  n'est associee a aucun noeud ???
@@ -303,7 +304,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 			
 			/** Purification, ordered by display order **/
-
+            // 0 pour l'instant
+			
 			
 			/** Transfert, ordered by display order **/
 			// NOTE: pas de Node a creer pour experiences type transfert...sauf cas particuliers
@@ -324,30 +326,42 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-            //27/03/2017 renommage "Tubes" en "Tubes ou Strips"
-			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10500,
+			// FDS ajout 19/07/2017 NGL-1519: dupliquer "lib-normalization" en experience de type transfert=> meme proprietes	
+			l.add(newExperimentType("Normalisation (supplémentaire)","additional-normalization",null,10500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
+					getPropertyDefinitionsLibNormalization(),
+					getInstrumentUsedTypes("hand","janus"), 
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+			
+            // FDS 27/03/2017 renommage "Tubes" en "Tubes ou Strips"
+			l.add(newExperimentType("Tubes ou Strips -> Plaque","tubes-to-plate",null,10600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10600,
+			l.add(newExperimentType("Plaque -> Tubes","plate-to-tubes",null,10700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10700,
+			l.add(newExperimentType("Plaques -> Plaque","plates-to-plate",null,10800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// renommage "Tubes ou Plaques" en "Tubes + Plaques
-			l.add(newExperimentType("Tubes + Plaques -> Plaque","x-to-plate",null,10800,
+			// FDS renommage "Tubes ou Plaques" en "Tubes + Plaques
+			l.add(newExperimentType("Tubes + Plaques -> Plaque","x-to-plate",null,10900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
+					getInstrumentUsedTypes("hand"),
+					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-					
+
 			
-			// NOTE: toutes les experiences nanopores sont regroupées dans Nanopore.java
+			/** NOTE: toutes les experiences nanopores sont regroupées dans la classe Nanopore.java **/
 			l.addAll(new Nanopore().getExperimentType());
 			
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -914,7 +928,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single",23));
 	
 		//OuputContainer
-		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
+		// GA 08/02/2016 => ces proprietes de containerOut doivent etre propagees au content
 		// GA 14/03/2016 => il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
 				"single", 30, true, null,null));
@@ -927,23 +941,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	
 	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment librairie normalization pour le process X5
+	// FDS 19/07/2017 -- JIRA NGL-1519: egalement utilisees par l'experience de transfert additional-normalization
 	private List<PropertyDefinition> getPropertyDefinitionsLibNormalization() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
 		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire
+		// 26/07/2017  non editable
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
 				MeasureUnit.find.findByCode("µL"),
-				"single", 20, true, null,null));
+				"single", 20, false, null,null));
 		
-		//buffer est sur ContainerIn ????????????
+		//buffer 
+		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire
+		// 26/07/2017  non editable
 		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
 				MeasureUnit.find.findByCode("µL"),
-				"single", 20, true, null,null));		
+				"single", 20, false, null,null));		
 		
 		//OuputContainer
 		

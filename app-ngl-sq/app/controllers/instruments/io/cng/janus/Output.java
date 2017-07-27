@@ -63,11 +63,16 @@ public class Output extends AbstractOutput {
 			} else {
 				throw new RuntimeException("Janus sampleSheet type not managed : "+experiment.typeCode + "/" +ftype);
 			}
-			
-		} else if ("lib-normalization".equals(experiment.typeCode)){
+		
+		} else if ( "lib-normalization".equals(experiment.typeCode) ){
 			Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
 			content = OutputHelper.format(normalization.render(experiment).body());	
 			
+		// FDS 19/07/2017 NGL-1519 ajout "additional-normalization"	
+		} else if ( "additional-normalization".equals(experiment.typeCode) ){
+			Logger.info("generation feuille de route Janus / exp="+ experiment.typeCode );
+			content = OutputHelper.format(normalization.render(experiment).body());	
+
 		}else {
 			// a venir ????
 			//    rna-prep; 

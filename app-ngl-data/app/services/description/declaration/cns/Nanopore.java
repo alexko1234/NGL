@@ -42,7 +42,7 @@ public class Nanopore extends AbstractDeclaration{
 				
 		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", 
 				ProcessCategory.find.findByCode("sequencing"),62 , 
-				null,
+				getPropertyDefinitionsRunNanopore(),
 				Arrays.asList(getPET("ext-to-nanopore-run",-1), 
 						getPET("nanopore-library",-1), 
 						getPET("nanopore-depot",0)), 
@@ -995,9 +995,7 @@ public class Nanopore extends AbstractDeclaration{
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
-		propertyDefinitions.add(newPropertiesDefinition(
-				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
-				true,null, getLibProcessTypeCodeValues(),"single" ,1,true, "ONT",null));
+		propertyDefinitions.addAll(getPropertyDefinitionsNanoporeLibrary());
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process, Level.CODE.Content),Integer.class,
 				true,null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"),
@@ -1011,6 +1009,19 @@ public class Nanopore extends AbstractDeclaration{
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition(
 				"Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class,
 				true, null,getLibProcessTypeCodeValues(),"single",1, true,"ONT",null));
+		
+		propertyDefinitions.addAll(getPropertyDefinitionsRunNanopore());
+		
+		return propertyDefinitions;
+	}
+	
+	public static List<PropertyDefinition> getPropertyDefinitionsRunNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(
+				newPropertiesDefinition("Dev / Prod ?", "devProdContext", LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, null, 
+						DescriptionFactory.newValues("PROD","DEV"),null,null,null,"single", 500, true, null, null)
+				);
 		
 		return propertyDefinitions;
 	}

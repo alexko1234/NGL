@@ -87,9 +87,10 @@ public class ProtocolServiceCNG {
 				InstanceFactory.setExperimentTypeCodes( "library-prep",
 													    "pcr-and-purification")));						
 
-		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"
+		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"; 19/07/2017 ajout additional-normalization
 		lp.add(newProtocol("normalization","normalisation","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes("lib-normalization")));
+				InstanceFactory.setExperimentTypeCodes("lib-normalization",
+						                               "additional-normalization")));
 		
 		// 27/09/2016 ajout protocole "protocole_pool" dédié a l'experience "pool plaque a plaque"
 		lp.add(newProtocol("protocol-pool","protocole_pool","?","1","production", 

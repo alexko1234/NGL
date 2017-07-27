@@ -1,5 +1,5 @@
-// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
-angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
+// FDS 19/07/2017 -- JIRA NGL-1519. Duplication avec qq differences: PAS DEFAUT pour volume, concentration
+angular.module('home').controller('AdditionalNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
                                                      function($scope, $parse, $http, atmToSingleDatatable){
 
 	var inputExtraHeaders=Messages("experiments.inputs");
@@ -81,16 +81,16 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
 			         { // libProcessType ajout 08/11/2016
-					 	"header":Messages("containers.table.libProcessType"),
-					 	"property": "inputContainer.contents",
-					 	//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
-					 	"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
-					 	"order":false,
-					 	"hide":true,
-					 	"type":"text",
-					 	"position":6.5,
-					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					 	"extraHeaders": {0: inputExtraHeaders}	 						 			
+					 		"header":Messages("containers.table.libProcessType"),
+					 		"property": "inputContainer.contents",
+					 		//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
+					 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+					 		"order":false,
+					 		"hide":true,
+					 		"type":"text",
+					 		"position":6.5,
+					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					 		"extraHeaders": {0: inputExtraHeaders}	 						 			
 					 },
 					 { //Tags
 					    "header":Messages("containers.table.tags"),
@@ -150,12 +150,11 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":10,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         // colonnes specifiques experience viennent ici.. 
-			         //   => Volume engagé, Volume tampon
+			         // colonnes specifiques experience viennent ici.. Volume engagé, Volume tampon
 			          
 			         //------------------------ OUTPUT containers section -------------------
 
-		            /* ne pas afficher les containercodes sauf pour DEBUG 
+		            /* ne pas aficher les containercodes sauf pour DEBUG 
 			         {
 			        	 "header":"[["+Messages("containers.table.code")+"]]",
 			        	 "property":"outputContainerUsed.code",
@@ -166,7 +165,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":100,
 			        	 "extraHeaders":{0:"outputExtraHeaders"}
 			         },*/
-			         { // barcode plaque sortie 
+			         { // barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
 			        	 "order":true,
@@ -194,25 +193,23 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
-			         { // Concentration; 08/11/2016 shortLabel
+			         { // Concentration  sans  valeur par defaut
 			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 						 "edit":true,
-						 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'", // 26/07/2017 NGL-1519: ajout calculs en Javascript
+						 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'",  // 26/07/2017 NGL-1519: ajout calculs en Javascript
 						 "hide":true,
 			        	 "type":"number",
-			        	 "defaultValues":4,
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         { // Volume ; 26/07/2017 supression de la valeur par defaut....
+			         { // Volume sans  valeur par defaut
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 						 "edit":true,
 						 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'",  // 26/07/2017 NGL-1519: ajout calculs en Javascript
 						 "hide":true,
 			        	 "type":"number",
-						 //"defaultValues":15, 
 			        	 "position":130,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
@@ -306,6 +303,8 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				}
 			}
 		}
+		
+		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	$scope.$on('refresh', function(e) {
@@ -406,7 +405,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
-
+	
 	// 26/07/2017: remplacer les calculs de calculation.drl par du javascript....
 	$scope.updatePropertyFromUDT = function(value, col){
 		//console.log("update from property : "+col.property);
@@ -414,14 +413,14 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		if (( col.property === 'outputContainerUsed.concentration.value')||
 			( col.property === 'outputContainerUsed.volume.value')
 		){
-			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data);
-			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data);
+			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data); 
+			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data); 
 			var outputVol= $parse("outputContainerUsed.volume.value")(value.data);
 			
 			//console.log(">>>outputContainerUsed.concentration.value="+ outputConc );
 			//console.log(">>>inputContainerUsed.concentration.value="+ inputConc );
 
-			// !! les cas ou la conc input est a 0 existent  et font planter la generation de la feuille de route
+			// !! les cas ou la conc input = 0 existent et font planter la generation de la feuille de route !!
 			// => faire comme le cas conc trop forte
 			if (( outputConc > inputConc) || (inputConc=== 0 ))
 			{
@@ -479,6 +478,5 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 			getterBufferVol.assign(udtData, undefined);
 		}
 	}
-	
 	
 }]);

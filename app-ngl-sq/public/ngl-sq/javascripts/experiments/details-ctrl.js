@@ -1324,7 +1324,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		columns.push({
 	        "header":Messages("containers.table.projectCodes"),
 	 		"property": "container.projectCodes",
-	 		"order":false,
+	 		"order":true,
 	 		"hide":true,
 	 		"type":"text",
 	 		"position":2,
@@ -1333,7 +1333,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		columns.push({
         	"header":Messages("containers.table.sampleCodes"),
  			"property": "container.sampleCodes",
- 			"order":false,
+ 			"order":true,
  			"hide":true,
  			"type":"text",
  			"position":3,
@@ -1362,7 +1362,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		columns.push({
 			"header":Messages("containers.table.status"),
 			"property":"status",
-			"order":false,
+			"order":true,
 			"edit":true,
 			"hide":false,
 			"type":"text",
@@ -1377,6 +1377,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		columns.push({
 	       	"header":Messages("containers.table.dispatch"),
 	    	"property":"dispatch",
+	    	"render":"<span ng-bind='getDispatchValue(cellValue)'></span>",
 	    	"order":false,
 			"edit":true,
 			"hide":false,
@@ -1471,7 +1472,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				active:Permissions.check("writing")?true:false,
 				columnMode:true,
 				byDefault: true,
-				showButton:false
+				showButton:true
 			},
 			hide:{
 				active:false
@@ -1797,6 +1798,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	dispatchValuesForExperimentType["all"] = [];
 	
 	var nextExperimentsForExperimentType = [];
+	
+	$scope.getDispatchValue = function(code){
+		return dispatchValues.find(function(dv){return (dv.code === code);}).name;		
+	};
 	
 	$scope.getDispatchValues = function(){
 		return dispatchValues;		
