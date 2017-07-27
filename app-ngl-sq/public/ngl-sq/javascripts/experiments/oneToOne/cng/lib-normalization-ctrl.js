@@ -414,16 +414,19 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		if (( col.property === 'outputContainerUsed.concentration.value')||
 			( col.property === 'outputContainerUsed.volume.value')
 		){
-			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data); //OUI !!
-			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data); //OUI !!
-			var vol= $parse("inputContainerUsed.volume.value")(value.data); //OUI !!
+			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data);
+			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data);
+			var vol= $parse("inputContainerUsed.volume.value")(value.data);
 			
 			//console.log(">>>outputContainerUsed.concentration.value="+ outputConc );
 			//console.log(">>>inputContainerUsed.concentration.value="+ inputConc );
 
-			if ( outputConc > inputConc)
+			// !! les cas ou la conc input est a 0 existent  et font planter la generation de la feuille de route
+			// => faire comme le cas conc trop forte
+			if (( outputConc > inputConc) || (inputConc=== 0 ))
 			{
-				console.log("concentration out trop forte !!");
+				console.log("concentration out trop forte OU concentration in  nulle!!");
+				
 				// forcer valeurs
 				$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(value.data, 0); 
 				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, vol);
