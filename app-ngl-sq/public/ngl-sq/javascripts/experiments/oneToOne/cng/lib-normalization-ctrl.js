@@ -416,7 +416,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		){
 			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data);
 			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data);
-			var vol= $parse("inputContainerUsed.volume.value")(value.data);
+			var outputVol= $parse("outputContainerUsed.volume.value")(value.data);
 			
 			//console.log(">>>outputContainerUsed.concentration.value="+ outputConc );
 			//console.log(">>>inputContainerUsed.concentration.value="+ inputConc );
@@ -429,8 +429,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				
 				// forcer valeurs
 				$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(value.data, 0); 
-				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, vol);
-				$parse("outputContainerUsed.volume.value").assign(value.data, vol);
+				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, outputVol);
 				$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
 			} else {
 			    computeVolumes(value.data);
