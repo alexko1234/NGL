@@ -140,7 +140,28 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         
+			         {
+			        	 "header":Messages("containers.table.quantity"),
+			        	 "property":'outputContainerUsed.quantity.value',
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":53,
+			        	 "watch":true,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.quantity.unit"),
+			        	 "property":"outputContainerUsed.quantity.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":54,
+			        	 "watch":true,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -544,6 +565,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		var getter = $parse("outputContainerUsed.quantity");
 		var outputQuantity = getter(udtData);
 		
+		
 		var compute = {
 				outputConc : $parse("outputContainerUsed.concentration.value")(udtData),
 				outputConcUnit : $parse("outputContainerUsed.concentration.unit")(udtData),
@@ -564,6 +586,9 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			}	
 			getter.assign(udtData, outputQuantity);
 		}else{
+			outputQuantity.value = null;
+			outputQuantity.unit = null;
+			getter.assign(udtData, outputQuantity);
 			console.log("not ready to computeOutputQuantity");
 		}
 		
