@@ -1612,6 +1612,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	//TODO used cache to optimize the update of support and add priority on stateCode
+	/*
 	var getContainerSupportStateRequests = function(index, supportCodes, stateCode){
 		var supportPromises = [];
 		supportCodes.forEach(function(value){
@@ -1620,7 +1621,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		
 		return supportPromises;
 	};
-	
+	*/
 	var getContainerStateRequests = function(index, containerCodes, stateCode){
 		var containerPromises = [];
 		containerCodes.forEach(function(value){
