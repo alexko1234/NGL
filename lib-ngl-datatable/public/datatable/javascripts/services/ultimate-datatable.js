@@ -365,7 +365,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (configPagination.active && !this.isRemoteMode(configPagination.mode)) {
                     this.config.pagination.pageNumber = 0;
                 }
-                if (recordsNumber === undefined) recordsNumber = data.length;
+                if (recordsNumber === undefined && data !== null & data !== undefined) recordsNumber = data.length;
                 this.allResult = data;
                 this.totalNumberRecords = recordsNumber;
                 this.loadUrlColumnProperty();
