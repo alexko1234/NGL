@@ -58,7 +58,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 9,
+		"position" : 8.1,
 		"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
@@ -73,7 +73,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		"edit" : false,
 		"hide" : true,
 		"type" : "number",
-		"position" : 10,
+		"position" : 8.2,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}

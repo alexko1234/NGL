@@ -50,7 +50,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 		"edit" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 10.1,
+		"position" : 8.1,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
