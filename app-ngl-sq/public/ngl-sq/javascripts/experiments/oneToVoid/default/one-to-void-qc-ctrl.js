@@ -190,7 +190,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 		
 		if(supportCategoryCode ==="tube"){
 			columns.push({
-				"header" : Messages("containers.table.supportCode"),
+				"header" : Messages("containers.table.code"),
 				"property" : "inputContainer.support.code",
 				"order" : true,
 				"edit" : false,

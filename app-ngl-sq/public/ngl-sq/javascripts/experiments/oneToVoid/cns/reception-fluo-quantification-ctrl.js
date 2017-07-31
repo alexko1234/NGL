@@ -55,7 +55,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			0 : Messages("experiments.inputs")
 		}
 	});
-	
+	/*
 	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
 		columns.push({
 			"header" : Messages("containers.table.workName"),
@@ -68,7 +68,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
-	
+	*/
 	$scope.atmService.data.setColumnsConfig(columns);
 	
 	
