@@ -43,7 +43,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"group" : true,
 			"position" : 1,
-			"type" : "text"
+			"type" : "text",
+			"groupMethod":"count:true"
 		});
 		columns.push({
 			"header" : Messages("processes.table.projectCode"),
