@@ -2389,8 +2389,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         if (angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#") {
                                             colValue = v;
                                         } else if (angular.isDefined(v)) {
-                                            //not filtered properties because used during the compute
-                                            colValue = $parse("group." + column.id + that.getFormatter(column))(result.data);
+                                            //not filtered and no format properties because used during the compute
+                                            colValue = $parse("group." + column.id)(result.data);
                                         } else {
                                             colValue = undefined;
                                         }
