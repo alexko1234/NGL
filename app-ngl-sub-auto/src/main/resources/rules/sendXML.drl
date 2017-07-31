@@ -20,6 +20,7 @@ rule "Define variable lineParmeter for sendXML specification"
        updateParameterXML("xmlExperiments",$job);
        updateParameterXML("xmlRuns",$job);
        $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionCode%",$job.getUniqueJobResource("subToSend").getProperty("code")));
+       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionDate%",$job.getUniqueJobResource("subToSend").getProperty("submissionDate")));
        $job.setParameterValue("OptionCD",$job.getParameterValue("OptionCD").getValue().replace("%submissionDirectory%",$job.getUniqueJobResource("subToSend").getProperty("submissionDirectory")));
 	
 end
@@ -61,9 +62,9 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		//File fileAC = new File(pathAC);
 		log.debug("path AC="+pathAC);
 		JSONDevice jsonDevice = new JSONDevice();
-		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?=fileNameAC="+pathAC;
+		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?=fileName="+pathAC;
 		log.debug("url "+url);
-		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?=fileNameAC="+pathAC, "{}", "bot");
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?=fileName="+pathAC, "{}", "bot");
 		log.debug("Result "+jsonResult);
 		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
 		log.debug("Resource Properties "+resourcePropertiesSet);

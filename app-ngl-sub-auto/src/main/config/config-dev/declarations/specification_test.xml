@@ -86,7 +86,7 @@ H:\birdsSpec.xsd">
 			<KeyValueElement key="-F" value="&quot;EXPERIMENT=@%xmlExperiments%&quot;" parameterName="xmlExperiments"/>
 			<KeyValueElement key="-F" value="&quot;RUN=@%xmlRuns%&quot;" parameterName="xmlRuns"/>
 			<LineElement line="-k" parameterName="optK" />
-			<LineElement line="listAC_%submissionDate%.txt" parameterName="listAC"/>
+			<LineElement line="listAC_%submissionCode%_%submissionDate%.txt" parameterName="listAC"/>
 			
 		</ParametersSpecification>
 		<InputsSpecification>
