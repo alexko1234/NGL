@@ -163,17 +163,30 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	
 	columns.push({
 			"header" : Messages("containers.table.concentration"),
-			"property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
+			"property": "inputContainerUsed.concentration.value",
+			//"property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
 			//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 			"order" : true,
 			"edit" : false,
 			"hide" : true,
-			"type" : "text",
+			"type" : "number",
 			"position" : 8,
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
 		});
+	columns.push({
+		"header" : Messages("containers.table.concentration.unit"),
+		"property": "inputContainerUsed.concentration.unit",
+		"order" : true,
+		"edit" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 8.1,
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
 
 	columns.push({
 			"header" : Messages("containers.table.volume") + " (µL)",
