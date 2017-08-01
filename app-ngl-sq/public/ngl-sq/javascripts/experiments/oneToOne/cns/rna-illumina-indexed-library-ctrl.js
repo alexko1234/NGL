@@ -80,7 +80,17 @@ angular.module('home').controller('RNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },		
+			         },
+			         {
+			        	 "header":Messages("containers.table.comments"),
+			        	 "property":"inputContainer.comments[0].comment",
+			        	 "order":false,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"textarea",
+			        	 "position":8,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
