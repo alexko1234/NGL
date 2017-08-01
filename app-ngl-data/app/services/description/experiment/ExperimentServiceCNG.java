@@ -717,7 +717,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 						               "ext-to-pcr-capture-pcr-indexing-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("labchip-migration-profile",
-				                   "qc-fluorometer"),            // qc ajout "qc-fluorometer" pour process Capture ( UTILE ?? voir comment plus bas...)
+				                   "quantit-fluo-quantif"),            // qc ajout "quantit-fluo-quantif"  pour process Capture ( UTILE ?? voir comment plus bas...)
 				null  // pas de transfert
 				).save();
 
@@ -725,8 +725,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		newExperimentTypeNode("capture",getExperimentTypes("capture").get(0),
 				false,false,false,
 				getExperimentTypeNodes("pcr-and-purification",
-										"ext-to-capture-pcr-indexing-fc", 
-										"ext-to-capture-pcr-indexing-fc-ord"),// previous nodes
+									   "ext-to-capture-pcr-indexing-fc", 
+									   "ext-to-capture-pcr-indexing-fc-ord"),// previous nodes
 				null, // pas de purif
 				null, // pas qc
 				null  // pas tranfert
@@ -736,8 +736,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		newExperimentTypeNode("pcr-indexing",getExperimentTypes("pcr-indexing").get(0),
 				false,false,false,
 				getExperimentTypeNodes("capture",
-										"ext-to-pcr-indexing-process-fc",
-										"ext-to-pcr-indexing-process-fc-ord"), // previous nodes
+									   "ext-to-pcr-indexing-process-fc",
+									   "ext-to-pcr-indexing-process-fc-ord"), // previous nodes
 				null, // pas de purif
 				null, // QUEL QC ?????????????????????????????????????????
 				null  // pas tranfert
@@ -1382,8 +1382,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), 
-				MeasureUnit.find.findByCode("ng/µl"),
-				MeasureUnit.find.findByCode("ng/µl"),
+				MeasureUnit.find.findByCode("ng/µL"),
+				MeasureUnit.find.findByCode("ng/µL"),
 				"single", 14, true, null, null));
 			
 		return propertyDefinitions;
@@ -1411,8 +1411,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
-				MeasureUnit.find.findByCode("ng/µl"),
-				MeasureUnit.find.findByCode("ng/µl"),
+				MeasureUnit.find.findByCode("ng/µL"),
+				MeasureUnit.find.findByCode("ng/µL"),
 				"single", 13, true, null,null));
 		
 		return propertyDefinitions;
@@ -1468,10 +1468,10 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				MeasureUnit.find.findByCode("ng"),
 				"single",11,true,null,null));
 		
-		// valeur par defaut: celle qui se trouve dans processus dans expectedBaits ?
-		// pas editable => liste
+		// Liste; valeur par defaut= celle qui se trouve dans processus dans expectedBaits . PAS POSSIBLE!!!	
 		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
-				null, null, null,"single",12,false,null,null));
+				null, null, null,
+				"single",12,true,null,null));
 		
 		//OuputContainer 
 			
@@ -1506,10 +1506,10 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 	private List<PropertyDefinition> getPropertyDefinitionsQuantIt() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration (ng/µl)", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Concentration (ng/µL)", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
-				MeasureUnit.find.findByCode("ng/µl"),
-				MeasureUnit.find.findByCode("ng/µl"),
+				MeasureUnit.find.findByCode("ng/µL"),
+				MeasureUnit.find.findByCode("ng/µL"),
 				"single", 13, true, null,null));        //////////position a definir...
 		
 		return propertyDefinitions;
@@ -1524,7 +1524,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		 values.add(DescriptionFactory.newValue("V5",    "V5"));
 		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));
 		 values.add(DescriptionFactory.newValue("V6",    "V6"));
-		 values.add(DescriptionFactory.newValue("V6+UTR","V6+UTR")); 
+		 values.add(DescriptionFactory.newValue("V6+UTR","V6+UTR"));  
 		 /// values.add(DescriptionFactory.newValue("custom","custom"));  ???
 	
     	return values;

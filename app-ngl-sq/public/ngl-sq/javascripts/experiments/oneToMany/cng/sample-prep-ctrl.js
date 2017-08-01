@@ -1,4 +1,4 @@
-/* 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js mais avec atmToGenerateMany
+// 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js mais avec atmToGenerateMany
   
 
 //NON---------------------------------PAS DU TOUT COMME CA................................

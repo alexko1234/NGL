@@ -83,7 +83,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":6,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-                     /* ne pas faire apparaitre les volumes...
+                     /* 25/07/2017 ne pas faire apparaitre les volumes...
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainerUsed.volume.value",
@@ -108,8 +108,9 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			         },
 			         
 			         // colonnes specifiques experience viennent ici...
+			         
 			         //--------------------- OUTPUT containers section -----------------------
-			         /* ne pas faire apparaitre les volumes...
+			         /* 25/07/2017 ne pas faire apparaitre les volumes...
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -244,10 +245,35 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
                 */
 			}
 	};
+	
+	// 31/07/2017 ajouter les columns 'processProperties' uniquement si experience state= N ou IP car n'existe que temporairement
+	//  plateWorkLabel / ngsRunWorkLabel 
+	if ( $scope.isInProgressState() || $scope.isNewState() ) {
+		datatableConfig.columns.push({
+	       	 "header": "Nom de travail plaque",
+	       	 "property":"inputContainerUsed.contents",
+	       	 "filter" : "getArray:'processProperties.plateWorkLabel.value' | unique",
+	       	 "order":true,
+			 "hide":true,
+	       	 "type":"text",
+	       	 "position":9.5,
+	       	 "extraHeaders":{0:inputExtraHeaders}
+		 });
+		
+		datatableConfig.columns.push({
+	       	 "header": "Nom de travail run NGS",
+	       	 "property":"inputContainerUsed.contents",
+	       	 "filter" : "getArray:'processProperties.ngsRunWorkLabel.value' | unique",
+	       	 "order":true,
+			 "hide":true,
+	       	 "type":"text",
+	       	 "position":9.7,
+	       	 "extraHeaders":{0:inputExtraHeaders}
+		 });
+    }
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");	
-		setRobotRunCode();
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
@@ -282,7 +308,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		$scope.atmService.data.setEdit();
 	});
 	
-	// 25/07/2017
+	/* NON N'IMPORTE QUOI !!!!!!!!!
 	var setRobotRunCode =function (){
 		// si l'utilisateur n'a pas saisi de Nom de run (robotRunCode )=> utiliser la valeur definie au niveau processus
 		// idealement il faudrait recuperer cette valeur au chargement de la page mais c'est plus compliqué...
@@ -294,6 +320,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		    $scope.experiment.instrumentProperties.robotRunCode.value = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].contents[0].processProperties.ngsRunWorkLabel.value;
 		}	
 	};
+	*/
 	
 	// for save callback
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
@@ -317,7 +344,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				}
 			}
 		}
-		//ne plus faire...datatable.setData(dataMain);
 	};
 	
 	/* 25/07/2017 pas necessaire tant que les volumes ne sont pas demandés...
@@ -368,5 +394,23 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
+	/*  TODO....IL FAUDRAIT DETECTER AU PLUS TOT LE NOMBRE d"IMPUTS !!!
+	
+	// PB compte les containers et pas les containerSupport.....
+	// if ($scope.mainService.getBasket().length() > 1 ) {
+	
+	// PB pas encore defini !!!
+	//if ($scope.atmService.data.inputContainerSupports.length > 1) {
+
+
+	// vérifier qu'on a une seule plaque en entree 
+	if  ( ??????????????? )
+		$scope.messages.clear();
+		$scope.messages.clazz = "alert alert-danger";
+		$scope.messages.text = Messages("experiments.input.error.only-1-plate");
+		$scope.messages.showDetails = false;
+		$scope.messages.open();
+	}
+	*/
 	
 }]);

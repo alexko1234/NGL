@@ -81,29 +81,6 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
-			         { // libProcessType ajout
-					   "header":Messages("containers.table.libProcessType"),
-					 	"property": "inputContainer.contents",
-					 	//"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
-					 	"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
-					 	"order":false,
-					 	"hide":true,
-					 	"type":"text",
-					 	"position":6.5,
-					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					 	"extraHeaders": {0: inputExtraHeaders}	 						 			
-					 },
-					 { //Tags
-					    "header":Messages("containers.table.tags"),
-			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'| unique",
-					 	"order":true,
-					 	"hide":true,
-					 	"type":"text",
-					 	"position":7,
-					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					    "extraHeaders":{0:inputExtraHeaders}
-					 },
 					 { //Concentration; 12/09/2016 ne pas inclure l'unité dans le label; 08/11/2016 label court
 			        	 "header":Messages("containers.table.concentration.shortLabel"), 
 			        	 "property":"inputContainerUsed.concentration.value",  
@@ -140,7 +117,9 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":10,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         // colonnes spécifiques experience viennent ici.. Volume engagé, Quantité engagée
+
+			         // colonnes correspondant aux propriétés experience de niveau containerIN viennent automatiquement ici
+                     //   => Volume engagé, Quantité engagée, Baits (sondes)
 			          
 			         //------------------------ OUTPUT containers section -------------------
 
@@ -183,8 +162,8 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
-			         { // Concentration  sans  valeur par defaut
-			        	 "header":Messages("containers.table.concentration.shortLabel") + " (nM)",
+			         { // Concentration
+			        	 "header":Messages("containers.table.concentration.shortLabel") + " (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
 						 "edit":true,
 						 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'",
@@ -193,7 +172,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         { // Volume sans  valeur par defaut
+			         { // Volume 
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 						 "edit":true,
@@ -262,6 +241,21 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 				dynamic:true,
 			}
 	}; // fin struct datatableConfig
+	
+
+	// 31/07/2017 ajouter les columns 'processProperties' uniquement si experience state= N ou IP car n'existe que temporairement
+	if ( $scope.isInProgressState() || $scope.isNewState()) {
+		datatableConfig.columns.push({
+	       	 "header": "Baits (sondes) prévues",
+	       	 "property":"inputContainerUsed.contents",
+	       	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique",
+	       	 "order":true,
+			 "hide":true,
+	       	 "type":"text",
+	       	 "position":11,
+	       	 "extraHeaders":{0:inputExtraHeaders}
+		 });
+    }
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
@@ -334,10 +328,10 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		};
 	};
 	
-	//defined default output unit
+	//defined default output unit;  28/07/2017 modif en "ng/µL" (au lieu de nM)
 	atmService.defaultOutputUnit = {
 			volume : "µL",
-			concentration : "nM"
+			concentration : "ng/µL"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
@@ -390,79 +384,44 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	}]);
 	
 	
-	// FDS 27/07/2017  calculs ADAPTER.. calculer une qute et pas des volumes...........
-	//TODO
+	// FDS 28/07/2017  calculs
 	$scope.updatePropertyFromUDT = function(value, col){
-		//console.log("update from property : "+col.property);
-
-		if (( col.property === 'outputContainerUsed.concentration.value')||
-			( col.property === 'outputContainerUsed.volume.value')
-		){
-			var outputConc=$parse("outputContainerUsed.concentration.value")(value.data); 
-			var inputConc= $parse("inputContainerUsed.concentration.value")(value.data); 
-			var outputVol= $parse("outputContainerUsed.volume.value")(value.data);
-			
-			//console.log(">>>outputContainerUsed.concentration.value="+ outputConc );
-			//console.log(">>>inputContainerUsed.concentration.value="+ inputConc );
-
-			// !! les cas ou la conc input = 0 existent et font planter la generation de la feuille de route !!
-			// => faire comme le cas conc trop forte
-			if (( outputConc > inputConc) || (inputConc=== 0 ))
-			{
-				console.log("concentration out trop forte OU concentration in  nulle!!");
-				
-				// forcer valeurs
-				$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(value.data, 0); 
-				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, outputVol);
-				$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
-			} else {
-			    computeVolumes(value.data);
-			}
+		console.log("update from property : "+col.property);
+		if ( col.property === 'inputContainerUsed.experimentProperties.inputQuantity.value'){
+		    computeVolumes(value.data);
 		}
 	}
-	
 
-	// FDS 27/07/2017  calculs ADAPTER.. calculer une qute et pas des volumes........
-	//TODO
+	// FDS 28/07/2017 calculs; attention aux pb d'unité, le calcul n'est possible que si l'unité est "ng/µL"
 	var computeVolumes = function(udtData){
-
-		var getterEngageVol= $parse("inputContainerUsed.experimentProperties.inputVolume.value");
-		var getterBufferVol= $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
-
+		var getterEngageVol=$parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		
 		var compute = {
-				inputConc :  $parse("inputContainerUsed.concentration.value")(udtData), // pas forcement dispo ( si pas de QC avant)
-				outputConc:  $parse("outputContainerUsed.concentration.value")(udtData),
-				outputVol:   $parse("outputContainerUsed.volume.value")(udtData),
-			   
+				inputConc :  $parse("inputContainerUsed.concentration.value")(udtData), 
+				inputQty :   $parse("inputContainerUsed.experimentProperties.inputQuantity.value")(udtData),
+				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
+
 				isReady:function(){
-					// attention division par 0 !
-					return (this.inputConc && this.outputConc && this.outputVol);
+					return (this.inputConc && this.inputQty && (this.inputConcUnit === "ng/µL"||this.inputConcUnit === "ng/µl" ) );
 				}
 		};
 		
-		if(compute.isReady()){
 
-			var engageVol=$parse("outputConc * outputVol  / inputConc")(compute);
+		if(compute.isReady()){
+			var engageVol=$parse("inputQty / inputConc")(compute);
+			var inputConc=$parse("inputConc")(compute);
+			
 			// arrondir...
 			if(angular.isNumber(engageVol) && !isNaN(engageVol)){
 				engageVol = Math.round(engageVol*10)/10;				
 			}
 			console.log("vol engagé = "+engageVol);
-			
-			var bufferVol=$parse("outputVol")(compute) - engageVol;
-			// arrondir...
-			if(angular.isNumber(bufferVol) && !isNaN(bufferVol)){
-				bufferVol = Math.round(bufferVol*10)/10;	
-			}
-			console.log("vol buffer= "+ bufferVol);
-			
+	
 			getterEngageVol.assign(udtData, engageVol);
-			getterBufferVol.assign(udtData, bufferVol);
 			
 		}else{
-			console.log("Impossible de calculer les volumes: valeurs manquantes");
+			console.log("Impossible de calculer les volumes: valeurs manquantes OU concentration avec unité incorrecte");
 			getterEngageVol.assign(udtData, undefined);
-			getterBufferVol.assign(udtData, undefined);
 		}
 	}
 	
