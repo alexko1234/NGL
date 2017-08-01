@@ -41,7 +41,8 @@ public class Input extends AbstractInput {
 			String codePropertiesConcFinal = null ;
 			String codePropertiesDilFactor = null ;
 
-			if(experiment.typeCode.equals("reception-fluo-quantification") ){
+			if(experiment.typeCode.equals("reception-fluo-quantification") || 
+					experiment.typeCode.equals("fluo-quantification")){
 				
 				String typeQC= getStringValue(sheet.getRow(0).getCell(3));
 				
@@ -67,8 +68,6 @@ public class Input extends AbstractInput {
 					contextValidation.addErrors("Erreur gamme", "Code gamme non géré : "+typeQC);	
 				}
 				
-			}else{
-				codePropertiesConcDil = "concentration1" ;
 			}
 			
 			final String codePropertiesConcDilf = codePropertiesConcDil ;
