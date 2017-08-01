@@ -365,7 +365,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 if (configPagination.active && !this.isRemoteMode(configPagination.mode)) {
                     this.config.pagination.pageNumber = 0;
                 }
-                if (recordsNumber === undefined) recordsNumber = data.length;
+                if (recordsNumber === undefined && data !== null & data !== undefined) recordsNumber = data.length;
                 this.allResult = data;
                 this.totalNumberRecords = recordsNumber;
                 this.loadUrlColumnProperty();
@@ -2394,8 +2394,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         if (angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#") {
                                             colValue = v;
                                         } else if (angular.isDefined(v)) {
-                                            //not filtered properties because used during the compute
-                                            colValue = $parse("group." + column.id + that.getFormatter(column))(result.data);
+                                            //not filtered and no format properties because used during the compute
+                                            colValue = $parse("group." + column.id)(result.data);
                                         } else {
                                             colValue = undefined;
                                         }
