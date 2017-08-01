@@ -2333,6 +2333,37 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         }, this);
                         lineValue = lineValue.substr(0, lineValue.length - 1) + "\n";
                         //data
+                        var cleanColValue = function(column, colValue){
+                        	 if (colValue !== undefined && column.type === "number") {
+                                 colValue = colValue.replace(/\u00a0/g, "");
+                             }
+                        	 
+                             if (colValue === undefined && column.type === "boolean") {
+                                 colValue = this.messages.Messages('datatable.export.no');
+                             } else if (colValue !== undefined && column.type === "boolean") {
+                                 if (colValue) {
+                                     colValue = this.messages.Messages('datatable.export.yes');
+                                 } else {
+                                     colValue = this.messages.Messages('datatable.export.no');
+                                 }
+                             }
+                             
+								if((column.type === "string" || column.type === "text"  || column.type === "textarea") && colValue){
+                             	if(Array.isArray(colValue) && colValue.length === 1  && colValue[0].search
+                             			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
+                             		colValue = '"'+colValue[0]+'"';
+                             	}else if(!Array.isArray(colValue) && colValue.search
+                             			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
+                             		colValue = '"'+colValue+'"';
+                             	} else if(!Array.isArray(colValue) || (Array.isArray(colValue) && colValue.length === 1)){
+                             		colValue = '"'+colValue+'"';
+                             	} else if(Array.isArray(colValue)){
+                             		colValue = '"'+colValue.join()+'"';
+                             	}                                 	
+                             }
+                             return colValue;
+                        };
+                       
                         displayResultTmp.forEach(function(result) {
 
                             columnsToPrint.forEach(function(column) {
@@ -2353,33 +2384,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                             //The function have to return a $scope value
                                             colValue = property;
                                         }
-                                        if (colValue !== undefined && column.type === "number") {
-                                            colValue = colValue.replace(/\u00a0/g, "");
-                                        }
-                                        if (colValue === undefined && column.type === "boolean") {
-                                            colValue = this.messages.Messages('datatable.export.no');
-                                        } else if (colValue !== undefined && column.type === "boolean") {
-                                            if (colValue) {
-                                                colValue = this.messages.Messages('datatable.export.yes');
-                                            } else {
-                                                colValue = this.messages.Messages('datatable.export.no');
-                                            }
-                                        }
-                                        
-										if((column.type === "string" || column.type === "text"  || column.type === "textarea") && colValue){
-                                        	if(Array.isArray(colValue) && colValue.length === 1  && colValue[0].search
-                                        			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
-                                        		colValue = '"'+colValue[0]+'"';
-                                        	}else if(!Array.isArray(colValue) && colValue.search
-                                        			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
-                                        		colValue = '"'+colValue+'"';
-                                        	} else if(!Array.isArray(colValue) || (Array.isArray(colValue) && colValue.length === 1)){
-                                        		colValue = '"'+colValue+'"';
-                                        	} else if(Array.isArray(colValue)){
-                                        		colValue = '"'+colValue.join()+'"';
-                                        	}                                 	
-                                        }
-                                        
+                                        colValue = cleanColValue(column, colValue);
 										
                                         lineValue = lineValue + ((colValue !== null) && (colValue) ? colValue : "") + delimiter;
                                     } else if (result.line.group) {
@@ -2395,17 +2400,17 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                             colValue = undefined;
                                         }
 										if(colValue === null)colValue = undefined;
-                                        if (colValue !== undefined && column.type === "number") {
-                                            colValue = colValue.replace(/\u00a0/g, "");
-                                        }
+										
+										colValue = cleanColValue(column, colValue);
+										
                                         lineValue = lineValue + ((colValue !== null) && (colValue) ? colValue : "") + delimiter;
                                     } else if (!result.line.group && column.url !== undefined && column.url !== null && exportType !== 'groupsOnly') {
                                         var url = $parse(column.url)(result.data);
                                         colValue = $parse(column.property + that.getFilter(column) + that.getFormatter(column))(that.urlCache[url]);
 										if(colValue === null)colValue = undefined;
-                                        if (colValue !== undefined && column.type === "number") {
-                                            colValue = colValue.replace(/\u00a0/g, "");
-                                        }
+										
+										colValue = cleanColValue(column, colValue);
+										
                                         lineValue = lineValue + ((colValue !== null) && (colValue) ? colValue : "") + delimiter;
                                     }
                                 }

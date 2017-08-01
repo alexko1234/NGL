@@ -116,8 +116,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				"edit" : false,
 				"type" : "text",
 				"filter" : "codes:'state'",
-				"groupMethod" : "collect",
-				"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+				"groupMethod" : "collect:true",
+				"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			});
 		}
 		columns.push({
@@ -188,8 +188,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"property" : "code",
 			"order" : true,
 			"hide" : true,
-			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"groupMethod" : "collect:true",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			"position" : 11,
 			"type" : "text"
 		});
