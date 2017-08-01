@@ -50,12 +50,12 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 		"edit" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 10.1,
+		"position" : 8.1,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
 	});
-	
+	/*
 	if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') == -1) {
 		columns.push({
 			"header" : Messages("containers.table.workName"),
@@ -68,7 +68,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 	}
-	
+	*/
 	$scope.atmService.data.setColumnsConfig(columns);
 	
 	
@@ -238,7 +238,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			}else if(calMethod==="HS 2 seul"){	
 				getter.assign(udtData,$parse("inputContainerUsed.experimentProperties.concentrationHS2.value")(udtData));
 			}else if(calMethod==="Non quantifiable"){	
-				getter.assign(udtData,$parse(undefined)(udtData));
+				getter.assign(udtData,undefined);
 			}
 			else {	console.log("calMethod "+calMethod+" not implemented");}
 			
@@ -271,6 +271,7 @@ angular.module('home').controller('OneToVoidReceptionFluoQuantificationCNSCtrl',
 			}	
 			getter.assign(udtData, quantity1);
 		}else{
+			getter.assign(udtData,undefined);
 			console.log("not ready to computeQuantity1");
 		}
 

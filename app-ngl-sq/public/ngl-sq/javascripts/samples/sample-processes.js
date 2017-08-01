@@ -236,7 +236,7 @@ angular.module('ngl-sq.samplesServices')
 		if(null != alternateConditions && undefined != alternateConditions && !angular.isArray(alternateConditions)) alternateConditions = [alternateConditions];
 		
 		var check = function(condition){
-			var results = $filter('filter')([this], condition.criteria);
+			var results = $filter('filter')([this], condition.criteria, true);
 			if((results.length > 0 && condition.expected === true)
 					|| (results.length === 0 && condition.expected === false)){
 				return true;

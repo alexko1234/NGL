@@ -106,3 +106,4 @@ status.UNSET = ---
 bt-select.here = Taper ici !
 
 search.placeholder.reporting.configuration = Sélect. colonnes config.
+search.placeholder.regexColumn = Recherche colonne

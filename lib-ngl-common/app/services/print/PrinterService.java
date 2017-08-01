@@ -61,8 +61,8 @@ public class PrinterService {
 		try {
 			sendCommands(bbp11, commands.toString());
 		} catch (PrintServicesException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Error when try to print with "+bbp11.name, e);
+			ctxVal.addErrors("printer", "Error when try to print with "+bbp11.name);
 		}
 	}
 

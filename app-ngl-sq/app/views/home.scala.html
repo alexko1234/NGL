@@ -100,7 +100,7 @@
 				<div class="panel-heading">
 					<h3 class="text-center">
 						<a href="@controllers.processes.tpl.routes.Processes.home("search")?stateCodes=IP">
-							<span class="label label-primary pull-right" ng-bind="processIPDatatable.totalNumberRecords"></span>
+							<span class="label label-primary pull-right" ng-bind="processIPDatatable.getTotalNumberRecords()"></span>
 							@Messages("home.processes.ip")							
 						</a>
 					</h3>
