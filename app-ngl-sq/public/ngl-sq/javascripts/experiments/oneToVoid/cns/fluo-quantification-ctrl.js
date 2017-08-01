@@ -26,9 +26,11 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 				if(quantity1){
 					inputContainerUsed.newQuantity = quantity1;
 				}else{
-					inputContainerUsed.newQuantity = $scope.computeQuantity(inputContainerUsed.concentration, 
+					inputContainerUsed.newQuantity = $scope.computeQuantity(
+							(concentration1)?inputContainerUsed.newConcentration:inputContainerUsed.concentration, 
 							(volume1)?inputContainerUsed.newVolume:inputContainerUsed.volume);
 				}
+			
 			}
 			
 			
@@ -345,10 +347,10 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	}
 	*/
 	
-	var importData = function(){
+	var importData = function(typeQC){
 		$scope.messages.clear();
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		console.log("File :"+$scope.fileBR+", typeqc :"+typeQC);
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url+"?gamme="+typeQC, ($scope.fileBR===null || $scope.fileBR===undefined)?$scope.fileHS:$scope.fileBR)
 		.success(function(data, status, headers, config) {
 			$scope.messages.clazz="alert alert-success";
 			$scope.messages.text=Messages('experiments.msg.import.success');
@@ -356,8 +358,11 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			$scope.messages.open();	
 			//only atm because we cannot override directly experiment on scope.parent
 			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
-			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
+			$scope.fileHS = undefined;
+			$scope.fileBR = undefined;
+			angular.element('#importFileHS')[0].value = null;
+			angular.element('#importFileBR')[0].value = null;
+
 			$scope.$emit('refresh');
 			
 		})
@@ -366,8 +371,11 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
 			$scope.messages.open();	
-			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
+			$scope.fileHS = undefined;
+			$scope.fileBR = undefined;
+			angular.element('#importFileHS')[0].value = null;
+			angular.element('#importFileBR')[0].value = null;
+
 		});
 	};
 	
@@ -377,10 +385,13 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 					&& ($scope.isInProgressState() || Permissions.check("admin")))
 					 
 			},
-		isFileSet:function(){
-			return ($scope.file === undefined)?"disabled":"";
+		isFileSetHS:function(){
+			return ($scope.fileHS ===null || $scope.fileHS === undefined)?"disabled":"";
 		},
-		click:importData,		
+		isFileSetBR:function(){
+			return ($scope.fileBR === null || $scope.fileBR === undefined)?"disabled":"";
+		},
+		clickHS:function(){ return importData("HS");},
+		clickBR:function(){ return importData("BR");}
 	};
-	
 }]);
