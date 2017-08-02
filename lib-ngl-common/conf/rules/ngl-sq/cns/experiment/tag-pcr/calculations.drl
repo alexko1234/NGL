@@ -49,6 +49,8 @@ rule "Set good project code for Amplicon"
 			outputProjectCode.value = "BZP";
 		}else if("APY".equals($inputProjectCode)){
 			outputProjectCode.value = "BZQ";
+		}else if("ANB".equals($inputProjectCode)){
+			outputProjectCode.value = "BZQ";
 		}else if("CAA".equals($inputProjectCode)){
 			outputProjectCode.value = "BZZ";
 		}else if("CAM".equals($inputProjectCode)){

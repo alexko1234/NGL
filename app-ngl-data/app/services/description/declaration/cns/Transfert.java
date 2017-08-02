@@ -74,7 +74,7 @@ public class Transfert extends AbstractDeclaration {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Tubes / Plaques -> Plaque","x-to-plate",null,10700,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),  getPropertyDefinitionPlateTubeToPlate(),
 				getInstrumentUsedTypes("hand","tecan-evo-100","biomek-fx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -209,6 +209,16 @@ public class Transfert extends AbstractDeclaration {
 
 		return propertyDefinitions;
 	}
+	
+	private static List<PropertyDefinition> getPropertyDefinitionPlateTubeToPlate() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, true, "F", null, 
+				"single", 100, true, null,null));
+		
+		return propertyDefinitions;
+	}
+	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionDilution() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
