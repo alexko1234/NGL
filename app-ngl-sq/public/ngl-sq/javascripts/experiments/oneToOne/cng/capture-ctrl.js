@@ -335,7 +335,10 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// 01/08/2017 TEST ajout checkOneSupportInput
+	//if ( $scope.checkOneSupportInput() ){
+	  $scope.atmService = atmService;
+    //}
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	

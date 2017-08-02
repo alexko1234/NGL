@@ -1,8 +1,8 @@
 /* 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js
    25/07/2017 Ne pas faire apparaitre les volumes.... */
 
-angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                    function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmToSingleDatatable','mainService',
+                                                    function($scope, $parse, atmToSingleDatatable, mainService){
 	// variables pour extraheaders
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
@@ -308,20 +308,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		$scope.atmService.data.setEdit();
 	});
 	
-	/* NON N'IMPORTE QUOI !!!!!!!!!
-	var setRobotRunCode =function (){
-		// si l'utilisateur n'a pas saisi de Nom de run (robotRunCode )=> utiliser la valeur definie au niveau processus
-		// idealement il faudrait recuperer cette valeur au chargement de la page mais c'est plus compliqué...
-		if( null === $scope.experiment.instrumentProperties.robotRunCode.value || undefined === $scope.experiment.instrumentProperties.robotRunCode.value){
-			alert ("Set instrumentProperties.robotRunCode...");
-			console.log("Set instrumentProperties.robotRunCode...");
-		    // utiliser plutot $parse('').assign() ???;
-			// !!!! il pourrait y avoir plusieurs valeurs venant de plusieur processus...prendre celle du premier inputContainer !?
-		    $scope.experiment.instrumentProperties.robotRunCode.value = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].contents[0].processProperties.ngsRunWorkLabel.value;
-		}	
-	};
-	*/
-	
 	// for save callback
 	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
@@ -345,6 +331,56 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			}
 		}
 	};
+	
+    // il faudrait la mettre qq part ou elle puisse etre utilisee par toutes les experiences.. voir GA...
+	var checkOneSupportInput = function(){
+		  // !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket ( ajouter mainService dans le controller !!! )
+
+		  /* plusieurs  categoryCode  pas possible ici car filtré par les inputs type Used de l'instrument
+		  var categoryCode = [];
+		  if(!$scope.isCreationMode()){
+			var categoryCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
+		  }else{
+			var categoryCode = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique", mainService);
+		  }
+		
+		  if(categoryCode.length > 1){
+				console.log("> 1  type support en entree");
+				
+			$scope.messages.clear(); 
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages("> 1  type support en entree") ;
+			$scope.messages.showDetails = false;
+			$scope.messages.open();
+			
+			return false;
+		  } 
+		  */
+		
+		
+		  var supportCode = [];
+		  if(!$scope.isCreationMode()){
+			var supportCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);			
+		  }else{
+			var supportCode = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService);
+		  }
+		
+		  if(supportCode.length > 1){
+			console.log(" > 1 support en entree");
+			
+			$scope.messages.clear();
+			$scope.messages.clear();
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages("experiments.input.error.only-1-plate");
+			$scope.messages.showDetails = false;
+			$scope.messages.open();
+			
+			return false;
+		  }
+		  
+		  return true;
+	};
+	
 	
 	/* 25/07/2017 pas necessaire tant que les volumes ne sont pas demandés...
 	   copier volume in vers volume out
@@ -381,7 +417,10 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// 01/08/2017 TEST checkOneSupportInput
+	if ( checkOneSupportInput() ){
+	  $scope.atmService = atmService;
+    }
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	
@@ -393,24 +432,5 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-	
-	/*  TODO....IL FAUDRAIT DETECTER AU PLUS TOT LE NOMBRE d"IMPUTS !!!
-	
-	// PB compte les containers et pas les containerSupport.....
-	// if ($scope.mainService.getBasket().length() > 1 ) {
-	
-	// PB pas encore defini !!!
-	//if ($scope.atmService.data.inputContainerSupports.length > 1) {
-
-
-	// vérifier qu'on a une seule plaque en entree 
-	if  ( ??????????????? )
-		$scope.messages.clear();
-		$scope.messages.clazz = "alert alert-danger";
-		$scope.messages.text = Messages("experiments.input.error.only-1-plate");
-		$scope.messages.showDetails = false;
-		$scope.messages.open();
-	}
-	*/
 	
 }]);

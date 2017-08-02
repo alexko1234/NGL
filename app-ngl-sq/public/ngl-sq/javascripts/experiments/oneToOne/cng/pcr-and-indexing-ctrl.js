@@ -1,6 +1,5 @@
-// FDS 04/8/2016 -- JIRA NGL-1026 :library-prep experiment ( idem a frg-and-library-prep mais sans la fragmentation )
-// difference avec PrepPcrFreeCtrl est sur la/les plaques index...
-angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
+// FDS 01/08/2017 - copiee depuis library-prep-ctrl...... A ADAPTER
+angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
@@ -126,16 +125,6 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 			        	 "position":99,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },*/
-			         { // Volume avec valeur par defaut
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
-			        	 "hide":true,
-			        	 "edit":true,
-			        	 "type":"number",
-			        	 "defaultValues":20,
-			        	 "position":34,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },
 			         { //  barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
@@ -230,7 +219,7 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
                 complex:true,
                 template:''
                 	+'<div class="btn-group" style="margin-left:5px">'
-                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' vol. eng. librairie'
+                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' volume final'
                 	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
                 	+'</div>'
 			}
@@ -300,18 +289,13 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 		$scope.atmService.data.setEdit();
 	});
 	
-    // 24/11/2016 FDS copier le volume containerIn dans le volume engagé Librairie
-	//     code adapté depuis copyVolumeInToOut de x-to-plates-ctrl.js
+    // 01/08/2017 FDS copier le volume containerIn dans le volume final ???
 	$scope.copyVolumeInToExp = function(){
 		console.log("copyVolumeInToExp");
 		
 		var data = $scope.atmService.data.displayResult;		
 		data.forEach(function(value){
-			
-			if ( !value.data.inputContainerUsed.experimentProperties ){
-				value.data.inputContainerUsed.experimentProperties = {};
-			}
-			value.data.inputContainerUsed.experimentProperties.inputVolumeLib=value.data.inputContainerUsed.volume;
+			value.data.outputContainerUsed.experimentProperties.finalVolume=value.data.inputContainerUsed.volume;
 		})		
 	};
 		
@@ -481,12 +465,11 @@ angular.module('home').controller('LibraryPrepCtrl',['$scope', '$parse',  '$filt
 	
 	//actuellement 1 seule definie
 	
-	$scope.plates = [ {name:"RAP TruSeq RNA HT", tagCategory:"DUAL-INDEX"} ];
+	$scope.plates = [ {name:"DAP TruSeq DNA HT", tagCategory:"DUAL-INDEX"} ];
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
 	// pour l'instant une seule plaque => faire un simple tableau
 	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
-	// NB: ce sont les memes index et dans la meme disposition que pour la "DAP TruSeq DNA HT", faut il tout dupliquer ???
 	var tagPlateCode=[];
 	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
 	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");

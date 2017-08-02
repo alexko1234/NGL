@@ -196,12 +196,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul (input tubes ou plaques / output tubes ou  plaques)
 		//FDS 13/07/2017 "Mastercycler Nexus-SX1" et "Mastercycler Nexus" sont le meme type => fusionner !!!
 		//               essai: mettre le nom de labo dans le "path"
+		//    01/08/2017 au labo LMPD il y a un Nexus Gradient !!!
 		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1", "mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerNexusProperties(), 
 				getInstruments(
 						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler-nexus6", "Mastercycler 6 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus9", "Mastercycler 8 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler-nexus9", "Mastercycler 8 (Nexus Gradient)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

@@ -349,7 +349,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
-			l.add(newExperimentType("PCR+indexing (post-capture)","pcr-indexing",null,720,
+			l.add(newExperimentType("PCR+indexing (post-capture)","pcr-and-indexing",null,720,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPcrIndexing(),
 					getInstrumentUsedTypes("mastercycler-nexus-and-bravows",
@@ -733,13 +733,14 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 	
 		//FDS ajout 11/07/2017 NGL-1201: processus capture
-		newExperimentTypeNode("pcr-indexing",getExperimentTypes("pcr-indexing").get(0),
+		newExperimentTypeNode("pcr-and-indexing",getExperimentTypes("pcr-and-indexing").get(0),
 				false,false,false,
 				getExperimentTypeNodes("capture",
 									   "ext-to-pcr-indexing-process-fc",
 									   "ext-to-pcr-indexing-process-fc-ord"), // previous nodes
 				null, // pas de purif
-				null, // QUEL QC ?????????????????????????????????????????
+				getExperimentTypes("bioanalyzer-migration-profile",
+						           "labchip-migration-profile"),    // QUELS QC  ??????????????? un seul suffit
 				null  // pas tranfert
 				).save();
 		
@@ -778,14 +779,14 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			
 		//FDS 12/12/2016 ajout prep-pcr-free en previous
 		//FDS 13/03/2017 -- JIRA NGL-1167: ajouter wg-chromium-lib-prep en previous 
-		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-indexing en previous
+		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-and-indexing en previous
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot",
 						               "pcr-and-purification",
 						               "prep-pcr-free",
 						               "wg-chromium-lib-prep",
-						               "pcr-indexing" ), // previous
+						               "pcr-and-indexing" ), // previous
 				null, // pas de purif
 				null, // pas de qc
 				null  // pas de transfert
@@ -795,14 +796,14 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous (fait partie de WG_Nano)
 		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
-		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-indexing en previous
+		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-and-indexing en previous
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
 				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", 
 						               "prep-pcr-free",
 						               "pcr-and-purification",
 						               "wg-chromium-lib-prep",
-						               "pcr-indexing" ), // previous nodes
+						               "pcr-and-indexing" ), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("miseq-qc"), // qc 
 				getExperimentTypes("aliquoting","pool") // transfert
@@ -837,9 +838,9 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 						               "denat-dil-lib",
 						               "normalization-and-pooling",
 						               "nanopore-library"),         // previous nodes
-				null,
-				null,
-				null
+				null, // pas de purif
+				null, // pas qc
+				null  // pas transfert
 				).save();	
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),

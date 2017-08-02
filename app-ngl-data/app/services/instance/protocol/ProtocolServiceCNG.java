@@ -176,7 +176,7 @@ public class ProtocolServiceCNG {
 						                               "sample-prep",
 						                               "pcr-and-purification",
 						                               "capture",
-						                               "pcr-indexing",
+						                               "pcr-and-indexing",
 						                               "quantit-fluo-quantif")));  
 
 		//------------Experiences de Control Qualité------------------------------

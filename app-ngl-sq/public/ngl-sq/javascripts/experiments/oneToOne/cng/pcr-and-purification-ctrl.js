@@ -319,9 +319,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 				}
 			}
 		}
-		
-		//ne plus faire...datatable.setData(dataMain);
 	};
+	
 	$scope.copyVolumeInToExp = function(){
 		
 		var data = $scope.atmService.data.displayResult;		
@@ -352,7 +351,10 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// 01/08/2017 TEST ajout checkOneSupportInput
+	//if ( $scope.checkOneSupportInput() ){
+	  $scope.atmService = atmService;
+	//}
 	
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	

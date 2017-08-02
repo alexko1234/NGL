@@ -286,7 +286,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("sample-prep",1),
 						getPET("pcr-and-purification",2),
 						getPET("capture",3),
-						getPET("pcr-indexing",4), 		
+						getPET("pcr-and-indexing",4), 		
 						getPET("lib-normalization",5),
 						getPET("normalization-and-pooling",5),   // 2 de meme niveau
 						getPET("prepa-fc-ordered",6), 
@@ -306,7 +306,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("sample-prep",1),
 						getPET("pcr-and-purification",2),
 						getPET("capture",3),
-						getPET("pcr-indexing",4), 
+						getPET("pcr-and-indexing",4), 
 						getPET("denat-dil-lib",5),
 				    	getPET("prepa-flowcell",6),
 				    	getPET("illumina-depot",7)),   
@@ -324,7 +324,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("sample-prep",-1), 
 						getPET("pcr-and-purification",0),
 						getPET("capture",1),
-						getPET("pcr-indexing",2), 	
+						getPET("pcr-and-indexing",2), 	
 						getPET("lib-normalization",3),
 						getPET("normalization-and-pooling",3),   // 2 de meme niveau
 						getPET("prepa-fc-ordered",4), 
@@ -343,7 +343,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("sample-prep",-1), 
 						getPET("pcr-and-purification",0),
 						getPET("capture",1),
-						getPET("pcr-indexing",2), 	
+						getPET("pcr-and-indexing",2), 	
 						getPET("denat-dil-lib",3),
 				    	getPET("prepa-flowcell",4),
 				    	getPET("illumina-depot",5)),  
@@ -360,13 +360,13 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("ext-to-capture-pcr-indexing-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("pcr-and-purification",-1),
 						getPET("capture",0),
-						getPET("pcr-indexing",1),
+						getPET("pcr-and-indexing",1),
 						getPET("lib-normalization",2),
 						getPET("normalization-and-pooling",2),   // 2 de meme niveau
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4)),
-				getExperimentTypes("capture").get(0),                             //first experiment type    
-				getExperimentTypes("pcr-indexing").get(0),                        //last  experiment type
+				getExperimentTypes("capture").get(0),                            //first experiment type    
+				getExperimentTypes("pcr-and-indexing").get(0),                   //last  experiment type
 				getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -378,12 +378,12 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("ext-to-capture-pcr-indexing-fc",-1), //ordered list of experiment type in process type
 						getPET("pcr-and-purification",-1),
 						getPET("capture",0),
-						getPET("pcr-indexing",1),
+						getPET("pcr-and-indexing",1),
 						getPET("denat-dil-lib",2),
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4)),
-				getExperimentTypes("capture").get(0),                                //first experiment type    
-				getExperimentTypes("pcr-indexing").get(0),                           //last  experiment type
+				getExperimentTypes("capture").get(0),                        //first experiment type    
+				getExperimentTypes("pcr-and-indexing").get(0),               //last  experiment type
 				getExperimentTypes("ext-to-capture-pcr-indexing-fc").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));					
 
@@ -394,12 +394,12 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				Arrays.asList(
 						getPET("ext-to-pcr-indexing-process-fc-ord",-1), //ordered list of experiment type in process type
 						getPET("capture",-1),
-						getPET("pcr-indexing",0), 	
+						getPET("pcr-and-indexing",0), 	
 						getPET("lib-normalization",1),
 						getPET("normalization-and-pooling",1),   // 2 de meme niveau
 						getPET("prepa-fc-ordered",2), 
 						getPET("illumina-depot",3)),
-				getExperimentTypes("pcr-indexing").get(0),                        //first experiment type    
+				getExperimentTypes("pcr-and-indexing").get(0),                    //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                      //last  experiment type
 				getExperimentTypes("ext-to-pcr-indexing-process-fc-ord").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -411,11 +411,11 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				Arrays.asList(
 						getPET("ext-to-pcr-indexing-process-fc",-1), //ordered list of experiment type in process type
 						getPET("capture",-1),
-						getPET("pcr-indexing",0), 
+						getPET("pcr-and-indexing",0), 
 						getPET("denat-dil-lib",1),
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4)),
-				getExperimentTypes("pcr-indexing").get(0),                    //first experiment type    
+				getExperimentTypes("pcr-and-indexing").get(0),                //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
 				getExperimentTypes("ext-to-pcr-indexing-process-fc").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
