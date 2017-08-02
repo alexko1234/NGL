@@ -44,19 +44,6 @@ dialect 'java'
 		modify($rps) {};
 end
 
-rule "Syntax order command line for createXML specification"
-	@BirdsRule(unixSyntaxRule)
-	dialect 'java'
-	salience 200
-    when
-        $strategy : UnixCommandSyntaxStrategy ( name == "createXMLSyntax" , commandLine == null)
-    then
-        Logger log = Logger.getLogger("ngl.sub.rules");
-		$strategy.setCommandLine($strategy.getExecutableName());
-		log.debug("command line : " + $strategy.getCommandLine());
-
-end
-
 rule "Define variable lineParmeter for createXML specification"
 	@BirdsRule(ExecutionService)
 	dialect 'java'

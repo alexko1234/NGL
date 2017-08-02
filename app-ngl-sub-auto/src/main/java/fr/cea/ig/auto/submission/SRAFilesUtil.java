@@ -2,10 +2,10 @@ package fr.cea.ig.auto.submission;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

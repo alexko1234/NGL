@@ -22,6 +22,13 @@
 		<RequiredProperty propertyName="xmlRuns" />
 	</ResourceType>
 	
+	<ResourceType name="releaseXML">
+		<RequiredProperty propertyName="code" keyProperty="true" />
+		<RequiredProperty propertyName="submissionDirectory" />
+		<RequiredProperty propertyName="submissionDate" />
+		<RequiredProperty propertyName="xmlSubmission" />
+	</ResourceType>
+	
 	<ResourceType name="rawData">
 		<RequiredProperty propertyName="fileList"/>
 	</ResourceType>
@@ -60,9 +67,17 @@
 		<ResourceType name="submissionZip" />
 	</Referential>
 	
+	<Referential name="internalRefRelease" device="birdsDevice" readOnly="false">
+		<ResourceType name="submission" />
+	</Referential>
+	
 	<Referential name="internalRefSubmissionXML" device="birdsDevice" readOnly="false">
 		<ResourceType name="submissionXML" />
 		<ResourceType name="rawData" />
+	</Referential>
+	
+	<Referential name="internalRefReleaseXML" device="birdsDevice" readOnly="false">
+		<ResourceType name="releaseXML" />
 	</Referential>
 	
 	<Referential name="internalRefZip" device="birdsDevice" readOnly="false">

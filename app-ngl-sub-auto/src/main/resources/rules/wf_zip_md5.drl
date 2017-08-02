@@ -36,6 +36,7 @@ rule "select resources from nglsub for workflow zip md5"
 			String experimentCodes = rpSub.getProperty("experimentCodes");
 			Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+codeSubmission,"bot");
 			boolean gzipForSubmission = SRAFilesUtil.checkGzipForSubmission(rpsRawData);
+			log.debug("gzip for submission "+gzipForSubmission);
 			if(gzipForSubmission){
 				ResourceProperties newRp = new ResourceProperties();
 				newRp.setProperty("code",codeSubmission);

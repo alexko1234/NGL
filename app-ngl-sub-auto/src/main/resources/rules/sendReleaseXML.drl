@@ -1,0 +1,57 @@
+#created on: Jul 7, 2014
+package birds
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+rule "Define variable lineParmeter for sendReleaseXML specification"
+	@BirdsRule(fsRule)
+	dialect 'java'
+	salience 300
+	no-loop
+    when
+       $treatSpec : TreatmentSpecification(name=="sendReleaseXML", project.name=="SRA")
+       $job : Job()
+    then
+       Logger log = Logger.getLogger("ngl.sub.rules");
+       log.debug("Set parameter for spec sendReleaseXML");
+       updateParameterXML("xmlSubmission",$job, "releaseToSend");
+       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionCode%",$job.getUniqueJobResource("releaseToSend").getProperty("code")));
+       SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddhhmm");
+       String dateSubmission = dt.format(new Date());
+       $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionDate%",dateSubmission));
+       $job.setParameterValue("OptionCD",$job.getParameterValue("OptionCD").getValue().replace("%submissionDirectory%",$job.getUniqueJobResource("releaseToSend").getProperty("submissionDirectory")));
+	
+end
+
+rule "POST DONE EXECUTION of sendReleaseXML : File release results operation"
+	@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 200
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "sendReleaseXML", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		//Call service treatment AC files results 
+		JobResource jobResource = $job.getUniqueJobResource("releaseToSend");
+		String codeSubmission = jobResource.getProperty("code");
+		String pathRelease = jobResource.getProperty("submissionDirectory")+File.separator+$job.getParameterValue("listAC").getValue();
+		//File fileAC = new File(pathAC);
+		log.debug("path release="+pathRelease);
+		JSONDevice jsonDevice = new JSONDevice();
+		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/release?=fileName="+pathRelease;
+		log.debug("url "+url);
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/release?=fileName="+pathRelease, "{}", "bot");
+		log.debug("Result "+jsonResult);
+		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
+		log.debug("Resource Properties "+resourcePropertiesSet);
+		//if submission.state=ERROR_SendXML set job status to JOB EXITED
+		//Get unique resource 
+		String state = resourcePropertiesSet.iterator().next().get("state.code");
+		log.debug("State from treatment release "+state);
+		if(state.equals("FE-SUB-R")){
+			$job.setExecutionState(Job.ERROR_STATUS);
+		}
+end
+
