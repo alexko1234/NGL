@@ -32,8 +32,8 @@ public class ProcessUpdate extends AbstractUpdate<Process>{
 		Query query = null;
 		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		queryElts.add(getProjectCodeQuery(form, ""));
-		queryElts.add(getSampleCodeQuery(form, ""));
+		queryElts.add(getProjectCodeQuery(form, "sampleOnInputContainer."));
+		queryElts.add(getSampleCodeQuery(form, "sampleOnInputContainer."));
 		queryElts.addAll(getContentPropertiesQuery(form, "sampleOnInputContainer."));
 		query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		if(CollectionUtils.isNotEmpty(form.codes)){
