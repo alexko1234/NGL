@@ -401,6 +401,8 @@ public class ImportServiceCNS extends AbstractImportService {
 		//toutes les stations des îles 01 à 20, pour les sites 01 à 03, pour les fish 01 à 10
 		//version 9
 		//I01S01F01 à I01S01F10
+		values.add(DescriptionFactory.newValue("103000", "I03S00"));
+		values.add(DescriptionFactory.newValue("111000", "I11S00"));
 		values.add(DescriptionFactory.newValue("100000", "I00S00"));
 		values.add(DescriptionFactory.newValue("100000100", "I00S00F00"));	
 		for(int i = 1; i <= 20; i++){
