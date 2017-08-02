@@ -162,7 +162,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	var columns = $scope.atmService.data.getColumnsConfig();
 	
 	columns.push({
-			"header" : Messages("containers.table.concentration"),
+			"header" : Messages("containers.table.concentration.shortLabel"),
 			"property": "inputContainerUsed.concentration.value",
 			//"property": "(inputContainerUsed.concentration.value|number).concat(' '+inputContainerUsed.concentration.unit)",
 			//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
@@ -176,7 +176,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			}
 		});
 	columns.push({
-		"header" : Messages("containers.table.concentration.unit"),
+		"header" : Messages("containers.table.concentration.unit.shortLabel"),
 		"property": "inputContainerUsed.concentration.unit",
 		"order" : true,
 		"edit" : false,
