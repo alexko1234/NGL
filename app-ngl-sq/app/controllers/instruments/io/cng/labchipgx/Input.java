@@ -105,7 +105,7 @@ public class Input extends AbstractInput {
 				}
 		    } 
 			n++;
-		}
+		} //end while
 
 		reader.close();
 		
@@ -157,7 +157,7 @@ public class Input extends AbstractInput {
 		}
 		
 		return experiment;
-	}
+	} // end import
 	
 	// NGL-1030: 10/08/2016: retour de la taille !!!!
 	public class LabChipData {

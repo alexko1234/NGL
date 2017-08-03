@@ -414,7 +414,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Quant-iT","quantit-fluo-quantif", null, 50,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQuantIt(), 
-					getInstrumentUsedTypes("quant-it"), 
+					getInstrumentUsedTypes("spectramax"), 
 					"OneToVoid",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 } // END DEV	

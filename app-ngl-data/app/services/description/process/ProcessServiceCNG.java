@@ -149,7 +149,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		            	getPET("denat-dil-lib",0),
 		            	getPET("prepa-flowcell",1),
 		            	getPET("illumina-depot",2)),          
-				getExperimentTypes("tubes-to-plate").get(0),         //first experiment type
+				getExperimentTypes("tubes-to-plate").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
 				getExperimentTypes("ext-to-denat-dil-lib").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
@@ -329,8 +329,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("normalization-and-pooling",3),   // 2 de meme niveau
 						getPET("prepa-fc-ordered",4), 
 						getPET("illumina-depot",5)),           
-				getExperimentTypes("pcr-and-purification").get(0),				              //first experiment type    
-				getExperimentTypes("illumina-depot").get(0),                                   //last  experiment type
+				getExperimentTypes("pcr-and-purification").get(0),				      //first experiment type    
+				getExperimentTypes("illumina-depot").get(0),                          //last  experiment type
 				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-ord").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		

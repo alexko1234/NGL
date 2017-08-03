@@ -263,10 +263,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-        // FDS 16/06/2016 -- NL-1201 : Ajout fluorometer quant-iT 
-		l.add(newInstrumentUsedType("Quant-iT", "quant-it", InstrumentCategory.find.findByCode("fluorometer"), getQuantitProperties(), 
+        // FDS 03/08/2017 -- NL-1201: Ajout fluorometer Spectramax
+		l.add(newInstrumentUsedType("Spectramax", "spectramax", InstrumentCategory.find.findByCode("fluorometer"), getSpectramaxProperties(), 
 				getInstruments(
-						createInstrument("quant-it1", "Quant-iT1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("spectramax1", "Spectramax1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("spectramax2", "Spectramax2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}),
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -594,8 +595,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	// FDS 16/06/2017 -- NGL-1201 (capture); pour l 'instant les kits sont les memes que pour le qubit !!!
-	private static List<PropertyDefinition> getQuantitProperties() throws DAOException {
+	// FDS 16/06/2017 -- NGL-1201 (capture); pour l 'instant les kits sont les memes que pour le qubit !!!; 03/08/2017 renommage getSpectramax!!
+	private static List<PropertyDefinition> getSpectramaxProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
