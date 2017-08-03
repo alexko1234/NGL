@@ -4,11 +4,11 @@
 <table class="table" >
 <thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
-			<th colspan="{{11 + inputContainerProperties.length}}">
+			<th colspan="{{8 + inputContainerProperties.length}}">
 				@Messages("experiments.inputs")
 			</th>
 			
-			<th colspan="{{5 + outputContainerProperties.length}}">
+			<th colspan="{{6 + outputContainerProperties.length}}">
 				@Messages("experiments.outputs")
 			</th>												
 		</tr>
@@ -55,17 +55,17 @@
 			<th><!-- FDS ajout supportCode (répété pour l'instant permet d'etre plus flexible pour la suite: sortie en plusieurs plaques )... -->
 				@Messages("containers.table.supportCode")
 			</th>			
-			<th><!-- FDS !!! problem graphique avec select: masque le contenu-->
-				@Messages("containers.table.support.line")&nbsp;&nbsp;&nbsp;&nbsp;.
+			<th style="width:70px;"><!-- FDS !!! problem graphique avec select: masque le contenu-->
+				@Messages("containers.table.support.line")
 			</th>
-			<th>
+			<th style="width:75px;">
 				@Messages("containers.table.support.column")
 			</th>
 			<th>
 				@Messages("containers.table.concentration.shortLabel")
 			</th>
-			<th><!-- FDS !!! problem graphique avec select: masque le contenu -->
-				@Messages("containers.table.concentration.unit.shortLabel")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
+			<th style="width: 90px;"><!-- FDS !!! problem graphique avec select: masque le contenu -->
+				@Messages("containers.table.concentration.unit.shortLabel")
 			</th>
 			<th>
 				@Messages("containers.table.volume") (µL)

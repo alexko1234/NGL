@@ -21,9 +21,9 @@ angular.module('home').controller('XToPlateCtrl',['$scope',
 			var unique = {};
 			$scope.experiment.atomicTransfertMethods.forEach(function(atm){
 				
-				if (!unique[atm.outputContainerUseds[0].locationOnContainerSupport]) {
+				if (!unique[atm.outputContainerUseds[0].locationOnContainerSupport.code]) {
 				    this.push(atm.outputContainerUseds[0].locationOnContainerSupport);
-				    unique[atm.outputContainerUseds[0].locationOnContainerSupport] = true;
+				    unique[atm.outputContainerUseds[0].locationOnContainerSupport.code] = true;
 				}
 			}, outputContainerSupports);
 		}

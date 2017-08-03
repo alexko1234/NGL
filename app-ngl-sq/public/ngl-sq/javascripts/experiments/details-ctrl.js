@@ -1372,7 +1372,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
  			"hide":true,
  			"type":"text",
  			"position":3,
- 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>"
+ 			"render":"<div list-resize='cellValue|unique' list-resize-min-size='3'>"
 	    });
 		columns.push({
         	"header":Messages("containers.table.tags"),
@@ -1382,7 +1382,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
  			"hide":true,
  			"type":"text",
  			"position":4,
- 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>"
+ 			"render":"<div list-resize='cellValue|unique' ' list-resize-min-size='3'>"
 	    });
 		columns.push({
 			"header":Messages("containers.table.state.code"),
@@ -1539,9 +1539,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			var intersection = function(arrays){
 				  return arrays.reduce(function(previous, current){
-				    return previous.filter(function(element){
-				      return current.indexOf(element) > -1;
-				    });
+				      if(previous && current){
+				    	  return previous.filter(function(element){
+				    		  return current.indexOf(element) > -1;				    	
+				    	  });
+				      }
 				  });
 				};
 			
@@ -1554,7 +1556,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					return dvet
 				});
 				
-				return intersection(dvets);
+				return intersection(dvets.filter(function(elt){return elt !== undefined}));
 			}));
 			
 			/*
@@ -2036,6 +2038,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						}
 						supportViewData = []
 						for(key in supportViewDataTmp){
+							supportViewDataTmp[key].container.processTypeCodes = $parse("processTypeCodes|unique")(supportViewDataTmp[key].container);
+							supportViewDataTmp[key].container.fromTransformationTypeCodes = $parse("fromTransformationTypeCodes|unique")(supportViewDataTmp[key].container);
 							supportViewData.push(supportViewDataTmp[key]);
 						}
 											
@@ -2106,6 +2110,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						
 						supportViewData = []
 						for(key in supportViewDataTmp){
+							supportViewDataTmp[key].container.processTypeCodes = $parse("processTypeCodes|unique")(supportViewDataTmp[key].container);
+							supportViewDataTmp[key].container.fromTransformationTypeCodes = $parse("fromTransformationTypeCodes|unique")(supportViewDataTmp[key].container);
 							supportViewData.push(supportViewDataTmp[key]);
 						}
 											
