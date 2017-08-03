@@ -357,10 +357,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, null, "single" ,101, true, null, null));
 		
 		// FDS 23/11/2016 SUPSQCNG-424 : ajout sequencingType optionnelle avec liste de choix,  niveau process uniquement
+		// FDS 02/08/2017 NGL-1543 la fonction getX5WgPcrFreeSequencingTypes a introduit des incohérences de codes...=> utiliser newValues
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de séquencage","sequencingType"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
-						, getX5WgPcrFreeSequencingTypes(), "single" ,102, null, null, null));
+						, DescriptionFactory.newValues("Hiseq 4000","Hiseq X"), "single" ,102, null, null, null));
 		
 		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
 		propertyDefinitions.add(
@@ -387,7 +388,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	// FDS 23/11/2016 SUPSQCNG-424
+	/* FDS 02/08/2017 NGL-1543 cette fonction a introduite des incohérences de codes supprimer...  
 	private static List<Value> getX5WgPcrFreeSequencingTypes(){
         List<Value> values = new ArrayList<Value>();
         
@@ -396,6 +397,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
          
         return values;
 	}
+	*/
 	
 	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq; 18/01/2017 remommer en getPropertyDefinitionsRNAseq=> getPropertyDefinitionsRNAlib
 	private static List<PropertyDefinition> getPropertyDefinitionsRNAlib() throws DAOException {
