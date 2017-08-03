@@ -132,6 +132,35 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"type":"text",
 			"groupMethod":"unique"
 		},
+		
+		{
+			"header":Messages("containers.table.state.code"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"edit":false,
+			"position":12,
+			"choiceInList": true,
+			"possibleValues":"searchService.lists.getStates()", 
+			"filter":"codes:'state'",
+			"groupMethod":"unique"
+				
+		},
+		 
+		{
+			"header":Messages("containers.table.valid"),
+			"property":"valuation.valid",
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"edit":true,
+			"position":13,
+			"choiceInList": true,
+			"possibleValues":"searchService.lists.getValuations()", 
+			"filter":"codes:'valuation'",
+       	 	"groupMethod":"unique"
+		},
 		{
 			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",
@@ -161,6 +190,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"groupMethod":"unique"
 				
 		 },
+		 /*
 		{
 			"header":Messages("containers.table.processCodes"),
 			"property":"processCodes",
@@ -171,33 +201,17 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
+		*/
 		{
-			"header":Messages("containers.table.state.code"),
-			"property":"state.code",
-			"order":true,
+			"header":Messages("containers.table.processTypeCodes"),
+			"property":"processTypeCodes",
+			"filter":"codes:'type'",
+			"order":false,
 			"hide":true,
 			"type":"text",
-			"edit":false,
-			"position":12,
-			"choiceInList": true,
-			"possibleValues":"searchService.lists.getStates()", 
-			"filter":"codes:'state'",
-			"groupMethod":"unique"
-				
-		},
-		 
-		{
-			"header":Messages("containers.table.valid"),
-			"property":"valuation.valid",
-			"order":true,
-			"hide":true,
-			"type":"text",
-			"edit":true,
-			"position":13,
-			"choiceInList": true,
-			"possibleValues":"searchService.lists.getValuations()", 
-			"filter":"codes:'valuation'",
-       	 	"groupMethod":"unique"
+			"position":16,
+			"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
+			"groupMethod":"collect"
 		}
 		
 		],	
