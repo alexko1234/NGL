@@ -44,7 +44,6 @@ public class Input extends AbstractInput {
 	*   Ignorer les lignes dont la colonne est > 20, ce sont des controles ( voir aussi remapPosition() )
 	*/
 	
-	
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 		
@@ -81,11 +80,20 @@ public class Input extends AbstractInput {
 		// hashMap  pour stocker les concentrations du fichier
 		Map<String,Double> data = new HashMap<String,Double>(0);
 		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+		// ajout 03/08/2017 charset detection (N. Wiart)
+		byte[] ibuf = pfv.value;
+		String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
+		
+		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian
+		if (ibuf.length >= 2 && (0xff & ibuf[0]) == 0xff && (ibuf[1] & 0xff) == 0xfe) {
+			charset = "UTF-16LE";
+		}
+		
+		InputStream is = new ByteArrayInputStream(ibuf);
 		
 		// Ce n'est pas un fichier MS-Excel mais un fichier TXT TAB delimité a lire ligne a ligne. 
-		// utiliser un bufferReader...Merci Nicolas	!!
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		// utiliser un bufferReader...Merci Nicolas	!! 03/08/2017 ajout charset
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
 		int n = 0;
 		String line;
 		
@@ -99,7 +107,7 @@ public class Input extends AbstractInput {
 				return experiment;
 			}
 			// commencer le traitement en sautant la 2eme ligne d'entete
-			if (n >1 ) {
+			if (n > 1 ) {
 				// description d'une ligne de donnees:
 				//  0         1      2       3          4            5             6          7
 				//Include	Color	Pos		Name		Cp		Concentration	Standard	Status

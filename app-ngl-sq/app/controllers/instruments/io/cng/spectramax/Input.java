@@ -54,31 +54,40 @@ public class Input extends AbstractInput {
 		// hashMap  pour stocker les concentrations fichier 
 		Map<String,SpectramaxData> dataMap = new HashMap<String,SpectramaxData>(0);
 		
-		InputStream is = new ByteArrayInputStream(pfv.value);
+		// charset detection (N. Wiart)
+		byte[] ibuf = pfv.value;
+		String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
 		
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian
+		if (ibuf.length >= 2 && (0xff & ibuf[0]) == 0xff && (ibuf[1] & 0xff) == 0xfe) {
+			charset = "UTF-16LE";
+		}
+		
+		InputStream is = new ByteArrayInputStream(ibuf);
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
 		int n = 0;
 		boolean lastwell=false;
-		String line;
+		String line="";
 		
-
 		// String unit="";  ne marche pas car le compilateur reclame un objet final...utiliser StringBuilder (N Wiart)
 		StringBuilder unit = new StringBuilder();
 		
-		// code pour trouver la bonne unité si jamais celle ci est variable !!!
+		// code pour trouver la bonne unité si jamais celle ci est variable dans le fichier!!!
 		//if ( fields[?????].matches("(.*)Conc.(.*)")){
 		//	unit.append("ng/µL");
 		//} else {
 		//	unit.append("nM");
 		//}
+		
 		unit.append("ng/µL");
 		
 		while (((line = reader.readLine()) != null) && !lastwell ){	 
-			/// attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!
-			String[] cols = line.replace (",", ".").split("\t");
-			
-			// verifier la ligne d'entete 3 eme ligne du fichier
-			if (n == 3) {
+			 // attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!
+			 String[] cols = line.replace (",", ".").split("\t");
+
+			// verifier la ligne d'entete (3 eme ligne du fichier)
+			if (n == 2) {
 				if ( ! cols[1].equals("Wells") ) {
 					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Wells");
 					return experiment;
@@ -90,8 +99,9 @@ public class Input extends AbstractInput {
 			}
 			
 			// commencer le traitement en sautant les 3 premieres lignes
-			if (n > 3 ) {
-				if (cols.length  == 0 ){
+			if (n > 2 ) {
+				// ligne vide trouvée=fin des data intéressantes
+				if ( cols[0].equals("")){
 					lastwell=true;
 					continue;
 				} else {
@@ -107,7 +117,7 @@ public class Input extends AbstractInput {
 					          n++;
 					         continue; // ne pas sortir permet de verifier le fichier
 				        } else {
-				             Logger.info ("conc moyenne="+cols[7]);
+				             // Logger.info ("conc moyenne="+cols[7]);
 				             double conc=Double.parseDouble(cols[7]);
 				             // si la valeur trouv2ée est négative ????
 
@@ -117,7 +127,7 @@ public class Input extends AbstractInput {
 				    }
 		        } 
 			}
-			
+		
 			n++;
 		} //end while
 
@@ -143,7 +153,7 @@ public class Input extends AbstractInput {
 		}
 		*/
 		
-		// ne positionner les valeurs que s'il n'y a pas d'erreur a la verification precedente...
+		// ne positionner les valeurs que s'il n'y a pas d'erreur a la vérification precedente...
 		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
 				.stream()
