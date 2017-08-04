@@ -546,7 +546,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
+	/*
 	if($scope.experiment.instrument.typeCode !== "biomek-fx-and-covaris-e220"){
 		if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
 			$scope.messages.clear();
@@ -558,7 +558,9 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}
-	
+	*/
+	$scope.messages.clear();
+	$scope.atmService = atmService;
 	
 	var generateSampleSheetNormalisation = function(){
 		generateSampleSheet("normalisation");
