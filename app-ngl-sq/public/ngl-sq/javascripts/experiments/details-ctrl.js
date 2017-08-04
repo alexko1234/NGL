@@ -1201,6 +1201,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 
 	$scope.currentComment = {comment:undefined};
 	
+	
+	$scope.analyseText = function(e){
+		
+		if(e.keyCode === 9){
+			e.preventDefault();
+		}
+	};
+	
 	$scope.convertToBr = function(text){
 		return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
 	};

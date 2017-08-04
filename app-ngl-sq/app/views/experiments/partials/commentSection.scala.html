@@ -39,7 +39,7 @@
 	      <div class="modal-body">
 	      	<form>
 	        	<label>@Messages("experiment.comment.textarea")</label>
-				<textarea  class="form-control" ng-model="currentComment.comment"  rows="5"></textarea>
+				<textarea  class="form-control" ng-model="currentComment.comment"  rows="5" ng-keydown="analyseText($event)"></textarea>
 			
 			</form>
 	      </div>
