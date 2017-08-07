@@ -375,6 +375,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 								"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
 					}
 					
+					column.groupMethod = "unique"; //par defaut pour toutes les propriétés
+					
 					columns.push(column);
 				});
 				columns = columnsDefault.concat(columns);

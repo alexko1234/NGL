@@ -479,17 +479,19 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         groupMethodColumns.forEach(function(column) {
                             if(column.id != that.config.group.by.id){                        	
 	                        	var propertyGetter = column.property;
-	                            propertyGetter += that.getFilter(column);
-	                            if ('sum' !== column.groupMethod && 'average' !== column.groupMethod) {
-	                            	propertyGetter += that.getFormatter(column);
-	                            }
-	                            var columnGetter = $parse(propertyGetter);
+	                            var propertyGetterWithoutFomat = propertyGetter + that.getFilter(column);
+	                            var columnGetterWithoutFomat = $parse(propertyGetterWithoutFomat);
+	                            
+	                            var propertyGetterWithFormat = propertyGetterWithoutFomat + that.getFormatter(column);
+	                            var columnGetterWithFomat = $parse(propertyGetterWithFormat);
+	                            
+	                            //var columnGetter = $parse(propertyGetter);
 	                            var columnSetter = $parse("group." + column.id);
 	
 	                            if ('sum' === column.groupMethod || 'average' === column.groupMethod) {
 	                                var result = groupData.reduce(function(value, element) {
 	                                    element.col = column; //add in experimental feature
-	                                	value += columnGetter(element);
+	                                	value += columnGetterWithoutFomat(element);
 										element.col = undefined;
 										return value;
 	                                }, 0);
@@ -498,8 +500,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	
 	                                if (isNaN(result)) {
 	                                    result = "#ERROR";
-	                                }else{
-	                                	result = $parse(result.toString()+that.getFormatter(column))(result);
 	                                }
 	
 	                                try {
@@ -508,30 +508,30 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                    console.log("computeGroup Error : " + e);
 	                                }
 	                            } else if ('unique' === column.groupMethod) {
-	                                var result = $filter('udtUnique')(groupData, propertyGetter);
+	                                var result = $filter('udtUnique')(groupData, propertyGetterWithFormat);
 	                                if (!angular.isArray(result)) {
-	                                    result = columnGetter(result);
+	                                    result = columnGetterWithoutFomat(result);
 	                                } else if (angular.isArray(result) && result.length > 1) {
 	                                    result = '#MULTI';
 	                                } else if (angular.isArray(result) && result.length === 1) {
-	                                    result = columnGetter(result[0]);
+	                                    result = columnGetterWithoutFomat(result[0]);
 	                                } else {
 	                                    result = undefined;
 	                                }
 	                                columnSetter.assign(group, result);
 	                            } else if ('countDistinct' === column.groupMethod) {
-	                                var result = $filter('udtCount')(groupData, propertyGetter,true);
+	                                var result = $filter('udtCount')(groupData, propertyGetterWithFormat,true);
 	                                columnSetter.assign(group, result);
 	                            } else if (column.groupMethod.startsWith('count')) {
 	                            	var params = column.groupMethod.split(":");
 	                            	var distinct = (params.length === 2 && params[1] === 'true')?true:false;
-	                            	var result = $filter('udtCount')(groupData, propertyGetter,distinct);
+	                            	var result = $filter('udtCount')(groupData, propertyGetterWithFormat,distinct);
 	                                columnSetter.assign(group, result);
 	                            } else if (column.groupMethod.startsWith('collect')) {
 	                            	var params = column.groupMethod.split(":");
 	                            	var unique = (params.length === 2 && params[1] === 'true')?true:false;
 	                            	
-	                                var result = $filter('udtCollect')(groupData, propertyGetter,unique);
+	                                var result = $filter('udtCollect')(groupData, propertyGetterWithFormat,unique);
 	                                columnSetter.assign(group, result);
 	                            } else {
 	                                console.error("groupMethod is not managed " + column.groupMethod);
@@ -2394,8 +2394,12 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         if (angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#") {
                                             colValue = v;
                                         } else if (angular.isDefined(v)) {
-                                            //not filtered and no format properties because used during the compute
-                                            colValue = $parse("group." + column.id)(result.data);
+                                            //not filtered properties because used during the compute
+                                            if('sum' === column.groupMethod || 'average' === column.groupMethod || 'unique' === column.groupMethod){
+                                            	colValue =  $parse("group."+column.id + that.getFormatter(column))(result.data);
+        			    					}else{
+        			    						colValue = v;
+        			    					}
                                         } else {
                                             colValue = undefined;
                                         }
@@ -3199,11 +3203,14 @@ directive("udtCell", function(){
 			    			}else if(value.line.group){
 			    				var v = currentScope.$eval("group."+column.id, value.data);
 			    				//if error in group function
-			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
+			    				if(angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#"){
 			    					return v;
 			    				}else if(angular.isDefined(v)){
-			    					//no filtered and no formatter properties because used during the compute
-			    					return currentScope.$eval("group."+column.id, value.data);
+			    					if('sum' === column.groupMethod || 'average' === column.groupMethod || 'unique' === column.groupMethod){
+			    						return currentScope.$eval("group."+column.id+currentScope.udtTableFunctions.getFormatter(column), value.data);
+			    					}else{
+			    						return v;
+			    					}
 			    				}else{
 			    					return undefined;
 			    				}
