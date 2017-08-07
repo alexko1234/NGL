@@ -824,9 +824,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
 		new Nanopore().getExperimentTypeNode();
 			
-		//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
-		// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....
-		// !!!!!		
+		// 05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
+		// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....		
 		newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
 				false, false,false,
 				// PB...getETNForPool(),  // previous nodes...
@@ -837,7 +836,11 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 						               "library-prep",
 						               "denat-dil-lib",
 						               "normalization-and-pooling",
-						               "nanopore-library"),         // previous nodes
+						               "nanopore-library",
+						               "fragmentation",
+						               "sample-prep",
+						               "capture",
+						               "pcr-and-indexing"),         // previous nodes
 				null, // pas de purif
 				null, // pas qc
 				null  // pas transfert
@@ -1423,12 +1426,23 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode("ng/µl"),"single", 13, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode("pb"),"single", 16, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
+				MeasureUnit.find.findByCode("µL"),
+				MeasureUnit.find.findByCode("µL"),
+				"single", 11, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
+				MeasureUnit.find.findByCode("ng/µL"),
+				MeasureUnit.find.findByCode("ng/µL"),
+				"single", 13, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),
+				MeasureUnit.find.findByCode("pb"),
+				MeasureUnit.find.findByCode("pb"),
+				"single", 16, true, null,null));
 		
 		return propertyDefinitions;
 		
@@ -1498,20 +1512,20 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
 				MeasureUnit.find.findByCode("µL"), 
-				"single",32, true, "30", null));
+				"single", 32, true, "30", null));
 		
 		return propertyDefinitions;
 	}
 	
-	//FDS ajout27/07/2017 NGL-1201
+	//FDS ajout 27/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsQuantIt() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration (ng/µL)", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),
 				MeasureUnit.find.findByCode("ng/µL"),
 				MeasureUnit.find.findByCode("ng/µL"),
-				"single", 13, true, null,null));        //////////position a definir...
+				"single", 13, true, null, null));        //////////position a definir...
 		
 		return propertyDefinitions;
 	}

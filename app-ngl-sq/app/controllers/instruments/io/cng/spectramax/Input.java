@@ -22,7 +22,7 @@ import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
-   /* Description du fichier a traiter: VERSION TXT...TAB délimité
+   /* Description du fichier a traiter: VERSION TXT...TAB délimité... ficjier original recu en UTF-16 Litle Endian
     |##BLOCKS= 1
     |Group: UnknownsDilution
     |Sample	Wells	RFU	Valeur	dilution ng/µl	Dilution_1	ConcStock ng/ul	Moyenne	
@@ -31,6 +31,7 @@ public class Input extends AbstractInput {
     |A2_	A2	265.96	26.67	5.000	5.000	133.362	133.362	
     |...
     |...
+    |<ligne vide>
     |Group Column	Formula Name	Formula	Precision	Notation
     |1	Sample	!SampleNames	2 decimal places	Numeric
     |2	Wells	!WellIDs	2 decimal places	Numeric

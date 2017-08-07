@@ -1,4 +1,3 @@
-// dupliqué depuis qpcr-quantification et simplifié...
 angular.module('home').controller('OneToVoidQuantitFluoQuantificationCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
@@ -9,7 +8,7 @@ angular.module('home').controller('OneToVoidQuantitFluoQuantificationCNGCtrl',['
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
-		// concentration (et size) de l'expérience doivent etres copiées dans le container
+		// les propriétés de l'expérience doivent etres copiées dans le container
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			var inputContainerUsed =$parse("inputContainerUseds[0]")(atm);
 			if(inputContainerUsed){
@@ -96,12 +95,12 @@ angular.module('home').controller('OneToVoidQuantitFluoQuantificationCNGCtrl',['
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
 	columns.push({
-		"header" : Messages("containers.table.sizeLong"),
+		"header" : Messages("containers.table.size") +" (bp)",
 		"property" : "inputContainer.size.value",
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 4.5,
+		"position" : 11,
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});

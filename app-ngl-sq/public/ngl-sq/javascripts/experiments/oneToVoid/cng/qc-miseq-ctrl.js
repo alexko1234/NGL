@@ -80,7 +80,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"edit" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 10,
+		"position" : 11, // chgé de 10 a 11
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});	
 	columns.push({

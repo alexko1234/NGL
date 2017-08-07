@@ -1,82 +1,18 @@
 @()
-<!--25/07/2017 dupliquee depuis preppcrfree  2 supports en output
--->
+<!--  copie de aliquoting.scala..... A ADAPTER !!!! -->
 <div class="col-md-12 col-lg-12" ng-controller="SamplePrepCtrl">
-  <div class="row">
-  <form class="form-inline" role="form">
-  	  <!-- premier support-->
-      <div class="row margin-bottom-7">
-         <div class="form-group col-lg-4">          
-              <div ng-switch on="mainService.isEditMode()"> 
-              <div ng-switch-when="false">   
-                   <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
-                   <span class="form-control-static" ng-bind="outputContainerSupport.code"></span>    
-               </div>                           
-               <div ng-switch-when="true">
-                   <label for="plateCode"  class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
-                   <input class="form-control input-sm" type="text" id="plateCode"
-									                    title=@Messages("experiments.outputContainerSupportCode")
-			  							                ng-model="outputContainerSupport.code" />	
-			  </div>
-			  </div>   
-	     </div>
-         <div class="form-group col-lg-6">
-              <div ng-switch on="mainService.isEditMode()"> 
-              <div ng-switch-when="false">   
-                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
-                   <span class="form-control-static" ng-bind="outputContainerSupport.storageCode"></span> 
-              </div>
-              <div ng-switch-when="true">
-                  <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
-                  <!-- FDS pas trouvé de classe correcte==> style="width:65%" -->
-                  <input class="form-control input-sm" type="text" id="plateStorage" style="width:65%"
-									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
-			 						                   ng-model="outputContainerSupport.storageCode" />	
+	<div class="row" ng-if="mainService.isEditMode()">
+			<div class="col-md-2 col-lg-2" ultimate-datatable="atmService.data.datatableParam" ></div>
+			<div class="col-md-1 col-lg-1" >
+				<!-- Drop buttons -->
+				<button  class="btn btn-default btn-lg center-block" ng-click="generateATM_TEST()" >
+					<i class="fa fa-sign-out fa-2x"></i>
+				</button>				
+			</div>		
+			<div class="col-md-9 col-lg-9">XXX</div>
 
-			  </div>
-			  </div>   
-	     </div>
-	  </div>
-	  <!-- 2eme support   margin-bottom-20 ou lieu de 7  change rien  !!!!!!!!.....-->
-      <div class="row margin-bottom-20">
-         <div class="form-group col-lg-4">          
-              <div ng-switch on="mainService.isEditMode()"> 
-              <div ng-switch-when="false">   
-                   <label for="plateCodeSpare" class="control-label">@Messages("experiments.outputContainerSupportCode") Spare</label>
-                   <span class="form-control-static" ng-bind="outputContainerSupportSpare.code"></span>    
-               </div>                           
-               <div ng-switch-when="true">
-                   <label for="plateCodeSpare"  class="control-label">@Messages("experiments.outputContainerSupportCode") Spare</label>
-                   <input class="form-control input-sm" type="text" id="plateCodeSpare"
-									                    title=@Messages("experiments.outputContainerSupportCode") Spare
-			  							                ng-model="outputContainerSupportSpare.code" />	
-			  </div>
-			  </div>   
-	     </div>
-         <div class="form-group col-lg-6">
-              <div ng-switch on="mainService.isEditMode()"> 
-              <div ng-switch-when="false">   
-                   <label for="plateStorageSpare" class="control-label">@Messages("experiments.outputContainerSupportStorageCode") (Spare)</label>
-                   <span class="form-control-static" ng-bind="outputContainerSupportSpare.storageCode"></span> 
-              </div>
-              <div ng-switch-when="true">
-                  <label for="plateStorageSpare" class="control-label">@Messages("experiments.outputContainerSupportStorageCode") Spare</label>
-                  <!-- FDS pas trouvé de classe correcte==> style="width:65%" -->
-                  <input class="form-control input-sm" type="text" id="plateStorageSpare" style="width:65%"
-									                   title=@Messages("experiments.outputContainerSupportStorageCode") Spare
-			 						                   ng-model="outputContainerSupportSpare.storageCode" />	
-
-			  </div>
-			  </div>   
-	     </div>
-	  </div>
-  </form>	
-  </div>
- <br/> <!-- pas beau!! -->
- 
-  <!--  changer  "atmService.data"  en "atmService.data.datatableConfig"    mieux mais vide... -->
-  <div class="row">
-	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatableConfig"></div>						
-  </div>
-  
+	</div>
+	<div class="row" ng-if="!mainService.isEditMode()">
+			<div class="col-md-12 col-lg-12">XXXX</div>
+	</div>
 </div>

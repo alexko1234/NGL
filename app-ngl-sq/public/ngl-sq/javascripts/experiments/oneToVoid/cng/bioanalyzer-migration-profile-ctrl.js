@@ -90,7 +90,7 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 	});
 	
 	columns.push({
-			"header" : Messages("containers.table.libProcessType"),
+			"header" : Messages("containers.table.libProcessTypeCode"), // ajout Code
 			"property" : "inputContainer.contents",
 			"order" : false,
 			"hide" : true,
