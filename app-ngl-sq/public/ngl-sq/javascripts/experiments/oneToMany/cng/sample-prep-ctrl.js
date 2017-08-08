@@ -1,5 +1,10 @@
+angular.module('home').controller('AliquotingCtrl',['$scope', '$parse', 'atmToGenerateMany',
+                                                               function($scope, $parse, atmToGenerateMany) {
+
+/*  ESSAI......
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commomAtomicTransferMethod',
                                                                function($scope, $parse, commomAtomicTransferMethod) {
+*/
 	
 
 	//-1- datatable ( necessaire juste pour un barcode ???)
@@ -76,7 +81,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commomA
 	};	
 	
 	// METTRE OU ?????
-	var $commonATM = commonAtomicTransfertMethod($scope);
+	//var $commonATM = commonAtomicTransfertMethod($scope);
 	
 	
 	/*
@@ -107,5 +112,30 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commomA
 	  alert('button pushed');
 	}
 	
+	
 
+	var atmService = atmToGenerateMany($scope, datatableConfigTubeParam, datatableConfigTubeConfig);
+	//defined new atomictransfertMethod
+	atmService.newAtomicTransfertMethod = function(){
+		return {
+			class:"OneToMany",
+			line:($scope.experiment.instrument.outContainerSupportCategoryCode!=="tube")?undefined:"1", 
+			column:($scope.experiment.instrument.outContainerSupportCategoryCode!=="tube")?undefined:"1",				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};		
+	};
+	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",
+			quantity:"ng"
+	};
+	atmService.defaultOutputValue = {
+			size : {copyInputContainer:true}
+	};
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	$scope.atmService = atmService;
+	
 }]);
