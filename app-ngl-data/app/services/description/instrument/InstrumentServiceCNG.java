@@ -659,6 +659,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	 
 	//FDS 23/01/2017 ajout Janus + cbot-v2
+	//FDS 08/08/2017 NGL-1550 passage a 8 source pour le Janus
 	private static List<PropertyDefinition> getJanusAndCBotV2Properties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 			
@@ -670,7 +671,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 			
 	    // propriété de container in !!!
 	    l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
-				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true , null, null));
+				 Arrays.asList(newValue("1", "Source 1"), 
+						       newValue("2", "Source 2"), 
+						       newValue("3", "Source 3"),
+						       newValue("4", "Source 4"),
+						       newValue("5", "Source 5"), 
+						       newValue("6", "Source 6"),
+						       newValue("7", "Source 7"),
+						       newValue("8", "Source 8")), 
+						       "single", 2, true , null, null));
 					
 	    l.addAll(getCBotV2Properties());
 			
