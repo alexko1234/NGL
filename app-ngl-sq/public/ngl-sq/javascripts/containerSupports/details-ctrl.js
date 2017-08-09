@@ -166,8 +166,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http','$window', '
 			},
 			exportCSV:{
 				active:true,
-				showButton:true,
-				delimiter:','
+				showButton:true
 			},
 			/*
 			lines:{

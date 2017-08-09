@@ -52,9 +52,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : true,
 			"hide" : true,
 			"group" : true,
-			"groupMethod" : "collect",
+			"groupMethod" : "collect:true",
 			"filter":"orderBy",
-        	"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+        	"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			"position" : 2,
 			"type" : "text"
 		});
@@ -64,9 +64,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : true,
 			"hide" : false,
 			"group" : true,
-			"groupMethod" : "collect",
+			"groupMethod" : "collect:true",
 			"filter":"orderBy",
-        	"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+        	"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			"position" : 3,
 			"type" : "text"
 		});
@@ -77,8 +77,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"type" : "string",
 			"order" : true,
 			"hide" : true,
-			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"groupMethod" : "collect:true",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			"position" : 4
 		});
 		columns.push({
@@ -375,7 +375,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 								"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
 					}
 					
-					column.groupMethod = "unique"; //par defaut pour toutes les propriétés
+					column.groupMethod = "collect:true"; //par defaut pour toutes les propriétés
 					
 					columns.push(column);
 				});
