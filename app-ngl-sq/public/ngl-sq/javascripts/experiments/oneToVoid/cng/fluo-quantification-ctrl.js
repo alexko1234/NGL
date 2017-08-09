@@ -72,17 +72,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 		"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders":{0:Messages("experiments.inputs")}
 	});
-	columns.push({
-		"header" : Messages("containers.table.libProcessTypeCode"),
-		"property" : "inputContainer.contents",
-		"filter": "getArray:'properties.libProcessTypeCode.value' | unique",
-		"order" : false,
-		"hide" : true,
-		"type" : "text",
-		"position" : 9,
-		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
-		"extraHeaders" : {0 : Messages("experiments.inputs")}
-	});	
+
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
@@ -90,10 +80,46 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 10,
+		"position" : 8,
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
+
+columns.push({
+   	 "header": Messages("containers.table.libProcessTypeCode"),
+   	 "property" : "inputContainerUsed.contents",
+   	 "filter" : "getArray:'properties.libProcessTypeCode.value' | unique ",
+   	 "order":true,
+		 "edit":false,
+		 "hide":true,
+   	 "type":"text",
+   	 "position":8.1,
+   	 "extraHeaders":{0 : Messages("experiments.inputs")}
+  }); 
+columns.push({
+  	 "header": "Protocole / Kit",
+  	 "property" : "inputContainerUsed.contents",
+  	 "filter" : "getArray:'properties.captureProtocol.value' | unique ",
+  	 "order":true,
+	 "edit":false,
+	 "hide":true,
+  	 "type":"text",
+  	 "position":8.1,
+  	 "extraHeaders":{0 : Messages("experiments.inputs")}
+   });
+
+columns.push({
+"header": "Baits",
+"property" : "inputContainerUsed.contents",
+"filter" : "getArray:'properties.baits.value' | unique ",
+"order":true,
+"edit":false,
+"hide":true,
+"type":"text",
+"position":8.2,
+"extraHeaders":{0 : Messages("experiments.inputs")}
+});
+
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 	
