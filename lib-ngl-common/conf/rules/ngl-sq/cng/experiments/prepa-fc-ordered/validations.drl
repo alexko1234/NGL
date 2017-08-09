@@ -113,7 +113,7 @@ rule "check nb support for one source"
 end
 
 rule "check nb source for one support"
-//c-a-d: meme plaque indiquée a differentes positions de départ pour Janus...
+// c-a-d: meme plaque indiquée a differentes positions de départ pour Janus...
     @nglSQ( validations )
 	dialect "java"
 	salience 700
