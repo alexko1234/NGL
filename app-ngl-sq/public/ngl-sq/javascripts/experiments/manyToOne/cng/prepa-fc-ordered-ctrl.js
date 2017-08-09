@@ -315,9 +315,9 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.atmService = null; //empeche la page de se charger...
 			$scope.experimentTypeTemplate = null;
 		} else {
-			// plaques uniqt mais il y a une limite !! combien ??
-			if ( supports.length > 4 ){ 
-				$scope.messages.setError(Messages('experiments.input.error.maxSupports', 4));
+			// plaques uniqt mais il y a une limite !! 09/08/2017 NGL-1550: passage a 8 sources pour le Janus
+			if ( supports.length > 8 ){ 
+				$scope.messages.setError(Messages('experiments.input.error.maxSupports', 8));
 				$scope.atmService = null; //empeche la page de se charger...
 				$scope.experimentTypeTemplate = null;
 			}
