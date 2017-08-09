@@ -31,13 +31,13 @@
 <div class="row margin-bottom-7">
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
-			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
-			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="initGraph()">@Messages("containers.tabs.treeoflife")</a></li>
-			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("containers.tabs.workflow")</a></li>
+			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("samples.tabs.general")</a></li>
+			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="initGraph()">@Messages("samples.tabs.treeoflife")</a></li>
+			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("samples.tabs.workflow")</a></li>
 			
-			<li ng-if="container.qualityControlResults !== null && container.qualityControlResults !== undefined" 
+			<!--  			<li ng-if="container.qualityControlResults !== null && container.qualityControlResults !== undefined" 
 				ng-class="getTabClass('resultsqc')"><a href="#" data-target="#resultsqc" data-toggle="tab" 
-					ng-click="setActiveTab('resultsqc')">@Messages("containers.tabs.resultsqc")</a></li>
+		ng-click="setActiveTab('resultsqc')">@Messages("containers.tabs.resultsqc")</a></li>-->
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane {{getTabClass('general')}}" id="general">
@@ -49,10 +49,10 @@
 			<div class="tab-pane {{getTabClass('workflow')}}" id="workflow">
 				@partials.details_workflow()
 			</div>
-			<div class="tab-pane {{getTabClass('resultsqc')}}" id="results" 
+		<!--  	<div class="tab-pane {{getTabClass('resultsqc')}}" id="results" 
 				ng-if="container.qualityControlResults !== null && container.qualityControlResults !== undefined && container.qualityControlResults.length > 0">
 				@partials.details_qc()
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>

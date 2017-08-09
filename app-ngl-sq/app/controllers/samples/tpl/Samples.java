@@ -6,7 +6,7 @@ import play.Logger;
 import play.Routes;
 import play.libs.Json;
 import play.mvc.Result;
-import views.html.container.details;
+import views.html.samples.details;
 import views.html.samples.home;
 import views.html.samples.search;
 import controllers.CommonController;
@@ -43,6 +43,7 @@ public class Samples extends CommonController{
 						controllers.commons.api.routes.javascript.Values.list(),
 						controllers.projects.api.routes.javascript.Projects.list(),
 						controllers.samples.api.routes.javascript.Samples.list(),
+						controllers.samples.api.routes.javascript.Samples.get(),
 						controllers.experiments.api.routes.javascript.Experiments.list(),
 						controllers.commons.api.routes.javascript.States.list(),
 						controllers.commons.api.routes.javascript.Users.list(),

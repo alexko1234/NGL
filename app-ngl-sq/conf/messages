@@ -621,27 +621,37 @@ printing.tags.msg.error.printing = Impression en erreur
 
 printing.tags.table.label = Label
 printing.tags.table.barcode = Code barre
-##sample
 
-samples.table.projectCode = Projet
-samples.table.code = Code
-samples.table.name = Name
-samples.table.typeCode = Type
-samples.table.importTypeCode = Import type
-samples.table.sample = Echantillon
-samples.table.referenceCollab = Ref. collaborateur
-samples.table.taxonCode = Taxon ID
-samples.table.ncbiScientifiName = Taxon
 #Samples
 samples.title = Echantillons
 samples.menu = Echantillons
 samples.menu.search = Rechercher
+
+#Sample tabs
+samples.tabs.general = Général
+samples.tabs.treeoflife = Arbre de Vie Echantillon
+samples.tabs.workflow = Infos workflow Echantillon
 samples.tabs.search = Recherche Echantillon
+
+##sample table
+samples.table.projectCode = Projet
+samples.table.typeCode = Type
+samples.table.importTypeCode = Type d''import
+samples.table.categoryCode = Categorie échantillon
+samples.table.sample = Echantillon
+samples.table.referenceCollab = Ref. collaborateur
+samples.table.taxonCode = Taxon ID
+samples.table.ncbiScientifiName = Taxon
+samples.table.ncbiLineage = Lignée
 samples.table.code = Echantillon
 samples.table.projectCodes = Projet(s)
 samples.table.creationDate = Date de création
 samples.table.createUser = Créé par
 samples.table.state = Etat
+samples.table.stateDate= Date
+samples.table.stateUser = Utilisateur 
+samples.table.comments = Commentaires
+samples.table.process = Processus
 
 samples.placeholder.fromDate = Echantillon depuis le (jj/mm/aaaa)
 samples.placeholder.toDate = Echantillon jusqu''au (jj/mm/aaaa)

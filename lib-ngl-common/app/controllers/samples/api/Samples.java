@@ -40,6 +40,7 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
@@ -50,6 +51,7 @@ public class Samples extends DocumentController<Sample>{
 	public Samples() {
 		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);	
 	}
+	
 	
 	
 	@Permission(value={"reading"})
@@ -188,7 +190,7 @@ public class Samples extends DocumentController<Sample>{
 			input.traceInformation = new TraceInformation();
 			input.traceInformation.setTraceInformation(getCurrentUser());				
 		} else {
-			return badRequest("use PUT method to update the experiment");
+			return badRequest("use PUT method to update the sample");
 		}
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
