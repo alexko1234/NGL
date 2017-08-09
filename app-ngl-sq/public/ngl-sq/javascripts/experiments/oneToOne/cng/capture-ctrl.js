@@ -108,6 +108,44 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":9,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         /* 09/08/2017  libProcessTypeCode (niveau content) 
+                                    expected baits (niveau processus)
+                                    captureProtocol (niveau content)
+                        A VERIFIER
+                     */
+			         {
+			        	 "header": Messages("containers.table.libProcessTypeCode"),
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique ",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":9.2,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         {
+			        	 "header": "Baits (sondes) prévues",
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique ",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":9.4,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         {
+			        	 "header": "Protocole/ Kit",
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'processProperties.captureProtocol.value' | unique ",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":9.6,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
 			         { // Etat input Container
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code | codes:'state'",

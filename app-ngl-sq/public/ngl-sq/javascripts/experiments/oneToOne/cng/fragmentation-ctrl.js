@@ -83,18 +83,44 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":6,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-                     /* 25/07/2017 ne pas faire apparaitre les volumes...
+                     /* 09/08/2017 libProcessTypeCode (niveau content) 
+                                   expected baits (niveau processus)
+                                   captureProtocol (niveau content)
+                        A VERIFIER
+                     */
 			         {
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainerUsed.volume.value",
+			        	 "header": Messages("containers.table.libProcessTypeCode"),
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique ",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-			        	 "type":"number",
-			        	 "position":8,
+			        	 "type":"text",
+			        	 "position":7,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         */
+			         {
+			        	 "header": "Baits (sondes) prévues",
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique ",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":7.2,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
+			         {
+			        	 "header": "Protocole/ Kit",
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'processProperties.captureProtocol.value' | unique ",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":7.4,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",

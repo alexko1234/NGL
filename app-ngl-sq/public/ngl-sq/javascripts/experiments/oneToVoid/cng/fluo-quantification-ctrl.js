@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToVoidQuantitFluoQuantificationCNGCtrl',['$scope', '$parse','$http',
+angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
 	// NGL-1055 : surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
@@ -91,16 +91,6 @@ angular.module('home').controller('OneToVoidQuantitFluoQuantificationCNGCtrl',['
 		"hide" : true,
 		"type" : "text",
 		"position" : 10,
-		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
-		"extraHeaders" : {0 : Messages("experiments.inputs")}
-	});
-	columns.push({
-		"header" : Messages("containers.table.size") +" (bp)",
-		"property" : "inputContainer.size.value",
-		"order" : false,
-		"hide" : true,
-		"type" : "text",
-		"position" : 11,
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});

@@ -55,7 +55,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":11,
+			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0: inputExtraHeaders}
 				     },
@@ -65,7 +65,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":12,
+			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
@@ -76,7 +76,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				 		"order":true,
 				 		"hide":true,
 				 		"type":"text",
-				 		"position":13,
+				 		"position":6,
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
@@ -87,7 +87,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":14,
+			        	 "position":7,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },  
 			         { // Volume
@@ -96,16 +96,54 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":15,
+			        	 "position":8,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
+                     /* 09/08/2017 libProcessTypeCode (niveau content) 
+                                    expected baits (niveau processus)
+                                    captureProtocol (niveau content)
+				        A VERIFIER
+				     */
+				     {
+				       "header": Messages("containers.table.libProcessTypeCode"),
+				       "property" : "inputContainerUsed.contents",
+				       "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique ",
+				       "order":true,
+					   "edit":false,
+					   "hide":true,
+				       "type":"text",
+				       "position":8.2,
+				       "extraHeaders":{0:inputExtraHeaders}
+				     },
+				     {
+				       "header": "Baits (sondes) prévues",
+				      	"property" : "inputContainerUsed.contents",
+				      	"filter" : "getArray:'processProperties.expectedBaits.value' | unique ",
+				      	"order":true,
+					    "edit":false,
+					    "hide":true,
+				      	"type":"text",
+				      	"position":8.4,
+				      	"extraHeaders":{0:inputExtraHeaders}
+				     },
+				     {
+				        "header": "Protocole/ Kit",
+				      	"property" : "inputContainerUsed.contents",
+				      	"filter" : "getArray:'processProperties.captureProtocol.value' | unique ",
+				      	"order":true,
+						"edit":false,
+					    "hide":true,
+				      	"type":"text",
+				      	"position":8.6,
+				      	"extraHeaders":{0:inputExtraHeaders}
+				     },	         
 			         { // Etat input Container 
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":16,
+			        	 "position":9,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
 			         //--->  colonnes specifiques experience s'inserent ici  (inputUsed ??)     

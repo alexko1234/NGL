@@ -102,6 +102,19 @@ angular.module('home').controller('OneToVoidBioanalyzerMigrationProfileCNGCtrl',
 			}
 		});
 	
+	// 08/08/2017 ajout Tag
+	columns.push({
+		"header" : Messages("containers.table.tags"),
+		"property" : "inputContainer.contents",
+		"filter" : "getArray:'properties.tag.value'| unique",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 7.4,
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
+	});
+	
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 

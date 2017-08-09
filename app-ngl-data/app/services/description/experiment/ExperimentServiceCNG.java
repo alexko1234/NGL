@@ -411,7 +411,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 	    
 if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			//FDS 27/07/2017 ajout NGL-1201: qc pour process Capture
-			l.add(newExperimentType("Quant-iT","quantit-fluo-quantif", null, 50,
+			l.add(newExperimentType("Dosage Fluo (Quant-iT)","fluo-quantification", null, 50,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQuantIt(), 
 					getInstrumentUsedTypes("spectramax"), 
@@ -717,7 +717,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 						               "ext-to-pcr-capture-pcr-indexing-fc-ord"), // previous nodes
 				null, // pas de purif
 				getExperimentTypes("labchip-migration-profile",
-				                   "quantit-fluo-quantif"),            // qc ajout "quantit-fluo-quantif"  pour process Capture ( UTILE ?? voir comment plus bas...)
+				                   "fluo-quantification"),            // qc ajout "fluo-quantification"  pour process Capture ( UTILE ?? voir comment plus bas...)
 				null  // pas de transfert
 				).save();
 

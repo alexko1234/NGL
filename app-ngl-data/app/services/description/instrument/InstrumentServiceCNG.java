@@ -266,8 +266,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         // FDS 03/08/2017 -- NL-1201: Ajout fluorometer Spectramax
 		l.add(newInstrumentUsedType("Spectramax", "spectramax", InstrumentCategory.find.findByCode("fluorometer"), getSpectramaxProperties(), 
 				getInstruments(
-						createInstrument("spectramax1", "Spectramax1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("spectramax2", "Spectramax2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("spectramax-bank1", "Spectramax Banque 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("spectramax-bank2", "Spectramax Banque 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("spectramax-prod1", "Spectramax Prod",     null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}),
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
