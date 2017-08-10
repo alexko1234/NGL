@@ -12,6 +12,7 @@ declare SourceSupportInfo
 end
 
 // 01/02/2017 janus-and-cBot devient janus-and-cBotV2 
+// 09/08/2017 NGL1550 passage a 8 sources
 rule "Init SourceInfo for janus+cbot v2"
     @nglSQ( validations )
 	dialect "java"
@@ -29,6 +30,14 @@ rule "Init SourceInfo for janus+cbot v2"
 	    insert(sourceInfo3);
 	    SourceInfo sourceInfo4 = new SourceInfo("4",new TreeSet());
 	    insert(sourceInfo4);
+	    SourceInfo sourceInfo5 = new SourceInfo("5",new TreeSet());
+	    insert(sourceInfo5);
+	    SourceInfo sourceInfo6 = new SourceInfo("6",new TreeSet());
+	    insert(sourceInfo6);
+	    SourceInfo sourceInfo7 = new SourceInfo("7",new TreeSet());
+	    insert(sourceInfo7);
+	    SourceInfo sourceInfo8 = new SourceInfo("8",new TreeSet());
+	    insert(sourceInfo8);
 end
 
 // 01/02/2017 janus-and-cBot devient janus-and-cBotV2 
@@ -104,7 +113,7 @@ rule "check nb support for one source"
 end
 
 rule "check nb source for one support"
-//c-a-d: meme plaque indiquée a differentes positions de départ pour Janus...
+// c-a-d: meme plaque indiquée a differentes positions de départ pour Janus...
     @nglSQ( validations )
 	dialect "java"
 	salience 700
