@@ -1371,10 +1371,10 @@ angular.module('commonsServices', []).
     			return array;    			
     		}
     	}).filter('arrayElt', function(){
-    		return function(array, position){
-    			if(!angular.isArray(array))return undefined;
-    			
-    			return array[position];    			    			
+    		return function(array, position, ifOnlyOne){ //onlyOne return only if one element
+    			if(angular.isArray(array) && ifOnlyOne !== true)return array[position]; 
+    			else if(angular.isArray(array) && ifOnlyOne === true && array.length === 1)return array[0]
+    			else return array;   			    			
     		}
     	}).filter('countDistinct', ['$parse',function($parse) {
     	    return function(array, key) {
