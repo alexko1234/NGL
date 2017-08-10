@@ -12,7 +12,9 @@
 				.success(function(data) {
 				// initialisation de la variable createService.sraVariables.exitingStudyType utilisée dans create.scala.html
 				createService.sraVariables.existingStudyType = data;																					
-				});			
+				});	
+				
+				
 				isInit=true;
 			}
 		};
@@ -180,14 +182,16 @@ var getColumns = function(){
 			form : undefined,
 			datatable : undefined,
 			sraVariables : {},
-			
+
 			//console.log("sraVariables :" + sraVariables); 
 			// Recherche l'ensemble de studies pour un projCode :
 			search : function(){
-				this.datatable.search({projCodes:this.form.projCodes});
-				//this.datatable.search({this.form});
+				//this.form.accessions = [];
+				//this.form.accessions.push("ERP005930");
+				this.datatable.search({projCodes:this.form.projCodes, accessions:this.form.accessions, codes:this.form.codes, accessionRegex:this.form.accessionRegex, codeRegex:this.form.codeRegex});				
+				//this.datatable.search(this.form);
 			},
-			
+		
 			cancel : function(){
 				this.datatable.setData([],0);
 			},
@@ -364,8 +368,8 @@ var getColumns = function(){
 			//console.log("sraVariables :" + sraVariables); 
 			// Recherche l'ensemble de studies pour un projCode :
 			search : function(){
-				this.datatable.search({projCodes:this.form.projCodes, stateCode:'F-SUB', confidential:'true'});
-				//this.datatable.search({this.form});
+				//this.datatable.search({projCodes:this.form.projCodes, stateCode:'F-SUB', confidential:'true'});
+				this.datatable.search(this.form);
 			},
 			
 			cancel : function(){

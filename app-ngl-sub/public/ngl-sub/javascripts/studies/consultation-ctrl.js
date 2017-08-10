@@ -11,9 +11,12 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 			search:{
 				url:jsRoutes.controllers.sra.studies.api.Studies.list()
 			},
-			pagination:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
 			select:{active:true},
-			showTotalNumberRecords:false,
+			showTotalNumberRecords:true,
 			edit : {
 				active:true, // permettre edition des champs editables
 				showButton : true,// bouton d'edition visible
@@ -74,13 +77,19 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 	$scope.consultationService = studiesConsultationService;
 	$scope.consultationService.init($routeParams, studiesDTConfig);
 	
-	$scope.search = function(){
-		if($scope.consultationService.form.projCodes && $scope.consultationService.form.projCodes.length > 0){
-			$scope.consultationService.search();
-		} else {
-			console.log("Cancel datatable");
-			$scope.consultationService.cancel();
-		}	
-	};
+	//$scope.search = function(){
+		//if(($scope.consultationService.form.projCodes && $scope.consultationService.form.projCodes.length > 0)||
+		//($scope.consultationService.form.accessions && $scope.consultationService.form.accessions.length > 0)||
+		//($scope.consultationService.form.codes && $scope.consultationService.form.codes.length > 0)){
+		//	console.log($scope.consultationService.form.accessions)
+		//	$scope.consultationService.search();
+		//} else {
+		//	console.log("Cancel datatable");
+		//	$scope.consultationService.cancel();
+		//}	
+	//};
+	
+	
+	
 
 }]);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -154,7 +155,28 @@ public class Studies extends DocumentController<AbstractStudy>{
 		
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
 			queries.add(DBQuery.in("state.code", form.stateCode));
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.accessions)) { //all
+			queries.add(DBQuery.in("accession", form.accessions));
 		}	
+		
+		if(CollectionUtils.isNotEmpty(form.accessions)){
+			queries.add(DBQuery.in("accession", form.accessions));
+		}else if(StringUtils.isNotBlank(form.accessionRegex)){
+			queries.add(DBQuery.regex("accession", Pattern.compile(form.accessionRegex)));
+		}
+
+		
+		if (CollectionUtils.isNotEmpty(form.codes)) { //all
+			queries.add(DBQuery.in("code", form.codes));
+		}
+		
+		if(CollectionUtils.isNotEmpty(form.codes)){
+			queries.add(DBQuery.in("code", form.codes));
+		}else if(StringUtils.isNotBlank(form.codeRegex)){
+			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
+		}
 		
 		if ((form.confidential != null) && (form.confidential==true)) {
 			Calendar calendar = Calendar.getInstance();
@@ -175,10 +197,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 	}*/
 	
 	
-	
 	public Result update(String code) {
-		//Get Submission from DB 
-		//AbstractStudy study = getStudy(code);
 		AbstractStudy study = getObject(code);
 
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);

@@ -31,12 +31,10 @@ public class Studies extends CommonController
 	public static Result get(String code) {
 		return ok(home.render("search"));
 	}
-	
+
 	public static Result details() {
 		return ok(details.render());
 	}	
-	
-	
 	
 
 

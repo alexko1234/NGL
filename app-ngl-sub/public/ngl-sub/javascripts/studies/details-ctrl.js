@@ -10,9 +10,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			search:{
 				url:jsRoutes.controllers.sra.studies.api.Studies.list()
 			},
-			pagination:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
 			select:{active:true},
-			showTotalNumberRecords:false,
+			showTotalNumberRecords:true,
 			edit : {
 				active:false, // permettre edition des champs editables
 				showButton : false,// bouton d'edition visible
@@ -49,9 +52,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			name:'experimentDT',
 			order :{by:'code',mode:'local', reverse:true},
 			search:{active:false},
-			pagination:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
 			select:{active:true},
-			showTotalNumberRecords:false,
+			showTotalNumberRecords:true,
 			edit:{
 				active:true,
 				showButton : false,
@@ -88,6 +94,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			columns : [
 			        {property:"code",
 			        	header: Messages("experiment.code"),
+			        	type :"text",		    	  	
+			        	order:false
+			        },
+			         {property:"accession",
+			        	header: Messages("experiment.accession"),
 			        	type :"text",		    	  	
 			        	order:false
 			        },	
@@ -232,9 +243,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	var runsDTConfig = {
 			name:'runDT',
 			order :{by:'code',mode:'local', reverse:true},
-			search:{active:false},
-			pagination:{active:false},
-			showTotalNumberRecords:false,
+			pagination:{
+				active:true,
+				mode:'local'
+			},			
+			showTotalNumberRecords:true,
 			edit : {
 				active:true,
 				showButton : false,
@@ -244,6 +257,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			columns : [
 			           {property:"run.code",
 			        	header: Messages("run.code"),
+			        	type :"text",		    	  	
+			        	order:true
+			           },
+			           {property:"run.accession",
+			        	header: Messages("run.accession"),
 			        	type :"text",		    	  	
 			        	order:true
 			           },
@@ -265,9 +283,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			name:'rawDataDT',
 			order :{by:'code',mode:'local', reverse:true},
 			search:{active:false},
-			pagination:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
 			select:{active:true},
-			showTotalNumberRecords:false,
+			showTotalNumberRecords:true,
 			edit : {
 				active:true,
 				showButton : false,

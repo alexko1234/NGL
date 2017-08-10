@@ -11,6 +11,9 @@ studies.msg.save.success=Study crée
 create.placeholder.studiesTitle= * Title du study
 create.placeholder.projectCodes= * Choisir au moins un code projet
 release.placeholder.projectCodes= * Choisir au moins un code projet
+consultation.placeholder.projectCodes= Choisir un code projet
+consultation.placeholder.studyAccessions= Pattern AC study ou liste ACs
+consultation.placeholder.studyCodes= Pattern code study ou liste codes
 create.placeholder.abstract= * Donner un Abstract
 create.placeholder.description= * Donner une description
 create.placeholder.existingStudyType= * Choisir un type de study
@@ -18,7 +21,7 @@ studies.menu.consultation = Recherche
 study.code=Code
 study.projectCode=ProjectCode
 study.state.code=State
-study.accession=AccessionNumber
+study.accession=Numeros d'accession
 study.releaseDate=ReleaseDate
 study.centerName=CenterName
 study.centerProjectName=CenterProjectName
@@ -78,7 +81,6 @@ create.placeholder.submissions.study= * Choisir un study
 create.placeholder.submissions.configuration= * Choisir une configuration
 create.placeholder.submissions.readSet= * Choisir les readSets
 activate.placeholder.projectCodes= * Choisir un code projet
-consultation.placeholder.projectCodes= * Choisir un code projet
 validation.placeholder.projectCode= * Choisir un code projet
 submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
@@ -105,13 +107,15 @@ consultation.placeholder.state= Choisir l'état de la soumission
 
 run.experiment.code=Code experiment
 run.code=Code 
+run.accession=Numeros d'accession 
 run.date=Date
 
 #RAW DATA
-rawData.relatifName=relatifName
+rawData.relatifName=Nom du fichier
 
 #SAMPLE 
 sample.code=Code
+sample.accession=Numeros d'accession
 sample.projectCode=Code projet
 sample.state=Etat
 sample.title=Title
@@ -127,6 +131,7 @@ sample.classification=Classification
 
 #EXPERIMENT
 experiment.code=Code
+experiment.accession=Numeros d'accession
 experiment.projectCode=Code projet
 experiment.state=Etat
 experiment.sampleCode=Code Sample

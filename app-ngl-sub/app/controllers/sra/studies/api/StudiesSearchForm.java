@@ -13,4 +13,9 @@ public class StudiesSearchForm extends ListForm{
 	public List<String> stateCodes = new ArrayList<String>();
 	public Boolean confidential = null;
 	public String stateCode = null;
+	public List<String> accessions = new ArrayList<String>();
+	public String accessionRegex;
+	public List<String> codes = new ArrayList<String>();
+	public String codeRegex;
+
 }

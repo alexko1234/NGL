@@ -111,7 +111,6 @@ public class Configurations extends DocumentController<Configuration>{
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
 			queries.add(DBQuery.in("projectCodes", form.projCodes));
 		}
-			
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

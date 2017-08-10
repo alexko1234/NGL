@@ -107,3 +107,16 @@ bt-select.here = Taper ici !
 
 search.placeholder.reporting.configuration = Sélect. colonnes config.
 search.placeholder.regexColumn = Recherche colonne
+
+
+#button
+button.search = Rechercher
+button.reset = Réinitialiser
+button.validate = Sauvegarder
+button.cancel = Annuler
+button.edit = Editer
+button.import.file = Import fichier
+button.printMode = Imprimer
+button.print = Imprimer
+button.delete = Supprimer
+button.exportCSV = Export CSV
