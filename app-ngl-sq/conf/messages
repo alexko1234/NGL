@@ -630,7 +630,7 @@ samples.menu.search = Rechercher
 #Sample tabs
 samples.tabs.general = Général
 samples.tabs.treeoflife = Arbre de Vie Echantillon
-samples.tabs.workflow = Infos workflow Echantillon
+samples.tabs.workflow = Infos Processus
 samples.tabs.search = Recherche Echantillon
 
 ##sample table
@@ -652,6 +652,8 @@ samples.table.stateDate= Date
 samples.table.stateUser = Utilisateur 
 samples.table.comments = Commentaires
 samples.table.process = Processus
+samples.table.processCategoryCode = Catégorie de Processus
+samples.table.currentExperiment = Expérience courante
 
 samples.placeholder.fromDate = Echantillon depuis le (jj/mm/aaaa)
 samples.placeholder.toDate = Echantillon jusqu''au (jj/mm/aaaa)

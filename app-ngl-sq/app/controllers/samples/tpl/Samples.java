@@ -44,6 +44,8 @@ public class Samples extends CommonController{
 						controllers.projects.api.routes.javascript.Projects.list(),
 						controllers.samples.api.routes.javascript.Samples.list(),
 						controllers.samples.api.routes.javascript.Samples.get(),
+						controllers.containers.api.routes.javascript.Containers.get(),
+						
 						controllers.experiments.api.routes.javascript.Experiments.list(),
 						controllers.commons.api.routes.javascript.States.list(),
 						controllers.commons.api.routes.javascript.Users.list(),

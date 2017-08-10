@@ -14,30 +14,29 @@
 			@columnLabelValue(Messages("samples.table.code")){
 				<p class="form-control-static" ng-bind="sample.code" />
 			}
-			
 			@columnLabelValue(Messages("samples.table.typeCode")){
-				<div class="form-control-static" ng-bind="sample.typeCode" />
+				<div class="form-control-static" ng-bind="sample.typeCode|codes:'type'" />
 			}
 			@columnLabelValue(Messages("samples.table.categoryCode")){
-				<div class="form-control-static" ng-bind='sample.categoryCode' />
+				<div class="form-control-static" ng-bind="sample.categoryCode|codes:'type'" />
 			}
 			@columnLabelValue(Messages("samples.table.projectCodes")){	
 				<div class="form-control-static" list-resize="sample.projectCodes|unique" list-resize-min-size='10' />
 			}
-			@columnLabelValue(Messages("samples.table.referenceCollab")){	
-				<div class="form-control-static" ng-bind='sample.referenceCollab'/>
-			}
+			
 			@columnLabelValue(Messages("samples.table.taxonCode")){	
 				<div class="form-control-static" ng-bind='sample.taxonCode' />
 			}			
 			@columnLabelValue(Messages("samples.table.ncbiScientifiName")){	
 				<div class="form-control-static" ng-bind='sample.ncbiScientificName' />
 			}
-		}
-		@column(){				
-	
 			@columnLabelValue(Messages("samples.table.ncbiLineage")){	
 				<div class="form-control-static" ng-bind='sample.ncbiLineage' />
+			}
+		}
+		@column(){				
+			@columnLabelValue(Messages("samples.table.referenceCollab")){	
+				<div class="form-control-static" ng-bind='sample.referenceCollab'/>
 			}
 			@columnLabelValue(Messages("samples.table.creationDate")){	
 				<p  class="form-control-static" ng-bind="sample.traceInformation.creationDate|date:'@Messages("date.format")'" />
