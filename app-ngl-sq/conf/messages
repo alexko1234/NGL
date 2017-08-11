@@ -513,7 +513,7 @@ experiments.input.error.maxSupports=Maximum {0} supports en entrée
 experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 
 containers.table.outputNumber = Nb aliquots
-supports.outputNumber = Nb supports
+supports.outputNumber = Nb supports en sortie
 
 experiment.dispatch.title = Orientation des containers : 
 

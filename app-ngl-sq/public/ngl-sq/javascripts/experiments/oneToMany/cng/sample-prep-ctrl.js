@@ -1,73 +1,133 @@
-/*
- 
-angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'atmToSingleDatatable','mainService',
-                                              function($scope, $parse, atmToSingleDatatable, mainService) {
-*/
-	
-
+/* 11/08/2017 GA: experience One to Many qui n'utilise pas de datatable...
+ * 
+ */
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService',
                                                                function($scope, $parse, commonAtomicTransfertMethod, mainService) {
 
 	
 
-	  $scope.supportCode = [];
-	  
+	  var inputSupportCode;
 	  if(!$scope.isCreationMode()){
-		  $scope.supportCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);			
+		  // mode nouveau, terminé
+		  // l'experience existe recuperer LE locationOnContainerSupport.code des container ( il ne peux y en avoir qu'un seul)
+		  inputSupportCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);			
 	  }else{
-		  $scope.supportCode = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService);
+		  // trouver le/les codes des suports de tous les container en entree de l'experience (il peux y en avoir plusieurs..)
+		  inputSupportCode = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService);
 	  }	
-
-	  if($scope.supportCode.length > 1){
-			console.log(" > 1 support en entree");
-			
-			$scope.messages.clear();
-			$scope.messages.clear();
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages("experiments.input.error.only-1-plate");
-			$scope.messages.showDetails = false;
-			$scope.messages.open();
-			
-			return false;
+	  
+	  //traiter les 2 cas
+	  if(angular.isArray(inputSupportCode) && inputSupportCode.length === 1){
+		  $scope.messages.clear();
+		  $scope.inputSupportCode = inputSupportCode[0];
+	  }else if($scope.isCreationMode() && angular.isArray(inputSupportCode) && inputSupportCode.length > 1){
+		  $scope.messages.clear();
+		  $scope.messages.clazz = "alert alert-danger";
+		  $scope.messages.text = Messages("experiments.input.error.only-1-plate");
+		  $scope.messages.showDetails = false;
+		  $scope.messages.open();
+		  //// pourquoi un return ??? return false;
+	  }else{
+		  throw 'problem with inputSupportCode';
 	  }
+	 
 	
-	  
-	//var $commonATM = commonAtomicTransfertMethod($scope);
-	
+	// creer un tableau sur lequel pourra boucler ng-repeat
+	// ce tableau est initialisé sur onChange de" nbOutputSupport"
+	// transformer au passage le type text en nombre=> *1
+	$scope.initOutputContainerSupportCodes = function(nbOutputSupport){
+		if(nbOutputSupport){
+			$scope.outputContainerSupportCodes = new Array(nbOutputSupport*1);			
+		}	
+	}
 
-	$scope.generateATMtest=function(nbOutputSupport){
-	    console.log ('Nb ouput support='+ nbOutputSupport);
+
+	$scope.generateATM=function(outputContainerSupportCodes){
+	    console.log ('ouput supports='+ outputContainerSupportCodes);
 	    
-	    // !! si utilisateur chge de valeur il faut purger les atm precedemment crees ????
-	  
-		//atmService.data.save();
-		//var allData = atmService.data.getData();
-		//atmService.data.atm = [];
+	    if($scope.isCreationMode()){
+	    	//En mode creation d'experience=> creation des ATM
+	    	console.log ('creation mode...');
+	    	 
+	    	$scope.experiment.atomicTransfertMethods = []; // reinitaliser en cas ou l'utilisateur utilise plusieurs fois le bouton
+	    	
+	    	//Each promise object will have a "then" function that can take two arguments, a "success" handler and an "error" handler.
+	    	$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+			  .then(function(containers) {	
+				 containers.forEach(function(inputContainer){
+					 
+					//1 creation de l'ATM
+					var atm = newAtomicTransfertMethod(inputContainer.support.line, inputContainer.support.column);
+					
+					//2 creation d'1 inputContainerUsed
+					var inputContainerUsed=$commonATM.convertContainerToInputContainerUsed(inputContainer);
+					atm.inputContainerUseds.push(inputContainerUsed);
+					
+					//3 creation de j outputContainerUsed
+					for(var j = 0; j < $scope.outputContainerSupportCodes.length ; j++){
+						var outputContainerUsed = $commonATM.newOutputContainerUsed(defaultOutputUnit, defaultOutputValue, atm.line, atm.column, inputContainer);
+						//affectation du SupportCode
+						outputContainerUsed.locationOnContainerSupport.code=  $scope.outputContainerSupportCodes[j];
+						atm.outputContainerUseds.push(outputContainerUsed);
+					}
+					
+					//4 mettre l'atm dans l'experience
+					$scope.experiment.atomicTransfertMethods.push(atm);
+				});
+			});	    
+	    } else {
+	    	console.log ('modifif mode...');
+	    	/* TODO ...pour la modification d'une experience existente= > autre algo a faire !!
+	    	l'utilisateur peut modifier - le code support Input ???????????????????
+	    	                            - le nombre de supporte en output
+	    	                            - les codes barres en output
+	    	*/
+	    	console.log ('convertExperiment...');
+	    	convertExperimentATM(experiment.atomicTransfertMethods, experiment.state.code);
+	    }
+	};
+	
+	/*TODO creer une fonction de conversion inspiree de convertExperimentATMToDatatable...*/
+	 
+	var  convertExperimentATM= function(experimentATMs, experimentStateCode){
+		var promises = [];
 		
-		//for(var i = 0; i < allData.length; i++){  
-	    for(var i = 0; i < 17 ; i++){
-
-			//var data = allData[i];
-			//var atm = this.newAtomicTransfertMethod();
-			//atm.inputContainerUseds.push($commonATM.convertContainerToInputContainerUsed(data.inputContainer));
-			console.log(i+ " atm.inputContainerUseds.push($commonATM.convertContainerToInputContainerUsed(data.inputContainer))");
-			
-			for(var j = 0; j < nbOutputSupport ; j++){
-			  //	atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,this.defaultOutputValue,atm.line,atm.column, data.inputContainer));
-			   console.log("  "+ j+ " atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,this.defaultOutputValue,atm.line,atm.column, data.inputContainer))");	
-			}
-			
-			//this.data.atm.push(atm);
-		}				
+		var atms = experimentATMs;
+		
+		promises.push($commonATM.loadInputContainerFromAtomicTransfertMethods(atms));					
+		promises.push($commonATM.loadOutputContainerFromAtomicTransfertMethods(atms));
+		$q.all(promises).then(function (result) {
+			var toto=undefined;
+		});
 	};
 	
 	
-	/*Init
-	var atmService = atmToSingleDatatable($scope, datatableConfigTubeParam);
-	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(l,c){
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save");
+		$scope.$emit('childSaved', callbackFunction);
+	});
+	
+	$scope.$on('refresh', function(e) {
+		console.log("call event refresh");
+		$scope.$emit('viewRefeshed');
+	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");	
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		// rien  ????
+	});
+	
+	
+	/*Init*/
+	var $commonATM = commonAtomicTransfertMethod($scope);
+	
+	var newAtomicTransfertMethod = function(l,c){
 		return {
-			class:"OneToOne",
+			class:"OneToMany",
 			line: l, 
 			column: c, 				
 			inputContainerUseds:new Array(0), 
@@ -76,16 +136,13 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 	};
 
 	//defined default output unit
-	atmService.defaultOutputUnit = {
+	var defaultOutputUnit = {
 			volume : "µL",
 			concentration : "nM"
-	}
+	};
 	
-	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-
-	$scope.atmService = atmService;
-   */
-	
+	//nécessaire pour newOutputContainerUsed meme si vide
+	var defaultOutputValue = {		
+	};
 	
 }]);
