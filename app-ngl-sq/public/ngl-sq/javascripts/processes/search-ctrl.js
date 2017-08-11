@@ -64,11 +64,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.search();
 	}
 	
-	if($scope.searchService.isRouteParam){
-		$scope.search();
-	}
-	
-	
 }]);
 
 angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {

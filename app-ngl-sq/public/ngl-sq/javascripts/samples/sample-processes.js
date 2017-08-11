@@ -56,7 +56,7 @@ angular.module('ngl-sq.samplesServices')
 				}else if(scope.dspShowRs && process.readsets && process.readsets.length === 1){
 					$window.open(AppURL("bi")+"/readsets/"+process.readsets[0].code, 'readset');
 				}else{
-					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&typeCode="+process.typeCode, 'processes');
+					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&categoryCodes="+process.categoryCode+"&typeCodes="+process.typeCode, 'processes');
 				}	
 				$event.stopPropagation();
 			}
