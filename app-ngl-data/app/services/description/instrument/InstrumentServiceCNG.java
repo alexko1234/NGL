@@ -659,18 +659,27 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	 
 	//FDS 23/01/2017 ajout Janus + cbot-v2
+	//FDS 08/08/2017 NGL-1550 passage a 8 source pour le Janus, 6 strips, ajout nouveau programme
 	private static List<PropertyDefinition> getJanusAndCBotV2Properties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 			
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
+				 newValues("Clusterstripprepworklist","2_HiseqCluster_ClusterStripPrep_worklist_US_plaque"), "single", 40, false ,null, null));
 			
 		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				newValues("1","2","3","4"), "single", 50, true ,null, null));
+				newValues("1","2","3","4","5","6"), "single", 50, true ,null, null));
 			
 	    // propriété de container in !!!
 	    l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
-				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true , null, null));
+				 Arrays.asList(newValue("1", "Source 1"), 
+						       newValue("2", "Source 2"), 
+						       newValue("3", "Source 3"),
+						       newValue("4", "Source 4"),
+						       newValue("5", "Source 5"), 
+						       newValue("6", "Source 6"),
+						       newValue("7", "Source 7"),
+						       newValue("8", "Source 8")), 
+						       "single", 2, true , null, null));
 					
 	    l.addAll(getCBotV2Properties());
 			
