@@ -107,15 +107,23 @@ public class UpdateReportingData extends AbstractImportData {
 		sample.processes = processes.parallelStream()
 					.map(process -> convertToSampleProcess(sample, process))
 					.collect(Collectors.toList());	
+		
+		SampleProcess spWithoutProcess = getReadSetBeforeNGLSQ(sample);
+		if(null != spWithoutProcess){
+			sample.processes.add(spWithoutProcess);
+		}
+		
 		computeStatistics(sample);
 	}
+
+	
 
 	private void computeStatistics(Sample sample) {
 		if(null != sample.processes){
 			
 			sample.processesStatistics = new SampleProcessesStatistics();	
-			sample.processesStatistics.processTypeCodes = sample.processes.stream().collect(Collectors.groupingBy(p -> p.typeCode, Collectors.counting()));
-			sample.processesStatistics.processCategoryCodes = sample.processes.stream().collect(Collectors.groupingBy(p -> p.categoryCode, Collectors.counting()));
+			sample.processesStatistics.processTypeCodes = sample.processes.stream().filter(p -> p.typeCode != null).collect(Collectors.groupingBy(p -> p.typeCode, Collectors.counting()));
+			sample.processesStatistics.processCategoryCodes = sample.processes.stream().filter(p -> p.categoryCode != null).collect(Collectors.groupingBy(p -> p.categoryCode, Collectors.counting()));
 		
 			sample.processesStatistics.readSetTypeCodes = sample.processes.stream().filter(p -> p.readsets != null).map(p -> p.readsets).flatMap(List::stream).collect(Collectors.groupingBy(r -> r.typeCode, Collectors.counting()));
 		}
@@ -143,7 +151,7 @@ public class UpdateReportingData extends AbstractImportData {
 		}
 		
 		if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
-			List<SampleReadSet> readsets = updateReadSets(sample, process);
+			List<SampleReadSet> readsets = getSampleReadSets(sample, process);
 			if(readsets != null && readsets.size() > 0){
 				sampleProcess.readsets = readsets;
 			}
@@ -305,7 +313,7 @@ public class UpdateReportingData extends AbstractImportData {
 	}
 	
 
-	private List<SampleReadSet> updateReadSets(Sample sample, Process process) {
+	private List<SampleReadSet> getSampleReadSets(Sample sample, Process process) {
 		List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
 		String tag = procWorkflowHelper.getTagAssignFromProcessContainers(process);
 		
@@ -364,4 +372,40 @@ public class UpdateReportingData extends AbstractImportData {
 		return treatments;
 	}
 	
+	/**
+	 * Extract ReadSet before the beginning of ngl-sq used.
+	 * @param sample
+	 * @return
+	 */
+	private SampleProcess getReadSetBeforeNGLSQ(Sample sample) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			Date date = sdf.parse("2015/03/30");
+		
+			List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
+			
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("treatments", 0);
+			
+			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
+					DBQuery.lessThan("runSequencingStartDate", date).in("sampleCode", sample.code).in("projectCode", sample.projectCodes),
+					keys)
+			.cursor.forEach(readset -> {
+				sampleReadSets.add(convertToSampleReadSet(readset));							
+			});
+			
+			SampleProcess sampleProcess = null;
+			if(sampleReadSets.size() > 0){
+				sampleProcess = new SampleProcess();
+				sampleProcess.typeCode = "Old LIMS";
+				sampleProcess.readsets = sampleReadSets;
+			}
+			
+			return sampleProcess;
+		} catch (ParseException e) {
+			Logger.error(e.getMessage(),e);
+			return null;
+		}
+		
+	}
 }
