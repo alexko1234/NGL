@@ -241,6 +241,9 @@ public interface VariableSRA {
 			put("rhs2500","Illumina HiSeq 2500");
 			put("rhs2500r","Illumina HiSeq 2500");
 			put("rmiseq","Illumina MiSeq");
+			put("hiseq4000","Illumina HiSeq 4000");
+			put("rhs4000","Illumina HiSeq 4000");
+
 			put ("unspecified", "unspecified");  // ajout pour repriseHistorique.
 		}
 	};  
