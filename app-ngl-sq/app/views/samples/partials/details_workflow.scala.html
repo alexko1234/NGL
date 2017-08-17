@@ -5,21 +5,26 @@
 		<thead>
 			<tr>
 				<th>@Messages("samples.table.process")</th>
-				<th>@Messages("samples.table.processCategoryCode")</th>
-				<th>@Messages("samples.table.state")</th>
+				<th>@Messages("samples.table.processesUpdatedDate")</th>
+				<th>@Messages("samples.table.typeCode")</th>
+				<th>@Messages("samples.table.processState")</th>
+				<th>@Messages("samples.table.stateResolutions")</th>				
 				<th>@Messages("samples.table.currentExperiment")</th>
-				<th>@Messages("samples.table.stateDate")</th>
-				<th>@Messages("samples.table.stateUser")</th>
+				<th>@Messages("samples.table.readsets")</th>
+			<th>@Messages("samples.table.stateUser")</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-if="sample.processes !== null" ng-repeat="process in sample.processes|orderBy:'traceInformation.date'">
 				<td ng-bind="process.code" />
-				
-				<td ng-bind="process.categoryCode" />
+				<td ng-bind="process.state.date|date:'@Messages("datetime.format")'" />	
+				<td ng-bind="process.typeCode" />
 				<td ng-bind="process.state.code|codes:'state'" />
+				<td  list-resize="process.state.resolutionCodes|codes:'resolution'" />
 				<td ng-bind="process.currentExperimentTypeCode" />
-				<td ng-bind="process.state.date|date:'@Messages("datetime.format")'" />
+				<!--  <td ng-bind="process.readsets|0]" />-->
+				<td  ng-if="process.readsets !== null" ng-repeat="readset in process.readsets" ng-bind="readset.code">
+				<td  ng-if="process.readsets == null" >
 				<td ng-bind="process.state.user" />
 			</tr>
 			
