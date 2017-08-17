@@ -260,7 +260,16 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			}
 			if (count > 0) {
 				this.isRouteParam = true;
-				this.form = $routeParams;
+				this.form = angular.copy($routeParams);
+				
+				if(angular.isString(this.form.typeCodes)){
+					this.form.typeCodes = [this.form.typeCodes];
+				}
+				if(angular.isString(this.form.categoryCodes)){
+					this.form.categoryCodes = [this.form.categoryCodes];
+				}
+				
+				
 			}
 		},
 		extractDate: function(value){
@@ -480,7 +489,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 		initProcessTypes:function(){
 			//load all process cat
-			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url, {processTypesByCategory:this.processTypesByCategory})
+			return $http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url, {processTypesByCategory:this.processTypesByCategory})
 				.success(function(data, status, headers, config) {
 				data.forEach(function(processType){
 					if(!config.processTypesByCategory[processType.category.code]){
@@ -648,12 +657,18 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			} else {
 				searchService.resetForm();
 			}
+						
+			searchService.initProcessTypes().then(function(){
+				searchService.setRouteParams($routeParams);
+				if(searchService.isRouteParam){
+					searchService.changeProcessCategories();
+					searchService.setRouteParams($routeParams); //twice because changeProcessCategories remove typeCodes
+					searchService.changeProcessTypeCode();
+					searchService.search();			
+				}
+			});
 
-			if (angular.isDefined($routeParams)) {
-				this.setRouteParams($routeParams);
-			}
 			
-			searchService.initProcessTypes();
 		}
 	};
 

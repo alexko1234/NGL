@@ -10,7 +10,7 @@ angular.module('ngl-sq.samplesServices')
 		},
 		template: "<ul class='list-group' style='margin-bottom:0px'>"
 				+" 	<li  ng-repeat='(typeCode, values) in processesByTypeCode' class='list-group-item'>"
-				+" 	{{typeCode|codes:'type'}} :  "
+				+" 	{{typeCode|codes:'type':false}} :  "
 				+"  <a href='#' role='button' ng-repeat='p in values|orderBy:\"traceInformation.creationDate\"' ng-click='goTo(p,$event)' ng-class='getProcessClass(p)' style='margin-right:2px' title='{{p.currentExperimentTypeCode|codes:\"type\"}}' ng-bind-html='getInfo(p)'>"
 				+"  </a>"
 				+ "<span class='badge' ng-bind='values.length' ng-click='goToAllProcesses(values,$event)'></span>"
@@ -20,14 +20,18 @@ angular.module('ngl-sq.samplesServices')
 		link : function(scope, element, attr, ctrl) {
 			
 			scope.getProcessClass = function(process){
-				if(process.state.code === 'N'){
-					return "label label-info";
-				}else if(process.state.code === 'IP'){
-					return "label label-warning"
-				}else if(process.state.code === 'F' && process.experiments && process.experiments.length > 0){
+				if(process.state){
+					if(process.state.code === 'N'){
+						return "label label-info";
+					}else if(process.state.code === 'IP'){
+						return "label label-warning"
+					}else if(process.state.code === 'F' && process.experiments && process.experiments.length > 0){
+						return "label label-primary"
+					}else if(process.state.code === 'F' && (!process.experiments || process.experiments.length === 0)){
+						return "label label-default"
+					}
+				}else{
 					return "label label-primary"
-				}else if(process.state.code === 'F' && (!process.experiments || process.experiments.length === 0)){
-					return "label label-default"
 				}
 			};
 			
@@ -56,7 +60,7 @@ angular.module('ngl-sq.samplesServices')
 				}else if(scope.dspShowRs && process.readsets && process.readsets.length === 1){
 					$window.open(AppURL("bi")+"/readsets/"+process.readsets[0].code, 'readset');
 				}else{
-					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&typeCode="+process.typeCode, 'processes');
+					$window.open(jsRoutes.controllers.processes.tpl.Processes.home("search").url+"?code="+process.code+"&categoryCodes="+process.categoryCode+"&typeCodes="+process.typeCode, 'processes');
 				}	
 				$event.stopPropagation();
 			}

@@ -441,17 +441,18 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              */
             computeGroup: function() {
                 if (this.config.group.active && this.config.group.by) {
-                    var propertyGroupGetter = this.config.group.by.property;
-                    propertyGroupGetter += this.getFilter(this.config.group.by);
-                    propertyGroupGetter += this.getFormatter(this.config.group.by);
+                	var propertyGroupGetter = this.config.group.by.property;
+                    var propertyGroupGetterWithoutFormat = propertyGroupGetter + this.getFilter(this.config.group.by);
+                    var propertyGroupGetterWithFormat = propertyGroupGetterWithoutFormat + this.getFormatter(this.config.group.by);
+                    
                     if(this.config.group.by=="all"){
-                    	propertyGroupGetter="all";
+                    	propertyGroupGetterWithFormat="all";
                     }
-                    var groupGetter = $parse(propertyGroupGetter);
+                    var groupGetter = $parse(propertyGroupGetterWithFormat);
                    
                     var groupValues = this.allResult.reduce(function(array, value) {
                     	var groupValue = "all";
-                    	if(propertyGroupGetter !== "all"){
+                    	if(propertyGroupGetterWithFormat !== "all"){
                     		groupValue = groupGetter(value);
                     		if(groupValue !== null && groupValue !== undefined){
                     			groupValue = groupValue.toString();
@@ -470,11 +471,13 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     for (var key in groupValues) {
                         var group = {};
                         var groupData = groupValues[key];
-                        $parse("group." + this.config.group.by.id).assign(group, key);
-                        var groupMethodColumns = this.getColumnsConfig().filter(function(column) {
-                            return (column.groupMethod !== undefined && column.groupMethod !== null && column.property != propertyGroupGetter);
-                        });
+                        var keyFirstElementValue = $parse(propertyGroupGetterWithoutFormat)(groupData[0]);
                         var that = this;
+                        
+                        $parse("group." + this.config.group.by.id).assign(group, keyFirstElementValue);
+                        var groupMethodColumns = this.getColumnsConfig().filter(function(column) {
+                            return (column.groupMethod !== undefined && column.groupMethod !== null && column.property+that.getFilter(column) != propertyGroupGetterWithoutFormat);
+                        });
                         //compute for each number column the sum
                         groupMethodColumns.forEach(function(column) {
                             if(column.id != that.config.group.by.id){                        	

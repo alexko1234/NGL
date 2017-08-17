@@ -550,14 +550,15 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
 			var alreadyOnBasket = false;
-			for(var j=0;j<this.basket.get().length;j++){
+			for(var j=0;j<this.basket.get().length && !alreadyOnBasket;j++){
 				if(containers[i].group === undefined){
 					if(this.basket.get()[j].code === containers[i].code){
 						alreadyOnBasket = true;
 					}
 				}else{
-					var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
-					if($scope.datatable.getGroupColumnValue(containers[i], "code")[0] === this.basket.get()[j].code){
+					var test = [];
+					test = test.concat($scope.datatable.getGroupColumnValue(containers[i], "code"));
+					if(test.indexOf(this.basket.get()[j].code) > -1){
 						alreadyOnBasket = true;
 					}
 				}
