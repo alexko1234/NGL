@@ -233,7 +233,7 @@ public interface VariableSRA {
 			put("hiscansq","Illumina HiScanSQ");
 			put("hiseq x ten","HiSeq X Ten");
 			put("nextseq","NextSeq 500");
-			
+			put("illumina hiseq 4000","Illumina HiSeq 4000");
 			
 			// correspondance nomCnsInstrumentModel et instrumentModel :
 			put("rgaiix","Illumina Genome Analyzer IIx");
