@@ -18,12 +18,14 @@
 				<div class="form-control-static" ng-bind="sample.typeCode|codes:'type'" />
 			}
 			@columnLabelValue(Messages("samples.table.categoryCode")){
-				<div class="form-control-static" ng-bind="sample.categoryCode|codes:'type'" />
+				<div class="form-control-static" ng-bind="sample.categoryCode|codes:'sample_cat'" />
 			}
 			@columnLabelValue(Messages("samples.table.projectCodes")){	
-				<div class="form-control-static" list-resize="sample.projectCodes|unique" list-resize-min-size='10' />
+				<div class="form-control-static"  list-resize="sample.projectCodes|unique" list-resize-min-size='10' />
 			}
-			
+			@columnLabelValue(Messages("samples.table.projectCodes")){	
+				<div class="form-control-static" list-resize="sample.projectCodes|codes:'project'" list-resize-min-size='10' />
+			}
 			@columnLabelValue(Messages("samples.table.taxonCode")){	
 				<div class="form-control-static" ng-bind='sample.taxonCode' />
 			}			

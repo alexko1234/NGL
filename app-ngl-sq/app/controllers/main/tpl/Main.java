@@ -15,6 +15,7 @@ import models.laboratory.reagent.description.KitCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.laboratory.valuation.instance.ValuationCriteria;
+import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 import play.Play;
 import play.Routes;
@@ -73,13 +74,19 @@ public class Main extends CommonController{
 			.append("\":\"").append(cl.label).append("\",");
 		}
 		
+		List<Project> projects = MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList();
+		for(Project p:  projects){
+			sb.append("\"").append("project").append(".").append(p.code)
+			.append("\":\"").append(p.name).append("\",");
+		}
+		
 		List<ValuationCriteria> criterias = MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList();
 		for(ValuationCriteria vc:  criterias){
 			sb.append("\"").append("valuation_criteria").append(".").append(vc.code)
 			.append("\":\"").append(vc.name).append("\",");
 		}
 		
-		List<ResolutionConfiguration> resolutionConfigs = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList();
+		 List<ResolutionConfiguration> resolutionConfigs = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList();
 		resolutionConfigs
 			.stream()
 			.map(rc -> rc.resolutions)
@@ -88,6 +95,10 @@ public class Main extends CommonController{
 				sb.append("\"").append("resolution").append(".").append(r.code)
 				.append("\":\"").append(r.name).append("\",");
 			});
+		
+		
+		
+		
 		
 		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
 		for(Protocol protocol:protocols){
