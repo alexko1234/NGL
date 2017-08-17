@@ -659,12 +659,12 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			}
 						
 			searchService.initProcessTypes().then(function(){
-				if (angular.isDefined($routeParams)) {
-					searchService.setRouteParams($routeParams);
+				searchService.setRouteParams($routeParams);
+				if(searchService.isRouteParam){
 					searchService.changeProcessCategories();
 					searchService.setRouteParams($routeParams); //twice because changeProcessCategories remove typeCodes
 					searchService.changeProcessTypeCode();
-					searchService.search();
+					searchService.search();			
 				}
 			});
 
