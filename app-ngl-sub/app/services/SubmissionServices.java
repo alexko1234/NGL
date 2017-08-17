@@ -478,48 +478,16 @@ public class SubmissionServices {
 				System.out.println ("Dans init, cas strategy_internal_sample");
 
 				Sample sample= null;
-				if (mapUserClones!=null && !mapUserClones.isEmpty()){
-					
-					if (StringUtils.isBlank(clone)) {
-						countError++;
-						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_internal_sample avec mapUserClone et pas de nom de clone dans ngl \n";
-						continue;					
-					}
-					if (! mapUserClones.containsKey(clone)){
-						countError++;
-						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_internal_sample avec mapUserClone qui ne contient pas le clone '" + clone +"' \n";
-						continue;
-					}
-					String sampleAc = mapUserClones.get(clone).getSampleAc();
-					if (StringUtils.isBlank(sampleAc)){
-						countError++;
-						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque mapUserClone pour clone '" + clone + "' ne contient pas de sampleAc";
-						continue;					
-					}
-					// creation ou recuperation dans base du sample avec status F-SUB (si AC alors F-sub)
-					if ( ! MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, "accession", sampleAc)){
-						countError++;
-						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque la base ne contient pas le sample :" + sampleAc;
-						continue;					
-					}
-					sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
-								Sample.class, DBQuery.and(DBQuery.is("accession", sampleAc)));
-					if (sample == null){
-						// bug
-					}
-					// Mise a jour de l'objet submission pour mapUserClone :
-					UserCloneType submission_userClone = new UserCloneType();
-					submission_userClone.setAlias(mapUserClones.get(clone).getAlias());
-					submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
-				    submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
-				    submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone); 
-				} else if (StringUtils.isNotBlank(acSample)){
+
+				if (StringUtils.isNotBlank(acSample)){
 					sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
 							Sample.class, DBQuery.and(DBQuery.is("accession", acSample)));
 					if (sample == null){
 						// bug
 					}
+					
 				} else {
+				
 					// Recuperer le sample existant avec son state.code ou bien en creer un nouveau avec state.code='N'
 					sample = fetchSample(readSet, config.strategySample, scientificName, user);
 					// Renseigner l'objet submission :
@@ -546,8 +514,8 @@ public class SubmissionServices {
 						}	
 						// Le champs scientificName est rempli automatiquement et n'est pas surchargeable.
 					}
-				}
-
+				
+}
 				// Mise a jour de l'objet submission pour les samples references
 				if(!submission.refSampleCodes.contains(sample.code)){
 					submission.refSampleCodes.add(sample.code);
@@ -620,31 +588,7 @@ public class SubmissionServices {
 				experiment.studyAccession = externalStudy.accession;	
 					
 			} else { // strategie internal_study
-				if (mapUserClones != null && !mapUserClones.isEmpty()){
-					if (! mapUserClones.containsKey(clone)){
-						countError++;
-						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_internal_study avec mapUserClone qui ne contient pas le clone '" + clone +"' \n";
-						continue;
-					} else {
-						// mettre a jour submission.mapUserClone :
-						UserCloneType submission_userClone = new UserCloneType();
-						submission_userClone.setAlias(mapUserClones.get(clone).getAlias());
-						submission_userClone.setSampleAc(mapUserClones.get(clone).getSampleAc());
-						submission_userClone.setStudyAc(mapUserClones.get(clone).getStudyAc());
-						submission.mapUserClone.put(submission_userClone.getAlias(), submission_userClone);
-					}
-					String studyAc = mapUserClones.get(clone).getStudyAc();
-					if (StringUtils.isBlank(studyAc)){
-						countError++;
-						errorMessage = errorMessage + "Soumission impossible pour le readset '" + readSet.code + "' parceque strategy_internal_study avec mapUserClone.get(clone).getStudyAc() non renseigne pour le clone '" + clone + "'\n";
-						continue;					
-					}
-					
-					// creation ou recuperation dans base de study avec state.code = F-SUB
-					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
-							Study.class, DBQuery.and(DBQuery.is("accession", studyAc)));
-		
-				} else if (StringUtils.isNotBlank(acStudy)) {
+				if (StringUtils.isNotBlank(acStudy)) {
 					study = MongoDBDAO.findOne(InstanceConstants.SRA_STUDY_COLL_NAME,
 							Study.class, DBQuery.and(DBQuery.is("accession", acStudy)));
 				} else if (StringUtils.isNotBlank(studyCode)) {
