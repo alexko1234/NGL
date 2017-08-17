@@ -785,7 +785,8 @@ public class SubmissionServices {
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);
 					
-		String syntProjectCode = "";
+		String syntProjectCode = submission.code;
+		/*
 		for (String projectCode: submission.projectCodes) {
 			if (StringUtils.isNotBlank(projectCode)) {
 				syntProjectCode += "_" + projectCode;
@@ -794,7 +795,7 @@ public class SubmissionServices {
 		if (StringUtils.isNotBlank(syntProjectCode)){
 			syntProjectCode = syntProjectCode.replaceFirst("_", "");
 		}
-					
+		*/			
 		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
 		//submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
 		if (submission.release) {
