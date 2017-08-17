@@ -659,13 +659,17 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	 
 	//FDS 23/01/2017 ajout Janus + cbot-v2
-	//FDS 08/08/2017 NGL-1550 passage a 8 source pour le Janus, 6 strips, ajout nouveau programme
+	//FDS 08/08/2017 NGL-1550 passage a 8 source pour le Janus, 6 strips
+    //FDS 11/08/2017 attendre feu vert de la prod pour ajout nouveau programme....
 	private static List<PropertyDefinition> getJanusAndCBotV2Properties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 			
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("Clusterstripprepworklist","2_HiseqCluster_ClusterStripPrep_worklist_US_plaque"), "single", 40, false ,null, null));
-			
+				 newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
+		/* 
+		         newValues("Clusterstripprepworklist","2_HiseqCluster_ClusterStripPrep_worklist_US_plaque"), "single", 40, false ,null, null));
+		*/
+		
 		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				newValues("1","2","3","4","5","6"), "single", 50, true ,null, null));
 			
