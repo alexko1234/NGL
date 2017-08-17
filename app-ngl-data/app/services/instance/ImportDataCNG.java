@@ -21,21 +21,21 @@ public class ImportDataCNG {
 		// decaler les demarragesr pour eviter que les logs s'entrecroisent !!!
 		
 		//vérifier s'il y a des projets a importer 1 fois par heure
-		new ProjectImportCNG(Duration.create(5,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
+		new ProjectImportCNG(ImportDataUtil.getDurationForNextHour(0),Duration.create(60,TimeUnit.MINUTES));
 		
 		//vérifier s'il y a des index a importer 1 fois par jour
-		new IndexImportCNG(Duration.create(10,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS));
+		new IndexImportCNG(ImportDataUtil.getDurationInMillinsBefore(5, 0),Duration.create(1,TimeUnit.DAYS));
 		
 		//FDS: pas fonctionnel ?? ni nécessaire ??
 		//new ExperimentImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));	
 		
 		//vérifier s'il y a des containers a importer toutes les 10 minutes
-		new ContainerImportCNG(Duration.create(30,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
+		new ContainerImportCNG(ImportDataUtil.getDurationForNextHour(30),Duration.create(10,TimeUnit.MINUTES));
 		
 		//Mise a jour des info du NCBI pour les samples qui n'en ont pas
-		new UpdateSampleNCBITaxonCNG(Duration.create(1,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
+		new UpdateSampleNCBITaxonCNG(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS));
 		 
 		//11/04/2017 ajouter la propagation des modifications apportées aux samples...
-		new UpdateSamplePropertiesCNS(Duration.create(15,TimeUnit.MINUTES),Duration.create(6,TimeUnit.HOURS));
+		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS));
 	}
 }

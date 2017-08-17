@@ -28,9 +28,13 @@ public abstract class AbstractImportData implements Runnable{
 		this.contextError=new ContextValidation(Constants.NGL_DATA_USER);
 		this.name=name;
 		logger=Logger.of(this.getClass().getName());
+		
+		Logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
+		
 		Akka.system().scheduler().schedule(durationFromStart,durationFromNextIteration
 				, this, Akka.system().dispatcher()
-				); 
+				);
+				 
 	}
 
 	public void run() {

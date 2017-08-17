@@ -67,16 +67,16 @@ public class Global extends GlobalSettings {
 					String institute=play.Play.application().configuration().getString("import.institute");
 					Logger.info("Import institute "+ institute);
 				
-					if(institute.equals("CNG")){
+					if("CNG".equals(institute)){
 						new ImportDataCNG();
-					}else if (institute.equals("CNS")){
+					}else if ("CNS".equals(institute)){
 						 new ImportDataCNS();
 					} else {
 						throw new RuntimeException("La valeur de l'attribut import.institute dans application.conf n'a pas d'implementation");
 					}
 					
 				}catch(Exception e){
-					throw new RuntimeException("L'attribut import.institute dans application.conf n'est pas renseigné");
+					throw new RuntimeException("L'attribut import.institute dans application.conf n'est pas renseigné",e);
 				}
 				
 			} else { Logger.info("No import data"); }
