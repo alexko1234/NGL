@@ -5,7 +5,12 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 
 
 	var submissionDTConfig = {
-			pagination:{mode:'local'},			
+			pagination:{
+				active:true,
+				mode:'local'
+			},
+			select:{active:true},
+			showTotalNumberRecords:true,
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
 				url:jsRoutes.controllers.sra.submissions.api.Submissions.list()

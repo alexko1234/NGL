@@ -5,13 +5,61 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 
 
 
+	var studiesDTConfig = {
+			name:'studiesDT',
+			order :{by:'code',mode:'local', reverse:true},
+			search:{
+				url:jsRoutes.controllers.sra.studies.api.Studies.list()
+			},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
+			select:{active:true},
+			showTotalNumberRecords:true,
+			edit : {
+				active:true,
+				showButton : false,
+				withoutSelect : true,
+				columnMode : true,
+				lineMode : function(line){
+					if(line.state.code === "N")
+						return true;
+					else 
+						return false;
+				}
+			},
+			cancel : {
+				showButton:true
+			},
+			hide:{
+				active:true,
+				showButton:true
+			},
+			exportCSV:{
+				active:false
+			},
+			show:{                   // bouton pour epingler si on passe par details-ctrl.js 
+				active:true,
+				add :function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.sra.studies.tpl.Studies.get(line.code).url,remove:true});
+				}
+			},
+			
+
+	};
+	
 	var samplesDTConfig = {
 			name:'sampleDT',
 			order :{by:'code',mode:'local', reverse:true},
 			search:{active:false},
-			pagination:{active:false},
+			select:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
 			select:{active:true},
-			showTotalNumberRecords:false,
+			showTotalNumberRecords:true,
 			edit : {
 				active:true,
 				showButton : false,
@@ -50,6 +98,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			columns : [
 			        {property:"code",
 			        	  header: Messages("sample.code"),
+			        	  type :"text",		    	  	
+			        	  order:true
+			        },
+			         {property:"accession",
+			        	  header: Messages("sample.accession"),
 			        	  type :"text",		    	  	
 			        	  order:true
 			        },
@@ -139,9 +192,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			name:'experimentDT',
 			order :{by:'code',mode:'local', reverse:true},
 			search:{active:false},
-			pagination:{active:false},
-			select:{active:true},
-			showTotalNumberRecords:false,
+			select:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
+			showTotalNumberRecords:true,
 			edit:{
 				active:true,
 				showButton : false,
@@ -182,6 +238,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			columns : [
 			        {property:"code",
 			        	header: Messages("experiment.code"),
+			        	type :"text",		    	  	
+			        	order:false
+			        },
+			        {property:"accession",
+			        	header: Messages("experiment.accession"),
 			        	type :"text",		    	  	
 			        	order:false
 			        },	
@@ -328,8 +389,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			name:'runDT',
 			order :{by:'code',mode:'local', reverse:true},
 			search:{active:false},
-			pagination:{active:false},
-			showTotalNumberRecords:false,
+			pagination:{
+				active:true,
+				mode:'local'
+			},
+			select:{active:true},
+			showTotalNumberRecords:true,
 			edit : {
 				active:true,
 				showButton : false,
@@ -339,6 +404,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			columns : [
 			           {property:"run.code",
 			        	header: Messages("run.code"),
+			        	type :"text",		    	  	
+			        	order:true
+			           },
+			           {property:"run.accession",
+			        	header: Messages("run.accession"),
 			        	type :"text",		    	  	
 			        	order:true
 			           },
@@ -359,9 +429,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			name:'rawDataDT',
 			order :{by:'code',mode:'local', reverse:true},
 			search:{active:false},
-			pagination:{active:false},
+			select:{active:false},
+			pagination:{
+				active:true,
+				mode:'local'
+			},
 			select:{active:true},
-			showTotalNumberRecords:false,
+			showTotalNumberRecords:true,
 			edit : {
 				active:true,
 				showButton : false,
@@ -405,6 +479,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.mainService.stopEditMode();
 		$scope.sampleCheck=false;
 		$scope.experimentCheck=false;
+		$scope.studyCheck=false
 		$scope.runCheck=false;
 		$scope.rawDataCheck=false;
 		// Attention appel de get du controller api.sra.submissions qui est herite
@@ -443,6 +518,19 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				$scope.sraVariables.libraryLayoutOrientation = data;
 			});	
 			
+			if($scope.submission.studyCode !=null){
+				$http.get(jsRoutes.controllers.sra.studies.api.Studies.get($scope.submission.studyCode).url).success(function(data)
+					{
+					$scope.studies = [];
+					$scope.studies.push(data);
+					console.log("$scope.submission.study: " + $scope.submission.studyCode);
+					console.log("$scope.studies :" + $scope.studies);
+
+					//Init datatable
+					$scope.studyDT = datatable(studiesDTConfig);
+					$scope.studyDT.setData($scope.studies, $scope.studies.length);
+					});
+			}
 			if($scope.submission.refSampleCodes.length>0){
 				var nbElementByBatch = Math.ceil($scope.submission.refSampleCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
 	            var queries = [];
@@ -592,8 +680,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	$scope.userValidate = function(){
 		$scope.messages.clear();
 		
-		
 		var error = false;
+		
+		// Recuperation des studies :
+		$scope.studyDT.save();	// sauvegarde dans client des studies avec valeurs editees (valeurs utilisateurs)	
+		var tab_studies = $scope.studyDT.getData();
+		
+		
 		// Recuperation des samples :
 		$scope.sampleDT.save();	// sauvegarde dans client des samples avec valeurs editees (valeurs utilisateurs)	
 		var tab_samples = $scope.sampleDT.getData();
@@ -602,7 +695,37 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.experimentDT.save();		// recuperation saisie utilisateur et sauvegarde dans client.
 		var tab_experiments = $scope.experimentDT.getData();
 
-		var decompte = tab_samples.length +  tab_experiments.length;
+
+		var decompte = tab_samples.length +  tab_experiments.length + tab_studies.length;
+
+		
+		// Mise à jour du status  des studies :
+		for(var i = 0; i < tab_studies.length ; i++){
+			console.log("studyCode = " + tab_studies[i].code + " state = "+ tab_studies[i].state.code);
+			//tab_studies[i].state.code = "V-SUB";
+			console.log("studyTitle = " + tab_studies[i].title + " state = "+ tab_studies[i].state.code);
+			console.log("studyCode = " + tab_studies[i].code + " state = "+ tab_studies[i].state.code);
+			// sauvegarde dans database asynchrone
+			$http.put(jsRoutes.controllers.sra.studies.api.Studies.update(tab_studies[i].code).url, tab_studies[i])
+			.success(function(data){
+			//Set success message
+			//$scope.messages.clazz="alert alert-success";
+			//$scope.messages.text=Messages('submissions.msg.validate.success');
+			//$scope.messages.open();
+			
+			decompte = processInSubmission(decompte, error);
+			}).error(function(data){
+			$scope.messages.addDetails(data);
+			//$scope.messages.setError("save");
+			error = true;
+			decompte = processInSubmission(decompte, error);
+			});			
+			console.log("studyTitle = " + tab_studies[i].title + " state = "+ tab_studies[i].state.code);
+		}
+		$scope.studyDT.setData(tab_studies, tab_studies.length);
+		// sauvegarde cote client des studies avec bon statut
+		$scope.studyDT.save(); // fait le save cote client mais n'utilise pas url et ne fait pas save dans database.
+	
 		
 		
 		// Mise à jour du status  des samples :
@@ -664,6 +787,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	$scope.cancel = function(){
 		console.log("call cancel");
 		$scope.messages.clear();
+		$scope.studyDT.cancel();
 		$scope.sampleDT.cancel();
 		$scope.experimentDT.cancel();
 		$scope.mainService.stopEditMode();		
@@ -672,6 +796,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	$scope.activeEditMode = function(){
 		$scope.messages.clear();
 		$scope.mainService.startEditMode();
+		$scope.studyDT.setEdit();
 		$scope.sampleDT.setEdit();
 		$scope.experimentDT.setEdit();
 	};

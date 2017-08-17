@@ -55,6 +55,7 @@ public class Submissions extends CommonController
   	    		controllers.sra.api.routes.javascript.Variables.get(),
   	    		controllers.commons.api.routes.javascript.States.list(),
  	    		controllers.sra.studies.api.routes.javascript.Studies.list(),
+ 	    		controllers.sra.studies.api.routes.javascript.Studies.get(),
   	    		controllers.sra.configurations.api.routes.javascript.Configurations.list(),
   	    		controllers.sra.configurations.api.routes.javascript.Configurations.get(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),

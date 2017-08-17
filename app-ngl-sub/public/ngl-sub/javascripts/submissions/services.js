@@ -235,6 +235,10 @@
 			    	  	header: Messages("submissions.code"),
 			    	  	type :"text",		    	  	
 			    	  	order:true});
+		columns.push({	property:"accession",
+			    	  	header: Messages("submissions.accession"),
+			    	  	type :"text",		    	  	
+			    	  	order:true});		
 		columns.push({	property:"state.code",
 						"filter":"codes:'state'",
 						header: Messages("submissions.state"),

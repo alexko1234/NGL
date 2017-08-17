@@ -82,6 +82,7 @@ create.placeholder.submissions.configuration= * Choisir une configuration
 create.placeholder.submissions.readSet= * Choisir les readSets
 activate.placeholder.projectCodes= * Choisir un code projet
 validation.placeholder.projectCode= * Choisir un code projet
+submissions.tabs.study=Study
 submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
 submissions.tabs.run=Run
