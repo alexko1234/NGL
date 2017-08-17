@@ -84,16 +84,22 @@ public class UpdateReportingData extends AbstractImportData {
 											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
 								}	
 							}catch(Throwable e){
-								contextError.addErrors(sample.code, e.getMessage());
 								logger.error("Sample : "+sample.code+" - "+e,e);
+								if(null != e.getMessage())
+									contextError.addErrors(sample.code, e.getMessage());
+								else
+									contextError.addErrors(sample.code, "null");
 							}
 						});
 					skip = skip+5000;
 					long t2 = System.currentTimeMillis();
 					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
 				}catch(Throwable e){
-					contextError.addErrors("Error", e.getMessage());
 					logger.error("Error : "+e,e);
+					if(null != e.getMessage())
+						contextError.addErrors("Error", e.getMessage());
+					else
+						contextError.addErrors("Error", "null");
 				}
 			}
 		

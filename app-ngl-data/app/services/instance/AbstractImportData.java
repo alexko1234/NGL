@@ -57,7 +57,7 @@ public abstract class AbstractImportData implements Runnable{
 			/* Logger send an email */
 			long t2 = System.currentTimeMillis();
 			if(error){
-				logger.error("ImportData End Error");
+				logger.error("ImportData End Error - "+(t2-t1)/1000+" s");
 			}else {
 				logger.info("ImportData End - "+(t2-t1)/1000+" s");
 			}
