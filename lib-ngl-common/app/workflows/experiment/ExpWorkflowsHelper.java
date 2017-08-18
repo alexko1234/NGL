@@ -1157,7 +1157,7 @@ public class ExpWorkflowsHelper {
 	 * @param exp
 	 * @param validation
 	 */
-	public void updateQCResultInInputContainers(Experiment exp, ContextValidation validation) {
+	public void updateQCResultInInputContainers(ContextValidation validation, Experiment exp) {
 		exp.atomicTransfertMethods
 				.parallelStream()
 				.map(atm -> atm.inputContainerUseds)
@@ -1485,6 +1485,14 @@ public class ExpWorkflowsHelper {
 
 	public void removeOutputContainerCode(Experiment exp, ContextValidation errorValidation) {
 		exp.atomicTransfertMethods.stream().forEach(atm -> atm.removeOutputContainerCode());
+		
+	}
+
+
+	public void updateContentPropertiesWithExperimentContentProperties(ContextValidation validation, Experiment exp) {
+		
+		
+		
 		
 	}
 

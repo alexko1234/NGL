@@ -46,7 +46,9 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 			expWorkflowsHelper.updateOutputContainerContents(exp);		
 			expWorkflowsHelper.updateWithNewSampleCodesIfNeeded(exp);
-		} 
+		}else if("F".equals(exp.state.code)){
+			expWorkflowsHelper.updateOutputContainerContents(exp);					
+		}
 		expWorkflowsHelper.updateStatus(exp, validation);
 		expWorkflowsHelper.updateComments(exp, validation);		
 	}
@@ -56,8 +58,9 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Experiment exp) {
 		if("F".equals(exp.state.code)){
 			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
-				expWorkflowsHelper.updateQCResultInInputContainers(exp, validation);
+				expWorkflowsHelper.updateQCResultInInputContainers(validation, exp);
 			}
+			expWorkflowsHelper.updateContentPropertiesWithExperimentContentProperties(validation, exp);
 		}	
 	}
 	
