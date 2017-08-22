@@ -47,7 +47,8 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateOutputContainerContents(exp);		
 			expWorkflowsHelper.updateWithNewSampleCodesIfNeeded(exp);
 		}else if("F".equals(exp.state.code)){
-			expWorkflowsHelper.updateOutputContainerContents(exp);					
+			expWorkflowsHelper.updateOutputContainerContents(exp);		
+			expWorkflowsHelper.updateWithNewSampleCodesIfNeeded(exp);
 		}
 		expWorkflowsHelper.updateStatus(exp, validation);
 		expWorkflowsHelper.updateComments(exp, validation);		

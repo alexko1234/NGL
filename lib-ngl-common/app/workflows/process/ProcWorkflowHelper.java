@@ -29,6 +29,7 @@ import workflows.container.ContWorkflows;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.MongoDBResult.Sort;
 
 @Service
 public class ProcWorkflowHelper {
@@ -113,6 +114,7 @@ public class ProcWorkflowHelper {
 			
 		}
 	}
+	
 	private Query getContentQuery(Container container, Content content) {
 		Query query = DBQuery.is("code",container.code);
 		
@@ -144,7 +146,7 @@ public class ProcWorkflowHelper {
 													.in("projectCode",  process.projectCodes)
 													.exists("properties.tag"));
 			
-			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query);
+			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query).sort("traceInformation.creationDate",Sort.ASC);
 			if(containersWithTag.size() > 0){
 				return containersWithTag.cursor.next().contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString();
 			}else{
@@ -213,33 +215,6 @@ public class ProcWorkflowHelper {
 				.collect(Collectors.toList());		
 	}
 	
-	/**
-	 * Query to retrieve container and content (using tag if exist)
-	 * @param process
-	 * @param tag 
-	 * @return
-	 */
-	private DBQuery.Query getChildContainerQueryForProcessProperties(Process process, String tag) {
-		List<String> containerCodes = new ArrayList<String>();
-		containerCodes.add(process.inputContainerCode);
-		if(null != process.outputContainerCodes){
-			containerCodes.addAll(process.outputContainerCodes);
-		}
-		DBQuery.Query query = DBQuery.in("code",containerCodes);
-		if(tag != null){
-			query.elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes)
-												.in("projectCode",  process.projectCodes)
-												.is("properties.tag.value", tag)
-												.exists("processProperties"));
-			
-		}else{
-			query.elemMatch("contents", DBQuery.in("sampleCode", process.sampleCodes)
-												.in("projectCode",  process.projectCodes)
-												.exists("processProperties"));			
-		}
-		
-		return query;
-	}
 	
 	
 	/**

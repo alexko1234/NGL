@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -43,6 +45,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.Project;
 import models.laboratory.protocol.instance.Protocol;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.tree.SampleLife;
@@ -53,6 +56,7 @@ import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +74,7 @@ import workflows.process.ProcWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
 @Service
@@ -392,7 +397,7 @@ public class ExpWorkflowsHelper {
 					})
 				.flatMap(List::stream).collect(Collectors.toCollection(ArrayList::new));
 		contents = ContainerHelper.fusionContents(contents);
-		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithATM(exp, null, CODE.Content);
+		Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevel(exp, CODE.Content);
 		newContentProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Content));
 		contents.forEach((Content c) ->{
 			c.properties.putAll(newContentProperties);
@@ -441,7 +446,7 @@ public class ExpWorkflowsHelper {
 			List<Container> containers = entry.getValue();
 			ContainerSupport support = createContainerSupport(entry.getKey(), containers, validation);
 			//TODO GA extract only properties from exp and inst not from atm => must be improve
-			support.properties = getCommonPropertiesForALevelWithATM(exp, null, CODE.ContainerSupport); 
+			support.properties = getCommonPropertiesForALevel(exp, CODE.ContainerSupport); 
 			support.validate(supportsValidation);
 
 			if(!supportsValidation.hasErrors()){
@@ -661,7 +666,7 @@ public class ExpWorkflowsHelper {
 		String fromTransfertTypeCode =  getFromSatTypeCode(exp, ExperimentCategory.CODE.transfert);
 		String fromTransfertCode = getFromSatCode(exp, ExperimentCategory.CODE.transfert);
 		
-		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevelWithATM(exp, null, CODE.Container);
+		Map<String, PropertyValue> containerProperties = getCommonPropertiesForALevel(exp, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
 		Set<String> processTypeCodes =new HashSet<String>();
@@ -986,14 +991,14 @@ public class ExpWorkflowsHelper {
 	
 	
 	/**
-	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
+	 * Get all property for a level in experimentProperties, instrumentProperties and inpoutContainerProperties
 	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
 	 * @param exp
 	 * @param atm
 	 * @param level
 	 * @return
 	 */
-	private Map<String, PropertyValue> getCommonPropertiesForALevelWithATM(Experiment exp, AtomicTransfertMethod atm, Level.CODE level) {
+	private Map<String, PropertyValue> getCommonPropertiesForALevel(Experiment exp, Level.CODE level) {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
@@ -1490,14 +1495,138 @@ public class ExpWorkflowsHelper {
 
 
 	public void updateContentPropertiesWithExperimentContentProperties(ContextValidation validation, Experiment exp) {
+		long t1 = System.currentTimeMillis();
+		//1 extract content property code
+	
+		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
+		final Set<String> contentPropertyCodes = getPropertyDefinitionCodesByLevelFilterObject(expType.propertiesDefinitions, CODE.Content);
 		
+		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
+		contentPropertyCodes.addAll(getPropertyDefinitionCodesByLevelFilterObject(insType.propertiesDefinitions, CODE.Content));
+		//extract protocol
 		
+		Protocol protocol = MongoDBDAO.findByCode(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, exp.protocolCode);
+		//TODO Need to define protocol properties in description but in waiting we just copy all
+		if(null != protocol && null != protocol.properties && protocol.properties.size() > 0){
+			contentPropertyCodes.addAll(protocol.properties.keySet());
+		}
+		//2 update only if content property exist
+		if(contentPropertyCodes.size() > 0){
+			List<OutputContainerUsed> ocus = exp.atomicTransfertMethods
+													.stream()
+													.map(atm -> atm.outputContainerUseds)
+													.flatMap(List::stream)
+													.collect(Collectors.toList());
+				
+			ocus.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes));	
+		}
+		long t2 = System.currentTimeMillis();
+		Logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
 		
+	}
+	public static final String TAG_PROPERTY_NAME = "tag";
+
+	private void updateContainerContentPropertiesInCascading(ContextValidation validation, OutputContainerUsed ocu, Set<String> contentPropertyCodes) {
+		List<Container> containerMustBeUpdated = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  
+				DBQuery.or(DBQuery.is("code", ocu.code), DBQuery.regex("treeOfLife.paths", Pattern.compile(","+ocu.code+"$|,"+ocu.code+","))))
+		.toList();
 		
+		Set<String> containerCodes = containerMustBeUpdated.stream().map(c -> c.code).collect(Collectors.toSet());
+		
+		ocu.contents.forEach(ocuContent -> {
+			Map<String, PropertyValue> updatedProperties = ocuContent.properties
+																		.entrySet()
+																		.stream()
+																		.filter(entry ->contentPropertyCodes.contains(entry.getKey()))
+																		.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+			
+			
+			List<Sample> allSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  
+					DBQuery.or(DBQuery.is("code", ocuContent.sampleCode), DBQuery.regex("life.path", Pattern.compile(","+ocuContent.sampleCode+"$|,"+ocuContent.sampleCode+","))))
+			.toList();
+			
+			Set<String> projectCodes = allSamples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
+			Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
+			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes);
+			
+			containerMustBeUpdated.forEach(container -> {
+				container.traceInformation.setTraceInformation(validation.getUser());
+				container.contents.stream()
+					.filter(content -> ((!content.properties.containsKey(TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode))
+							|| (null != tags  && content.properties.containsKey(TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) 
+									&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value))))
+					.forEach(content -> {
+						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
+						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));	
+						
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));
+					});	
+			});
+			
+			
+			//update readsets with new exp property values
+			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", containerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
+				.cursor
+				.forEach(readset -> {
+					if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
+							|| (null != tags && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
+							&&  tags.contains(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
+						readset.traceInformation.setTraceInformation(validation.getUser());
+						readset.sampleOnContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
+						updatedProperties.forEach((k,v)-> readset.sampleOnContainer.properties.putIfAbsent(k, v));
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
+					}
+			});		
+			
+		});			
 	}
 
 
+	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes) {
+		Set<String> tags = null;
+		if(ocuContent.properties.containsKey(TAG_PROPERTY_NAME)){
+			tags = new TreeSet<String>();
+			tags.add(ocuContent.properties.get(TAG_PROPERTY_NAME).value.toString());
+		}else{
+			DBQuery.Query query = DBQuery.in("code", containerCodes)
+					.size("contents", 1)
+					.elemMatch("contents", DBQuery.in("sampleCode", sampleCodes)
+												.in("projectCode",  projectCodes)
+												.exists("properties.tag"));
+		
+			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query).sort("traceInformation.creationDate",Sort.ASC);
+			if(containersWithTag.size() > 0){
+				final Set<String> tmpTags = new TreeSet<String>(); 
+				containersWithTag.cursor.forEach(container -> {
+					tmpTags.add(container.contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString());
+				});
+				tags = tmpTags;
+			}else{
+				tags = null;
+			}
+		}
+		return tags;
+	}
 
+	/**
+	 * WARNING DUPLICATE CODE FROM ProcWorkflowHelper.
+	 * I KNOW IT'S BAD, SORRY ;-).
+	 * @param container
+	 * @param content
+	 * @return
+	 */
+	private Query getContentQuery(Container container, Content content) {
+		Query query = DBQuery.is("code",container.code);
+		
+		Query contentQuery =  DBQuery.is("projectCode", content.projectCode).is("sampleCode", content.sampleCode);
+		
+		if(content.properties.containsKey(TAG_PROPERTY_NAME)){
+			contentQuery.is("properties.tag.value", content.properties.get(TAG_PROPERTY_NAME).value);
+		}
+		query.elemMatch("contents", contentQuery);
+		
+		return query;
+	}
 	
 
 }
