@@ -84,7 +84,7 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 				support.storageCode = getStorageCode(containers);
 			}
 			
-			if(null == support.state){
+			if(null == support.state || null == support.state.code){
 				support.state = getState(containers);
 			}
 			
