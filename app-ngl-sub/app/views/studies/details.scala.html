@@ -21,12 +21,26 @@
 	</div>
 </div>
 
+
 <div class="row">
 	<!--Affichage du message de reussite ou echec si bouton release activé --> 
 	<div class="col-md-12 col-lg-12" messages="messages"></div>
 </div>
 
+
+
 <form class="form-horizontal" name="studyForm">
+
+
+</div>
+	<h1 >
+	<span  ng-bind="study.code" ></span>
+	</h1>
+	<h5>
+	</h5>
+</div>
+
+
 <div class="row">
 	@column(){
 		@views.html.helper.columnLabelValue(Messages("study.code")){
@@ -48,15 +62,25 @@
 			<p class="form-control-static">{{study.description}}</p>
 		}	
 	}
-	
 </div>
+
+
 </form>		
+
+<form class="form-horizontal" name="studyForm2">
 	
 <div class="page-header"/>	
 					
-<div> 
-	<label>@Messages("studies.msg.details-release")</label> 
+<div class="row">
+	@column(){	
+		@views.html.helper.columnLabelValue(Messages("studies.msg.details-release")){
+			<p class="form-control-static">{{study.code}}</p>
+		}	
+	}	
 </div>	
+</div>
+
+</form>		
 
 
 

@@ -76,71 +76,72 @@
 //methode utilisée pour definir les colonnes 
 var getColumns = function(){
 		var columns = [];
-			columns.push({property:"code",
+				columns.push({property:"code",
 			        	header: Messages("study.code"),
 			        	type :"text",		    	  	
 			        	order:true
 			        	});	
-			        	// voir comment affichicher liste des codesProjets.	
-			 /*columns.push({property:"projectCodes",
+			        					
+			   	columns.push({property:"accession",
+			        	header: Messages("study.accession"),
+			        	type :"text",		    	  	
+			        	order:true,
+			        	edit:false,
+			        	choiceInList:false  
+			        	});	
+			    columns.push({property:"state.code",
+			        	header: Messages("study.state.code"),
+			        	"filter":"codes:'state'",
+			        	type :"text",		    	  	
+			        	order:true
+			        	});	    	
+			 	columns.push({property:"releaseDate",
+			        	header: Messages("study.releaseDate"),
+			        	type :"date",		    	  	
+			        	order:false,
+			        	edit:false,
+			        	choiceInList:false  
+			           });
+			 	
+			     // voir comment affichicher liste des codesProjets.	
+			 	columns.push({property:"projectCodes",
 			        	header: Messages("study.projectCodes"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
-			        	});*/ 				
-			   columns.push({property:"accession",
-			        	header: Messages("study.accession"),
-			        	type :"text",		    	  	
-			        	order:false,
-			        	edit:false,
-			        	choiceInList:false  
-			        	});	
-			 /*columns.push({property:"releaseDate",
-			        	header: "study.releaseDate",
-			        	type :Date,		    	  	
-			        	order:false,
-			        	edit:false,
-			        	choiceInList:false  
-			        	});	*/
-			 columns.push({property:"state.code",
-			        	header: Messages("study.state.code"),
-			        	"filter":"codes:'state'",
-			        	type :"text",		    	  	
-			        	order:true
-			        	});	
-			 columns.push({property:"centerName",
+			        	});    	
+			 /*	columns.push({property:"centerName",
 			        	header: Messages("study.centerName"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
 			        	});	
-			  columns.push({property:"centerProjectName",
+			  	columns.push({property:"centerProjectName",
 			        	header: Messages("study.centerProjectName"),
 			        	type :"text",		    	  	
 			        	order:false,
 			        	edit:false,
 			        	choiceInList:false  
-			        	});			        			        			        
-			  columns.push({property:"title",
+			        	});*/			        			        			        
+			  	columns.push({property:"title",
 						header: Messages("study.title"),
 						type :"String",
 			        	hide:true,
 			        	edit:true,
 						order:false,
 				    	choiceInList:false
-				    	});	
-				    
-			  columns.push({property:"studyAbstract",
-						header: Messages("study.studyAbstract"),
+				    	});	    
+			  	columns.push({property:"studyAbstract",
+						header: Messages("study.abstract"),
 						type :"String",
 			        	hide:true,
 			        	edit:true,
 						order:false,
 				    	choiceInList:false
 				    	});	
-			   columns.push({property:"description",
+			   	columns.push({property:"description",
 						header: Messages("study.description"),
 						type :"String",
 			        	hide:true,
@@ -168,6 +169,8 @@ var getColumns = function(){
 	var initListService = function(){
 		if(!isInit){
 			consultationService.lists.refresh.projects();
+			lists.refresh.states({objectTypeCode:"SRASubmission"});
+			
 			$http.get(jsRoutes.controllers.sra.api.Variables.get('existingStudyType').url)
 				.success(function(data) {
 					// initialisation de la variable sraVariables.existingStudyType 
@@ -188,8 +191,8 @@ var getColumns = function(){
 			search : function(){
 				//this.form.accessions = [];
 				//this.form.accessions.push("ERP005930");
-				this.datatable.search({projCodes:this.form.projCodes, accessions:this.form.accessions, codes:this.form.codes, accessionRegex:this.form.accessionRegex, codeRegex:this.form.codeRegex});				
-				//this.datatable.search(this.form);
+				//this.datatable.search({projCodes:this.form.projCodes, accessions:this.form.accessions, codes:this.form.codes, accessionRegex:this.form.accessionRegex, codeRegex:this.form.codeRegex});				
+				this.datatable.search(this.form);
 			},
 		
 			cancel : function(){

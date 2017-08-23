@@ -29,7 +29,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 						return false;
 				}
 			},
-			cancel : {
+			/*cancel : {
 				showButton:true
 			},
 			hide:{
@@ -44,10 +44,75 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				add :function(line){
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.sra.studies.tpl.Studies.get(line.code).url,remove:true});
 				}
-			},
-			
-
-	};
+			},*/
+			columns : [
+			        {property:"code",
+			        	  header: Messages("study.code"),
+			        	  type :"text",		    	  	
+			        	  order:true
+			        },
+			        {property:"accession",
+			        	  header: Messages("study.accession"),
+			        	  type :"text",		    	  	
+			        	  order:true
+			        }, 
+			        {property:"state.code",
+			        	  header: Messages("study.state.code"),
+			        	  type :"text",		    	  	
+			        	  order:true
+			        }, 
+			       {property:"releaseDate",
+			        	header: Messages("study.releaseDate"),
+			        	type :"date",		    	  	
+			        	order:false,
+			        	edit:false,
+			        	choiceInList:false  
+			        },
+			        /*{property:"centerProjectName",
+			        	header: Messages("study.centerProjectName"),
+			        	type :"text",		    	  	
+			        	order:false,
+			        	edit:false,
+			        	choiceInList:false  
+			        },*/
+			        {property:"projectCodes",
+			        	header: Messages("study.projectCodes"),
+			        	type :"text",		    	  	
+			        	order:false,
+			        	edit:false,
+			        	choiceInList:false  
+			        },
+			        {property:"title",
+			        	  header: Messages("study.title"),
+			        	  type :"text",	
+			        	  hide:true,
+			        	  order:false,
+			        	  edit:true,
+			        	  editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
+			        	  choiceInList:false
+			        },
+			        {property:"studyAbstract",
+						header: Messages("study.abstract"),
+						type :"String",
+			        	hide:true,
+			        	edit:true,
+			        	editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
+						order:false,
+				    	choiceInList:false
+				    },
+			        {property:"description",
+			        	  header: Messages("study.description"),
+			        	  type :"text",	
+			        	  hide:true,
+			        	  order:false,
+			        	  edit:true,
+			        	  editTemplate:"<textarea class='form-control' #ng-model rows='1'></textarea>",
+			        	  choiceInList:false
+			        },
+			        
+				]			
+	};		        
+	
 	
 	var samplesDTConfig = {
 			name:'sampleDT',
@@ -479,7 +544,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.mainService.stopEditMode();
 		$scope.sampleCheck=false;
 		$scope.experimentCheck=false;
-		$scope.studyCheck=false
+		$scope.studyCheck=false;
 		$scope.runCheck=false;
 		$scope.rawDataCheck=false;
 		// Attention appel de get du controller api.sra.submissions qui est herite

@@ -9,6 +9,7 @@ import views.html.submissions.details;
 import views.html.submissions.home;
 import controllers.CommonController;
 
+
 public class Submissions extends CommonController
 {
 	
@@ -44,7 +45,6 @@ public class Submissions extends CommonController
 	}
 
 
-
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
@@ -70,8 +70,7 @@ public class Submissions extends CommonController
   	    		controllers.sra.samples.api.routes.javascript.Samples.update(),
   	  	    	controllers.sra.experiments.api.routes.javascript.Experiments.list(),
   	    		controllers.sra.experiments.api.routes.javascript.Experiments.update()    		
-  	      )	  	      
+    	   )	  	      
   	    );
-  	  }
-  	 
+  	  }   		
 }

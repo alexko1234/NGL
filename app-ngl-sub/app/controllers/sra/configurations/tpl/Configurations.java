@@ -38,6 +38,7 @@ public class Configurations extends CommonController
   	        // Routes
   	    		controllers.sra.configurations.tpl.routes.javascript.Configurations.home(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
+  	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.sra.configurations.api.routes.javascript.Configurations.save(),
   	    		controllers.sra.api.routes.javascript.Variables.get(),
   	    		controllers.sra.configurations.api.routes.javascript.Configurations.get(),

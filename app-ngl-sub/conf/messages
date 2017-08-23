@@ -25,7 +25,7 @@ study.accession=Numeros d'accession
 study.releaseDate=ReleaseDate
 study.centerName=CenterName
 study.centerProjectName=CenterProjectName
-study.title=Title
+study.title=Titre
 study.studyAbstract=StudyAbstract
 study.description=Description
 study.bioProjectId=BioProjectId
@@ -38,11 +38,11 @@ studies.msg.details-release=Objets liés au study :
 studies.msg.details-release-1=Study :
 studies.msg.details.states=state :
 studies.msg.release.success=Demande de release du study enregistrée
-
-study.title=Titre :
 study.state=Etat :
-study.abstract=Resume :
+study.abstract=Resumé :
 study.description=Description
+study.projectCodes=Codes projets
+
 #Configuration
 configurations.menu = Configurations
 configurations.menu.create = Création
@@ -77,6 +77,9 @@ submissions.menu.consultation=Recherche
 submissions.menu.validation=Validation
 submissions.menu.activate=Démarrer la soumission.
 submissions.page.title=Soumission
+consultation.placeholder.submissionAccessions= Pattern AC submission ou liste ACs
+consultation.placeholder.stateCodes= Choisir un etat
+consultation.placeholder.submissionCodes= Pattern code submission ou liste codes
 create.placeholder.submissions.study= * Choisir un study
 create.placeholder.submissions.configuration= * Choisir une configuration
 create.placeholder.submissions.readSet= * Choisir les readSets

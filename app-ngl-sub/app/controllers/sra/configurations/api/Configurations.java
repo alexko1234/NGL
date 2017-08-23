@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -102,20 +103,45 @@ public class Configurations extends DocumentController<Configuration>{
 	}
 
 	
+
+	
 	private Query getQuery(ConfigurationsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		/*if (StringUtils.isNotBlank(projCode)) { 
-			queries.add(DBQuery.in("projectCode", form.projCode));
-		}*/
+		
 		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
-			queries.add(DBQuery.in("projectCodes", form.projCodes));
+			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
+			// C'est une valeur qui peut prendre une valeur autorisee dans le formulaire. Ici on veut que 
+			// l'ensemble des valeurs correspondent à l'ensemble des valeurs du formulaire independamment de l'ordre.
 		}
+		
+		if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCodes));
+		}
+		
+		if (StringUtils.isNotBlank(form.stateCode)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCode));
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.codes)) { //all
+			queries.add(DBQuery.in("code", form.codes));
+		}
+		
+		if(CollectionUtils.isNotEmpty(form.codes)){
+			queries.add(DBQuery.in("code", form.codes));
+		}else if(StringUtils.isNotBlank(form.codeRegex)){
+			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
+	
+
+	
+	
 	
 	private Configuration getConfiguration(String code) {
 		Configuration configuration = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, code);

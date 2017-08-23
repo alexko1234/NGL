@@ -185,13 +185,38 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 
 	}
 	
-	@Test
+	//@Test
 	public void FileAcServicesReal() throws IOException, SraException, MailServiceException {
-		String code = "CNS_ART_254F1QHOV";
+		Submission submission;
+		String code = "CNS_CAA_28HF4VOO4";
 		String user = "william";
 		ContextValidation ctxVal = new ContextValidation(user);
-		File fileEbi = new File("/env/cns/home/sgas/test/list_AC_04_05_2017.txt");
-		Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+		File fileEbi = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/CAA/17_08_2017/list_AC_CNS_CAA_28HF4VOO4.txt");
+		//Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+		
+		code = "CNS_BZZ_CAN_28HD5LO4V";
+		ctxVal = new ContextValidation(user);
+		fileEbi = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/BZZ_CAN/17_08_2017/list_AC_CNS_BZZ_CAN_28HD5LO4V.txt");
+		//submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+		
+		
+		code = "CNS_BZZ_CAN_28HD4ZIGG";
+		ctxVal = new ContextValidation(user);
+		fileEbi = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/CNS_BZZ_CAN_28HD4ZIGG/17_08_2017/list_AC_CNS_BZZ_CAN_28HD4ZIGG.txt");
+		//submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+		
+
+		code = "CNS_BZZ_CAN_28HD59RR8";
+		ctxVal = new ContextValidation(user);
+		fileEbi = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/CNS_BZZ_CAN_28HD59RR8/17_08_2017/list_AC_CNS_BZZ_CAN_28HD59RR8.txt");
+		submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+			
+
+		code = "CNS_BZZ_CAN_28HD5FO6C";
+		ctxVal = new ContextValidation(user);
+		fileEbi = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/NGL/CNS_BZZ_CAN_28HD5FO6C/17_08_2017/list_AC_CNS_BZZ_CAN_28HD5FO6C.txt");
+		submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+		
 		ctxVal.displayErrors(Logger.of("SRA"));
 
 		//Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA960789"));

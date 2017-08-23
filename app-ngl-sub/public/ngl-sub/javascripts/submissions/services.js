@@ -263,11 +263,12 @@
 			$http.get(jsRoutes.controllers.sra.api.Variables.get('status').url)
 			.success(function(data) {
 			//initialisation de la variable consultationService.sraVariables.state utilisée dans consultation.scala.html
-			//consultationService.sraVariables.state = data;	
+			consultationService.sraVariables.state = data;	
 			console.log("state " + data);																					
 			});	*/	
 			
 			lists.refresh.states({objectTypeCode:"SRASubmission"});
+			
 			//lists.refresh.states({objectTypeCode:"SRASubmission"},"SRASubmissionState");
 			isInit=true;
 		}
@@ -295,19 +296,21 @@
 				
 				/*if (this.form.state!==null && this.form.state !== undefined){
 					this.datatable.search({projCode:this.form.projCode, state : this.form.state});
+									//this.datatable.search({projCodes:this.form.projCodes});
 				} else {
 					this.datatable.search({projCode:this.form.projCode});
 				}*/
+				//this.datatable.search({projCodes:this.form.projCodes, accessions:this.form.accessions, codes:this.form.codes, accessionRegex:this.form.accessionRegex, codeRegex:this.form.codeRegex});
 				this.datatable.search(this.form);
-			},
+			},	
 			cancel : function(){
 				this.datatable.setData([],0);
 			},
 			
-			
 			resetForm : function(){
 				this.form = {};	
 			},
+			
 			// important pour avoir le menu permettant d'epingler : 
 			setRouteParams:function($routeParams){
 					var count = 0;

@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
@@ -90,27 +91,50 @@ public class Submissions extends DocumentController<Submission>{
 		}else{
 			return ok(Json.toJson(submissionsList));
 		}
+		
 	}
 
 	
 	private Query getQuery(SubmissionsSearchForm form) {
+
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
-			queries.add(DBQuery.in("projectCodes", form.projCodes));
-		}
-		//modif		if (StringUtils.isNotBlank(form.state)) { //all
 
-		//if (StringUtils.isNotBlank(form.state.code)) { //all
+		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
+			queries.add(DBQuery.in("projectCodes", form.projCodes)); // doit pas marcher car pour state.code
+			// C'est une valeur qui peut prendre une valeur autorisee dans le formulaire. Ici on veut que 
+			// l'ensemble des valeurs correspondent à l'ensemble des valeurs du formulaire independamment de l'ordre.
+		}
+		if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCodes));
+		}
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
 			queries.add(DBQuery.in("state.code", form.stateCode));
+		}
+		if (CollectionUtils.isNotEmpty(form.accessions)) { //all
+			queries.add(DBQuery.in("accession", form.accessions));
 		}	
+		if(CollectionUtils.isNotEmpty(form.accessions)){
+			queries.add(DBQuery.in("accession", form.accessions));
+		}else if(StringUtils.isNotBlank(form.accessionRegex)){
+			queries.add(DBQuery.regex("accession", Pattern.compile(form.accessionRegex)));
+		}
+		if (CollectionUtils.isNotEmpty(form.codes)) { //all
+			queries.add(DBQuery.in("code", form.codes));
+		}
+		if(CollectionUtils.isNotEmpty(form.codes)){
+			queries.add(DBQuery.in("code", form.codes));
+		}else if(StringUtils.isNotBlank(form.codeRegex)){
+			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
+		}
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
 
+	
+	
 	public Result update(String code) {
 		//Get Submission from DB 
 		Submission submission = getSubmission(code);

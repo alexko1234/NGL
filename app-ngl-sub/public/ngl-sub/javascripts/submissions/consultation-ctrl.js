@@ -46,13 +46,13 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 	$scope.consultationService.isValidation = false;
 	console.log("consultation-ctrl:state " + $scope.consultationService.form.stateCode);
 
-	$scope.search = function(){
+	/*$scope.search = function(){
 		if($scope.consultationService.form.projCodes && $scope.consultationService.form.projCodes.length > 0){
 			$scope.consultationService.search();
 		} else {
 			console.log("Cancel datatable");
 			$scope.consultationService.cancel();
 		}	
-	};
+	};*/
 
 }]);
