@@ -28,6 +28,7 @@ import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContWorkflows;
+import workflows.container.ContentHelper;
 
 @Service
 public class ProcWorkflowHelper {
@@ -36,6 +37,9 @@ public class ProcWorkflowHelper {
 	public static final String TAG_PROPERTY_NAME = "tag";
 	@Autowired
 	ContWorkflows contWorkflows;
+	
+	@Autowired
+	ContentHelper contentHelper;
 	
 	public void updateInputContainerToStartProcess(ContextValidation contextValidation, Process process) {
 		ProcessType processType = ProcessType.find.findByCode(process.typeCode);
@@ -105,7 +109,7 @@ public class ProcWorkflowHelper {
 					.forEach(content -> {
 						content.processProperties = process.properties;
 						content.processComments = process.comments;	
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});
 					
 			});
@@ -113,20 +117,7 @@ public class ProcWorkflowHelper {
 		}
 	}
 	
-	private Query getContentQuery(Container container, Content content) {
-		Query query = DBQuery.is("code",container.code);
-		
-		Query contentQuery =  DBQuery.is("projectCode", content.projectCode).is("sampleCode", content.sampleCode);
-		
-		if(content.properties.containsKey(TAG_PROPERTY_NAME)){
-			contentQuery.is("properties.tag.value", content.properties.get(TAG_PROPERTY_NAME).value);
-		}
-		query.elemMatch("contents", contentQuery);
-		
-		return query;
-	}
-
-
+	
 	/**
 	 * Find the tag assign during process or existing at the beginning of process
 	 * @param process
@@ -184,7 +175,7 @@ public class ProcWorkflowHelper {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
 						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));
 						
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));						
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));						
 					});								
 			});
 		

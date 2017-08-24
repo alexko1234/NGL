@@ -70,6 +70,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
+import workflows.container.ContentHelper;
 import workflows.process.ProcWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -88,7 +89,9 @@ public class ExpWorkflowsHelper {
 	private ContSupportWorkflows containerSupportWorkflows;
 	@Autowired
 	private ProcWorkflows processWorkflows;
-
+	@Autowired
+	ContentHelper contentHelper;
+	
 	public void updateXCodes(Experiment exp) {
 		Set<String> sampleCodes = new HashSet<String>();
 		Set<String> projectCodes  = new HashSet<String>();
@@ -1559,7 +1562,7 @@ public class ExpWorkflowsHelper {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
 						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));	
 						
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, getContentQuery(container, content), DBUpdate.set("contents.$", content));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});	
 			});
 			
@@ -1622,25 +1625,7 @@ public class ExpWorkflowsHelper {
 		return tags;
 	}
 
-	/**
-	 * WARNING DUPLICATE CODE FROM ProcWorkflowHelper.
-	 * I KNOW IT'S BAD, SORRY ;-).
-	 * @param container
-	 * @param content
-	 * @return
-	 */
-	private Query getContentQuery(Container container, Content content) {
-		Query query = DBQuery.is("code",container.code);
-		
-		Query contentQuery =  DBQuery.is("projectCode", content.projectCode).is("sampleCode", content.sampleCode);
-		
-		if(content.properties.containsKey(TAG_PROPERTY_NAME)){
-			contentQuery.is("properties.tag.value", content.properties.get(TAG_PROPERTY_NAME).value);
-		}
-		query.elemMatch("contents", contentQuery);
-		
-		return query;
-	}
+	
 	
 
 }
