@@ -3,34 +3,23 @@ package services.instance.container;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.mongojack.DBQuery;
+
+import com.mongodb.MongoException;
+
+import fr.cea.ig.MongoDBDAO;
 import models.LimsCNSDAO;
-import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
-import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import models.utils.instance.SampleHelper;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import play.Logger;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
-import validation.sample.instance.SampleValidationHelper;
-import validation.utils.ValidationHelper;
-
-import com.mongodb.MongoException;
-
-import controllers.description.commons.Levels;
-
-import fr.cea.ig.MongoDBDAO;
 
 public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 

@@ -4,24 +4,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.Constants;
-import models.laboratory.container.instance.Container;
-import models.utils.InstanceConstants;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import fr.cea.ig.MongoDBDAO;
+import models.Constants;
+import models.laboratory.container.instance.Container;
+import models.utils.InstanceConstants;
 import play.Logger;
 import play.api.modules.spring.Spring;
-import fr.cea.ig.MongoDBDAO;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import workflows.container.ContWorkflows;
-import workflows.container.ContainerWorkflows;
 
 public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 
