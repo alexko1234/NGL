@@ -61,11 +61,12 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
    function generateATM(callbackFunction){
 	    console.log ('ouput supports='+ $scope.outputContainerSupportCodes);
 	    console.log ('ouput storages='+ $scope.storageCodes);
+	    $scope.messages.clear();
 	    
 	    if($scope.isCreationMode()){
 	    	console.log ('creation mode...');
 	    	
-	    	//1 initaliser
+	    	//1 initialiser
 	    	$scope.experiment.atomicTransfertMethods = [];
 	    	
 	    	//2 récupérer les inputContainers depuis le basket
@@ -84,18 +85,16 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 							
 					//2.3 création de j outputContainerUsed
 					for(var j = 0; j < $scope.outputContainerSupportCodes.length ; j++){
-						// vérifier que l'utilisateur a bien entré qq chose...
-						if ($scope.outputContainerSupportCodes[j] !== undefined && $scope.outputContainerSupportCodes[j] !== null){
+						// si l'utilisateur a bien entré des supportCodes
+						if ($scope.outputContainerSupportCodes[j] !== undefined && $scope.outputContainerSupportCodes[j] !== null && $scope.outputContainerSupportCodes[j] !== ''){
 							var outputContainerUsed = $commonATM.newOutputContainerUsed(defaultOutputUnit, defaultOutputValue, atm.line, atm.column, inputContainer);
 							//affectation du SupportCode
 							outputContainerUsed.locationOnContainerSupport.code=  $scope.outputContainerSupportCodes[j];
-							if ( $scope.storageCodes[j] !== undefined && $scope.storageCodes[j] !== null){
-								  //affectation du storageCode
+							//affectation du storageCode si defini
+							if ( $scope.storageCodes[j] !== undefined && $scope.storageCodes[j] !== null){			  
 								  outputContainerUsed.locationOnContainerSupport.storageCode=  $scope.storageCodes[j];
 							}
 							atm.outputContainerUseds.push(outputContainerUsed);
-							//console.log(' >  outputContainerUsed'+'['+j+']=' +$scope.outputContainerSupportCodes[j] +':'+ atm.line+':'+atm.column )
-							//console.log(' >> outputContainerUsed'+'['+j+']=' +atm.outputContainerUseds[j].locationOnContainerSupport.code+ atm.outputContainerUseds[j].locationOnContainerSupport.line+atm.outputContainerUseds[j].locationOnContainerSupport.column )
 						}
 					}
 					
@@ -105,24 +104,20 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 				});
 				 
 				// !!! promise=asynchronisme. mettre le $emit('childSaved') ici et plus dans $scope.$on('save',
-				$scope.$emit('childSaved', callbackFunction); 
-				
-				/*
-				if ( $scope.experiment.atomicTransfertMethods.outputContainerUseds.length === 0){
-					$scope.messages.setError(Messages('experiments.output.error.minSupports',1));
-					// PB il n'existe pas pour l'instant de  $scope.$emit('childError').. TODO
-					$scope.$emit('childError', callbackFunction);
+				// tester avec le premier ATM
+				if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
+					$scope.$emit('childSavedError', callbackFunction);
 				} else {	
 					$scope.$emit('childSaved', callbackFunction);
 			    }
-			    */
+			    
 			    
 			});	    
 	   } else {
 	    	console.log ('modification mode...');
 	    	// l'utilisateur peut modifier - le nombre de supports en output et/ou les codes barres en output
 	    	
-	    	// chg algo  afaire... se contenter de supprimer les outpuContainerUseds au lieu de tout refaire !!
+	    	// TODO  chg algo: se contenter de supprimer les outputContainerUseds au lieu de tout refaire !!
 	    	
 	    	//0 copier les anciens ATMs (on n'a plus le basket...)
 	    	var previousATMs=$scope.experiment.atomicTransfertMethods;
@@ -141,13 +136,13 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 					
 					//2.3 création de j outputContainerUsed
 					for(var j = 0; j < $scope.outputContainerSupportCodes.length ; j++){
-						// vérifier que l'utilisateur a bien entré qq chose...
-						if ($scope.outputContainerSupportCodes[j] !== undefined && $scope.outputContainerSupportCodes[j] !== null){
+						// si l'utilisateur a bien entré des supportCodes
+						if ($scope.outputContainerSupportCodes[j] !== undefined && $scope.outputContainerSupportCodes[j] !== null && $scope.outputContainerSupportCodes[j] !== ''){
 							var outputContainerUsed = $commonATM.newOutputContainerUsed(defaultOutputUnit, defaultOutputValue, atm.line, atm.column, prevatm.inputContainerUseds[0]);
 							//affectation du SupportCode 
 							outputContainerUsed.locationOnContainerSupport.code=  $scope.outputContainerSupportCodes[j];
+							//affectation du storageCode si defini
 							if ( $scope.storageCodes[j] !== undefined && $scope.storageCodes[j] !== null){
-							  //affectation du storageCode
 							  outputContainerUsed.locationOnContainerSupport.storageCode= $scope.storageCodes[j];
 							}
 							atm.outputContainerUseds.push(outputContainerUsed);
@@ -157,18 +152,15 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 					//2.4 mettre l'atm dans l'expérience
 					$scope.experiment.atomicTransfertMethods.push(atm);
 	    	});
-	    	// pas de promise dans ce cas mais obligé de faire le $emit('childSaved de facon similaire...
-	    	$scope.$emit('childSaved', callbackFunction);
 	    	
-	    	/*
-			if ( $scope.experiment.atomicTransfertMethods.outputContainerUseds.length === 0){
-				$scope.messages.setError(Messages('experiments.output.error.minSupports',1));
-				// PB il n'existe pas pour l'instant de  $scope.$emit('childError')... TODO
-				$scope.$emit('childError', callbackFunction);
+	    	// pas de promise dans ce cas mais obligé de faire le $emit('childSaved de facon similaire...
+	    	// tester avec le premier ATM
+			if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
+				$scope.$emit('childSavedError', callbackFunction);
 			} else {
 				$scope.$emit('childSaved', callbackFunction);
 			}
-			*/
+			
 	    }
 	}
 	

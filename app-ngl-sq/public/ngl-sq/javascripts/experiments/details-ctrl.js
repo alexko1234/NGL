@@ -368,12 +368,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('refreshReagents');
 	}); 
 	
-	// TEST FDS
+	// FDS 24/08/2017
 	$scope.$on('childSavedError', function(e, callbackFunctions) {
 		
 		//$scope.messages.setError("save");
+		
+		// POUR TEST...
 		   $scope.messages.clazz = "alert alert-danger";
-		   $scope.messages.text = Messages('TODO childSavedError msg');
+		   $scope.messages.text = Messages('experiments.output.error.minSupports',1);//EN DUR PAS BON !!
 		   $scope.messages.showDetails = false;
 		   $scope.messages.open();
 		   
