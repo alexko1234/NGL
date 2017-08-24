@@ -465,9 +465,9 @@ experiment.placeholder.reagents.kit = Taper ici
 experiment.placeholder.containerFromTransformationTypeCode = Container issu du type d''exp. 
 
 experiments.msg.save.sucess = Sauvegarde réussie
-experiments.msg.save.error = Sauvegarde echouée
+experiments.msg.save.error = Sauvegarde échouée
 experiments.msg.details = [détails]
-experiments.msg.empty.save.error = Incomplet - Sauvegarde echouée
+experiments.msg.empty.save.error = Incomplet - Sauvegarde échouée
 experiments.msg.generateSampleSheet.success = Feuille de route envoyée
 experiments.msg.generateSampleSheet.error = Echec de l'envoi de la feuille de route
 
@@ -478,7 +478,7 @@ experiments.select.experimentType.transferts = Transfert
 experiments.select.experimentType.qualitycontrols = Contrôle qualité
 experiments.select.experimentCategory = Categorie d''expérience
 experiments.select.instrument = Instrument
-experiments.select.resolutions = Resolution
+experiments.select.resolutions = Résolution
 experiments.select.protocols = Protocoles
 experiments.select.protocol = Protocole
 experiments.select.intrumentUsedType = Instrument
@@ -499,7 +499,7 @@ experiments.table.state.code = Etat exp.
 experiments.table.resolutionCodes = Résolution
 experiments.intrumentCategory = Contenant sortie
 experiments.table.creationDate = Date de création exp.
-experiments.table.createUser = Expérience Créée par
+experiments.table.createUser = Expérience créée par
 experiments.table.status = Statut
 
 experiments.input.error.only-tubes = Seuls des tubes peuvent entrer dans cette expérience
@@ -509,6 +509,9 @@ experiments.input.error.only-1-plate= Une seule plaque peut entrer dans cette ex
 experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les même
 experiments.input.error.maxContainers=Maximum {0} containers en entrée
 experiments.input.error.maxSupports=Maximum {0} supports en entrée
+
+experiments.output.error.maxSupports=Maximum {0} supports en sortie
+experiments.output.error.minSupports=Minimum {0} support(s) en sortie
 
 experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 

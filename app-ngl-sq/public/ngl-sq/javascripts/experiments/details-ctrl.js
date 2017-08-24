@@ -368,6 +368,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('refreshReagents');
 	}); 
 	
+	// TEST FDS
+	$scope.$on('childSavedError', function(e, callbackFunctions) {
+		
+		//$scope.messages.setError("save");
+		   $scope.messages.clazz = "alert alert-danger";
+		   $scope.messages.text = Messages('TODO childSavedError msg');
+		   $scope.messages.showDetails = false;
+		   $scope.messages.open();
+		   
+		saveInProgress = false;	
+		if(mainService.isEditMode()){
+			$scope.$broadcast('activeEditMode');
+		}	
+	});
+	
 	$scope.$on('childSaved', function(e, callbackFunctions) {
 		
 		updatePropertyUnit($scope.experiment);
@@ -386,7 +401,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		} 
 		
 	});
-	
 	
 	var saveOnRemote = function(callbackFunction){
 		if(creationMode){

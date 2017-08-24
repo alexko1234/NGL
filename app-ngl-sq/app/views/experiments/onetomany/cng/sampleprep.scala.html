@@ -4,9 +4,7 @@
 
 		<div class="col-md-2 col-lg-2">
 		   <label for="InputSupport" class="control-label">@Messages("containers.table.support.in.code")</label>
-		   <input class="form-control input-sm" type="text" id="InputSupport"
-								                   title=@Messages("containers.table.support.in.code") 
-		 						                   ng-model="inputSupportCode" />
+		   <div> {{inputSupportCode}}</div>
 		</div>
 		
 		<div class="col-md-2 col-lg-2">
@@ -17,19 +15,22 @@
 		</div> 	
 		
 		<div class="col-md-2 col-lg-2" ng-show="nbOutputSupport > 0" ng-repeat="code in outputContainerSupportCodes track by $index">
-		    <!-- probleme  si utilisation de ATMessages collé avec {{ }} -->
+		    <!-- probleme  si utilisation de (AT)Messages collé avec {{ }} -->
 			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")-{{$index+1}}</label>
 			<input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" />
-		</div>
-		
-		<!--  finalement on peut s'en passer ??	 si    generateATM est appeler directement au save !!                
-	    <div class="col-md-1 col-lg-1" ng-show="nbOutputSupport > 0">
-		    <button  class="btn btn-default btn-lg center-block" ng-click="generateATM(outputContainerSupportCodes)" >
+			
+			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")-{{$index+1}}</label>
+			<input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" />
+			
+		</div>	
+		<!--  TEST AVEC REMISE BOUTON mais sans parametre OK -->
+		<!--  TEST AVEC SUPPRESSION BOUTTON 
+		 <div class="col-md-1 col-lg-1" ng-show="nbOutputSupport > 0">
+		    <button  class="btn btn-default btn-lg center-block" ng-click="generateATM()" >
 					<i class="fa fa-sign-out fa-2x"></i>
 		    </button>				
-	    </div>		
-       -->	
-       
+	    </div>	
+        -->
 	</div>
 	<!--------------------------------------------------------------->
 	<div class="row" ng-if="!mainService.isEditMode()">
@@ -45,18 +46,15 @@
 		</div> 
 		
 		<div class="col-md-2 col-lg-2"  ng-show="nbOutputSupport > 0"  ng-repeat="code in outputContainerSupportCodes track by $index">
-		    <!-- probleme  si utilisation de ATMessages collé avec {{ }} -->
-			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code") - {{$index+1}}</label>
+		    <!-- probleme  si utilisation de (AT)Messages collé avec {{ }} -->
+			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")-{{$index+1}}</label>
 			<div>{{ outputContainerSupportCodes[$index] }}</div>
+			  
+			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")-{{$index+1}}</label>
+			<div>{{ storageCodes[$index] }}</div>
+			
 		</div>
 		
-	<!--  ne pas afficher le bouton si pas edit mode...
-	   <div class="col-md-1 col-lg-1"  ng-show="nbOutputSupport > 0">
-		    <button  class="btn btn-default btn-lg center-block" ng-click="generateATM(outputContainerSupportCodes)" >
-					<i class="fa fa-sign-out fa-2x"></i>
-		    </button>				
-	   </div>	
-	-->
 	
 	</div>
 </div>
