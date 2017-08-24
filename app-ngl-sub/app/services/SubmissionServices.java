@@ -369,13 +369,17 @@ public class SubmissionServices {
 				errorMessage = errorMessage + "  - Soumission deja existante dans base pour : '" + readSet.code + "' \n";
 				// Recuperer exp dans mongo
 				continue;
-			} 	
+			} /*else {
+				System.out.println("Aucun experiment ne reference le readSet " + readSet.code);
+			}*/
 					
 			// Verifier que ce readSet est bien valide avant soumission :
 			if (! readSet.bioinformaticValuation.valid.equals(TBoolean.TRUE)) {
 				countError++;
 				errorMessage = errorMessage + "  - Soumission impossible pour le readset '" + readSet.code + "' parceque non valide pour la bioinformatique \n";
 				continue;
+			}	else {
+				System.out.println("Le readset est bien valide :" + readSet.code);
 			}
 			
 			// Recuperer scientificName via NCBI pour ce readSet. Le scientificName est utilisé dans la construction
@@ -387,16 +391,29 @@ public class SubmissionServices {
 			if (StringUtils.isBlank(scientificName)){
 				//scientificName=updateLaboratorySampleForNcbiScientificName(taxonId, contextValidation);
 				throw new SraException("Pas de recuperation du nom scientifique pour le sample "+ laboratorySampleCode);
+			} else {
+				System.out.println("Nom du scientific Name = "+ laboratorySample.ncbiScientificName);
 			}
-			
 			// Creer les objets avec leurs alias ou code, les instancier completement et les sauver.
-
+			
 			// Creer l'experiment avec un state.code = 'N'
+			//System.out.println("scientificName =" + scientificName);
+			//System.out.println("librarySelection = " + config.librarySelection);
+			//System.out.println("librarySource = " + config.librarySource);
+			//System.out.println("libraryStrategy = "+config.libraryStrategy);
+			//System.out.println("libraryConstructionProtocol = "+ config.libraryConstructionProtocol);
+			
 			Experiment experiment = createExperimentEntity(readSet, scientificName, user);
 			experiment.librarySelection = config.librarySelection;
 			experiment.librarySource = config.librarySource;
 			experiment.libraryStrategy = config.libraryStrategy;
 			experiment.libraryConstructionProtocol = config.libraryConstructionProtocol;
+			
+			//System.out.println("scientificName =" + scientificName);
+			//System.out.println("librarySelection = " + config.librarySelection);
+			//System.out.println("librarySource = " + config.librarySource);
+			//System.out.println("libraryStrategy = "+config.libraryStrategy);
+			//System.out.println("libraryConstructionProtocol = "+ config.libraryConstructionProtocol);
 			
 			//String laboratorySampleName = laboratorySample.name;
 			String clone = laboratorySample.referenceCollab;
@@ -689,7 +706,7 @@ public class SubmissionServices {
 			expElt.validate(contextValidation);
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", expElt.code)){	
 				MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, expElt);
-				//System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
+				System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
 			}
 		}
 
@@ -704,12 +721,12 @@ public class SubmissionServices {
 
 		// updater si besoin le study pour le statut 'V-SUB'
 		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
-			study.state.code = "V-SUB";
+			study.state.code = "U-SUB";
 			study.traceInformation.modifyDate = new Date();
 			study.traceInformation.modifyUser = user;
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", study.code),
-					DBUpdate.set("state.code", "V-SUB").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
+					DBUpdate.set("state.code", study.state.code).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
 		}
 		// Updater les readSets pour le status dans la base: 
 		for (ReadSet readSet : readSets) {
@@ -730,7 +747,7 @@ public class SubmissionServices {
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
 			submission.validate(contextValidation);
 			MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
-			System.out.println ("sauvegarde dans la base du submission " + submission.code);
+			//System.out.println ("sauvegarde dans la base du submission " + submission.code);
 		}
 
 		if (contextValidation.hasErrors()){
@@ -796,8 +813,9 @@ public class SubmissionServices {
 			syntProjectCode = syntProjectCode.replaceFirst("_", "");
 		}
 		*/			
-		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
+		//submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
 		//submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
+		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.code; 
 		if (submission.release) {
 			submission.submissionDirectory = submission.submissionDirectory + "_release"; 
 		}
@@ -1121,7 +1139,7 @@ public class SubmissionServices {
 		experiment.readSetCode = readSet.code;
 		experiment.projectCode = readSet.projectCode;
 		experiment.traceInformation.setTraceInformation(user);
-		//System.out.println("expCode =" + experiment.code);
+		System.out.println("expCode =" + experiment.code);
 		String laboratoryRunCode = readSet.runCode;
 		
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
@@ -1133,14 +1151,17 @@ public class SubmissionServices {
 			for(String k: listKeysSampleOnContainerProperties) {
 				//System.out.print("lulu cle = '" + k+"'  => ");
 				PropertyValue propertyValue = sampleOnContainerProperties.get(k);
-				//System.out.println(propertyValue.value);
 			}
 			if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {
 				String libProcessTypeCode = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
+				//System.out.print(" !!! libProcessTypeCode="+ libProcessTypeCode);
 			}
 		}
 		String libProcessTypeCodeVal = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
 		String typeCode = readSet.typeCode;
+		//System.out.println("libProcessTypeCodeVal = "+libProcessTypeCodeVal);
+		//System.out.println("typeCode = "+typeCode);
+
 		if (readSet.typeCode.equalsIgnoreCase("rsillumina")){
 			typeCode = "Illumina";
 		} else if (readSet.typeCode.equalsIgnoreCase("rsnanopore")){
@@ -1154,7 +1175,19 @@ public class SubmissionServices {
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
 		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
 
+		//System.out.println("typePlatform="+ experiment.typePlatform);
+		//System.out.println("title="+ experiment.title);
+		//System.out.println("libraryName="+ experiment.libraryName);
+		
+		if(laboratoryRun==null){
+			throw new SraException("Pas de laboratoryRun pour " + readSet.code);
+		}
+		if (laboratoryRun.instrumentUsed == null ){
+			throw new SraException("Pas de champs instrumentUsed pour le laboratoryRun " + laboratoryRun.code);
+		} 
+		//System.out.println("Recuperation de instrumentUsed = "+ laboratoryRun.instrumentUsed);
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+		
 		//System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
 		//System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = '" + instrumentUsed.typeCode+"'");
 		//System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");

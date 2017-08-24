@@ -23,7 +23,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true,
 				lineMode : function(line){
-					if(line.state.code === "N")
+					if((line.state.code === "N")||(line.state.code === "U-SUB"))
 						return true;
 					else 
 						return false;

@@ -43,7 +43,7 @@ angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeP
 	$scope.consultationService.form.stateCode = 'N';
 	console.log("validation-ctrl:stateCode " + $scope.consultationService.form.stateCode);
 
-	$scope.search = function(){
+	/*$scope.search = function(){
 		if($scope.consultationService.form.projCodes && $scope.consultationService.form.projCodes.length > 0){
 			$scope.consultationService.search();
 		} else {
@@ -51,6 +51,6 @@ angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeP
 			$scope.consultationService.cancel();
 		}
 			
-	};
+	};*/
 
 }]);

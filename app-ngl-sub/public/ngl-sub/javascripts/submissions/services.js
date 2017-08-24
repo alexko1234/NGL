@@ -275,7 +275,6 @@
 	};
 	
 	
-
 			
 	var consultationService = {
 			isRouteParam : false,
