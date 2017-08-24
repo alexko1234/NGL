@@ -41,16 +41,18 @@ public class ContainerMapping extends Mapping<Container> {
 		}else{
 			container.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
-		//TODO better management for state with a fieldConfiguration
-		if(null == container.state || null == container.state.code){
-			container.state = new State("IS", contextValidation.getUser());
-		} else if(container.state.user == null){
-			container.state.user = contextValidation.getUser();
-		}	
+			
 	}
 
 	@Override
 	public void consolidate(Container c) {
+		
+		if(null == c.state || null == c.state.code){
+			c.state = new State("IS", contextValidation.getUser());
+		} else if(c.state.user == null){
+			c.state.user = contextValidation.getUser();
+		}
+		
 		if(c.categoryCode == null && c.support.categoryCode != null){
 			c.categoryCode = ContainerCategory.find.findByContainerSupportCategoryCode(c.support.categoryCode).code;
 		}

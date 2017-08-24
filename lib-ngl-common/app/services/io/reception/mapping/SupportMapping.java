@@ -86,6 +86,8 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 			
 			if(null == support.state || null == support.state.code){
 				support.state = getState(containers);
+			}else if(support.state.user == null){
+				support.state.user = contextValidation.getUser();
 			}
 			
 			if(null == support.fromTransformationTypeCodes || support.fromTransformationTypeCodes.size() == 0){
