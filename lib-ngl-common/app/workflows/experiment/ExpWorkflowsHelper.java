@@ -1578,6 +1578,20 @@ public class ExpWorkflowsHelper {
 					}
 			});		
 			
+			//update processes with new exp property values
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, DBQuery.in("sampleOnInputContainer.containerCode", containerCodes).in("sampleOnInputContainer.sampleCode", sampleCodes).in("sampleOnInputContainer.projectCode", projectCodes))
+			.cursor
+			.forEach(process -> {
+				if(!process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)
+						|| (null != tags && process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME) 
+						&&  tags.contains(process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value))){
+					process.traceInformation.setTraceInformation(validation.getUser());
+					process.sampleOnInputContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
+					updatedProperties.forEach((k,v)-> process.sampleOnInputContainer.properties.putIfAbsent(k, v));
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
+				}
+			});
+			
 		});			
 	}
 
@@ -1589,7 +1603,7 @@ public class ExpWorkflowsHelper {
 			tags.add(ocuContent.properties.get(TAG_PROPERTY_NAME).value.toString());
 		}else{
 			DBQuery.Query query = DBQuery.in("code", containerCodes)
-					.size("contents", 1)
+					.size("contents", 1) //only one content is very important because we targeting the lib container and not a pool after lib prep.
 					.elemMatch("contents", DBQuery.in("sampleCode", sampleCodes)
 												.in("projectCode",  projectCodes)
 												.exists("properties.tag"));
