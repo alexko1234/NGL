@@ -107,10 +107,15 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 				// tester avec le premier ATM
 				if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
 					$scope.$emit('childSavedError', callbackFunction);
+
+				    $scope.messages.clazz = "alert alert-danger";
+				    $scope.messages.text = Messages('experiments.output.error.minSupports',1);
+				    $scope.messages.showDetails = false;
+					$scope.messages.open();   
+					
 				} else {	
 					$scope.$emit('childSaved', callbackFunction);
-			    }
-			    
+			    } 
 			    
 			});	    
 	   } else {
@@ -157,6 +162,11 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 	    	// tester avec le premier ATM
 			if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
 				$scope.$emit('childSavedError', callbackFunction);
+				
+			    $scope.messages.clazz = "alert alert-danger";
+			    $scope.messages.text = Messages('experiments.output.error.minSupports',1);
+			    $scope.messages.showDetails = false;
+				$scope.messages.open(); 
 			} else {
 				$scope.$emit('childSaved', callbackFunction);
 			}
