@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -16,6 +17,7 @@ import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.ValidationHelper;
 
@@ -60,6 +62,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 		
 		ContainerSupportValidationHelper.validateId(this, contextValidation);
 		ContainerSupportValidationHelper.validateCode(this, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, contextValidation);
+		CommonValidationHelper.validateState(ObjectType.CODE.Container, state, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
 		ContainerSupportValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 		ContainerSupportValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
