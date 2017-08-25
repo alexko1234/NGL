@@ -2,11 +2,10 @@ package services.instance.container;
 
 import java.sql.SQLException;
 
-import scala.concurrent.duration.FiniteDuration;
+import com.mongodb.MongoException;
 
 import models.utils.dao.DAOException;
-
-import com.mongodb.MongoException;
+import scala.concurrent.duration.FiniteDuration;
 
 public class PrepaflowcellImportCNS extends ContainerImportCNS {
 	

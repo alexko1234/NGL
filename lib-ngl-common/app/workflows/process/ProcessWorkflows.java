@@ -1,12 +1,13 @@
 package workflows.process;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.description.ProcessType;
@@ -15,18 +16,12 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
 import models.utils.instance.StateHelper;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
 import workflows.container.ContWorkflows;
-import workflows.container.ContainerWorkflows;
-import fr.cea.ig.MongoDBDAO;
 
 public class ProcessWorkflows {
 

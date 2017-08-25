@@ -2,11 +2,11 @@ package services.instance.container;
 
 import java.sql.SQLException;
 
+import com.mongodb.MongoException;
+
 import models.utils.dao.DAOException;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
-
-import com.mongodb.MongoException;
 
 public class BanqueAmpliImportCNS extends ContainerImportCNS {
 
