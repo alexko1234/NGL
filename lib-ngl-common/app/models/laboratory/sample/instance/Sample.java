@@ -1,5 +1,6 @@
 package models.laboratory.sample.instance;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class Sample extends DBObject implements IValidation{
 	public String taxonCode;
 	public String ncbiScientificName;
 	public String ncbiLineage;
-	public List<Comment> comments;
+	public List<Comment> comments = new ArrayList<Comment>(0);
 	public TraceInformation traceInformation;
 
 	public SampleLife life;

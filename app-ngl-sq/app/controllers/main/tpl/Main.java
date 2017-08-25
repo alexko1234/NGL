@@ -147,8 +147,9 @@ public class Main extends CommonController{
  	        Routes.javascriptRouter("jsRoutes",  	       
  	        		controllers.experiments.api.routes.javascript.Experiments.list(),
  	        		controllers.containers.api.routes.javascript.Containers.list(),
- 	        		controllers.processes.api.routes.javascript.Processes.list()
- 	      )
+ 	        		controllers.processes.api.routes.javascript.Processes.list(),
+ 	        		controllers.samples.api.routes.javascript.Samples.list()
+ 	       	      )
  	    );
  	  }
    

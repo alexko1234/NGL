@@ -48,6 +48,9 @@ public class Samples extends DocumentController<Sample>{
 	
 	final Form<Sample> sampleForm = form(Sample.class);
 	final static List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
+	final static List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
+	
+	
 	public Samples() {
 		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);	
 	}

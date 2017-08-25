@@ -4,7 +4,6 @@
 		<table class="table table-condensed table-hover table-bordered">
 		<thead>
 			<tr>
-				<th>@Messages("samples.table.process")</th>
 				<th>@Messages("samples.table.processesUpdatedDate")</th>
 				<th>@Messages("samples.table.typeCode")</th>
 				<th>@Messages("samples.table.processState")</th>
@@ -15,14 +14,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-if="sample.processes !== null" ng-repeat="process in sample.processes|orderBy:'traceInformation.date'">
-				<td ng-bind="process.code" />
+			<tr ng-if="sample.processes !== null" ng-repeat="process in sample.processes|orderBy:'traceInformation.creationDate'">
 				<td ng-bind="process.state.date|date:'@Messages("datetime.format")'" />	
-				<td ng-bind="process.typeCode" />
+				<td ng-bind="process.typeCode|codes:'type'" />
 				<td ng-bind="process.state.code|codes:'state'" />
 				<td  list-resize="process.state.resolutionCodes|codes:'resolution'" />
-				<td ng-bind="process.currentExperimentTypeCode" />
-				<!--  <td ng-bind="process.readsets|0]" />-->
+				<td ng-bind="process.currentExperimentTypeCode|codes:'type'" />
 				<td  ng-if="process.readsets !== null" ng-repeat="readset in process.readsets" ng-bind="readset.code">
 				<td  ng-if="process.readsets == null" >
 				<td ng-bind="process.state.user" />

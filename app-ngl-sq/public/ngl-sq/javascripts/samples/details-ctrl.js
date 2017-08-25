@@ -69,17 +69,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		return null;
 	}
 	
-	var containerNodes = undefined;
+	var sampleNodes = undefined;
 	$scope.initGraph = function(){
 		$scope.setActiveTab('treeoflife');
-		if(!containerNodes){
-			//Faire foreach process
-			$http.get(jsRoutes.controllers.containers.api.Containers.get($scope.sample.processes[0].sampleOnInputContainer.containerCode).url).then(function(response) {
-				$scope.container = response.data;			
-			
-		//	initTreeOfLife($scope.container);
-			});
-			
+		if(!sampleNodes){	
+			initTreeOfLife($scope.sample);			
 			
 		}
 	}
@@ -88,6 +82,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		var asynchGraph = function() {
 			 return $q(function(resolve, reject) {
 				 setTimeout(function() {
+					
 				 	 var cy = 
 						cytoscape({
 					          container: document.getElementById('graph'),
@@ -132,13 +127,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						              'source-arrow-color': 'data(faveColor)',
 						              'target-arrow-color': 'data(faveColor)'
 						            })
-						            /*
-						          .selector('edge.questionable')
-						            .css({
-						              'line-style': 'dotted',
-						              'target-arrow-shape': 'diamond'
-						            })
-						            */
+						          
 						          .selector('.faded')
 						            .css({
 						              'opacity': 0.25,
@@ -153,7 +142,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				 	cy.on('click', 'node', function(evt){
 				 		var data = this.data(); 
 				 		$scope.$apply(function(scope){
-				 			 tabService.addTabs({label:data.code,href:jsRoutes.controllers.containers.tpl.Containers.get(data.code).url, remove:true});						 		
+				 			 tabService.addTabs({label:data.code,href:jsRoutes.controllers.samples.tpl.Samples.get(data.code).url, remove:true});						 		
 				 		 });
 				 	});
 				 	cy.on('click', 'edge', function(evt){
@@ -162,6 +151,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				 			$window.open(jsRoutes.controllers.experiments.tpl.Experiments.get(data.fromExperimentCode).url, 'experiments');
 				 		});
 				 	});
+				 	
 				});	
 			 }, 1);
 		};
@@ -169,15 +159,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	
 	
-	var computeGraphElements = function(containerNodes){
+	var computeGraphElements = function(sampleNodes){
 		//nodes
 		var graphElements = [];
-		containerNodes = $filter('orderBy')(containerNodes,'indexFromCurrent');
-		for(var key in containerNodes){
-			var currentNode = containerNodes[key];
-			var currentContainer = containerNodes[key].container;
-			currentContainer.id = currentContainer.code;
-			currentContainer.label = currentContainer.code;
+		sampleNodes = $filter('orderBy')(sampleNodes,'indexFromCurrent');
+		for(var key in sampleNodes){
+			var currentNode = sampleNodes[key];
+			var currentSample = sampleNodes[key].sample;
+			currentSample.id = currentSample.code;
+			currentSample.label = currentSample.code;
 			var faveColor = '#6FB1FC';
 			if(currentNode.indexFromCurrent < 0){
 				faveColor = '#F5A45D'
@@ -186,35 +176,35 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				faveColor = '#F5A45D'
 			}
 			
-			currentContainer.faveColor = faveColor;
-			currentContainer.faveShape="ellipse";
-			if(currentContainer.contents.length > 1){
-				currentContainer.faveShape="octagon";
-			}
+			currentSample.faveColor = faveColor;
+			currentSample.faveShape="ellipse";
+		/*	if(currentSample.contents.length > 1){
+				currentSample.faveShape="octagon"; //!!!!GS ne pas modifier la forme de la bulle!!!
+			}*/
 			
-			graphElements.push({"data":currentContainer,"group":"nodes"});
+			graphElements.push({"data":currentSample,"group":"nodes"});
 			
 		}
 		
 		//edges
 		
-		for(var key in containerNodes){
+		for(var key in sampleNodes){
 			
-			var currentNode = containerNodes[key];
-			var currentContainer = containerNodes[key].container;
+			var currentNode = sampleNodes[key];
+			var currentSample = sampleNodes[key].sample;
 			angular.forEach(currentNode.childNodes, function(childNode){
-				var childContainer = childNode.container;
-				var currentContainer = this.container;
+				var childSample = childNode.sample;
+				var currentSample = this.sample;
 				var edge = {
-						"id":currentContainer.code+"-"+childContainer.code,
-						"source":currentContainer.code,
-						"target":childContainer.code
+						"id":currentSample.code+"-"+childSample.code,
+						"source":currentSample.code,
+						"target":childSample.code
 						
 				}
 				
-				if(childContainer.treeOfLife && childContainer.treeOfLife.from){
-					edge.label=$filter('codes')(childContainer.treeOfLife.from.experimentTypeCode,'type');
-					edge.fromExperimentCode = childContainer.treeOfLife.from.experimentCode;
+				if(childSample.life && childSample.life.from){
+					edge.label=$filter('codes')(childSample.life.from.experimentTypeCode,'type');
+					edge.fromExperimentCode = childSample.life.from.experimentCode;
 				}
 				
 				var faveColor = '#6FB1FC';
@@ -235,78 +225,80 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	
 	
 	
-	var initTreeOfLife = function(currentContainer){
-		//extract parent container codes
-		var codes = {parentContainerCodes : []};	
-		if(!angular.isUndefined(currentContainer.treeOfLife) && (currentContainer.treeOfLife !== null)){
-			angular.forEach(currentContainer.treeOfLife.paths, function(path){
-				path = path.substring(1);
-				this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
-			}, codes);
+	var initTreeOfLife = function(currentSample){
+		//extract parent sample codes
+		var codes = {parentSampleCodes : []};	//For the moment just 1 parent
+		if(!angular.isUndefined(currentSample.life) && (currentSample.life !== null)){
+				
+		codes.parentSampleCodes = codes.parentSampleCodes.concat(currentSample.life.path.split(",")); //path commence par 1 ,
 		}
 
 		var promises = [];
-		if(codes.parentContainerCodes.length > 0){ // Case no paths
-			var nbElementByBatch = Math.ceil(codes.parentContainerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+		if(codes.parentSampleCodes.length > 0){ // Case no paths
+			var nbElementByBatch = Math.ceil(codes.parentSampleCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
             var queries = [];
-            for (var i = 0; i < 6 && codes.parentContainerCodes.length > 0; i++) {
-                var subContainerCodes = codes.parentContainerCodes.splice(0, nbElementByBatch);
-                promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:subContainerCodes}}));                
+            for (var i = 0; i < 6 && codes.parentSampleCodes.length > 0; i++) {
+            	if (codes.parentSampleCodes[0] == ""){
+            		codes.parentSampleCodes.splice(0, 1); 
+            	}else{
+            		var subSampleCode = codes.parentSampleCodes.splice(0, nbElementByBatch); 
+            		promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url, {params : {codes:subSampleCode}}));               		
+            	}
             }			
 		}
-		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
+		promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url, {params : {codeRegex:currentSample.code}}));
 		
 		
 		$q.all(promises).then(function(results){
-			containerNodes = {};
-			var newNode = function(container){
-				return  {container:container, parentNodes:[], childNodes:[],indexFromCurrent:undefined};
+			sampleNodes = {};
+			var newNode = function(sample){
+				return  {sample:sample, parentNode:undefined, childNodes:[],indexFromCurrent:undefined};
 			};
 			
-			containerNodes[$scope.container.code] = newNode($scope.container);
+			sampleNodes[$scope.sample.code] = newNode($scope.sample);
 
 
 			angular.forEach(results, function(result){
-				angular.forEach(result.data, function(container){
-					this[container.code] = newNode(container);
+				angular.forEach(result.data, function(sample){
+					this[sample.code] = newNode(sample);
 				}, this)
-			}, containerNodes)
+			}, sampleNodes)
 
 			
-			var updateParentNodes = function(currentContainerNode, containerNodes){
-				//only if parents
-				if(currentContainerNode.parentNodes.length === 0){
+			var updateParentNodes = function(currentSampleNode, sampleNodes){
+				//only if parent
+				if(! currentSampleNode.parentNode){
 					
-					if(currentContainerNode.container.treeOfLife){
-						var parentContainers = currentContainerNode.container.treeOfLife.from.containers;
+					if(currentSampleNode.sample.life){
+						var parentSample = currentSampleNode.sample.life.from.sampleCode;
 						
-						angular.forEach(parentContainers, function(parentContainer){
+				
 						
-							if(containerNodes[parentContainer.code]){
-								var parentContainerNode = containerNodes[parentContainer.code];
-								this.parentNodes.push(parentContainerNode);
-								updateParentNodes(parentContainerNode, containerNodes);								
+							if(sampleNodes[parentSample]){
+								var parentSampleNode = sampleNodes[parentSample];
+								currentSampleNode.parentNode=parentSampleNode;							
+								updateParentNodes(parentSampleNode, sampleNodes);								
 							}else{
 								//when display a branch of a pool
-								//throw 'error not found node for '+parentContainer.code;
+								//throw 'error not found node for '+parentSample.code;
 							}
 							
-						}, currentContainerNode)
+						
 					}
 				}			
 			};
 						
-			for(var key in containerNodes){
-				updateParentNodes(containerNodes[key], containerNodes);							
+			for(var key in sampleNodes){
+				updateParentNodes(sampleNodes[key], sampleNodes);							
 			}
 			
 			//update child
-			for(var key in containerNodes){
-				var currentNode = containerNodes[key];
-				angular.forEach(currentNode.parentNodes, function(parentNode){
-					parentNode.childNodes.push(this);
-				},currentNode)										
-			}
+		for(var key in sampleNodes){
+				var currentNode = sampleNodes[key];
+				if (currentNode.parentNode){
+					currentNode.parentNode.childNodes.push(currentNode);
+				}		
+			} 
 			
 			
 			var updateIndexForParents = function(parentNodes, childIndex){
@@ -316,21 +308,21 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				}, childIndex);
 			};
 			
-			var updateIndexForChildren = function(childNodes, parentIndex){
+		var updateIndexForChildren = function(childNodes, parentIndex){
 				angular.forEach(childNodes, function(childNode){
 					childNode.indexFromCurrent = this + 1 ;
 					updateIndexForChildren(childNode.childNodes, childNode.indexFromCurrent);
 				}, parentIndex);
-			};
+			}; 
 			
-			//update index from current container
-			var currentContainerNode = containerNodes[$scope.container.code];			
-			currentContainerNode.indexFromCurrent = 0;			
-			updateIndexForParents(currentContainerNode.parentNodes, currentContainerNode.indexFromCurrent);
-			updateIndexForChildren(currentContainerNode.childNodes, currentContainerNode.indexFromCurrent);
+			//update index from current sample
+			var currentSampleNode = sampleNodes[$scope.sample.code];			
+			currentSampleNode.indexFromCurrent = 0;			
+			updateIndexForParents(currentSampleNode.parentNodes, currentSampleNode.indexFromCurrent);
+		updateIndexForChildren(currentSampleNode.childNodes, currentSampleNode.indexFromCurrent);
 			
 			
-			var graphElements =  computeGraphElements(containerNodes);
+			var graphElements =  computeGraphElements(sampleNodes);
 			initCytoscape(graphElements);
 		});
 		
