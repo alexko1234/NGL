@@ -47,6 +47,7 @@ H:\birdsSpec.xsd">
 			<KeyValueElement key="-F" value="&quot;SUBMISSION=@%xmlSubmission%&quot;" parameterName="xmlSubmission"/>
 			<LineElement line="-k" parameterName="optK" />
 			<LineElement line="release_%submissionCode%_%submissionDate%.txt" parameterName="listAC"/>
+			<LineElement line="cd %submissionDirectory%" parameterName="OptionCD"/>
 			
 		</ParametersSpecification>
 		<InputsSpecification>
