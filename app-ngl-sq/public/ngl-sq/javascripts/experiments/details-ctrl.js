@@ -572,8 +572,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				var wells = udt.displayResult;
 				for(var j = 0; j < wells.length; j++){
 					if(wells[j].data.inputContainerUsed.categoryCode ==='well'){
-						wells[j].data.outputContainerUsed.locationOnContainerSupport.line = wells[j].data.inputContainerUsed.locationOnContainerSupport.line
-						wells[j].data.outputContainerUsed.locationOnContainerSupport.column = wells[j].data.inputContainerUsed.locationOnContainerSupport.column
+						wells[j].data.outputContainerUsed.locationOnContainerSupport.line = wells[j].data.inputContainerUsed.locationOnContainerSupport.line;
+						wells[j].data.outputContainerUsed.locationOnContainerSupport.column = wells[j].data.inputContainerUsed.locationOnContainerSupport.column;
 					}
 				}
 				
@@ -1038,7 +1038,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.kitCatalogIsActive = function() {
 		var liste = lists.getKitCatalogs();
 		if (listKitCatalogsActive == undefined && liste!=undefined) {
-			listKitCatalogsActive = $filter('filter')(liste, {active:true})
+			listKitCatalogsActive = $filter('filter')(liste, {active:true});
 		}
 		return listKitCatalogsActive;
 	}
