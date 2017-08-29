@@ -292,8 +292,6 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				}
 			}
 		}
-		
-		//ne plus faire...datatable.setData(dataMain);
 	}
 	
 	// ajout showButton + suppression start = false;
@@ -355,9 +353,21 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	atmService.defaultOutputUnit = {
 			volume : "µL"
 	};
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	$scope.atmService = atmService;
+	// 28/08/2017 OK countInputSupportCodes
+	if ( $scope.countInputSupportCodes() > 1) {
+		console.log(" > 1 support en entree");
+		
+		$scope.messages.clear();
+		$scope.messages.clazz = "alert alert-danger";
+		$scope.messages.text = Messages("experiments.input.error.only-1-plate");
+		$scope.messages.showDetails = false;
+		$scope.messages.open();
+	} else {
+		$scope.atmService = atmService;
+	}
 	
 	// Calculs 
 	$scope.updatePropertyFromUDT = function(value, col){

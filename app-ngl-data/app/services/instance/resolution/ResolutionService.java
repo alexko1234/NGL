@@ -859,7 +859,7 @@ public class ResolutionService {
 	public static void createProcessResolutionCNG(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 
-		// pour l'instant les 2 premieres ne sont pas demandees...
+		// pour l'instant les 2 premières ne sont pas demandées...
 		//l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
 		//l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
 		
@@ -868,6 +868,9 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("problème profil","stop-pb-profil", resolutionCategories.get("Default"), (short) 5));
 		l.add(InstanceFactory.newResolution("problème technique","stop-pb-technique", resolutionCategories.get("Default"), (short) 6));
 		l.add(InstanceFactory.newResolution("contamination","stop-contamination", resolutionCategories.get("Default"), (short) 7));
+		
+		// 29/08/2017 ajout. nom et codes exacts a définir....
+		l.add(InstanceFactory.newResolution("à stocker","stop-stock", resolutionCategories.get("Default"), (short) 8));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";

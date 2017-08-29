@@ -23,14 +23,6 @@
 			<input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" />
 			
 		</div>	
-		<!--  TEST AVEC REMISE BOUTON mais sans parametre OK -->
-		<!--  TEST AVEC SUPPRESSION BOUTTON 
-		 <div class="col-md-1 col-lg-1" ng-show="nbOutputSupport > 0">
-		    <button  class="btn btn-default btn-lg center-block" ng-click="generateATM()" >
-					<i class="fa fa-sign-out fa-2x"></i>
-		    </button>				
-	    </div>	
-        -->
 	</div>
 	<!--------------------------------------------------------------->
 	<div class="row" ng-if="!mainService.isEditMode()">
@@ -54,7 +46,5 @@
 			<div>{{ storageCodes[$index] }}</div>
 			
 		</div>
-		
-	
 	</div>
 </div>

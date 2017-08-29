@@ -216,7 +216,6 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 		// rien  ????
 	});
 	
-	
 	/*Init*/
 	var $commonATM = commonAtomicTransfertMethod($scope);
 	

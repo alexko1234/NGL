@@ -443,10 +443,18 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
-	// 01/08/2017 TEST checkOneSupportInput
-	if ( checkOneSupportInput() ){
-	  $scope.atmService = atmService;
-    }
+	// 28/08/2017 OK countInputSupportCodes
+	if ( $scope.countInputSupportCodes() > 1) {
+		console.log(" > 1 support en entree");
+		
+		$scope.messages.clear();
+		$scope.messages.clazz = "alert alert-danger";
+		$scope.messages.text = Messages("experiments.input.error.only-1-plate");
+		$scope.messages.showDetails = false;
+		$scope.messages.open();
+	} else {
+		$scope.atmService = atmService;
+	}	
 	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 	
