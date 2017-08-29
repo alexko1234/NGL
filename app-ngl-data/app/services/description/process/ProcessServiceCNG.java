@@ -730,9 +730,9 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
         values.add(DescriptionFactory.newValue("CS","CS - Agilent : V5+UTR"));
         values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6"));
         values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR"));
-        values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic"));
-        values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome"));
-        values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome"));   
+        //values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic"));
+        //values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome"));
+        //values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome"));   
          
         return values;
 	}
@@ -747,7 +747,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));
 		 values.add(DescriptionFactory.newValue("V6",    "V6"));
 		 values.add(DescriptionFactory.newValue("V6+UTR","V6+UTR")); 
-		 /// values.add(DescriptionFactory.newValue("custom","custom"));  ???
+		 values.add(DescriptionFactory.newValue("custom","custom"));
 	
     	return values;
 	}
