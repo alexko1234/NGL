@@ -73,7 +73,7 @@ public class FileAcServices  {
 		}
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		if (submission == null){
-			throw new SraException("soumission "+submission.code+" impossible à recuperer dans base");
+			throw new SraException(" soumission " + submission.code + " impossible à recuperer dans base");
 		}
 		if (! ebiFileAc.exists()){
 			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ ebiFileAc.getAbsolutePath());
@@ -109,10 +109,12 @@ public class FileAcServices  {
 
 		
 		Map<String, String> mapSamples = new HashMap<String, String>(); 
+		Map<String, String> mapExtIdSamples = new HashMap<String, String>(); 
 		Map<String, String> mapExperiments = new HashMap<String, String>(); 
 		Map<String, String> mapRuns = new HashMap<String, String>(); 
 		String submissionAc = null;
 		String studyAc = null;
+		String studyExtId = null;
 		String message = null;
 		String ebiSubmissionCode = null;
 		String ebiStudyCode = null;
@@ -183,14 +185,21 @@ public class FileAcServices  {
 					
 					System.out.println("alias : " + alias);
 					System.out.println("accession : " + accession);
+					
 					if(elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
 						ebiSubmissionCode = elt.getAttribute("alias");	
 						submissionAc = elt.getAttribute("accession");
 					} else if(elt.getTagName().equalsIgnoreCase("STUDY")) {
 						ebiStudyCode = elt.getAttribute("alias");	
 						studyAc = elt.getAttribute("accession");
+						final Element eltExtId = (Element) elt.getElementsByTagName("EXT_ID").item(0);
+						studyExtId = eltExtId.getAttribute("accession");
+						System.out.println("study_ext_id: " + studyExtId);
 				    } else if(elt.getTagName().equalsIgnoreCase("SAMPLE")) {
 				    	mapSamples.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
+				    	final Element eltExtId = (Element) elt.getElementsByTagName("EXT_ID").item(0);
+						//String sampleExtId = eltExtId.getAttribute("accession");
+						mapExtIdSamples.put(elt.getAttribute("alias"), eltExtId.getAttribute("accession"));	
 					} else if(elt.getTagName().equalsIgnoreCase("EXPERIMENT")) {
 				    	mapExperiments.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
 					} else if(elt.getTagName().equalsIgnoreCase("RUN")) {
@@ -315,15 +324,18 @@ public class FileAcServices  {
 			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", ebiStudyCode).notExists("accession"),
-					DBUpdate.set("accession", studyAc).set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));
+					DBUpdate.set("accession", studyAc).set("externalId", studyExtId).set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));
 		}
+		
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
 			String ac = entry.getValue();
+			String ext_id_ac = mapExtIdSamples.get(code);
 			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 		
+					DBUpdate.set("accession", ac).set("externalId", ext_id_ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 		
+			
 		}
 		for(Entry<String, String> entry : mapExperiments.entrySet()) {
 			String code = entry.getKey();

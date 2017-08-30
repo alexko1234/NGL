@@ -115,7 +115,7 @@ public class XmlServices {
 
 			chaine = chaine + "  <STUDY alias=\""+ studyCode + "\" ";
 			if (StringUtils.isNotBlank(study.accession)) {	
-				chaine = chaine + "accession=\"" + study.accession + "\" ";
+				chaine = chaine + " accession=\"" + study.accession + "\" ";
 			}
 				
 			chaine = chaine + ">\n";
@@ -146,6 +146,7 @@ public class XmlServices {
 		} // end if		
 	} // end writeStudyXml
 	   
+	
 	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
 		System.out.println("sample = "  + submission.sampleCodes.get(0));
 		if (submission == null) {
@@ -175,7 +176,7 @@ public class XmlServices {
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 				
 				if (StringUtils.isNotBlank(sample.accession)) {
-					chaine = chaine + "accession=\"" + sample.accession + "\"";
+					chaine = chaine + " accession=\"" + sample.accession + "\"";
 				}
 				chaine = chaine + ">\n";
 				if (StringUtils.isNotBlank(sample.title)) {
@@ -204,6 +205,10 @@ public class XmlServices {
 			submission.xmlSamples = outputFile.getName();
 		}
 	}
+	
+	
+	
+	
 	public static void writeExperimentXml (Submission submission, File outputFile) throws IOException, SraException {
 		if (submission == null) {
 			return;
@@ -228,7 +233,7 @@ public class XmlServices {
 				}
 				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + VariableSRA.centerName + "\"";
 				if (StringUtils.isNotBlank(experiment.accession)) {
-					chaine = chaine + "accession=\"" + experiment.accession + "\" ";	
+					chaine = chaine + " accession=\"" + experiment.accession + "\" ";	
 				}
 				chaine = chaine + ">\n";
 				// Les champs title et libraryName sont considerés comme obligatoires
@@ -269,7 +274,11 @@ public class XmlServices {
 				chaine = chaine + " />\n";
 
 				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
-				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+				if (StringUtils.isBlank(experiment.libraryConstructionProtocol)){
+					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+				} else {
+					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+experiment.libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+				}
 				chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
 				if (! "OXFORD_NANOPORE".equalsIgnoreCase(experiment.typePlatform)) {
 					chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
@@ -333,7 +342,7 @@ public class XmlServices {
 				System.out.println("Ecriture du run " + runCode);
 				chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
 				if (StringUtils.isNotBlank(run.accession)) {
-					chaine = chaine + "accession=\"" + run.accession + "\" ";
+					chaine = chaine + " accession=\"" + run.accession + "\" ";
 				}
 				
 				//Format date

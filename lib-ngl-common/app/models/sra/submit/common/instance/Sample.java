@@ -23,6 +23,7 @@ public class Sample extends AbstractSample {
 	public String description;      
 	public String clone;           
 	//public String accession;       // numeros d'accession attribué par ebi champs mis dans AbstractSample
+ 	public String externalId = null;
 	public Date releaseDate;         // required, date de mise à disposition en public par l'EBI
 	//public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" mis dans AbstractSample
 	//public TraceInformation traceInformation = new TraceInformation(); champs mis dans AbstractSample

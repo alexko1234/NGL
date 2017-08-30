@@ -26,7 +26,10 @@ import mail.MailServiceException;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
 import org.junit.Assert;
@@ -184,7 +187,7 @@ public class ToolsTest extends AbstractTestsSRA {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testRetourRelease()throws IOException, SraException, MailServiceException {
 		String user = "william";
 		ContextValidation ctxVal = new ContextValidation(user);
@@ -355,5 +358,182 @@ public class ToolsTest extends AbstractTestsSRA {
 	}	
 	
 	
+	//@Test
+	public void debug_emose() throws IOException, SraException {
+		Submission submission1 = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_CAA_28HF4VOO4")));
+		Submission submission2 = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BZZ_CAN_28HD5LO4V")));
+		Submission submission3 = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BZZ_CAN_28HD4ZIGG")));
+		Submission submission4 = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BZZ_CAN_28HD59RR8")));
+		Submission submission5 = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
+				Submission.class, DBQuery.and(DBQuery.is("code", "CNS_BZZ_CAN_28HD5FO6C")));
+		System.out.println ("taille sub 1 = " +submission1.experimentCodes.size());			
+		System.out.println ("taille sub 2 = " +submission2.experimentCodes.size());			
+		System.out.println ("taille sub 3 = " +submission3.experimentCodes.size());			
+		System.out.println ("taille sub 4 = " +submission4.experimentCodes.size());			
+		System.out.println ("taille sub 5 = " +submission5.experimentCodes.size());			
+
+		XmlServices xmlServices = new XmlServices();
+		
+		int taille =  submission1.experimentCodes.size() + submission2.experimentCodes.size()+ submission3.experimentCodes.size() + submission4.experimentCodes.size()+submission5.experimentCodes.size();
+		System.out.println ("taille totale = " + taille);
+		
+		List<String> experimentCodes = new ArrayList<String>();
+		
+		for (String expCode : submission1.experimentCodes) {
+			experimentCodes.add(expCode);
+		}
+		for (String expCode : submission2.experimentCodes) {
+			experimentCodes.add(expCode);
+		}
+		for (String expCode : submission3.experimentCodes) {
+			experimentCodes.add(expCode);
+		}
+		for (String expCode : submission4.experimentCodes) {
+			experimentCodes.add(expCode);
+		}
+		for (String expCode : submission5.experimentCodes) {
+			experimentCodes.add(expCode);
+		}
+		
+		String outputFile = "/env/cns/home/sgas/juliePoulain/update_emose_experiment.xml";
+		//experimentCodes = new ArrayList<String>();
+		// Ecriture de experiment.xml :reprise du code de XmlServices ici car on ne veut pas sauver la soumission
+		if (! experimentCodes.isEmpty()) {	
+			// ouvrir fichier en ecriture
+			System.out.println("Creation du fichier " + outputFile);
+			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
+			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+			chaine = chaine + "<EXPERIMENT_SET>\n";
+			
+			for (String experimentCode : experimentCodes){
+				// Recuperer objet experiment dans la base :
+				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
+				//output_buffer.write("//\n");
+				System.out.println("Ecriture de experiment " + experimentCode);
+				if (experiment == null){
+					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
+				}
+				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + VariableSRA.centerName + "\"";
+				if (StringUtils.isNotBlank(experiment.accession)) {
+					chaine = chaine + " accession=\"" + experiment.accession + "\" ";	
+				}
+				chaine = chaine + ">\n";
+				// Les champs title et libraryName sont considerés comme obligatoires
+				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
+				chaine = chaine + "    <STUDY_REF ";
+				//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
+				if (StringUtils.isNotBlank(experiment.studyCode)) { 
+					chaine = chaine + " refname=\"" + experiment.studyCode +"\"";
+				}
+				if (StringUtils.isNotBlank(experiment.studyAccession)){
+					chaine = chaine + " accession=\"" + experiment.studyAccession + "\"";
+				}
+				chaine = chaine + "/>\n"; 
+				
+				chaine = chaine + "      <DESIGN>\n";
+				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
+				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
+				//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
+				if (StringUtils.isNotBlank(experiment.sampleCode)){
+					chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
+				}
+				if (StringUtils.isNotBlank(experiment.sampleAccession)){
+					chaine = chaine + " accession=\""+experiment.sampleAccession + "\"";
+				}
+				chaine = chaine + "/>\n";
+				
+				chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
+				chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
+				chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy.get(experiment.libraryStrategy.toLowerCase()) + "</LIBRARY_STRATEGY>\n";
+				chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource.get(experiment.librarySource.toLowerCase()) + "</LIBRARY_SOURCE>\n";
+				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection.toLowerCase()) + "</LIBRARY_SELECTION>\n";
+				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
+				
+				chaine = chaine + "              <"+ VariableSRA.mapLibraryLayout.get(experiment.libraryLayout.toLowerCase());	
+				if("PAIRED".equalsIgnoreCase(experiment.libraryLayout)) {
+					chaine = chaine + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\"";
+				}
+				chaine = chaine + " />\n";
+
+				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
+				if (StringUtils.isBlank(experiment.libraryConstructionProtocol)){
+					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+				} else {
+					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+experiment.libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+
+				}
+					chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
+				if (! "OXFORD_NANOPORE".equalsIgnoreCase(experiment.typePlatform)) {
+					chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
+					chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
+					chaine = chaine + "              <SPOT_LENGTH>"+experiment.spotLength+"</SPOT_LENGTH>\n";
+					for (ReadSpec readSpec: experiment.readSpecs) {
+						chaine = chaine + "              <READ_SPEC>\n";
+						chaine = chaine + "                <READ_INDEX>"+readSpec.readIndex+"</READ_INDEX>\n";
+						chaine = chaine + "                <READ_LABEL>"+readSpec.readLabel+"</READ_LABEL>\n";
+						chaine = chaine + "                <READ_CLASS>"+readSpec.readClass+"</READ_CLASS>\n";
+						chaine = chaine + "                <READ_TYPE>"+readSpec.readType+"</READ_TYPE>\n";
+						chaine = chaine + "                <BASE_COORD>" + readSpec.baseCoord + "</BASE_COORD>\n";
+						chaine = chaine + "              </READ_SPEC>\n";
+					}
+					chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
+					chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
+				}
+				chaine = chaine + "      </DESIGN>\n";
+				chaine = chaine + "      <PLATFORM>\n";
+				chaine = chaine + "        <" + VariableSRA.mapTypePlatform.get(experiment.typePlatform.toLowerCase()) + ">\n";
+				chaine = chaine + "          <INSTRUMENT_MODEL>" + VariableSRA.mapInstrumentModel.get(experiment.instrumentModel.toLowerCase()) + "</INSTRUMENT_MODEL>\n";
+				chaine = chaine + "        </" + VariableSRA.mapTypePlatform.get(experiment.typePlatform.toLowerCase()) + ">\n";
+				chaine = chaine + "      </PLATFORM>\n";
+				chaine = chaine + "  </EXPERIMENT>\n";
+			}
+			chaine = chaine + "</EXPERIMENT_SET>\n";
+			output_buffer.write(chaine);
+			output_buffer.close();
+		}
+		
+		
+		
+		//xmlServices.writeAllXml(submission.code);
+		
+	}
 	
+	//@Test
+	public void updateExtId() throws IOException, SraException {
+		List<String> submissionCodes = new ArrayList<String>();
+		submissionCodes.add("CNS_ART_254F1QHOV");
+		submissionCodes.add("CNS_BCU_25U9550HF");
+		submissionCodes.add("CNS_BCU_BLK_266H23OI3");
+		submissionCodes.add("CNS_BDQ_BGX_BGU_27BB18OFB");
+		submissionCodes.add("CNS_BHC_25CB4YW76");
+		submissionCodes.add("CNS_BIL_274F26OJP");
+		submissionCodes.add("CNS_BTR_26JA4HWSC");
+		submissionCodes.add("CNS_BYQ_AWF_24RF4HJFI");
+		submissionCodes.add("CNS_BZZ_CAN_28HD4ZIGG");
+		submissionCodes.add("CNS_BZZ_CAN_28HD59RR8");
+		submissionCodes.add("CNS_BZZ_CAN_28HD5FO6C");
+		submissionCodes.add("CNS_BZZ_CAN_28HD5LO4V");
+		submissionCodes.add("CNS_CAA_28HF4VOO4");
+		for (String code : submissionCodes) {
+			System.out.println("submissionCode = "+code);
+			
+			File fileEbi = new File("/env/cns/home/sgas/debug_extId/list_AC_"+ code +".txt");
+			String user = "william";
+			ContextValidation ctxVal = new ContextValidation(user);
+			/*try {
+				Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+			} catch (MailServiceException e) {
+				// TODO Auto-generated catch block
+				ctxVal.displayErrors(Logger.of("SRA"));	
+				e.printStackTrace();
+			} */
+			ctxVal.displayErrors(Logger.of("SRA"));	
+			
+		}
+		
+	}
 }

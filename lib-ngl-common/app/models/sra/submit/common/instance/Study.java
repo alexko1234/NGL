@@ -29,6 +29,7 @@ public class Study extends AbstractStudy {
 	public String existingStudyType;   // required et constraint 
 	public Date firstSubmissionDate;   // date de premiere soumission du study.
  	public String accession = null;      // numeros d'accession attribué par ebi */
+ 	public String externalId = null;
   	public Date releaseDate;             // required, date de mise à disposition en public par l'EBI
   	public String centerName = VariableSRA.centerName;        // required pour nos stats valeur fixee à GSC */
     public String centerProjectName;      // required pour nos stats valeur fixée à projectCode
