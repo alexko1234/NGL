@@ -21,19 +21,7 @@
 				<div class="form-control-static" ng-bind="sample.categoryCode|codes:'sample_cat'" />
 			}
 			@columnLabelValue(Messages("samples.table.projectCodes")){	
-			<!-- <div class="form-control-static"  list-resize="sample.projectCodes|unique" " list-resize-min-size='10' />
-		 -->
-		<!-- 	<div ng-if="sample.projectCodes !== null"   ng-repeat="project in sample.projectCodes" >
-				<table> 
-					<tr >
-						<td  ng-bind="project"/>
-						<td>  (</td>
-		 				<td  ng-bind="project|codes:'project'" />
-		 				<td>)</td>
-					</tr>
-				
-				</table> 	
-			</div> -->
+			
 			<ul  ng-if="sample.projectCodes !== null"   ng-repeat="project in sample.projectCodes|unique">
 			<!-- 		<li ng-bind='project.concat("("+project+")")'/>
 				<li ng-bind='project.concat("("+project|codes:project+")")' />
@@ -41,10 +29,8 @@
 				<li >{{project}} ({{project|codes:'project'}})
 				</>
 				</li>
-			</ul>
-				
+			</ul>				
 			}
-			
 			@columnLabelValue(Messages("samples.table.taxonCode")){	
 				<div class="form-control-static" ng-bind='sample.taxonCode' />
 			}			
