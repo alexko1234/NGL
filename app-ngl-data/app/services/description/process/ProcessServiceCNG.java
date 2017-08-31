@@ -307,9 +307,11 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("pcr-and-purification",2),
 						getPET("capture",3),
 						getPET("pcr-and-indexing",4), 
-						getPET("denat-dil-lib",5),
-				    	getPET("prepa-flowcell",6),
-				    	getPET("illumina-depot",7)),   
+						getPET("lib-normalization",5),
+						getPET("normalization-and-pooling",5),   // 2 de meme niveau
+						getPET("denat-dil-lib",6),
+				    	getPET("prepa-flowcell",7),
+				    	getPET("illumina-depot",8)),   
 				getExperimentTypes("fragmentation").get(0),                   //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
 				getExperimentTypes("ext-to-capture-prep-process-fc").get(0),  //void  experiment type
@@ -343,10 +345,12 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("sample-prep",-1), 
 						getPET("pcr-and-purification",0),
 						getPET("capture",1),
-						getPET("pcr-and-indexing",2), 	
-						getPET("denat-dil-lib",3),
-				    	getPET("prepa-flowcell",4),
-				    	getPET("illumina-depot",5)),  
+						getPET("pcr-and-indexing",2),
+						getPET("lib-normalization",3),
+						getPET("normalization-and-pooling",3),   // 2 de meme niveau
+						getPET("denat-dil-lib",4),
+				    	getPET("prepa-flowcell",5),
+				    	getPET("illumina-depot",6)),  
 				getExperimentTypes("pcr-and-purification").get(0),				          //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                              //last  experiment type
 				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc").get(0),  //void  experiment type
@@ -379,9 +383,11 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("pcr-and-purification",-1),
 						getPET("capture",0),
 						getPET("pcr-and-indexing",1),
-						getPET("denat-dil-lib",2),
-						getPET("prepa-fc-ordered",3), 
-						getPET("illumina-depot",4)),
+						getPET("lib-normalization",2),
+						getPET("normalization-and-pooling",2),   // 2 de meme niveau
+					    getPET("denat-dil-lib",3),
+						getPET("prepa-fc",4), 
+						getPET("illumina-depot",5)),
 				getExperimentTypes("capture").get(0),                        //first experiment type    
 				getExperimentTypes("pcr-and-indexing").get(0),               //last  experiment type
 				getExperimentTypes("ext-to-capture-pcr-indexing-fc").get(0), //void  experiment type
@@ -412,8 +418,10 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("ext-to-pcr-indexing-process-fc",-1), //ordered list of experiment type in process type
 						getPET("capture",-1),
 						getPET("pcr-and-indexing",0), 
-						getPET("denat-dil-lib",1),
-						getPET("prepa-fc-ordered",3), 
+						getPET("lib-normalization",1),
+						getPET("normalization-and-pooling",1),   // 2 de meme niveau
+						getPET("denat-dil-lib",2),
+						getPET("prepa-fc",3), 
 						getPET("illumina-depot",4)),
 				getExperimentTypes("pcr-and-indexing").get(0),                //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type
