@@ -327,8 +327,9 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Fragmentation","fragmentation",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsFragmentation(),
-					getInstrumentUsedTypes("covaris-e220-and-sciclone-ngsx",
-							               "covaris-le220-and-sciclone-ngsx"),
+					getInstrumentUsedTypes("covaris-e220-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx",
+							               "covaris-e220","covaris-le220"),                                 // ajoutés 29/08/2017
+							               
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -1483,10 +1484,12 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				MeasureUnit.find.findByCode("ng"),
 				"single",11,true,null,null));
 		
-		// Liste; valeur par defaut= celle qui se trouve dans processus dans expectedBaits . PAS POSSIBLE!!!	
-		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
+		// Liste; valeur par defaut= celle qui se trouve dans processus dans expectedBaits ?. PAS POSSIBLE!!!
+		// 31/08/2017 erreur de spec, mettre sur ContainerOut 
+		//            il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) ??????
+		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
 				null, null, null,
-				"single",12,true,null,null));
+				"single",12,true,"F",null));
 		
 		//OuputContainer 
 			

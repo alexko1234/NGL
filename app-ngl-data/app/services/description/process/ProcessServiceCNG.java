@@ -42,10 +42,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. Illumina", "library"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. Nanopore", "nanopore-library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. pr séquençage Illumina", "library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. pr séquençage Nanopore", "nanopore-library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Séquençage", "sequencing"));
 		// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
 		//  attention bug connu: manque la puce "terminer" dans le dispatch final
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));
@@ -277,7 +277,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	    // 10/07/2017  NOUVEAU CHANGEMENT: 8 process !!!!	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture (4000/X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000/X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
@@ -296,8 +296,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				getExperimentTypes("ext-to-capture-prep-process-fc-ord").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture (2000/2500/Miseq/NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq) ?? plus Miseq ??
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2000/2500/NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
@@ -758,10 +758,10 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		 List<Value> values = new ArrayList<Value>();
 		 
 		 // LISTE exacte à nous donner ! sureSelect XT 3µg ; XT 200ng ; XT2 1µg, XT2 100ng
-		 values.add(DescriptionFactory.newValue("sureselect-xt-3µg",   "sureSelect XT 3µg"));
-		 values.add(DescriptionFactory.newValue("sureselect-xt-200ng", "sureSelect XT 200ng"));
-		 values.add(DescriptionFactory.newValue("sureselect-xt2-1µg",  "sureSelect XT2 1µg"));
-		 values.add(DescriptionFactory.newValue("sureselect-xt2-100ng","sureSelect XT2 100ng"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt-3µg",   "SureSelect XT 3µg"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt-200ng", "SureSelect XT 200ng"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt2-1µg",  "SureSelect XT2 1µg"));
+		 values.add(DescriptionFactory.newValue("sureselect-xt2-100ng","SureSelect XT2 100ng"));
 		 
 	    return values;
 	}

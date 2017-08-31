@@ -1,7 +1,6 @@
 @()
 <div class="col-md-12 col-lg-12" ng-controller="SamplePrepCtrl">
-	<div class="row"  ng-if="mainService.isEditMode()">
-
+	<div class="row" ng-if="mainService.isEditMode()">
 		<div class="col-md-2 col-lg-2">
 		   <label for="InputSupport" class="control-label">@Messages("containers.table.support.in.code")</label>
 		   <div> {{inputSupportCode}}</div>
@@ -15,21 +14,19 @@
 		</div> 	
 		
 		<div class="col-md-2 col-lg-2" ng-show="nbOutputSupport > 0" ng-repeat="code in outputContainerSupportCodes track by $index">
-		    <!-- probleme  si utilisation de (AT)Messages collé avec {{ }} -->
-			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")-{{$index+1}}</label>
+			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")&nbsp;{{$index+1}}</label>
 			<input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" />
 			
-			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")-{{$index+1}}</label>
+			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")&nbsp;{{$index+1}}</label>
 			<input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" />
 			
-		</div>	
-	</div>
+		</div>	 
+	 </div>
 	<!--------------------------------------------------------------->
-	<div class="row" ng-if="!mainService.isEditMode()">
-	
+	<div class="row margin-bottom-7" ng-if="!mainService.isEditMode()">
 		<div class="col-md-2 col-lg-2">
 		   <label for="InputSupport" class="control-label">@Messages("containers.table.support.in.code")</label>
-		   <div> {{inputSupportCode}}</div>
+		   <div>{{inputSupportCode}}</div>
 		</div>
 		
 		<div class="col-md-2 col-lg-2">
@@ -38,13 +35,51 @@
 		</div> 
 		
 		<div class="col-md-2 col-lg-2"  ng-show="nbOutputSupport > 0"  ng-repeat="code in outputContainerSupportCodes track by $index">
-		    <!-- probleme  si utilisation de (AT)Messages collé avec {{ }} -->
-			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")-{{$index+1}}</label>
+			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")&nbsp;{{$index+1}}</label>
 			<div>{{ outputContainerSupportCodes[$index] }}</div>
 			  
-			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")-{{$index+1}}</label>
+			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")&nbsp;{{$index+1}}</label>
 			<div>{{ storageCodes[$index] }}</div>
-			
 		</div>
-	</div>
+	 	<div class="col-md-12 col-lg-12">
+		   <ul class="nav nav-tabs margin-bottom-5" role="tablist">
+		     <li class="active"><a href="" role="tab" data-target="#inputSupport"               data-toggle="tab" >@Messages("containers.table.support.in.code") : {{inputSupportCode}}</a></li>
+  	         <li ng-repeat="code in outputContainerSupportCodes track by $index"><a href="" role="tab" data-target="#outputSupport{{$index+1}}" data-toggle="tab" >@Messages("containers.table.support.out.code")&nbsp;{{$index+1}} : {{ outputContainerSupportCodes[$index] }}</a></li>
+	       </ul>
+		</div>	
+  	</div>
+  
+  	<!-- doit on afficher les tabs dans les 2 modes ?? ou seulement si !editMode 
+  	    l'onglet a vec plaque input peut etre afiche dans tous les cas !!!
+  	    les onglet de sortie ne peuvent etre affichés que si etat != en cours -->
+  	    
+  	<div class="tab-content"  >
+		<div class="tab-pane active" id="inputSupport">	
+	 		<div class="row margin-bottom-7">
+				<table class="table table-bordered table-condensed">
+       			<thead>
+            		<tr>
+                		<th></th>
+               			 <th ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]">{{i}}</th>
+           			 </tr>
+        		</thead>
+       			 <tbody>
+            		<tr ng-repeat="y in ['A','B','C','D','E','F','G','H']" class="total">
+                		<td><strong>{{y}}</strong></td>
+                		<td class="plates" ng-repeat="x in [1,2,3,4,5,6,7,8,9,10,11,12]" class="browser">
+                	   		 <div ng-class="getClass(x, y)" ng-bind="displayCellPlaque(x, y)"/>
+                	   		 <div class="visible-print-block" ng-bind="displayCellPlaque(x, y)"/>    						    					
+                		</td>          
+            		</tr>
+        		<tbody>
+        		</table>
+			</div>
+		</div> 
+		<div class="tab-pane" id="outputSupport{{$index+1}}" ng-repeat="code in outputContainerSupportCodes track by $index">	
+	 		<div class="row margin-bottom-7">
+	    		<!--  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data">OUTPUTTTTTTTTTTT {{$index+1}}</div> -->
+	    		<div class="col-md-12 col-lg-12">ultimate-datatable for OUTPUTTTTTTTTTTT {{$index+1}} !!!!!</div>
+	  		</div>
+		</div>  
+  	</div>
 </div>

@@ -1,7 +1,11 @@
 /* 11/08/2017 GA/FDS experience One to Many qui n'utilise pas de datatable... */
-angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService',
-                                                               function($scope, $parse, commonAtomicTransfertMethod, mainService) {
+/* 30/08/2017 finalement il faut meme plusieurs datatables ???  => injecter atmToSingleDatatable ???? .....*/
 
+angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService','atmToSingleDatatable',
+                                                               function($scope, $parse, commonAtomicTransfertMethod, mainService, atmToSingleDatatable ) {
+
+	
+	
     var nbOutputSupport;
 	
     if(!$scope.isCreationMode()){
@@ -238,5 +242,137 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 	//nécessaire pour newOutputContainerUsed meme si vide
 	var defaultOutputValue = {		
 	};
+	
+	
+	
+	/*----------------- TEST 30/08 il faut des datatables !!!! -----------------------------------------------
+	
+	var datatableConfigTest = {
+			//peut etre exporté CSV ??
+			name: $scope.experiment.typeCode+'_TEST'.toUpperCase(),
+			columns:[   
+					 {
+			        	 "header":Messages("containers.table.code"),
+			        	 "property":"inputContainer.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":1,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         }    
+			         ],
+			compact:true,
+			showTotalNumberRecords:false,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:'inputContainer.code'
+			},
+			remove:{
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				mode:'local'
+			},
+			save:{
+				active:true,
+				withoutEdit: true,
+				keepEdit:true,
+				changeClass : false,
+				mode:'local',
+				showButton:false
+			},			
+			select:{
+				active:true
+			},
+			edit:{
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:($scope.isCreationMode()),
+				columnMode:true
+			},	
+			cancel : {
+				active:true
+			},
+			extraHeaders:{
+				number:1,
+				dynamic:true,
+			}
+
+	};
+	
+	
+	var atmService = atmToSingleDatatable($scope, datatableConfigTest);
+	atmService.newAtomicTransfertMethod = function(l, c){
+		return {
+			class:"OneToMany",
+			line: l, 
+			column: c, 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};
+    atmService.experimentToView($scope.experiment, $scope.experimentType);
+	
+	$scope.atmService = atmService;	
+		
+	var init = function(){
+		$scope.clearMessages();		
+		$scope.datatable = datatable(datatableConfigTest);
+	}
+	
+	// copiée de ngl-plates/ details-ctrl.js
+	var displayCellPlaque =function(x, y){
+		var wells = $scope.datatable.displayResult;
+		if(!angular.isUndefined(wells)){
+	        for (var i = 0; i <wells.length; i++) {
+		         if (wells[i].data.x === (x) && wells[i].data.y===(y+'')) {
+		        	 return wells[i].data.name.replace(/_/g,' ');
+		         }
+	        }
+		}
+        return "------";
+     }
+	
+	var computeXY = function(){
+		var wells = $scope.datatable.displayResult;
+		var nbCol = 12;
+		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+		var x = 0;
+		for(var i = 0; i < nbCol ; i++){
+			for(var j = 0; j < nbLine.length; j++){
+				if(x < wells.length){
+					wells[x].data.y = nbLine[j]+'';
+					wells[x].data.x = i+1;					
+				}
+				x++;
+			}
+		}		
+	};
+	
+	// copiée de ngl-plates/ details-ctrl.js
+	var getClass = function(x, y){
+		var wells = $scope.datatable.displayResult;
+		if(!angular.isUndefined(wells)){
+	        for (var i = 0; i <wells.length; i++) {
+		         if (wells[i].data.x === (x) && wells[i].data.y===(y+'')) {
+		        	 var well = wells[i];
+		        	 if(well.data.valid === "FALSE"){
+		        		 return "alert alert-danger hidden-print";
+		        	 }else if(well.data.valid === "TRUE"){
+		        		 return "alert alert-success hidden-print";
+		        	 }	        	
+		         }
+	        }
+		}
+        return "hidden-print";
+     }
+	*/
 	
 }]);

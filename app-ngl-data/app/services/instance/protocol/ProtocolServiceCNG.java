@@ -190,9 +190,15 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("labchip-gx","LabChiP_GX", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("labchip-migration-profile")));
 		
+		// 30/08/2017 ajout protocole pour capture
+		lp.add(newProtocol("sop-capture","SOP_Capture", "?","1","production",
+				InstanceFactory.setExperimentTypeCodes("labchip-migration-profile")));
+		
 		// 27/02/2017 ajout protocole pour Bioanalyzer 
 		lp.add(newProtocol("bioanalyzer","BioAnalyzer", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("bioanalyzer-migration-profile")));
+		
+		
 		
 		
 		//------------Experiences de Purification-----------------------------

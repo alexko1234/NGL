@@ -11,18 +11,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[	
 			         //--------------------- INPUT containers section -----------------------
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         */
+
 			         { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -50,7 +39,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":3,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         {
+			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
 			 			"order":true,
@@ -60,7 +49,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0:inputExtraHeaders}
 				     },
-				     {
+				     { // Echantillon(s) 
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
 			 			"order":true,
@@ -72,7 +61,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
-			        	 //"property":"inputContainer.fromTransformationTypeCodes",  ///pourquoi ?????????????????????????
 			        	 "property":"inputContainerUsed.fromTransformationTypeCodes",
 			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
@@ -83,26 +71,22 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":6,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-                     /* 09/08/2017 libProcessTypeCode (niveau content) 
-                                   expected baits (niveau processus)
-                                   captureProtocol (niveau content)
-                        A VERIFIER
-                     */
-			         {
+			         { // 31/08/2017 niveau process ET contents 
+			           // c'est la premiere experience du process utiliser processProperties; marche a new et en cours et plus a terminé, c'est normal !!!
 			        	 "header": Messages("containers.table.libProcessTypeCode"),
 			        	 "property" : "inputContainerUsed.contents",
-			        	 "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique ",
+			        	 "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique | codes:'value'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":7,
 			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         {
+			         },    
+			         { // 31/08/2017 niveau process uniquement => processProperties;  marche a new et en cours et plus a terminé, c'est normal !!!
 			        	 "header": "Baits (sondes) prévues",
 			        	 "property" : "inputContainerUsed.contents",
-			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique ",
+			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique | codes:'value'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -110,10 +94,11 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":7.2,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         {
-			        	 "header": "Protocole/ Kit",
+			         { // 30/08/2017 niveau process ET contents 
+			           // c'est la premiere experience du process utiliser processProperties; marche a new et en cours et plus a terminé, c'est normal !!!
+			        	 "header": "Protocole / Kit",
 			        	 "property" : "inputContainerUsed.contents",
-			        	 "filter" : "getArray:'processProperties.captureProtocol.value' | unique ",
+			        	 "filter" : "getArray:'processProperties.captureProtocol.value' | unique | codes:'value'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -121,7 +106,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "position":7.4,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         {
+			         { // Etat input Container
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
 			        	 "order":true,
@@ -356,55 +341,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 				}
 			}
 		}
-	};
-	
-    // il faudrait la mettre qq part ou elle puisse etre utilisee par toutes les experiences.. voir GA...
-	var checkOneSupportInput = function(){
-		  // !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket ( ajouter mainService dans le controller !!! )
-
-		  /* plusieurs  categoryCode  pas possible ici car filtré par les inputs type Used de l'instrument
-		  var categoryCode = [];
-		  if(!$scope.isCreationMode()){
-			var categoryCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
-		  }else{
-			var categoryCode = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique", mainService);
-		  }
-		
-		  if(categoryCode.length > 1){
-				console.log("> 1  type support en entree");
-				
-			$scope.messages.clear(); 
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages("> 1  type support en entree") ;
-			$scope.messages.showDetails = false;
-			$scope.messages.open();
-			
-			return false;
-		  } 
-		  */
-		
-		
-		  var supportCode = [];
-		  if(!$scope.isCreationMode()){
-			var supportCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);			
-		  }else{
-			var supportCode = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService);
-		  }
-		
-		  if(supportCode.length > 1){
-			console.log(" > 1 support en entree");
-			
-			$scope.messages.clear();
-			$scope.messages.clear();
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages("experiments.input.error.only-1-plate");
-			$scope.messages.showDetails = false;
-			$scope.messages.open();
-			
-			return false;
-		  }
-		  
-		  return true;
 	};
 	
 	

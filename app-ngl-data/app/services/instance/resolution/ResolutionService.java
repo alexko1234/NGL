@@ -870,7 +870,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("contamination","stop-contamination", resolutionCategories.get("Default"), (short) 7));
 		
 		// 29/08/2017 ajout. nom et codes exacts a définir....
-		l.add(InstanceFactory.newResolution("à stocker","stop-stock", resolutionCategories.get("Default"), (short) 8));
+		l.add(InstanceFactory.newResolution("sauvegarde","stop-backup", resolutionCategories.get("Default"), (short) 8));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";

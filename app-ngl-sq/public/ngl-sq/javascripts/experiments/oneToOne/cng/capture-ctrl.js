@@ -11,18 +11,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
 			         //--------------------- INPUT containers section -----------------------
-			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
-					  {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0: inputExtraHeaders }
-			         },	
-			         */				
+			         			
 			         { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -107,38 +96,33 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "type":"number",
 			        	 "position":9,
 			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         /* 09/08/2017  libProcessTypeCode (niveau content) 
-                                    expected baits (niveau processus)
-                                    captureProtocol (niveau content)
-                        A VERIFIER
-                     */
-			         {
+			         },      
+			         { // 31/08/2017 niveau process ET contents => utiliser properties et pas processProperties
 			        	 "header": Messages("containers.table.libProcessTypeCode"),
 			        	 "property" : "inputContainerUsed.contents",
-			        	 "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique ",
+			        	 "filter" : "getArray:'properties.libProcessTypeCode.value' | unique | codes:'value'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":9.2,
 			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         {
+			         },      
+			         { // 31/08/2017 niveau process uniquement =>  utiliser processProperties; ne fonctionne que a nouveau et en cours c'est normal !!
 			        	 "header": "Baits (sondes) prévues",
 			        	 "property" : "inputContainerUsed.contents",
-			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique ",
+			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique  | codes:'value'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":9.4,
 			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         {
-			        	 "header": "Protocole/ Kit",
+			         }, 
+			         { // 31/08/2017 niveau process ET contents => utiliser properties et pas processProperties
+			        	 "header": "Protocole / Kit",
 			        	 "property" : "inputContainerUsed.contents",
-			        	 "filter" : "getArray:'processProperties.captureProtocol.value' | unique ",
+			        	 "filter" : "getArray:'properties.captureProtocol.value' | unique  | codes:'value'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -200,6 +184,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
+			         /* 30/08/2017 pas de volume ni concentration OUT
 			         { // Concentration
 			        	 "header":Messages("containers.table.concentration.shortLabel") + " (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
@@ -220,6 +205,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":130,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
+			         */
 			         { // Etat outpout container 
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -281,6 +267,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	}; // fin struct datatableConfig
 	
 
+	/*   DOUBLON => DEJA PLUS HAUT !!!!
 	// 31/07/2017 ajouter les columns 'processProperties' uniquement si experience state= N ou IP car n'existe que temporairement
 	if ( $scope.isInProgressState() || $scope.isNewState()) {
 		datatableConfig.columns.push({
@@ -294,6 +281,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	       	 "extraHeaders":{0:inputExtraHeaders}
 		 });
     }
+    */
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
@@ -427,7 +415,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === '???????????')}, // FDS ne pas afficher bouton pour "hand"
+		isShow:function(){return ($scope.experiment.instrument.typeCode === 'bravo-workstation')}, 
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);

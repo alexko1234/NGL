@@ -11,18 +11,7 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[	
 			         //--------------------- INPUT containers section -----------------------
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         */
+
 			         { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -70,6 +59,17 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0:inputExtraHeaders}
 				     },
+				     { // 31/08/2017 ajout demandé: sampleAliquoteCode 
+					     "header":Messages("containers.table.codeAliquot"),
+					 	 "property": "inputContainer.contents", 
+					 	 "filter": "getArray:'properties.sampleAliquoteCode.value'",
+					 	 "order":true,
+					 	 "hide":true,
+					 	 "type":"text",
+					 	 "position": 5.5,
+					 	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					     "extraHeaders":{0: inputExtraHeaders}
+					 },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
@@ -79,9 +79,20 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 						 "hide":true,
 			        	 "type":"text",
 			 			 "render":"<div list-resize='cellValue'  list-resize-min-size='3'>",
-			        	 "position":4,
+			        	 "position":5.6,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         { // 31/08/2017 ajout demandé: libProcessTypeCode 
+				       "header": Messages("containers.table.libProcessTypeCode"),
+				       "property" : "inputContainerUsed.contents",
+				       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
+				       "order":true,
+					   "edit":false,
+					   "hide":true,
+				       "type":"text",
+				       "position":5.8,
+				       "extraHeaders":{0:inputExtraHeaders}
+				     },
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
@@ -89,24 +100,12 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":4,
+			 			"position": 5.9,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0:inputExtraHeaders}
 			         },	
-			         /* suppression demandee lors du test avant mise en prod 01/09/2016
-					 {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":5,
-			        	 "extraHeaders":{0:inputExtraHeaders}
-			         },
-			         */
 			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":false,

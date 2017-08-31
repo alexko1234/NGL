@@ -10,18 +10,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 
 			"columns":[
 			         //--------------------- INPUT containers section -----------------------
-			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
-					  {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":0,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			          },	
-			          */		        
+			         	        
 			          { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -69,7 +58,8 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				   /*  { // sampleAliquoteCode 
+				     /*
+				     { // sampleAliquoteCode 
 				        "header":Messages("containers.table.codeAliquot"),
 				 		"property": "inputContainer.contents", 
 				 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
@@ -81,33 +71,10 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
 					*/
-					 { // Concentration
-			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":7,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },  
-			         { // Volume
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainerUsed.volume.value",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":8,
-			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },
-                     /* 09/08/2017 libProcessTypeCode (niveau content) 
-                                    expected baits (niveau processus)
-                                    captureProtocol (niveau content)
-				        A VERIFIER
-				     */
-				     {
+				     { // 31/08/2017 niveau process ET contents =>utiliser properties et pas processProperties
 				       "header": Messages("containers.table.libProcessTypeCode"),
 				       "property" : "inputContainerUsed.contents",
-				       "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique ",
+				       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
 				       "order":true,
 					   "edit":false,
 					   "hide":true,
@@ -115,10 +82,10 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				       "position":8.2,
 				       "extraHeaders":{0:inputExtraHeaders}
 				     },
-				     {
-				       "header": "Baits (sondes) prévues",
-				      	"property" : "inputContainerUsed.contents",
-				      	"filter" : "getArray:'processProperties.expectedBaits.value' | unique ",
+				     { // 31/08/2017 baits rellement utilisees (mises dans l'experience precedente capture) => outputContainerUsed.contents
+				       "header": "Baits (sondes)",
+				      	"property" : "outputContainerUsed.contents",
+				      	"filter" : "getArray:'properties.baits.value' | unique | codes:'value'",
 				      	"order":true,
 					    "edit":false,
 					    "hide":true,
@@ -126,10 +93,10 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				      	"position":8.4,
 				      	"extraHeaders":{0:inputExtraHeaders}
 				     },
-				     {
-				        "header": "Protocole/ Kit",
+				     { // 31/08/2017 niveau process ET contents =>utiliser properties et pas processProperties
+				        "header": "Protocole / Kit",
 				      	"property" : "inputContainerUsed.contents",
-				      	"filter" : "getArray:'processProperties.captureProtocol.value' | unique ",
+				      	"filter" : "getArray:'properties.captureProtocol.value' | unique | codes:'value'",
 				      	"order":true,
 						"edit":false,
 					    "hide":true,
@@ -253,13 +220,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				"dynamic":true,
 			},
 			"otherButtons": {
-                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-                complex:true,
-                template:''
-                	+'<div class="btn-group" style="margin-left:5px">'
-                	+'<button class="btn btn-default" ng-click="copyVolumeInToExp()" data-toggle="tooltip" title="'+Messages("experiments.button.plate.copyVolumeTo")+' volume final'
-                	+'" ng-disabled="!isEditMode()" ng-if="experiment.instrument.outContainerSupportCategoryCode!==\'tube\'"><i class="fa fa-files-o" aria-hidden="true"></i> Volume </button>'                	                	
-                	+'</div>'
+				//30/08/2017 plus de volume in donc plus besoin de bouton de copie de volume.....
 			}
 	}; // fin struct datatableConfig
 	
@@ -325,15 +286,6 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 		$scope.atmService.data.setEdit();
 	});
 	
-    // 01/08/2017 FDS copier le volume containerIn dans le volume final ???
-	$scope.copyVolumeInToExp = function(){
-		console.log("copyVolumeInToExp");
-		
-		var data = $scope.atmService.data.displayResult;		
-		data.forEach(function(value){
-			value.data.outputContainerUsed.experimentProperties.finalVolume=value.data.inputContainerUsed.volume;
-		})		
-	};
 		
 	//Init
 	
@@ -369,6 +321,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 		$scope.atmService = atmService;
 	}
 	
+	/* A SUPPRIMER ??????????
 	// Calculs 
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
@@ -449,7 +402,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 			console.log("Missing values to calculate Volume");
 		}
 	}
-	
+	*/
 	
 	var importData = function(){
 		$scope.messages.clear();
