@@ -336,7 +336,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(line, column){
+/*	atmService.newAtomicTransfertMethod = function(line, column){
 		var getLine = function(line){
 			if($scope.experiment.instrument.outContainerSupportCategoryCode === 'tube'){
 				return "1";
@@ -347,6 +347,31 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 		}
 		var getColumn=getLine;
 				
+		
+		return {
+			class:"OneToOne",
+			line:getLine(line), 
+			column:getColumn(column), 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};*/
+	
+	
+	atmService.newAtomicTransfertMethod =  function(line, column){
+		var getLine = function(line){
+			if($scope.experiment.instrument.outContainerSupportCategoryCode 
+					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
+				return line;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
+				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
+				return undefined;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode === "tube"){
+				return "1";
+			}
+			
+		}
+		var getColumn=getLine;
 		
 		return {
 			class:"OneToOne",
@@ -438,11 +463,11 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 		
 	}
 	
-	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
+	$scope.atmService = atmService;
+/*	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
 		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}else{
 		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
-	}
+	}*/
 }]);
