@@ -386,7 +386,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("lib-normalization",2),
 						getPET("normalization-and-pooling",2),   // 2 de meme niveau
 					    getPET("denat-dil-lib",3),
-						getPET("prepa-fc",4), 
+						getPET("prepa-flowcell",4), 
 						getPET("illumina-depot",5)),
 				getExperimentTypes("capture").get(0),                        //first experiment type    
 				getExperimentTypes("pcr-and-indexing").get(0),               //last  experiment type
@@ -421,7 +421,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 						getPET("lib-normalization",1),
 						getPET("normalization-and-pooling",1),   // 2 de meme niveau
 						getPET("denat-dil-lib",2),
-						getPET("prepa-fc",3), 
+						getPET("prepa-flowcell",3), 
 						getPET("illumina-depot",4)),
 				getExperimentTypes("pcr-and-indexing").get(0),                //first experiment type    
 				getExperimentTypes("illumina-depot").get(0),                  //last  experiment type

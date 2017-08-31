@@ -112,8 +112,11 @@ public class RunServiceCNG  extends AbstractRunService{
         List<Value> values = new ArrayList<Value>();
         
          // codes for Captures
+         // 31/08/2017 QUESTION A VOIR AVEC GA.... les "vrais" code Capture utilisé sont dans  ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
+         // => pour l'istant mettre en commentaire
+         
          values.add(DescriptionFactory.newValue("CA","CA - DefCap008_Rg"));
-         values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
+         //values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023")); 31/08/2017 !! doublon
          values.add(DescriptionFactory.newValue("CB","CB - DefCap005_Ex"));
          values.add(DescriptionFactory.newValue("CC","CC - DefCap006_Ex"));
          values.add(DescriptionFactory.newValue("CD","CD - DefCap004_Rg"));
@@ -128,23 +131,23 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CM","CM - DefCap012_Rg"));
          values.add(DescriptionFactory.newValue("CN","CN - DefCapINRA1_Rg"));
          values.add(DescriptionFactory.newValue("CO","CO - DefCapCAPSEQAN"));
-         values.add(DescriptionFactory.newValue("CP","CP - DefCap013_Ex"));
+         //values.add(DescriptionFactory.newValue("CP","CP - DefCap013_Ex"));31/08/2017 !! doublon
          values.add(DescriptionFactory.newValue("CQ","CQ - DefCap014_Rg"));
          values.add(DescriptionFactory.newValue("CR","CR - DefCap015_Ex"));
-         values.add(DescriptionFactory.newValue("CS","CS - DefCap016_Ex"));
+         //values.add(DescriptionFactory.newValue("CS","CS - DefCap016_Ex")); 31/08/2017 !! doublon
          values.add(DescriptionFactory.newValue("CT","CT - CapNimGenV3_017_Ex"));
          values.add(DescriptionFactory.newValue("CV","CV - DefCap018_Ex"));
          values.add(DescriptionFactory.newValue("CW","CW - DefCap019_Rg"));
          values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
          values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
-         values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022"));
+         //values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022")); 31/08/2017 !! doublon
          
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
-         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
-         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));
+         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !!! aussi dans ProcessServiceCNG
+         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !!! aussi dans ProcessServiceCNG
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
@@ -159,6 +162,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("HIC","HIC - HiC"));
          
          // codes for RNA sequencing
+         // !!! DD/DE/DF/DG/DH aussi  dans ProcessServiceCNG / getRNALibProcessTypeCodeValues(){
          values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
          values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
          values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
