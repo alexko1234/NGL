@@ -32,15 +32,17 @@ rule "select resources from nglsub for getCCRTFiles treatment"
 		for(ResourceProperties rpSub : rpSubmissions){
 			//Get submission code
 			String codeSubmission = rpSub.getProperty("code");
+			log.debug("Get CCRT files for "+codeSubmission);
 			String submissionDirectory = rpSub.getProperty("submissionDirectory");
 			Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+codeSubmission,"bot");
 			rpsRawData = SRAFilesUtil.filterByLocation(rpsRawData);
+			log.debug("Filter by location size "+rpsRawData.size());
 			for(ResourceProperties rp : rpsRawData){
 				ResourceProperties newRp = new ResourceProperties();
-				rp.setProperty("code",codeSubmission);
-				rp.setProperty("submissionDirectory",submissionDirectory);
-				rp.setProperty("relatifName",rp.getProperty("relatifName");
-				rp.setProperty("directory",rp.getProperty("directory");
+				newRp.setProperty("code",codeSubmission);
+				newRp.setProperty("submissionDirectory",submissionDirectory);
+				newRp.setProperty("relatifName",rp.getProperty("relatifName"));
+				newRp.setProperty("directory",rp.getProperty("directory"));
 				resourceProperties.add(newRp);
 			}
 		}

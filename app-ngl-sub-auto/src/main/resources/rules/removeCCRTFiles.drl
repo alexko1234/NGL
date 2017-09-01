@@ -32,17 +32,21 @@ rule "select resources from nglsub for removeCCRTFiles treatment"
 		for(ResourceProperties rpSub : rpSubmissions){
 			//Get submission code
 			String codeSubmission = rpSub.getProperty("code");
+			log.debug("Get submission F-SUB "+codeSubmission);
 			String submissionDirectory = rpSub.getProperty("submissionDirectory");
 			Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+codeSubmission,"bot");
 			boolean isDataCCRT = SRAFilesUtil.isDataCCRT(rpsRawData);
+			log.debug("is DataCCRT "+isDataCCRT);
 			if(isDataCCRT){
 				for(ResourceProperties rp : rpsRawData){
 					if(rp.getProperty("location").equals("CCRT")){
+						
 						ResourceProperties newRp = new ResourceProperties();
-						rp.setProperty("code",codeSubmission);
-						rp.setProperty("submissionDirectory",submissionDirectory);
-						rp.setProperty("relatifName",rp.getProperty("relatifName");
-						rp.setProperty("directory",rp.getProperty("directory");
+						newRp.setProperty("code",codeSubmission);
+						newRp.setProperty("submissionDirectory",submissionDirectory);
+						newRp.setProperty("relatifName",rp.getProperty("relatifName"));
+						newRp.setProperty("directory",rp.getProperty("directory"));
+						log.debug("location CCR add new RP "+rp.getProperty("relatifName"));
 						resourceProperties.add(newRp);
 					}
 				}
@@ -59,14 +63,14 @@ rule "set parameter for removeCCRTFiles"
 	salience 300
 	no-loop
 		when
-			$treatSpec : TreatmentSpecification(name=="getCCRTFile", project.name=="SRA")
+			$treatSpec : TreatmentSpecification(name=="removeCCRTFile", project.name=="SRA")
 			$job : Job()
 		then
 			Logger log = Logger.getLogger("ngl.sub.rules");
 			log.debug("set parameter value");
 			
-			String filePath = $job.getUniqueJobResource("inputGetCCRT").getProperty("submissionDirectory")+File.separator+$job.getUniqueJobResource("inputGetCCRT").getProperty("relatifName");
-			
+			String filePath = $job.getUniqueJobResource("inputRmCCRT").getProperty("submissionDirectory")+File.separator+$job.getUniqueJobResource("inputRmCCRT").getProperty("relatifName");
+			log.debug("set filePath "+filePath);
 			String fileParam = $job.getParameterValue("fileParam").getValue().replace("%filePath%",filePath);
 			$job.setParameterValue("fileParam", fileParam);
 			

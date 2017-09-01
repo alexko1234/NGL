@@ -9,7 +9,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="getCCRTFile" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="default">
-			<Executable path="rsync" user="cnsnglapps" host="etna2.genoscope.cns.fr"/>
+			<Executable path="/env/cns/submit_traces/SRA/NGL_test/script/test.sh" user="cnsnglapps" host="etna2.genoscope.cns.fr"/>
 			<Slurm job="rsyncJob" part="normal" account="soumissions"/>
 		</ExecutableSpecification>
 		
@@ -30,7 +30,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="removeCCRTFile" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="default">
 			<!-- TODO call REST API NGL-SUB -->
-			<Executable path="rm"/>
+			<Executable path="/env/cns/submit_traces/SRA/NGL_test/script/test.sh"/>
 		</ExecutableSpecification>
 			
 		<ParametersSpecification>

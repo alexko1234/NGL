@@ -33,7 +33,7 @@ dialect 'java'
 				ResourceProperties newRp = new ResourceProperties();
 				newRp.setProperty("fileName",rpRawDataFilter.getProperty("relatifName"));
 				if(rpRawDataFilter.getProperty("location").equals("CCRT")){
-					newRp.setProperty("directory",rpRawDataFilter.getProperty("submissionDirectory"));
+					newRp.setProperty("directory",groupJobResource.getProperty("submissionDirectory"));
 				}else{
 					newRp.setProperty("directory",rpRawDataFilter.getProperty("directory"));
 				}
