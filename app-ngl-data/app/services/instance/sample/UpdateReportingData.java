@@ -78,11 +78,14 @@ public class UpdateReportingData extends AbstractImportData {
 						.cursor.forEach(sample -> {
 							try{
 								updateProcesses(sample);
+								Logger.debug("update sample "+sample.code);
 								if(sample.processes != null && sample.processes.size() > 0){
-									Logger.debug("update sample "+sample.code);
 									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
 											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
-								}	
+								}else{
+									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+											DBUpdate.unset("processes").unset("processesStatistics").set("processesUpdatedDate", date));
+								}
 							}catch(Throwable e){
 								logger.error("Sample : "+sample.code+" - "+e,e);
 								if(null != e.getMessage())
