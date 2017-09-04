@@ -33,7 +33,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
 
 		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
-	};
+	};*/
 	 //buttons section 
 	 $scope.save = function(){
 		saveInProgress = true;	
@@ -70,7 +70,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	$scope.isSaveInProgress = function(){
 		return saveInProgress;
-	};  */
+	};  
 
 	var saveInProgress = false;
 	var samplePropertyDefinitionMap = {};	
