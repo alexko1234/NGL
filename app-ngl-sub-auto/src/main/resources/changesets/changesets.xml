@@ -56,7 +56,8 @@
 		<resource type="DRL" source="classpath:rules/createReleaseXML.drl" />
 		<resource type="DRL" source="classpath:rules/sendReleaseXML.drl" />
 		<!--  resource source='classpath:example/ResourceSplitting.drl' type='DRL' / -->
-		
+		<resource type="DRL" source="classpath:rules/getCCRTFiles.drl" />
+		<resource type="DRL" source="classpath:rules/removeCCRTFiles.drl" />
 		<!--
 			resource
 			source='http://etna15.genoscope.cns.fr:8280/drools-guvnor/org.drools.guvnor.Guvnor/package/sbwh6.test/LATEST'

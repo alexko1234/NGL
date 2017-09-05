@@ -32,7 +32,11 @@ dialect 'java'
 			{
 				ResourceProperties newRp = new ResourceProperties();
 				newRp.setProperty("fileName",rpRawDataFilter.getProperty("relatifName"));
-				newRp.setProperty("directory",rpRawDataFilter.getProperty("directory"));
+				if(rpRawDataFilter.getProperty("location").equals("CCRT")){
+					newRp.setProperty("directory",groupJobResource.getProperty("submissionDirectory"));
+				}else{
+					newRp.setProperty("directory",rpRawDataFilter.getProperty("directory"));
+				}
 				newRp.setProperty("submissionDirectory",groupJobResource.getProperty("submissionDirectory"));
 				newRp.setProperty("experimentCode",tabExperimentCodes[i]);
 				newRp.setProperty("idGroupJob",""+$groupJob.getId());

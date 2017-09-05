@@ -60,12 +60,45 @@ public class SRAFilesUtil {
 		return false;
 	}
 	
+	public static boolean checkDataCCRT(Set<ResourceProperties> rpsRawData, String submissionDirectory)
+	{
+		boolean checkDataCCRT = true;
+		for(ResourceProperties rawData: rpsRawData){
+			if(rawData.getProperty("location").equals("CCRT")){
+				File filePath = new File(submissionDirectory+File.separator+rawData.getProperty("relatifName"));
+				if(!filePath.exists())
+					checkDataCCRT=false;
+			}
+		}
+		return checkDataCCRT;
+	}
+	
+	public static boolean isDataCCRT(Set<ResourceProperties> rpsRawData)
+	{
+		for(ResourceProperties rawData: rpsRawData){
+			if(rawData.getProperty("location").equals("CCRT"))
+				return true;
+		}
+		return false;
+	}
+	
 	public static Set<ResourceProperties> filterByGzipForSubmission(Set<ResourceProperties> rpsRawData)
 	{
 		Set<ResourceProperties> rpsRawDataFilter = new HashSet<ResourceProperties>();
 		for(ResourceProperties rp : rpsRawData){
 			if(rp.getProperty("gzipForSubmission").equals("true")){
 				rp.put("relatifName", rp.getProperty("relatifName").replace(".gz", ""));
+				rpsRawDataFilter.add(rp);
+			}
+		}
+		return rpsRawDataFilter;
+	}
+	
+	public static Set<ResourceProperties> filterByLocation(Set<ResourceProperties> rpsRawData)
+	{
+		Set<ResourceProperties> rpsRawDataFilter = new HashSet<ResourceProperties>();
+		for(ResourceProperties rp : rpsRawData){
+			if(rp.getProperty("location").equals("CCRT")){
 				rpsRawDataFilter.add(rp);
 			}
 		}

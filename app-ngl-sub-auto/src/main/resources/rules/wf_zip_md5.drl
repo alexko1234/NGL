@@ -32,12 +32,15 @@ rule "select resources from nglsub for workflow zip md5"
 		for(ResourceProperties rpSub : rpSubmissions){
 			//Get submission code
 			String codeSubmission = rpSub.getProperty("code");
+			log.debug("Get input zip for "+codeSubmission);
 			String submissionDirectory = rpSub.getProperty("submissionDirectory");
 			String experimentCodes = rpSub.getProperty("experimentCodes");
 			Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+codeSubmission,"bot");
 			boolean gzipForSubmission = SRAFilesUtil.checkGzipForSubmission(rpsRawData);
+			boolean checkDataCCRT = SRAFilesUtil.checkDataCCRT(rpsRawData,submissionDirectory);
 			log.debug("gzip for submission "+gzipForSubmission);
-			if(gzipForSubmission){
+			log.debug("checkDataCCRT for submission "+checkDataCCRT);
+			if(gzipForSubmission && checkDataCCRT){
 				ResourceProperties newRp = new ResourceProperties();
 				newRp.setProperty("code",codeSubmission);
 				newRp.setProperty("gzipForSubmission","true");
