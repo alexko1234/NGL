@@ -107,6 +107,6 @@
 	
 	<!-- Project by submission type -->
 	<Project name="SRA" workspace="/env/cns/submit_traces/SRA/SNTS_output_xml/autoFtp/log" >
-		<ProjectProperty name="ccrt_user" value="cnsnglapps" />
+		<ProjectProperty name="ccrt_user" value="scarpelc" />
 	</Project>
 </Declaration>
