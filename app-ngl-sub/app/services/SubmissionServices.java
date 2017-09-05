@@ -39,6 +39,7 @@ import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
+import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
@@ -1134,7 +1135,9 @@ public class SubmissionServices {
 		// La validite du readSet doit avoir été testé avant.
 
 		Experiment experiment = new Experiment(); 
-		
+		SraParameter sraParam = new SraParameter();
+		Map<String, String> map = sraParam.getParameter("libProcessTypeCodeValue_orientation");
+
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);
 		experiment.readSetCode = readSet.code;
 		experiment.projectCode = readSet.projectCode;
@@ -1290,6 +1293,7 @@ public class SubmissionServices {
 			experiment.libraryLayout = "SINGLE";
 			experiment.libraryLayoutOrientation = "forward";
 		} else {
+			
 			// Ajouter les read_spec (dans SPOT_DESCRIPTOR ) en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
 			// les rsnanopore sont normalement des single forward.
 			experiment.libraryLayout = null;
@@ -1315,10 +1319,11 @@ public class SubmissionServices {
 							System.out.print(propertyValue.toString());
 							System.out.println(", value  => "+propertyValue.value);
 						} */
+							
 							if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {					
 								PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
 								String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
-								if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
+								/*if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
 									experiment.libraryLayoutOrientation = "reverse-forward";
 								} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
 										||libProcessTypeCodeValue.equalsIgnoreCase("H")||libProcessTypeCodeValue.equalsIgnoreCase("L")
@@ -1332,6 +1337,11 @@ public class SubmissionServices {
 									experiment.libraryLayoutOrientation = "forward-reverse";
 								} else {
 									throw new SraException("Pour le readSet " + readSet.code +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
+								}*/
+								if (map.get(libProcessTypeCodeValue)==null){
+									throw new SraException("Pour le readSet " + readSet.code +  ", valeur de libProcessTypeCodeValue inconnue :" + libProcessTypeCodeValue);
+								} else {
+									experiment.libraryLayoutOrientation = map.get(libProcessTypeCodeValue);
 								}
 							}
 						}

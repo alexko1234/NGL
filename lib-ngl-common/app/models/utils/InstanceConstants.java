@@ -29,6 +29,10 @@ public interface InstanceConstants {
 	public static final String SRA_ANALYSIS_WGS_COLL_NAME="ngl_sub.AnalysisWgs";
 	public static final String SRA_CONFIGURATION_COLL_NAME="ngl_sub.Configuration";
 	public static final String SRA_READSET_COLL_NAME="ngl_sub.Readset";
+	public static final String SRA_PARAMETER_COLL_NAME = "ngl_sub.Parameter";
+
+	//public static final String SRA_MAP_LIBPROCESSTYPECODEVALUE_ORIENTATION_COLL_NAME="ngl_sub.map_libProcessTypeCodeValue_orientation";
+
 
 	public static final String PARAMETER_COLL_NAME = "ngl_common.Parameter";
 	public static final String REPORTING_CONFIG_COLL_NAME = "ngl_common.ReportingConfiguration"; 
