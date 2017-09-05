@@ -73,7 +73,8 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			         },
 			         { // 31/08/2017 niveau process ET contents 
 			           // c'est la premiere experience du process utiliser processProperties; marche a new et en cours et plus a terminé, c'est normal !!!
-			        	 "header": Messages("containers.table.libProcessTypeCode"),
+			           // si filtre codes:'value' alors header =>libProcessType
+			        	 "header": Messages("containers.table.libProcessType"),
 			        	 "property" : "inputContainerUsed.contents",
 			        	 "filter" : "getArray:'processProperties.libProcessTypeCode.value' | unique | codes:'value'",
 			        	 "order":true,
@@ -84,7 +85,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },    
 			         { // 31/08/2017 niveau process uniquement => processProperties;  marche a new et en cours et plus a terminé, c'est normal !!!
-			        	 "header": "Baits (sondes) prévues",
+			        	 "header": Messages("containers.table.expectedBaits"),
 			        	 "property" : "inputContainerUsed.contents",
 			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique | codes:'value'",
 			        	 "order":true,
@@ -96,7 +97,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			         },
 			         { // 30/08/2017 niveau process ET contents 
 			           // c'est la premiere experience du process utiliser processProperties; marche a new et en cours et plus a terminé, c'est normal !!!
-			        	 "header": "Protocole / Kit",
+			        	 "header": Messages("containers.table.captureProtocol"),
 			        	 "property" : "inputContainerUsed.contents",
 			        	 "filter" : "getArray:'processProperties.captureProtocol.value' | unique | codes:'value'",
 			        	 "order":true,

@@ -82,8 +82,8 @@ angular.module('home').controller('PcrAndPurificationCtrl',['$scope', '$parse', 
 			        	 "position":5.6,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         { // 31/08/2017 ajout demandé: libProcessTypeCode 
-				       "header": Messages("containers.table.libProcessTypeCode"),
+			         { // 31/08/2017 ajout demandé: libProcessTypeCode; 04/09/2017 si filtre codes:'value' alors header =>libProcessType
+				       "header": Messages("containers.table.libProcessType"),
 				       "property" : "inputContainerUsed.contents",
 				       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
 				       "order":true,

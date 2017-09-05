@@ -590,6 +590,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	
 	private static List<Value> getRNALibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
+        // et pourquoi pas RA, RB, RC ???  Voir RunServiceCNG
         
         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
@@ -635,7 +636,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	private static List<Value> getX5WgNanoLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
-        // dans RunServiceCNG le nom reprend le code...
+        // !! aussi dans RunServiceCNG
         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));   
          
         return values;
@@ -657,7 +658,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	private static List<Value> getWgChromiumLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
-        // dans RunServiceCNG le nom reprend le code...
+        // !! aussi dans RunServiceCNG
         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));   
          
         return values;
@@ -733,14 +734,14 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	private static List<Value> getCaptureLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
-        // Liste evolutive !!!!
-        values.add(DescriptionFactory.newValue("CP","CP - Agilent : V5"));
-        values.add(DescriptionFactory.newValue("CS","CS - Agilent : V5+UTR"));
-        values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6"));
-        values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR"));
-        //values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic"));
-        //values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome"));
-        //values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome"));   
+        // Liste evolutive !!!! 05/09/2017 mise en coherence avec RunServiceCNG => c-a-d meme code, meme label 
+        values.add(DescriptionFactory.newValue("CP","CP - Agilent : V5 (DefCap013_Ex)"));
+        values.add(DescriptionFactory.newValue("CS","CS - Agilent : V5+UTR (DefCap016_Ex)"));
+        values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6 (DefCap022)"));
+        values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)"));
+        values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)"));
+        //values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
+        //values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));   
          
         return values;
 	}

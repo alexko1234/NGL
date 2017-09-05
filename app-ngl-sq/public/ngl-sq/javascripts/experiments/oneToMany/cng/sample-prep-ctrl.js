@@ -6,28 +6,9 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 
 	
 	
-    var nbOutputSupport;
+    var nbOutputSupport; 
+    // $scope.outputContainerSupportCodes= new Array(1); // test ajout change rien
 	
-    if(!$scope.isCreationMode()){
-	   getExperimentData();
-		
-    }else{
-	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (il peut y en avoir plusieurs..)
-	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
-	   
-	   if ($scope.inputSupportCodes.length > 1){
-		   $scope.messages.clear();
-		   $scope.messages.clazz = "alert alert-danger";
-		   $scope.messages.text = Messages("experiments.input.error.only-1-plate");
-		   $scope.messages.showDetails = false;
-		   $scope.messages.open();
-	   } else {		  
-		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
-		   $scope.outputContainerSupportCodes=[];
-		   $scope.storageCodes=[];
-	   }
-	}	
-	  
    // créer un tableau sur lequel pourra boucler ng-repeat
    // ce tableau est modifié sur onChange de "nbOutputSupport"
    $scope.initOutputContainerSupportCodes = function(nbOutputSupport){
@@ -60,6 +41,27 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 		}	
 	}
 
+   if(!$scope.isCreationMode()){
+	   getExperimentData();
+    }else{
+	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (il peut y en avoir plusieurs..)
+	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
+	   
+	   // $scope.initOutputContainerSupportCodes (1);// test ajout chge rien 
+	   
+	   if ($scope.inputSupportCodes.length > 1){
+		   $scope.messages.clear();
+		   $scope.messages.clazz = "alert alert-danger";
+		   $scope.messages.text = Messages("experiments.input.error.only-1-plate");
+		   $scope.messages.showDetails = false;
+		   $scope.messages.open();
+	   } else {		  
+		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
+		   $scope.outputContainerSupportCodes=[];
+		   $scope.storageCodes=[];
+	   }
+	}	
+   
 
    // il faut la callbackFunction pour le $emit 
    function generateATM(callbackFunction){

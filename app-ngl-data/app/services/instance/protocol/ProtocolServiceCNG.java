@@ -177,7 +177,8 @@ public class ProtocolServiceCNG {
 						                               "pcr-and-purification",
 						                               "capture",
 						                               "pcr-and-indexing",
-						                               "fluo-quantification")));  
+						                               "fluo-quantification",
+						                               "labchip-migration-profile")));  
 
 		//------------Experiences de Control Qualité------------------------------
 		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", 
@@ -188,10 +189,6 @@ public class ProtocolServiceCNG {
 		
 		// 01/09/2016 ajout 
 		lp.add(newProtocol("labchip-gx","LabChiP_GX", "?","1","production",
-				InstanceFactory.setExperimentTypeCodes("labchip-migration-profile")));
-		
-		// 30/08/2017 ajout protocole pour capture
-		lp.add(newProtocol("sop-capture","SOP_Capture", "?","1","production",
 				InstanceFactory.setExperimentTypeCodes("labchip-migration-profile")));
 		
 		// 27/02/2017 ajout protocole pour Bioanalyzer 

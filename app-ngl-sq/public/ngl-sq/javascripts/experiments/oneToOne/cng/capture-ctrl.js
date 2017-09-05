@@ -97,8 +97,8 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "position":9,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },      
-			         { // 31/08/2017 niveau process ET contents => utiliser properties et pas processProperties
-			        	 "header": Messages("containers.table.libProcessTypeCode"),
+			         { // 31/08/2017 niveau process ET contents => utiliser properties et pas processProperties; 04/09/2017 si filtre codes:'value' alors header =>libProcessType
+			        	 "header": Messages("containers.table.libProcessType"),
 			        	 "property" : "inputContainerUsed.contents",
 			        	 "filter" : "getArray:'properties.libProcessTypeCode.value' | unique | codes:'value'",
 			        	 "order":true,
@@ -109,7 +109,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },      
 			         { // 31/08/2017 niveau process uniquement =>  utiliser processProperties; ne fonctionne que a nouveau et en cours c'est normal !!
-			        	 "header": "Baits (sondes) prévues",
+			        	 "header": Messages("containers.table.expectedBaits"),
 			        	 "property" : "inputContainerUsed.contents",
 			        	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique  | codes:'value'",
 			        	 "order":true,
@@ -120,7 +120,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         }, 
 			         { // 31/08/2017 niveau process ET contents => utiliser properties et pas processProperties
-			        	 "header": "Protocole / Kit",
+			        	 "header": Messages("containers.table.captureProtocol"),
 			        	 "property" : "inputContainerUsed.contents",
 			        	 "filter" : "getArray:'properties.captureProtocol.value' | unique  | codes:'value'",
 			        	 "order":true,
@@ -439,7 +439,8 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
 
 				isReady:function(){
-					return (this.inputConc && this.inputQty && (this.inputConcUnit === "ng/µL"||this.inputConcUnit === "ng/µl" ) );
+					// traiter le cas ou la qté est volontairement mise a 0
+					return (this.inputConc && ( this.inputQty || this.inputQty === 0 ) && (this.inputConcUnit === "ng/µL"||this.inputConcUnit === "ng/µl" ) );
 				}
 		};
 		

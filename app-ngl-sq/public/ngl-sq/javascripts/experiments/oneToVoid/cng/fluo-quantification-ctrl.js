@@ -85,40 +85,44 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
 
-columns.push({
-   	 "header": Messages("containers.table.libProcessTypeCode"),
-   	 "property" : "inputContainerUsed.contents",
-   	 "filter" : "getArray:'properties.libProcessTypeCode.value' | unique ",
-   	 "order":true,
+	// 04/09/2017 niveau process ET contents =>utiliser properties et pas processProperties
+	columns.push({
+	   	 "header": Messages("containers.table.libProcessType"),
+	   	 "property" : "inputContainerUsed.contents",
+	   	 "filter" : "getArray:'properties.libProcessTypeCode.value' | unique | codes:'value'",
+	   	 "order":true,
+		 "edit":false,
+		  "hide":true,
+	   	 "type":"text",
+	   	 "position":8.1,
+	   	 "extraHeaders":{0 : Messages("experiments.inputs")}
+	  }); 
+	
+	// 04/09/2017 utiliser processProperties
+	columns.push({
+		"header": Messages("containers.table.expectedBaits"),
+		"property" : "inputContainerUsed.contents",
+		"filter" : "getArray:'processProperties.baits.value' | unique | codes:'value'",
+		"order":true,
+		"edit":false,
+		"hide":true,
+		"type":"text",
+		"position":8.2,
+		"extraHeaders":{0 : Messages("experiments.inputs")}
+		});
+	
+	// 04/09/2017 niveau process ET contents =>utiliser properties et pas processProperties
+	columns.push({
+	  	 "header": Messages("containers.table.captureProtocol"),
+	  	 "property" : "inputContainerUsed.contents",
+	  	 "filter" : "getArray:'properties.captureProtocol.value' | unique | codes:'value'",
+	  	 "order":true,
 		 "edit":false,
 		 "hide":true,
-   	 "type":"text",
-   	 "position":8.1,
-   	 "extraHeaders":{0 : Messages("experiments.inputs")}
-  }); 
-columns.push({
-  	 "header": "Protocole / Kit",
-  	 "property" : "inputContainerUsed.contents",
-  	 "filter" : "getArray:'properties.captureProtocol.value' | unique ",
-  	 "order":true,
-	 "edit":false,
-	 "hide":true,
-  	 "type":"text",
-  	 "position":8.1,
-  	 "extraHeaders":{0 : Messages("experiments.inputs")}
-   });
-
-columns.push({
-"header": "Baits",
-"property" : "inputContainerUsed.contents",
-"filter" : "getArray:'properties.baits.value' | unique ",
-"order":true,
-"edit":false,
-"hide":true,
-"type":"text",
-"position":8.2,
-"extraHeaders":{0 : Messages("experiments.inputs")}
-});
+	  	 "type":"text",
+	  	 "position":8.2,
+	  	 "extraHeaders":{0 : Messages("experiments.inputs")}
+	   });
 
 	
 	$scope.atmService.data.setColumnsConfig(columns);

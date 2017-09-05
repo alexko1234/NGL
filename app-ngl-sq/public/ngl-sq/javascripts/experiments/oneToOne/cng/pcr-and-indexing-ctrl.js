@@ -71,8 +71,8 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
 					*/
-				     { // 31/08/2017 niveau process ET contents =>utiliser properties et pas processProperties
-				       "header": Messages("containers.table.libProcessTypeCode"),
+				     { // 31/08/2017 niveau process ET contents =>utiliser properties et pas processProperties; 04/09/2017 si filtre codes:'value' alors header =>libProcessType
+				       "header": Messages("containers.table.libProcessType"),
 				       "property" : "inputContainerUsed.contents",
 				       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
 				       "order":true,
@@ -83,7 +83,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				       "extraHeaders":{0:inputExtraHeaders}
 				     },
 				     { // 31/08/2017 baits rellement utilisees (mises dans l'experience precedente capture) => outputContainerUsed.contents
-				       "header": "Baits (sondes)",
+				       "header": Messages("containers.table.baits"),
 				      	"property" : "outputContainerUsed.contents",
 				      	"filter" : "getArray:'properties.baits.value' | unique | codes:'value'",
 				      	"order":true,
@@ -94,7 +94,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				      	"extraHeaders":{0:inputExtraHeaders}
 				     },
 				     { // 31/08/2017 niveau process ET contents =>utiliser properties et pas processProperties
-				        "header": "Protocole / Kit",
+				        "header":  Messages("containers.table.captureProtocol"),
 				      	"property" : "inputContainerUsed.contents",
 				      	"filter" : "getArray:'properties.captureProtocol.value' | unique | codes:'value'",
 				      	"order":true,

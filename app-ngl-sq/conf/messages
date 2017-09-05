@@ -181,6 +181,9 @@ containers.table.workName = Label de travail
 containers.table.expectedCoverage= Couv. souhaitée
 containers.table.resolutionCodes = Résolutions
 containers.table.libraryToDo = Type(s) banque(s) à réaliser
+containers.table.expectedBaits=Baits (sondes) prévues
+containers.table.baits=Baits (sondes)
+containers.table.captureProtocol=Protocole / Kit
 
 container.from = issu de
 

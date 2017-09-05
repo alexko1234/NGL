@@ -60,9 +60,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('updateExperimentProperty', pName);
 	};
 	
-	// TEST FDS 28/08/2017
+	// FDS 28/08/2017
 	$scope.countInputSupportCodes = function(){
-		  // !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket ( ajouter mainService dans le controller !!! )
+		  // !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket
 		  var supportCode = [];
 		  if(!$scope.isCreationMode()){
 			var supportCode = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.code'|unique",$scope.experiment);			

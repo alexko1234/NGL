@@ -233,19 +233,19 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
-		// FDS correction 29/08/2017 les covaris utilisent des plaques et pas des tubes !!
+		// FDS correction 29/08/2017 les covaris utilisent aussi des plaques et pas seulement des tubes !!
 		l.add(newInstrumentUsedType("Covaris LE220", "covaris-le220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("covaris2", "Covaris 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
-				getContainerSupportCategories(new String[]{"96-well-plate"}),
-				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 		
 		l.add(newInstrumentUsedType("Covaris E220", "covaris-e220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("covaris3", "Covaris 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
-				getContainerSupportCategories(new String[]{"96-well-plate"}),
-				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		
@@ -259,15 +259,16 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null,                                                               // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
+		// FDS 04/09/2017 pas de propriétés pour le QuBit...
+		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"),getQuBitProperties(), 
 				getInstruments(
 						createInstrument("quBit1", "QuBit 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-        // FDS 03/08/2017 -- NL-1201: Ajout fluorometer Spectramax
-		l.add(newInstrumentUsedType("SpectraMax", "spectramax", InstrumentCategory.find.findByCode("spectrophotometer"), getSpectramaxProperties(), 
+        // FDS 03/08/2017 -- NL-1201: Ajout fluorometer Spectramax; FDS 04/09/2017 pas de propriétés
+		l.add(newInstrumentUsedType("SpectraMax", "spectramax", InstrumentCategory.find.findByCode("spectrophotometer"), null, 
 				getInstruments(
 						createInstrument("spectramax-bank1", "SpectraMax Banque 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("spectramax-bank2", "SpectraMax Banque 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -305,8 +306,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate)
-		// FDS 10/072017 inversion code/name
-		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpMotionProperties(), 
+		// FDS 10/07/2017 inversion code/name
+		// FDS 04/09/2017 Pas de properties...
+		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
 						createInstrument("bravo-workstation1", "Bravo Workstation 1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("bravo-workstation2", "Bravo Workstation 2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
@@ -602,15 +604,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				                       newValues("HS", "BR"), "single"));		
 		return l;
 	}
-	
-	// FDS 16/06/2017 -- NGL-1201 (capture); pour l 'instant les kits sont les memes que pour le qubit !!!; 03/08/2017 renommage getSpectramax!!
-	private static List<PropertyDefinition> getSpectramaxProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		
-		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("HS", "BR"), "single"));		
-		return l;
-	}
 
 	
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
@@ -673,8 +666,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 newValues("PCR FREE PROD NGS FINAL",
-                		  "ESSAI: Fragmentation"), 
-                		  "single", null, false ,null, null));
+                		  "DEV: Fragmentation"),  
+                "single", null, false ,null, null));
 
 		//l.addAll(getCovarisProperties());
 		l.addAll(getScicloneNGSXProperties());
@@ -694,8 +687,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
 				newValues("programme 1_normalisation",    // normalization
 						  "1_HiseqCluster_Normalisation_V0",
-						  "1_HiseqCluster_Normalisation_gros_vol_tris"),
-						  "single", null, false ,null, null));
+						  "1_HiseqCluster_Normalisation_gros_vol_tris"), 
+				"single", null, false ,null, null));
 		
 		return l;
 	}
@@ -746,7 +739,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						       newValue("6", "Source 6"),
 						       newValue("7", "Source 7"),
 						       newValue("8", "Source 8")), 
-						       "single", 2, true , null, null));
+				"single", 2, true , null, null));
 					
 	    l.addAll(getCBotV2Properties());
 			

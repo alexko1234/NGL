@@ -1,27 +1,51 @@
 @()
 <div class="col-md-12 col-lg-12" ng-controller="SamplePrepCtrl">
-	<div class="row" ng-if="mainService.isEditMode()">
+	<div class="row margin-bottom-7" ng-if="mainService.isEditMode()">
 		<div class="col-md-2 col-lg-2">
 		   <label for="InputSupport" class="control-label">@Messages("containers.table.support.in.code")</label>
 		   <div> {{inputSupportCode}}</div>
 		</div>
 		
+		<!--  remplacement par dropdown
 		<div class="col-md-2 col-lg-2">
            <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber")</label>
 		   <input class="form-control input-sm" type="text" id="NbOutputSupport"
 								                   title=@Messages("supports.outputNumber")
 		 						                   ng-model="nbOutputSupport" ng-change="initOutputContainerSupportCodes(nbOutputSupport)"/>
-		</div> 	
+		</div> 
+		 -->	
+		 
+		 <!--   <option selected="selected" value="1 ne fonctionne pas !!!!!!!-->
+		<div class="col-md-2 col-lg-2">
+		<label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber") ({{nbOutputSupport}})</label>&nbsp;&nbsp;
+		<select id="NbOutputSupport" ng-model="nbOutputSupport"  ng-change="initOutputContainerSupportCodes(nbOutputSupport)" ng-class="inputClass" style="background:white" >
+		    <option value="1">1</option>
+		    <option value="2">2</option>
+		</select>
+		</div>
+	
+
+		<div class="col-md-4 col-lg-4" ng-show="nbOutputSupport > 0">
+		<table class="table table-condensed table-hover table-bordered">
+		   <!--  class="header"  marche pas ??=> utilisation de <strong> -->
+		   <thead>
+		     <tr>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.support.out.code")</strong></td>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
+		     </tr>
+		   </thead>
+		   <tbody>
+		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
+		      <td><input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" /></td>
+		      <td><input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" /></td>
+		   </tr>
+		   </tbody>
+		</table>
+		</div>
 		
-		<div class="col-md-2 col-lg-2" ng-show="nbOutputSupport > 0" ng-repeat="code in outputContainerSupportCodes track by $index">
-			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")&nbsp;{{$index+1}}</label>
-			<input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" />
-			
-			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")&nbsp;{{$index+1}}</label>
-			<input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" />
-			
-		</div>	 
+		
 	 </div>
+	 
 	<!--------------------------------------------------------------->
 	<div class="row margin-bottom-7" ng-if="!mainService.isEditMode()">
 		<div class="col-md-2 col-lg-2">
@@ -30,17 +54,28 @@
 		</div>
 		
 		<div class="col-md-2 col-lg-2">
-           <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber")</label>
-		   <div>{{nbOutputSupport}}</div>
+           <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber") ({{nbOutputSupport}})</label>&nbsp;&nbsp;{{nbOutputSupport}}
 		</div> 
 		
-		<div class="col-md-2 col-lg-2"  ng-show="nbOutputSupport > 0"  ng-repeat="code in outputContainerSupportCodes track by $index">
-			<label for="outputContainerSupportCodes{{$index}}" class="control-label">@Messages("containers.table.support.out.code")&nbsp;{{$index+1}}</label>
-			<div>{{ outputContainerSupportCodes[$index] }}</div>
-			  
-			<label for="storageCodes{{$index}}" class="control-label">@Messages("containers.table.storageCode")&nbsp;{{$index+1}}</label>
-			<div>{{ storageCodes[$index] }}</div>
+		
+		<div class="col-md-4 col-lg-4" ng-show="nbOutputSupport > 0">
+		<table class="table table-condensed table-hover table-bordered">
+		<!--   class="header"  marche pas ??=> utilisation de <strong> -->
+		   <thead>
+		     <tr>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.support.out.code")</strong></td>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
+		     </tr>
+		   </thead>
+		   <tbody>
+		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
+		      <td>{{ outputContainerSupportCodes[$index] }}</td>
+		      <td>{{ storageCodes[$index] }}</td>
+		   </tr>
+		   </tbody>
+		</table>
 		</div>
+		
 	 	<div class="col-md-12 col-lg-12">
 		   <ul class="nav nav-tabs margin-bottom-5" role="tablist">
 		     <li class="active"><a href="" role="tab" data-target="#inputSupport"               data-toggle="tab" >@Messages("containers.table.support.in.code") : {{inputSupportCode}}</a></li>
@@ -50,11 +85,20 @@
   	</div>
   
   	<!-- doit on afficher les tabs dans les 2 modes ?? ou seulement si !editMode 
-  	    l'onglet a vec plaque input peut etre afiche dans tous les cas !!!
+  	    l'onglet avec plaque input peut etre afiche dans tous les cas !!!
+  	    
   	    les onglet de sortie ne peuvent etre affichés que si etat != en cours -->
   	    
   	<div class="tab-content"  >
 		<div class="tab-pane active" id="inputSupport">	
+		
+			<div class="row margin-bottom-7">
+	    		<!--  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data">OUTPUTTTTTTTTTTT {{$index+1}}</div> -->
+	    		<div class="col-md-12 col-lg-12">ultimate-datatable for INPUTTTTTTTTTTTT {{$index+1}} !!!!!</div>
+	  		</div>
+
+		</div> 
+		<div class="tab-pane" id="outputSupport{{$index+1}}" ng-repeat="code in outputContainerSupportCodes track by $index">	
 	 		<div class="row margin-bottom-7">
 				<table class="table table-bordered table-condensed">
        			<thead>
@@ -74,12 +118,6 @@
         		<tbody>
         		</table>
 			</div>
-		</div> 
-		<div class="tab-pane" id="outputSupport{{$index+1}}" ng-repeat="code in outputContainerSupportCodes track by $index">	
-	 		<div class="row margin-bottom-7">
-	    		<!--  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data">OUTPUTTTTTTTTTTT {{$index+1}}</div> -->
-	    		<div class="col-md-12 col-lg-12">ultimate-datatable for OUTPUTTTTTTTTTTT {{$index+1}} !!!!!</div>
-	  		</div>
 		</div>  
   	</div>
 </div>
