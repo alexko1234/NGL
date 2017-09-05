@@ -99,10 +99,12 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"hide":true,
 			"type":"text",
 			"position":10,
-			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			"filter":"getArray:'properties.tag.value' | unique",
 			"groupMethod":"collect"
 			
 		},
+		
 		{
 			"header":Messages("containers.table.fromTransformationTypeCodes"),
 			"property":"fromTransformationTypeCodes",
