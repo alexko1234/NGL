@@ -74,6 +74,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("ext-to-x5-wg-pcr-free",-1), //ordered list of experiment type in process type
 						getPET("prep-pcr-free",0),
 						getPET("lib-normalization",1), 
+						getPET("normalization-and-pooling",1), // ajout 06/09/2017
 						getPET("prepa-fc-ordered",2), 
 						getPET("illumina-depot",3) ),         
 				getExperimentTypes("prep-pcr-free").get(0),         //first experiment type    
@@ -91,6 +92,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("prep-wg-nano",0),
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
+						getPET("normalization-and-pooling",3), // ajout 06/09/2017
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4) ),      
 				getExperimentTypes("prep-wg-nano").get(0),      //first experiment type;
