@@ -450,6 +450,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Adaptateurs/Kmers","Qlte-adapterKmer", QlterC,(short) 4));		
 		l.add(InstanceFactory.newResolution("Duplicat pairs > 20","Qlte-duplicatPairs", QlterC,(short) 5));
 		l.add(InstanceFactory.newResolution("Duplicat > 30","Qlte-duplicat", QlterC,(short) 6));
+		l.add(InstanceFactory.newResolution("Score qualité moyen","Pb-qualite", QlterC,(short) 7));
 		
 		// TAXO
 		ResolutionCategory TAXOrC= resolutionCategories.get("TAXO");
@@ -465,6 +466,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Fungi","TAXO-fungi", TAXOrC,(short) 9));
 		l.add(InstanceFactory.newResolution("OK post clean rRNA","TAXO-postCleanrRNA", TAXOrC,(short) 10));
 		l.add(InstanceFactory.newResolution("Contaminant amplicon","TAXO-contaAmplicon", TAXOrC,(short) 11));
+		l.add(InstanceFactory.newResolution("% hominidae","Pb-taxonomy", TAXOrC,(short) 12));
 					
 		// RIBO
 		l.add(InstanceFactory.newResolution("% rRNA élevé","RIBO-percEleve", resolutionCategories.get("RIBO"),(short) 1));
