@@ -9,7 +9,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="getCCRTFile" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="default">
-			<Executable path="rsync" user="cnsnglapps" host="etna2.genoscope.cns.fr"/>
+			<Executable path="rsync" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
 			<Slurm job="rsyncJob" part="normal" account="soumissions"/>
 		</ExecutableSpecification>
 		
