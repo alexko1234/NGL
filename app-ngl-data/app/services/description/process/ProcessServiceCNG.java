@@ -92,7 +92,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("prep-wg-nano",0),
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
-						getPET("normalization-and-pooling",3), // ajout 06/09/2017
+						getPET("normalization-and-pooling",2), // ajout 06/09/2017
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4) ),      
 				getExperimentTypes("prep-wg-nano").get(0),      //first experiment type;
