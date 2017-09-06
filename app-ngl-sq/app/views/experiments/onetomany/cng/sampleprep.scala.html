@@ -6,24 +6,14 @@
 		   <div> {{inputSupportCode}}</div>
 		</div>
 		
-		<!--  remplacement par dropdown
-		<div class="col-md-2 col-lg-2">
-           <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber")</label>
-		   <input class="form-control input-sm" type="text" id="NbOutputSupport"
-								                   title=@Messages("supports.outputNumber")
-		 						                   ng-model="nbOutputSupport" ng-change="initOutputContainerSupportCodes(nbOutputSupport)"/>
-		</div> 
-		 -->	
-		 
-		 <!--   <option selected="selected" value="1 ne fonctionne pas !!!!!!!-->
+		<!--   <option selected="selected" value="1 ne fonctionne pas avec angular !!!!!!!-->
 		<div class="col-md-2 col-lg-2">
 		<label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber") ({{nbOutputSupport}})</label>&nbsp;&nbsp;
-		<select id="NbOutputSupport" ng-model="nbOutputSupport"  ng-change="initOutputContainerSupportCodes(nbOutputSupport)" ng-class="inputClass" style="background:white" >
+		<select id="NbOutputSupport" ng-model="nbOutputSupport" ng-change="initOutputContainerSupportCodes(nbOutputSupport)" ng-class="inputClass" style="background:white" >
 		    <option value="1">1</option>
 		    <option value="2">2</option>
 		</select>
 		</div>
-	
 
 		<div class="col-md-4 col-lg-4" ng-show="nbOutputSupport > 0">
 		<table class="table table-condensed table-hover table-bordered">
@@ -42,8 +32,6 @@
 		   </tbody>
 		</table>
 		</div>
-		
-		
 	 </div>
 	 
 	<!--------------------------------------------------------------->
@@ -56,8 +44,7 @@
 		<div class="col-md-2 col-lg-2">
            <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber") ({{nbOutputSupport}})</label>&nbsp;&nbsp;{{nbOutputSupport}}
 		</div> 
-		
-		
+	
 		<div class="col-md-4 col-lg-4" ng-show="nbOutputSupport > 0">
 		<table class="table table-condensed table-hover table-bordered">
 		<!--   class="header"  marche pas ??=> utilisation de <strong> -->
@@ -75,20 +62,16 @@
 		   </tbody>
 		</table>
 		</div>
-		
-	 	<div class="col-md-12 col-lg-12">
+	</div>
+	
+	<!-- onglets-->
+	<div class="col-md-12 col-lg-12">
 		   <ul class="nav nav-tabs margin-bottom-5" role="tablist">
 		     <li class="active"><a href="" role="tab" data-target="#inputSupport"               data-toggle="tab" >@Messages("containers.table.support.in.code") : {{inputSupportCode}}</a></li>
-  	         <li ng-repeat="code in outputContainerSupportCodes track by $index"><a href="" role="tab" data-target="#outputSupport{{$index+1}}" data-toggle="tab" >@Messages("containers.table.support.out.code")&nbsp;{{$index+1}} : {{ outputContainerSupportCodes[$index] }}</a></li>
+  	         <li ng-show="!mainservice.isCreationMode()" ng-repeat="code in outputContainerSupportCodes track by $index"><a href="" role="tab" data-target="#outputSupport{{$index+1}}" data-toggle="tab" >@Messages("containers.table.support.out.code")&nbsp;{{$index+1}} : {{ outputContainerSupportCodes[$index] }}</a></li>
 	       </ul>
-		</div>	
-  	</div>
-  
-  	<!-- doit on afficher les tabs dans les 2 modes ?? ou seulement si !editMode 
-  	    l'onglet avec plaque input peut etre afiche dans tous les cas !!!
-  	    
-  	    les onglet de sortie ne peuvent etre affichés que si etat != en cours -->
-  	    
+	</div>	
+  	<!-- les onglet de sortie ne doivent  etre affichés que si etat !en cours --> 
   	<div class="tab-content"  >
 		<div class="tab-pane active" id="inputSupport">	
 		
@@ -98,6 +81,7 @@
 	  		</div>
 
 		</div> 
+		<div ng-show="!mainservice.isCreationMode()"
 		<div class="tab-pane" id="outputSupport{{$index+1}}" ng-repeat="code in outputContainerSupportCodes track by $index">	
 	 		<div class="row margin-bottom-7">
 				<table class="table table-bordered table-condensed">
@@ -118,6 +102,7 @@
         		<tbody>
         		</table>
 			</div>
-		</div>  
+		</div> 
+		</div>
   	</div>
 </div>

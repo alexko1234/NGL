@@ -3,12 +3,10 @@
 
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService','atmToSingleDatatable',
                                                                function($scope, $parse, commonAtomicTransfertMethod, mainService, atmToSingleDatatable ) {
+	
+	
+   var nbOutputSupport=1;  // essai d'initialisation
 
-	
-	
-    var nbOutputSupport; 
-    // $scope.outputContainerSupportCodes= new Array(1); // test ajout change rien
-	
    // créer un tableau sur lequel pourra boucler ng-repeat
    // ce tableau est modifié sur onChange de "nbOutputSupport"
    $scope.initOutputContainerSupportCodes = function(nbOutputSupport){
@@ -47,7 +45,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (il peut y en avoir plusieurs..)
 	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
 	   
-	   // $scope.initOutputContainerSupportCodes (1);// test ajout chge rien 
+	   $scope.initOutputContainerSupportCodes (1);// test ajout pour initaliser mais chge rien 
 	   
 	   if ($scope.inputSupportCodes.length > 1){
 		   $scope.messages.clear();
@@ -57,8 +55,8 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonA
 		   $scope.messages.open();
 	   } else {		  
 		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
-		   $scope.outputContainerSupportCodes=[];
-		   $scope.storageCodes=[];
+		   $scope.outputContainerSupportCodes=['']; // essai ajout ''
+		   $scope.storageCodes=[''];// essai ajout ''
 	   }
 	}	
    
