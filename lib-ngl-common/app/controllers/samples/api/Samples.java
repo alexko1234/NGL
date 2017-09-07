@@ -2,6 +2,8 @@ package controllers.samples.api;
 
 import static play.data.Form.form;
 
+import static validation.sample.instance.SampleValidationHelper.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,6 +18,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
@@ -27,19 +30,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
+import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
@@ -206,4 +213,96 @@ public class Samples extends DocumentController<Sample>{
 			return badRequest(filledForm.errorsAsJson());
 		}				
 	}
+
+
+private static Sample findSample(String sampleCode){
+	return  MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sampleCode));
+}
+
+@Permission(value={"writing"})
+@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+public static Result update(String code){
+	Sample sample = findSample(code);
+	if(sample == null){
+		return badRequest("Sample with code "+code+" not exist");
+	}
+	
+	Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+	QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+	Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+	Sample input = filledForm.get();
+
+	if(queryFieldsForm.fields == null){
+		if (code.equals(input.code)) {
+			if(null != input.traceInformation){
+				input.traceInformation.setTraceInformation(getCurrentUser());
+			}else{
+				Logger.error("traceInformation is null !!");
+			}
+			
+			if(!input.state.code.equals(input.state.code)){
+				return badRequest("You cannot change the state code. Please used the state url ! ");
+			}
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal.setUpdateMode();
+			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+			cleanProperty(input);
+			input.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
+				return ok(Json.toJson(input));
+			}else {
+				return badRequest(filledForm.errorsAsJson());
+			}
+			
+		}else{
+			return badRequest("sample code are not the same");
+		}	
+	}else{
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		ctxVal.setUpdateMode();
+		validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+		validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
+		if(!filledForm.hasErrors()){
+			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+			
+			TraceInformation ti = sample.traceInformation;
+			ti.setTraceInformation(getCurrentUser());
+			
+			if(queryFieldsForm.fields.contains("valuation")){
+				input.valuation.user = getCurrentUser();
+				input.valuation.date = new Date();
+			}
+			
+			if(queryFieldsForm.fields.contains("volume")){
+				validateVolume(input.volume, ctxVal);					
+			}
+			if(queryFieldsForm.fields.contains("quantity")){
+				validateQuantity(input.quantity, ctxVal);					
+			}
+			if(queryFieldsForm.fields.contains("size")){
+				validateSize(input.size, ctxVal);
+			}
+			if(queryFieldsForm.fields.contains("concentration")){
+				validateConcentration(input.concentration, ctxVal);					
+			}
+			if(!ctxVal.hasErrors()){
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Sample.class, 
+						DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Sample.class).set("traceInformation", ti));
+				return ok(Json.toJson(findSample(code)));
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}				
+		}else{
+			return badRequest(filledForm.errorsAsJson());
+		}		
+	}		
+}
+private static DatatableForm updateForm(SamplesSearchForm form) {
+	if(form.includes.contains("default")){
+		form.includes.remove("default");
+		form.includes.addAll(defaultKeys);
+	}
+	return form;
+}
 }
