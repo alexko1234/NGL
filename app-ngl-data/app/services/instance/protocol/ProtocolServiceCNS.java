@@ -209,6 +209,16 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq NEB Reagent"))));
 		
+		lp.add(newProtocol("prod-ill-bqadn-lowcost-148-v4","Prod_ILL_BqADN_LowCost_148_v4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification","dna-illumina-indexed-library","fragmentation"), 
+				concatMap(newPSV("libraryProtocol","Bq low cost"))));
+		lp.add(newProtocol("prod-ill-bqadn-nebu2-151-v2","Prod_ILL_BqADN_NEBUII_151_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure","pcr-amplification-and-purification","dna-illumina-indexed-library","fragmentation"), 
+				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II"))));
+		lp.add(newProtocol("prod-ill-bqadn-pcrfree-157-v1","Prod_ILL_BqADN_PCRFree_157_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
+				concatMap(newPSV("libraryProtocol","Bq PCR free"))));
+		lp.add(newProtocol("prod-ill-tag-amplicons-159-v1","Prod_ILL_Tag_Amplicons_159_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("prod-ill-dep-qpcr-149-v2","Prod_ILL_Dep_qPCR_149_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+
+		
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter V4"),newPSV("strandOrientation","unstranded"),newPSV("cDNAsynthesisType","oligodT"))));
     	
@@ -285,7 +295,7 @@ public class ProtocolServiceCNS {
 			
 				
 		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){	
-			
+				
 		}
 		
 		for(Protocol protocole:lp){
