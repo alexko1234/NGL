@@ -17,12 +17,11 @@ public class SraParameter  extends DBObject {
 	
 	public static Map <String, String> getParameter(String type) {
 		Map<String, String> map = new HashMap<String, String>();
-		type="libProcessTypeCodeValue_orientation";
 		List<SraParameter> sraParam = MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.in("type", type)).toList();
 		for (SraParameter param: sraParam){
 			map.put(param.code, param.value);
 		}
 		return map;
 	}
-	
+
 }

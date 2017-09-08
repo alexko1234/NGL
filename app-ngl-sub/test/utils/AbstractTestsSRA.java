@@ -38,9 +38,6 @@ public abstract class AbstractTestsSRA {
 		return fakeApplication();
 	}
 	
-	
-	
-	
 	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName,String code)
 			throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 

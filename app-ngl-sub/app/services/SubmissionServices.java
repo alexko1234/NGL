@@ -755,7 +755,7 @@ public class SubmissionServices {
 			System.out.println("submission.validate produit des erreurs");
 			// rallBack avec clean sur exp et sample et mise à jour study
 			System.out.println("\ndisplayErrors dans SubmissionServices::createNewSubmission :");
-			//contextValidation.displayErrors(Logger.of("SRA"));
+			contextValidation.displayErrors(Logger.of("SRA"));
 			System.out.println("\n end displayErrors dans SubmissionServices::createNewSubmission :");
 			
 			// enlever les samples, experiments et submission qui ont ete crées par le service et remettre
@@ -1136,7 +1136,7 @@ public class SubmissionServices {
 
 		Experiment experiment = new Experiment(); 
 		SraParameter sraParam = new SraParameter();
-		Map<String, String> map = sraParam.getParameter("libProcessTypeCodeValue_orientation");
+		Map<String, String> mapLibProcessTypeCodeVal_orientation = VariableSRA.mapLibProcessTypeCodeVal_orientation;
 
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);
 		experiment.readSetCode = readSet.code;
@@ -1338,10 +1338,10 @@ public class SubmissionServices {
 								} else {
 									throw new SraException("Pour le readSet " + readSet.code +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
 								}*/
-								if (map.get(libProcessTypeCodeValue)==null){
+								if (mapLibProcessTypeCodeVal_orientation.get(libProcessTypeCodeValue)==null){
 									throw new SraException("Pour le readSet " + readSet.code +  ", valeur de libProcessTypeCodeValue inconnue :" + libProcessTypeCodeValue);
 								} else {
-									experiment.libraryLayoutOrientation = map.get(libProcessTypeCodeValue);
+									experiment.libraryLayoutOrientation = mapLibProcessTypeCodeVal_orientation.get(libProcessTypeCodeValue);
 								}
 							}
 						}
@@ -1353,7 +1353,7 @@ public class SubmissionServices {
 				System.out.println("libraryLayout======"+libraryLayout);
 			}
 		}
-		experiment.libraryConstructionProtocol = VariableSRA.libraryConstructionProtocol;
+		experiment.libraryConstructionProtocol = VariableSRA.defaultLibraryConstructionProtocol;
 		experiment.run = createRunEntity(readSet);
 
 		// Renseigner l'objet experiment pour lastBaseCoord : Recuperer les lanes associées au

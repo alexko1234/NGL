@@ -18,7 +18,7 @@ import controllers.CommonController;
 public class Variables extends CommonController{
 	
 	public static Result get(String name){
-		if(name.equalsIgnoreCase("mapCenterName")){
+		if(name.equalsIgnoreCase("centerName")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapCenterName)));
 		} else if(name.equalsIgnoreCase("laboratoryName")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapLaboratoryName)));

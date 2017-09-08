@@ -21,7 +21,6 @@ public class Readset extends DBObject implements IValidation {
 		contextValidation.addKeyToRootKeyName("ngl-sub::Readset");
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.type, VariableSRA.mapTypeReadset, "typeReadset");
-
 		contextValidation.removeKeyFromRootKeyName("ngl-sub::Readset");
 		//System.out.println("sortie de sample.validate pour " + this.code);
 	}

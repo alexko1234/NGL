@@ -52,7 +52,7 @@ public class XmlServices {
 		// si on est dans soumission de données :
 		if (!submission.release) {
 			if (StringUtils.isNotBlank(submission.studyCode)) {	
-				File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
+				File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudies);
 				writeStudyXml(submission, studyFile);
 			}
 			if (submission.sampleCodes.size() != 0){
