@@ -11,6 +11,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -127,13 +128,17 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			.filter(atm -> atm.outputContainerUseds != null)			
 			.map(atm -> atm.outputContainerUseds)
 			.flatMap(List::stream)
-			.filter(ocu -> ocu.experimentProperties != null)
+			.filter(ocu -> (ocu.experimentProperties != null && ifSameProjectSample(input, ocu)))
 			.map(ocu -> ocu.experimentProperties.entrySet())
 			.flatMap(Set::stream)
 			.filter(entry -> (entry.getKey().equals(input.contentPropertyNameUpdated) && ValidationHelper.convertStringToType(pd.valueType, entry.getValue().value.toString()).equals(currentValue)))
 			.forEach(entry ->{
 				entry.getValue().value = newValue;
 			});					
+	}
+
+	private boolean ifSameProjectSample(NGLObject input, OutputContainerUsed ocu) {
+		return ocu.contents.stream().anyMatch(content -> (input.projectCode.equals(content.projectCode) &&  input.sampleCode.equals(content.sampleCode)));		
 	}
 
 	@Override
