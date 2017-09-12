@@ -69,7 +69,7 @@ error.validationexp.comments.null = Le commentaire est null
 error.validationexp.status.empty = Vous devez renseigner le statut avant de terminer l''expérience
 error.validationexp.container.alreadyused = Le container {0} est déjà en cours d''utilisation
 error.validationexp.support.alreadyused = Le support {0} est déjà en cours d''utilisation
-
+error.validationexp.inputContainer.state.code = Le container {0} n''a pas le bon état (A-*).
 error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
 
 #directive messages

@@ -45,7 +45,12 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		
 		if(inputContainer.contents.size() != container.contents.size()){
 			contextValidation.addErrors("categoryCode", "error.validationexp.inputContainer.contents.sizenotequals", inputContainer.code);
-		}		
+		}
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
+		if(contextValidation.isCreationMode() && !container.state.code.startsWith("A")){
+			contextValidation.addErrors("state.code", "error.validationexp.inputContainer.state.code", inputContainer.code);
+		}
 		//TODO improve comparison
 	}
 	

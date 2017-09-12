@@ -115,6 +115,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		
 		IntStream.range(0, atomicTransfertMethods.size()).parallel().forEach(i -> {
 			ContextValidation cv = new ContextValidation(contextValidation.getUser());
+			cv.setMode(contextValidation.getMode());
 			cv.putObject(FIELD_STATE_CODE, contextValidation.getObject(FIELD_STATE_CODE));
 			cv.putObject(FIELD_EXPERIMENT, contextValidation.getObject(FIELD_EXPERIMENT));
 			cv.putObject(FIELD_TYPE_CODE , expTypeCode);
