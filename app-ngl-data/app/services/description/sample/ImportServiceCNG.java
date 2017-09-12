@@ -183,11 +183,11 @@ public class ImportServiceCNG extends AbstractImportService {
         return values;
     } 
 	
-	// 04/07/2017 restreindre la possibilite d'erreur a l'import des fichier de librairies externes
-	// Liste a faire évoluer...
+	
 	private static List<Value> getExtLibProcessTypecodesValues(){
         List<Value> values = new ArrayList<Value>();
         
+        // 04/07/2017 restreindre la possibilite d'erreur: autoriser uniquement librariries externes RNA
         values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
         values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
         values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
@@ -196,6 +196,13 @@ public class ImportServiceCNG extends AbstractImportService {
         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));
         values.add(DescriptionFactory.newValue("RG","RG - mRNASeq"));
         values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold"));
+        
+        // 12/09/2017 ajout des codes pour import des librairies DNA externes 
+        values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
+        values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
+        values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
+        values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
+        values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));      
 
         return values;
 	}
