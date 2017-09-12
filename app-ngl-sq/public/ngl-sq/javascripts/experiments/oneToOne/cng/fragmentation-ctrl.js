@@ -121,33 +121,16 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			         
 			         // colonnes specifiques experience viennent ici...
 			         
-			         //--------------------- OUTPUT containers section -----------------------
-			         /* 25/07/2017 ne pas faire apparaitre les volumes...
-			         {
-			        	 "header":Messages("containers.table.volume")+ " (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
-			        	 "editDirectives":"udt-change='updatePropertyFromUDT(value,col)'",
-			        	 "tdClass":"valuationService.valuationCriteriaClass(value.data, experiment.status.criteriaCode, col.property)",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":300,
-			        	 "extraHeaders":{0:outputExtraHeaders}
-			         },
-			         */
-			         /* ne pas afficher les containercodes  sauf pour DEBUG
-			         {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"outputContainerUsed.code",
-			        	 "order":true,
-						 "edit":false,
+			         { //  TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+			        	 "header":"TESTTTT",
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":400,
-			        	 "extraHeaders":{0:outputExtraHeaders}
-			         },
-			         */
+			        	 "position":200,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         }, 
+			         
+			         //--------------------- OUTPUT containers section -----------------------
 			         { //  barcode plaque sortie == support Container used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
@@ -357,6 +340,11 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		})		
 	};
 	*/
+	
+	// En fragmentation le covaris n'est utilisé qu'en mode plaque
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
+	});
 		
 	//Init
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
@@ -403,5 +391,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
+	
+
 	
 }]);

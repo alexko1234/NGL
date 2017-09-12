@@ -102,7 +102,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 	columns.push({
 		"header": Messages("containers.table.expectedBaits"),
 		"property" : "inputContainerUsed.contents",
-		"filter" : "getArray:'processProperties.baits.value' | unique | codes:'value'",
+		"filter" : "getArray:'processProperties.expectedBaits.value' | unique | codes:'value'",
 		"order":true,
 		"edit":false,
 		"hide":true,

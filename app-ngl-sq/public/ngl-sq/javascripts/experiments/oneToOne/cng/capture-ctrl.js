@@ -265,23 +265,6 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 				dynamic:true,
 			}
 	}; // fin struct datatableConfig
-	
-
-	/*   DOUBLON => DEJA PLUS HAUT !!!!
-	// 31/07/2017 ajouter les columns 'processProperties' uniquement si experience state= N ou IP car n'existe que temporairement
-	if ( $scope.isInProgressState() || $scope.isNewState()) {
-		datatableConfig.columns.push({
-	       	 "header": "Baits (sondes) prévues",
-	       	 "property":"inputContainerUsed.contents",
-	       	 "filter" : "getArray:'processProperties.expectedBaits.value' | unique",
-	       	 "order":true,
-			 "hide":true,
-	       	 "type":"text",
-	       	 "position":11,
-	       	 "extraHeaders":{0:inputExtraHeaders}
-		 });
-    }
-    */
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
