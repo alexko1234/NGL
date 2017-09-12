@@ -105,6 +105,17 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			         },
 			         */
 			         {
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "watch":true,
+			        	 "type":"number",
+			        	 "position":62,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
