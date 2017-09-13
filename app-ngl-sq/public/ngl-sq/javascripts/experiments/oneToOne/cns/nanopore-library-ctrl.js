@@ -111,7 +111,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "required":true,
+						 "required":"isRequired()",
 			        	 "type":"number",
 			        	 "position":62,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
