@@ -1,7 +1,7 @@
 /* 30/06/2016 dupliqué a partir de pcr-and-purification-ctrl.js
    25/07/2017 Ne pas faire apparaitre les volumes.... */
 
-angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmToSingleDatatable','mainService',
+angular.module('home').controller('FragmentationCNGCtrl',['$scope', '$parse', 'atmToSingleDatatable','mainService',
                                                     function($scope, $parse, atmToSingleDatatable, mainService){
 	// variables pour extraheaders
 	var inputExtraHeaders=Messages("experiments.inputs");
