@@ -265,11 +265,37 @@ public class BanqueIllumina extends AbstractDeclaration {
 						getExperimentTypes("spri-select").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-spri-select-stk-illumina-depot").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(DescriptionFactory.newProcessType("Réorientation manips - STK, FC, Dépôt", "reor-stk-illumina-depot", 
+				ProcessCategory.find.findByCode("library"), 52,
+				getReorSTKDepotProperties(), 
+				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),
+						getPET("sizing",-1),
+						getPET("spri-select",-1),
+						getPET("pcr-amplification-and-purification",-1),
+						getPET("solution-stock",0),
+						getPET("prepa-flowcell",1),
+						getPET("prepa-fc-ordered",1),
+						getPET("illumina-depot",2)), 
+						getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 		
 		
 		return l;	
 	}
 	
+	private List<PropertyDefinition> getReorSTKDepotProperties() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
+		
+		List<Value> libProcessTypeCodes = new ArrayList<Value>();
+		libProcessTypeCodes.addAll(MetaGenomique.getLibProcessDA());
+		libProcessTypeCodes.addAll(MetaBarCoding.getBanqueProcessTypeMetaTA());
+		propertyDefinitions.add(getLibProcessTypeCodeProperty(libProcessTypeCodes));
+		propertyDefinitions.addAll(getAmpureProperties());
+		propertyDefinitions.addAll(RunIllumina.getIlluminaDepotProperties());
+		return propertyDefinitions;
+	}
+
+
 	private List<PropertyDefinition> getDNALibIlluminaProcessProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();	
 		

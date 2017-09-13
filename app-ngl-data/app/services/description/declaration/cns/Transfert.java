@@ -213,7 +213,7 @@ public class Transfert extends AbstractDeclaration {
 	private static List<PropertyDefinition> getPropertyDefinitionPlateTubeToPlate() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, "F", null, 
 				"single", 100, true, null,null));
 		
 		return propertyDefinitions;

@@ -105,6 +105,18 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			         },
 			         */
 			         {
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "editDirectives":" udt-change='updatePropertyFromUDT(value,col)' ",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+						 "required":"isRequired()",
+			        	 "type":"number",
+			        	 "position":62,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
@@ -253,6 +265,45 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 		$scope.atmService.data.setEdit();
 	});
 	//Init
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		
+		if(col.property === 'outputContainerUsed.volume.value'){
+			computeLigationQuantity(value.data);			
+		}else if(col.property === 'outputContainerUsed.experimentProperties.ligationConcentration.value'){
+			computeLigationQuantity(value.data);
+		}
+		
+	}
+	// inputVol * concIn 
+	var computeLigationQuantity = function(udtData){
+		var getter = $parse("outputContainerUsed.experimentProperties.ligationQuantity.value");
+		var ligationQuantity = getter(udtData);
+		
+		var compute = {
+				outputConc : $parse("outputContainerUsed.experimentProperties.ligationConcentration.value")(udtData),
+				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				isReady:function(){
+					return (this.outputConc && this.outputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(outputConc * outputVol)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				ligationQuantity = Math.round(result*10)/10;				
+			}else{
+				ligationQuantity = undefined;
+			}	
+			getter.assign(udtData, ligationQuantity);
+		}else{
+			getter.assign(udtData, null);
+			console.log("not ready to computeFrgInputQuantity");
+		}
+		
+	}
+	
 	
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);

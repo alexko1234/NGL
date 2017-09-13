@@ -829,8 +829,8 @@ public class Nanopore extends AbstractDeclaration{
 				"single",50,true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition(
 				"Qté finale Ligation","ligationQuantity", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class,
-				false, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
-				"single",60,true, null, null)); 
+				true, null, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),
+				"single",60,false, null, null)); 
 
 		//Experiments
 		propertyDefinitions.add(newPropertiesDefinition(

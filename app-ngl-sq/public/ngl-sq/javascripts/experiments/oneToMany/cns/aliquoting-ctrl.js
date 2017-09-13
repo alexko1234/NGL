@@ -115,6 +115,16 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$parse', 'atmToGe
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
+			        	 "property":"inputContainerUsed.concentration.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
@@ -148,6 +158,7 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$parse', 'atmToGe
 			         {
 			        	 "header":Messages("containers.table.volume")+" (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
+			        	 "editDirectives":" udt-change='updatePropertyFromUDT(value,col)' ",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -432,6 +443,43 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$parse', 'atmToGe
 			});
 		}		
 	};
+	
+	
+	$scope.updatePropertyFromUDT = function(value, col){
+		
+		if(col.property === 'outputContainerUsed.volume.value'){
+			computeQuantity(value.data);			
+		}
+		
+	}
+	// inputVol * concIn 
+	var computeQuantity = function(udtData){
+		var getter = $parse("outputContainerUsed.quantity.value");
+		var quantity = getter(udtData);
+		
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				isReady:function(){
+					return (this.inputConc && this.outputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputConc * outputVol)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				quantity = Math.round(result*10)/10;				
+			}else{
+				quantity = undefined;
+			}	
+			getter.assign(udtData, quantity);
+		}else{
+			getter.assign(udtData, null);
+			console.log("not ready to quantity");
+		}
+		
+	}
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");

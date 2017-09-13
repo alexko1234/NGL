@@ -74,6 +74,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("ext-to-x5-wg-pcr-free",-1), //ordered list of experiment type in process type
 						getPET("prep-pcr-free",0),
 						getPET("lib-normalization",1), 
+						getPET("normalization-and-pooling",1), // ajout 06/09/2017 (NGL-1576)
 						getPET("prepa-fc-ordered",2), 
 						getPET("illumina-depot",3) ),         
 				getExperimentTypes("prep-pcr-free").get(0),         //first experiment type    
@@ -91,6 +92,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("prep-wg-nano",0),
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
+						getPET("normalization-and-pooling",2), // ajout 06/09/2017 (NGL-1576)
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4) ),      
 				getExperimentTypes("prep-wg-nano").get(0),      //first experiment type;
@@ -99,8 +101,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			
 		// FDS 13/03/2017 NGL-1167 ajout "wg-chromium-lib-prep" en -1
-		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016
-		l.add(DescriptionFactory.newProcessType("Norm,FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016; chgt label 06/09/2017 (NGL-1576)
+		l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				20,
 				null,  // pas de propriétés ??
 				Arrays.asList(
@@ -215,8 +217,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-rna-lib-process").get(0),    //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-        // FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modif du label=> supprimer RNA
-		l.add(DescriptionFactory.newProcessType("Norm+pooling, dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
+        // FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modif du label=> supprimer RNA;chgt label (NGL-1576)
+		l.add(DescriptionFactory.newProcessType("Norm(+pooling), dénat, FC, dépot", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 				21,   
 				null, // pas de propriétés ??
 				Arrays.asList(

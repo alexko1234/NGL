@@ -138,8 +138,6 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
-			        	 //utilisation de la directive utd-change car elle capture les modifications du header puis déclenche la function calculVolume 
-			        	 // Si ng-change seul l'evenement utilisateur est capturé, la valeur de la cellule est modifiée mais le calcul non executé
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
