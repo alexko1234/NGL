@@ -42,8 +42,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> séq. Illumina", "library"));          // 13/09/2017 fdsantos NGL-1201 renommage label
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> séq. Nanopore", "nanopore-library")); // 13/09/2017 fdsantos NGL-1201 renommage label
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> seq. Illumina", "library"));          // 13/09/2017 fdsantos NGL-1201 renommage label
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> seq. Nanopore", "nanopore-library")); // 13/09/2017 fdsantos NGL-1201 renommage label
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Séquençage", "sequencing"));
 		// 28/11/2016 fdsantos JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
