@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.State;
@@ -61,6 +62,7 @@ public class ValidationHelper {
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired, String currentStateCode, String defaultRequiredState) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(properties!=null && !properties.isEmpty()){
+			cleanningProperties(properties);
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
 		}		
 		Multimap<String, PropertyDefinition> multimap = getMultimap(propertyDefinitions);
@@ -132,6 +134,17 @@ public class ValidationHelper {
 		}
 	}
 	
+	private static void cleanningProperties(Map<String, PropertyValue> properties) {
+		List<String> removedKeys = properties.entrySet().parallelStream()
+			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null))
+			.map(entry -> entry.getKey())
+			.collect(Collectors.toList());
+		
+		if(!removedKeys.isEmpty()){
+			removedKeys.parallelStream().forEach(key -> properties.remove(key));
+		}		
+	}
+
 	private static boolean isStateRequired(String currentStateCode,
 			String requiredState, String defaultRequiredState) {
 
