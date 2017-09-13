@@ -130,29 +130,29 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CM","CM - DefCap012_Rg"));
          values.add(DescriptionFactory.newValue("CN","CN - DefCapINRA1_Rg"));
          values.add(DescriptionFactory.newValue("CO","CO - DefCapCAPSEQAN"));
-         values.add(DescriptionFactory.newValue("CP","CP - Agilent : V5 (DefCap013_Ex)"));
+         values.add(DescriptionFactory.newValue("CP","CP - Agilent : V5 (DefCap013_Ex)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CQ","CQ - DefCap014_Rg"));
          values.add(DescriptionFactory.newValue("CR","CR - DefCap015_Ex"));
-         values.add(DescriptionFactory.newValue("CS","CS - Agilent : V5+UTR (DefCap016_Ex)"));
+         values.add(DescriptionFactory.newValue("CS","CS - Agilent : V5+UTR (DefCap016_Ex)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CT","CT - CapNimGenV3_017_Ex"));
          values.add(DescriptionFactory.newValue("CV","CV - DefCap018_Ex"));
          values.add(DescriptionFactory.newValue("CW","CW - DefCap019_Rg"));
          values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
          values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
-         values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6 (DefCap022)"));
-         values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)"));
+         values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6 (DefCap022)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
+         values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
-         values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)"));
+         values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
-         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));  //NGL-1584
+         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));  // NGL-1584 ajout
          
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
-         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !!! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
-         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !!! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
@@ -170,11 +170,11 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
          values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
          values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
-         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));        // !! aussi  dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
-         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));        // !! aussi  dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
-         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));  // !! aussi  dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
-         values.add(DescriptionFactory.newValue("RG","RG - mRNASeq"));          // !! aussi  dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
-         values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold"));    // !! aussi  dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));        // !! aussi dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));        // !! aussi dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));  // !! aussi dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("RG","RG - mRNASeq"));          // !! aussi dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("RH","RH - sstRNASeqGold"));    // !! aussi dans ProcessServiceCNG / getRNALibProcessTypeCodeValues()
          
          //
          values.add(DescriptionFactory.newValue("UN","UN - UKNOWN"));

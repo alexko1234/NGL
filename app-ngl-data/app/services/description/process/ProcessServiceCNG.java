@@ -590,8 +590,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	
 	private static List<Value> getRNALibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
-        // et pourquoi pas RA, RB, RC ???  Voir RunServiceCNG
-        
+
+        // !! garder les codes et labels en coherence avec  ImportServiceCNG et RunServiceCNG
         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing
@@ -742,7 +742,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
         values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)"));
         //values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
         //values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));   
-        values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));  //NGL-1584
+        //values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));
          
         return values;
 	}
