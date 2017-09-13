@@ -747,8 +747,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
         values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)"));
         //values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
         //values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));   
-        //values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));
-         
+        values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028")); // NGL-1584 ajout 
+        
         return values;
 	}
 	
