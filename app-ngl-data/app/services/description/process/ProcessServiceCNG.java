@@ -42,11 +42,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. pr séquençage Illumina", "library"));
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. pr séquençage Nanopore", "nanopore-library"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> séq. Illumina", "library"));          // 13/09/2017 fdsantos NGL-1201 renommage label
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> séq. Nanopore", "nanopore-library")); // 13/09/2017 fdsantos NGL-1201 renommage label
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Séquençage", "sequencing"));
-		// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
+		// 28/11/2016 fdsantos JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
 		//  attention bug connu: manque la puce "terminer" dans le dispatch final
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));
 
@@ -119,8 +119,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 		
-		// FDS modif 28/10/2016 NGL-1025: renommage en "2000/2500_Dénat, prep FC, dépôt"
-		l.add(DescriptionFactory.newProcessType("2000/2500_Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
+		// FDS 28/10/2016 NGL-1025: renommage label en "2000/2500_Dénat, prep FC, dépôt"
+		// FDS 13/09/2017 NGL-1201: renommage label en "Dénat, prep FC, dépôt (2000/2500/MiSeq/NextSeq)"
+		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt (2000/2500/MiSeq/NextSeq)", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				40,
 		        getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(
@@ -157,8 +158,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 		}
 		
-
-		l.add(DescriptionFactory.newProcessType("2000/2500_Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
+		// FDS 13/09/2017 NGL-1201: renommage label en "Prep FC, dépôt (2000/2500/MiSeq/NextSeq)"
+		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt (2000/2500/MiSeq/NextSeq)", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
 				42,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(
@@ -170,7 +171,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),        //last  experiment type
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-	
+		
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				43,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
