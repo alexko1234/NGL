@@ -121,15 +121,6 @@ angular.module('home').controller('FragmentationCtrl',['$scope', '$parse', 'atmT
 			         
 			         // colonnes specifiques experience viennent ici...
 			         
-			         { //  TESTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-			        	 "header":"TESTTTT",
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":200,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         }, 
-			         
 			         //--------------------- OUTPUT containers section -----------------------
 			         { //  barcode plaque sortie == support Container used 
 			        	 "header":Messages("containers.table.support.name"),
