@@ -132,6 +132,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
+						 "required":"isRequired()",
 			        	 "type":"number",
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
