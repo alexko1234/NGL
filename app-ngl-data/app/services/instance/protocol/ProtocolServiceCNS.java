@@ -159,31 +159,25 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
-		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
-		
-		
+		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification"), false));
 		
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
-
-		
 		lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("solution-stock")));
 
-		lp.add(newProtocol("Tag18S_V9","Tag18S V9","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag16S_V4V5_Fuhrmann","Tag16S V4V5 Fuhrmann","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag16S_Full_Length_16S_V4V5_Fuhrman","Tag 16S_Full Length + 16S_V4V5_Fuhrman","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_18S_V4","Tag 18S_V4","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		
+		lp.add(newProtocol("Tag18S_V9","Tag18S V9","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag16S_V4V5_Fuhrmann","Tag16S V4V5 Fuhrmann","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_18S_V4","Tag 18S_V4","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_ITS2","Tag ITS2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
-		lp.add(newProtocol("Tag_ITS2_int","Tag ITS2_int","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_ITS2_int","Tag ITS2_int","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		//lp.add(newProtocol("Tag_ITS2_SYM_VAR","Tag ITS2_SYM_VAR","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm56","Tag ITS2_SYM_VAR_Tm56","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm59","Tag ITS2_SYM_VAR_Tm59","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm56","Tag ITS2_SYM_VAR_Tm56","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm59","Tag ITS2_SYM_VAR_Tm59","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		
-		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag16S_Full_Length_16S_V4V5_Fuhrman","Tag 16S_Full Length + 16S_V4V5_Fuhrman","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_16S_V1V2V3","Tag 16S_V1V2V3","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		
 		
 		
 		
@@ -205,10 +199,12 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq Super low cost"))));
+		
 		lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq low cost"))));
+				concatMap(newPSV("libraryProtocol","Bq low cost")),false));		
 		lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II"))));
+				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II")),false));
+		
 		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq NEB Reagent"))));
 		
@@ -281,7 +277,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));
 		
 		lp.add(newProtocol("Bq_PCR_free","Bq_PCR_free","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq PCR free"))));
+				concatMap(newPSV("libraryProtocol","Bq PCR free")),false));
 		
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
 		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
