@@ -75,7 +75,12 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		
 		if($scope.experiment.typeCode === "chip-migration" && col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
 			computeQuantity1(value.data);
-		}
+		}else if (col.property === 'inputContainerUsed.experimentProperties.measuredSize.value' 
+		     || col.property === 'inputContainerUsed.experimentProperties.concentration.value' 
+			|| col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
+			console.log("coucou");
+			computeQttyNm(value.data);	
+		}	
 		
 	}
 	
@@ -350,6 +355,41 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			label:Messages("experiments.sampleSheet")
 		}]);
 	}
-	
+		
+	var computeQttyNm = function(udtData){
+		var getter= $parse("inputContainerUsed.experimentProperties.nmolCalculatedQuantity.value");
+		var nmQuantity=getter(udtData);
+		
+		var compute = {
+				conc : $parse ("inputContainerUsed.concentration.value")(udtData),
+				size : $parse ("inputContainerUsed.experimentProperties.measuredSize.value")(udtData),
+				vol : 	$parse ("inputContainerUsed.experimentProperties.volume1.value")(udtData),
+				isReady:function(){
+					return (this.conc && this.size && this.vol);
+				}
+			};
+		
+		if(compute.isReady()){
+			if ("ng/µl" !== $parse ("inputContainerUsed.concentration.unit")(udtData)){
+				console.log("unit "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+				nmQuantity = undefined;	
+			}
+			console.log("unit OK "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+			
+			var result = $parse("(conc * 660 * size / 1000000 * vol)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				nmQuantity= Math.round(result*10)/10;					
+			}else{
+				nmQuantity = undefined;
+			}	
+			getter.assign(udtData, nmQuantity);
+		}else{
+			getter.assign(udtData,undefined);
+			console.log("not ready to nmolCalculatedQuantity");
+		}
+
+	}
+
 	
 }]);

@@ -339,6 +339,10 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Quantité finale", "quantity1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 25, false, null,null));
 		
+		propertyDefinitions.add(newPropertiesDefinition("Qté nmol calculée", "nmolCalculatedQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode("nM"),"single", 26, false, null,null));
+	
+		
 		return propertyDefinitions;
 		
 	}
@@ -404,7 +408,7 @@ public class QualityControl extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),
 				"single", 17, true, null,null));
 		
-	
+		
 		
 		return propertyDefinitions;
 	}
@@ -508,7 +512,9 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert","insertSize", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content), Integer.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 21, false, null,null));
 	
-		
+		propertyDefinitions.add(newPropertiesDefinition("Qté nmol calculée", "nmolCalculatedQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode("nM"),"single", 19, false, null,null));
+	
 		
 		return propertyDefinitions;
 	}

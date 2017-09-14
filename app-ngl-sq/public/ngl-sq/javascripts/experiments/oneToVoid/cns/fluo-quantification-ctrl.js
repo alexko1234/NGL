@@ -53,6 +53,15 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			0 : Messages("experiments.inputs")
 		}
 	});
+	columns.push({
+		"header":Messages("containers.table.size")+ " (pb)",
+		"property": "inputContainerUsed.size.value",
+		"order":false,
+		"hide":true,
+		"type":"text",
+		"position":8.05,
+		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+	});
 	
 	columns.push({
 		"header" : Messages("containers.table.tags"),
@@ -120,6 +129,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
     		computeConcentration1(value.data);
     	}else if(col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
     		computeQuantity1(value.data);
+    		computeQttyNm(value.data);
     	}
 		
 	}
@@ -347,6 +357,8 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	}
 	*/
 	
+	
+	
 	var importData = function(typeQC){
 		$scope.messages.clear();
 		console.log("File :"+$scope.fileBR+", typeqc :"+typeQC);
@@ -394,4 +406,36 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		clickHS:function(){ return importData("HS");},
 		clickBR:function(){ return importData("BR");}
 	};
+	
+	
+	var computeQttyNm = function(udtData){
+		var getter= $parse("inputContainerUsed.experimentProperties.nmolCalculatedQuantity.value");
+		var nmQuantity=getter(udtData);
+		
+		var compute = {
+				conc : $parse ("inputContainerUsed.experimentProperties.concentration1.value")(udtData),
+				size : $parse ("inputContainerUsed.size.value")(udtData),
+				vol : 	$parse ("inputContainerUsed.experimentProperties.volume1.value")(udtData),
+				isReady:function(){
+					return (this.conc && this.size && this.vol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(conc * 660 * size / 1000000 * vol)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				nmQuantity= Math.round(result*10)/10;					
+			}else{
+				nmQuantity = undefined;
+			}	
+			getter.assign(udtData, nmQuantity);
+		}else{
+			getter.assign(udtData,undefined);
+			console.log("not ready to nmolCalculatedQuantity");
+		}
+
+	}
+	
+	
 }]);
