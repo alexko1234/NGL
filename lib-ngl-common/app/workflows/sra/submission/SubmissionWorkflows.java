@@ -1,12 +1,8 @@
 package workflows.sra.submission;
 
-import java.io.File;
-
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.specs2.execute.Error;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
@@ -16,35 +12,20 @@ import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.sra.SraValidationHelper;
 import workflows.Workflows;
-import workflows.experiment.ExpWorkflowsHelper;
 @Service
 public class SubmissionWorkflows extends Workflows<Submission>{
 
 	//public static SubmissionWorkflows instance= new SubmissionWorkflows();
-	@Autowired
-	SubmissionWorkflowsHelper submissionWorkflowsHelper;
-
+	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
-		// Gerer historique de la modification
-		submission.traceInformation = updateTraceInformation(submission.traceInformation, nextState); 	
-		if(submission.state.equals("IP-SUB-R")){
-			File ebiFile = submissionWorkflowsHelper.checkFileEbi((String)validation.getObject("fileEbi"), validation);
-			submissionWorkflowsHelper.checkRelease(submission, validation);
-			String studyAccession = submissionWorkflowsHelper.parseEbiFileRelease(submission, ebiFile, validation);
-			
-			
-		}
+		// TODO Auto-generated method stub
 	}
 
 	@Override

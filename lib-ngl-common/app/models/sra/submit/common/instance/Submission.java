@@ -17,7 +17,6 @@ import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import scalaz..bslash.amp.div.This;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
