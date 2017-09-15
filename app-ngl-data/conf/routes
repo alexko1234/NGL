@@ -107,7 +107,7 @@ GET		/cns/migration-error-flowcellChemistry	controllers.migration.cns.MigrationU
 GET 	/cns/migration-projects					controllers.migration.MigrationProjet.migration()
 GET 	/cns/migration-tara-station				controllers.migration.cns.MigrationSampleTaraStation.migration()
 
-
+GET		/cns/migration-readset-nanopore			controllers.migration.cns.MigrationReadSetNanopore.migration(collectionName: java.lang.String)
 
 GET 	/migration-process-properties			controllers.migration.MigrationProcessProperties.migration()
 
