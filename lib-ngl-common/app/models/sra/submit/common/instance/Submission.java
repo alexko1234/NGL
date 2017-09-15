@@ -17,6 +17,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
+import scalaz..bslash.amp.div.This;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
@@ -92,6 +93,11 @@ public class Submission extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("submission");
+		
+		if(contextValidation.isUpdateMode()){
+			ValidationHelper.required(contextValidation, this.creationUser, "creationUser");
+		}
+		
 		// verifier que projectCode est bien renseigné et existe dans lims :
 		SraValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
 
@@ -112,7 +118,7 @@ public class Submission extends DBObject implements IValidation {
 					||this.state.code.equalsIgnoreCase("IP-SUB")
 					||this.state.code.equalsIgnoreCase("IP-SUB-R")
 					|| this.state.code.equalsIgnoreCase("F-SUB")) {
-				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
+				ValidationHelper.required(contextValidation, this.submissionDirectory , "submissionDirectory");
 				ValidationHelper.required(contextValidation, this.creationDate , "creationDate");
 				ValidationHelper.required(contextValidation, this.validationDate , "validationDate");
 			}
@@ -131,6 +137,7 @@ public class Submission extends DBObject implements IValidation {
 			contextValidation.removeKeyFromRootKeyName("submission");
 			return;
 		} 
+		
 		// Dans le cas d'une soumission pour une release, on n'applique pas le reste des validations
 		if (this.release){
 			return;

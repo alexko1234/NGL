@@ -1,8 +1,12 @@
 package workflows.sra.submission;
 
+import java.io.File;
+
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.specs2.execute.Error;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
@@ -14,104 +18,117 @@ import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.sra.SraValidationHelper;
 import workflows.Workflows;
+import workflows.experiment.ExpWorkflowsHelper;
 @Service
 public class SubmissionWorkflows extends Workflows<Submission>{
 
 	//public static SubmissionWorkflows instance= new SubmissionWorkflows();
-
+	@Autowired
+	SubmissionWorkflowsHelper submissionWorkflowsHelper;
 
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
-			Submission object, State nextState) {
-		// TODO Auto-generated method stub
-		
+			Submission submission, State nextState) {
+		// Gerer historique de la modification
+		submission.traceInformation = updateTraceInformation(submission.traceInformation, nextState); 	
+		if(submission.state.equals("IP-SUB-R")){
+			File ebiFile = submissionWorkflowsHelper.checkFileEbi((String)validation.getObject("fileEbi"), validation);
+			submissionWorkflowsHelper.checkRelease(submission, validation);
+			String studyAccession = submissionWorkflowsHelper.parseEbiFileRelease(submission, ebiFile, validation);
+			
+			
+		}
 	}
 
 	@Override
 	public void applyPreValidateCurrentStateRules(ContextValidation validation, Submission object) {
 		// TODO Auto-generated method stub		
 	}
-	
+
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Submission object) {
 		// TODO Auto-generated method stub		
 	}
 
 	@Override
-	public void applySuccessPostStateRules(ContextValidation validation, Submission object) {	
-		System.out.println("dans applySuccessPostStateRules submission=" + object.code + " avec state.code='"+object.state.code+"'");
-		// Pas de propagation des etats si N ou N-R car objets de la soumission comme study qui peut etre validé
-		if ((object.state.code.equalsIgnoreCase("N")) || (object.state.code.equalsIgnoreCase("N-R"))) {
-			System.out.println("dans applySuccessPostStateRules , sortie sans propagation des etats");
-			return;
-		}
+	public void applySuccessPostStateRules(ContextValidation validation, Submission submission) {
 
-		if (StringUtils.isNotBlank(object.studyCode)) {
-			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, object.studyCode);
-			// Recuperer object study pour mettre historique des state traceInformation à jour:
-			if (! object.state.code.equalsIgnoreCase("F-SUB-R")){
-				// Recopier etat de soumission dans etat du study
-				study.state = updateHistoricalNextState(study.state, object.state);
-				study.traceInformation = updateTraceInformation(study.traceInformation, object.state);				
-			} else {
-				// Mettre etat du study à F-SUB si etat de submission est à F-SUB-R :
-				State state_replacement = new State();
-				state_replacement.code = "F-SUB";
-				state_replacement.user = object.state.user;
-				state_replacement.date = object.state.date;
-				study.state = updateHistoricalNextState(study.state, state_replacement);
-				study.traceInformation = updateTraceInformation(study.traceInformation, state_replacement);				
+		if (! submission.state.code.equalsIgnoreCase("N") && ! submission.state.code.equalsIgnoreCase("N-R")){
+			System.out.println("dans applySuccessPostStateRules submission=" + submission.code + " avec state.code='"+submission.state.code+"'");
+			// Pas de propagation des etats si N ou N-R car objets de la soumission comme study qui peut etre validé
+			if ((submission.state.code.equalsIgnoreCase("N")) || (submission.state.code.equalsIgnoreCase("N-R"))) {
+				System.out.println("dans applySuccessPostStateRules , sortie sans propagation des etats");
+				return;
 			}
-			// Mettre à jour study pour le state, traceInformation 
-			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-			DBQuery.is("code", object.studyCode),
-			DBUpdate.set("state", study.state).set("traceInformation", study.traceInformation));
-			
-			System.out.println("mise à jour du study avec state.code=" + study.state.code);
-		}
-        //Normalement une soumission pour release doit concerner uniquement un study, donc pas de test pour status F-SUB-R		
-		if (object.sampleCodes != null){
-			for (int i = 0; i < object.sampleCodes.size() ; i++) {
-				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, object.sampleCodes.get(i));
-				sample.state = updateHistoricalNextState(sample.state, object.state);
-				sample.traceInformation = updateTraceInformation(sample.traceInformation, object.state);
 
-				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
-						DBQuery.is("code", object.sampleCodes.get(i)),
-						DBUpdate.set("state", sample.state).set("traceInformation", sample.traceInformation));
-				System.out.println("mise à jour du sample "+ sample.code + " avec state.code=" + sample.state.code);
-				
+			if (StringUtils.isNotBlank(submission.studyCode)) {
+				Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
+				// Recuperer object study pour mettre historique des state traceInformation à jour:
+				if (! submission.state.code.equalsIgnoreCase("F-SUB-R")){
+					// Recopier etat de soumission dans etat du study
+					study.state = updateHistoricalNextState(study.state, submission.state);
+					study.traceInformation = updateTraceInformation(study.traceInformation, submission.state);				
+				} else {
+					// Mettre etat du study à F-SUB si etat de submission est à F-SUB-R :
+					State state_replacement = new State();
+					state_replacement.code = "F-SUB";
+					state_replacement.user = submission.state.user;
+					state_replacement.date = submission.state.date;
+					study.state = updateHistoricalNextState(study.state, state_replacement);
+					study.traceInformation = updateTraceInformation(study.traceInformation, state_replacement);				
+				}
+				// Mettre à jour study pour le state, traceInformation 
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+						DBQuery.is("code", submission.studyCode),
+						DBUpdate.set("state", study.state).set("traceInformation", study.traceInformation));
+
+				System.out.println("mise à jour du study avec state.code=" + study.state.code);
 			}
-		}
-		
-		if (object.experimentCodes != null){
-			for (int i = 0; i < object.experimentCodes.size() ; i++) {
-				
-				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, object.experimentCodes.get(i));
-				experiment.state = updateHistoricalNextState(experiment.state, object.state);
-				experiment.traceInformation = updateTraceInformation(experiment.traceInformation, object.state);
-				
-				// Updater objet experiment :
-				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
-						DBQuery.is("code", object.experimentCodes.get(i)),
-						DBUpdate.set("state", experiment.state).set("traceInformation", experiment.traceInformation));
-				System.out.println("mise à jour de exp "+ experiment.code + " avec state.code=" + experiment.state.code);
+			//Normalement une soumission pour release doit concerner uniquement un study, donc pas de test pour status F-SUB-R		
+			if (submission.sampleCodes != null){
+				for (int i = 0; i < submission.sampleCodes.size() ; i++) {
+					Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, submission.sampleCodes.get(i));
+					sample.state = updateHistoricalNextState(sample.state, submission.state);
+					sample.traceInformation = updateTraceInformation(sample.traceInformation, submission.state);
 
-				// Updater objet readSet :
-				ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
-				readset.submissionState = updateHistoricalNextState(readset.submissionState, object.state);
-				readset.traceInformation = updateTraceInformation(readset.traceInformation, object.state);
-				
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
-						DBQuery.is("code", experiment.readSetCode),
-						DBUpdate.set("submissionState", readset.submissionState).set("traceInformation", readset.traceInformation));
-				System.out.println("mise à jour de readset "+ readset.code + " avec readset.code=" + readset.submissionState.code);
+					MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
+							DBQuery.is("code", submission.sampleCodes.get(i)),
+							DBUpdate.set("state", sample.state).set("traceInformation", sample.traceInformation));
+					System.out.println("mise à jour du sample "+ sample.code + " avec state.code=" + sample.state.code);
+
+				}
+			}
+
+			if (submission.experimentCodes != null){
+				for (int i = 0; i < submission.experimentCodes.size() ; i++) {
+
+					Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, submission.experimentCodes.get(i));
+					experiment.state = updateHistoricalNextState(experiment.state, submission.state);
+					experiment.traceInformation = updateTraceInformation(experiment.traceInformation, submission.state);
+
+					// Updater objet experiment :
+					MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
+							DBQuery.is("code", submission.experimentCodes.get(i)),
+							DBUpdate.set("state", experiment.state).set("traceInformation", experiment.traceInformation));
+					System.out.println("mise à jour de exp "+ experiment.code + " avec state.code=" + experiment.state.code);
+
+					// Updater objet readSet :
+					ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
+					readset.submissionState = updateHistoricalNextState(readset.submissionState, submission.state);
+					readset.traceInformation = updateTraceInformation(readset.traceInformation, submission.state);
+
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+							DBQuery.is("code", experiment.readSetCode),
+							DBUpdate.set("submissionState", readset.submissionState).set("traceInformation", readset.traceInformation));
+					System.out.println("mise à jour de readset "+ readset.code + " avec readset.code=" + readset.submissionState.code);
+				}
 			}
 		}
 	}
@@ -120,21 +137,17 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Submission object, State nextState) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void setState(ContextValidation contextValidation, Submission object, State nextState) {
-		System.out.println("dans setState avec submission" + object.code +" et et submission.state="+object.state.code+ " et nextState="+nextState.code);
-		
+	public void setState(ContextValidation contextValidation, Submission submission, State nextState) {
+		System.out.println("dans setState avec submission" + submission.code +" et et submission.state="+submission.state.code+ " et nextState="+nextState.code);
+
 		contextValidation.setUpdateMode();
-
-		// Gerer historique de la modification
-		object.traceInformation = updateTraceInformation(object.traceInformation, nextState); 			
-
 		// verifier que le state à installer est valide avant de mettre à jour base de données : 
 		// verification qui ne passe pas par VariableSRA [SraValidationHelper.requiredAndConstraint(contextValidation, nextState.code , VariableSRA.mapStatus, "state.code")]		
-        // mais par CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 
+		// mais par CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 
 		// pour uniformiser avec reste du code ngl
 		System.out.println("dans setState");
 		System.out.println("contextValidation.error avant validateState " + contextValidation.errors);
@@ -142,15 +155,20 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 	
 		System.out.println("contextValidation.error apres validateState " + contextValidation.errors);
 
-		if(!contextValidation.hasErrors()){
-			// Gerer l'historique des states :
-			object.state = updateHistoricalNextState(object.state, nextState);	
-			// sauver le state dans la base avec traceInformation
-			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
-				DBQuery.is("code", object.code),
-				DBUpdate.set("state", object.state).set("traceInformation", object.traceInformation));
-			if (! object.state.code.equalsIgnoreCase("N") && ! object.state.code.equalsIgnoreCase("N-R")){
-				applySuccessPostStateRules(contextValidation, object);
+		if(!contextValidation.hasErrors() && !nextState.code.equals(submission.state.code)){
+			applyPreStateRules(contextValidation, submission, nextState);
+			submission.validate(contextValidation);
+			if(!contextValidation.hasErrors()){
+				// Gerer l'historique des states :
+				submission.state = updateHistoricalNextState(submission.state, nextState);	
+				// sauver le state dans la base avec traceInformation
+				MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
+						DBQuery.is("code", submission.code),
+						DBUpdate.set("state", submission.state).set("traceInformation", submission.traceInformation));
+				applySuccessPostStateRules(contextValidation, submission);
+				nextState(contextValidation, submission);		
+			}else{
+				applyErrorPostStateRules(contextValidation, submission, nextState);	
 			}
 		} else {
 			System.out.println("ATTENTION ERROR :"+contextValidation.errors);
@@ -161,10 +179,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void nextState(ContextValidation contextValidation, Submission object) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-	
+
+
 
 }
