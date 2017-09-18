@@ -36,21 +36,18 @@ rule "POST DONE EXECUTION of sendReleaseXML : File release results operation"
 		//Call service treatment AC files results 
 		JobResource jobResource = $job.getUniqueJobResource("releaseToSend");
 		String codeSubmission = jobResource.getProperty("code");
+		String studyAccession = jobResource.getProperty("studyAccession");
+		String studyCode = jobResource.getProperty("studyCode");
+		String creationUser = jobResource.getProperty("creationUser");
 		String pathRelease = jobResource.getProperty("submissionDirectory")+File.separator+$job.getParameterValue("listAC").getValue();
 		//File fileAC = new File(pathAC);
 		log.debug("path release="+pathRelease);
-		JSONDevice jsonDevice = new JSONDevice();
-		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/release?=fileName="+pathRelease;
-		log.debug("url "+url);
-		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/release?=fileName="+pathRelease, "{}", "bot");
-		log.debug("Result "+jsonResult);
-		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
-		log.debug("Resource Properties "+resourcePropertiesSet);
-		//if submission.state=ERROR_SendXML set job status to JOB EXITED
-		//Get unique resource 
-		String state = resourcePropertiesSet.iterator().next().get("state.code");
-		log.debug("State from treatment release "+state);
-		if(state.equals("FE-SUB-R")){
+		log.debug("Call treatment File Release "+pathRelease+" / "+codeSubmission+" / "+studyAccession+" / "+studyCode+" / "+creationUser);
+		boolean ebiSuccess = SubmissionServicesFactory.getInstance().treatmentFileRelease(pathRelease, codeSubmission, studyAccession, studyCode, creationUser);
+		if(ebiSuccess){
+			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state, "{\"code\":\"F-SUB\"}", "bot");
+		}else{
+			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state, "{\"code\":\"FE-SUB-R\"}", "bot");
 			$job.setExecutionState(Job.ERROR_STATUS);
 		}
 end
