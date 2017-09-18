@@ -1,8 +1,12 @@
 package workflows.sra.submission;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
@@ -20,12 +24,15 @@ import workflows.Workflows;
 @Service
 public class SubmissionWorkflows extends Workflows<Submission>{
 
-	//public static SubmissionWorkflows instance= new SubmissionWorkflows();
+	@Autowired
+	SubmissionWorkflowsHelper submissionWorkflowHelper;
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
-		// TODO Auto-generated method stub
+		if("IP-SUB-R".equals(submission.code) && "F-SUB".equals(nextState)){
+			submissionWorkflowHelper.updateSubmissionRelease(submission);
+		}
 	}
 
 	@Override
