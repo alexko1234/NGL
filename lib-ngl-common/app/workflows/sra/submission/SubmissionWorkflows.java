@@ -123,9 +123,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation,
-			Submission object, State nextState) {
-		// TODO Auto-generated method stub
-
+			Submission submission, State nextState) {
+		if("IP-SUB-R".equals(submission.code) && "F-SUB".equals(nextState)){
+			submissionWorkflowHelper.updateSubmissionRelease(submission);
+		}
 	}
 
 	@Override

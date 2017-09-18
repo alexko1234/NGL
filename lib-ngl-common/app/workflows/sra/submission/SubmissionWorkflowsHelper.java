@@ -24,10 +24,25 @@ public class SubmissionWorkflowsHelper {
 		Date release_date  = calendar.getTime();
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submission.code),
-				DBUpdate.set("submissionDate", date).set("traceInformation.modifyUser", submission.creationUser).set("traceInformation.modifyDate", date));	
+				DBUpdate.set("submissionDate", date));	
 
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 				DBQuery.is("accession", study.accession),
-				DBUpdate.set("releaseDate", release_date).set("traceInformation.modifyUser", submission.creationUser).set("traceInformation.modifyDate", date));
+				DBUpdate.set("releaseDate", release_date));
+	}
+	
+	public void removeSubmissionRelease(Submission submission)
+	{
+		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
+		Calendar calendar = Calendar.getInstance();
+		Date date  = calendar.getTime();		
+		Date release_date  = calendar.getTime();
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
+				DBQuery.is("code", submission.code),
+				DBUpdate.set("submissionDate", null));	
+
+			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+				DBQuery.is("accession", study.accession),
+				DBUpdate.set("releaseDate", null));
 	}
 }
