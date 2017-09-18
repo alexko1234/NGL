@@ -77,7 +77,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			computeQuantity1(value.data);
 		}else if (col.property === 'inputContainerUsed.experimentProperties.measuredSize.value' 
 		     || col.property === 'inputContainerUsed.experimentProperties.concentration.value' 
-			|| col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
+			){
 			computeConcNm(value.data);	
 		}	
 		
@@ -371,7 +371,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			if ("ng/µl" === $parse ("inputContainerUsed.concentration.unit")(udtData)){
 				console.log("unit OK "+$parse ("inputContainerUsed.concentration.unit")(udtData));
 			
-				var result = $parse("(conc / 660 / size / 1000000 )")(compute);
+				var result = $parse("(conc / 660 / size * 1000000 )")(compute);
 				console.log("result = "+result);
 				if(angular.isNumber(result) && !isNaN(result)){
 					nmQuantity= Math.round(result*10)/10;					

@@ -423,7 +423,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			};
 		
 		if(compute.isReady()){
-			var result = $parse("(conc / 660 / size / 1000000)")(compute);
+			var result = $parse("(conc / 660 / size * 1000000)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				nmQuantity= Math.round(result*10)/10;					
