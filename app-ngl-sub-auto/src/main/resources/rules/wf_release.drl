@@ -20,6 +20,14 @@ rule "select resources from nglsub for release"
 		Logger log = Logger.getLogger("ngl.sub.rules");
 		$rps.initialize();
 		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB-R", "bot");
+		for(ResourceProperties rp : resourcePropertiesSet){
+			String studyCode = rp.getProperty("studyCode");
+			//Get study 
+			Set<ResourceProperties> rpStudy = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/studies/"+studyCode, "bot");
+			if(rpStudy.size()==1){
+				rp.setProperty("studyAccession",rpStudy.getProperty("accession"));
+			}
+		}
 		log.debug("size resources "+resourcePropertiesSet.size());
 		$rps.addResourcePropertiesSet(resourcePropertiesSet);
 		modify($rps){};

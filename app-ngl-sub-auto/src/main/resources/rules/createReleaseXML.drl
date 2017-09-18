@@ -29,10 +29,13 @@ rule "add releaseXML resources in internalRefReleaseXML to fire sendReleaseXML"
 		$job : Job(treatmentSpecification!=null, treatmentSpecification.name == "createReleaseXML")
 	then
 		Logger log = Logger.getLogger("ngl.sub.rules");
+		JobResource jobResource = $job.getUniqueJobResource("releaseToXML");
+		String studyAccession = jobResource.getProperty("studyAccession");
 		log.debug("Add resources rules for sendReleaseXML from file "+$job.getProperty(Job.STDOUT));
 		Set<ResourceProperties> setResources = new JSONDevice().parseJSONFromFileName($job.getProperty(Job.STDOUT));
 		for(ResourceProperties rp : setResources){
 			JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
+			rp.setProperty("studyAccession",studyAccession);
 	   		outputResource.setResourceProperties(rp);
 		}
 		$flag.setDone(true);
