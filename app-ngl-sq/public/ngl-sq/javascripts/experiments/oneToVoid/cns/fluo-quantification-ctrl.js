@@ -129,7 +129,9 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
     		computeConcentration1(value.data);
     	}else if(col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
     		computeQuantity1(value.data);
-    		computeQttyNm(value.data);
+     	}else if ('inputContainerUsed.experimentProperties.concentration1.value'){
+    		computeConcNm(value.data);
+    		   
     	}
 		
 	}
@@ -408,21 +410,20 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	};
 	
 	
-	var computeQttyNm = function(udtData){
-		var getter= $parse("inputContainerUsed.experimentProperties.nmolCalculatedQuantity.value");
+	var computeConcNm = function(udtData){
+		var getter= $parse("inputContainerUsed.experimentProperties.nMcalculatedConcentration.value");
 		var nmQuantity=getter(udtData);
 		
 		var compute = {
 				conc : $parse ("inputContainerUsed.experimentProperties.concentration1.value")(udtData),
 				size : $parse ("inputContainerUsed.size.value")(udtData),
-				vol : 	$parse ("inputContainerUsed.experimentProperties.volume1.value")(udtData),
 				isReady:function(){
-					return (this.conc && this.size && this.vol);
+					return (this.conc && this.size);
 				}
 			};
 		
 		if(compute.isReady()){
-			var result = $parse("(conc * 660 * size / 1000000 * vol)")(compute);
+			var result = $parse("(conc / 660 / size / 1000000)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				nmQuantity= Math.round(result*10)/10;					

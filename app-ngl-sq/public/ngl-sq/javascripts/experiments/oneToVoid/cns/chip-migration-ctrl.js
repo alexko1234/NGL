@@ -78,8 +78,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		}else if (col.property === 'inputContainerUsed.experimentProperties.measuredSize.value' 
 		     || col.property === 'inputContainerUsed.experimentProperties.concentration.value' 
 			|| col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
-			console.log("coucou");
-			computeQttyNm(value.data);	
+			computeConcNm(value.data);	
 		}	
 		
 	}
@@ -356,37 +355,37 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		}]);
 	}
 		
-	var computeQttyNm = function(udtData){
-		var getter= $parse("inputContainerUsed.experimentProperties.nmolCalculatedQuantity.value");
+	var computeConcNm = function(udtData){
+		var getter= $parse("inputContainerUsed.experimentProperties.nMcalculatedConcentration.value");
 		var nmQuantity=getter(udtData);
 		
 		var compute = {
 				conc : $parse ("inputContainerUsed.concentration.value")(udtData),
 				size : $parse ("inputContainerUsed.experimentProperties.measuredSize.value")(udtData),
-				vol : 	$parse ("inputContainerUsed.experimentProperties.volume1.value")(udtData),
 				isReady:function(){
-					return (this.conc && this.size && this.vol);
+					return (this.conc && this.size);
 				}
 			};
 		
 		if(compute.isReady()){
-			if ("ng/µl" !== $parse ("inputContainerUsed.concentration.unit")(udtData)){
+			if ("ng/µl" === $parse ("inputContainerUsed.concentration.unit")(udtData)){
+				console.log("unit OK "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+			
+				var result = $parse("(conc / 660 / size / 1000000 )")(compute);
+				console.log("result = "+result);
+				if(angular.isNumber(result) && !isNaN(result)){
+					nmQuantity= Math.round(result*10)/10;					
+				}else{
+					nmQuantity = undefined;
+				}
+			}else{
 				console.log("unit "+$parse ("inputContainerUsed.concentration.unit")(udtData));
 				nmQuantity = undefined;	
 			}
-			console.log("unit OK "+$parse ("inputContainerUsed.concentration.unit")(udtData));
-			
-			var result = $parse("(conc * 660 * size / 1000000 * vol)")(compute);
-			console.log("result = "+result);
-			if(angular.isNumber(result) && !isNaN(result)){
-				nmQuantity= Math.round(result*10)/10;					
-			}else{
-				nmQuantity = undefined;
-			}	
 			getter.assign(udtData, nmQuantity);
 		}else{
 			getter.assign(udtData,undefined);
-			console.log("not ready to nmolCalculatedQuantity");
+			console.log("not ready to nMcalculatedConcentration");
 		}
 
 	}
