@@ -91,6 +91,16 @@ public class ContainerMapping extends Mapping<Container> {
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
 		}
 		
+		if(sample.life != null && sample.life.from != null){
+			PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sample.life.from.sampleTypeCode);
+			properties.put("fromSampleTypeCode", fromSampleTypeCode);
+			PropertySingleValue fromSampleCode = new PropertySingleValue(sample.life.from.sampleCode);
+			properties.put("fromSampleCode", fromSampleCode);
+			//PropertySingleValue fromProjectCode = new PropertySingleValue(sample.life.from.projectCodes); //?quiz du fromProjectCode
+			//properties.put("fromProjectCode", fromProjectCode);
+		}
+		
+		
 		//HACK to have the original container on the readset
 		if(Action.save.equals(action) && !properties.containsKey("sampleAliquoteCode")){
 			PropertySingleValue psv = new PropertySingleValue(containerCode);

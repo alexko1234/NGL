@@ -81,8 +81,13 @@ public class SampleMapping extends Mapping<Sample> {
 		//TODO update categoryCode if not a code but a label.
 		if(sample.categoryCode == null){
 			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
-		}
-		
+		}		
+	}
+
+
+	@Override
+	public void consolidate(Sample sample) {
+		// TODO Auto-generated method stub
 		//update link between two sample need only from.sampleCode
 		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
 			Sample parentSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.life.from.sampleCode);
@@ -106,14 +111,6 @@ public class SampleMapping extends Mapping<Sample> {
 				contextValidation.addErrors("sampleCode", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.life.from.sampleCode);
 			}
 		}
-		
-	}
-
-
-	@Override
-	public void consolidate(Sample sample) {
-		// TODO Auto-generated method stub
-		
 	}	
 	
 	@Override
