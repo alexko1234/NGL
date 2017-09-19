@@ -357,7 +357,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		
 	var computeConcNm = function(udtData){
 		var getter= $parse("inputContainerUsed.experimentProperties.nMcalculatedConcentration.value");
-		var nmQuantity=getter(udtData);
+		var nmConc=getter(udtData);
 		
 		var compute = {
 				conc : $parse ("inputContainerUsed.concentration.value")(udtData),
@@ -374,15 +374,15 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				var result = $parse("(conc / 660 / size * 1000000 )")(compute);
 				console.log("result = "+result);
 				if(angular.isNumber(result) && !isNaN(result)){
-					nmQuantity= Math.round(result*10)/10;					
+					nmConc= Math.round(result*10)/10;					
 				}else{
-					nmQuantity = undefined;
+					nmConc = undefined;
 				}
 			}else{
 				console.log("unit "+$parse ("inputContainerUsed.concentration.unit")(udtData));
-				nmQuantity = undefined;	
+				nmConc = undefined;	
 			}
-			getter.assign(udtData, nmQuantity);
+			getter.assign(udtData, nmConc);
 		}else{
 			getter.assign(udtData,undefined);
 			console.log("not ready to nMcalculatedConcentration");

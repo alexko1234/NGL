@@ -117,22 +117,23 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilBR1.value'){
 			computeConcentrationBR1(value.data);
     		computeConcentration1(value.data);
+    		computeConcNm(value.data);
 	 	}else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS1.value'
 	 		|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS1.value'){
 			computeConcentrationHS1(value.data);
     		computeConcentration1(value.data);
+    		computeConcNm(value.data);
 	 	} else if(col.property === 'inputContainerUsed.experimentProperties.dilutionFactorHS2.value'
 	 		|| col.property === 'inputContainerUsed.experimentProperties.concentrationDilHS2.value'){
         	computeConcentrationHS2(value.data);
     		computeConcentration1(value.data);
+    		computeConcNm(value.data);
 		}else if(col.property === 'inputContainerUsed.experimentProperties.calculationMethod.value'){
     		computeConcentration1(value.data);
+    		computeConcNm(value.data);
     	}else if(col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
     		computeQuantity1(value.data);
-     	}else if ('inputContainerUsed.experimentProperties.concentration1.value'){
-    		computeConcNm(value.data);
-    		   
-    	}
+     	}
 		
 	}
 	
@@ -152,7 +153,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		if(compute.isReady()){
 			
 			var result = $parse("(conc1 * dilution1)")(compute);
-			console.log("result = "+result);
+			console.log("computeConcentrationBR1 result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				concentration1 = Math.round(result*10)/10;				
 			}else{
@@ -181,7 +182,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		if(compute.isReady()){
 			
 			var result = $parse("(conc1 * dilution1)")(compute);
-			console.log("result = "+result);
+			console.log("computeConcentrationHS1 result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				concentration1 = Math.round(result*10)/10;				
 			}else{
@@ -209,7 +210,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		if(compute.isReady()){
 			
 			var result = $parse("(conc1 * dilution1)")(compute);
-			console.log("result = "+result);
+			console.log("computeConcentrationHS2 result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				concentration1 = Math.round(result*10)/10;				
 			}else{
@@ -243,7 +244,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 				
 				if(compute.isReady()){
 					var result = $parse("(inputConcHS1 + inputConcHS2)/2")(compute);
-					console.log("result Moyenne des 2 HS = "+result);
+					console.log("computeConcentration1 result Moyenne des 2 HS = "+result);
 					if(angular.isNumber(result) && !isNaN(result)){
 						concentration1 = Math.round(result*10)/10;				
 					}else{
@@ -265,7 +266,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 				var concentration1;
 				if(compute.isReady()){
 					concentration1 = $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData) >25 ? $parse("inputContainerUsed.experimentProperties.concentrationBR1.value")(udtData) :  $parse("inputContainerUsed.experimentProperties.concentrationHS1.value")(udtData); 
-					console.log("result BR si > 25 et HS1 si BR <= 25 = "+result);
+					console.log("computeConcentration1 result BR si > 25 et HS1 si BR <= 25 = "+result);
 				}else {
 					concentration1=undefined;
 				}
@@ -305,7 +306,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		
 		if(compute.isReady()){
 			var result = $parse("(inputVol1 * inputConc1)")(compute);
-			console.log("result = "+result);
+			console.log("computeQuantity1 result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				quantity1 = Math.round(result*10)/10;				
 			}else{
@@ -412,7 +413,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	var computeConcNm = function(udtData){
 		var getter= $parse("inputContainerUsed.experimentProperties.nMcalculatedConcentration.value");
-		var nmQuantity=getter(udtData);
+		var nmConc=getter(udtData);
 		
 		var compute = {
 				conc : $parse ("inputContainerUsed.experimentProperties.concentration1.value")(udtData),
@@ -424,13 +425,13 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		
 		if(compute.isReady()){
 			var result = $parse("(conc / 660 / size * 1000000)")(compute);
-			console.log("result = "+result);
+			console.log("computeConcNm result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				nmQuantity= Math.round(result*10)/10;					
+				nmConc= Math.round(result*10)/10;					
 			}else{
-				nmQuantity = undefined;
+				nmConc = undefined;
 			}	
-			getter.assign(udtData, nmQuantity);
+			getter.assign(udtData, nmConc);
 		}else{
 			getter.assign(udtData,undefined);
 			console.log("not ready to nmolCalculatedQuantity");
