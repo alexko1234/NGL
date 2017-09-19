@@ -286,15 +286,15 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,
 						 "unit":value.outputContainerUsed.volume.unit};
 			}
-	    }
+	    }else{
+		   value.inputContainerUsed.experimentProperties["requiredVolume"]=null;
+		   value.inputContainerUsed.experimentProperties["bufferVolume"]=null;
+	   }
 	}
 		
 	$scope.calculVolumes=function(value){
 		if(value!=null & value !=undefined){
 			calculVolumeFromValue(value.data);
-	   }else{
-		   value.inputContainerUsed.experimentProperties["requiredVolume"]=undefined;
-		   value.inputContainerUsed.experimentProperties["bufferVolume"]=undefined;
 	   }
 	};
 	
