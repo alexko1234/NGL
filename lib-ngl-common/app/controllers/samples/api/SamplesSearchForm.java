@@ -35,7 +35,7 @@ public class SamplesSearchForm extends ListForm{
 	
 	public Map<String, List<String>> experimentProperties = new HashMap<String, List<String>>();
 	public String toString() {
-		return "ContainersSearchForm [projectCode=" + projectCode
+		return "SamplesSearchForm [projectCode=" + projectCode
 
 				+ ", projectCodes=" + projectCodes + ",sampleCode=" + ", code=" + code
 				+ ", typeCodes"

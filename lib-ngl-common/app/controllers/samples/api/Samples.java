@@ -46,14 +46,18 @@ import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.containers.api.ContainerBatchElement;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
 public class Samples extends DocumentController<Sample>{
-	
-	final Form<Sample> sampleForm = form(Sample.class);
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final static Form<Sample> sampleForm = form(Sample.class);
+	final static Form<SamplesSearchForm> sampleSearchForm = form(SamplesSearchForm.class);
+	final static Form<SampleBatchElement> batchElementForm = form(SampleBatchElement.class);
+
 	final static List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
 	final static List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
 	
@@ -66,12 +70,12 @@ public class Samples extends DocumentController<Sample>{
 	
 	@Permission(value={"reading"})
 	public Result list(){
-		SamplesSearchForm searchForm = filledFormQueryString(SamplesSearchForm.class);
-		if(searchForm.reporting){
-			return nativeMongoDBQuery(searchForm);
+		SamplesSearchForm samplesSearch = filledFormQueryString(SamplesSearchForm.class);
+		if(samplesSearch.reporting){
+			return nativeMongoDBQuery(samplesSearch);
 		}else{
-			DBQuery.Query query = getQuery(searchForm);
-			return mongoJackQuery(searchForm, query);			
+			DBQuery.Query query = getQuery(samplesSearch);
+			return mongoJackQuery(samplesSearch, query);			
 		}		
 	}
 
@@ -221,13 +225,15 @@ private static Sample findSample(String sampleCode){
 
 @Permission(value={"writing"})
 @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-public static Result update(String code){
+public  Result update(String code){
 	Sample sample = findSample(code);
 	if(sample == null){
 		return badRequest("Sample with code "+code+" not exist");
 	}
 	
+	
 	Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+	
 	QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 	Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
 	Sample input = filledForm.get();
@@ -240,9 +246,7 @@ public static Result update(String code){
 				Logger.error("traceInformation is null !!");
 			}
 			
-			if(!input.state.code.equals(input.state.code)){
-				return badRequest("You cannot change the state code. Please used the state url ! ");
-			}
+			
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
@@ -296,7 +300,8 @@ public static Result update(String code){
 		}else{
 			return badRequest(filledForm.errorsAsJson());
 		}		
-	}		
+	}	*/	
+	return badRequest(filledForm.errorsAsJson());
 }
 private static DatatableForm updateForm(SamplesSearchForm form) {
 	if(form.includes.contains("default")){
