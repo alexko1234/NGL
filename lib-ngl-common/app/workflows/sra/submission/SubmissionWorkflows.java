@@ -147,7 +147,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(submission.state.code)){
 			applyPreStateRules(contextValidation, submission, nextState);
-			submission.validate(contextValidation);
+			//submission.validate(contextValidation);
 			if(!contextValidation.hasErrors()){
 				// Gerer l'historique des states :
 				submission.state = updateHistoricalNextState(submission.state, nextState);	
