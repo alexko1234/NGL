@@ -292,6 +292,9 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	$scope.calculVolumes=function(value){
 		if(value!=null & value !=undefined){
 			calculVolumeFromValue(value.data);
+	   }else{
+		   value.inputContainerUsed.experimentProperties["requiredVolume"]=undefined;
+		   value.inputContainerUsed.experimentProperties["bufferVolume"]=undefined;
 	   }
 	};
 	
