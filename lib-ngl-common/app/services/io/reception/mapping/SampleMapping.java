@@ -14,7 +14,9 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 public class SampleMapping extends Mapping<Sample> {
 	/**
@@ -80,6 +82,31 @@ public class SampleMapping extends Mapping<Sample> {
 		if(sample.categoryCode == null){
 			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
 		}
+		
+		//update link between two sample need only from.sampleCode
+		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
+			Sample parentSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.life.from.sampleCode);
+			if(null != parentSample){
+				sample.life.from.projectCodes =  parentSample.projectCodes;
+				sample.life.from.sampleTypeCode=parentSample.typeCode;
+				if(null != parentSample.life && null != parentSample.life.path){
+					sample.life.path=parentSample.life.path+","+parentSample.code;
+				}else{
+					sample.life.path=","+parentSample.code;
+				}
+				//force this information 
+				sample.properties.putAll(parentSample.properties);	
+				if(!parentSample.taxonCode.equals(sample.taxonCode)){
+					contextValidation.addErrors("taxonCode","error.receptionfile.taxonCode.diff", sample.taxonCode, parentSample.taxonCode);
+				}
+				if(!parentSample.referenceCollab.equals(sample.referenceCollab)){
+					contextValidation.addErrors("referenceCollab","error.receptionfile.referenceCollab.diff", sample.referenceCollab, parentSample.referenceCollab);
+				}				
+			}else{
+				contextValidation.addErrors("sampleCode", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.life.from.sampleCode);
+			}
+		}
+		
 	}
 
 
