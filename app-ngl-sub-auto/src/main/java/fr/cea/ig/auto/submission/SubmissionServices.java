@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,6 +30,7 @@ import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
 
 public class SubmissionServices implements ISubmissionServices{
 
+	private static Logger log = Logger.getLogger(SubmissionServices.class);
 	
 	//TODO
 	@Override
@@ -40,6 +42,7 @@ public class SubmissionServices implements ISubmissionServices{
 		return null;
 	}
 	
+	@Override
 	public boolean treatmentFileRelease(String ebiFileName, String submissionCode, String accessionStudy, String studyCode, String creationUser) throws FatalException, BirdsException, UnsupportedEncodingException
 	{
 		if(ebiFileName==null)
@@ -50,6 +53,7 @@ public class SubmissionServices implements ISubmissionServices{
 			throw new BirdsException("Fichier resultat de l'ebi pour la release absent des disques : "+ retourEbiRelease.getAbsolutePath());
 		}
 		
+		log.debug("Parse ebi file "+ebiFileName);
 		boolean ebiSuccess = false;
 		String message = null;
 		String infos = null;
@@ -86,7 +90,7 @@ public class SubmissionServices implements ISubmissionServices{
 			final NodeList racineNoeuds = racine.getChildNodes();
 			final int nbRacineNoeuds = racineNoeuds.getLength();
 			
-			System.out.println("Nombre de racine noeud = "+ nbRacineNoeuds);
+			log.debug("Nombre de racine noeud = "+ nbRacineNoeuds);
 			
 			if( racine.getAttribute("success").equalsIgnoreCase ("true")){
 				ebiSuccess = true;
@@ -114,7 +118,7 @@ public class SubmissionServices implements ISubmissionServices{
 							Matcher m = p.matcher(infos);
 							if ( m.find() ) { 
 								studyAccession = m.group(1);
-								System.out.println("studyAccession="+ studyAccession);
+								log.debug("studyAccession="+ studyAccession);
 							}
 						}
 					}
@@ -130,16 +134,16 @@ public class SubmissionServices implements ISubmissionServices{
 		
 		if (studyAccession!=null && !studyAccession.equals("")){
 			if(studyAccession.equals(accessionStudy)) {
-				System.out.println("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  accessionStudy +"'");
+				log.debug("studyAccession :'"+ studyAccession + "' ==  study.accession :'" +  accessionStudy +"'");
 				ebiSuccess = true;
 				message = "Objets lies au studyAccession = " + studyAccession + " mis dans le domaine public via la soumission "+ submissionCode + "</br>"; 
 			} else {
 				ebiSuccess = false;
-				System.out.println("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  accessionStudy +"' pour study.code = '"+ studyCode +"'");
+				log.debug("studyAccession :'"+ studyAccession + "' !=  study.accession :'" +  accessionStudy +"' pour study.code = '"+ studyCode +"'");
 				message = "La soumission ."+ submissionCode + " indique un study à releaser "+ accessionStudy + " different du studyAccession indiqué dans " + retourEbiRelease.getName();
 			}
 		} else {
-			System.out.println("Pas de recuperation du studyAccession");
+			log.debug("Pas de recuperation du studyAccession");
 			message = "La soumission ."+ submissionCode + " a un retour incorrect " + retourEbiRelease.getName();
 		}
 		

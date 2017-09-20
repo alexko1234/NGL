@@ -23,8 +23,9 @@ rule "select resources from nglsub for release"
 		for(ResourceProperties rp : resourcePropertiesSet){
 			String studyCode = rp.getProperty("studyCode");
 			//Get study 
-			Set<ResourceProperties> rpStudy = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/studies/"+studyCode, "bot");
-			if(rpStudy.size()==1){
+			Set<ResourceProperties> rpStudies = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/studies/"+studyCode, "bot");
+			if(rpStudies.size()==1){
+				ResourceProperties rpStudy = rpStudies.iterator().next();
 				rp.setProperty("studyAccession",rpStudy.getProperty("accession"));
 			}
 		}
