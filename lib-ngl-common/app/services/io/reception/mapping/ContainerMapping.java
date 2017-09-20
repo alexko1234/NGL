@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.mongojack.DBQuery;
+
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -81,23 +84,19 @@ public class ContainerMapping extends Mapping<Container> {
 	
 	private Map<String, PropertyValue> computeProperties(
 			Map<String, PropertyValue> properties, Sample sample, String containerCode) {
-		SampleType sampleType = SampleType.find.findByCode(sample.typeCode);
-		if(sampleType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
-		}
-		
-		ImportType importType = ImportType.find.findByCode(sample.importTypeCode);
-		if(importType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
-		}
-		
+		setPropertiesFromSample(properties, sample);
 		if(sample.life != null && sample.life.from != null){
 			PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sample.life.from.sampleTypeCode);
 			properties.put("fromSampleTypeCode", fromSampleTypeCode);
 			PropertySingleValue fromSampleCode = new PropertySingleValue(sample.life.from.sampleCode);
 			properties.put("fromSampleCode", fromSampleCode);
-			//PropertySingleValue fromProjectCode = new PropertySingleValue(sample.life.from.projectCodes); //?quiz du fromProjectCode
-			//properties.put("fromProjectCode", fromProjectCode);
+			PropertySingleValue fromProjectCode = new PropertySingleValue(sample.life.from.projectCode);
+			properties.put("fromProjectCode", fromProjectCode);
+			
+			Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
+					DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
+			setPropertiesFromSample(properties, parentSample);
+			
 		}
 		
 		
@@ -108,6 +107,18 @@ public class ContainerMapping extends Mapping<Container> {
 		}
 		
 		return properties;
+	}
+
+	private void setPropertiesFromSample(Map<String, PropertyValue> properties, Sample sample) {
+		SampleType sampleType = SampleType.find.findByCode(sample.typeCode);
+		if(sampleType !=null){
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+		}
+		
+		ImportType importType = ImportType.find.findByCode(sample.importTypeCode);
+		if(importType !=null){
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+		}
 	}
 
 	

@@ -229,14 +229,7 @@ public abstract class FileService {
 			});
 		}
 
-		//Thirds consolidate sample
-		if(configuration.configs.containsKey(Mapping.Keys.sample.toString())){
-			Map<String, DBObject> samples = objects.get(Mapping.Keys.sample.toString());
-			samples.values().forEach(s -> {
-				((SampleMapping)mappings.get(Mapping.Keys.sample.toString())).consolidate((Sample)s);
-
-			});
-		}
+		
 
 
 	}
