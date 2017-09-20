@@ -1,5 +1,6 @@
 package fr.cea.ig.auto.submission;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
@@ -13,4 +14,6 @@ public interface ISubmissionServices {
 
 	public boolean treatmentFileRelease(String ebiFileName, String submissionCode, String accessionStudy, String studyCode,
 			String creationUser) throws FatalException, BirdsException, UnsupportedEncodingException;
+
+	void createXMLRelease(String submissionCode, String submissionDirectory, String studyCode) throws BirdsException, IOException;
 }

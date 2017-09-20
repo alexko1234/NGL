@@ -1,6 +1,8 @@
 package fr.cea.ig.auto.submission;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -40,6 +42,44 @@ public class SubmissionServices implements ISubmissionServices{
 		//Call NGL SUB Services to get rawData resources from submission
 		//Convert JSON to JobResource
 		return null;
+	}
+	
+	@Override
+	public void createXMLRelease(String submissionCode, String submissionDirectory, String studyCode) throws BirdsException, IOException
+	{
+		File submissionFile = new File(submissionDirectory + File.separator +"submission.xml");
+		
+		if(studyCode==null || (studyCode!=null && studyCode.equals(""))){
+			throw new BirdsException("Impossible de faire la soumission pour release " + submissionCode + " sans studyCode");
+
+		}
+		
+		// ouvrir fichier en ecriture
+		log.debug("Creation du fichier " + submissionFile);
+		BufferedWriter output_buffer = new BufferedWriter(new FileWriter(submissionFile));
+		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+		chaine = chaine + "<SUBMISSION_SET>\n";
+		
+		log.debug("Ecriture du submission " + submissionCode);
+		chaine = chaine + "  <SUBMISSION alias=\""+ submissionCode + "\" ";
+		chaine = chaine + ">\n";	
+		chaine = chaine + "    <CONTACTS>\n";
+		chaine = chaine + "      <CONTACT  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
+		chaine = chaine + "    </CONTACTS>\n";
+			
+		chaine = chaine + "    <ACTIONS>\n";
+		
+		chaine = chaine + "      <ACTION>\n        <RELEASE target=\"" + studyCode + "\"/>\n      </ACTION>\n";
+		
+		chaine = chaine + "    </ACTIONS>\n";
+		
+		
+		
+		chaine = chaine + "  </SUBMISSION>\n";
+		chaine = chaine + "</SUBMISSION_SET>\n";
+		
+		output_buffer.write(chaine);
+		output_buffer.close();	
 	}
 	
 	@Override

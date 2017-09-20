@@ -17,6 +17,26 @@ rule "Define variable lineParmeter for createReleaseXML specification"
        log.debug("Code "+$job.getUniqueJobResource("releaseToXML").getProperty("code"));
 end
 
+#execution traitement : suppression fichiers locaux
+rule "Action : create xml file for release"
+    @BirdsRule( ExecutionService )
+    salience 200
+	dialect 'java'
+	no-loop 
+	when
+	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS )
+	    $job : Job( treatmentSpecification.name == "createReleaseXML" )
+	then
+	    Logger log = Logger.getLogger("ngl.sub.rules");
+	   
+	    JobResource jobResource = $job.getUniqueJobResource("releaseToXML");
+	    String codeSubmission = jobResource.getProperty("code");
+	    String submissionDirectory = jobResource.getProperty("submissionDirectory");
+	    String studyCode = jobResource.getProperty("studyAccession");
+	     log.debug("Call createXML release with "+codeSubmission+"/"+submissionDirectory+"/"+studyCode);
+	    SubmissionServicesFactory.getInstance().createXMLRelease(codeSubmission, submissionDirectory,studyCode);
+end
+
 rule "add releaseXML resources in internalRefReleaseXML to fire sendReleaseXML"
 	@BirdsRule( addResources ) 
 	dialect 'java'
@@ -30,14 +50,17 @@ rule "add releaseXML resources in internalRefReleaseXML to fire sendReleaseXML"
 	then
 		Logger log = Logger.getLogger("ngl.sub.rules");
 		JobResource jobResource = $job.getUniqueJobResource("releaseToXML");
-		String studyAccession = jobResource.getProperty("studyAccession");
-		log.debug("Add resources rules for sendReleaseXML from file "+$job.getProperty(Job.STDOUT));
-		Set<ResourceProperties> setResources = new JSONDevice().parseJSONFromFileName($job.getProperty(Job.STDOUT));
-		for(ResourceProperties rp : setResources){
-			JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
-			rp.setProperty("studyAccession",studyAccession);
-	   		outputResource.setResourceProperties(rp);
-		}
+		log.debug("Add resources rules for sendReleaseXML");
+		log.debug("Job resource "+jobResource);
+		JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
+		ResourceProperties resourceProperties = outputResource.getResourceProperties();
+		resourceProperties.setProperty("code",jobResource.getProperty("code"));
+	  	resourceProperties.setProperty("studyAccession",jobResource.getProperty("studyAccession"));
+	  	resourceProperties.setProperty("studyCode",jobResource.getProperty("studyCode"));
+	  	resourceProperties.setProperty("submissionDirectory",jobResource.getProperty("submissionDirectory"));
+	  	resourceProperties.setProperty("submissionDate",jobResource.getProperty("submissionDate"));
+	  	resourceProperties.setProperty("xmlSubmission",jobResource.getProperty("xmlSubmission"));
+		
 		$flag.setDone(true);
 		modify($flag){};
 		modify($resourceSet){};
