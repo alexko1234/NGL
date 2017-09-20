@@ -23,6 +23,7 @@
 	
 	<logger name="fr.genoscope.lis.devsi.birds" level="DEBUG"  />
 	<logger name="fr.genoscope.lis.devsi.birds.api.client.BirdsLineCommands" level="INFO"  />
+	<logger name="fr.cea.ig.auto.submission.SubmissionServices" level="DEBUG"  />
 	
 	<logger name="org.hibernate" level="ERROR"  />
 	<logger name="bitronix.tm" level="ERROR"  />

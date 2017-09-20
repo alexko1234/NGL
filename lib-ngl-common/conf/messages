@@ -120,3 +120,12 @@ button.printMode = Imprimer
 button.print = Imprimer
 button.delete = Supprimer
 button.exportCSV = Export CSV
+
+error.file.not.found=Fichier non trouvé {0}
+error.file.null=Absence de fichier
+
+error.validationsub.release.false=La soumission {0} ne correspond pas a une soumission pour release
+error.parse.ebi.release.receipt=Absence de la ligne RECEIPT ... pour  {0} dans fichier {1}
+error.parse.ebi.release.exception=Exception lecture fichier release : {0}
+
+
