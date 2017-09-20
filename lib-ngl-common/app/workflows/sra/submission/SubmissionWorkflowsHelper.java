@@ -26,7 +26,7 @@ public class SubmissionWorkflowsHelper {
 		Logger.debug("update submission date study "+study.code+" with date "+release_date);
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submission.code),
-				DBUpdate.set("submissionDate", date));	
+				DBUpdate.set("submissionDate", date).set("xmlSubmission", "submission.xml"));	
 
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 				DBQuery.is("accession", study.accession),
@@ -39,7 +39,7 @@ public class SubmissionWorkflowsHelper {
 		
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submission.code),
-				DBUpdate.set("submissionDate", null));	
+				DBUpdate.set("submissionDate", null).set("xmlSubmission", null));	
 
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 				DBQuery.is("accession", study.accession),
