@@ -31,7 +31,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	public void applyPreStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
 		updateTraceInformation(submission.traceInformation, nextState); 
-		if("IP-SUB-R".equals(submission.code) && "F-SUB".equals(nextState)){
+		if("IP-SUB-R".equals(submission.state.code) && "F-SUB".equals(nextState)){
 			submissionWorkflowHelper.updateSubmissionRelease(submission);
 		}
 	}
