@@ -1,8 +1,5 @@
 package workflows.sra.submission;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -18,6 +15,7 @@ import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
+import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
@@ -30,8 +28,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
+		Logger.debug("apply pre state rules");
 		updateTraceInformation(submission.traceInformation, nextState); 
-		if("IP-SUB-R".equals(submission.state.code) && "F-SUB".equals(nextState)){
+		if("IP-SUB-R".equals(submission.state.code) && "F-SUB".equals(nextState.code)){
+			Logger.debug("call update submission Release");
 			submissionWorkflowHelper.updateSubmissionRelease(submission);
 		}
 	}
