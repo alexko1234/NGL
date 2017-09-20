@@ -208,11 +208,16 @@ public class OutputHelper {
 	}
 	
 	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName){	
-		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
+		if(container.experimentProperties.containsKey(propertyName)){
+			return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
+		}else{
+			return "";
+		}
 	}
 	
 	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName, int scale){
-		if(!container.experimentProperties.get(propertyName).value.equals("")){
+		if(container.experimentProperties.containsKey(propertyName)
+				&& !container.experimentProperties.get(propertyName).value.equals("")){
 			return new BigDecimal(container.experimentProperties.get(propertyName).value.toString()).setScale(scale, BigDecimal.ROUND_UP).toString().replace(".",",") ;
 		}
 		return "";
