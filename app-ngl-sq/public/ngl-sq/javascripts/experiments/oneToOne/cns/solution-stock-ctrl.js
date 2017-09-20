@@ -89,6 +89,16 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				 		 "position":6.5,
 				 		 "extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 				 	 },
+				 	{
+				 		"header" : "Conc. convertie en nM", 
+				 		"property" : "(inputContainerUsed.concentration.unit === 'ng/µl')?(inputContainerUsed.concentration.value / 660 / inputContainerUsed.size.value * 1000000):null",
+				 		"type" : "number", 
+			            "order" : true, 
+			            "hide" : true, 
+			           "format" : "2", 
+			            "position":6.8,
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -149,6 +159,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         */
+			         
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
