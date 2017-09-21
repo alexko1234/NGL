@@ -374,7 +374,8 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				var result = $parse("(conc / 660 / size * 1000000 )")(compute);
 				console.log("result = "+result);
 				if(angular.isNumber(result) && !isNaN(result)){
-					nmConc= Math.round(result*10)/10;					
+					//nmConc= Math.round(result*10)/10;	
+					nmConc=result;
 				}else{
 					nmConc = undefined;
 				}
