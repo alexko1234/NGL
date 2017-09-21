@@ -209,7 +209,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 12,
 			"order" : true,
 			"hide" : true,
-			"filter" : "filters:'F'|get:'date'",
+			"filter" : "filters:{code:'F'}:true|get:'date'",
 			"format" : Messages("datetime-hour.format"),
 			"groupMethod" : "unique",
 			"type" : "date"
