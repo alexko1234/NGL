@@ -1186,11 +1186,12 @@ angular.module('commonsServices', []).
     			}
     		};	    	
     	}]).filter('filters',['$filter',function ($filter) {
-    		return function (array, expressions) {
-    			if (!angular.isArray(expressions)) expressions = [expressions];
+    		return function (array, expressions, comparator) {
+    			if(!angular.isArray(expressions)) expressions = [expressions];
+    			if(comparator === undefined || comparator === null )comparator = false; 
     			var filtered = [];
     			for(var i = 0; i < expressions.length; i++){
-    				var result = $filter('filter')(array, expressions[i]);
+    				var result = $filter('filter')(array, expressions[i], comparator);
     				if(result && result.length > 0)filtered = filtered.concat(result);    				
     			}
     			if(filtered.length > 0)return filtered;
