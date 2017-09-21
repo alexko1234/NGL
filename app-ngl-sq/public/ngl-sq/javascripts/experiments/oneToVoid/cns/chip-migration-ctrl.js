@@ -75,7 +75,11 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		
 		if($scope.experiment.typeCode === "chip-migration" && col.property === 'inputContainerUsed.experimentProperties.volume1.value'){
 			computeQuantity1(value.data);
-		}
+		}else if (col.property === 'inputContainerUsed.experimentProperties.measuredSize.value' 
+		     || col.property === 'inputContainerUsed.experimentProperties.concentration.value' 
+			){
+			computeConcNm(value.data);	
+		}	
 		
 	}
 	
@@ -350,6 +354,42 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			label:Messages("experiments.sampleSheet")
 		}]);
 	}
-	
+		
+	var computeConcNm = function(udtData){
+		var getter= $parse("inputContainerUsed.experimentProperties.nMcalculatedConcentration.value");
+		var nmConc=getter(udtData);
+		
+		var compute = {
+				conc : $parse ("inputContainerUsed.concentration.value")(udtData),
+				size : $parse ("inputContainerUsed.experimentProperties.measuredSize.value")(udtData),
+				isReady:function(){
+					return (this.conc && this.size);
+				}
+			};
+		
+		if(compute.isReady()){
+			if ("ng/µl" === $parse ("inputContainerUsed.concentration.unit")(udtData)){
+				console.log("unit OK "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+			
+				var result = $parse("(conc / 660 / size * 1000000 )")(compute);
+				console.log("result = "+result);
+				if(angular.isNumber(result) && !isNaN(result)){
+					//nmConc= Math.round(result*10)/10;	
+					nmConc=result;
+				}else{
+					nmConc = undefined;
+				}
+			}else{
+				console.log("unit "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+				nmConc = undefined;	
+			}
+			getter.assign(udtData, nmConc);
+		}else{
+			getter.assign(udtData,undefined);
+			console.log("not ready to nMcalculatedConcentration");
+		}
+
+	}
+
 	
 }]);

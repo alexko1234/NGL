@@ -159,31 +159,25 @@ public class ProtocolServiceCNS {
 		
 		
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
-		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
-		
-		
+		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification"), false));
 		
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
-
-		
 		lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("solution-stock")));
 
-		lp.add(newProtocol("Tag18S_V9","Tag18S V9","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag16S_V4V5_Fuhrmann","Tag16S V4V5 Fuhrmann","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag16S_Full_Length_16S_V4V5_Fuhrman","Tag 16S_Full Length + 16S_V4V5_Fuhrman","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_18S_V4","Tag 18S_V4","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		
+		lp.add(newProtocol("Tag18S_V9","Tag18S V9","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag16S_V4V5_Fuhrmann","Tag16S V4V5 Fuhrmann","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_18S_V4","Tag 18S_V4","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_ITS2","Tag ITS2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
-		lp.add(newProtocol("Tag_ITS2_int","Tag ITS2_int","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_ITS2_int","Tag ITS2_int","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		//lp.add(newProtocol("Tag_ITS2_SYM_VAR","Tag ITS2_SYM_VAR","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm56","Tag ITS2_SYM_VAR_Tm56","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm59","Tag ITS2_SYM_VAR_Tm59","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm56","Tag ITS2_SYM_VAR_Tm56","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_ITS2_SYM_VAR_Tm59","Tag ITS2_SYM_VAR_Tm59","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		
-		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag16S_Full_Length_16S_V4V5_Fuhrman","Tag 16S_Full Length + 16S_V4V5_Fuhrman","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_16S_V1V2V3","Tag 16S_V1V2V3","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
-		
 		
 		
 		
@@ -205,10 +199,12 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("Bq_Super_low_cost_ptr_150_1","Bq_Super_low cost_ptr 150_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq Super low cost"))));
+		
 		lp.add(newProtocol("Bq_Low cost_ptr_148_3","Bq_Low cost_ptr_148_3","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq low cost"))));
+				concatMap(newPSV("libraryProtocol","Bq low cost")),false));		
 		lp.add(newProtocol("Bq_NEB_Next_Ultra_II_ptr_151_1","Bq_NEB Next Ultra II ptr_151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II"))));
+				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II")),false));
+		
 		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq NEB Reagent"))));
 		
@@ -263,10 +259,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
 				InstanceFactory.setExperimentTypeCodes("pulsed-field-electrophoresis","small-and-large-rna-isolation", "chip-migration","chip-migration-rna-evaluation","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate", "dilution")));
 
-		lp.add(newProtocol("annexe-puce-adn-hs-v1","Annexe_PuceADN-HS_v1","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration")));
+		lp.add(newProtocol("annexe-puce-adn-hs-v1","Annexe_PuceADN-HS_v1","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration","chip-migration-rna-evaluation")));
 		lp.add(newProtocol("annexe-labchip-v1","Annexe_LabChip_v1","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration")));
-
-		
+						
 		lp.add(newProtocol("ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure"),false));
 		lp.add(newProtocol("ampure","ampure","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure")));
 		lp.add(newProtocol("annexe-purif-adn-ampure-v1","Annexe_PurifADN-AMPure_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
@@ -281,7 +276,7 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("rna-extraction-from-trizol-filter-with-dnase","Extraction ARN à partir de filtres en Trizol avec DNAse sur colonne","path1","1","production", InstanceFactory.setExperimentTypeCodes("total-rna-extraction")));
 		
 		lp.add(newProtocol("Bq_PCR_free","Bq_PCR_free","path1","1","production", InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
-				concatMap(newPSV("libraryProtocol","Bq PCR free"))));
+				concatMap(newPSV("libraryProtocol","Bq PCR free")),false));
 		
 		lp.add(newProtocol("mechanical-fragmentation","fragmentation mécanique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));
 		lp.add(newProtocol("enzymatic-fragmentation","fragmentation enzymatique","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation","nanopore-frg")));

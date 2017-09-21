@@ -89,6 +89,16 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				 		 "position":6.5,
 				 		 "extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 				 	 },
+				 	{
+				 		"header" : "Conc. convertie en nM", 
+				 		"property" : "(inputContainerUsed.concentration.unit === 'ng/µl')?(inputContainerUsed.concentration.value / 660 / inputContainerUsed.size.value * 1000000):null",
+				 		"type" : "number", 
+			            "order" : true, 
+			            "hide" : true, 
+			           "format" : "2", 
+			            "position":6.8,
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -132,6 +142,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
+						 "required":"isRequired()",
 			        	 "type":"number",
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
@@ -148,6 +159,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         */
+			         
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -257,7 +269,11 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	//WARNING Old systme to compute better used  updatePropertyFromUDT function see normalization
 	var calculVolumeFromValue=function(value){
 		console.log("call calculVolumeFromValue");
-		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
+		if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties===null){
+			value.inputContainerUsed.experimentProperties={};
+		}
+		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null 
+				&& value.outputContainerUsed.concentration != null && value.outputContainerUsed.concentration.value!=null){
 			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){				
 				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/value.inputContainerUsed.concentration.value;
 				requiredVolume = Math.round(requiredVolume*10)/10
@@ -265,27 +281,30 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				var bufferVolume = value.outputContainerUsed.volume.value-requiredVolume;
 				bufferVolume = Math.round(bufferVolume*10)/10
 				
-				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
-					value.inputContainerUsed.experimentProperties={};
-				}
-				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,"unit":value.outputContainerUsed.volume.unit};
+				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":"µl"};
+				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,"unit":"µl"};
 				
-			}else if(value.inputContainerUsed.concentration.unit==="ng/µl") {
+			}else if(value.inputContainerUsed.concentration.unit==="ng/µl" 
+				&& value.inputContainerUsed.size != null && value.inputContainerUsed.size.value != null) {
 				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*1000000/(660*value.inputContainerUsed.size.value));
 				requiredVolume = Math.round(requiredVolume*10)/10
 				
 				var bufferVolume = value.outputContainerUsed.volume.value-requiredVolume;
 				bufferVolume = Math.round(bufferVolume*10)/10
-				
-				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
-					value.inputContainerUsed.experimentProperties={};
-				}				
-				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,
-						 "unit":value.outputContainerUsed.volume.unit};
+						
+				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":"µl"};
+				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,"unit":"µl"};
+			}else{
+				value.inputContainerUsed.experimentProperties["requiredVolume"]=null;
+				value.inputContainerUsed.experimentProperties["bufferVolume"]=null;
 			}
-	    }
+	    }else if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null){
+	    	value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":value.outputContainerUsed.volume.value,"unit":"µl"};
+			value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":0,"unit":"µl"};			
+	    } else{
+		   value.inputContainerUsed.experimentProperties["requiredVolume"]=null;
+		   value.inputContainerUsed.experimentProperties["bufferVolume"]=null;
+	   }
 	}
 		
 	$scope.calculVolumes=function(value){

@@ -141,7 +141,8 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.categoryCode = container.categoryCode; 
 					containerUsed.contents = container.contents;
 					//GA for storage we keep the experiment information to change it. used in QC.
-					var storageCode = containerUsed.locationOnContainerSupport.storageCode;
+					
+					var storageCode = $parse("locationOnContainerSupport.storageCode")(containerUsed);
 					containerUsed.locationOnContainerSupport = container.support;
 					containerUsed.locationOnContainerSupport.storageCode = storageCode;
 					if(experimentStateCode != null && experimentStateCode != undefined && experimentStateCode !== 'F'){
