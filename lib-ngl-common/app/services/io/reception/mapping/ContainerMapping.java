@@ -26,6 +26,7 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import play.Logger;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
 
@@ -37,16 +38,77 @@ public class ContainerMapping extends Mapping<Container> {
 		super(objects, configuration, action, InstanceConstants.CONTAINER_COLL_NAME, Container.class, Mapping.Keys.container, contextValidation);
 	}
 
+	/**
+	 * Try to find container with code obtain from support (best practice) but if not found try default method with code field.
+	 */
+	protected Container get(Container object, Map<Integer, String> rowMap, boolean errorIsNotFound) {
+		try {
+			AbstractFieldConfiguration supportConfig = configuration.get("support");
+			if(null != supportConfig){
+				supportConfig.populateField(object.getClass().getField("support"), object, rowMap, contextValidation, action);
+				if(null != object.support){
+					String code = computeCode(object);
+					if(null != code){
+						object.code = code;
+						object = MongoDBDAO.findByCode(collectionName, type, object.code);	
+						if(errorIsNotFound && null == object){
+							contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
+						}
+					}else{
+						object = super.get(object, rowMap, errorIsNotFound);
+					}
+				}else if(supportConfig.required){
+					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" support !!!");
+				}else{
+					object = super.get(object, rowMap, errorIsNotFound);
+				}
+			}else{
+				object = super.get(object, rowMap, errorIsNotFound);
+			}
+		} catch (Exception e) {
+			Logger.error("Error", e.getMessage(), e);
+			contextValidation.addErrors("Error", e.getMessage());
+			throw new RuntimeException(e);
+		}		
+		return object;
+	}
+	
 	protected void update(Container container) {
 		//TODO update categoryCode if not a code but a label.
 		if(Action.update.equals(action)){
 			container.traceInformation.setTraceInformation(contextValidation.getUser());
 		}else{
+			container.code = computeCode(container);
 			container.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
 			
 	}
-
+	/**
+	 * Compute the container code if possible
+	 * @param container
+	 * @return
+	 */
+	private String computeCode(Container container) {
+		String code = null;
+		if(container.support != null && 
+				container.support.code != null && container.support.line != null && container.support.column != null){
+			ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
+			if(csc.nbLine == 1 && csc.nbColumn == 1){
+				code= container.support.code;
+			}else if(csc.nbLine > 1 && csc.nbColumn == 1){
+				container.support.line = container.support.line.toUpperCase();
+				code=container.support.code+"_"+container.support.line;
+	
+			}else if(csc.nbLine > 1 && csc.nbColumn > 1){
+				container.support.line = container.support.line.toUpperCase();
+				container.support.column = container.support.column.toUpperCase();
+				
+				code=container.support.code+"_"+container.support.line+container.support.column;
+			}
+		}
+		return code;
+	}
+	
 	@Override
 	public void consolidate(Container c) {
 		

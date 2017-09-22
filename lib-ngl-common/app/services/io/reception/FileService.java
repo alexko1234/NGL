@@ -187,7 +187,9 @@ public abstract class FileService {
 			return null;
 		}
 	}
-
+	/*
+	 * compute container code with the support code in case of container.code is null
+	 */
 	private String getContainerCode(ContainerSupport support,
 			Container container) {
 		ContainerSupportCategory csc = ContainerSupportCategory.find.findByCode(container.support.categoryCode);
