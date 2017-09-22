@@ -155,6 +155,9 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				url:function(line){
 					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
 					}
+			},
+			exportCSV:{
+				active:true,
 			}
 	};
 

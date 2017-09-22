@@ -140,6 +140,9 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 			},
 			hide:{
 				active:true
+			},
+			exportCSV:{
+				active:true,
 			}
 	};
 
