@@ -209,7 +209,7 @@ public class MetaBarCoding extends AbstractDeclaration {
                          "single", 100, true, null,null));
 
          return propertyDefinitions;
- }
+	 }
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsSizingDEV() {

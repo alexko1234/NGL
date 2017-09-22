@@ -307,8 +307,15 @@ public class ExpWorkflowsHelper {
 	 * Update only content
 	 * @param exp
 	 */
-	public void updateOutputContainerContents(Experiment exp) {
-		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsedContents(exp, atm));
+	public void updateATMContainerContents(Experiment exp) {
+		exp.atomicTransfertMethods.forEach(atm -> {
+			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+				updateInputContainerUsedContents(exp, atm);
+			}else{
+				updateOutputContainerUsedContents(exp, atm);					
+			}
+			
+		});					
 	}
 	
 	/**
@@ -346,8 +353,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private void updateOutputContainerUsedContents(Experiment exp,
-			AtomicTransfertMethod atm) {
+	private void updateOutputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
 		if(atm.outputContainerUseds != null){
 			atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 				ocu.contents = getContents(exp, atm, ocu);				
@@ -355,6 +361,17 @@ public class ExpWorkflowsHelper {
 		}
 	}
 
+	private void updateInputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
+		if(atm.inputContainerUseds != null){
+			atm.inputContainerUseds.forEach((InputContainerUsed icu) ->{
+				Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
+				icu.contents.forEach(content -> {
+					content.properties.putAll(newContentProperties);
+				});
+			});
+		}
+	}
+	
 	private Set<String> getFromTransformationTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentTypeCodes = new HashSet<String>(0);
 		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
@@ -1518,7 +1535,7 @@ public class ExpWorkflowsHelper {
 		//2 update only if content property exist
 		if(contentPropertyCodes.size() > 0){
 			exp.atomicTransfertMethods.forEach(atm -> {
-				if(OneToVoidContainer.class.isInstance(atm)){
+				if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
 					atm.inputContainerUseds
 							.stream()
 							.forEach(icu -> updateContainerContentPropertiesInCascading(validation, icu, contentPropertyCodes));
@@ -1568,6 +1585,9 @@ public class ExpWorkflowsHelper {
 					.forEach(content -> {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
 						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));	
+						if(content.properties.containsKey("libLayoutNominalLength")){
+							Logger.debug(container.code+" "+content.properties.get("libLayoutNominalLength").value.toString());
+						}
 						
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});	
