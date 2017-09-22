@@ -36,9 +36,11 @@ import models.laboratory.container.instance.tree.ParentContainers;
 import models.laboratory.container.instance.tree.TreeOfLifeNode;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
@@ -1515,13 +1517,18 @@ public class ExpWorkflowsHelper {
 		}
 		//2 update only if content property exist
 		if(contentPropertyCodes.size() > 0){
-			List<OutputContainerUsed> ocus = exp.atomicTransfertMethods
-													.stream()
-													.map(atm -> atm.outputContainerUseds)
-													.flatMap(List::stream)
-													.collect(Collectors.toList());
+			exp.atomicTransfertMethods.forEach(atm -> {
+				if(OneToVoidContainer.class.isInstance(atm)){
+					atm.inputContainerUseds
+							.stream()
+							.forEach(icu -> updateContainerContentPropertiesInCascading(validation, icu, contentPropertyCodes));
+				}else{
+					atm.outputContainerUseds
+							.stream()
+							.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes));					
+				}
 				
-			ocus.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes));	
+			});			
 		}
 		long t2 = System.currentTimeMillis();
 		Logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
@@ -1529,7 +1536,7 @@ public class ExpWorkflowsHelper {
 	}
 	public static final String TAG_PROPERTY_NAME = "tag";
 
-	private void updateContainerContentPropertiesInCascading(ContextValidation validation, OutputContainerUsed ocu, Set<String> contentPropertyCodes) {
+	private void updateContainerContentPropertiesInCascading(ContextValidation validation, AbstractContainerUsed ocu, Set<String> contentPropertyCodes) {
 		List<Container> containerMustBeUpdated = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  
 				DBQuery.or(DBQuery.is("code", ocu.code), DBQuery.regex("treeOfLife.paths", Pattern.compile(","+ocu.code+"$|,"+ocu.code+","))))
 		.toList();
