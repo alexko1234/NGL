@@ -208,6 +208,11 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Bq_NEB_Reagent_ptr_143_4","Bq_NEB Reagent ptr_143_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq NEB Reagent"))));
 		
+		/*
+		lp.add(newProtocol("swift-accel-1s","Swift_Accel_1S","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation","pcr-amplification-and-purification"), 
+				concatMap(newPSV("libraryProtocol","Bq Swift Accel"))));
+		*/
+		
 		lp.add(newProtocol("prod-ill-bqadn-lowcost-148-v4","Prod_ILL_BqADN_LowCost_148_v4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification","dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq low cost"))));
 		lp.add(newProtocol("prod-ill-bqadn-nebu2-151-v2","Prod_ILL_BqADN_NEBUII_151_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification","dna-illumina-indexed-library","fragmentation"), 
