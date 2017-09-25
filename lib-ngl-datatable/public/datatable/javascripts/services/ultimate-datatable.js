@@ -218,7 +218,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     start: false
                 },
                 callbackEndDisplayResult : function(){},
-                compact: true //mode compact pour le nom des bouttons
+                compact: true, //mode compact pour le nom des bouttons
+                objectsMustBeAddInGetFinalValue:{} //object used in $parse to apply function on extract value.
 
             },
             config: undefined,
@@ -2223,16 +2224,18 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             getFinalValue : function(column, result){
             	var filter = this.getFilter(column);
             	var formatter = this.getFormatter(column);
-            	var colValue = undefined;
+            	var colValue = {"col":column};
+            	colValue = Object.assign(colValue, this.config.objectsMustBeAddInGetFinalValue);
             	if (!result.line.group && (column.url === undefined || column.url === null)) {
-                	var v = $parse(column.property+filter)(result.data);
+                	var getter = $parse(column.property+filter);
+            		var v = getter(result.data, colValue);
     				if(!angular.isArray(v)){ //so work for sum, average, unique and collect if one element
     					colValue =  $parse("this"+formatter)(v);
 					}else {
 						colValue = v.map(function(v){return $parse("this"+formatter)(v);});			    						
 					}		    				                                    	
                 } else if (result.line.group) {
-                	var v = $parse("group."+column.id)(result.data);
+                	var v = $parse("group."+column.id)(result.data, colValue);
     				//if error in group function
     				if(angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#"){
     					colValue = v;
@@ -2244,7 +2247,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
     					}			    					
     				}                                    	
                 } else if (!result.line.group && column.url !== undefined && column.url !== null) {
-                    var url = $parse(column.url)(result.data);
+                    var url = $parse(column.url)(result.data, colValue);
                     var v = $parse(column.property+filter)(this.urlCache[url]);
     				if(!angular.isArray(v)){ //so work for sum, average, unique and collect if one element
     					colValue =  $parse("this"+formatter)(v);
@@ -2999,8 +3002,7 @@ directive("udtCell", function(){
 
 			    	scope.udtTableFunctions.getFormatter = scope.udtTable.getFormatter;
 	    			scope.udtTableFunctions.getFilter = scope.udtTable.getFilter;
-	    			scope.udtTableFunctions.getFinalValue = scope.udtTable.getFinalValue;
-
+	    			
 	    			scope.udtTableFunctions.getOptions = function(col){
 	    				if(angular.isString(col.possibleValues)){
 	    					return col.possibleValues;
@@ -3121,7 +3123,7 @@ directive("udtCell", function(){
                                      }
                             	});                           
 		    			}
-		    			return currentScope.udtTableFunctions.getFinalValue(column, value);			    		
+		    			return currentScope.udtTable.getFinalValue(column, value);			    		
 	    			};
 	    			
 	    			var getDisplayFunction = function(col){

@@ -21,6 +21,7 @@ factory('samplesSearchService', ['$http', 'mainService', 'lists', 'datatable', f
 		columns.push({
 			"header":Messages("samples.table.code"),
 			"property":"code",
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3' vertical>",
 			"order":true,
 			"hide":true,
 			"position":2,

@@ -32,6 +32,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			},
 			exportCSV:{
 				active:true,
+			},
+			objectsMustBeAddInGetFinalValue:{
+				"searchService":processesSearchService
 			}
 	};
 
