@@ -282,7 +282,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 	    // 10/07/2017  NOUVEAU CHANGEMENT: 8 process !!!!	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000/X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000 / X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
@@ -302,7 +302,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq) ?? plus Miseq ??
-		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2000/2500/NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2000 / 2500 / NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
@@ -323,7 +323,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));  	
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1)  (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 1 (4000/X5)", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (4000 / X5)", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				7,
 				null,
 				Arrays.asList(
@@ -342,7 +342,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 1 (2000/2500/Miseq/NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (2000 / 2500 /Miseq / NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				8,
 				null,
 				Arrays.asList(
@@ -362,7 +362,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 2 (4000/X5)", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (4000 / X5)", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				9,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
@@ -380,7 +380,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise 2 (2000/2500/Miseq/NextSeq)", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (2000 / 2500 / NextSeq)", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				10,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
@@ -399,7 +399,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));					
 
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("PCR indexing (4000/X5)", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		//l.add(DescriptionFactory.newProcessType("PCR indexing (4000/X5)", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (4000 / X5)", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				11,
 				null,
 				Arrays.asList(
@@ -416,7 +417,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("PCR indexing (2000/2500/Miseq/NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),
+		//l.add(DescriptionFactory.newProcessType("PCR indexing (2000/2500/Miseq/NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),
+		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (2000 / 2500 / NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),		
 				12,
 				null,
 				Arrays.asList(
