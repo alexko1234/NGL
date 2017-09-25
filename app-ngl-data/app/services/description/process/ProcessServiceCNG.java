@@ -341,8 +341,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc-ord").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (2000/2500/Miseq/NextSeq)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (2000 / 2500 /Miseq / NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (2000/2500/NextSeq)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (2000 / 2500 / NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				8,
 				null,
 				Arrays.asList(
@@ -379,7 +379,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/Miseq/NextSeq)
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/NextSeq)
 		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (2000 / 2500 / NextSeq)", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				10,
 				getPropertyDefinitionsCapturePcrIndexing(),
@@ -416,8 +416,8 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				getExperimentTypes("ext-to-pcr-indexing-process-fc-ord").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (2000/2500/Miseq/NextSeq)
-		//l.add(DescriptionFactory.newProcessType("PCR indexing (2000/2500/Miseq/NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (2000/2500/NextSeq)
+		//l.add(DescriptionFactory.newProcessType("PCR indexing (2000/2500/NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),
 		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (2000 / 2500 / NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),		
 				12,
 				null,
