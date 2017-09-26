@@ -234,10 +234,24 @@ angular.module('ngl-sq.samplesServices')
 	};
 }]).filter('isConditions',['$filter',function ($filter) {
 	return function (processes, conditions, alternateConditions) { //$or between conditions and alternateConditions
-		if(null == conditions || undefined == conditions) return;
-		if(null == processes || undefined == processes)return 0;
-		if(!angular.isArray(conditions)) conditions = [conditions];
-		if(null != alternateConditions && undefined != alternateConditions && !angular.isArray(alternateConditions)) alternateConditions = [alternateConditions];
+		if(!angular.isObject(conditions)) return;
+		if(!angular.isArray(processes))return 0;
+		
+		if(angular.isArray(conditions)){
+			conditions = [conditions];
+		}else if(!angular.isArray(conditions) && !conditions["$or"]){ //only one conditions
+			conditions = [[conditions]];
+		}else if(!angular.isArray(conditions) && conditions["$or"] && angular.isArray(conditions["$or"])){
+			conditions = conditions;
+		}else {
+			throw "conditions configuration not managed !";
+		}
+		
+		if(angular.isObject(alternateConditions)) {
+			(!angular.isArray(alternateConditions))?conditions.push([alternateConditions]):conditions.push(alternateConditions);			
+		}
+		
+		
 		
 		var check = function(condition){
 			var results = $filter('filter')([this], condition.criteria, true);
@@ -250,18 +264,20 @@ angular.module('ngl-sq.samplesServices')
 		};
 		
 		var process = processes.find(function(process){
-			var test = conditions.every(check, process);
+			var test = conditions.some(function(insideConditions){
+				return insideConditions.every(check, process);
+			});
 			
 			return test;
 		});
-		
+		/*
 		if((process === null || process == undefined) && alternateConditions !== null && alternateConditions !== undefined){
 			process = processes.find(function(process){
 				var test = alternateConditions.every(check, process);
 				return test;
 			});
 		}
-		
+		*/
 		if(process){
 			console.log("process = "+process.code);
 			return 1;
