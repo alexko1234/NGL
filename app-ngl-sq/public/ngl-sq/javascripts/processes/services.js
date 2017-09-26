@@ -180,7 +180,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"filter" : "unique",
 			"groupMethod" : "collect:true",
 			"filter":"orderBy:searchService.extractDate",
-			"render" : "<div list-resize='cellValue' list-resize-min-size='2' vertical>",
+			"render" : "<div list-resize='cellValue|orderBy:searchService.extractDate' list-resize-min-size='2' vertical>",
 			"type" : "text"
 		});
 		columns.push({
