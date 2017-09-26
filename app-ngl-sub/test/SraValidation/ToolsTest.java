@@ -163,15 +163,15 @@ public class ToolsTest extends AbstractTestsSRA {
 	
 	//@Test
 	public void testfileAc()throws IOException, SraException, MailServiceException {
-		File fileEbi = new File("/env/cns/home/sgas/test/listAC_CNS_BDQ_BGX_BGU_27BB18OFB.txt.ok");
+		File fileEbi = new File("/env/cns/home/sgas/test/listAC_CNS_ANU_29LH3R4QK_201709251245.txt");
 		String user = "william";
 		ContextValidation ctxVal = new ContextValidation(user);
-		String submissionCode = "CNS_BDQ_BGX_BGU_27BB18OFB";
+		String submissionCode = "CNS_ANU_29LH3R4QK";
 		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
 		ctxVal.displayErrors(Logger.of("SRA"));
 
 	}
-
+	
 	//@Test
 	public void testRelease()throws IOException {
 		Submission submission = MongoDBDAO.findOne(InstanceConstants.SRA_SUBMISSION_COLL_NAME,
