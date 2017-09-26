@@ -390,7 +390,9 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		};
 	};
 	
-	// 03/05/2017 NGL-1197
+	/* 03/05/2017 NGL-1197
+	   26/09/2017 suppression car ajouté par erreur ????
+	 
 	$scope.copyVolumeToEngaged = function(index){
 		if (index){
 			copyVolumeAtm(index);
@@ -416,7 +418,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		 		}
 			});
 	}
-
+    */
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {

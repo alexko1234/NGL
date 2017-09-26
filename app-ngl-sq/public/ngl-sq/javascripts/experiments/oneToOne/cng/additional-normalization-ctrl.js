@@ -431,7 +431,13 @@ angular.module('home').controller('AdditionalNormalizationCtrl',['$scope', '$par
 				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, outputVol);
 				$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
 			} else {
-			    computeVolumes(value.data);
+				// 26/09/2017 NGL-1519: la normalisation se fait en nM, si les concentration venant de l'experience precedente sont en ng/ul=> pas de calcul
+				var input_unit= $parse("inputContainerUsed.concentration.unit")(value.data);
+				if (input_unit==='nM'){	
+			       computeVolumes(value.data);
+				} else {
+					console.log("Impossible de calculer les volumes: unité d'entrée n'est pas nM");
+				}
 			}
 		}
 	}

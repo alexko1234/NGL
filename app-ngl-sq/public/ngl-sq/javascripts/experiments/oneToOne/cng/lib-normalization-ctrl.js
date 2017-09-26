@@ -408,7 +408,6 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	}]);
 
 	// 26/07/2017: remplacer les calculs de calculation.drl par du javascript...
-	
 	$scope.updatePropertyFromUDT = function(value, col){
 		//console.log("update from property : "+col.property);
 
