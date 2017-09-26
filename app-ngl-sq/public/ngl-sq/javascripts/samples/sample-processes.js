@@ -242,7 +242,7 @@ angular.module('ngl-sq.samplesServices')
 		}else if(!angular.isArray(conditions) && !conditions["$or"]){ //only one conditions
 			conditions = [[conditions]];
 		}else if(!angular.isArray(conditions) && conditions["$or"] && angular.isArray(conditions["$or"])){
-			conditions = conditions;
+			conditions = conditions["$or"].map(function(elt){return (!angular.isArray(elt))?[elt]:elt;});
 		}else {
 			throw "conditions configuration not managed !";
 		}
@@ -279,7 +279,7 @@ angular.module('ngl-sq.samplesServices')
 		}
 		*/
 		if(process){
-			console.log("process = "+process.code);
+			//console.log("process = "+process.code);
 			return 1;
 		}else return 0;
 		
