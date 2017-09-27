@@ -108,6 +108,7 @@ public class RunIllumina extends AbstractDeclaration {
 						getPET("sizing",-1),
 						getPET("spri-select",-1),
 						getPET("pcr-amplification-and-purification",-1),
+						getPET("indexing-and-pcr-amplification",-1),
 						getPET("solution-stock",0),
 						getPET("prepa-flowcell",1),
 						getPET("prepa-fc-ordered",1),
@@ -170,7 +171,8 @@ public class RunIllumina extends AbstractDeclaration {
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
 		
 		newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification","dna-illumina-indexed-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
+		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,
+				getExperimentTypeNodes("ext-to-norm-fc-depot-illumina", "ext-to-ampli-stk-illumina-depot", "ext-to-ampure-stk-illumina-depot","sizing","spri-select","pcr-amplification-and-purification","indexing-and-pcr-amplification","dna-illumina-indexed-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("pool", "pool-tube")).save();
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();

@@ -53,11 +53,18 @@ public class MetaTProcess extends AbstractDeclaration {
 				AbstractExperimentService.getInstrumentUsedTypes("thermocycler-and-biomek-fx","thermocycler"),"OneToOne", null,true,
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newExperimentType("Banque RNA SANS indexing","rna-illumina-library","LIB",831,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsRNAIlluminaLibrary(),
+				AbstractExperimentService.getInstrumentUsedTypes("thermocycler-and-biomek-fx","thermocycler"),"OneToOne", null,true,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
 		l.add(newExperimentType("Fragmentation Illumina","fragmentation","FRG",780,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
 				getInstrumentUsedTypes("covaris-e220-ext","covaris-e220","biomek-fx-and-covaris-e220"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
+				
 		
 		return l;
 	}
@@ -113,7 +120,9 @@ public class MetaTProcess extends AbstractDeclaration {
 						,getPET("dna-rna-extraction",-1)
 						,getPET("small-and-large-rna-isolation",-1)
 						, getPET("rna-illumina-indexed-library",0)
+						, getPET("rna-illumina-library",0)
 						, getPET("pcr-amplification-and-purification",1)
+						, getPET("indexing-and-pcr-amplification",1)
 						, getPET("solution-stock",2)
 						, getPET("prepa-flowcell",3)
 						, getPET("prepa-fc-ordered",3)
@@ -137,39 +146,32 @@ public class MetaTProcess extends AbstractDeclaration {
 	@Override
 	protected void getExperimentTypeNodePROD() {
 		
-		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
-				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
-		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","dna-rna-extraction","ext-to-metagenomic-process-with-sizing","ext-to-metagenomic-process","ext-to-metagenomic-process-with-spri-select","ext-to-pcr-free-process"),	
-				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		
-		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
-				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	
 	}
 	
 	@Override
 	protected void getExperimentTypeNodeCommon() {
 		
 		
+		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
+				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
+		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","dna-rna-extraction","ext-to-metagenomic-process-with-sizing","ext-to-metagenomic-process","ext-to-metagenomic-process-with-spri-select","ext-to-pcr-free-process"),	
+				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
-		
+		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
+				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();	
+		newExperimentTypeNode("rna-illumina-library",AbstractExperimentService.getExperimentTypes("rna-illumina-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
+				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+	
 	}
 
 	@Override
 	protected void getExperimentTypeNodeDEV() {
-		newExperimentTypeNode("ext-to-cdna-frg-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-cdna-frg-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("cdna-synthesis",AbstractExperimentService.getExperimentTypes("cdna-synthesis").get(0),false, false,false, getExperimentTypeNodes("dna-rna-extraction","ext-to-cdna-frg-transcriptomic-process"),
-				null, getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, false,	getExperimentTypeNodes("cdna-synthesis","dna-rna-extraction","ext-to-metagenomic-process-with-sizing","ext-to-metagenomic-process","ext-to-metagenomic-process-with-spri-select","ext-to-pcr-free-process"),	
-				null, getExperimentTypes("chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-		newExperimentTypeNode("ext-to-rna-lib-transcriptomic-process", AbstractExperimentService.getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("rna-illumina-indexed-library",AbstractExperimentService.getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("dna-rna-extraction","ext-to-rna-lib-transcriptomic-process","fragmentation", "small-and-large-rna-isolation"),
-				null,getExperimentTypes("fluo-quantification","chip-migration"), getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
-	
+		
+		
 	}
 
 	@Override
@@ -178,7 +180,7 @@ public class MetaTProcess extends AbstractDeclaration {
 
 	}
 	
-	private List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaIndexedLibrary() {
+	private List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaLibrary() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		propertyDefinitions.add(newPropertiesDefinition("Qté engagée ds bq RNA","rnaLibInputQuantity", LevelService.getLevels(Level.CODE.ContainerIn, Level.CODE.Content),Double.class, false, null,
@@ -188,18 +190,25 @@ public class MetaTProcess extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
 
-			
+		//Experiments
+		propertyDefinitions.add(newPropertiesDefinition("Schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
+					false, null, null , "img",17,true,null,null));
+
+		
+		return propertyDefinitions;
+	}
+	
+	
+	private List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaIndexedLibrary() {
+		List<PropertyDefinition> propertyDefinitions = getPropertyDefinitionsRNAIlluminaLibrary();
+
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
 				null, null,null,null,"single", 14, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
 				getTagCategoriesIllumina(), null,null,null,"single", 15, false, null,null));
 
-		//Experiments
-				propertyDefinitions.add(newPropertiesDefinition(
-						"Schéma de manips","experimentPlan",LevelService.getLevels(Level.CODE.Experiment), Image.class, 
-						false, null, null , "img",17,true,null,null));
-
+		
 		
 		return propertyDefinitions;
 	}

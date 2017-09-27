@@ -66,6 +66,13 @@ public class MetaBarCoding extends AbstractDeclaration {
                              getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
                              DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+             l.add(newExperimentType("Amplification/PCR + indexing","indexing-and-pcr-amplification","PCR",900,
+                     ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsAmpliPurifIndexing(),
+                     getInstrumentUsedTypes("thermocycler"),"OneToOne", null,true,
+                     DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+             
+             
              l.add(newExperimentType("Sizing (gel)","sizing","SIZ",950,
                              ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsSizingDEV(),
                              getInstrumentUsedTypes("hand"),"OneToMany", null,true,
@@ -81,6 +88,7 @@ public class MetaBarCoding extends AbstractDeclaration {
              return l;
      }
 
+	
 	
 	
 	@Override
@@ -170,6 +178,8 @@ public class MetaBarCoding extends AbstractDeclaration {
 				,null,getExperimentTypes("fluo-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		newExperimentTypeNode("pcr-amplification-and-purification",getExperimentTypes("pcr-amplification-and-purification").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampli-spri-select-stk-illumina-depot","dna-illumina-indexed-library","rna-illumina-indexed-library")
 				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
+		newExperimentTypeNode("indexing-and-pcr-amplification",getExperimentTypes("indexing-and-pcr-amplification").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampli-spri-select-stk-illumina-depot","rna-illumina-library")
+				,getExperimentTypes("post-pcr-ampure"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
 		
 		newExperimentTypeNode("sizing",getExperimentTypes("sizing").get(0),true, true,false,getExperimentTypeNodes("ext-to-ampure-sizing-stk-illumina-depot", "ext-to-sizing-stk-illumina-depot", "pcr-amplification-and-purification")
 				,null,getExperimentTypes("fluo-quantification","chip-migration","qpcr-quantification"),getExperimentTypes("pool","tubes-to-plate","plate-to-tubes")).save();
@@ -225,6 +235,19 @@ public class MetaBarCoding extends AbstractDeclaration {
                         "single", 100, true, null,null));
 
         return propertyDefinitions;
+	}
+
+	private List<PropertyDefinition> getPropertyDefinitionsAmpliPurifIndexing() {
+		List<PropertyDefinition> propertyDefinitions = getPropertyDefinitionsAmpliPurif();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 16, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
+				getTagCategoriesIllumina(), null,null,null,"single", 17, false, null,null));
+
+		
+		return propertyDefinitions;
 	}
 
 

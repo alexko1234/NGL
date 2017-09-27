@@ -1,5 +1,5 @@
-angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                    function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope', '$parse', '$http', '$filter', 'atmToSingleDatatable',
+                                                    function($scope, $parse, $http, $filter, atmToSingleDatatable){
                                                     
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
@@ -359,6 +359,80 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 		});
 	}
 
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
+			computeInputQuantity(value.data);
+		} else if( (col.property === 'inputContainerUsed.experimentProperties.nbPCR.value') || (col.property === 'outputContainerUsed.experimentProperties.PCRvolume.value')){
+	            computeOutputContainerVolumePerPCR(value.data);
+	    } else if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
+			computeTagCategory(value.data);			
+		}    
+	}
+	
+	
+	
+  var computeOutputContainerVolumePerPCR  = function(udtData){
+	     var getter = $parse("outputContainerUsed.volume.value");
+         var volume = getter(udtData);
+   
+        var compute = {
+                pcrvolume : $parse("outputContainerUsed.experimentProperties.PCRvolume.value")(udtData),
+                nbPCR : $parse("inputContainerUsed.experimentProperties.nbPCR.value")(udtData),
+                isReady:function(){
+                    return (this.pcrvolume && this.nbPCR);
+                }
+            };
+           
+           if(compute.isReady()){
+               var result = $parse("(pcrvolume * nbPCR)")(compute);
+               console.log("result = "+result);
+              
+               if(angular.isNumber(result) && !isNaN(result)){
+            	   volume = Math.round(result*10)/10;               
+               }else{
+            	   volume = undefined;
+               }   
+               getter.assign(udtData, volume);
+               console.log("vol = "+volume);
+	              
+           }else{
+               getter.assign(udtData, undefined);
+               console.log("not ready to volume");
+           }
+    
+  }
+	
+	
+	var computeInputQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
+		var inputQuantity = getter(udtData);
+		
+		var compute = {
+				inputVol1 : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+				inputConc1 : $parse("inputContainerUsed.concentration.value")(udtData),
+				isReady:function(){
+					return (this.inputVol1 && this.inputConc1);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputVol1 * inputConc1)")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity = Math.round(result*10)/10;				
+			}else{
+				inputQuantity = undefined;
+			}	
+			getter.assign(udtData, inputQuantity);
+		}else{
+			getter.assign(udtData, undefined);
+			console.log("not ready to inputQuantity");
+		}
+		
+	}
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 /*	atmService.newAtomicTransfertMethod = function(line, column){
@@ -412,81 +486,15 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 			volume : "µL"
 	}
 	
+	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
+		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
+		if(property.code=="tag"){
+			column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.code for v in tags | filter:$viewValue | limitTo:20" typeahead-min-length=1 udt-change="updatePropertyFromUDT(value,col)"/>';        											
+		}
+		return column;
+	};
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-	
-	$scope.updatePropertyFromUDT = function(value, col){
-		console.log("update from property : "+col.property);
-		
-		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'){
-			computeInputQuantity(value.data);
-		}
-		
-	    if( (col.property === 'inputContainerUsed.experimentProperties.nbPCR.value') || (col.property === 'outputContainerUsed.experimentProperties.PCRvolume.value')){
-	            computeOutputContainerVolumePerPCR(value.data);
-	    }
-	        
-	}
-	
-	  var computeOutputContainerVolumePerPCR  = function(udtData){
-		     var getter = $parse("outputContainerUsed.volume.value");
-	         var volume = getter(udtData);
-	   
-	        var compute = {
-	                pcrvolume : $parse("outputContainerUsed.experimentProperties.PCRvolume.value")(udtData),
-	                nbPCR : $parse("inputContainerUsed.experimentProperties.nbPCR.value")(udtData),
-	                isReady:function(){
-	                    return (this.pcrvolume && this.nbPCR);
-	                }
-	            };
-	           
-	           if(compute.isReady()){
-	               var result = $parse("(pcrvolume * nbPCR)")(compute);
-	               console.log("result = "+result);
-	              
-	               if(angular.isNumber(result) && !isNaN(result)){
-	            	   volume = Math.round(result*10)/10;               
-	               }else{
-	            	   volume = undefined;
-	               }   
-	               getter.assign(udtData, volume);
-	               console.log("vol = "+volume);
-		              
-	           }else{
-	               getter.assign(udtData, undefined);
-	               console.log("not ready to volume");
-	           }
-	    
-	  }
-	
-	
-	var computeInputQuantity = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity.value");
-		var inputQuantity = getter(udtData);
-		
-		var compute = {
-				inputVol1 : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
-				inputConc1 : $parse("inputContainerUsed.concentration.value")(udtData),
-				isReady:function(){
-					return (this.inputVol1 && this.inputConc1);
-				}
-			};
-		
-		if(compute.isReady()){
-			var result = $parse("(inputVol1 * inputConc1)")(compute);
-			console.log("result = "+result);
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputQuantity = Math.round(result*10)/10;				
-			}else{
-				inputQuantity = undefined;
-			}	
-			getter.assign(udtData, inputQuantity);
-		}else{
-			getter.assign(udtData, undefined);
-			console.log("not ready to inputQuantity");
-		}
-		
-	}
 	
 	$scope.atmService = atmService;
 /*	if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
@@ -495,4 +503,34 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 	}else{
 		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
 	}*/
+	
+	$http.get(jsRoutes.controllers.commons.api.Parameters.list().url,{params:{typeCode:"index-illumina-sequencing"}})
+		.success(function(data, status, headers, config) {
+			$scope.tags = data;		
+		});
+	
+	var computeTagCategory = function(udtData){
+		var getter = $parse("outputContainerUsed.experimentProperties.tagCategory.value");
+		var tagCategory = getter(udtData);
+		
+		var compute = {
+				tagValue : $parse("outputContainerUsed.experimentProperties.tag.value")(udtData),
+				tag : $filter("filter")($scope.tags,{code:$parse("outputContainerUsed.experimentProperties.tag.value")(udtData)},true),
+				isReady:function(){
+					return (this.tagValue && this.tag && this.tag.length === 1);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.tag[0].categoryCode;
+			console.log("result = "+result);
+			if(result){
+				tagCategory = result;				
+			}else{
+				tagCategory = undefined;
+			}	
+			getter.assign(udtData, tagCategory);
+		}else if(compute.tagValue){
+			getter.assign(udtData, undefined);
+		}		
+	}
 }]);
