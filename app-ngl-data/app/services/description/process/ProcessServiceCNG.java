@@ -42,8 +42,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> seq. Illumina", "library"));          // 13/09/2017 fdsantos NGL-1201 renommage label
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. -> seq. Nanopore", "nanopore-library")); // 13/09/2017 fdsantos NGL-1201 renommage label
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. librairie pr séquençage Illumina", "library"));          // 27/09/2017 fdsantos NGL-1201 renommage label
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. librairie pr séquençage Nanopore", "nanopore-library")); // 27/09/2017 fdsantos NGL-1201 renommage label
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Séquençage", "sequencing"));
 		// 28/11/2016 fdsantos JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
@@ -103,7 +103,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS 13/03/2017 NGL-1167 ajout "wg-chromium-lib-prep" en -1
 		// FDS ajout 12/04/2016 JIRA NGL-894/981 : processus court demarrant a lib-normalization, pas de proprietes; chgt label 15/09/2016; 
 		// chgt label 06/09/2017 (NGL-1576); chgt label  13/09/2017 NGL-1201
-		l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt (2000/2500/MiSeq/NextSeq)", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+		l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt (2000 / 2500 / MiSeq / NextSeq)", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				20,
 				null,  // pas de propriétés ??
 				Arrays.asList(
@@ -122,7 +122,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		// FDS 28/10/2016 NGL-1025: renommage label en "2000/2500_Dénat, prep FC, dépôt"
 		// FDS 13/09/2017 NGL-1201: renommage label en "Dénat, prep FC, dépôt (2000/2500/MiSeq/NextSeq)"
-		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt (2000/2500/MiSeq/NextSeq)", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
+		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt (2000 / 2500 / MiSeq / NextSeq)", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				40,
 		        getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(
@@ -160,7 +160,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		}
 		
 		// FDS 13/09/2017 NGL-1201: renommage label en "Prep FC, dépôt (2000/2500/MiSeq/NextSeq)"
-		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt (2000/2500/MiSeq/NextSeq)", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
+		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt (2000 / 2500 / MiSeq / NextSeq)", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
 				42,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(
@@ -221,7 +221,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
         // FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modif du label=> supprimer RNA;
 		// FDS chgt label (NGL-1576); FDS chgt label 13/07/2017 NGL-1201
-		l.add(DescriptionFactory.newProcessType("Norm(+pooling), dénat, FC, dépôt (4000/X5)", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
+		l.add(DescriptionFactory.newProcessType("Norm(+pooling), dénat, FC, dépôt (4000 / X5)", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 				21,   
 				null, // pas de propriétés ??
 				Arrays.asList(
@@ -301,7 +301,7 @@ if ( !ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				getExperimentTypes("ext-to-capture-prep-process-fc-ord").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq) ?? plus Miseq ??
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq)
 		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2000 / 2500 / NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), 
