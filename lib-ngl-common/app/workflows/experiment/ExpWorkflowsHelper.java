@@ -36,9 +36,11 @@ import models.laboratory.container.instance.tree.ParentContainers;
 import models.laboratory.container.instance.tree.TreeOfLifeNode;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
@@ -305,8 +307,15 @@ public class ExpWorkflowsHelper {
 	 * Update only content
 	 * @param exp
 	 */
-	public void updateOutputContainerContents(Experiment exp) {
-		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsedContents(exp, atm));
+	public void updateATMContainerContents(Experiment exp) {
+		exp.atomicTransfertMethods.forEach(atm -> {
+			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+				updateInputContainerUsedContents(exp, atm);
+			}else{
+				updateOutputContainerUsedContents(exp, atm);					
+			}
+			
+		});					
 	}
 	
 	/**
@@ -344,8 +353,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private void updateOutputContainerUsedContents(Experiment exp,
-			AtomicTransfertMethod atm) {
+	private void updateOutputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
 		if(atm.outputContainerUseds != null){
 			atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 				ocu.contents = getContents(exp, atm, ocu);				
@@ -353,6 +361,17 @@ public class ExpWorkflowsHelper {
 		}
 	}
 
+	private void updateInputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
+		if(atm.inputContainerUseds != null){
+			atm.inputContainerUseds.forEach((InputContainerUsed icu) ->{
+				Map<String, PropertyValue> newContentProperties = getCommonPropertiesForALevelWithICU(exp, icu, CODE.Content);
+				icu.contents.forEach(content -> {
+					content.properties.putAll(newContentProperties);
+				});
+			});
+		}
+	}
+	
 	private Set<String> getFromTransformationTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentTypeCodes = new HashSet<String>(0);
 		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
@@ -1515,13 +1534,18 @@ public class ExpWorkflowsHelper {
 		}
 		//2 update only if content property exist
 		if(contentPropertyCodes.size() > 0){
-			List<OutputContainerUsed> ocus = exp.atomicTransfertMethods
-													.stream()
-													.map(atm -> atm.outputContainerUseds)
-													.flatMap(List::stream)
-													.collect(Collectors.toList());
+			exp.atomicTransfertMethods.forEach(atm -> {
+				if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+					atm.inputContainerUseds
+							.stream()
+							.forEach(icu -> updateContainerContentPropertiesInCascading(validation, icu, contentPropertyCodes));
+				}else{
+					atm.outputContainerUseds
+							.stream()
+							.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes));					
+				}
 				
-			ocus.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes));	
+			});			
 		}
 		long t2 = System.currentTimeMillis();
 		Logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
@@ -1529,7 +1553,7 @@ public class ExpWorkflowsHelper {
 	}
 	public static final String TAG_PROPERTY_NAME = "tag";
 
-	private void updateContainerContentPropertiesInCascading(ContextValidation validation, OutputContainerUsed ocu, Set<String> contentPropertyCodes) {
+	private void updateContainerContentPropertiesInCascading(ContextValidation validation, AbstractContainerUsed ocu, Set<String> contentPropertyCodes) {
 		List<Container> containerMustBeUpdated = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  
 				DBQuery.or(DBQuery.is("code", ocu.code), DBQuery.regex("treeOfLife.paths", Pattern.compile(","+ocu.code+"$|,"+ocu.code+","))))
 		.toList();
@@ -1561,6 +1585,9 @@ public class ExpWorkflowsHelper {
 					.forEach(content -> {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
 						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));	
+						if(content.properties.containsKey("libLayoutNominalLength")){
+							Logger.debug(container.code+" "+content.properties.get("libLayoutNominalLength").value.toString());
+						}
 						
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});	

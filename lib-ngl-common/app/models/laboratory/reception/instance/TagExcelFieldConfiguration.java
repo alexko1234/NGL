@@ -41,7 +41,7 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 			//Get Index
 			Index index = getIndex(contextValidation, sequence, name);
 			if(null != index && !tagCategory.booleanValue()){
-				populateField(field, dbObject, index.name);
+				populateField(field, dbObject, index.code);
 			}else if(null != index && tagCategory.booleanValue()){
 				populateField(field, dbObject, index.categoryCode);
 			}
@@ -51,7 +51,7 @@ public class TagExcelFieldConfiguration extends AbstractFieldConfiguration {
 			
 			Index index = getIndex(contextValidation, sequence, null);
 			if(null != index && !tagCategory.booleanValue()){
-				populateField(field, dbObject, index.name);
+				populateField(field, dbObject, index.code);
 			}else if(null != index && tagCategory.booleanValue()){
 				populateField(field, dbObject, index.categoryCode);
 			}

@@ -180,6 +180,7 @@ public class Submissions extends DocumentController<Submission>{
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
 			return badRequest(filledForm.errorsAsJson());
 		}
+		
 		subWorkflows.setState(ctxVal, submission, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -265,6 +266,7 @@ public class Submissions extends DocumentController<Submission>{
 		//Logger.debug("filledForm "+filledForm);
 		File retourEbiRelease =new File(submissionsForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
+		ctxVal.putObject("fileEbi", retourEbiRelease);
 		try {
 			submission = ReleaseServices.traitementRetourRelease(ctxVal, code, retourEbiRelease); 
 		} catch (IOException e) {

@@ -66,6 +66,7 @@ public class ResolutionService {
 			createQCMiseqResolutionCNG(ctx);
 			createExperimentResolution(ctx); // ajoute les resolutions par defaut sur toutes les experiences
 			createProcessResolutionCNG(ctx);
+			createContainerResolutionCNG(ctx);
 		}
 		else if ( inst.equals("CNS") ){			
 			resolutionCategories = createResolutionCategoriesCNS();
@@ -904,6 +905,22 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Echec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 3));	
 
 		return l;
+	}
+	
+	
+	public static void createContainerResolutionCNG(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+
+		l.add(InstanceFactory.newResolution("Epuisé","empty", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Renvoyé collaborateur","return-collab", resolutionCategories.get("Default"), (short) 3));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "containerReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Container";
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
 	

@@ -231,32 +231,6 @@ angular.module('home').controller('FragmentationCNGCtrl',['$scope', '$parse', 'a
                 */
 			}
 	};
-	
-	// 31/07/2017 ajouter les columns 'processProperties' uniquement si experience state= N ou IP car n'existe que temporairement
-	//  plateWorkLabel / ngsRunWorkLabel 
-	if ( $scope.isInProgressState() || $scope.isNewState() ) {
-		datatableConfig.columns.push({
-	       	 "header": "Nom de travail plaque",
-	       	 "property":"inputContainerUsed.contents",
-	       	 "filter" : "getArray:'processProperties.plateWorkLabel.value' | unique",
-	       	 "order":true,
-			 "hide":true,
-	       	 "type":"text",
-	       	 "position":9.5,
-	       	 "extraHeaders":{0:inputExtraHeaders}
-		 });
-		
-		datatableConfig.columns.push({
-	       	 "header": "Nom de travail run NGS",
-	       	 "property":"inputContainerUsed.contents",
-	       	 "filter" : "getArray:'processProperties.ngsRunWorkLabel.value' | unique",
-	       	 "order":true,
-			 "hide":true,
-	       	 "type":"text",
-	       	 "position":9.7,
-	       	 "extraHeaders":{0:inputExtraHeaders}
-		 });
-    }
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");	

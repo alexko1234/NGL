@@ -407,7 +407,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		label:Messages("experiments.sampleSheet") 
 	}]);
 
-	// 26/07/2017: remplacer les calculs de calculation.drl par du javascript....
+	// 26/07/2017: remplacer les calculs de calculation.drl par du javascript...
 	$scope.updatePropertyFromUDT = function(value, col){
 		//console.log("update from property : "+col.property);
 
@@ -432,7 +432,13 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, outputVol);
 				$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
 			} else {
-			    computeVolumes(value.data);
+				// 14/09/2017 la normalisation se fait en nM, si les concentration venant de l'experience precedente sont en ng/ul=> pas de calcul
+				var input_unit= $parse("inputContainerUsed.concentration.unit")(value.data);
+				if (input_unit==='nM'){	
+			       computeVolumes(value.data);
+				} else {
+					console.log("Impossible de calculer les volumes: unité d'entrée n'est pas nM");
+				}
 			}
 		}
 	}

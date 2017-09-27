@@ -52,7 +52,7 @@ public class InstanceFactory {
 
 	
 	public static Protocol newProtocol( String code,String name,
-			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties,Boolean active) {
+			String path, String version, String cat, List<String> exp,  Map<String, PropertyValue> properties, Boolean active) {
 		Protocol p = new Protocol();
 		p.code = code.toLowerCase().replace("\\s+", "-");
 		p.name = name;

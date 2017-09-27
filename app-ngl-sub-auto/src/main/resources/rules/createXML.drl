@@ -60,6 +60,10 @@ rule "Define variable lineParmeter for createXML specification"
        log.debug("Code "+$job.getUniqueJobResource("subToXML").getProperty("code"));
 end
 
+
+
+
+
 rule "add submissionXML resources in internalRefSubmission_xml to fire sendXML"
 	@BirdsRule( addResources ) 
 	dialect 'java'
