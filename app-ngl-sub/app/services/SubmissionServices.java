@@ -841,6 +841,7 @@ public class SubmissionServices {
 		if (submission == null){
 			throw new SraException("aucun objet submission dans la base pour  : " + submissionCode);
 		}
+		String user = contextValidation.getUser();
 		try {
 			// creation repertoire de soumission :
 			File dataRep = createDirSubmission(submission);
@@ -887,6 +888,9 @@ public class SubmissionServices {
 						rawData.gzipForSubmission = true;
 					} else {
 						rawData.gzipForSubmission = false;
+						if (StringUtils.isBlank(rawData.md5)){
+							contextValidation.addErrors("md5", " valeur à null alors que donnée deja zippée pour "+ rawData.relatifName);
+						}
 					}
 					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
 					// donnée est au CNS et si elle n'est pas à zipper
@@ -928,8 +932,8 @@ public class SubmissionServices {
 			throw new SraException(" Dans activatePrimarySubmission pb IOException: " + e);		
 		}
 		
+		
 		// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state=uservalidate
-		String user = contextValidation.getUser();
 		State state = new State("IW-SUB", user);
 		submissionWorkflows.setState(contextValidation, submission, state);
 		if (! contextValidation.hasErrors()) {
@@ -940,6 +944,7 @@ public class SubmissionServices {
 		} else {
 			System.out.println("Probleme pour passer la soumission avec le state IW-SUB");
 			contextValidation.displayErrors(Logger.of("SRA"));
+			throw new SraException(" Dans activatePrimarySubmission Erreurs : " + contextValidation.errors.toString());		
 		}
 		
 	}
@@ -1291,7 +1296,7 @@ public class SubmissionServices {
 		if ("rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// Pas de spot_descriptor
 			experiment.libraryLayout = "SINGLE";
-			experiment.libraryLayoutOrientation = "forward";
+			experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation.get("forward");
 		} else {
 			
 			// Ajouter les read_spec (dans SPOT_DESCRIPTOR ) en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
@@ -1305,7 +1310,7 @@ public class SubmissionServices {
 				if (StringUtils.isNotBlank(libraryLayout)) { 
 					if (libraryLayout.equalsIgnoreCase("SR")){
 						experiment.libraryLayout = "SINGLE";
-						experiment.libraryLayoutOrientation = "forward";
+						experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation.get("forward");
 					} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
 						experiment.libraryLayout = "PAIRED";
 						//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
@@ -1490,11 +1495,11 @@ public class SubmissionServices {
 					System.out.println("raw data directory"+rawData.directory);
 					rawData.relatifName = runInstanceFile.fullname;
 					rawData.location = readSet.location;
-					run.listRawData.add(rawData);
 					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
-						//System.out.println("Recuperation du md5 pour" + rawData.relatifName ");
 						rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
+						System.out.println("Recuperation du md5 pour" + rawData.relatifName +"= " + rawData.md5);
 					}
+					run.listRawData.add(rawData);
 					Set<String> listKeys = runInstanceFile.properties.keySet();
 					
 					for(String k: listKeys) {
