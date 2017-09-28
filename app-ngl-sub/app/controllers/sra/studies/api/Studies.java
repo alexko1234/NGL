@@ -234,20 +234,19 @@ public class Studies extends DocumentController<AbstractStudy>{
 	}
 	
 	public Result updateState(String code){
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		//Get Submission from DB 
 		Study study = getStudy(code); 
 		Form<State> filledForm = getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		if (study == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("study " + code,  " not exist in database");	
 			return badRequest(filledForm.errorsAsJson());
 		}
-		
+		Logger.debug("Controller studies set state for "+study.code);
 		studyWorkflows.setState(ctxVal, study, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));

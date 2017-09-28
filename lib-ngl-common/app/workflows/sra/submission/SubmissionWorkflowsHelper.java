@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
@@ -23,7 +24,6 @@ import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import workflows.run.Workflows;
 import workflows.sra.experiment.ExperimentWorkflows;
@@ -33,9 +33,12 @@ import workflows.sra.study.StudyWorkflows;
 @Service
 public class SubmissionWorkflowsHelper {
 
-	final StudyWorkflows studyWorkflows = Spring.getBeanOfType(StudyWorkflows.class);
-	final SampleWorkflows sampleWorkflows = Spring.getBeanOfType(SampleWorkflows.class);
-	final ExperimentWorkflows experimentWorkflows = Spring.getBeanOfType(ExperimentWorkflows.class);
+	@Autowired
+	StudyWorkflows studyWorkflows;
+	@Autowired
+	SampleWorkflows sampleWorkflows;
+	@Autowired
+	ExperimentWorkflows experimentWorkflows;
 	
 
 	public void updateSubmissionRelease(Submission submission)

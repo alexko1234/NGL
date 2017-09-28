@@ -54,7 +54,7 @@ public class StudyWorkflows extends Workflows<Study>{
 
 	@Override
 	public void setState(ContextValidation contextValidation, Study study, State nextState) {
-		System.out.println("dans setState avec submission" + study.code +" et et submission.state="+study.state.code+ " et nextState="+nextState.code);
+		System.out.println("dans setState avec study" + study.code +" et et study.state="+study.state.code+ " et nextState="+nextState.code);
 
 		contextValidation.setUpdateMode();
 		// verifier que le state à installer est valide avant de mettre à jour base de données : 

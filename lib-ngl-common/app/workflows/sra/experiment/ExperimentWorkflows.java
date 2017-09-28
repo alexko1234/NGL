@@ -2,6 +2,7 @@ package workflows.sra.experiment;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
@@ -13,6 +14,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
 
+@Service
 public class ExperimentWorkflows extends Workflows<Experiment>{
 
 	@Override

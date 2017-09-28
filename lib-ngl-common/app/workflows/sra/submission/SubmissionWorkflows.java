@@ -18,7 +18,7 @@ import workflows.Workflows;
 public class SubmissionWorkflows extends Workflows<Submission>{
 
 	@Autowired
-	SubmissionWorkflowsHelper submissionWorkflowHelper;
+	SubmissionWorkflowsHelper submissionWorkflowsHelper;
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
@@ -27,10 +27,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		updateTraceInformation(submission.traceInformation, nextState); 
 		if("IP-SUB-R".equals(submission.state.code) && "F-SUB".equals(nextState.code)){
 			Logger.debug("call update submission Release");
-			submissionWorkflowHelper.updateSubmissionRelease(submission);
+			submissionWorkflowsHelper.updateSubmissionRelease(submission);
 		}
 		if("IW-SUB-R".equals(nextState.code)){
-			submissionWorkflowHelper.createDirSubmission(submission, validation);
+			submissionWorkflowsHelper.createDirSubmission(submission, validation);
 		}
 	}
 
@@ -47,8 +47,8 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Submission submission) {
 		
-		if (! submission.state.code.equalsIgnoreCase("N") && ! submission.state.code.equalsIgnoreCase("N-R")){
-			submissionWorkflowHelper.updateSubmissionChildObject(submission, validation);
+		if (! submission.state.code.equalsIgnoreCase("N") && ! submission.state.code.equalsIgnoreCase("N-R") && !submission.state.code.equalsIgnoreCase("IW-SUB-R")){
+			submissionWorkflowsHelper.updateSubmissionChildObject(submission, validation);
 		}
 	}
 
@@ -56,10 +56,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
 		if("IP-SUB-R".equals(submission.code) && "F-SUB".equals(nextState)){
-			submissionWorkflowHelper.updateSubmissionRelease(submission);
+			submissionWorkflowsHelper.updateSubmissionRelease(submission);
 		}
 		if("IW-SUB-R".equals(submission.code)){
-			submissionWorkflowHelper.rollbackSubmissionRelease(submission, validation);
+			submissionWorkflowsHelper.rollbackSubmissionRelease(submission, validation);
 		}
 	}
 

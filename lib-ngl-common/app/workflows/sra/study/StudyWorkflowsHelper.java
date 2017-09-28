@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
@@ -15,14 +16,14 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
 @Service
 public class StudyWorkflowsHelper {
 
-	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	@Autowired
+	SubmissionWorkflows submissionWorkflows;
 
 	public void createSubmissionEntityforRelease(Study study, ContextValidation validation)
 	{
