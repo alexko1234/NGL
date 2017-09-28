@@ -471,6 +471,8 @@ experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde échouée
 experiments.msg.details = [détails]
 experiments.msg.empty.save.error = Incomplet - Sauvegarde échouée
+experiments.msg.nocontainer.save.error = Il faut au moins un container dans l''expérience
+
 experiments.msg.generateSampleSheet.success = Feuille de route envoyée
 experiments.msg.generateSampleSheet.error = Echec de l'envoi de la feuille de route
 
