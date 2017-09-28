@@ -281,7 +281,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		});
 		
 		datatableConfig.order.by = 'inputContainer.sampleCodes';
-	
 	}
 	
 	
@@ -321,8 +320,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		return outputContainerSupports;
 	}
 	
-	
-	
 	$scope.getInputContainerSupports = function(){
 		var inputContainerSupports = [];
 		if($scope.experiment.atomicTransfertMethods){
@@ -330,7 +327,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		}
 		return inputContainerSupports;
 	}
-	
 	
 	$scope.isEditMode = function(){
 		return ($scope.$parent.isEditMode() && $scope.isNewState());
@@ -345,7 +341,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			$scope.$emit('childSavedError', callbackFunction);
 			
 		    $scope.messages.clazz = "alert alert-danger";
-		    $scope.messages.text = Messages("experiments.msg.nocontainer.save.error");
+		    $scope.messages.text = Messages("experiments.msg.nocontainer.save.error"); // veut pa sortir !!
 		    $scope.messages.showDetails = false;
 			$scope.messages.open();   
 	
@@ -439,7 +435,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
 	
 	$scope.atmService = atmService;
 	
