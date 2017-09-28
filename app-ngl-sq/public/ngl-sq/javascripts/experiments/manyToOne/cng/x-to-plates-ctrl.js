@@ -121,15 +121,16 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			console.log ("updating all ATMs "+ propertyName +" with :" + propertyValue);
 		    atm.forEach(function(a){	
 		    	
-		    	 if ((propertyName === "supportStorageCode") && propertyValue)  {
+		    	 // 28/09/2017 supression des   && propertyValue car sinon on ne peut pas effacer completement le champ...
+		    	 if (propertyName === "supportStorageCode")  {
 		    		//console.log ("updating "+ a.outputContainerUseds[0].locationOnContainerSupport.storageCode +"=>"+ propertyValue);
 		    		a.outputContainerUseds[0].locationOnContainerSupport.storageCode=propertyValue;
 		    		
-		    	 } else if  ((propertyName === "supportCode") && propertyValue) {
+		    	 } else if  (propertyName === "supportCode")  {
 		 		    //console.log ("updating "+ a.outputContainerUseds[0].locationOnContainerSupport.code +"=>"+ propertyValue);
 		 		    a.outputContainerUseds[0].locationOnContainerSupport.code=propertyValue;
 		 		 
-		    	 } else if  (((propertyName === "concentration")||(propertyName === "volume")) && propertyValue) {
+		    	 } else if  ((propertyName === "concentration")||(propertyName === "volume")) {
 			 		    //console.log ("updating "+propertyName+".value =>"+ propertyValue);
 			 		    $parse(propertyName+'.value').assign(a.outputContainerUseds[0],propertyValue);
 			 		   
