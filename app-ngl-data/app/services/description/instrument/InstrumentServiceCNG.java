@@ -191,10 +191,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		
 		/** thermocyclers **/
-
-		// SUPPRIME 17/07/2017, vieux noms...
-		//l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
-		
 		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul (input tubes ou plaques / output tubes ou  plaques)
 		//FDS 13/07/2017 "Mastercycler Nexus-SX1" et "Mastercycler Nexus" sont le meme type => fusionner !!!
 		//               essai: mettre le nom de labo dans le "path"
@@ -203,15 +199,16 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler-nexus6", "Mastercycler 6 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						
 						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus9", "Mastercycler 8 (Nexus Gradient)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler-nexus8", "Mastercycler 8 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus Gradient)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
         
 		
 		//FDS 13/07/2017 le nom "Mastercycler Nexus Gradient" est incorrect =>"Mastercycler EP-Gradient"
-		/* Mais de toute facon pas utilisé seules ????    si=> synthese cdna , mais la/lesquelle sont utilisees*/
 		l.add(newInstrumentUsedType("Mastercycler EP-Gradient", "mastercycler-ep-gradient", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerEPGradientProperties(), 
 				getInstruments(
 						createInstrument("mastercycler-ep-gradient1", "Mastercycler 1 (EP Gradient)", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -272,7 +269,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("spectramax-bank1", "SpectraMax Banque 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("spectramax-bank2", "SpectraMax Banque 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("spectramax-prod1", "SpectraMax Prod",     null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("spectramax-prod1", "SpectraMax Prod",     null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), // pas encore livré...
 				getContainerSupportCategories(new String[]{"96-well-plate"}),
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

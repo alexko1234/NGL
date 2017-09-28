@@ -336,10 +336,23 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		return ($scope.$parent.isEditMode() && $scope.isNewState());
 	};
 	
+	// fdsantos 28/09/2017 :NGL-1601 ne pas sauvegareder une experience vide.
+	//  !!! ATTENTION COMMUN CNS/CNG !!!
 	$scope.$on('save', function(e, callbackFunction) {
-		console.log("call event save on x-to-tubes");		
-		$scope.atmService.viewToExperiment($scope.experiment, false);
-		$scope.$emit('childSaved', callbackFunction);
+		console.log("call event save on x-to-tubes");
+		
+		if($scope.atmService.data.atm.length === 0){
+			$scope.$emit('childSavedError', callbackFunction);
+			
+		    $scope.messages.clazz = "alert alert-danger";
+		    $scope.messages.text = Messages('experiments.msg.empty.save.error');
+		    $scope.messages.showDetails = false;
+			$scope.messages.open();   
+	
+		} else {	
+			$scope.atmService.viewToExperiment($scope.experiment, false);
+			$scope.$emit('childSaved', callbackFunction);
+	    } 
 	});
 	
 	$scope.$on('refresh', function(e) {
