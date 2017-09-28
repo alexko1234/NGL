@@ -128,5 +128,10 @@ error.validationsub.release.false=La soumission {0} ne correspond pas a une soum
 error.parse.ebi.release.receipt=Absence de la ligne RECEIPT ... pour  {0} dans fichier {1}
 error.parse.ebi.release.exception=Exception lecture fichier release : {0}
 
+error.directory.release.exist=Le repertoire {0} existe deja !!! (soumission concurrente ?) pour la soumission {1}
+error.directory.release.create=Impossible de creer le repertoire {0} pour la soumission {1}
+
+error.experiment.mulitple.submission=Experiment {0} utilise par plusieurs objets submissions
+
 
  

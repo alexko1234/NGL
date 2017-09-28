@@ -81,6 +81,7 @@ PUT		/sra/studies/:code 							@controllers.sra.studies.api.Studies.update(code:
 POST	/api/sra/studies					    	@controllers.sra.studies.api.Studies.save()
 PUT		/api/sra/studies/:studyCode/release	        @controllers.sra.studies.api.Studies.release(studyCode : java.lang.String)
 
+PUT		/sra/studies/:code/state				    @controllers.sra.submissions.api.Studies.updateState(code:java.lang.String)
 
 #--------
 # Samples

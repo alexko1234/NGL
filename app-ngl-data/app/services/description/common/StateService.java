@@ -106,7 +106,7 @@ public class StateService {
 		l.add(newState("Soumission en echec", "FE-SUB", true, 2004, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 		l.add(newState("Utilisé dans une soumission", "U-SUB", true, 2005, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRAConfiguration.name()), true, null));		
 		l.add(newState("Soumission pour release à New", "N-R", true, 2006, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));
-		l.add(newState("Soumission pour release study en attente", "IW-SUB-R", true, 2007, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission pour release study en attente", "IW-SUB-R", true, 2007, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.SRASubmission.name(), ObjectType.CODE.SRAStudy.name()), true, null));		
 		l.add(newState("Soumission pour release study en cours", "IP-SUB-R", true, 2008, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 		l.add(newState("Soumission pour release study en echec", "FE-SUB-R", true, 2009, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
 

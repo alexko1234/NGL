@@ -26,12 +26,15 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
+import workflows.sra.study.StudyWorkflows;
+import workflows.sra.submission.SubmissionWorkflows;
 import controllers.DocumentController;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
@@ -42,6 +45,8 @@ public class Studies extends DocumentController<AbstractStudy>{
 
 	final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
+	final StudyWorkflows studyWorkflows = Spring.getBeanOfType(StudyWorkflows.class);
+	final static Form<State> stateForm = form(State.class);
 	
 	public Studies() {
 		super(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
@@ -227,6 +232,36 @@ public class Studies extends DocumentController<AbstractStudy>{
 			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
+	
+	public Result updateState(String code){
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
+		//Get Submission from DB 
+		Study study = getStudy(code); 
+		Form<State> filledForm = getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		
+		if (study == null) {
+			//return badRequest("Submission with code "+code+" not exist");
+			ctxVal.addErrors("study " + code,  " not exist in database");	
+			return badRequest(filledForm.errorsAsJson());
+		}
+		
+		studyWorkflows.setState(ctxVal, study, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(getObject(code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+	
+	private Study getStudy(String code)
+	{
+		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
+		return study;
+	}
+	
 	
 /*	public Result release(String code) {
 		//Get Submission from DB 
