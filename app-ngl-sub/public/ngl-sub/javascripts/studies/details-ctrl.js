@@ -420,7 +420,9 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	$scope.userRelease = function(){
 		$scope.messages.clear();
 		console.log("je suis dans le bouton studies.details-ctrl.js.userRelease");
-		$http.put(jsRoutes.controllers.sra.studies.api.Studies.release($scope.study.code).url, $scope.study)
+		var state = angular.copy($scope.study.state);
+		state.code = "IW-SUB-R";
+		$http.put(jsRoutes.controllers.sra.studies.api.Studies.updateState($scope.study.code).url, state)
 			.success(function(data){
 		   		$scope.messages.clazz="alert alert-success";
 				$scope.messages.text=Messages('studies.msg.release.success');
