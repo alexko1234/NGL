@@ -336,7 +336,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		return ($scope.$parent.isEditMode() && $scope.isNewState());
 	};
 	
-	// fdsantos 28/09/2017 :NGL-1601 ne pas sauvegareder une experience vide.
+	// fdsantos 28/09/2017 :NGL-1601 ne pas sauvegarder une experience vide.
 	//  !!! ATTENTION COMMUN CNS/CNG !!!
 	$scope.$on('save', function(e, callbackFunction) {
 		console.log("call event save on x-to-tubes");
@@ -345,7 +345,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			$scope.$emit('childSavedError', callbackFunction);
 			
 		    $scope.messages.clazz = "alert alert-danger";
-		    $scope.messages.text = Messages('experiments.msg.empty.save.error');
+		    $scope.messages.text = Messages("experiments.msg.nocontainer.save.error");
 		    $scope.messages.showDetails = false;
 			$scope.messages.open();   
 	
