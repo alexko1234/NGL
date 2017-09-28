@@ -112,7 +112,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
 		"filter" : "getArray:'properties.tag.value' | unique",
-		"order" : false,
+		"order":true,
 		"hide" : true,
 		"type" : "text",
 		"position" : 10,

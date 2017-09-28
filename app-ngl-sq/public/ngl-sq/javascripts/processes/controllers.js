@@ -94,10 +94,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 					{
 						"header":Messages("containers.table.tags"),
 						"property": "contents",
-						"order":false,
+						"order":true,
 						"hide":true,
 						"type":"text",
-						"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+						"filter":"getArray:\"properties.tag.value\"",
+						"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 						"groupMethod":"collect",
 			        	"position":10
 					},
