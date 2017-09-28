@@ -153,8 +153,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 	
 	
 	// /!\ controller commun a normalization-and-pooling et pool
-	// Julie demande de bloquer le calcul en normalization-and-pooling si unité de concentration n'EST PAS nM 
-	// TODO...
+
     /* FDS 27/10/2016  la modification des proprietes line et column n'as pas besoin de recalculer les volumes!!
                        Vu avec Julie: la modification des proprietes experimentProperties.inputVolume et experimentProperties.bufferVolume
                        ne DOIT PAS refaire les calculs => c'est l'utilisteur qui impose son choix!
@@ -208,6 +207,9 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			outputVol : $parse("outputContainerUseds[0].volume")(atm)
 		};
 		
+		// 28/09/2017 Julie demande de bloquer le calcul en normalization-and-pooling si unité de concentration n'EST PAS nM 
+		//           mais autoriser pour le pool ??
+		
 		if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
 			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / (inputConc.value * 100)")(compute);
 			console.log("result = "+result);
@@ -222,8 +224,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			inputVolume.value = undefined;
 			getter.assign(inputContainerUsed, inputVolume);
 		}
-		return inputVolume.value;
 		
+		return inputVolume.value;
 	}
 	
 	// calcul du volume tampon a ajouter
