@@ -15,6 +15,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.run.instance.Analysis;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -226,35 +227,33 @@ private static Sample findSample(String sampleCode){
 @Permission(value={"writing"})
 @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 public  Result update(String code){
-	Sample sample = findSample(code);
-	if(sample == null){
+	Sample sampleInDB = findSample(code);
+	if(sampleInDB == null){
 		return badRequest("Sample with code "+code+" not exist");
 	}
-	
-	
+		
 	Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 	
 	QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 	Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
-	Sample input = filledForm.get();
+	Sample sampleInForm = filledForm.get();
 
 	if(queryFieldsForm.fields == null){
-		if (code.equals(input.code)) {
-			if(null != input.traceInformation){
-				input.traceInformation.setTraceInformation(getCurrentUser());
+		if (code.equals(sampleInForm.code)) {
+			if(null != sampleInForm.traceInformation){
+				sampleInForm.traceInformation = getUpdateTraceInformation(sampleInForm.traceInformation);				
 			}else{
 				Logger.error("traceInformation is null !!");
 			}
-			
-			
+						
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
-			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
-			cleanProperty(input);
-			input.validate(ctxVal);
+			sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
+
+			sampleInForm.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
-				return ok(Json.toJson(input));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, sampleInForm);
+				return ok(Json.toJson(sampleInForm));
 			}else {
 				return badRequest(filledForm.errorsAsJson());
 			}
@@ -268,41 +267,34 @@ public  Result update(String code){
 		validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 		validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 		if(!filledForm.hasErrors()){
-			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+			sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
 			
-			TraceInformation ti = sample.traceInformation;
+			TraceInformation ti = sampleInDB.traceInformation;
 			ti.setTraceInformation(getCurrentUser());
 			
 			if(queryFieldsForm.fields.contains("valuation")){
-				input.valuation.user = getCurrentUser();
-				input.valuation.date = new Date();
+				sampleInForm.valuation.user = getCurrentUser();
+				sampleInForm.valuation.date = new Date();
 			}
 			
-			if(queryFieldsForm.fields.contains("volume")){
-				validateVolume(input.volume, ctxVal);					
-			}
-			if(queryFieldsForm.fields.contains("quantity")){
-				validateQuantity(input.quantity, ctxVal);					
-			}
-			if(queryFieldsForm.fields.contains("size")){
-				validateSize(input.size, ctxVal);
-			}
-			if(queryFieldsForm.fields.contains("concentration")){
-				validateConcentration(input.concentration, ctxVal);					
-			}
 			if(!ctxVal.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Sample.class, 
-						DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Sample.class).set("traceInformation", ti));
+				updateObject(DBQuery.and(DBQuery.is("code", code)), 
+						getBuilder(sampleInForm, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(sampleInDB.traceInformation)));
+				if(queryFieldsForm.fields.contains("code") && null != sampleInForm.code){
+					code = sampleInForm.code;
+				}
 				return ok(Json.toJson(findSample(code)));
+				
 			}else{
 				return badRequest(filledForm.errorsAsJson());
 			}				
 		}else{
 			return badRequest(filledForm.errorsAsJson());
-		}		
-	}	*/	
-	return badRequest(filledForm.errorsAsJson());
+		}
+	}	
+	
 }
+
 private static DatatableForm updateForm(SamplesSearchForm form) {
 	if(form.includes.contains("default")){
 		form.includes.remove("default");
