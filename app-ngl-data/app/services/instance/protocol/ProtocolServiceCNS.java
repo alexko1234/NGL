@@ -236,10 +236,7 @@ public class ProtocolServiceCNS {
 				concatMap(newPSV("libraryProtocol","Bq NEB Next Ultra II"))));
 		lp.add(newProtocol("prod-ill-bqadn-pcrfree-157-v2","Prod_ILL_BqADN_PCRFree_157_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-illumina-indexed-library","fragmentation"), 
 				concatMap(newPSV("libraryProtocol","Bq PCR free"))));
-		lp.add(newProtocol("prod-ill-tag-amplicons-159-v2","Prod_ILL_Tag_Amplicons_159_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr","post-pcr-ampure")));
-		
-				
-		
+		lp.add(newProtocol("prod-ill-tag-amplicons-159-v2","Prod_ILL_Tag_Amplicons_159_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		
 		
 		lp.add(newProtocol("smarter_v4","Smarter V4_ptr_sox156_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("cdna-synthesis"), 
