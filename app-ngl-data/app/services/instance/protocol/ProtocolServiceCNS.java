@@ -183,6 +183,7 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("amplif_ptr_sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
 		lp.add(newProtocol("amplif_nebnext_ultraii_ptr_151_1","Amplif_NebNext_UltraII ptr 151_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
+		lp.add(newProtocol("ampli-swift-accel-1s","Ampli_Swift_Accel_1S","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
 		
 		
 		
