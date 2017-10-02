@@ -57,19 +57,6 @@ public class SubmissionWorkflowsHelper {
 				DBUpdate.set("releaseDate", release_date));
 	}
 
-	public void removeSubmissionRelease(Submission submission)
-	{
-		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
-
-		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
-				DBQuery.is("code", submission.code),
-				DBUpdate.set("submissionDate", null).set("xmlSubmission", null));	
-
-		MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-				DBQuery.is("accession", study.accession),
-				DBUpdate.set("releaseDate", null));
-	}
-
 	public void createDirSubmission(Submission submission,ContextValidation validation){
 		// Determiner le repertoire de soumission:
 		

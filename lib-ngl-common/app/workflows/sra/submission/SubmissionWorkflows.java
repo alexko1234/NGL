@@ -55,11 +55,11 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
-		if("IP-SUB-R".equals(submission.code) && "F-SUB".equals(nextState)){
-			submissionWorkflowsHelper.updateSubmissionRelease(submission);
-		}
 		if("IW-SUB-R".equals(submission.code)){
 			submissionWorkflowsHelper.rollbackSubmissionRelease(submission, validation);
+		}
+		if(validation.hasErrors()){
+			Logger.error("Problem on SubmissionWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
 		}
 	}
 
