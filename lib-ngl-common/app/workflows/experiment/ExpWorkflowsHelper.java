@@ -1295,6 +1295,7 @@ public class ExpWorkflowsHelper {
 					public int compare(OutputContainerUsed ocu1,	OutputContainerUsed ocu2) {						
 						Content content1 = ocu1.contents.get(0); //in theory only one content;
 						Content content2 = ocu2.contents.get(0); //in theory only one content;						
+						//TODO Add other field to compare in case of same sample. This other field need to be used in exp.js
 						return content1.sampleCode.compareTo(content2.sampleCode);						
 					}
 					
@@ -1346,12 +1347,14 @@ public class ExpWorkflowsHelper {
 	private void createNewSamples(Experiment exp, AtomicTransfertMethod  atm, ContextValidation validation) {
 		if(atm.inputContainerUseds.size() == 1 && atm.inputContainerUseds.get(0).contents.size() == 1){
 			InputContainerUsed icu = atm.inputContainerUseds.get(0);
+			String inputContentSampleCode = atm.inputContainerUseds.get(0).contents.get(0).sampleCode;
+			String inputContentProjectCode = atm.inputContainerUseds.get(0).contents.get(0).projectCode;
 			
-			Sample sampleIn=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, atm.inputContainerUseds.get(0).contents.get(0).sampleCode);
+			Sample sampleIn=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, inputContentSampleCode);
 
 			atm.outputContainerUseds
 				.stream()
-				.forEach(ocu -> createNewSamplesFromSampleIn(exp, ocu, icu, sampleIn, validation))
+				.forEach(ocu -> createNewSamplesFromSampleIn(exp, ocu, icu, sampleIn, inputContentProjectCode, validation))
 				;
 			
 		}else{
@@ -1385,7 +1388,7 @@ public class ExpWorkflowsHelper {
 
 
 	private OutputContainerUsed createNewSamplesFromSampleIn(Experiment exp, OutputContainerUsed ocu,
-			InputContainerUsed icu, Sample sampleIn, ContextValidation validation) {
+			InputContainerUsed icu, Sample sampleIn, String inputContentProjectCode, ContextValidation validation) {
 		
 		String sampleTypeCode=ocu.experimentProperties.get("sampleTypeCode").value.toString();
 		String projectCode=ocu.experimentProperties.get("projectCode").value.toString();
@@ -1406,7 +1409,7 @@ public class ExpWorkflowsHelper {
 			newSample.ncbiLineage=sampleIn.ncbiLineage;
 			newSample.ncbiScientificName=sampleIn.ncbiScientificName;
 			newSample.referenceCollab=sampleIn.referenceCollab;
-			newSample.life = getSampleLife(exp, sampleIn, icu);
+			newSample.life = getSampleLife(exp, sampleIn, icu, inputContentProjectCode);
 			
 			newSample.traceInformation=new TraceInformation(validation.getUser());
 			
@@ -1425,7 +1428,7 @@ public class ExpWorkflowsHelper {
 
 	
 	private SampleLife getSampleLife(Experiment exp, Sample sampleIn,
-			InputContainerUsed icu) {
+			InputContainerUsed icu, String projectCode) {
 		SampleLife lifeSample = new SampleLife();
 		
 		lifeSample.from = new models.laboratory.sample.instance.tree.From();
@@ -1437,7 +1440,7 @@ public class ExpWorkflowsHelper {
 		lifeSample.from.processCodes=icu.processCodes;
 		lifeSample.from.processTypeCodes=icu.processTypeCodes;
 		
-		lifeSample.from.projectCodes =  sampleIn.projectCodes;
+		lifeSample.from.projectCode =  projectCode;
 		lifeSample.from.sampleCode=sampleIn.code;
 		lifeSample.from.sampleTypeCode=sampleIn.typeCode;
 		
