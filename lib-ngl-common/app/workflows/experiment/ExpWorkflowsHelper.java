@@ -574,7 +574,8 @@ public class ExpWorkflowsHelper {
 			if(null != newSampleCodes && newSampleCodes.size() > 0){
 				Logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes));
-			}
+			}			
+			//TODO Analyse if need to update lastSampleCode on project with the real exist sample. 
 		}
 		
 	}
