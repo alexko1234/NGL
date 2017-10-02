@@ -15,7 +15,8 @@ rule "Define variable lineParmeter for sendReleaseXML specification"
     then
        Logger log = Logger.getLogger("ngl.sub.rules");
        log.debug("Set parameter for spec sendReleaseXML");
-       updateParameterXML("xmlSubmission",$job, "releaseToSend");
+       $job.setParameterValue("xmlSubmission",$job.getParameterValue("xmlSubmission").getValue().replace("%xmlSubmission%","submission.xml"));
+      // updateParameterXML("xmlSubmission",$job, "releaseToSend");
        $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionCode%",$job.getUniqueJobResource("releaseToSend").getProperty("code")));
        SimpleDateFormat dt = new SimpleDateFormat("yyyyMMddhhmm");
        String dateSubmission = dt.format(new Date());
