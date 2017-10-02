@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class From {
 
-	public Set<String> projectCodes;
+	public String projectCode;
 	public String sampleCode;
 	public String sampleTypeCode;
 	
