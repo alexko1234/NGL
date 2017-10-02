@@ -40,6 +40,8 @@ rule "Set good project code for DNA"
 			outputProjectCode.value = "BYX";
 		}else if("CAB".equals($inputProjectCode)){
 			outputProjectCode.value = "CAA";
+		}else if("CCP".equals($inputProjectCode)){
+			outputProjectCode.value = "CCQ";
 		}else{
 			outputProjectCode.value = null;
 		}
@@ -86,6 +88,8 @@ rule "Set good project code for RNA"
 			outputProjectCode.value = "BYY";
 		}else if("CAB".equals($inputProjectCode)){
 			outputProjectCode.value = "BZY";
+		}else if("CCP".equals($inputProjectCode)){
+			outputProjectCode.value = "CCS";
 		}else{
 			outputProjectCode.value = null;
 		}
