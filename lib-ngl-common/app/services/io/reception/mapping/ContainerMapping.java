@@ -147,7 +147,7 @@ public class ContainerMapping extends Mapping<Container> {
 	private Map<String, PropertyValue> computeProperties(
 			Map<String, PropertyValue> properties, Sample sample, String containerCode) {
 		setPropertiesFromSample(properties, sample);
-		if(sample.life != null && sample.life.from != null){
+		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null && sample.life.from.projectCode != null){
 			PropertySingleValue fromSampleTypeCode = new PropertySingleValue(sample.life.from.sampleTypeCode);
 			properties.put("fromSampleTypeCode", fromSampleTypeCode);
 			PropertySingleValue fromSampleCode = new PropertySingleValue(sample.life.from.sampleCode);
@@ -160,7 +160,6 @@ public class ContainerMapping extends Mapping<Container> {
 			setPropertiesFromSample(properties, parentSample);
 			
 		}
-		
 		
 		//HACK to have the original container on the readset
 		if(Action.save.equals(action) && !properties.containsKey("sampleAliquoteCode")){
