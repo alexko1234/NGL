@@ -3,6 +3,8 @@ package services.io.reception.mapping;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
@@ -14,7 +16,9 @@ import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 public class SampleMapping extends Mapping<Sample> {
 	/**
@@ -79,13 +83,34 @@ public class SampleMapping extends Mapping<Sample> {
 		//TODO update categoryCode if not a code but a label.
 		if(sample.categoryCode == null){
 			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
+		}	
+		
+		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
+			Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
+			if(null != parentSample){
+				sample.life.from.sampleTypeCode=parentSample.typeCode;
+				if(null != parentSample.life && null != parentSample.life.path){
+					sample.life.path=parentSample.life.path+","+parentSample.code;
+				}else{
+					sample.life.path=","+parentSample.code;
+				}
+				//force this information 
+				sample.properties.putAll(parentSample.properties);	
+				if(!parentSample.taxonCode.equals(sample.taxonCode)){
+					contextValidation.addErrors("taxonCode","error.receptionfile.taxonCode.diff", sample.taxonCode, parentSample.taxonCode);
+				}
+				if(!parentSample.referenceCollab.equals(sample.referenceCollab)){
+					contextValidation.addErrors("referenceCollab","error.receptionfile.referenceCollab.diff", sample.referenceCollab, parentSample.referenceCollab);
+				}				
+			}else{
+				contextValidation.addErrors("sample", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.life.from.projectCode+" + "+sample.life.from.sampleCode);
+			}
 		}
 	}
 
 
 	@Override
 	public void consolidate(Sample sample) {
-		// TODO Auto-generated method stub
 		
 	}	
 	

@@ -72,6 +72,9 @@ error.validationexp.support.alreadyused = Le support {0} est déjà en cours d''
 error.validationexp.inputContainer.state.code = Le container {0} n''a pas le bon état (A-*).
 error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
 
+error.receptionfile.taxonCode.diff = "Le code taxon est différent du sample parent {0} <> {1}"
+error.receptionfile.referenceCollab.diff = "La réf. collaborateur est différente du sample parent {0} <> {1}"
+
 #directive messages
 msg.details = [détails]
 msg.success.save = Sauvegarde réussie.

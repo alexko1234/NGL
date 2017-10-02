@@ -218,7 +218,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     start: false
                 },
                 callbackEndDisplayResult : function(){},
-                compact: true //mode compact pour le nom des bouttons
+                compact: true, //mode compact pour le nom des bouttons
+                objectsMustBeAddInGetFinalValue:{} //object used in $parse to apply function on extract value.
 
             },
             config: undefined,
@@ -445,6 +446,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     var propertyGroupGetterWithoutFormat = propertyGroupGetter + this.getFilter(this.config.group.by);
                     var propertyGroupGetterWithFormat = propertyGroupGetterWithoutFormat + this.getFormatter(this.config.group.by);
                     
+                    var groupContext = {"col":this.config.group.by};
+                    groupContext = Object.assign(groupContext, this.config.objectsMustBeAddInGetFinalValue);
+                	
+                    
                     if(this.config.group.by=="all"){
                     	propertyGroupGetterWithFormat="all";
                     }
@@ -453,7 +458,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     var groupValues = this.allResult.reduce(function(array, value) {
                     	var groupValue = "all";
                     	if(propertyGroupGetterWithFormat !== "all"){
-                    		groupValue = groupGetter(value);
+                    		groupValue = groupGetter(value,groupContext);
                     		if(groupValue !== null && groupValue !== undefined){
                     			groupValue = groupValue.toString();
                     		}else{
@@ -471,7 +476,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     for (var key in groupValues) {
                         var group = {};
                         var groupData = groupValues[key];
-                        var keyFirstElementValue = $parse(propertyGroupGetterWithoutFormat)(groupData[0]);
+                        var keyFirstElementValue = $parse(propertyGroupGetterWithoutFormat)(groupData[0],groupContext);
                         var that = this;
                         
                         $parse("group." + this.config.group.by.id).assign(group, keyFirstElementValue);
@@ -491,10 +496,14 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                            //var columnGetter = $parse(propertyGetter);
 	                            var columnSetter = $parse("group." + column.id);
 	
+	                            var context = {"col":column};
+	                        	context = Object.assign(context, this.config.objectsMustBeAddInGetFinalValue);
+	                        	
+	                            
 	                            if ('sum' === column.groupMethod || 'average' === column.groupMethod) {
 	                                var result = groupData.reduce(function(value, element) {
 	                                    element.col = column; //add in experimental feature
-	                                	value += columnGetterWithoutFomat(element);
+	                                	value += columnGetterWithoutFomat(element, context);
 										element.col = undefined;
 										return value;
 	                                }, 0);
@@ -511,7 +520,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                    console.log("computeGroup Error : " + e);
 	                                }
 	                            } else if ('unique' === column.groupMethod) {
-	                                var result = $filter('udtUnique')(groupData, propertyGetterWithFormat);
+	                                var result = $filter('udtUnique')(groupData, propertyGetterWithFormat, context);
 	                                if (!angular.isArray(result)) {
 	                                    result = columnGetterWithoutFomat(result);
 	                                } else if (angular.isArray(result) && result.length > 1) {
@@ -523,18 +532,18 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                }
 	                                columnSetter.assign(group, result);
 	                            } else if ('countDistinct' === column.groupMethod) {
-	                                var result = $filter('udtCount')(groupData, propertyGetterWithFormat,true);
+	                                var result = $filter('udtCount')(groupData, propertyGetterWithFormat,true, context);
 	                                columnSetter.assign(group, result);
 	                            } else if (column.groupMethod.startsWith('count')) {
 	                            	var params = column.groupMethod.split(":");
 	                            	var distinct = (params.length === 2 && params[1] === 'true')?true:false;
-	                            	var result = $filter('udtCount')(groupData, propertyGetterWithFormat,distinct);
+	                            	var result = $filter('udtCount')(groupData, propertyGetterWithFormat,distinct, context);
 	                                columnSetter.assign(group, result);
 	                            } else if (column.groupMethod.startsWith('collect')) {
 	                            	var params = column.groupMethod.split(":");
 	                            	var unique = (params.length === 2 && params[1] === 'true')?true:false;
 	                            	//collect all value but if unique this is apply on display value (after format) not on real value because for user a unique is a final result											  
-	                                var result = $filter('udtCollect')(groupData, propertyGetterWithoutFormat, unique, "this"+that.getFormatter(column));
+	                                var result = $filter('udtCollect')(groupData, propertyGetterWithoutFormat, unique, "this"+that.getFormatter(column), context);
 	                                //to optimize if collect as only one value so put directly the alone result
 	                                if (angular.isArray(result) && result.length === 1) {
 	                                    result = result[0];
@@ -544,7 +553,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 	                                console.error("groupMethod is not managed " + column.groupMethod);
 	                            }
 	                        }
-                        });
+                        },this);
 
                         groups[key] = group;
                         this.allGroupResult.push(group);
@@ -2223,16 +2232,19 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             getFinalValue : function(column, result){
             	var filter = this.getFilter(column);
             	var formatter = this.getFormatter(column);
+            	var context = {"col":column};
+            	context = Object.assign(context, this.config.objectsMustBeAddInGetFinalValue);
             	var colValue = undefined;
             	if (!result.line.group && (column.url === undefined || column.url === null)) {
-                	var v = $parse(column.property+filter)(result.data);
+                	var getter = $parse(column.property+filter);
+            		var v = getter(result.data, context);
     				if(!angular.isArray(v)){ //so work for sum, average, unique and collect if one element
     					colValue =  $parse("this"+formatter)(v);
 					}else {
 						colValue = v.map(function(v){return $parse("this"+formatter)(v);});			    						
 					}		    				                                    	
                 } else if (result.line.group) {
-                	var v = $parse("group."+column.id)(result.data);
+                	var v = $parse("group."+column.id)(result.data, context);
     				//if error in group function
     				if(angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#"){
     					colValue = v;
@@ -2244,7 +2256,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
     					}			    					
     				}                                    	
                 } else if (!result.line.group && column.url !== undefined && column.url !== null) {
-                    var url = $parse(column.url)(result.data);
+                    var url = $parse(column.url)(result.data, context);
                     var v = $parse(column.property+filter)(this.urlCache[url]);
     				if(!angular.isArray(v)){ //so work for sum, average, unique and collect if one element
     					colValue =  $parse("this"+formatter)(v);
@@ -2389,7 +2401,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     format += " | date:'" + (col.format ? col.format : this.messages.Messages("datetime.format")) + "'";
                 } else if (col.type === "number") {
                     format += " | number" + (col.format ? ':' + col.format : '');
-                }
+                } 
                 return format;
             },
 
@@ -2999,8 +3011,7 @@ directive("udtCell", function(){
 
 			    	scope.udtTableFunctions.getFormatter = scope.udtTable.getFormatter;
 	    			scope.udtTableFunctions.getFilter = scope.udtTable.getFilter;
-	    			scope.udtTableFunctions.getFinalValue = scope.udtTable.getFinalValue;
-
+	    			
 	    			scope.udtTableFunctions.getOptions = function(col){
 	    				if(angular.isString(col.possibleValues)){
 	    					return col.possibleValues;
@@ -3121,7 +3132,7 @@ directive("udtCell", function(){
                                      }
                             	});                           
 		    			}
-		    			return currentScope.udtTableFunctions.getFinalValue(column, value);			    		
+		    			return currentScope.udtTable.getFinalValue(column, value);			    		
 	    			};
 	    			
 	    			var getDisplayFunction = function(col){
@@ -3235,54 +3246,32 @@ directive('udtConvertvalue',['udtConvertValueServices','$filter', function(udtCo
             };
 }]);;angular.module('ultimateDataTableServices').
  //Convert the date in format(view) to a timestamp date(model)
-directive('udtDateTimestamp', function() {
-	            return {
-	                require: 'ngModel',
-	                link: function(scope, ele, attr, ngModel) {
-						var typedDate = "01/01/1970";//Initialisation of the date
-						
-	                	var convertToDate = function(date){
-	                		if(date !== null && date !== undefined && date !== ""){
-		                		var format = scope.udtTableFunctions.messages.Messages("date.format").toUpperCase();
-		                		date = moment(date).format(format);
-		                		return date;
-	                		}
-	                		return "";
-	                	};
-	                	
-	                	var convertToTimestamp = function(date){
-	                		if(date !== null && date !== undefined && date !== ""){
-		                		var format = scope.udtTableFunctions.messages.Messages("date.format").toUpperCase();
-		    					return moment(date, format).valueOf();
-	                		}
-	                		return "";
-	    				};
-						
-	                	//model to view
-	                	scope.$watch(
-							function(){
-								return ngModel.$modelValue;
-							}, function(newValue, oldValue){
-								//We check if the
-								if(newValue !== null && newValue !== undefined && newValue !== "" && typedDate.length === 10){
-									var date = convertToDate(newValue);
-	    							ngModel.$setViewValue(date);
-									ngModel.$render();
-								}
-	                    });
-						
-	                	//view to model
-	                    ngModel.$parsers.push(function(value) {
-	                    	var date = value;
-							typedDate = date;//The date of the user
-	                    	if(value.length === 10){//When the date is complete
-	                    		date = convertToTimestamp(value);
-	                    	}
-							return date;
-	                    });
-	                }
-	            }
-	        });;angular.module('ultimateDataTableServices').
+directive('udtDateTimestamp', ['$filter', function($filter) {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, ngModelController) {
+			
+			ngModelController.$formatters.push(function(data) {
+				var convertedData = data;
+				convertedData = $filter('date')(convertedData, Messages("date.format"));
+			    return convertedData;
+			}); 
+	    
+		    ngModelController.$parsers.push(function(data) {
+		    	var convertedData = data;
+	    	    if(moment && convertedData !== ""){
+	    			   convertedData = moment(data, Messages("date.format").toUpperCase()).valueOf();
+	    		   }else{
+	    			   convertedData = null;
+	    			   console.log("mission moment library to convert string to date");
+	    		   }
+		    	   
+		    	  return convertedData;
+		    }); 
+			
+        }
+    }
+}]);;angular.module('ultimateDataTableServices').
 //Write in an input or select in a list element the value passed to the directive when the list or the input ngModel is undefined or empty
 //EXAMPLE: <input type="text" default-value="test" ng-model="x">
 directive('udtDefaultValue',['$parse', function($parse) {
@@ -3761,7 +3750,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
     		};
 }]);;angular.module('ultimateDataTableServices').
 filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
-    	    return function(array, key, unique, keyUnique) {
+    	    return function(array, key, unique, keyUnique, context) {
     	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
@@ -3771,7 +3760,7 @@ filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
     	    	var possibleValues = [];
     	    	angular.forEach(array, function(element){
     	    		if (angular.isObject(element)) {
-    	    			var currentValue = $parse(key)(element);
+    	    			var currentValue = $parse(key)(element, context);
     	    			if(undefined !== currentValue && null !== currentValue){
     	    				//Array.prototype.push.apply take only arrays
     	    				if(angular.isArray(currentValue)){
@@ -3788,7 +3777,7 @@ filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
     	    		
     	    	});
     	    	if(unique){
-    	    		possibleValues = $filter('udtUnique')(possibleValues, keyUnique);
+    	    		possibleValues = $filter('udtUnique')(possibleValues, keyUnique, context);
     	    	}
     	    	return possibleValues;    	    	
     	    };
@@ -3803,7 +3792,7 @@ filter('udtConvert', ['udtConvertValueServices', function(udtConvertValueService
     		}
 }]);;angular.module('ultimateDataTableServices').
 filter('udtCount', ['$parse',function($parse) {
-    	    return function(array, key, distinct) {
+    	    return function(array, key, distinct, context) {
     	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
@@ -3813,7 +3802,7 @@ filter('udtCount', ['$parse',function($parse) {
     	    	var possibleValues = [];
     	    	angular.forEach(array, function(element){
     	    		if (angular.isObject(element)) {
-    	    			var currentValue = $parse(key)(element);
+    	    			var currentValue = $parse(key)(element, context);
     	    			if(angular.isArray(currentValue) && currentValue.length === 1)currentValue = currentValue[0];
     	    			if(distinct && undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
        	    				possibleValues.push(currentValue);
@@ -3829,7 +3818,7 @@ filter('udtCount', ['$parse',function($parse) {
     	    };
 }]);;angular.module('ultimateDataTableServices').
 filter('udtUnique', ['$parse', function($parse) {
-    		return function (collection, property) {
+    		return function (collection, property, context) {
     			var isDefined = angular.isDefined,
     		    isUndefined = angular.isUndefined,
     		    isFunction = angular.isFunction,
@@ -3846,7 +3835,7 @@ filter('udtUnique', ['$parse', function($parse) {
 					return collection;
 				}
 	
-	    		/**
+				/**
 	    		* get an object and return array of values
 	    		* @param object
 	    		* @returns {Array}
@@ -3874,7 +3863,7 @@ filter('udtUnique', ['$parse', function($parse) {
     		          get = $parse(property);
 
     		      return collection.filter(function (elm) {
-					var prop = get(elm);
+					var prop = get(elm, context);
 					if(some(uniqueItems, prop)) {
 					  return false;
 					}

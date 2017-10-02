@@ -32,6 +32,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			},
 			exportCSV:{
 				active:true,
+			},
+			objectsMustBeAddInGetFinalValue:{
+				"searchService":processesSearchService
 			}
 	};
 
@@ -155,6 +158,9 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				url:function(line){
 					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
 					}
+			},
+			exportCSV:{
+				active:true,
 			}
 	};
 

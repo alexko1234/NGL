@@ -460,9 +460,12 @@ angular.module('home').controller('NanoporeDepotCtrlCNG',['$scope', '$parse', '$
 	};
 
 	if($scope.isCreationMode()){
-		var format = Messages("date.format").toUpperCase();
-		var date = moment().format(format);
-		date = moment(date, format).valueOf();
-		$parse("experimentProperties.runStartDate.value").assign($scope.experiment, date); 
+		if(!$parse("experimentProperties.runStartDate.value")($scope.experiment)){
+			var format = Messages("date.format").toUpperCase();
+			var date = moment().format(format);
+			date = moment(date, format).valueOf();
+			$parse("experimentProperties.runStartDate.value").assign($scope.experiment, date); 
+		}
 	}
+		
 }]);

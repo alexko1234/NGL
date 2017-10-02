@@ -265,7 +265,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 	
 		propertyDefinitions.add(newPropertiesDefinition("DNA polymerase", "dnaPolymerase", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
-				DescriptionFactory.newValues("taq Q5","taq Kapa"), null, null, null,"single", 1, false, null,null));
+				DescriptionFactory.newValues("taq Q5","taq Kapa","autre"), null, null, null,"single", 1, false, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Experiment), Integer.class, true, null, null, 
 				"single", 3, true, null,null));

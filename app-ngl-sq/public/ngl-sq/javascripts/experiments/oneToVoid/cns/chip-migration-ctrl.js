@@ -237,11 +237,12 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	 columns.push({
 			"header" : Messages("containers.table.tags"),
 			"property" : "inputContainer.contents",
-			"order" : false,
+			"order" : true,
 			"hide" : true,
 			"type" : "text",
 			"position" : 7.2,
-			"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			"filter":"getArray:\"properties.tag.value\"",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
