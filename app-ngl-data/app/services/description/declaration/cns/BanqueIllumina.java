@@ -229,6 +229,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 				getAmpureSTKDepotProcessProperties(), 
 				Arrays.asList(getPET("ext-to-ampure-stk-illumina-depot",-1)
 						,getPET("pcr-amplification-and-purification",-1)
+						,getPET("indexing-and-pcr-amplification",-1)
 						,getPET("post-pcr-ampure",0)  //GA 08/11/2016 purif need to declare on first during process creation
 						,getPET("solution-stock",0) //GA 08/11/2016 transformation need to declare on first for experiment creation
 						,getPET("prepa-flowcell",1)
@@ -272,6 +273,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 						getPET("sizing",-1),
 						getPET("spri-select",-1),
 						getPET("pcr-amplification-and-purification",-1),
+						getPET("indexing-and-pcr-amplification",-1),
 						getPET("solution-stock",0),
 						getPET("prepa-flowcell",1),
 						getPET("prepa-fc-ordered",1),

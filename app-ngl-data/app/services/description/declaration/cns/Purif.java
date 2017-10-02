@@ -158,7 +158,7 @@ public class Purif extends AbstractDeclaration {
 		
 		//GA 07/11/2016 USED FOR PROCESS who start with ampure
 		newExperimentTypeNode("post-pcr-ampure",getExperimentTypes("post-pcr-ampure").get(0),false, false,false,
-				getExperimentTypeNodes("pcr-amplification-and-purification")
+				getExperimentTypeNodes("pcr-amplification-and-purification","indexing-and-pcr-amplification")
 				,null,null,null).save();
 		
 
