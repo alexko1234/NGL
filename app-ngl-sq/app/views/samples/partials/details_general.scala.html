@@ -21,15 +21,9 @@
 				<div class="form-control-static" ng-bind="sample.categoryCode|codes:'sample_cat'" />
 			}
 			@columnLabelValue(Messages("samples.table.projectCodes")){	
-			
-			<ul  ng-if="sample.projectCodes !== null"   ng-repeat="project in sample.projectCodes|unique">
-			<!-- 		<li ng-bind='project.concat("("+project+")")'/>
-				<li ng-bind='project.concat("("+project|codes:project+")")' />
-				<li ng-bind='project|codes:"project"' /> -->
-				<li >{{project}} ({{project|codes:'project'}})
-				</>
-				</li>
-			</ul>				
+			<div  ng-if="sample.projectCodes !== null"   ng-repeat="project in sample.projectCodes|unique">
+				{{project}} ({{project|codes:'project'}})
+			</div>				
 			}
 			@columnLabelValue(Messages("samples.table.taxonCode")){	
 				<div class="form-control-static" ng-bind='sample.taxonCode' />

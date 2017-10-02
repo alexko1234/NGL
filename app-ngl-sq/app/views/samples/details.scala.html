@@ -33,16 +33,16 @@
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("samples.tabs.general")</a></li>
 			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="initGraph()">@Messages("samples.tabs.treeoflife")</a></li>
-			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("samples.tabs.workflow")</a></li>
+			<li ng-if="sample.processes !== null && sample.processes !== undefined && sample.processes.length > 0" ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("samples.tabs.workflow")</a></li>
 		</ul>
-		<div class="tab-content">
+		<div class="tab-content" >
 			<div class="tab-pane {{getTabClass('general')}}" id="general">
 				@partials.details_general()
 			</div>
 			<div class="tab-pane {{getTabClass('treeoflife')}}" id="treeoflife">
 				@partials.details_treeoflife()
 			</div>
-			<div class="tab-pane {{getTabClass('workflow')}}" id="workflow">
+			<div class="tab-pane {{getTabClass('workflow')}}"  id="workflow">
 				@partials.details_workflow()
 			</div>
 		</div>

@@ -10,19 +10,19 @@
 				<th>@Messages("samples.table.stateResolutions")</th>				
 				<th>@Messages("samples.table.currentExperiment")</th>
 				<th>@Messages("samples.table.readsets")</th>
-			<th>@Messages("samples.table.stateUser")</th>
+				<th>@Messages("samples.table.createProcessUser")</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-if="sample.processes !== null" ng-repeat="process in sample.processes|orderBy:'traceInformation.creationDate'">
-				<td ng-bind="process.state.date|date:'@Messages("datetime.format")'" />	
+				<td ng-bind="process.traceInformation.creationDate|date:'@Messages("datetime.format")'" />	
 				<td ng-bind="process.typeCode|codes:'type'" />
 				<td ng-bind="process.state.code|codes:'state'" />
 				<td  list-resize="process.state.resolutionCodes|codes:'resolution'" />
 				<td ng-bind="process.currentExperimentTypeCode|codes:'type'" />
 				<td  ng-if="process.readsets !== null" ng-repeat="readset in process.readsets" ng-bind="readset.code">
 				<td  ng-if="process.readsets == null" >
-				<td ng-bind="process.state.user" />
+				<td ng-bind="process.traceInformation.createUser" />
 			</tr>
 			
 		</tbody>

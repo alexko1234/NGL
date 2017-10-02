@@ -661,6 +661,7 @@ samples.table.createUser = Créé par
 samples.table.processState = Etat
 samples.table.processesUpdatedDate= Date de mise à jour
 samples.table.stateUser = Utilisateur 
+samples.table.createProcessUser = Créé par  
 samples.table.comments = Commentaires
 samples.table.process = Processus
 samples.table.currentExperiment = Exp. courante

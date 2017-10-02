@@ -11,6 +11,7 @@ import controllers.ListForm;
 public class SamplesSearchForm extends ListForm{
 	public String code; 
 	public String codeRegex;
+	public String treeOfLifePathRegex;
 	public Set<String> codes;
 	public String projectCode;
 	public List<String> projectCodes;

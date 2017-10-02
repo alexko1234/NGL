@@ -114,6 +114,11 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCodes));
 		}
 
+		if(StringUtils.isNotBlank(samplesSearch.treeOfLifePathRegex)){
+			queryElts.add(DBQuery.regex("life.path", Pattern.compile(samplesSearch.treeOfLifePathRegex)));
+		}
+		
+		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}

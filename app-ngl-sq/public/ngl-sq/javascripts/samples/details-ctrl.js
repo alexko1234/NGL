@@ -290,17 +290,16 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			var nbElementByBatch = Math.ceil(codes.parentSampleCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
 			var queries = [];
 			for (var i = 0; i < 6 && codes.parentSampleCodes.length > 0; i++) {
-				if (codes.parentSampleCodes[0] == ""){
-					codes.parentSampleCodes.splice(0, 1); 
+				if (codes.parentSampleCodes[i] == ""){
+				    codes.parentSampleCodes.splice(i,i+1); 
 				}else{
 					var subSampleCode = codes.parentSampleCodes.splice(0, nbElementByBatch); 
 					promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url, {params : {codes:subSampleCode}}));               		
 				}
 			}			
 		}
-		promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url, {params : {codeRegex:currentSample.code}}));
-
-
+			promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url,{params : {treeOfLifePathRegex:','+currentSample.code+'$|,'+currentSample.code+','}}));
+	
 		$q.all(promises).then(function(results){
 			sampleNodes = {};
 			var newNode = function(sample){
@@ -309,11 +308,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 			sampleNodes[$scope.sample.code] = newNode($scope.sample);
 
-
-			angular.forEach(results, function(result){
+			angular.forEach(results, function(result){		
 				angular.forEach(result.data, function(sample){
 					this[sample.code] = newNode(sample);
-				}, this)
+						}, this)
 			}, sampleNodes)
 
 
@@ -332,8 +330,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							//when display a branch of a pool
 							//throw 'error not found node for '+parentSample.code;
 						}
-
-
 					}
 				}			
 			};
@@ -345,9 +341,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			//update child
 			for(var key in sampleNodes){
 				var currentNode = sampleNodes[key];
+			
 				if (currentNode.parentNode){
 					currentNode.parentNode.childNodes.push(currentNode);
-				}		
+					}		
 			} 
 
 
