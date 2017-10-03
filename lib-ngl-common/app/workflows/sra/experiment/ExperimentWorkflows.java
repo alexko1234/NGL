@@ -51,7 +51,7 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 	public void setState(ContextValidation contextValidation, Experiment experiment, State nextState) {
 		contextValidation.setUpdateMode();
 
-		CommonValidationHelper.validateState(ObjectType.CODE.Sample, nextState, contextValidation); 	
+		CommonValidationHelper.validateState(ObjectType.CODE.SRAExperiment, nextState, contextValidation); 	
 		Logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(experiment.state.code)){

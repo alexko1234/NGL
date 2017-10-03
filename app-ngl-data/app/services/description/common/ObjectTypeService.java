@@ -37,6 +37,9 @@ public class ObjectTypeService {
 			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.Analysis.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.SRASubmission.name() ), errors);
 			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.SRAConfiguration.name() ), errors);
+			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.SRAExperiment.name() ), errors);
+			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.SRASample.name() ), errors);
+			DAOHelpers.saveModel(ObjectType.class,DescriptionFactory.newDefaultObjectType(ObjectType.CODE.SRAStudy.name() ), errors);
 	}
 	
 	
