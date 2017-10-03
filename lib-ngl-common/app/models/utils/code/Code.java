@@ -23,4 +23,6 @@ public interface Code {
 	
 	public void updateProjectSampleCodeIfNeeded(String projectCode, String newSampleCode);
 	
+	public void updateProjectSampleCodeWithLastSampleCode(String projectCode);
+	
 }

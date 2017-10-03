@@ -136,9 +136,7 @@ public class SampleMapping extends Mapping<Sample> {
 			
 			if(sample.projectCodes.size() == 1){
 				String projectCode = sample.projectCodes.iterator().next(); 
-				Sample lastSample = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
-					.sort("code", Sort.DESC).limit(1).toList().get(0);
-				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),DBUpdate.set("lastSampleCode",lastSample.code));
+				CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);
 			}else{
 				contextValidation.addErrors("project","problem during rollback to update last sample code on projects "+sample.projectCodes.toString());
 			}
