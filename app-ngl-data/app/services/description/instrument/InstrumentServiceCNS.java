@@ -725,7 +725,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				"Pooling_tubes_5_pour_1pool_BC"
 				),
 				"single", 10, true, null,null));
-		l.add(newPropertiesDefinition("Programme en entrée", "inputProgram", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues( 
+		l.add(newPropertiesDefinition("Input programme ", "inputProgram", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues( 
 				"WorkList",
 				"3µl"
 				),
