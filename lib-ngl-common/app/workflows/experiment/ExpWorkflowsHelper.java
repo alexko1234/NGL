@@ -1475,11 +1475,18 @@ public class ExpWorkflowsHelper {
 			}
 			
 			updateProjectCodes.parallelStream().forEach(projectCode -> {
-				Sample sample = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
-					.sort("code", Sort.DESC).limit(1).toList().get(0);
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
+					.sort("code", Sort.DESC).limit(1).toList();
 				
-				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
-						DBUpdate.set("lastSampleCode",sample.code));
+				if(samples.size() == 1){
+					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
+							DBUpdate.set("lastSampleCode",samples.get(0).code));
+				}else{
+					MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
+							DBUpdate.unset("lastSampleCode"));
+				}
+				
+				
 				
 			});
 			
