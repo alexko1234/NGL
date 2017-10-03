@@ -9,6 +9,7 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
+import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 import play.Logger;
 import validation.ContextValidation;
@@ -31,6 +32,16 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		}
 		if("IW-SUB-R".equals(nextState.code)){
 			submissionWorkflowsHelper.createDirSubmission(submission, validation);
+		}
+		if("IW-SUB".equals(nextState.code)){
+			try {
+				Logger.debug("call activatePrimarySubmission");
+				submissionWorkflowsHelper.activatePrimarySubmission(validation, submission);
+			} catch (SraException e) {
+				// TODO Auto-generated catch block
+				Logger.debug("probleme activatePrimarySubmission :");
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -55,7 +66,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
-		if("IW-SUB-R".equals(submission.code)){
+		if("IW-SUB-R".equals(nextState)){
 			submissionWorkflowsHelper.rollbackSubmissionRelease(submission, validation);
 		}
 		if(validation.hasErrors()){
