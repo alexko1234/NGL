@@ -241,10 +241,10 @@ public class MetaBarCoding extends AbstractDeclaration {
 		List<PropertyDefinition> propertyDefinitions = getPropertyDefinitionsAmpliPurif();
 		
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				null, null,null,null,"single", 16, true, null,null));
+				null, null,null,null,"single", 55, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
-				getTagCategoriesIllumina(), null,null,null,"single", 17, false, null,null));
+				getTagCategoriesIllumina(), null,null,null,"single", 56, false, null,null));
 
 		
 		return propertyDefinitions;
