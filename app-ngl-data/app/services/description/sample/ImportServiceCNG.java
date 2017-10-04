@@ -202,7 +202,10 @@ public class ImportServiceCNG extends AbstractImportService {
         values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
         values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
-        values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));      
+        values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));   
+        
+        // 04/10/2017 ajout des codes pour import Capture
+        values.add(DescriptionFactory.newValue("CAF", "CAF - Chromium Whole Exome (DefCap028)"));
 
         return values;
 	}
