@@ -30,29 +30,38 @@ object ApplicationBuild extends Build {
   )
 	
    
-   object BuildSettings {
-   
-           val buildOrganization = "fr.cea.ig"
-           val buildVersion      = appVersion
-           
-          val buildSettings =  Seq (
-               organization   := buildOrganization+"."+appName,
-               version        := buildVersion,
-			   scalaVersion := "2.11.1",
-               credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
-               publishMavenStyle := true
-           )  
-           
-           val buildSettingsLib = Seq (
-               organization   := buildOrganization,
-               version        := buildVersion,  
-			   scalaVersion := "2.11.1",
-               credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
-               publishMavenStyle := true               
-           )  
-              
-    }
- 
+  object BuildSettings {
+
+	   val buildOrganization = "fr.cea.ig"
+			   val buildVersion      = appVersion
+			   
+			   val compilationOptions // : Seq[sbtq.Def.Setting[_]] 
+			   = Seq(
+					   // scalacOptions += "-deprecation",
+					   //javacOptions  ++= Seq("-Xlint:deprecation","-Xlint:unchecked")
+					   //javacOptions += "-verbose"
+					   // javacOptions += "-Xlint",
+					   scalaVersion := "2.11.1"
+					   )
+
+			   val buildSettings =  Seq (
+					   organization   := buildOrganization+"."+appName,
+					   version        := buildVersion,
+					   //scalaVersion := "2.11.1",
+					   credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
+					   publishMavenStyle := true
+					   ) ++ compilationOptions
+
+			   val buildSettingsLib = Seq (
+					   organization   := buildOrganization,
+					   version        := buildVersion,  
+					   //scalaVersion := "2.11.1",
+					   credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
+					   publishMavenStyle := true
+					   ) ++ compilationOptions
+
+   }
+
   
    object Resolvers {        
    	import BuildSettings._
@@ -194,7 +203,15 @@ object ApplicationBuild extends Build {
     resolvers += "julienrf.github.com" at "http://julienrf.github.com/repo/",
     sbt.Keys.fork in Test := false,
     publishTo := Some(nexusigpublish),
-    resourceDirectory in Test <<= baseDirectory / "conftest").dependsOn(nglframeworkweb)
+    // resourceDirectory in Test <<= baseDirectory / "conftest" 
+    // baseDirectory : RichFileSetting
+    //   /(c: String): Def.Initialize[File]
+    // trait DefinableSetting[S]
+    //   <<=(app: Def.Initialize[S]): Def.Setting[S]
+    // (resourceDirectory.in(Test)).<<=(baseDirectory.value./("conftest"))
+    // resourceDirectory.in(Test).:=(baseDirectory.value./("conftest"))
+    resourceDirectory in Test := baseDirectory.value / "conftest"
+    ).dependsOn(nglframeworkweb)
 
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.PlayJava).settings(
     // Add your own project settings here      
