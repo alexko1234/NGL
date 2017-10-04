@@ -61,6 +61,16 @@ rule "Set good project code for Amplicon"
 			outputProjectCode.value = "CBR";
 		}else if("BMI".equals($inputProjectCode)){
 			outputProjectCode.value = "CCC";
+		}else if("CCQ".equals($inputProjectCode)){
+			outputProjectCode.value = "CCR";
+		}else if("CCT".equals($inputProjectCode)){
+			outputProjectCode.value = "CCU";
+		}else if("CCX".equals($inputProjectCode)){
+			outputProjectCode.value = "CCY";
+		}else if("CCQ".equals($inputProjectCode)){
+			outputProjectCode.value = "CCR";
+		}else if("CDD".equals($inputProjectCode)){
+			outputProjectCode.value = "CDE";
 		}else{
 			outputProjectCode.value = null;
 		}

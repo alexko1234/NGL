@@ -600,8 +600,14 @@ public class ExpWorkflowsHelper {
 			Set<String> newSampleCodes = (Set<String>)validation.getObject(NEW_SAMPLE_CODES);
 			if(null != newSampleCodes && newSampleCodes.size() > 0){
 				Logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes)).toList();
+				Set<String> projectCodes = samples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes));
-			}
+				projectCodes.parallelStream().forEach(projectCode -> {
+					CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);				
+				});
+			}			
+			//TODO Analyse if need to update lastSampleCode on project with the real exist sample. 
 		}
 		
 	}
@@ -1501,12 +1507,7 @@ public class ExpWorkflowsHelper {
 			}
 			
 			updateProjectCodes.parallelStream().forEach(projectCode -> {
-				Sample sample = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
-					.sort("code", Sort.DESC).limit(1).toList().get(0);
-				
-				MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
-						DBUpdate.set("lastSampleCode",sample.code));
-				
+				CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);				
 			});
 			
 		}
