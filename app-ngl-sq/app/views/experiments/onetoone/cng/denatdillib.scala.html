@@ -1,16 +1,12 @@
 @()
-<!-- 01/12/2016 FDS NGL-66 denaturation en plaque (copie du code de Libnormalization) -->
-  
-<!-- 12/12/2016 ne pas encore mettre en production ne laisser que le mode tubes...-->
-<!--<div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode">-->
-<!--<div ng-switch-when="tube" >-->
-<!--    ATviews.html.experiments.onetoone.defaults.partials.denatdillibtubes()-->
-<!--</div>-->
-<!--<div ng-switch-when="96-well-plate" >-->
-<!--    ATviews.html.experiments.onetoone.defaults.partials.denatdillibplates()-->
-<!--</div>-->
-<!--</div>-->
 
-<div class="col-md-12 col-lg-12" >
+<!-- 12/12/2016 ne pas encore mettre en production ne laisser que le mode tubes...
+     04/10/2017 OK NGL-1589: sortie plaque necessaire... faire un controller unique, le definir ici et pas dans les partials -->
+<div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode" ng-controller="DenatDilLibCtrlPlates">  
+<div ng-switch-when="tube" >
     @views.html.experiments.onetoone.defaults.partials.denatdillibtubes()
+</div>
+<div ng-switch-when="96-well-plate" >
+    @views.html.experiments.onetoone.defaults.partials.denatdillibplates()
+</div>
 </div>

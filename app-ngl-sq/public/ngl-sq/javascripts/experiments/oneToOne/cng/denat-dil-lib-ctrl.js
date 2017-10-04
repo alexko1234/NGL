@@ -1,4 +1,5 @@
 // FDS 12/12/2016 -- JIRA NGL-166 : denaturation en tubes: modification pour imposer categorie in=categorie out
+// OLD NE SERT PLUS.. garder en attendant que le nouveau marche
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
 

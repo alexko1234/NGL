@@ -280,14 +280,14 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
-					getInstrumentUsedTypes("hand", "janus"),
+					getInstrumentUsedTypes("hand","janus"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellCNG(),
-					getInstrumentUsedTypes("cBotV2", "cBot-onboard"),
+					getInstrumentUsedTypes("cBotV2","cBot-onboard"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -300,7 +300,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	
 			//FDS modif 28/10/2015 : ajout "HISEQ4000","HISEQX"
-			l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
+			l.add(newExperimentType("Dépôt sur séquenceur","illumina-depot",null, 1400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsIlluminaDepot(),
 					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
