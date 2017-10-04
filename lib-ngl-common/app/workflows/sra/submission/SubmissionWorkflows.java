@@ -32,6 +32,9 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		if("IW-SUB-R".equals(nextState.code)){
 			submissionWorkflowsHelper.createDirSubmission(submission, validation);
 		}
+		if("IW-SUB".equals(nextState.code)){
+			submissionWorkflowsHelper.activatePrimarySubmission(validation, submission);
+		}
 	}
 
 	@Override
@@ -56,7 +59,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
 		if("IW-SUB-R".equals(submission.code)){
-			submissionWorkflowsHelper.rollbackSubmissionRelease(submission, validation);
+			submissionWorkflowsHelper.rollbackSubmission(submission, validation);
 		}
 		if(validation.hasErrors()){
 			Logger.error("Problem on SubmissionWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
@@ -98,14 +101,11 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		}
 	}
 
-
 	@Override
 	public void nextState(ContextValidation contextValidation, Submission object) {
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 
 }
