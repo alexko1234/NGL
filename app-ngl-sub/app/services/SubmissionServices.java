@@ -1142,7 +1142,7 @@ public class SubmissionServices {
 		// La validite du readSet doit avoir été testé avant.
 
 		Experiment experiment = new Experiment(); 
-		SraParameter sraParam = new SraParameter();
+		//SraParameter sraParam = new SraParameter();
 		Map<String, String> mapLibProcessTypeCodeVal_orientation = VariableSRA.mapLibProcessTypeCodeVal_orientation;
 
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);

@@ -32,9 +32,9 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		if("IW-SUB-R".equals(nextState.code)){
 			submissionWorkflowsHelper.createDirSubmission(submission, validation);
 		}
-		if("IW-SUB".equals(nextState.code)){
+		/*if("IW-SUB".equals(nextState.code)){
 			submissionWorkflowsHelper.activatePrimarySubmission(validation, submission);
-		}
+		}*/
 	}
 
 	@Override
