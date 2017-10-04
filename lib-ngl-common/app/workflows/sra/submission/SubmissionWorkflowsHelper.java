@@ -105,7 +105,7 @@ public class SubmissionWorkflowsHelper {
 			// detruire la soumission :
 			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submission.code);
 			// remettre le status du study avec un status F-SUB
-			// La date de release du study est modifié seulement si retour posifit de l'EBI pour release donc si status F-SUB-R
+			// La date de release du study est modifié seulement si retour positif de l'EBI pour release donc si status F-SUB-R
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class,
 					DBQuery.is("code", submission.studyCode),
 					DBUpdate.set("state.code", "F-SUB").set("traceInformation.modifyUser", validation.getUser()).set("traceInformation.modifyDate", new Date()));
