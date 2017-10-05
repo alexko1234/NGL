@@ -32,7 +32,13 @@ public class Experiments extends DocumentController<Experiment> {
 
 	public Result get(String code)
 	{
-		return ok(Json.toJson(super.getObject(code)));
+		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
+				DBQuery.is("code", code));
+		if (exp != null) {
+			return ok(Json.toJson(exp));
+		} else{
+			return notFound();
+		}	
 	}
 	
 	public Result list()

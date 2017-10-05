@@ -96,21 +96,24 @@ PUT		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.update(cod
 # Experiments
 #-------------
 GET		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.list()
+GET		/api/sra/experiments/rawDatas				@controllers.sra.experiments.api.ExperimentsRawDatas.list()
 GET		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.get(code: java.lang.String)
 PUT		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
-
-#-----------------
-# ExperimentsRuns
-#-----------------
-GET		/api/sra/experiments/runs/:code				@controllers.sra.experiments.api.ExperimentsRuns.get(code: java.lang.String)
-
+GET 	/api/sra/experiments/run/:code				@controllers.sra.experiments.api.ExperimentsRuns.get(code: java.lang.String)
 
 #-------------------
 # ExperimentsRawData
 #-------------------
-GET		/api/sra/experiments/rawDatas						@controllers.sra.experiments.api.ExperimentsRawDatas.list()
+
 PUT		/api/sra/experiments/:code/rawDatas/:relatifName	@controllers.sra.experiments.api.ExperimentsRawDatas.update(code: java.lang.String, relatifName: java.lang.String)
 GET		/api/sra/experiments/:code/rawDatas/:relatifName	@controllers.sra.experiments.api.ExperimentsRawDatas.get(code: java.lang.String, relatifName: java.lang.String)
+
+#-----------------
+# ExperimentsRuns
+#-----------------
+
+
+
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 #--------
