@@ -289,6 +289,7 @@ public class SubmissionWorkflowsHelper {
 	
 	
 	public void activatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
+	System.out.println("Dans SubmissionWorkflowsHelper.activatePrimarySubmission");
 	// creer repertoire de soumission sur disque et faire liens sur données brutes
 		try {
 			// creation repertoire de soumission :

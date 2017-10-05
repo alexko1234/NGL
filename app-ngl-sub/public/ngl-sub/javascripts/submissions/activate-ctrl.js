@@ -84,17 +84,21 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 		for(var i = 0; i < tab_submissions.length ; i++){
 			console.log("submissionCode = " + tab_submissions[i].code + " state = "+ tab_submissions[i].state.code);
 			// met à jour dans la base les objets qui doivent etres soumis à l'EBI avec status "inwaiting" ancienne version:
-			$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.activate(tab_submissions[i].code).url, tab_submissions[i])
+			/*$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.activate(tab_submissions[i].code).url, tab_submissions[i])
 			.success(function(data){
 		   		decompte = processInSubmission(decompte, error);
 			})
-			/*
-			state.code = "IW-SUB"; // a tester.
+			*/
+			var state = angular.copy(tab_submissions[i].state);
+			console.log("stateCode =" + state.code);
+			
+			state.code = "IW-SUB";
+			console.log("stateCode =" + state.code);
 			$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.updateState(tab_submissions[i].code).url, state)
 			.success(function(data) {
 		   		decompte = processInSubmission(decompte, error);
 			})
-			*/
+			
 			.error(function(data){
 				$scope.messages.addDetails(data);
 				error = true;
