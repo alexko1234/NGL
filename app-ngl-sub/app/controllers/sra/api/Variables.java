@@ -16,7 +16,6 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.parameter.Parameter;
 import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
