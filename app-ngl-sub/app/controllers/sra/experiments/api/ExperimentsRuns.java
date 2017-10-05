@@ -1,5 +1,6 @@
 package controllers.sra.experiments.api;
 
+<<<<<<< HEAD
 import static play.data.Form.form;
 
 import java.util.Arrays;
@@ -79,5 +80,5 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 				DBQuery.is("run.code", code));
 		return exp;
 	}
-	
+
 }
