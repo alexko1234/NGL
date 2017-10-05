@@ -16,7 +16,6 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.parameter.Parameter;
 import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
@@ -87,8 +86,6 @@ public class Variables extends CommonController{
 		} else if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategyStudy")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategyStudy)));
 		}else{
-
-
 			Query query = getQuery(variableSearch);		
 
 			List<SraParameter> values=MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, query).toList();
