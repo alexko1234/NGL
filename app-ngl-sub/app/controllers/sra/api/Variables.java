@@ -87,7 +87,6 @@ public class Variables extends CommonController{
 
 			List<SraParameter> values=MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, query).toList();
 
-
 			List<ListObject> valuesListObject = new ArrayList<ListObject>();
 			for (SraParameter s : values) {
 				valuesListObject.add(new ListObject(s.code, s.value));
