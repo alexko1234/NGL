@@ -37,7 +37,6 @@ public class Variables extends CommonController{
 	}
 
 	public static Result get(String type, String code){
-
 		if(type.equalsIgnoreCase("strategySample")){
 			SraParameter parameter = new SraParameter();
 			parameter.code=code;
