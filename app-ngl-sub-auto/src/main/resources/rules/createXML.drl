@@ -60,7 +60,27 @@ rule "Define variable lineParmeter for createXML specification"
        log.debug("Code "+$job.getUniqueJobResource("subToXML").getProperty("code"));
 end
 
-
+rule "create xml file for submission"
+    @BirdsRule( ExecutionService )
+    salience 500
+	dialect 'java'
+	no-loop 
+	when
+	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS, caught==false )
+	    $job : Job( treatmentSpecification!=null, treatmentSpecification.name == "createXML" )
+	then
+	    Logger log = Logger.getLogger("ngl.sub.rules");
+	   	log.debug("Call create xml for submission");
+	    JobResource jobResource = $job.getUniqueJobResource("subToXML");
+	    String codeSubmission = jobResource.getProperty("code");
+	    String submissionDirectory = jobResource.getProperty("submissionDirectory");
+	    String studyCode = jobResource.getProperty("studyCode");
+	    String sampleCodes = jobResource.getProperty("sampleCodes");
+	    String experimentCodes = jobResource.getProperty("experimentCodes");
+	    String runCodes = jobResource.getProperty("runCodes");
+	     log.debug("Call createXML with "+codeSubmission+"/"+submissionDirectory+"/"+studyCode);
+	    SubmissionServicesFactory.getInstance().createXMLSubmission(codeSubmission, submissionDirectory,studyCode,sampleCodes,experimentCodes,runCodes);
+end
 
 
 

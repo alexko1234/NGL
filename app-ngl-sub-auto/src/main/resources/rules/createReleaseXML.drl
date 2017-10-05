@@ -17,15 +17,14 @@ rule "Define variable lineParmeter for createReleaseXML specification"
        log.debug("Code "+$job.getUniqueJobResource("releaseToXML").getProperty("code"));
 end
 
-#execution traitement : suppression fichiers locaux
 rule "Action : create xml file for release"
     @BirdsRule( ExecutionService )
     salience 200
 	dialect 'java'
 	no-loop 
 	when
-	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS )
-	    $job : Job( treatmentSpecification.name == "createReleaseXML" )
+	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS , caught==false)
+	    $job : Job( treatmentSpecification!=null, treatmentSpecification.name == "createReleaseXML" )
 	then
 	    Logger log = Logger.getLogger("ngl.sub.rules");
 	   

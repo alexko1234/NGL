@@ -122,9 +122,8 @@ H:\birdsSpec.xsd">
 	
 	<!-- Treatment : call NGL SUB services to create xml files to send to EBI -->
 	<Treatment name="createXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
-		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
-			<!-- TODO call REST API NGL-SUB -->
-			<Executable path="curl f -A bot -X PUT http://appprod.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
+		<ExecutableSpecification commandSyntaxStrategyName="default">
+			<Executable />
 		</ExecutableSpecification>
 		
 		<InputsSpecification>
