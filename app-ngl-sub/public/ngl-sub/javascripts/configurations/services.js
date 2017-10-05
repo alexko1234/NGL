@@ -8,25 +8,25 @@
 		var initListService = function(){
 			if(!isInit){
 				createService.lists.refresh.projects();
-				$http.get(jsRoutes.controllers.sra.api.Variables.get('strategySample').url)
+				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'strategySample'}})
 				.success(function(data) {
 					// initialisation de la variable createService.sraVariables.strategySample utilisée dans create.scala.html
 					createService.sraVariables.strategySample = data;																					
 				});
-				$http.get(jsRoutes.controllers.sra.api.Variables.get('strategyStudy').url)
+				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'strategyStudy'}})
 				.success(function(data) {
 					// initialisation de la variable createService.sraVariables.strategyStudy utilisé dans create.scala.html
 					createService.sraVariables.strategyStudy = data;																					
 				});
-				$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySelection').url)
+				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'librarySelection'}})
 				.success(function(data) {
 					createService.sraVariables.librarySelection = data;																					
 				});
-				$http.get(jsRoutes.controllers.sra.api.Variables.get('libraryStrategy').url)
+				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'libraryStrategy'}})
 				.success(function(data) {
 					createService.sraVariables.libraryStrategy = data;																					
 				});
-				$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySource').url)
+				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'librarySource'}})
 				.success(function(data) {
 					createService.sraVariables.librarySource = data;																					
 				});

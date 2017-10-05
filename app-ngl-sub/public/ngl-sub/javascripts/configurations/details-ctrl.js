@@ -145,19 +145,19 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			console.log("$routeParams.code:"+$routeParams.code);
 			console.log("configuration.code :"+$scope.configuration.code);
 
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySelection').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'librarySelection'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.librarySelection
 				$scope.sraVariables.librarySelection = data;
 			});	
 		
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('libraryStrategy').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'libraryStrategy'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.libraryStrategy 
 				$scope.sraVariables.libraryStrategy = data;
 			});
 		
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySource').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'librarySource'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.librarySource 
 				$scope.sraVariables.librarySource = data;

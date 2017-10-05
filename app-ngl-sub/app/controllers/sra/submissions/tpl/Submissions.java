@@ -53,6 +53,7 @@ public class Submissions extends CommonController
   	    		controllers.sra.submissions.tpl.routes.javascript.Submissions.home(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.sra.api.routes.javascript.Variables.get(),
+  	    		controllers.sra.api.routes.javascript.Variables.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
  	    		controllers.sra.studies.api.routes.javascript.Studies.list(),
  	    		controllers.sra.studies.api.routes.javascript.Studies.get(),

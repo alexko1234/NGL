@@ -571,27 +571,27 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			console.log("Submission.sampleCodes :"+$scope.submission.sampleCodes);
 			console.log("Submission.experimentCodes :"+$scope.submission.experimentCodes);
 			console.log("Submission.runCodes :"+$scope.submission.runCodes);
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySelection').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'librarySelection'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.librarySelection utilisee dans experimentsDTConfig
 				$scope.sraVariables.librarySelection = data;
 			});	
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('libraryStrategy').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'libraryStrategy'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.libraryStrategy utilisee dans experimentsDTConfig
 				$scope.sraVariables.libraryStrategy = data;
 			});
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySource').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'librarySource'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.librarySource utilisee dans experimentsDTConfig
 				$scope.sraVariables.librarySource = data;
 			});
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('libraryLayout').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'libraryLayout'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.libraryLayout utilisee dans experimentsDTConfig
 				$scope.sraVariables.libraryLayout = data;
 			});
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('libraryLayoutOrientation').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'libraryLayoutOrientation'}})
 			.success(function(data) {
 				// initialisation de la variable sraVariables.libraryLayoutOrientation utilisee dans experimentsDTConfig
 				$scope.sraVariables.libraryLayoutOrientation = data;

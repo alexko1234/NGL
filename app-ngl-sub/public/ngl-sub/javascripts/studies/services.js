@@ -8,7 +8,7 @@
 		var initListService = function(){
 			if(!isInit){
 				createService.lists.refresh.projects();
-				$http.get(jsRoutes.controllers.sra.api.Variables.get('existingStudyType').url)
+				$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'existingStudyType'}})
 				.success(function(data) {
 				// initialisation de la variable createService.sraVariables.exitingStudyType utilisée dans create.scala.html
 				createService.sraVariables.existingStudyType = data;																					
@@ -171,7 +171,7 @@ var getColumns = function(){
 			consultationService.lists.refresh.projects();
 			lists.refresh.states({objectTypeCode:"SRASubmission"});
 			
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('existingStudyType').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'existingStudyType'}})
 				.success(function(data) {
 					// initialisation de la variable sraVariables.existingStudyType 
 					consultationService.sraVariables.existingStudyType = data;																					
@@ -351,7 +351,7 @@ var getColumns = function(){
 	var initListService = function(){
 		if(!isInit){
 			releaseService.lists.refresh.projects();
-			$http.get(jsRoutes.controllers.sra.api.Variables.get('existingStudyType').url)
+			$http.get(jsRoutes.controllers.sra.api.Variables.list().url, {params:{type:'existingStudyType'}})
 				.success(function(data) {
 					// initialisation de la variable sraVariables.existingStudyType 
 					releaseService.sraVariables.existingStudyType = data;																					

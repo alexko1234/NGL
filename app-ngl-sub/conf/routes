@@ -47,7 +47,9 @@ GET		/tpl/sra/configurations/js-routes			controllers.sra.configurations.tpl.Conf
 
 GET 	/api/sra/configurations					    @controllers.sra.configurations.api.Configurations.list()
 GET		/tpl/sra/configurations/consultation		controllers.sra.configurations.tpl.Configurations.consultation()
-GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
+GET		/api/sra/variables			           		controllers.sra.api.Variables.list()
+GET		/api/sra/variables/:type/:code         		controllers.sra.api.Variables.get(type: java.lang.String, code: java.lang.String)
+
 ###http://localhost:9000/api/sra/configurations/CONF_BCZ_098K3YVFH
 # methode get du controlleur api qui est heritée d'un parent de DocumentController
 GET		/api/sra/configurations/:code				@controllers.sra.configurations.api.Configurations.get(code: java.lang.String)

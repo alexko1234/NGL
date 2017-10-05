@@ -47,6 +47,7 @@ public class Studies extends CommonController
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.sra.api.routes.javascript.Variables.get(),
+  	    		controllers.sra.api.routes.javascript.Variables.list(),
   	    		controllers.sra.studies.api.routes.javascript.Studies.save(),
   	    		controllers.sra.studies.api.routes.javascript.Studies.get(),
  	    		controllers.sra.studies.tpl.routes.javascript.Studies.get(),
