@@ -16,7 +16,6 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.parameter.Parameter;
 import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
@@ -38,11 +37,26 @@ public class Variables extends CommonController{
 	}
 
 	public static Result get(String type, String code){
-		SraParameter parameter=MongoDBDAO.findOne(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.is("type", type).is("code", code));
-		if(parameter != null){
+
+		if(type.equalsIgnoreCase("strategySample")){
+			SraParameter parameter = new SraParameter();
+			parameter.code=code;
+			parameter.type=type;
+			parameter.value= VariableSRA.mapStrategySample.get("code");
 			return ok(Json.toJson(parameter));
+		}else if(type.equalsIgnoreCase("strategyStudy")){
+			SraParameter parameter = new SraParameter();
+			parameter.code=code;
+			parameter.type=type;
+			parameter.value= VariableSRA.mapStrategyStudy.get("code");
+			return ok(Json.toJson(parameter));
+		}else{
+			SraParameter parameter=MongoDBDAO.findOne(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.is("type", type).is("code", code));
+			if(parameter != null){
+				return ok(Json.toJson(parameter));
+			}
+			else { return notFound(); }
 		}
-		else { return notFound(); }
 	}
 
 	private static Query getQuery(VariablesSearchForm form) {
@@ -62,17 +76,41 @@ public class Variables extends CommonController{
 
 
 	private static Result list(VariablesSearchForm variableSearch) {
-		Query query = getQuery(variableSearch);		
 
-		List<SraParameter> values=MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, query).toList();
+		if (variableSearch.type.equalsIgnoreCase("strategySample")){
+			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategySample)));
+		} else if (variableSearch.type.equalsIgnoreCase("strategyStudy")){
+			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategyStudy)));
+		}else{
 
 
-		List<ListObject> valuesListObject = new ArrayList<ListObject>();
-		for (SraParameter s : values) {
-			valuesListObject.add(new ListObject(s.code, s.value));
+			Query query = getQuery(variableSearch);		
+
+			List<SraParameter> values=MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, query).toList();
+
+
+			List<ListObject> valuesListObject = new ArrayList<ListObject>();
+			for (SraParameter s : values) {
+				valuesListObject.add(new ListObject(s.code, s.value));
+			}
+			return ok(Json.toJson(valuesListObject));
 		}
-		return ok(Json.toJson(valuesListObject));
 
 	}
+
+	private static List<ListObject> toListObjects(Map<String, String> map){
+		List<ListObject> lo = new ArrayList<ListObject>();
+		for(String key : map.keySet()){
+			lo.add(new ListObject(key, map.get(key)));
+		}
+
+		//Sort by code
+		Collections.sort(lo, new Comparator<ListObject>(){
+			public int compare(ListObject lo1, ListObject lo2) {
+				return lo1.code.compareTo(lo2.code);
+			}
+		});
+		return lo;
+	}	
 
 }
