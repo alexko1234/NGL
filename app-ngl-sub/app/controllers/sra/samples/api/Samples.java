@@ -5,14 +5,14 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.sra.submit.common.instance.AbstractSample;
-import models.sra.submit.common.instance.Sample;
-import models.sra.submit.common.instance.Submission;
-import models.utils.InstanceConstants;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
+
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
+import models.sra.submit.common.instance.AbstractSample;
+import models.utils.InstanceConstants;
 
 //import com.gargoylesoftware.htmlunit.javascript.host.Console;
 
@@ -21,10 +21,6 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import models.laboratory.common.instance.State;
 
 public class Samples extends DocumentController<AbstractSample>{
 
@@ -36,6 +32,11 @@ public class Samples extends DocumentController<AbstractSample>{
 		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
 	}
 
+	public Result get(String code)
+	{
+		return ok(Json.toJson(getSample(code)));
+	}
+	
 	public Result list()
 	{
 		SamplesSearchForm form = filledFormQueryString(SamplesSearchForm.class);

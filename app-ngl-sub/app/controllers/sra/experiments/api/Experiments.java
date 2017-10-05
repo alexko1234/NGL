@@ -5,24 +5,21 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.utils.InstanceConstants;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import models.sra.submit.sra.instance.Experiment;
+import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import models.laboratory.common.instance.State;
 
 public class Experiments extends DocumentController<Experiment> {
 
@@ -33,6 +30,11 @@ public class Experiments extends DocumentController<Experiment> {
 		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
+	public Result get(String code)
+	{
+		return ok(Json.toJson(super.getObject(code)));
+	}
+	
 	public Result list()
 	{
 		ExperimentsSearchForm form = filledFormQueryString(ExperimentsSearchForm.class);

@@ -89,13 +89,21 @@ PUT		/sra/studies/:code/state				    @controllers.sra.studies.api.Studies.update
 # Samples
 #--------
 GET		/api/sra/samples							@controllers.sra.samples.api.Samples.list()
+GET		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.get(code: java.lang.String)
 PUT		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.update(code: java.lang.String)
 
 #-------------
 # Experiments
 #-------------
 GET		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.list()
+GET		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.get(code: java.lang.String)
 PUT		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
+
+#-----------------
+# ExperimentsRuns
+#-----------------
+GET		/api/sra/experiments/runs/:code				@controllers.sra.experiments.api.ExperimentsRuns.get(code: java.lang.String)
+
 
 #-------------------
 # ExperimentsRawData
