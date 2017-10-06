@@ -57,8 +57,10 @@
 				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")' title='@Messages("experiment.placeholder.fromDate")'>
 			}
 			
-			@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.code" placeholder='@Messages("experiment.placeholder.code")' title='@Messages("experiment.placeholder.code")'>				
+			@formGroup{
+				<bt-input  class="form-control" input-ng-model="searchService.form.code" textarea-ng-model="searchService.form.codes" placeholder='@Messages("experiment.placeholder.code")' ></bt-input>						
+				
+								
 			}
 		}
 		@columnSearchForm{
