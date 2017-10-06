@@ -299,8 +299,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
 			$scope.file = undefined;
 			angular.element('#importFile')[0].value = null;
-			$scope.$emit('refresh');
-			
+			$scope.$emit('refresh');			
 		})
 		.error(function(data, status, headers, config) {
 			$scope.messages.clazz = "alert alert-danger";

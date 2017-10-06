@@ -1420,9 +1420,9 @@ angular.module('commonsServices', []).
     			var flatArray = [];
     			if(angular.isArray(array)){
 	    			for(var i=0;i<array.length;i++){
-	    				if(null != property && undefined != property){
+	    				if(null != property && undefined != property && array[i][property]){
 	    					flatArray = flatArray.concat(array[i][property]);
-	    				}else{
+	    				}else if(array[i]){
 	    					flatArray = flatArray.concat(array[i]);
 	    				}
 	    			}

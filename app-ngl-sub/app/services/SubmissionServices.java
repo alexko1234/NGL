@@ -14,6 +14,7 @@ import play.Logger;
 import validation.ContextValidation;
 import workflows.sra.submission.ConfigurationWorkflows;
 import workflows.sra.submission.SubmissionWorkflows;
+import workflows.sra.submission.SubmissionWorkflowsHelper;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -82,7 +83,8 @@ public class SubmissionServices {
 	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
-	
+	SubmissionWorkflowsHelper submissionWorkflowsHelper;
+
 	
 	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
 		try {
@@ -160,7 +162,7 @@ public class SubmissionServices {
 		if (contextValidation.hasErrors()){
 			System.out.println("submission.validate produit des erreurs");
 			// destruction de la submission et rallback pour etat du study: 
-			cleanDataBase(submission.code, contextValidation);	
+			submissionWorkflowsHelper.rollbackSubmission(submission, contextValidation);	
 			contextValidation.displayErrors(Logger.of("SRA"));
 			throw new SraException("SubmissionServices::initReleaseSubmission::probleme validation  voir log: ");
 		} else {	
@@ -1140,7 +1142,7 @@ public class SubmissionServices {
 		// La validite du readSet doit avoir été testé avant.
 
 		Experiment experiment = new Experiment(); 
-		SraParameter sraParam = new SraParameter();
+		//SraParameter sraParam = new SraParameter();
 		Map<String, String> mapLibProcessTypeCodeVal_orientation = VariableSRA.mapLibProcessTypeCodeVal_orientation;
 
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);

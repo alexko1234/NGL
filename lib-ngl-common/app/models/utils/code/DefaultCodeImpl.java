@@ -2,6 +2,7 @@ package models.utils.code;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,10 +11,12 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult.Sort;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.Project;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 
 public class DefaultCodeImpl implements Code {
@@ -176,5 +179,21 @@ public class DefaultCodeImpl implements Code {
 				.or(DBQuery.notExists("lastSampleCode"), DBQuery.lessThan("nbCharactersInSampleCode", nbCharactersInSampleCode), 
 						DBQuery.is("nbCharactersInSampleCode", nbCharactersInSampleCode).lessThan("lastSampleCode", newSampleCode)),
 				DBUpdate.set("lastSampleCode",newSampleCode).set("nbCharactersInSampleCode", nbCharactersInSampleCode));
+	}
+
+	@Override
+	public void updateProjectSampleCodeWithLastSampleCode(String projectCode) {
+		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("projectCodes", projectCode))
+				.sort("code", Sort.DESC).limit(1).toList();
+			
+		if(samples.size() == 1){
+			MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
+					DBUpdate.set("lastSampleCode",samples.get(0).code));
+		}else{
+			MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", projectCode),
+					DBUpdate.unset("lastSampleCode"));
+		}
+			
+		
 	}
 }

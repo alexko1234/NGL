@@ -23,7 +23,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
-		Logger.debug("apply pre state rules");
+		Logger.debug("dans apply pre state rules avec nextState = '" + nextState.code + "'");
 		updateTraceInformation(submission.traceInformation, nextState); 
 		if("IP-SUB-R".equals(submission.state.code) && "F-SUB".equals(nextState.code)){
 			Logger.debug("call update submission Release");
@@ -31,6 +31,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		}
 		if("IW-SUB-R".equals(nextState.code)){
 			submissionWorkflowsHelper.createDirSubmission(submission, validation);
+		}
+		
+		if("IW-SUB".equals(nextState.code)){
+			submissionWorkflowsHelper.activatePrimarySubmission(validation, submission);
 		}
 	}
 
@@ -56,7 +60,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
 		if("IW-SUB-R".equals(submission.code)){
-			submissionWorkflowsHelper.rollbackSubmissionRelease(submission, validation);
+			submissionWorkflowsHelper.rollbackSubmission(submission, validation);
 		}
 		if(validation.hasErrors()){
 			Logger.error("Problem on SubmissionWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
@@ -98,14 +102,11 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		}
 	}
 
-
 	@Override
 	public void nextState(ContextValidation contextValidation, Submission object) {
 		// TODO Auto-generated method stub
 
 	}
-
-
 
 
 }

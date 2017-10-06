@@ -169,6 +169,7 @@ public class Submissions extends DocumentController<Submission>{
 	public Result updateState(String code){
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		//Get Submission from DB 
+		System.out.println("Dans Submissions.updateState, submission.code="+ code);
 		Submission submission = getSubmission(code); // ou bien Submission submission2 = getObject(code);
 		Form<State> filledForm = getFilledForm(stateForm, State.class);
 		State state = filledForm.get();

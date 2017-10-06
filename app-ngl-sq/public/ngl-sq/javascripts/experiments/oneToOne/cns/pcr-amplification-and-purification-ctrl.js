@@ -48,19 +48,7 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         // restait un render avec "|" ???
-			         {
-			        	"header":Messages("containers.table.tags"),
-			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":4.5,
-			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-								 
+			         	 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainerUsed.concentration.value",
@@ -238,9 +226,21 @@ angular.module('home').controller('PCRAmplificationAndPurificationCtrl',['$scope
 		$scope.atmService.data.setEdit();
 	});
 	
-	
-	
-	
+	if($scope.experiment.typeCode==="pcr-amplification-and-purification"){
+		datatableConfig.columns.push(// restait un render avec "|" ???
+		         {
+		        	"header":Messages("containers.table.tags"),
+		 			"property": "inputContainer.contents",
+		 			"filter": "getArray:'properties.tag.value'",
+		 			"order":true,
+		 			"hide":true,
+		 			"type":"text",
+		 			"position":4.5,
+		 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
+		        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			     }
+		);
+	}
 	//Init		
 	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
 		datatableConfig.columns.push({

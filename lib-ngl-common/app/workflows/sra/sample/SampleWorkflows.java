@@ -51,7 +51,7 @@ public class SampleWorkflows extends Workflows<Sample>{
 	public void setState(ContextValidation contextValidation, Sample sample, State nextState) {
 		contextValidation.setUpdateMode();
 
-		CommonValidationHelper.validateState(ObjectType.CODE.Sample, nextState, contextValidation); 	
+		CommonValidationHelper.validateState(ObjectType.CODE.SRASample, nextState, contextValidation); 	
 		Logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(sample.state.code)){

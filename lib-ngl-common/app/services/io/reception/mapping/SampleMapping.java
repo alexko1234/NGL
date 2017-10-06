@@ -4,9 +4,11 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
+import models.laboratory.project.instance.Project;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import models.laboratory.sample.description.SampleCategory;
@@ -19,6 +21,7 @@ import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult.Sort;
 
 public class SampleMapping extends Mapping<Sample> {
 	/**
@@ -105,7 +108,10 @@ public class SampleMapping extends Mapping<Sample> {
 			}else{
 				contextValidation.addErrors("sample", ValidationConstants.ERROR_NOTEXISTS_MSG, sample.life.from.projectCode+" + "+sample.life.from.sampleCode);
 			}
+		}else{
+			sample.life = null;
 		}
+		
 	}
 
 
@@ -121,5 +127,21 @@ public class SampleMapping extends Mapping<Sample> {
 			CodeHelper.getInstance().updateProjectSampleCodeIfNeeded(sample.projectCodes.iterator().next(), sample.code);
 		}
 		super.synchronizeMongoDB(c);
+	}
+	@Override
+	public void rollbackInMongoDB(DBObject c){
+		if(Action.save.equals(action) && c._id == null){ 
+			Sample sample = (Sample)c;
+			MongoDBDAO.deleteByCode(collectionName, c.getClass(), c.code);
+			
+			if(sample.projectCodes.size() == 1){
+				String projectCode = sample.projectCodes.iterator().next(); 
+				CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);
+			}else{
+				contextValidation.addErrors("project","problem during rollback to update last sample code on projects "+sample.projectCodes.toString());
+			}
+		}else if(Action.update.equals(action)){
+			//replace by old version of the object
+		}		
 	}
 }
