@@ -27,7 +27,7 @@ public class Global extends GlobalSettings {
 			Logger.error("Error Load knowledge base");
 			Logger.error("Drools Singleton error: "+e.getMessage(),e);
 			//Shutdown application
-			Play.stop();
+			// Play.stop(app);
 		}
 		
 		/*
