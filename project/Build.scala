@@ -7,12 +7,17 @@ object ApplicationBuild extends Build {
    import BuildSettings._	
    import Resolvers._
    import Dependencies._
-   import play.Play.autoImport._
-   import PlayKeys._
+   // import play.Play.autoImport._
+   import play.sbt.Play.autoImport._
+   
+   // import PlayKeys._
+   import play.sbt.PlayImport._
+   // playKeys -> PlayImport =>
+   //   val assets: java.io.File = (playPackageAssets in Compile).value
+   //   val assets: java.io.File = PlayKeys.playPackageAssets.value // WILD GUESS
 
-   val appName = "ngl"
+   val appName    = "ngl"
    val appVersion = "1.0-SNAPSHOT"
-     
 
    val sqVersion = "1.36.0-SNAPSHOT"  
    val biVersion = "1.38.0-SNAPSHOT"
@@ -24,6 +29,9 @@ object ApplicationBuild extends Build {
    val libDatatableVersion = "1.2-SNAPSHOT"
    val libFrameworkWebVersion = "1.1-SNAPSHOT"
    
+   val postgresql = "postgresql" % "postgresql" % "8.3-603.jdbc4"
+   //val postgresql = "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+   //val postgresql = "org.postgresql" % "postgresql" % "9.4.1208"
    
   override def settings = super.settings ++ Seq(
         EclipseKeys.skipParents in ThisBuild := false
@@ -35,98 +43,123 @@ object ApplicationBuild extends Build {
 	   val buildOrganization = "fr.cea.ig"
 			   val buildVersion      = appVersion
 			   
-			   val compilationOptions // : Seq[sbtq.Def.Setting[_]] 
+			   val globSettings
 			   = Seq(
 					   // scalacOptions += "-deprecation",
 					   //javacOptions  ++= Seq("-Xlint:deprecation","-Xlint:unchecked")
 					   //javacOptions += "-verbose"
 					   // javacOptions += "-Xlint",
-					   scalaVersion := "2.11.1"
+					   // scalaVersion := "2.11.1"
+			       //libraryDependencies += evolutions,
+			       //libraryDependencies += jdbc,
+			       // libraryDependencies += jdbc,
+					   version             := buildVersion,  
+					   credentials         += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
+					   publishMavenStyle   := true,
+					   
+			       //dependencyOverrides += "io.netty" % "netty" % "3.10.1.Final",
+			       //dependencyOverrides += "org.jboss.logging" % "jboss-logging" % "3.1.1.GA",
+ 			       //dependencyOverrides += "com.google.guava" % "guava" % "15.0",
+			       //dependencyOverrides += "com.typesafe.play" % "play-java_2.11" % "2.3.0",
+ 			       //dependencyOverrides += "com.typesafe.play" % "twirl-api_2.11" % "1.0.0",
+			       //dependencyOverrides += "com.typesafe.play" % "play-java-jdbc_2.11" % "2.3.0", 
+			       //dependencyOverrides += "org.springframework" % "spring-tx" % "3.2.8.RELEASE",
+			       //dependencyOverrides += "com.typesafe.play" % "play-jdbc_2.11" % "2.3.0",
+			       //dependencyOverrides += "com.typesafe.play" % "play-java-ws_2.11" % "2.3.0",
+			       //dependencyOverrides += "com.typesafe.play" % "play-ws_2.11" % "2.3.0",
+             //dependencyOverrides += "org.springframework" % "spring-context" % "3.2.8.RELEASE",
+             //dependencyOverrides += "org.springframework" % "spring-aop" % "3.2.8.RELEASE",
+             //dependencyOverrides += "org.springframework" % "spring-beans" % "3.2.8.RELEASE",
+             //dependencyOverrides += "org.springframework" % "spring-core" % "3.2.8.RELEASE",
+             //dependencyOverrides += "com.typesafe.play" % "play_2.11" % "2.3.0",
+             //dependencyOverrides += "xml-apis" % "xml-apis" % "1.0.b2",
+             
+			       scalaVersion        := "2.11.6" // play 2.4 req
 					   )
 
 			   val buildSettings =  Seq (
-					   organization   := buildOrganization+"."+appName,
-					   version        := buildVersion,
+					   organization   := buildOrganization+"."+appName
+					   //version        := buildVersion,
 					   //scalaVersion := "2.11.1",
-					   credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
-					   publishMavenStyle := true
-					   ) ++ compilationOptions
+					   //credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials"))
+					   //publishMavenStyle := true
+					   ) ++ globSettings
 
 			   val buildSettingsLib = Seq (
-					   organization   := buildOrganization,
-					   version        := buildVersion,  
-					   //scalaVersion := "2.11.1",
-					   credentials += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
-					   publishMavenStyle := true
-					   ) ++ compilationOptions
+					   organization   := buildOrganization
+					   //credentials       += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials"))
+					   ) ++ globSettings
 
    }
 
   
    object Resolvers {        
-   	import BuildSettings._
-        var location = sys.env.getOrElse("NGL_LOCATION", default = "external")
-   	
-   	    val nglgithub	= "NGL GitHub Repo" at "https://institut-de-genomique.github.io/NGL-Dependencies/"    
-   	    val nexusoss = "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public/"
-		val mavencentral = "Maven central" at "http://central.maven.org/maven2/"
-   	    val nexusig = "Nexus repository" at "https://gsphere.genoscope.cns.fr/nexus/content/groups/public/" 
-        val nexus = if(location.equalsIgnoreCase("external")) Seq(nexusoss,mavencentral,nglgithub) else Seq(nexusig,nglgithub)	
-        val nexusigrelease = "releases"  at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/releases"
-        val nexusigsnapshot = "snapshots" at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/snapshots"
-        val nexusigpublish = if (buildVersion.endsWith("SNAPSHOT")) nexusigsnapshot else nexusigrelease				
-    } 
+	   import BuildSettings._
+	   var location = sys.env.getOrElse("NGL_LOCATION", default = "external")
+
+	   val nglgithub	= "NGL GitHub Repo" at "https://institut-de-genomique.github.io/NGL-Dependencies/"    
+	   val nexusoss = "Sonatype OSS" at "https://oss.sonatype.org/content/groups/public/"
+	   val mavencentral = "Maven central" at "http://central.maven.org/maven2/"
+	   val nexusig = "Nexus repository" at "https://gsphere.genoscope.cns.fr/nexus/content/groups/public/" 
+	   val nexus = if(location.equalsIgnoreCase("external")) Seq(nexusoss,mavencentral,nglgithub) else Seq(nexusig,nglgithub)	
+	   val nexusigrelease = "releases"  at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/releases"
+	   val nexusigsnapshot = "snapshots" at "https://gsphere.genoscope.cns.fr/nexus/content/repositories/snapshots"
+	   val nexusigpublish = if (buildVersion.endsWith("SNAPSHOT")) nexusigsnapshot else nexusigrelease				
+   } 
  
    object Dependencies {
-   	val nglcommonDependencies = Seq(
-		javaCore, javaJdbc, javaWs,
-		"fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
-		"mysql" % "mysql-connector-java" % "5.1.18",
-		"net.sourceforge.jtds" % "jtds" % "1.2.2",
-	    "net.sf.opencsv" % "opencsv" % "2.0",
-        "commons-collections" % "commons-collections" % "3.2.1",
-		"org.springframework" % "spring-jdbc" % "4.0.3.RELEASE",		
-		"org.springframework" % "spring-test" % "4.0.3.RELEASE",
-		"org.julienrf" %% "play-jsmessages" % "1.6.2",
-		"javax.mail" % "mail" % "1.4.2",
-	    "org.codehaus.janino" % "janino" % "2.5.15",
+	   val nglcommonDependencies = Seq(
+			   javaCore,
+			   javaJdbc, 
+			   javaWs,
+			   "fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
+			   "mysql" % "mysql-connector-java" % "5.1.18",
+			   "net.sourceforge.jtds" % "jtds" % "1.2.2",
+			   // "net.sourceforge.jtds" % "jtds" % "1.3.1",
+			   "net.sf.opencsv" % "opencsv" % "2.0",
+			   "commons-collections" % "commons-collections" % "3.2.1",
+			   "org.springframework" % "spring-jdbc" % "4.0.3.RELEASE",		
+			   "org.springframework" % "spring-test" % "4.0.3.RELEASE",
+			   "org.julienrf" %% "play-jsmessages" % "1.6.2",
+			   "javax.mail" % "mail" % "1.4.2",
+			   "org.codehaus.janino" % "janino" % "2.5.15",
+			   "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
+			   "org.javassist" % "javassist" % "3.20.0-GA",
+			   cache
+			   )	
+			   val ngldatatableDependencies = Seq(
+					   javaCore
+					   )
+			   val nglreagentsDependencies = Seq(
+					   javaCore
+					   )
+			   val nglframeworkwebDependencies = Seq(
+					   javaCore,
+					   javaWs,
+					   "javax.mail" % "mail" % "1.4.2",
+					   "org.drools" % "drools-core" % "6.1.0.Final",
+					   "org.drools" % "drools-compiler" % "6.1.0.Final",
+					   "org.drools" % "knowledge-api" % "6.1.0.Final",
+					   "org.kie" % "kie-api" % "6.1.0.Final",
+					   "org.kie" % "kie-internal" % "6.1.0.Final",
+					   "fr.cea.ig.modules" %% "authentication" % "1.4-SNAPSHOT",
+					   "fr.cea.ig" %% "mongodbplugin" % "1.6.0-SNAPSHOT"
+					   )
+			   val nglbiDependencies = Seq(
+					   // Add your project dependencies here,
+					   javaCore, javaJdbc,
 
-	    "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
-	   "org.javassist" % "javassist" % "3.20.0-GA",
-	    cache
-
-    	)	
-   	val ngldatatableDependencies = Seq(
-   	    javaCore
-   	    )
-	val nglreagentsDependencies = Seq(
-   	    javaCore
-   	    )
-   	val nglframeworkwebDependencies = Seq(
-   	    javaCore,
-		javaWs,
-   	    "javax.mail" % "mail" % "1.4.2",
-   	    "org.drools" % "drools-core" % "6.1.0.Final",
-   	    "org.drools" % "drools-compiler" % "6.1.0.Final",
-   	    "org.drools" % "knowledge-api" % "6.1.0.Final",
-   	    "org.kie" % "kie-api" % "6.1.0.Final",
-   	    "org.kie" % "kie-internal" % "6.1.0.Final",
-		"fr.cea.ig.modules" %% "authentication" % "1.4-SNAPSHOT",
-		"fr.cea.ig" %% "mongodbplugin" % "1.6.0-SNAPSHOT"
-   	)
-   	val nglbiDependencies = Seq(
-	        // Add your project dependencies here,
-	      javaCore, javaJdbc,
-
-		"postgresql" % "postgresql" % "8.3-603.jdbc4"
-
-		)
-	val nglsqDependencies = Seq(
-		javaCore, javaJdbc,
-		  // Add your project dependencies here,
-		"postgresql" % "postgresql" % "8.3-603.jdbc4",
-		"org.assertj" % "assertj-core" % "1.7.1"
-		)
+					   // "postgresql" % "postgresql" % "8.3-603.jdbc4"
+					   postgresql
+					   )
+			   val nglsqDependencies = Seq(
+					   javaCore, 
+					   javaJdbc,
+					   // Add your project dependencies here,
+					   // "postgresql" % "postgresql" % "8.3-603.jdbc4",
+					   postgresql,
+					   "org.assertj" % "assertj-core" % "1.7.1"
+					   )
 /*
 	val nglauthDependencies = Seq(
 	javaCore, javaJdbc,javaEbean,
@@ -144,7 +177,8 @@ object ApplicationBuild extends Build {
 	val ngldataDependencies = Seq(
 		javaCore, javaJdbc,
 		  // Add your project dependencies here,
-		  "postgresql" % "postgresql" % "8.3-603.jdbc4"
+		  //"postgresql" % "postgresql" % "8.3-603.jdbc4"
+		  postgresql
 		)
 	val nglsubDependencies = Seq(
 	    javaCore, javaJdbc
@@ -153,12 +187,13 @@ object ApplicationBuild extends Build {
 
 	val nglprojectsDependencies = Seq(
 	    javaCore, javaJdbc,
-		"postgresql" % "postgresql" % "8.3-603.jdbc4"
+		//"postgresql" % "postgresql" % "8.3-603.jdbc4"
+	    postgresql
 	)
 
   }
 
-  val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib).enablePlugins(play.PlayJava).settings(
+  val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
     // Add your own project settings here
     version := libDatatableVersion,
     libraryDependencies ++= ngldatatableDependencies,
@@ -167,16 +202,18 @@ object ApplicationBuild extends Build {
     publishTo := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (playPackageAssets in Compile).value
+      // val assets: java.io.File = (playPackageAssets in Compile).value
+      val assets: java.io.File = PlayKeys.playPackageAssets.value // WILD GUESS
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     },
     packagedArtifacts in publish := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (playPackageAssets in Compile).value
+      // val assets: java.io.File = (playPackageAssets in Compile).value
+      val assets: java.io.File = PlayKeys.playPackageAssets.value // WILD GUESS
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     })
 
-  val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib).enablePlugins(play.PlayJava).settings(
+  val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
     // Add your own project settings here     
     version := libFrameworkWebVersion,
     libraryDependencies ++= nglframeworkwebDependencies,
@@ -185,16 +222,18 @@ object ApplicationBuild extends Build {
     publishTo := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (playPackageAssets in Compile).value
+      // val assets: java.io.File = (playPackageAssets in Compile).value
+      val assets: java.io.File = PlayKeys.playPackageAssets.value // WILD GUESS
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     },
     packagedArtifacts in publish := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (playPackageAssets in Compile).value
+      // val assets: java.io.File = (playPackageAssets in Compile).value
+      val assets: java.io.File = PlayKeys.playPackageAssets.value // WILD GUESS
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     }).dependsOn(ngldatatable)
 
-  val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.PlayJava).settings(
+  val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here   
     version := appVersion,
     libraryDependencies ++= nglcommonDependencies,
@@ -213,7 +252,7 @@ object ApplicationBuild extends Build {
     resourceDirectory in Test := baseDirectory.value / "conftest"
     ).dependsOn(nglframeworkweb)
 
-  val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.PlayJava).settings(
+  val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here      
     version := biVersion,
     libraryDependencies ++= nglbiDependencies,
@@ -221,7 +260,7 @@ object ApplicationBuild extends Build {
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
-  val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.PlayJava).settings(
+  val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here 
     version := appVersion,
     libraryDependencies ++= ngldataDependencies,
@@ -229,7 +268,7 @@ object ApplicationBuild extends Build {
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
-  val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings).enablePlugins(play.PlayJava).settings(
+  val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here      
     version := sqVersion,
     libraryDependencies ++= nglsqDependencies,
@@ -240,7 +279,7 @@ object ApplicationBuild extends Build {
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
-  val nglsub = Project(appName + "-sub", file("app-ngl-sub"), settings = buildSettings).enablePlugins(play.PlayJava).settings(
+  val nglsub = Project(appName + "-sub", file("app-ngl-sub"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here    
     version := subVersion,
     libraryDependencies ++= nglsubDependencies,
@@ -248,7 +287,7 @@ object ApplicationBuild extends Build {
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 /*    
-    val nglauth = Project(appName + "-authorization", file("app-ngl-authorization"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+    val nglauth = Project(appName + "-authorization", file("app-ngl-authorization"),settings = buildSettings).enablePlugins(play.sbt.Play).settings(
              // Add your own project settings here   
 		version := appVersion,
 		libraryDependencies ++= nglauthDependencies,			 
@@ -257,7 +296,7 @@ object ApplicationBuild extends Build {
              publishTo := Some(nexusigpublish)
    ).dependsOn(nglcommon)
 */   
-   val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+   val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		// Add your own project settings here  
 		version := appVersion,				
 		resolvers := nexus,
@@ -266,7 +305,7 @@ object ApplicationBuild extends Build {
           
       )
    
-   val nglplates = Project(appName + "-plates", file("app-ngl-plaques"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+   val nglplates = Project(appName + "-plates", file("app-ngl-plaques"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
        // Add your own project settings here
 	   version := appVersion,
 		libraryDependencies ++= nglplaquesDependencies,	
@@ -276,7 +315,7 @@ object ApplicationBuild extends Build {
     ).dependsOn(nglcommon % "test->test;compile->compile")
 
 
-    val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+    val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
        // Add your own project settings here      
 	     version := appVersion,
 		libraryDependencies ++= ngldevguideDependencies,
@@ -285,7 +324,7 @@ object ApplicationBuild extends Build {
        publishTo := Some(nexusigpublish) 
     ).dependsOn(nglcommon % "test->test;compile->compile")
 
-   val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+   val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
        // Add your own project settings here   
 		version := projectsVersion,
 		libraryDependencies ++= nglprojectsDependencies,   
@@ -294,7 +333,7 @@ object ApplicationBuild extends Build {
        publishTo := Some(nexusigpublish)
      ).dependsOn(nglcommon % "test->test;compile->compile")
 	 
-	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
        // Add your own project settings here   
 		version := reagentsVersion,
 		libraryDependencies ++= nglreagentsDependencies,   
@@ -304,7 +343,7 @@ object ApplicationBuild extends Build {
      ).dependsOn(nglcommon % "test->test;compile->compile")
 
  	 
-   val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+   val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
       // Add your own project settings here     
 		version := appVersion,			  
       resolvers := nexus,
@@ -314,4 +353,8 @@ object ApplicationBuild extends Build {
      	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub,nglreagents,nglprojects
     )
 
+   val depcheck = Project("depcheck",file("depcheck")).enablePlugins(play.sbt.PlayJava).settings(
+		     version := "0.1-SNAPHSHOT",
+		     globSettings
+		   )
 }
