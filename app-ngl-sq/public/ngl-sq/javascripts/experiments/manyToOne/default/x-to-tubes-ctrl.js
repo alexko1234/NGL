@@ -341,7 +341,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			$scope.$emit('childSavedError', callbackFunction);
 			
 		    $scope.messages.clazz = "alert alert-danger";
-		    $scope.messages.text = Messages("experiments.msg.nocontainer.save.error"); // veut pa sortir !!
+		    $scope.messages.text = Messages("experiments.msg.nocontainer.save.error");
 		    $scope.messages.showDetails = false;
 			$scope.messages.open();   
 	

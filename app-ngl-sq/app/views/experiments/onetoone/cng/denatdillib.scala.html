@@ -1,12 +1,10 @@
 @()
-
-<!-- 12/12/2016 ne pas encore mettre en production ne laisser que le mode tubes...
-     04/10/2017 OK NGL-1589: sortie plaque necessaire... faire un controller unique, le definir ici et pas dans les partials -->
-<div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode" ng-controller="DenatDilLibCtrlPlates">  
-<div ng-switch-when="tube" >
+<!-- 04/10/2017 OK NGL-1589: sortie plaque necessaire... faire un nouveau controller unique, le definir ici et pas dans les partials -->
+<div class="col-md-12 col-lg-12" ng-switch="experiment.instrument.outContainerSupportCategoryCode"  ng-controller="DenatDilLibCtrl">  
+  <div ng-switch-when="tube" >
     @views.html.experiments.onetoone.defaults.partials.denatdillibtubes()
-</div>
-<div ng-switch-when="96-well-plate" >
+  </div>
+  <div ng-switch-when="96-well-plate" >
     @views.html.experiments.onetoone.defaults.partials.denatdillibplates()
-</div>
+  </div>
 </div>

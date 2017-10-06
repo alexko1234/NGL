@@ -556,6 +556,15 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null
 				).save();	
 		
+		// ??? FDS  ajout 06/10/2017 manque node ext-to-norm-and-pool-denat-fc-depot
+		newExperimentTypeNode("ext-to-norm-and-pool-denat-fc-depot",getExperimentTypes("ext-to-norm-and-pool-denat-fc-depot").get(0),
+				false,false,false,
+				null, // no previous nodes
+				null,
+				null,
+				null
+				).save();
+		
 		//FDS ajout 12/12/2016 -- JIRA NGL-1025 RNA_Seq; processus court
 		newExperimentTypeNode("ext-to-rna-lib-process",getExperimentTypes("ext-to-rna-lib-process").get(0),
 				false,false,false,
@@ -785,6 +794,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot",
+						               "ext-to-norm-and-pool-denat-fc-depot", // FDS ajout 06/10/2017
 						               "pcr-and-purification",
 						               "prep-pcr-free",
 						               "wg-chromium-lib-prep",

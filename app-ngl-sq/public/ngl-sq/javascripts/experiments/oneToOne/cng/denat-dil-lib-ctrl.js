@@ -1,78 +1,92 @@
-// FDS 12/12/2016 -- JIRA NGL-166 : denaturation en tubes: modification pour imposer categorie in=categorie out
-// OLD NE SERT PLUS.. garder en attendant que le nouveau marche
+// FDS 04/10/2017 -- JIRA NGL-1584: denaturation en tubes et plaques
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
 
-	// JIRA-781 rendre editable quand experience est en cours=> supprimer:  && !$scope.Inprogress 
+	var inputExtraHeaders=Messages("experiments.inputs");
+	var outputExtraHeaders=Messages("experiments.outputs");	
+	
 	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
 			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },					 				         
-			         {
+			         //--------------------- INPUT containers section -----------------------
+			         
+			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":2,
+			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     {
+				     { // Echantillon(s) 
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":3,
+			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     
-				     {
-			        	"header":"Code aliquot",
+				     { //sample Aliquots
+			        	"header":Messages("containers.table.codeAliquot"),
 			 			"property": "inputContainer.contents",
 			 			"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":4,
+			 			"position":6,
 			 			"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-			         {
+			         { // libProcessType ajout 04/10/2017
+						 "header":Messages("containers.table.libProcessType"),
+						 "property": "inputContainer.contents",
+						 //"filter": "getArray:'properties.libProcessTypeCode.value'| codes:'libProcessTypeCode'",.. peut on decoder ???? 
+						 "filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+						 "order":false,
+						 "hide":true,
+						 "type":"text",
+						 "position":6.5,
+						 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+						 "extraHeaders": {0: inputExtraHeaders}	 						 			
+			         },
+			         { //Tags
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
 			 			"filter": "getArray:'properties.tag.value'| unique",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":5,
+			 			"position":7,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0: inputExtraHeaders}
 			         },				 
-					 {
+					 {  //Concentration en nM;
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":6,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "position":8,
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         {
+			        /* { // volume pas necessaire ????
+			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "property":"volume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":9,
+			        	 "extraHeaders":{0: inputExtraHeaders}
+			         },*/
+			         {  // Etat input Container
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
 						 "filter":"codes:'state'",
@@ -80,21 +94,15 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":7,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	 "position":10,
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			        /* {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"volume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":5,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },*/
-			         {
-			        	 "header":Messages("containers.table.concentration") + " (pM)",
+			         // colonnes specifiques experience viennent s'insererer ici s'il y en a
+			          
+			         //------------------------ OUTPUT containers section -------------------
+
+			         { // Concentration shortLabel en pM;
+			        	 "header":Messages("containers.table.concentration.shortLabel") + " (pM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "convertValue": {"active":true, "displayMeasureValue":"pM", "saveMeasureValue":"nM"},			        	 
 			        	 "order":true,
@@ -102,40 +110,20 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"number",
 			        	 //"defaultValues":10,
-			        	 "position":50,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			        	 "position":130,
+			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         {
+			         { // volume en uL
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":51,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			        	 "position":140,
+			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         {
-			        	 "header":Messages("containers.table.storageCode"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":52,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"outputContainerUsed.code",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":400,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
+			         { 
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
@@ -143,9 +131,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":500,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }
-			         
+			        	 "extraHeaders":{0:outputExtraHeaders}
+			         }       
 			         ],
 			compact:true,
 			pagination:{
@@ -155,7 +142,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				active:false
 			},
 			order:{
-				mode:'local', //or 
+				mode:'local',
 				active:true,
 				by:'inputContainer.code'
 			},
@@ -169,7 +156,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	        	withoutEdit: true,
 	        	changeClass:false,
 	        	showButton:false,
-	        	mode:'local'
+	        	mode:'local'	        		
 			},
 			hide:{
 				active:true
@@ -192,26 +179,147 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			},
 			extraHeaders:{
 				number:2,
-				dynamic:true,
+				dynamic:true
+			},
+			otherButtons: {
+                active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+                complex:true,
+                template:  ''
+                	+$scope.plateUtils.templates.buttonLineMode()
+                	+$scope.plateUtils.templates.buttonColumnMode()     
 			}
-	};
+	}; // fin struct datatableConfig
+	
+	// colonnes variables
+	//INPUT
+	if ( $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube" ){
+		 datatableConfig.columns.push({
+			// barcode plaque entree == input support Container code
+	        "header":Messages("containers.table.support.name"),
+	        "property":"inputContainer.support.code",
+			"hide":true,
+	        "type":"text",
+	        "position":1,
+	        "extraHeaders":{0: inputExtraHeaders}
+	      });
+		 datatableConfig.columns.push({
+	        // Ligne
+	        "header":Messages("containers.table.support.line"),
+	        "property":"inputContainer.support.line",
+	        "order":true,
+			"hide":true,
+	        "type":"text",
+	         "position":2,
+	        "extraHeaders":{0: inputExtraHeaders}
+	     });
+		 datatableConfig.columns.push({
+	        // colonne
+	        "header":Messages("containers.table.support.column"),
+		    // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+	        "property":"inputContainer.support.column*1",
+	        "order":true,
+			"hide":true,
+	        "type":"number",
+	        "position":3,
+	        "extraHeaders":{0: inputExtraHeaders}
+	     });
+		 
+	} else {
+			datatableConfig.columns.push({
+				"header":Messages("containers.table.code"),
+				"property":"inputContainer.support.code",
+				"order":true,
+				"edit":false,
+				"hide":true,
+				"type":"text",
+				"position":1,
+				"extraHeaders":{0: inputExtraHeaders}
+			});
+	}	
+	
+	// OUTPUT
+	if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ){	
+		 datatableConfig.columns.push({
+			 // barcode plaque sortie == support Container used code... faut Used 
+			 "header":Messages("containers.table.support.name"),
+			 "property":"outputContainerUsed.locationOnContainerSupport.code", 
+			 "order":true,
+			 "hide":true,
+			 "type":"text",
+			 "position":100,
+			 "extraHeaders":{0: outputExtraHeaders}
+         });
+		 datatableConfig.columns.push({
+			 // Line
+        	 "header":Messages("containers.table.support.line"),
+        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
+ 			 "edit" : true,
+			 "choiceInList":true,
+			 "possibleValues":[{"name":'A',"code":"A"},{"name":'B',"code":"B"},{"name":'C',"code":"C"},{"name":'D',"code":"D"},
+			                   {"name":'E',"code":"E"},{"name":'F',"code":"F"},{"name":'G',"code":"G"},{"name":'H',"code":"H"}],
+        	 "order":true,
+			 "hide":true,
+        	 "type":"text",
+        	 "position":110,
+        	 "extraHeaders":{0:outputExtraHeaders}
+         });
+		 datatableConfig.columns.push({
+			 // column
+        	 "header":Messages("containers.table.support.column"),
+        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
+ 			 "edit" : true,
+			 "choiceInList":true,
+			 "possibleValues":[{"name":'1',"code":"1"},{"name":'2',"code":"2"},{"name":'3',"code":"3"},{"name":'4',"code":"4"},
+			                   {"name":'5',"code":"5"},{"name":'6',"code":"6"},{"name":'7',"code":"7"},{"name":'8',"code":"8"},
+			                   {"name":'9',"code":"9"},{"name":'10',"code":"10"},{"name":'11',"code":"11"},{"name":'12',"code":"12"}], 
+        	 "order":true,
+			 "hide":true,
+        	 "type":"number",
+        	 "position":120,
+        	 "extraHeaders":{0:outputExtraHeaders}
+         });		
+	} else {
+		    // GA: meme pour les tubes utiliser  x.locationOnContainerSupport.code  et pas x.code
+			datatableConfig.columns.push({
+				"header":Messages("containers.table.code"),
+				"property":"outputContainerUsed.locationOnContainerSupport.code",
+				"order":true,
+				"edit":true,
+				"hide":true,
+				"type":"text",
+				"position":100,
+				"extraHeaders":{0:outputExtraHeaders}
+			});
+			
+			datatableConfig.columns.push({
+				"header":Messages("containers.table.storageCode"),
+				"property":"outputContainerUsed.locationOnContainerSupport.storageCode",
+				"order":true,
+				"edit":true,
+				"hide":true,
+				"type":"text",
+				"position":150,
+				"extraHeaders":{0:outputExtraHeaders}
+			});		 
+	}
+
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
+		
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		
-		for(var i = 0 ; i < $scope.experiment.atomicTransfertMethods.length ; i++){
-			var atm = $scope.experiment.atomicTransfertMethods[i];
-			
-			$parse('locationOnContainerSupport.code').assign(atm.outputContainerUseds[0], atm.outputContainerUseds[0].code);			
+		if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ) {
+			copyContainerSupportCodeAndStorageCode($scope.experiment);
 		}
 		
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");		
+		console.log("call event refresh");	
+		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.edit.byDefault = false;
@@ -223,6 +331,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");
+		
 		$scope.atmService.data.cancel();
 		
 		if($scope.isCreationMode()){
@@ -230,7 +339,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			dtConfig.edit.byDefault = false;
 			$scope.atmService.data.setConfig(dtConfig);
 		}
-		
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
@@ -239,25 +347,67 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		$scope.atmService.data.setEdit();
 	});
 	
-	// la gestion des plaques n'est pas encore en plaque.. forcer en mode tube
-	// passer par un watch est trop tard!!!
-	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
-		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
-	});
+
+	// si Output != tube (plaque et strip ??)
+	if ( $scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" ) {
+
+		$scope.outputContainerSupport = { code : null , storageCode : null};	
 	
-	if ( $scope.experiment.instrument.outContainerSupportCategoryCode === "96-well-plate") {
-	      $scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
-    }
+		if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
+			$scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+			console.log("previous code: "+ $scope.outputContainerSupport.code);
 		
-	//Init
+			$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+			console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
+		}
+	}
 	
+	// modifié a partir de copyContainerSupportCodeAndStorageCodeToDT
+	var copyContainerSupportCodeAndStorageCode = function(experiment){
+	
+		var outputContainerSupportCode = $scope.outputContainerSupport.code;
+		var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
+
+		if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+			for(var i = 0; i < experiment.atomicTransfertMethods.length; i++){
+				var atm = experiment.atomicTransfertMethods[i];
+				// on est dans du oneToOne=> 1 seul containerUsed -->  [0]
+				$parse('outputContainerUseds[0].locationOnContainerSupport.code').assign(atm,outputContainerSupportCode);
+				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
+				    $parse('outputContainerUseds[0].locationOnContainerSupport.storageCode').assign(atm,outputContainerSupportStorageCode);
+				}
+				
+				// Obligatoire !!!
+				atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
+				atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column;
+			}
+		}
+	}	
+	
+	//Init
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(){
+	atmService.newAtomicTransfertMethod =  function(line, column){
+		// gestion de tubes ET plaques
+		var getLine = function(line){
+			if($scope.experiment.instrument.outContainerSupportCategoryCode 
+					=== $scope.experiment.instrument.inContainerSupportCategoryCode){
+				return line;
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
+				&& $scope.experiment.instrument.inContainerSupportCategoryCode === "tube") {
+				return undefined;     // dans ce cas c'est l'utilisateur qui le defini manuellement
+			}else if($scope.experiment.instrument.outContainerSupportCategoryCode === "tube"){
+				return "1";
+			}
+			
+		}
+		var getColumn=getLine;
+		
 		return {
 			class:"OneToOne",
-			line:"1", 
-			column:"1", 				
+			line:getLine(line), 
+			column:getColumn(column), 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
@@ -270,26 +420,46 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	}
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-	
-	console.log("in="+$scope.experiment.instrument.inContainerSupportCategoryCode);	
-	console.log("out="+$scope.experiment.instrument.outContainerSupportCategoryCode);	
-	
-	// 13/12/2016
-	// verifier que inContainerSupportCategoryCode == outContainerSupportCategoryCode
-	// meme pour la main ???
-	//if($scope.experiment.instrument.typeCode !== "hand"){
 
-		if($scope.experiment.instrument.inContainerSupportCategoryCode === $scope.experiment.instrument.outContainerSupportCategoryCode){
-			console.log("?????????????????");
-			$scope.messages.clear();
-			$scope.atmService = atmService;
-		}else{
-			$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
-		}
-	//}else{
-	//	$scope.messages.clear();
-	//	$scope.atmService = atmService;
-	//}
+	$scope.atmService = atmService;
+
+
+	/*  pas de sample sheet demandee pour l'instant...
+	var generateSampleSheet = function(){
+		$scope.messages.clear();
+		
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filepath = header.split("filename=")[1];
+			var filename = filepath.split(/\/|\\/);
+			filename = filename[filename.length-1];
+			if(data!=null){
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+				$scope.messages.showDetails = false;
+				$scope.messages.open();	
+				
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();				
+		});
+	};
+	
+	$scope.setAdditionnalButtons([{
+		isDisabled : function(){return $scope.isCreationMode();},
+		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')}, // FDS pourquoi ce forcage ???
+		click: generateSampleSheet,
+		label:Messages("experiments.sampleSheet") 
+	}]);
+	*/
+	
 	
 }]);
