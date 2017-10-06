@@ -40,6 +40,9 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
 
 
 // libraryDependencies += "org.javassist" % "javassist" % "3.20.0-GA"
+// bytecode enhancement has been pulled out of core play 
+addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.1.0")
+
 
 scalacOptions += "-deprecation"
 
