@@ -250,8 +250,8 @@ object ApplicationBuild extends Build {
     publishTo := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
-      val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
-      artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+     val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
+     artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     },
     packagedArtifacts in publish := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
@@ -430,4 +430,8 @@ object ApplicationBuild extends Build {
 	)
 		   */
 
+   val depcheck = Project("depcheck",file("depcheck")).enablePlugins(play.sbt.PlayJava).settings(
+		     version := "0.1-SNAPHSHOT",
+		     globSettings
+		   )
 }
