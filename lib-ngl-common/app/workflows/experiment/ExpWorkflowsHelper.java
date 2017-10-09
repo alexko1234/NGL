@@ -1294,7 +1294,11 @@ public class ExpWorkflowsHelper {
 						Content content1 = ocu1.contents.get(0); //in theory only one content;
 						Content content2 = ocu2.contents.get(0); //in theory only one content;						
 						//TODO Add other field to compare in case of same sample. This other field need to be used in exp.js
-						return content1.sampleCode.compareTo(content2.sampleCode);						
+						int result = content1.sampleCode.compareTo(content2.sampleCode);
+						if(result == 0){
+							result = ocu1.code.compareTo(ocu2.code);
+						}						
+						return result;
 					}
 					
 				})
