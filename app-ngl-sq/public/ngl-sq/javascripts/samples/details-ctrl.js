@@ -36,6 +36,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	};*/
 	 //buttons section 
 	
+	$scope.convertToBr = function(text){
+		if(text)return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
+	};
+	
 	 $scope.save = function(){
 		saveInProgress = true;	
 		console.log("sample "+$scope.sample.code);
