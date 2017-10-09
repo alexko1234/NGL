@@ -97,10 +97,11 @@ PUT		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.update(cod
 #-------------
 GET		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.list()
 GET		/api/sra/experiments/rawDatas				@controllers.sra.experiments.api.ExperimentsRawDatas.list()
+GET		/api/sra/experiments/readSpecs				@controllers.sra.experiments.api.ExperimentsReadSpecs.list()
 GET		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.get(code: java.lang.String)
 PUT		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
 GET 	/api/sra/experiments/run/:code				@controllers.sra.experiments.api.ExperimentsRuns.get(code: java.lang.String)
-
+PUT		/api/sra/experiments/run/:code				@controllers.sra.experiments.api.ExperimentsRuns.update(code: java.lang.String)
 #-------------------
 # ExperimentsRawData
 #-------------------

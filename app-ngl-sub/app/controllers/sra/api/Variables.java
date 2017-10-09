@@ -20,6 +20,7 @@ import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -33,6 +34,7 @@ public class Variables extends CommonController{
 	{
 		Form<VariablesSearchForm> filledForm = filledFormQueryString(form, VariablesSearchForm.class);
 		VariablesSearchForm variableSearch = filledForm.get();
+		Logger.debug("variableSearch "+variableSearch);
 		return list(variableSearch);
 	}
 
@@ -50,7 +52,8 @@ public class Variables extends CommonController{
 			parameter.value= VariableSRA.mapStrategyStudy.get("code");
 			return ok(Json.toJson(parameter));
 		}else{
-			SraParameter parameter=MongoDBDAO.findOne(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.is("type", type).is("code", code));
+			SraParameter parameter=MongoDBDAO.findOne(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.and(DBQuery.is("code", code),DBQuery.is("type", type)));
+			Logger.debug("parameter "+parameter);
 			if(parameter != null){
 				return ok(Json.toJson(parameter));
 			}
@@ -76,9 +79,10 @@ public class Variables extends CommonController{
 
 	private static Result list(VariablesSearchForm variableSearch) {
 
-		if (variableSearch.type.equalsIgnoreCase("strategySample")){
+		Logger.debug("variableSearch type "+variableSearch.type);
+		if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategySample")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategySample)));
-		} else if (variableSearch.type.equalsIgnoreCase("strategyStudy")){
+		} else if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategyStudy")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategyStudy)));
 		}else{
 

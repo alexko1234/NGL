@@ -8,4 +8,5 @@ public class ExperimentsSearchForm  extends ListForm {
 	public String experimentCode;
 	public String submissionCode;
 	public String studyCode; // ajout pour interface release study
+	public String runCode;
 }

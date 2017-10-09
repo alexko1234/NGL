@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +15,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import controllers.DocumentController;
+import controllers.QueryFieldsForm;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
@@ -22,12 +32,6 @@ import models.sra.submit.common.instance.UserExperimentType;
 import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -45,14 +49,14 @@ import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.SubmissionWorkflows;
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Submissions extends DocumentController<Submission>{
 	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
 	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
 	private Map<String, UserSampleType> mapUserSamples = new HashMap<String, UserSampleType>();
+
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate");
 
 	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
@@ -76,7 +80,7 @@ public class Submissions extends DocumentController<Submission>{
 	//search : function(){
 	//	this.datatable.search({projCode:this.form.projCode, state:'N'});
 	//},
-	
+
 	public Result list(){	
 		Form<SubmissionsSearchForm> submissionsSearchFilledForm = filledFormQueryString(submissionsSearchForm, SubmissionsSearchForm.class);
 		SubmissionsSearchForm submissionsSearchForm = submissionsSearchFilledForm.get();
@@ -91,10 +95,10 @@ public class Submissions extends DocumentController<Submission>{
 		}else{
 			return ok(Json.toJson(submissionsList));
 		}
-		
+
 	}
 
-	
+
 	private Query getQuery(SubmissionsSearchForm form) {
 
 		List<Query> queries = new ArrayList<Query>();
@@ -133,12 +137,15 @@ public class Submissions extends DocumentController<Submission>{
 		return query;
 	}
 
-	
-	
+
+
 	public Result update(String code) {
 		//Get Submission from DB 
 		Submission submission = getSubmission(code);
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+		
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
@@ -146,23 +153,42 @@ public class Submissions extends DocumentController<Submission>{
 			return badRequest(filledForm.errorsAsJson());
 		}
 		Submission submissionInput = filledForm.get();
-		if (code.equals(submissionInput.code)) {	
-			ctxVal.setUpdateMode();
-			ctxVal.getContextObjects().put("type","sra");
-			submissionInput.traceInformation.setTraceInformation(getCurrentUser());
-			submissionInput.validate(ctxVal);
-			if (!ctxVal.hasErrors()) {
-				Logger.info("Update submission state "+submissionInput.state.code);
-				MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
-				return ok(Json.toJson(submissionInput));
-			}else {
+
+		if(queryFieldsForm.fields == null){
+
+			if (code.equals(submissionInput.code)) {	
+				ctxVal.setUpdateMode();
+				ctxVal.getContextObjects().put("type","sra");
+				submissionInput.traceInformation.setTraceInformation(getCurrentUser());
+				submissionInput.validate(ctxVal);
+				if (!ctxVal.hasErrors()) {
+					Logger.info("Update submission state "+submissionInput.state.code);
+					MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
+					return ok(Json.toJson(submissionInput));
+				}else {
+					return badRequest(filledForm.errorsAsJson());
+				}
+			}else{
+				//return badRequest("submission code are not the same");
+				ctxVal.addErrors("submission "+code, "submission code  " +code + " and submissionInput.code "+ submissionInput.code + "are not the same");
 				return badRequest(filledForm.errorsAsJson());
-			}
-		}else{
-			//return badRequest("submission code are not the same");
-			ctxVal.addErrors("submission "+code, "submission code  " +code + " and submissionInput.code "+ submissionInput.code + "are not the same");
-			return badRequest(filledForm.errorsAsJson());
-		}	
+			}	
+		}else{ //update only some authorized properties
+			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			
+			ctxVal.setUpdateMode();
+			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
+			
+			if(!ctxVal.hasErrors()){
+				updateObject(DBQuery.and(DBQuery.is("code", code)), 
+						getBuilder(submissionInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(submission.traceInformation)));
+			
+				return ok(Json.toJson(getObject(code)));
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}			
+		}
 	}
 
 
@@ -175,13 +201,13 @@ public class Submissions extends DocumentController<Submission>{
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-		
+
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
 			return badRequest(filledForm.errorsAsJson());
 		}
-		
+
 		subWorkflows.setState(ctxVal, submission, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -189,20 +215,20 @@ public class Submissions extends DocumentController<Submission>{
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
-	
-	
+
+
 	public Result createXml(String code)
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
-		
+
 		// declaration d'un filledForm uniquement pour utiliser messages.addDetails au niveau des javascript et 
 		// pouvoir afficher l'ensemble des erreurs.
 		//Form initialise avec l'objet submission car pas d'objet submission dans le body
 		//Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
 		Form<Submission> filledForm = Form.form(Submission.class);
 		filledForm.fill(submission);
-		
+
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
@@ -227,14 +253,14 @@ public class Submissions extends DocumentController<Submission>{
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
-	//	Form<File> filledForm = getFilledForm(pathForm, File.class);
+		//	Form<File> filledForm = getFilledForm(pathForm, File.class);
 		if (submission == null) {
 			return badRequest("Submission with code "+code, " not exist");
 		}
 		Form<SubmissionsFileForm> submissionsACFilledForm = filledFormQueryString(submissionsACForm, SubmissionsFileForm.class);
 		SubmissionsFileForm submissionsACForm = submissionsACFilledForm.get();
-		
-		
+
+
 		//Logger.debug("filledForm "+filledForm);
 		File ebiFileAc =new File(submissionsACForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
@@ -256,14 +282,14 @@ public class Submissions extends DocumentController<Submission>{
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
-	//	Form<File> filledForm = getFilledForm(pathForm, File.class);
+		//	Form<File> filledForm = getFilledForm(pathForm, File.class);
 		if (submission == null) {
 			return badRequest("Submission with code "+code, " not exist");
 		}
 		Form<SubmissionsFileForm> submissionsFilledForm = filledFormQueryString(submissionsACForm, SubmissionsFileForm.class);
 		SubmissionsFileForm submissionsForm = submissionsFilledForm.get();
-		
-		
+
+
 		//Logger.debug("filledForm "+filledForm);
 		File retourEbiRelease =new File(submissionsForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
@@ -282,7 +308,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		return ok(Json.toJson(submission));
 	}
-	
+
 	private Submission getSubmission(String code)
 	{
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
@@ -293,21 +319,21 @@ public class Submissions extends DocumentController<Submission>{
 	// methode appelée  depuis interface submissions.create-ctrl.js (submissions.create.scala.html)
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
 	public Result save() throws SraException, IOException {
-	
+
 		if(request().body().isMaxSizeExceeded()){
 			return badRequest("Max size exceeded");
 		}
-		
+
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		Logger.debug("filledForm "+filledForm);
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
 		Logger.debug("readsets "+submissionsCreationForm.readSetCodes);
-		
+
 		String user = getCurrentUser();
 		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
-		
+
 		String submissionCode;
 		try {
 			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileExperiments)){
@@ -353,7 +379,7 @@ public class Submissions extends DocumentController<Submission>{
 			  System.out.println("       study_ac : '" + entry.getValue().getStudyAc()+  "'");
 			  System.out.println("       sample_ac : '" + entry.getValue().getSampleAc()+  "'");
 			}*/
-						
+
 			List<String> readSetCodes;
 			InputStream inputStreamUserFileReadSet = Tools.decodeBase64(submissionsCreationForm.base64UserFileReadSet);
 			Logger.debug("Read base64UserFileReadSet : "+inputStreamUserFileReadSet);
@@ -366,19 +392,19 @@ public class Submissions extends DocumentController<Submission>{
 				// remplir la liste readSetCodes
 				// à partir de la selection de readset des utilisateurs
 			}
-			
+
 			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
 			//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
 
 			SubmissionServices submissionServices = new SubmissionServices();
-				
+
 			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest(filledForm.errorsAsJson());
 			}	
-			
+
 		} catch (SraException e) {
 			contextValidation.addErrors("save submission ", e.getMessage()); // si solution avec ctxVal
 			return badRequest(filledForm.errorsAsJson());
@@ -386,7 +412,7 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submissionCode));
 	}
 
-		
+
 	public Result activate(String submissionCode) throws SraException, IOException
 	{
 		SubmissionServices submissionServices = new SubmissionServices();
