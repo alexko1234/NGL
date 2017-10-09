@@ -32,7 +32,7 @@ angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable
 				tabService.addTabs({label:line.code,href:jsRoutes.controllers.samples.tpl.Samples.get(line.code).url, remove:true});
 			}
 		}
-		/*
+		
 		,
 		edit:{
 			active:Permissions.check("writing")?true:false,
@@ -42,20 +42,14 @@ angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable
 			active:Permissions.check("writing")?true:false,
 			url:function(value){
 				var fields = "fields=valuation";
-				if(value.state)fields = fields+"&fields=state";
-				if(value.comments)fields = fields+"&fields=comments";
-				if(value.concentration)fields = fields+"&fields=concentration";
-				if(value.volume)fields = fields+"&fields=volume";
-				if(value.quantity)fields = fields+"&fields=quantity";
-				if(value.size)fields = fields+"&fields=size";
+					if(value.comments)fields = fields+"&fields=comments";
 				
 				return jsRoutes.controllers.samples.api.Samples.update(value.code).url+"?"+fields;
 			},
 			method:'put',
 			mode:'remote'			
 		}
-		*/
-	};
+	}
 
 	
 	
@@ -66,10 +60,10 @@ angular.module('home').controller('SearchCtrl', ['$scope',  '$window','datatable
 	$scope.reset = function(){
 		$scope.searchService.resetForm();		
 	};
-	$scope.goToReadSet = function(code, $event){
+/*	$scope.goToReadSet = function(code, $event){
 		$window.open(AppURL("bi")+"/readsets/"+code, 'readset');
 		if($event)$event.stopPropagation();
-	}
+	}*/
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){

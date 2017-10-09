@@ -13,7 +13,7 @@ import controllers.CommonController;
 
 public class Samples extends CommonController{
 
-	
+
 	public static Result home(String code){
 		return ok(home.render(code));
 	}
@@ -29,7 +29,7 @@ public class Samples extends CommonController{
 	public static Result details() {
 		return ok(details.render());
 	}
-	    
+
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
@@ -42,10 +42,19 @@ public class Samples extends CommonController{
 						controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 						controllers.commons.api.routes.javascript.Values.list(),
 						controllers.projects.api.routes.javascript.Projects.list(),
+
 						controllers.samples.api.routes.javascript.Samples.list(),
 						controllers.samples.api.routes.javascript.Samples.get(),
+						controllers.samples.api.routes.javascript.Samples.update(),
+
+						controllers.samples.tpl.routes.javascript.Samples.get(),
+						controllers.samples.tpl.routes.javascript.Samples.search(),
+						controllers.samples.tpl.routes.javascript.Samples.details(),
+						controllers.samples.tpl.routes.javascript.Samples.home(),
+
+
 						controllers.containers.api.routes.javascript.Containers.get(),
-						
+
 						controllers.experiments.api.routes.javascript.Experiments.list(),
 						controllers.commons.api.routes.javascript.States.list(),
 						controllers.commons.api.routes.javascript.Users.list(),
@@ -53,19 +62,15 @@ public class Samples extends CommonController{
 						controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
 						controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
 						controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
-			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),			      		
-			      		controllers.commons.api.routes.javascript.Values.list(),
-			      		controllers.commons.api.routes.javascript.Parameters.list(),
-			      		controllers.resolutions.api.routes.javascript.Resolutions.list(),
-			      		controllers.commons.api.routes.javascript.PropertyDefinitions.list(),
-		                controllers.samples.tpl.routes.javascript.Samples.get(),
-			      		controllers.samples.tpl.routes.javascript.Samples.search(),
-			      		controllers.samples.tpl.routes.javascript.Samples.details(),
-			      		controllers.samples.tpl.routes.javascript.Samples.home(),
-			      		controllers.processes.tpl.routes.javascript.Processes.home(),
-			      		controllers.experiments.tpl.routes.javascript.Experiments.get(),
-			      		
-			      		controllers.protocols.api.routes.javascript.Protocols.list()
+						controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),			      		
+						controllers.commons.api.routes.javascript.Values.list(),
+						controllers.commons.api.routes.javascript.Parameters.list(),
+						controllers.resolutions.api.routes.javascript.Resolutions.list(),
+						controllers.commons.api.routes.javascript.PropertyDefinitions.list(),
+						controllers.processes.tpl.routes.javascript.Processes.home(),
+						controllers.experiments.tpl.routes.javascript.Experiments.get(),
+
+						controllers.protocols.api.routes.javascript.Protocols.list()
 						)	  	      
 				);
 	}

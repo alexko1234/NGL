@@ -50,7 +50,7 @@
 			}
 			@columnLabelValue(Messages("samples.table.comments")){
 				<div ng-switch on="isEditMode()">
-					<p ng-switch-when="false"  class="form-control-static" ng-bind-html="convertToBr(sample.comments[0].comment)" />	
+					<p ng-switch-when="false"  class="form-control-static" ng-bind-html="convertToBr('test')" />	
 					<textarea ng-switch-when="true" class="form-control" ng-model="sample.comments[0].comment" rows="3"></textarea>
 				</div>	
 				

@@ -229,10 +229,14 @@ private static Sample findSample(String sampleCode){
 	return  MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sampleCode));
 }
 
-@Permission(value={"writing"})
+
 @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-public  Result update(String code){
+@Permission(value={"writing"})
+public  Result update(String code) throws DAOException{
+
+	
 	Sample sampleInDB = findSample(code);
+	Logger.debug("Sample with code "+code);
 	if(sampleInDB == null){
 		return badRequest("Sample with code "+code+" not exist");
 	}
@@ -257,7 +261,7 @@ public  Result update(String code){
 
 			sampleInForm.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, sampleInForm);
+				MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sampleInForm);
 				return ok(Json.toJson(sampleInForm));
 			}else {
 				return badRequest(filledForm.errorsAsJson());
@@ -297,7 +301,6 @@ public  Result update(String code){
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}	
-	
 }
 
 private static DatatableForm updateForm(SamplesSearchForm form) {

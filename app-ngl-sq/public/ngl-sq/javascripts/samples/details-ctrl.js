@@ -35,21 +35,26 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
 	};*/
 	 //buttons section 
+	
 	 $scope.save = function(){
 		saveInProgress = true;	
+		console.log("sample "+$scope.sample.code);
 		$http.put(jsRoutes.controllers.samples.api.Samples.update($scope.sample.code).url, $scope.sample)
+	//	$http.put("/api/samples/"+$scope.sample.code, $scope.sample)
 		.success(function(data, status, headers, config) {
+		
 			$scope.sample = data;
 			$scope.messages.setSuccess("save");						
 			mainService.stopEditMode();
-
+			
 			saveInProgress = false;									
 		})
 		.error(function(data, status, headers, config) {
+		
 			$scope.messages.setError("save");
 			$scope.messages.setDetails(data);				
 			saveInProgress = false;				
-		});			
+		});				
 	};
 
 	$scope.cancel = function(){
@@ -102,24 +107,24 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 
 
-		/*
+	
 		$http.get(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,{params:{'levelCode':'Sample'}}).then(function(response) {
 
 			response.data.forEach(function(pdef){
 					this[pdef.code]=pdef;
 			}, samplePropertyDefinitionMap);
 
-		});*/
+		});
 	}
 	init();
 
-	/*	$scope.getSamplePropertyDefinitionValueType = function(key){
+	$scope.getSamplePropertyDefinitionValueType = function(key){
 		var propertyDef = samplePropertyDefinitionMap[key];
 		if(propertyDef){
 			return propertyDef.valueType;
 		}
 		return null;
-	}*/
+	}
 
 	var sampleNodes = undefined;
 	$scope.initGraph = function(){

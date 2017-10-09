@@ -18,3 +18,4 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 	// configure html5 to get links working with bookmarked
 	$locationProvider.html5Mode({enabled: true, requireBase: false});
 });
+

@@ -2,6 +2,8 @@
 GET		/api/samples													@controllers.samples.api.Samples.list()
 GET		/api/samples/:code												@controllers.samples.api.Samples.get(code: java.lang.String)
 POST	/api/samples													@controllers.samples.api.Samples.save()
+PUT		/api/samples/:code												@controllers.samples.api.Samples.update(code:java.lang.String)
+
 
 #supports api	
 GET		/api/supports													controllers.containers.api.ContainerSupports.list()
