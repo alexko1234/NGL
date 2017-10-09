@@ -1,14 +1,15 @@
 package fr.cea.ig.auto.submission;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -48,7 +49,7 @@ public class SubmissionServices implements ISubmissionServices{
 		return null;
 	}
 
-	
+
 	@Override
 	public void createXMLSubmission(String submissionCode, String submissionDirectory, String studyCode, String sampleCodes, String experimentCodes, String runCodes) throws IOException, FatalException, JSONDeviceException
 	{
@@ -56,9 +57,9 @@ public class SubmissionServices implements ISubmissionServices{
 		log.debug("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		log.debug("resultDirectory = " + submissionDirectory);
 		log.debug("studyCode "+studyCode+" sampleCodes "+sampleCodes+" experimentCodes "+experimentCodes+" runCodes "+runCodes);
-		
+
 		IXMLServices xmlServices = XMLServicesFactory.getInstance();
-		
+
 		// si on est dans soumission de données :
 		if (studyCode!=null && !studyCode.equals("")) {	
 			File studyFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlStudies"));
@@ -86,7 +87,7 @@ public class SubmissionServices implements ISubmissionServices{
 
 	}
 
-	
+
 	@Override
 	public void createXMLRelease(String submissionCode, String submissionDirectory, String studyCode) throws BirdsException, IOException, FatalException
 	{
@@ -101,6 +102,276 @@ public class SubmissionServices implements ISubmissionServices{
 		xmlServices.createXMLRelease(submissionFile, submissionCode, studyCode);
 	}
 
+	public boolean treatmentFileSubmission(String ebiFileName, String submissionCode, String studyCode, String sampleCodes, String experimentCodes, String runCodes, String creationUser) throws FatalException, BirdsException, UnsupportedEncodingException
+	{
+		if(ebiFileName==null)
+			throw new FatalException("Pas de fichier retour ebi");
+		File retourEbiSub = new File(ebiFileName);
+
+		if (! retourEbiSub.exists()){
+			throw new BirdsException("Fichier resultat de l'ebi pour la release absent des disques : "+ retourEbiSub.getAbsolutePath());
+		}
+
+		boolean ebiSuccess =false;
+		String ebiSubmissionCode = null;
+		String submissionAc = null;
+		String ebiStudyCode = null;
+		String studyAc = null;
+		String studyExtId = null;
+		Map<String, String> mapSamples = new HashMap<String, String>(); 
+		Map<String, String> mapExtIdSamples = new HashMap<String, String>(); 
+		Map<String, String> mapExperiments = new HashMap<String, String>(); 
+		Map<String, String> mapRuns = new HashMap<String, String>(); 
+		/*
+		 * Etape 1 : récupération d'une instance de la classe "DocumentBuilderFactory"
+		 */
+		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		try {
+			/*
+			 * Etape 2 : création d'un parseur
+			 */
+			final DocumentBuilder builder = factory.newDocumentBuilder();
+			/*
+			 * Etape 3 : création d'un Document
+			 */
+
+			final Document document= builder.parse(retourEbiSub);
+			//Affiche du prologue
+			log.debug("*************PROLOGUE************");
+			log.debug("version : " + document.getXmlVersion());
+			log.debug("encodage : " + document.getXmlEncoding());      
+			log.debug("standalone : " + document.getXmlStandalone());
+			/*
+			 * Etape 4 : récupération de l'Element racine
+			 */
+			final Element racine = document.getDocumentElement();
+			//Affichage de l'élément racine
+			log.debug("\n*************RACINE************");
+			log.debug(racine.getNodeName());
+			log.debug("success = " + racine.getAttribute("success"));
+			//System.out.println(((Node) racine).getNodeName());
+			//System.out.println("success = " + ((DocumentBuilderFactory) racine).getAttribute("success"));
+			/*
+			 * Etape 5 : récupération des samples
+			 */
+
+
+
+			final NodeList racineNoeuds = racine.getChildNodes();
+			final int nbRacineNoeuds = racineNoeuds.getLength();
+
+
+
+			if( racine.getAttribute("success").equalsIgnoreCase ("true")){
+				ebiSuccess = true;
+			}
+			for (int i = 0; i<nbRacineNoeuds; i++) {
+
+				if(racineNoeuds.item(i).getNodeType() == Node.ELEMENT_NODE) {
+
+					final Element elt = (Element) racineNoeuds.item(i);
+					//Affichage d'un elt :
+					System.out.println("\n*************Elt************");
+
+					String alias = elt.getAttribute("alias");
+					String accession = elt.getAttribute("accession");
+
+					System.out.println("alias : " + alias);
+					System.out.println("accession : " + accession);
+
+					if(elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
+						ebiSubmissionCode = elt.getAttribute("alias");	
+						submissionAc = elt.getAttribute("accession");
+					} else if(elt.getTagName().equalsIgnoreCase("STUDY")) {
+						ebiStudyCode = elt.getAttribute("alias");	
+						studyAc = elt.getAttribute("accession");
+						final Element eltExtId = (Element) elt.getElementsByTagName("EXT_ID").item(0);
+						studyExtId = eltExtId.getAttribute("accession");
+						System.out.println("study_ext_id: " + studyExtId);
+					} else if(elt.getTagName().equalsIgnoreCase("SAMPLE")) {
+						mapSamples.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
+						final Element eltExtId = (Element) elt.getElementsByTagName("EXT_ID").item(0);
+						//String sampleExtId = eltExtId.getAttribute("accession");
+						mapExtIdSamples.put(elt.getAttribute("alias"), eltExtId.getAttribute("accession"));	
+					} else if(elt.getTagName().equalsIgnoreCase("EXPERIMENT")) {
+						mapExperiments.put(elt.getAttribute("alias"), elt.getAttribute("accession"));	
+					} else if(elt.getTagName().equalsIgnoreCase("RUN")) {
+						mapRuns.put(elt.getAttribute("alias"), elt.getAttribute("accession"));
+					} else {
+
+					}
+				}
+
+
+			}  // end for  
+		} catch (final ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (final SAXException e) {
+			e.printStackTrace();
+		} catch (final IOException e) {
+			e.printStackTrace();
+		} 
+		String message = null;
+		String sujet = null;
+
+		if (! ebiSuccess ) {
+			log.debug("success=true absent du fichier  " + ebiFileName);
+			message = "Absence de la ligne RECEIPT ... pour  " + submissionCode + " dans fichier "+ ebiFileName;
+			sendMail(creationUser, "ngl-sub : Ebi Accession Reporting error", new String(message.getBytes(), "iso-8859-1"));
+			return false;
+		}
+
+		// Mise à jour des objets :
+		Boolean error = false;
+		sujet = "Probleme parsing fichier des AC : ";
+		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileName + "</br>";
+
+		if (ebiSubmissionCode==null || (ebiSubmissionCode!=null && ebiSubmissionCode.equals(""))) {
+			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
+			message += "- ne contient pas ebiSubmissionCode \n";
+			error = true;
+		} 
+		if (! ebiSubmissionCode.equals(submissionCode)) {
+			//System.out.println("ebiSubmissionCode != submissionCode");
+			message += "- contient un ebiSubmissionCode ("  + ebiSubmissionCode + ") different du submissionCode passé en parametre "+ submissionCode + "</br>"; 
+			error = true;
+		}
+		// Verifier que le nombre d'ac recuperés dans le fichier est bien celui attendu pour l'objet submission:
+		if (studyCode== null || (studyCode!=null && studyCode.equals(""))) {
+			if (studyAc== null || (studyAc!=null && studyAc.equals(""))) {
+				//System.out.println("studyAc attendu non trouvé pour " + submission.studyCode);
+				message += "- ne contient pas de valeur pour le studyCode " + studyCode+"</br>";
+			}
+		}
+		if (sampleCodes != null && !sampleCodes.equals("")){
+			String[] tabSampleCodes = sampleCodes.split(",");
+			for (int i = 0; i < tabSampleCodes.length ; i++) {
+				String sampleCode = tabSampleCodes[i].replaceAll("\"", "");
+				if (!mapSamples.containsKey(sampleCode)){
+					//System.out.println("sampleAc attendu non trouvé pour " + submission.sampleCodes.get(i));
+					message += "- ne contient pas d'AC pour le sampleCode " + sampleCode+"</br>";
+					error = true;
+
+				}	
+			}
+		}
+		if (experimentCodes != null && !experimentCodes.equals("")){
+			String[] tabExperimentCodes = experimentCodes.split(",");
+			for (int i = 0; i < tabExperimentCodes.length ; i++) {
+				String experimentCode = tabExperimentCodes[i].replaceAll("\"", "");
+				if (!mapExperiments.containsKey(experimentCode)){
+					//System.out.println("experimentAc attendu non trouvé pour " + submission.experimentCodes.get(i));
+					message += "- ne contient pas d'AC pour l'experimentCode " + experimentCode + "</br>";
+					error = true;
+				}	
+			}
+		}
+		if (runCodes != null && !runCodes.equals("")){
+			String[] tabRunCodes = runCodes.split(",");
+			for (int i = 0; i < tabRunCodes.length ; i++) {
+				String runCode = tabRunCodes[i].replaceAll("\"", "");
+				//System.out.println("runCode========="+ submission.runCodes.get(i));
+				if (!mapRuns.containsKey(runCode)){
+					//System.out.println("runAc attendu non trouvé pour " + submission.runCodes.get(i));
+					message += "- ne contient pas d'AC pour le runCode " + runCode + "</br>";
+					error = true;
+				}	
+			}
+		}
+
+		if (error){
+			sendMail(creationUser, sujet, new String(message.getBytes(), "iso-8859-1"));
+			return false;
+		} 
+
+		Calendar calendar = Calendar.getInstance();
+		Date date  = calendar.getTime();
+		calendar.add(Calendar.YEAR, 2);
+		Date release_date  = calendar.getTime();
+
+		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" </br></br>";
+
+		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
+		updateSubmissionAC(submissionCode, submissionAc, date);
+		
+		if (ebiStudyCode!=null && !ebiStudyCode.equals("")) {	
+			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
+			updateStudyAC(ebiStudyCode, studyAc, studyExtId, date, release_date);
+		}
+		for(Entry<String, String> entry : mapSamples.entrySet()) {
+			String code = entry.getKey();
+			String ac = entry.getValue();
+			String ext_id_ac = mapExtIdSamples.get(code);
+			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
+			updateSampleAC(code, ac, ext_id_ac);
+			
+		}
+
+		for(Entry<String, String> entry : mapExperiments.entrySet()) {
+			String code = entry.getKey();
+			String ac = entry.getValue();
+			message += "experimentCode = " + code + ",   AC = "+ ac + "</br>";  
+			updateExperimentAC(code, ac);
+		}
+
+		for(Entry<String, String> entry : mapRuns.entrySet()) {
+			String code = entry.getKey();
+			String ac = entry.getValue();
+			message += "runCode = " + code + ",   AC = "+ ac  + "</br>";  
+			updateRunAC(code, ac);
+		}
+
+		sendMail(creationUser, "ngl-sub : Ebi Accession Reporting success", new String(message.getBytes(), "iso-8859-1"));
+			
+		return ebiSuccess;
+	}
+
+	private void updateSubmissionAC(String code, String accession, Date date) throws FatalException, JSONDeviceException
+	{
+		//Update submission acNumber and date
+		JSONDevice jsonDevice = new JSONDevice();
+		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"submissionDate\":"+date+"}";
+		//Call PUT update with submission modified
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate", submission,"bot");
+	}
+
+	private void updateStudyAC(String code, String accession, String externalId, Date firstSubmissionDate,Date releaseDate) throws FatalException, JSONDeviceException
+	{
+		JSONDevice jsonDevice = new JSONDevice();
+		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"firstSubmissionDate\":"+firstSubmissionDate+",\"releaseDate\":\""+releaseDate+"\"}";
+		//Call PUT update with submission modified
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate", study,"bot");
+	}
+
+	private void updateSampleAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
+	{
+		JSONDevice jsonDevice = new JSONDevice();
+		String sample = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"externalId\":"+externalId+"\"}";
+		//Call PUT update with submission modified
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/samples/"+code+"?fields=accession&fields=externalId");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/samples/"+code+"?fields=accession&fields=externalId", sample,"bot");
+	}
+	
+	private void updateExperimentAC(String code, String accession) throws FatalException, JSONDeviceException
+	{
+		JSONDevice jsonDevice = new JSONDevice();
+		String experiment = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
+		//Call PUT update with submission modified
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/experiments/"+code+"?fields=accession");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/experiments/"+code+"?fields=accession", experiment,"bot");
+	}
+	
+	private void updateRunAC(String code, String accession) throws FatalException, JSONDeviceException
+	{
+		JSONDevice jsonDevice = new JSONDevice();
+		String run = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
+		//Call PUT update with submission modified
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/experiments/run/"+code+"?fields=accession");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/experiments/run/"+code+"?fields=accession", run,"bot");
+	}
+	
 	@Override
 	public boolean treatmentFileRelease(String ebiFileName, String submissionCode, String accessionStudy, String studyCode, String creationUser) throws FatalException, BirdsException, UnsupportedEncodingException
 	{

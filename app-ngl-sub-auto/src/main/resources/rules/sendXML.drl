@@ -40,21 +40,21 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		//Call service treatment AC files results 
 		JobResource jobResource = $job.getUniqueJobResource("subToSend");
 		String codeSubmission = jobResource.getProperty("code");
+		String studyCode = jobResource.getProperty("studyCode");
+		String sampleCodes = jobResource.getProperty("sampleCodes");
+		String experimentCodes = jobResource.getProperty("experimentCodes");
+		String runCodes = jobResource.getProperty("runCodes");
+		String creationUser = jobResource.getProperty("creationUser");
 		String pathAC = jobResource.getProperty("submissionDirectory")+File.separator+$job.getParameterValue("listAC").getValue();
 		//File fileAC = new File(pathAC);
 		log.debug("path AC="+pathAC);
+		log.debug("Call treatmentFileSubmission with "+codeSubmission+" studyCode="+studyCode+" sampleCodes="+sampleCodes+" experimentCodes="+experimentCodes+" runCodes="+runCodes+" creationUser="+creationUser);
+		boolean ebiSuccess = SubmissionServicesFactory.getInstance().treatmentFileSubmission(pathAC, codeSubmission, studyCode, sampleCodes, experimentCodes, runCodes, creationUser);
 		JSONDevice jsonDevice = new JSONDevice();
-		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?=fileName="+pathAC;
-		log.debug("url "+url);
-		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc?=fileName="+pathAC, "{}", "bot");
-		log.debug("Result "+jsonResult);
-		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
-		log.debug("Resource Properties "+resourcePropertiesSet);
-		//if submission.state=ERROR_SendXML set job status to JOB EXITED
-		//Get unique resource 
-		String state = resourcePropertiesSet.iterator().next().get("state.code");
-		log.debug("State from treatment AC "+state);
-		if(state.equals("FE-SUB")){
+		if(ebiSuccess){
+			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", "{\"code\":\"F-SUB\"}", "bot");
+		}else{
+			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", "{\"code\":\"FE-SUB-R\"}", "bot");
 			$job.setExecutionState(Job.ERROR_STATUS);
 		}
 end
