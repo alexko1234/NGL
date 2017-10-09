@@ -114,6 +114,13 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","direct RNAsequencing"))));
 		
+		lp.add(newProtocol("cdna-pcr-sequencing","cDNA-PCR Sequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","cDNA-PCR Sequencing"))));
+		lp.add(newProtocol("direct-cdna-sequencing","direct cDNA Sequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
+				concatMap(newPSV("libraryProtocol","direct cDNA Sequencing"))));
+		
+		
+		
 		
 		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-end-prep","nanopore-pcr","nanopore-barcode-ligation","nanopore-pre-pcr-ligation","aliquoting")));
 		
@@ -154,10 +161,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("dnase-treatment","Traitement à la Dnase","path2","1","production",InstanceFactory.setExperimentTypeCodes("dnase-treatment")));
 
 		lp.add(newProtocol("fluo-dosage","dosage_fluo","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification"),false));
+		lp.add(newProtocol("annexe-dosagearn-en-attente","Annexe_DosageARN_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
 		lp.add(newProtocol("annexe-dosage-fluoroskan-v1","Annexe_DosageFluoroskan_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
 		lp.add(newProtocol("annexe-dosage-qubit-v1","Annexe_DosageQubit_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
-		
-		lp.add(newProtocol("annexe-dosagearn-en-attente","Annexe_DosageARN_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("reception-fluo-quantification")));
 		
 		
 		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
