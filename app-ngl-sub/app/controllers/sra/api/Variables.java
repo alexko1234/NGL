@@ -35,11 +35,13 @@ public class Variables extends CommonController{
 	{
 		Form<VariablesSearchForm> filledForm = filledFormQueryString(form, VariablesSearchForm.class);
 		VariablesSearchForm variableSearch = filledForm.get();
+		Logger.debug("variableSearch "+variableSearch);
 		return list(variableSearch);
 	}
 
 	public static Result get(String type, String code){
 
+		Logger.debug("Get "+type+" code "+code);
 		if(type.equalsIgnoreCase("strategySample")){
 			SraParameter parameter = new SraParameter();
 			parameter.code=code;

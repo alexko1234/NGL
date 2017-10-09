@@ -3,6 +3,7 @@ package controllers.sra.samples.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -10,6 +11,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
+import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
@@ -27,7 +29,6 @@ public class Samples extends DocumentController<AbstractSample>{
 
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
 	final static Form<AbstractSample> sampleForm = form(AbstractSample.class);
-
 
 	public Samples() {
 		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
@@ -54,7 +55,6 @@ public class Samples extends DocumentController<AbstractSample>{
 		AbstractSample sample = getSample(code);
 		Form<AbstractSample> filledForm = getFilledForm(sampleForm, AbstractSample.class);
 
-
 		if (sample == null) {
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
 			return badRequest(filledForm.errorsAsJson());
@@ -79,11 +79,11 @@ public class Samples extends DocumentController<AbstractSample>{
 				System.out.println(" ok je suis dans Samples.update et erreurs \n");
 				Logger.debug(Json.toJson(sampleInput).toString());
 				return badRequest(filledForm.errorsAsJson());
-			}
+			}		
 		}else{
 			filledForm.reject("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
 			return badRequest(filledForm.errorsAsJson());
-		}	
+		}
 	}
 
 	private AbstractSample getSample(String code)
