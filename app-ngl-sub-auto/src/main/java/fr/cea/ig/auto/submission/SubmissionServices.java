@@ -3,18 +3,13 @@ package fr.cea.ig.auto.submission;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-<<<<<<< HEAD
 import java.util.Map;
 import java.util.Map.Entry;
-=======
-import java.util.List;
->>>>>>>  On branch NGLSUB_1588_Refact
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,11 +49,6 @@ public class SubmissionServices implements ISubmissionServices{
 		return null;
 	}
 
-<<<<<<< HEAD
-
-=======
-	
->>>>>>>  On branch NGLSUB_1588_Refact
 	@Override
 	public void createXMLSubmission(String submissionCode, String submissionDirectory, String studyCode, String sampleCodes, String experimentCodes, String runCodes) throws IOException, FatalException, JSONDeviceException
 	{
@@ -66,7 +56,6 @@ public class SubmissionServices implements ISubmissionServices{
 		log.debug("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		log.debug("resultDirectory = " + submissionDirectory);
 		log.debug("studyCode "+studyCode+" sampleCodes "+sampleCodes+" experimentCodes "+experimentCodes+" runCodes "+runCodes);
-<<<<<<< HEAD
 
 		IXMLServices xmlServices = XMLServicesFactory.getInstance();
 		File studyFile = null;
@@ -109,39 +98,6 @@ public class SubmissionServices implements ISubmissionServices{
 	}
 
 
-=======
-		
-		IXMLServices xmlServices = XMLServicesFactory.getInstance();
-		
-		// si on est dans soumission de données :
-		if (studyCode!=null && !studyCode.equals("")) {	
-			File studyFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlStudies"));
-			xmlServices.writeStudyXml(studyFile, studyCode);
-		}
-		if (sampleCodes!=null){
-			File sampleFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSamples"));
-			xmlServices.writeSampleXml(sampleFile, sampleCodes); 
-		}
-		if (experimentCodes!=null){
-			File experimentFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlExperiments"));
-			xmlServices.writeExperimentXml(experimentFile, experimentCodes); 
-		} else {
-			log.debug("experimentCodes==0 ??????????");
-		}
-		if (runCodes!=null){
-			File runFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlRuns"));
-			xmlServices.writeRunXml(runFile, runCodes); 
-		} else {
-			log.debug("runCodes==0 ??????????");
-		}
-
-		File submissionFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSubmission"));
-		xmlServices.writeSubmissionXml(submissionFile, submissionCode, studyCode, sampleCodes, experimentCodes);
-
-	}
-
-	
->>>>>>>  On branch NGLSUB_1588_Refact
 	@Override
 	public void createXMLRelease(String submissionCode, String submissionDirectory, String studyCode) throws BirdsException, IOException, FatalException
 	{
@@ -154,7 +110,6 @@ public class SubmissionServices implements ISubmissionServices{
 
 		IXMLServices xmlServices = XMLServicesFactory.getInstance();
 		xmlServices.createXMLRelease(submissionFile, submissionCode, studyCode);
-<<<<<<< HEAD
 	}
 
 	@Override
@@ -436,8 +391,6 @@ public class SubmissionServices implements ISubmissionServices{
 		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+code+"?fields=accession");
 		log.debug("with JSON "+run);
 		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+code+"?fields=accession", run,"bot");
-=======
->>>>>>>  On branch NGLSUB_1588_Refact
 	}
 
 	@Override
