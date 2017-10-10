@@ -60,24 +60,27 @@ public class SubmissionServices implements ISubmissionServices{
 		log.debug("studyCode "+studyCode+" sampleCodes "+sampleCodes+" experimentCodes "+experimentCodes+" runCodes "+runCodes);
 
 		IXMLServices xmlServices = XMLServicesFactory.getInstance();
-
+		File studyFile = null;
 		// si on est dans soumission de données :
 		if (studyCode!=null && !studyCode.equals("")) {	
-			File studyFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlStudies"));
+			studyFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlStudies"));
 			xmlServices.writeStudyXml(studyFile, studyCode);
 		}
+		File sampleFile = null;
 		if (sampleCodes!=null){
-			File sampleFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSamples"));
+			sampleFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSamples"));
 			xmlServices.writeSampleXml(sampleFile, sampleCodes); 
 		}
+		File experimentFile = null;
 		if (experimentCodes!=null){
-			File experimentFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlExperiments"));
+			experimentFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlExperiments"));
 			xmlServices.writeExperimentXml(experimentFile, experimentCodes); 
 		} else {
 			log.debug("experimentCodes==0 ??????????");
 		}
+		File runFile = null;
 		if (runCodes!=null){
-			File runFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlRuns"));
+			runFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlRuns"));
 			xmlServices.writeRunXml(runFile, runCodes); 
 		} else {
 			log.debug("runCodes==0 ??????????");
@@ -85,6 +88,14 @@ public class SubmissionServices implements ISubmissionServices{
 
 		File submissionFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSubmission"));
 		xmlServices.writeSubmissionXml(submissionFile, submissionCode, studyCode, sampleCodes, experimentCodes);
+		
+		//Update xml fields
+		JSONDevice jsonDevice = new JSONDevice();
+		String submission = "{\"xmlSubmission\":\""+submissionFile.getName()+"\",\"xmlStudys\":\""+studyFile.getName()+"\",\"xmlSamples\":\""+sampleFile.getName()+"\",\"xmlExperiments\":\""+experimentFile.getName()+"\",\"xmlRuns\":\""+runFile.getName()+"\"}";
+		//Call PUT update with submission modified
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+submissionCode+"?fields=xmlSubmission&fields=xmlStudys&fields=xmlSamples&fields=xmlExperiments&fields=xmlRuns");
+		log.debug("with JSON "+submission);
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+submissionCode+"?fields=xmlSubmission&fields=xmlStudys&fields=xmlSamples&fields=xmlExperiments&fields=xmlRuns", submission,"bot");
 
 	}
 

@@ -41,6 +41,29 @@ rule "Syntax order command line for createXML specification"
 end
 
 
+#Send mail when job is exited
+rule "Send error mail when job exited"
+@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 100
+	no-loop
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification.specificationGroup == false, executionState == Job.ERROR_STATUS )
+	then
+		//Send mail
+		String errorMessage = "Error during executing job. Check outputFile and log \n"+
+		"STDOUT "+$job.getProperty(Job.STDOUT)+"\n"+
+		"STDERR "+$job.getProperty(Job.STDERR)+"\n"+
+		"SCHEDULER STDOUT "+$job.getProperty(JobScheduler.JOB_SCHEDULER_STD_OUTPUT_PATH+JobScheduler.JOB_SCHEDULER_STD_OUTPUT_FILE)+"\n"+
+		"SCHEDULER STDERR "+$job.getProperty(JobScheduler.JOB_SCHEDULER_STD_ERROR_PATH+JobScheduler.JOB_SCHEDULER_STD_ERROR_FILE)+"\n"+
+		"Exception "+$job.getProperty("Exception");
+		
+		MailServiceFactory.getInstance().sendMailWithProperties(MailUtil.MAIL_SUBJECT_ERROR, MailUtil.getMessage("Execution Job",$job,$job.getProperty("code"),"",errorMessage));
+		
+		
+end
+
 function void updateParameterXML(String valueParam, Job job, String resourceName)
 {
 	if(job.getUniqueJobResource(resourceName).getProperty(valueParam)!=null)

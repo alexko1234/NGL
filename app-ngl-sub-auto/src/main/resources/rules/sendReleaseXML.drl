@@ -44,7 +44,13 @@ rule "POST DONE EXECUTION of sendReleaseXML : File release results operation"
 		//File fileAC = new File(pathAC);
 		log.debug("path release="+pathRelease);
 		log.debug("Call treatment File Release "+pathRelease+" / "+codeSubmission+" / "+studyAccession+" / "+studyCode+" / "+creationUser);
-		boolean ebiSuccess = SubmissionServicesFactory.getInstance().treatmentFileRelease(pathRelease, codeSubmission, studyAccession, studyCode, creationUser);
+		boolean ebiSuccess = false;
+		try{
+			ebiSuccess = SubmissionServicesFactory.getInstance().treatmentFileRelease(pathRelease, codeSubmission, studyAccession, studyCode, creationUser);
+		}catch(Exception e){
+			$job.setExecutionState(Job.ERROR_STATUS);
+			$job.setProperty("Exception",e.getMessage());
+		}
 		JSONDevice jsonDevice = new JSONDevice();
 		if(ebiSuccess){
 			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", "{\"code\":\"F-SUB\"}", "bot");

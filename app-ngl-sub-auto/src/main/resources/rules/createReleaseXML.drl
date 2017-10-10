@@ -33,7 +33,12 @@ rule "Action : create xml file for release"
 	    String submissionDirectory = jobResource.getProperty("submissionDirectory");
 	    String studyCode = jobResource.getProperty("studyAccession");
 	     log.debug("Call createXML release with "+codeSubmission+"/"+submissionDirectory+"/"+studyCode);
-	    SubmissionServicesFactory.getInstance().createXMLRelease(codeSubmission, submissionDirectory,studyCode);
+	     try{
+	   	 	SubmissionServicesFactory.getInstance().createXMLRelease(codeSubmission, submissionDirectory,studyCode);
+	    }catch(Exception e){
+	    	$job.setExecutionState(Job.ERROR_STATUS);
+	    	$job.setProperty("Exception",e.getMessage());
+	    }
 end
 
 rule "add releaseXML resources in internalRefReleaseXML to fire sendReleaseXML"
