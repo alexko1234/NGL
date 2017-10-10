@@ -235,20 +235,22 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
 		// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans transformation)
-		l.add(DescriptionFactory.newProcessType("QC / TF / Purif", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
+		// FDS 10/10/2017 NGL-1625 renommer et utiliser getPETForTransfertQCPurif
+		l.add(DescriptionFactory.newProcessType("TF puis satellites", "transfert-qc-purif", ProcessCategory.find.findByCode("satellites"), 
 				60,
 				null, // pas de propriétés ??  
-				Arrays.asList(
-						getPET("ext-to-qc-transfert-purif",-1), //ordered list of experiment type in process type  (liste donnee par JG) ou utiliser getPETForQCTransfertPurif
-						getPET("prep-pcr-free",-1),
-						getPET("prep-wg-nano",-1),
-						getPET("pcr-and-purification",-1),
-						getPET("lib-normalization",-1),
-						getPET("library-prep",-1),
-						getPET("denat-dil-lib",-1),
-						getPET("normalization-and-pooling",-1),		
-						getPET("pool",0) ),	
-				getExperimentTypes("pool").get(0),                       //first experiment type
+				getPETForTransfertQCPurif(),
+				getExperimentTypes("pool").get(0),                       //first experiment type ( 1 transfert n'importe lequel...)
+				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
+				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		// FDS 10/10/2017 ajout NGL-1625
+		l.add(DescriptionFactory.newProcessType("QC puis satellites", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
+				70,
+				null, // pas de propriétés ??  
+				getPETForQCTransfertPurif(),
+				getExperimentTypes("labchip-migration-profile").get(0),  //first experiment type ( 1 qc n'importe lequel..)
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -505,11 +507,25 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	
-	// FDS ajout 28/11/2016 NGL-1164  PLUS UTILISE ???.....
+	// FDS 10/10/2017 duplication NGL-1625
 	// toutes les transformation en -1
 	// ext-to-qc-transfert-purif" en -1
-	// pool en 0 
+	// 1 transfert n'importe lequel ???? : pool en 0
+	private List<ProcessExperimentType> getPETForTransfertQCPurif(){
+		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
+			.stream()
+			.map(et -> getPET(et.code, -1))
+			.collect(Collectors.toList());
+
+		pets.add(getPET("ext-to-transfert-qc-purif",-1));
+		pets.add(getPET("pool",0));
+
+		return pets;		
+	}
+	
+	// toutes les transformation en -1
+	// ext-to-qc-transfert-purif" en -1
+	// 1 qc n'importe lequel ?????: labchip-migration-profile en 0 
 	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
 		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
 			.stream()
@@ -517,7 +533,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			.collect(Collectors.toList());
 
 		pets.add(getPET("ext-to-qc-transfert-purif",-1));
-		pets.add(getPET("pool",0));
+		pets.add(getPET("labchip-migration-profile",0));
 
 		return pets;		
 	}
