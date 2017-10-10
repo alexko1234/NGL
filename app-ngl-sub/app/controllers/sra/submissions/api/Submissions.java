@@ -56,7 +56,7 @@ public class Submissions extends DocumentController<Submission>{
 	private Map<String, UserSampleType> mapUserSamples = new HashMap<String, UserSampleType>();
 
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate");
+	final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
 
 	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
