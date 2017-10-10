@@ -146,6 +146,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
+			//FDS 10/10/2017 JIRA NGL-1625 dedoubler
+			l.add(newExperimentType("Ext to  TF / QC / purif","ext-to-transfert-qc-purif",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			
 			//FDS ajout 21/02/2017 NGL-1167: processus Chromium
 			l.add(newExperimentType("Ext to Prep Chromium WG","ext-to-wg-chromium-lib-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -453,7 +462,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null,
 				null
-				).save();		
+				).save();	
+		
+		// FDS ajout 10/10/2017 JIRA NGL-1625
+		newExperimentTypeNode("ext-to-transfert-qc-purif", getExperimentTypes("ext-to-transfert-qc-purif").get(0), 
+				false, false, false, 
+				null, // no previous nodes
+				null,
+				null,
+				null
+				).save();
+		
 			
 		//FDS ajout 20/02/2017 JIRA NGL-1167
 		newExperimentTypeNode("ext-to-wg-chromium-lib-process", getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), 
