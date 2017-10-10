@@ -203,10 +203,10 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<Value> getTaraPacificReplicateValues() {
 		List<Value> values = new ArrayList<Value>();
 		
-		values.add(DescriptionFactory.newValue("R1", "Replicat 1"));
-		values.add(DescriptionFactory.newValue("R2", "Replicat 2"));
-		values.add(DescriptionFactory.newValue("R3", "Replicat 3"));
-		values.add(DescriptionFactory.newValue("R4", "Replicat 4"));
+		values.add(DescriptionFactory.newValue("R1", "R1"));
+		values.add(DescriptionFactory.newValue("R2", "R2"));
+		values.add(DescriptionFactory.newValue("R3", "R3"));
+		values.add(DescriptionFactory.newValue("R4", "R4"));
 		
 		return values;		
 	}
