@@ -46,8 +46,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Lib. Nanopore", "nanopore-library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));
-		// 28/11/2016 fdsanto JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
-		//  attention bug connu: manque la puce "terminer" dans le dispatch final
+		// 28/11/2016 fdsantos JIRA NGL-1164; categorie de processus ne contenant aucune transformation mais uniquement des QC ou transferts...
+		// attention bug connu: manque la puce "terminer" dans le dispatch final
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Exp satellites", "satellites"));
 
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
@@ -92,7 +92,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						getPET("prep-wg-nano",0),
 						getPET("pcr-and-purification",1), 
 						getPET("lib-normalization",2),
-						getPET("normalization-and-pooling",2), // ajout 06/09/2017 (NGL-1576)
+						getPET("normalization-and-pooling",2),
 						getPET("prepa-fc-ordered",3), 
 						getPET("illumina-depot",4) ),      
 				getExperimentTypes("prep-wg-nano").get(0),      //first experiment type;
@@ -234,24 +234,24 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-norm-and-pool-denat-fc-depot").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
-		// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans transformation)
+		// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif" (sans transformation)
 		// FDS 10/10/2017 NGL-1625 renommer et utiliser getPETForTransfertQCPurif
 		l.add(DescriptionFactory.newProcessType("Transfert puis satellites", "transfert-qc-purif", ProcessCategory.find.findByCode("satellites"), 
 				60,
 				null, // pas de propriétés ??  
 				getPETForTransfertQCPurif(),
-				getExperimentTypes("pool").get(0),                       //first experiment type ( 1 transfert n'importe lequel...)
-				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
+				getExperimentTypes("pool").get(0),                       //first experiment type ( 1 transfert n'importe lequel...?)
+				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //last  experiment type ( doit etre la ext-to...)
 				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS 10/10/2017 ajout NGL-1625
+		// FDS 10/10/2017 NGL-1625: nouveau processus satellite
 		l.add(DescriptionFactory.newProcessType("QC puis satellites", "qc-transfert-purif", ProcessCategory.find.findByCode("satellites"), 
 				70,
 				null, // pas de propriétés ??  
 				getPETForQCTransfertPurif(),
-				getExperimentTypes("labchip-migration-profile").get(0),  //first experiment type ( 1 qc n'importe lequel..)
-				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
+				getExperimentTypes("labchip-migration-profile").get(0),  //first experiment type ( 1 qc n'importe lequel...?)
+				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to...)
 				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -392,17 +392,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
         return values;
 	}
 	
-	/* FDS 02/08/2017 NGL-1543 cette fonction a introduite des incohérences de codes supprimer...  
-	private static List<Value> getX5WgPcrFreeSequencingTypes(){
-        List<Value> values = new ArrayList<Value>();
-        
-         values.add(DescriptionFactory.newValue("RHS4000","Hiseq 4000"));
-         values.add(DescriptionFactory.newValue("RHSX","Hiseq X"));
-         
-        return values;
-	}
-	*/
-	
 	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq; 18/01/2017 remommer en getPropertyDefinitionsRNAseq=> getPropertyDefinitionsRNAlib
 	private static List<PropertyDefinition> getPropertyDefinitionsRNAlib() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -508,8 +497,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 	
 	// FDS 10/10/2017 duplication NGL-1625
-	// toutes les transformation en -1
-	// ext-to-qc-transfert-purif" en -1
+	// toutes les transformations en -1
+	// ext-to-transfert-qc-purif" en -1
 	// 1 transfert n'importe lequel ???? : pool en 0
 	private List<ProcessExperimentType> getPETForTransfertQCPurif(){
 		List<ProcessExperimentType> pets = ExperimentType.find.findByCategoryCode("transformation")
@@ -523,7 +512,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		return pets;		
 	}
 	
-	// toutes les transformation en -1
+	// FDS 10/10/2017 duplication NGL-1625
+	// toutes les transformations en -1
 	// ext-to-qc-transfert-purif" en -1
 	// 1 qc n'importe lequel ?????: labchip-migration-profile en 0 
 	private List<ProcessExperimentType> getPETForQCTransfertPurif(){
