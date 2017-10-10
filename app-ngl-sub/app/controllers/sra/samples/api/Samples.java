@@ -3,7 +3,6 @@ package controllers.sra.samples.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -11,7 +10,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
-import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
