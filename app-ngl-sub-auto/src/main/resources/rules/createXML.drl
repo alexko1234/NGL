@@ -99,10 +99,10 @@ rule "add submissionXML resources in internalRefSubmission_xml to fire sendXML"
 		log.debug("Add resources rules for sendXML from file "+$job.getProperty(Job.STDOUT));
 		//Get submission 
 		JobResource jobResource = $job.getUniqueJobResource("subToXML");
-		String codeSubmission  = jobResource.getProperty("code")
+		String codeSubmission  = jobResource.getProperty("code");
 		JSONDevice jsonDevice = new JSONDevice();
 		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions/"+codeSubmission, "bot");
-		for(ResourceProperties rp : setResources){
+		for(ResourceProperties rp : resourcePropertiesSet){
 			JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
 	   		outputResource.setResourceProperties(rp);
 		}

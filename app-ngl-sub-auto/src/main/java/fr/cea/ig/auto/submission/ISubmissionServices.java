@@ -20,4 +20,8 @@ public interface ISubmissionServices {
 
 	void createXMLSubmission(String submissionCode, String submissionDirectory, String studyCode, String sampleCodes,
 			String experimentCodes, String runCodes) throws IOException, FatalException, JSONDeviceException;
+
+	boolean treatmentFileSubmission(String ebiFileName, String submissionCode, String studyCode, String sampleCodes,
+			String experimentCodes, String runCodes, String creationUser)
+					throws FatalException, BirdsException, UnsupportedEncodingException;
 }

@@ -3,6 +3,7 @@ package fr.cea.ig.auto.submission;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -102,6 +103,7 @@ public class SubmissionServices implements ISubmissionServices{
 		xmlServices.createXMLRelease(submissionFile, submissionCode, studyCode);
 	}
 
+	@Override
 	public boolean treatmentFileSubmission(String ebiFileName, String submissionCode, String studyCode, String sampleCodes, String experimentCodes, String runCodes, String creationUser) throws FatalException, BirdsException, UnsupportedEncodingException
 	{
 		if(ebiFileName==null)
@@ -328,30 +330,38 @@ public class SubmissionServices implements ISubmissionServices{
 
 	private void updateSubmissionAC(String code, String accession, Date date) throws FatalException, JSONDeviceException
 	{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		String dateToInsert = formatter.format(date);
 		//Update submission acNumber and date
 		JSONDevice jsonDevice = new JSONDevice();
-		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"submissionDate\":"+date+"}";
+		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"submissionDate\":\""+dateToInsert+"\"}";
 		//Call PUT update with submission modified
 		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate");
+		log.debug("with JSON "+submission);
 		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate", submission,"bot");
 	}
 
 	private void updateStudyAC(String code, String accession, String externalId, Date firstSubmissionDate,Date releaseDate) throws FatalException, JSONDeviceException
 	{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		String firstSubDateToInsert = formatter.format(firstSubmissionDate);
+		String releaseDateToInsert = formatter.format(releaseDate);
 		JSONDevice jsonDevice = new JSONDevice();
-		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"firstSubmissionDate\":"+firstSubmissionDate+",\"releaseDate\":\""+releaseDate+"\"}";
+		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"firstSubmissionDate\":\""+firstSubDateToInsert+"\",\"releaseDate\":\""+releaseDateToInsert+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate");
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate", study,"bot");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate");
+		log.debug("with JSON "+study);
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate", study,"bot");
 	}
 
 	private void updateSampleAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
 	{
 		JSONDevice jsonDevice = new JSONDevice();
-		String sample = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"externalId\":"+externalId+"\"}";
+		String sample = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"externalId\":\""+externalId+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/samples/"+code+"?fields=accession&fields=externalId");
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/samples/"+code+"?fields=accession&fields=externalId", sample,"bot");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/api/sra/samples/internal/"+code+"?fields=accession&fields=externalId");
+		log.debug("with JSON "+sample);
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/samples/internal/"+code+"?fields=accession&fields=externalId", sample,"bot");
 	}
 	
 	private void updateExperimentAC(String code, String accession) throws FatalException, JSONDeviceException
@@ -359,8 +369,9 @@ public class SubmissionServices implements ISubmissionServices{
 		JSONDevice jsonDevice = new JSONDevice();
 		String experiment = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/experiments/"+code+"?fields=accession");
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/experiments/"+code+"?fields=accession", experiment,"bot");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/api/sra/experiments/"+code+"?fields=accession");
+		log.debug("with JSON "+experiment);
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+code+"?fields=accession", experiment,"bot");
 	}
 	
 	private void updateRunAC(String code, String accession) throws FatalException, JSONDeviceException
@@ -368,8 +379,9 @@ public class SubmissionServices implements ISubmissionServices{
 		JSONDevice jsonDevice = new JSONDevice();
 		String run = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/experiments/run/"+code+"?fields=accession");
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/experiments/run/"+code+"?fields=accession", run,"bot");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+code+"?fields=accession");
+		log.debug("with JSON "+run);
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+code+"?fields=accession", run,"bot");
 	}
 	
 	@Override
