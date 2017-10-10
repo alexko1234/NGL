@@ -236,13 +236,13 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			
 		// FDS ajout 28/11/2016 JIRA NGL-1164: nouveau processus pour "QC / TF / Purif "  (sans transformation)
 		// FDS 10/10/2017 NGL-1625 renommer et utiliser getPETForTransfertQCPurif
-		l.add(DescriptionFactory.newProcessType("TF puis satellites", "transfert-qc-purif", ProcessCategory.find.findByCode("satellites"), 
+		l.add(DescriptionFactory.newProcessType("Transfert puis satellites", "transfert-qc-purif", ProcessCategory.find.findByCode("satellites"), 
 				60,
 				null, // pas de propriétés ??  
 				getPETForTransfertQCPurif(),
 				getExperimentTypes("pool").get(0),                       //first experiment type ( 1 transfert n'importe lequel...)
-				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
-				getExperimentTypes("ext-to-qc-transfert-purif").get(0),  //void  experiment type
+				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //last  experiment type ( doit etre la ext-to....)
+				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS 10/10/2017 ajout NGL-1625
