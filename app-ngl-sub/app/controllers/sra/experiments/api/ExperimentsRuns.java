@@ -11,7 +11,6 @@ import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.Run;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
@@ -80,6 +79,4 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 				DBQuery.is("run.code", code));
 		return exp;
 	}
-
-
 }
