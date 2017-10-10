@@ -8,10 +8,7 @@ import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
 import fr.genoscope.lis.devsi.birds.api.exception.JSONDeviceException;
-<<<<<<< HEAD
 import fr.genoscope.lis.devsi.birds.extension.api.exception.MailServiceException;
-=======
->>>>>>>  On branch NGLSUB_1588_Refact
 
 public interface ISubmissionServices {
 
