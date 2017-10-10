@@ -152,6 +152,10 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Site", "taraSite", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificSiteValues(), "single", 10, true, null, null));		
 		
+		propertyDefinitions.add(newPropertiesDefinition("Réplicat", "replicate", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificReplicateValues(), "single", 11, true, null, null));		
+		
+		
 		return propertyDefinitions;
 	}
 	
@@ -190,10 +194,22 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Site", "taraSite", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				getTaraPacificSiteValues(), "single", 11, true, null, null));		
 		
+		propertyDefinitions.add(newPropertiesDefinition("Réplicat", "replicate", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				getTaraPacificReplicateValues(), "single", 12, true, null, null));		
 		
 		return propertyDefinitions;
 	}
 	
+	private static List<Value> getTaraPacificReplicateValues() {
+		List<Value> values = new ArrayList<Value>();
+		
+		values.add(DescriptionFactory.newValue("R1", "Replicat 1"));
+		values.add(DescriptionFactory.newValue("R2", "Replicat 2"));
+		values.add(DescriptionFactory.newValue("R3", "Replicat 3"));
+		values.add(DescriptionFactory.newValue("R4", "Replicat 4"));
+		
+		return values;		
+	}
 	
 	private static List<Value> getTaraPacificFinalDestination() {
 		List<Value> values = new ArrayList<Value>();
