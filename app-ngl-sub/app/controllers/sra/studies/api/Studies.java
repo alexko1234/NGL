@@ -3,7 +3,6 @@ package controllers.sra.studies.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
-import controllers.QueryFieldsForm;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;

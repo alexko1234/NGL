@@ -11,8 +11,8 @@ import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.Run;
 import models.utils.InstanceConstants;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -22,7 +22,7 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 
 	final static Form<Experiment> experimentForm = form(Experiment.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("run.accession");
+	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 	
 	public ExperimentsRuns() {
 		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
@@ -30,8 +30,7 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 
 	public Result get(String code)
 	{
-		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
-				DBQuery.is("run.code", code));
+		Experiment exp  = getExperiment(code);
 		if (exp != null) {
 			return ok(Json.toJson(exp.run));
 		} else{
@@ -46,9 +45,9 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 		
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-
+		Logger.debug(""+queryFieldsForm.fields);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
-		Experiment experiment = getObject(code);
+		Experiment experiment = getExperiment(code);
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("experiments ", " not exist");
@@ -64,14 +63,21 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 
 			if(!ctxVal.hasErrors()){
 				updateObject(DBQuery.and(DBQuery.is("run.code", code)), 
-						getBuilder(userExperiment, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(experiment.traceInformation)));
+						getBuilder(userExperiment, queryFieldsForm.fields, Experiment.class, "run").set("traceInformation", getUpdateTraceInformation(experiment.traceInformation)));
 
-				return ok(Json.toJson(getObject(code)));
+				return ok(Json.toJson(getExperiment(code)));
 			}else{
 				return badRequest(filledForm.errorsAsJson());
 			}		
 		}
 		return ok();
+	}
+	
+	private Experiment getExperiment(String code)
+	{
+		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
+				DBQuery.is("run.code", code));
+		return exp;
 	}
 	
 }
