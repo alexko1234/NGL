@@ -45,8 +45,6 @@ public class Studies extends DocumentController<AbstractStudy>{
 	final StudyWorkflows studyWorkflows = Spring.getBeanOfType(StudyWorkflows.class);
 	final static Form<State> stateForm = form(State.class);
 
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId","firstSubmissionDate","releaseDate");
 	public Studies() {
 		super(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
 	}
@@ -207,9 +205,6 @@ public class Studies extends DocumentController<AbstractStudy>{
 		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 
-		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
-		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-
 		if (study == null) {
 			//return badRequest("Study with code "+code+" not exist");
 			ctxVal.addErrors("study ", " not exist");
@@ -217,38 +212,24 @@ public class Studies extends DocumentController<AbstractStudy>{
 		}
 		AbstractStudy studyInput = filledForm.get();
 
-		if(queryFieldsForm.fields == null){
-			if (code.equals(studyInput.code)) {	
-				ctxVal.setUpdateMode();
-				ctxVal.getContextObjects().put("type","sra");
-				studyInput.traceInformation.setTraceInformation(getCurrentUser());
-				studyInput.validate(ctxVal);
-				if (!ctxVal.hasErrors()) {
-					Logger.info("Update study state "+studyInput.state.code);
-					MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
-					return ok(Json.toJson(studyInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
-				}
-			} else {
-				//return badRequest("study code are not the same");
-				ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
-				return badRequest(filledForm.errorsAsJson());
-			}	
-		}else{
-			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		if (code.equals(studyInput.code)) {	
 			ctxVal.setUpdateMode();
-			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
-			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			
-			if(!ctxVal.hasErrors()){
-				updateObject(DBQuery.and(DBQuery.is("code", code)), 
-						getBuilder(studyInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(study.traceInformation)));
-				return ok(Json.toJson(getObject(code)));
-			}else{
+			ctxVal.getContextObjects().put("type","sra");
+			studyInput.traceInformation.setTraceInformation(getCurrentUser());
+			studyInput.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				Logger.info("Update study state "+studyInput.state.code);
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
+				return ok(Json.toJson(studyInput));
+			}else {
 				return badRequest(filledForm.errorsAsJson());
-			}		
-		}
+			}
+		} else {
+			//return badRequest("study code are not the same");
+			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
+			return badRequest(filledForm.errorsAsJson());
+		}	
+
 	}
 
 	public Result updateState(String code){
