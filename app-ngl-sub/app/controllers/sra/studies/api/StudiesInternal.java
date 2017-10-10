@@ -38,12 +38,12 @@ import views.components.datatable.DatatableResponse;
 import workflows.sra.study.StudyWorkflows;
 
 
-public class InternalStudies extends DocumentController<Study>{
+public class StudiesInternal extends DocumentController<Study>{
 
 	final static Form<Study> studyForm = form(Study.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId","firstSubmissionDate","releaseDate");
-	public InternalStudies() {
+	public StudiesInternal() {
 		super(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class);
 	}
 
