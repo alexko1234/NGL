@@ -88,40 +88,42 @@ public class XMLServices implements IXMLServices{
 		JSONDevice jsonDevice = new JSONDevice();
 		for (int i=0; i<sampleCodes.length; i++){
 			String sampleCode = sampleCodes[i].replaceAll("\"", "");
-			log.debug("sampleCode = '" + sampleCode +"'");
-			ResourceProperties rpsSample = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/samples/"+sampleCode,"bot").iterator().next();
-			String accession = rpsSample.get("accession");
-			String title = rpsSample.get("title");
-			String scientificName = rpsSample.get("scientificName");
-			String commonName = rpsSample.get("commonName");
-			String anonymizedName = rpsSample.get("anonymizedName");
-			String description = rpsSample.get("description");
-			// Recuperer objet sample dans la base :
-			chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
+			if(sampleCode!=null && !sampleCode.equals("")){
+				log.debug("sampleCode = '" + sampleCode +"'");
+				ResourceProperties rpsSample = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/samples/"+sampleCode,"bot").iterator().next();
+				String accession = rpsSample.get("accession");
+				String title = rpsSample.get("title");
+				String scientificName = rpsSample.get("scientificName");
+				String commonName = rpsSample.get("commonName");
+				String anonymizedName = rpsSample.get("anonymizedName");
+				String description = rpsSample.get("description");
+				// Recuperer objet sample dans la base :
+				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 
-			if (accession!=null && !accession.equals("")) {
-				chaine = chaine + " accession=\"" + accession + "\"";
+				if (accession!=null && !accession.equals("")) {
+					chaine = chaine + " accession=\"" + accession + "\"";
+				}
+				chaine = chaine + ">\n";
+				if (title!=null && !title.equals("")) {
+					chaine = chaine + "    <TITLE>" + title + "</TITLE>\n";
+				}
+				chaine = chaine + "    <SAMPLE_NAME>\n";
+				chaine = chaine + "      <TAXON_ID>" + rpsSample.get("taxonId") + "</TAXON_ID>\n";
+				if (scientificName!=null && !scientificName.equals("")) {
+					chaine = chaine + "      <SCIENTIFIC_NAME>" + scientificName + "</SCIENTIFIC_NAME>\n";
+				}
+				if (commonName!=null && !commonName.equals("")) {
+					chaine = chaine + "      <COMMON_NAME>" + commonName + "</COMMON_NAME>\n";
+				}
+				if (anonymizedName!=null && !anonymizedName.equals("")) {
+					chaine = chaine + "      <ANONYMIZED_NAME>" + anonymizedName + "</ANONYMIZED_NAME>\n";
+				}
+				chaine = chaine + "    </SAMPLE_NAME>\n";
+				if (description!=null && !description.equals("")) {
+					chaine = chaine + "      <DESCRIPTION>" + description + "</DESCRIPTION>\n";
+				}
+				chaine = chaine + "  </SAMPLE>\n";
 			}
-			chaine = chaine + ">\n";
-			if (title!=null && !title.equals("")) {
-				chaine = chaine + "    <TITLE>" + title + "</TITLE>\n";
-			}
-			chaine = chaine + "    <SAMPLE_NAME>\n";
-			chaine = chaine + "      <TAXON_ID>" + rpsSample.get("taxonId") + "</TAXON_ID>\n";
-			if (scientificName!=null && !scientificName.equals("")) {
-				chaine = chaine + "      <SCIENTIFIC_NAME>" + scientificName + "</SCIENTIFIC_NAME>\n";
-			}
-			if (commonName!=null && !commonName.equals("")) {
-				chaine = chaine + "      <COMMON_NAME>" + commonName + "</COMMON_NAME>\n";
-			}
-			if (anonymizedName!=null && !anonymizedName.equals("")) {
-				chaine = chaine + "      <ANONYMIZED_NAME>" + anonymizedName + "</ANONYMIZED_NAME>\n";
-			}
-			chaine = chaine + "    </SAMPLE_NAME>\n";
-			if (description!=null && !description.equals("")) {
-				chaine = chaine + "      <DESCRIPTION>" + description + "</DESCRIPTION>\n";
-			}
-			chaine = chaine + "  </SAMPLE>\n";
 		}
 		chaine = chaine + "</SAMPLE_SET>\n";
 		output_buffer.write(chaine);
@@ -142,111 +144,113 @@ public class XMLServices implements IXMLServices{
 		JSONDevice jsonDevice = new JSONDevice();
 		for (int i=0; i<experimentCodes.length;i++){
 			String experimentCode = experimentCodes[i].replaceAll("\"", "");
-			ResourceProperties rpsExp = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+experimentCode,"bot").iterator().next();
-			log.debug("rspExp "+rpsExp);
-			log.debug("ReadSpec "+rpsExp.get("readSpecs"));
+			if(experimentCode!=null && !experimentCode.equals("")){
+				ResourceProperties rpsExp = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+experimentCode,"bot").iterator().next();
+				log.debug("rspExp "+rpsExp);
+				log.debug("ReadSpec "+rpsExp.get("readSpecs"));
 
-			String accession = rpsExp.get("accession");
-			String studyCode = rpsExp.get("studyCode");
-			String studyAccession = rpsExp.get("studyAccession");
-			String sampleCode = rpsExp.get("sampleCode");
-			String sampleAccession = rpsExp.get("sampleAccession");
+				String accession = rpsExp.get("accession");
+				String studyCode = rpsExp.get("studyCode");
+				String studyAccession = rpsExp.get("studyAccession");
+				String sampleCode = rpsExp.get("sampleCode");
+				String sampleAccession = rpsExp.get("sampleAccession");
 
-			String libraryStrategy = rpsExp.get("libraryStrategy");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/libraryStrategy/"+libraryStrategy.toLowerCase().replaceAll(" ", "%20"));
-			ResourceProperties rpsLibraryStrategy = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/libraryStrategy/"+libraryStrategy.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
-			String librarySource = rpsExp.get("librarySource");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/librarySource/"+librarySource.toLowerCase().replaceAll(" ", "%20"));
-			ResourceProperties rpsLibrarySource = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/librarySource/"+librarySource.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
-			String librarySelection = rpsExp.get("librarySelection");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/librarySelection/"+librarySelection.toLowerCase().replaceAll(" ", "%20"));
-			ResourceProperties rpsLibrarySelection = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/librarySelection/"+librarySelection.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
-			String libraryLayout = rpsExp.get("libraryLayout");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/libraryLayout/"+libraryLayout.toLowerCase().replaceAll(" ", "%20"));
-			ResourceProperties rpsLibraryLayout = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/libraryLayout/"+libraryLayout.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
-			String libraryConstructionProtocol = rpsExp.get("libraryConstructionProtocol");
-			String typePlatform = rpsExp.get("typePlatform");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/typePlatform/"+typePlatform.toLowerCase().replaceAll(" ", "%20"));
-			ResourceProperties rpsTypePlatform = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/typePlatform/"+typePlatform.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
-			String instrumentModel = rpsExp.get("instrumentModel");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/instrumentModel/"+instrumentModel.toLowerCase().replaceAll(" ", "%20"));
-			ResourceProperties rpsInstrumentModel = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/instrumentModel/"+instrumentModel.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
+				String libraryStrategy = rpsExp.get("libraryStrategy");
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/libraryStrategy/"+libraryStrategy.toLowerCase().replaceAll(" ", "%20"));
+				ResourceProperties rpsLibraryStrategy = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/libraryStrategy/"+libraryStrategy.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
+				String librarySource = rpsExp.get("librarySource");
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/librarySource/"+librarySource.toLowerCase().replaceAll(" ", "%20"));
+				ResourceProperties rpsLibrarySource = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/librarySource/"+librarySource.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
+				String librarySelection = rpsExp.get("librarySelection");
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/librarySelection/"+librarySelection.toLowerCase().replaceAll(" ", "%20"));
+				ResourceProperties rpsLibrarySelection = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/librarySelection/"+librarySelection.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
+				String libraryLayout = rpsExp.get("libraryLayout");
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/libraryLayout/"+libraryLayout.toLowerCase().replaceAll(" ", "%20"));
+				ResourceProperties rpsLibraryLayout = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/libraryLayout/"+libraryLayout.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
+				String libraryConstructionProtocol = rpsExp.get("libraryConstructionProtocol");
+				String typePlatform = rpsExp.get("typePlatform");
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/typePlatform/"+typePlatform.toLowerCase().replaceAll(" ", "%20"));
+				ResourceProperties rpsTypePlatform = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/typePlatform/"+typePlatform.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
+				String instrumentModel = rpsExp.get("instrumentModel");
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/instrumentModel/"+instrumentModel.toLowerCase().replaceAll(" ", "%20"));
+				ResourceProperties rpsInstrumentModel = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/instrumentModel/"+instrumentModel.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
 
-			chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + ProjectProperties.getProperty("centerName") + "\"";
-			if (accession!=null && !accession.equals("")) {
-				chaine = chaine + " accession=\"" + accession + "\" ";	
-			}
-			chaine = chaine + ">\n";
-			// Les champs title et libraryName sont considerés comme obligatoires
-			chaine = chaine + "    <TITLE>" + rpsExp.get("title") + "</TITLE>\n";
-			chaine = chaine + "    <STUDY_REF ";
-			//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
-			if (studyCode!=null && !studyCode.equals("")) { 
-				chaine = chaine + " refname=\"" + studyCode +"\"";
-			}
-			if (studyAccession!=null && !studyAccession.equals("")){
-				chaine = chaine + " accession=\"" + studyAccession + "\"";
-			}
-			chaine = chaine + "/>\n"; 
-
-			chaine = chaine + "      <DESIGN>\n";
-			chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
-			chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
-			//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
-			if (sampleCode!=null && !sampleCode.equals("")){
-				chaine = chaine+  "refname=\"" + sampleCode + "\"";
-			}
-			if (sampleAccession!=null && !sampleAccession.equals("")){
-				chaine = chaine + " accession=\""+sampleAccession + "\"";
-			}
-			chaine = chaine + "/>\n";
-
-			chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
-			chaine = chaine + "            <LIBRARY_NAME>" + rpsExp.get("libraryName") + "</LIBRARY_NAME>\n";
-			chaine = chaine + "            <LIBRARY_STRATEGY>"+ rpsLibraryStrategy.get("value") + "</LIBRARY_STRATEGY>\n";
-			chaine = chaine + "            <LIBRARY_SOURCE>" + rpsLibrarySource.get("value") + "</LIBRARY_SOURCE>\n";
-			chaine = chaine + "            <LIBRARY_SELECTION>" + rpsLibrarySelection.get("value") + "</LIBRARY_SELECTION>\n";
-			chaine = chaine + "            <LIBRARY_LAYOUT>\n";
-
-			chaine = chaine + "              <"+ rpsLibraryLayout.get("value");	
-			if("PAIRED".equalsIgnoreCase(libraryLayout)) {
-				chaine = chaine + " NOMINAL_LENGTH=\"" + rpsExp.get("libraryLayoutNominalLength") + "\"";
-			}
-			chaine = chaine + " />\n";
-
-			chaine = chaine + "            </LIBRARY_LAYOUT>\n";
-			if (libraryConstructionProtocol!=null && !libraryConstructionProtocol.equals("")){
-				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
-			} else {
-				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
-			}
-			chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
-			if (! "OXFORD_NANOPORE".equalsIgnoreCase(rpsExp.get("typePlatform"))) {
-				chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
-				chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
-				chaine = chaine + "              <SPOT_LENGTH>"+rpsExp.get("spotLength")+"</SPOT_LENGTH>\n";
-				//Get readSpec
-				Set<ResourceProperties> rpsReadSpecs = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/readSpecs?experimentCode="+experimentCode,"bot");
-				
-				for (ResourceProperties rp: rpsReadSpecs) {
-					chaine = chaine + "              <READ_SPEC>\n";
-					chaine = chaine + "                <READ_INDEX>"+rp.get("readIndex")+"</READ_INDEX>\n";
-					chaine = chaine + "                <READ_LABEL>"+rp.get("readLabel")+"</READ_LABEL>\n";
-					chaine = chaine + "                <READ_CLASS>"+rp.get("readClass")+"</READ_CLASS>\n";
-					chaine = chaine + "                <READ_TYPE>"+rp.get("readType")+"</READ_TYPE>\n";
-					chaine = chaine + "                <BASE_COORD>" + rp.get("baseCoord") + "</BASE_COORD>\n";
-					chaine = chaine + "              </READ_SPEC>\n";
+				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + ProjectProperties.getProperty("centerName") + "\"";
+				if (accession!=null && !accession.equals("")) {
+					chaine = chaine + " accession=\"" + accession + "\" ";	
 				}
-				chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
-				chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
+				chaine = chaine + ">\n";
+				// Les champs title et libraryName sont considerés comme obligatoires
+				chaine = chaine + "    <TITLE>" + rpsExp.get("title") + "</TITLE>\n";
+				chaine = chaine + "    <STUDY_REF ";
+				//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
+				if (studyCode!=null && !studyCode.equals("")) { 
+					chaine = chaine + " refname=\"" + studyCode +"\"";
+				}
+				if (studyAccession!=null && !studyAccession.equals("")){
+					chaine = chaine + " accession=\"" + studyAccession + "\"";
+				}
+				chaine = chaine + "/>\n"; 
+
+				chaine = chaine + "      <DESIGN>\n";
+				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
+				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
+				//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
+				if (sampleCode!=null && !sampleCode.equals("")){
+					chaine = chaine+  "refname=\"" + sampleCode + "\"";
+				}
+				if (sampleAccession!=null && !sampleAccession.equals("")){
+					chaine = chaine + " accession=\""+sampleAccession + "\"";
+				}
+				chaine = chaine + "/>\n";
+
+				chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
+				chaine = chaine + "            <LIBRARY_NAME>" + rpsExp.get("libraryName") + "</LIBRARY_NAME>\n";
+				chaine = chaine + "            <LIBRARY_STRATEGY>"+ rpsLibraryStrategy.get("value") + "</LIBRARY_STRATEGY>\n";
+				chaine = chaine + "            <LIBRARY_SOURCE>" + rpsLibrarySource.get("value") + "</LIBRARY_SOURCE>\n";
+				chaine = chaine + "            <LIBRARY_SELECTION>" + rpsLibrarySelection.get("value") + "</LIBRARY_SELECTION>\n";
+				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
+
+				chaine = chaine + "              <"+ rpsLibraryLayout.get("value");	
+				if("PAIRED".equalsIgnoreCase(libraryLayout)) {
+					chaine = chaine + " NOMINAL_LENGTH=\"" + rpsExp.get("libraryLayoutNominalLength") + "\"";
+				}
+				chaine = chaine + " />\n";
+
+				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
+				if (libraryConstructionProtocol!=null && !libraryConstructionProtocol.equals("")){
+					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+				} else {
+					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
+				}
+				chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
+				if (! "OXFORD_NANOPORE".equalsIgnoreCase(rpsExp.get("typePlatform"))) {
+					chaine = chaine + "          <SPOT_DESCRIPTOR>\n";
+					chaine = chaine + "            <SPOT_DECODE_SPEC>\n";
+					chaine = chaine + "              <SPOT_LENGTH>"+rpsExp.get("spotLength")+"</SPOT_LENGTH>\n";
+					//Get readSpec
+					Set<ResourceProperties> rpsReadSpecs = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/readSpecs?experimentCode="+experimentCode,"bot");
+
+					for (ResourceProperties rp: rpsReadSpecs) {
+						chaine = chaine + "              <READ_SPEC>\n";
+						chaine = chaine + "                <READ_INDEX>"+rp.get("readIndex")+"</READ_INDEX>\n";
+						chaine = chaine + "                <READ_LABEL>"+rp.get("readLabel")+"</READ_LABEL>\n";
+						chaine = chaine + "                <READ_CLASS>"+rp.get("readClass")+"</READ_CLASS>\n";
+						chaine = chaine + "                <READ_TYPE>"+rp.get("readType")+"</READ_TYPE>\n";
+						chaine = chaine + "                <BASE_COORD>" + rp.get("baseCoord") + "</BASE_COORD>\n";
+						chaine = chaine + "              </READ_SPEC>\n";
+					}
+					chaine = chaine + "            </SPOT_DECODE_SPEC>\n";
+					chaine = chaine + "          </SPOT_DESCRIPTOR>\n";
+				}
+				chaine = chaine + "      </DESIGN>\n";
+				chaine = chaine + "      <PLATFORM>\n";
+				chaine = chaine + "        <" + rpsTypePlatform.get("value") + ">\n";
+				chaine = chaine + "          <INSTRUMENT_MODEL>" + rpsInstrumentModel.get("value") + "</INSTRUMENT_MODEL>\n";
+				chaine = chaine + "        </" + rpsTypePlatform.get("value") + ">\n";
+				chaine = chaine + "      </PLATFORM>\n";
+				chaine = chaine + "  </EXPERIMENT>\n";
 			}
-			chaine = chaine + "      </DESIGN>\n";
-			chaine = chaine + "      <PLATFORM>\n";
-			chaine = chaine + "        <" + rpsTypePlatform.get("value") + ">\n";
-			chaine = chaine + "          <INSTRUMENT_MODEL>" + rpsInstrumentModel.get("value") + "</INSTRUMENT_MODEL>\n";
-			chaine = chaine + "        </" + rpsTypePlatform.get("value") + ">\n";
-			chaine = chaine + "      </PLATFORM>\n";
-			chaine = chaine + "  </EXPERIMENT>\n";
 		}
 		chaine = chaine + "</EXPERIMENT_SET>\n";
 		output_buffer.write(chaine);
@@ -268,45 +272,47 @@ public class XMLServices implements IXMLServices{
 		chaine = chaine + "<RUN_SET>\n";
 		for (int i=0; i<runCodes.length; i++){
 			String runCode = runCodes[i].replaceAll("\"", "");
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+runCode);
-			ResourceProperties rpsRun = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+runCode,"bot").iterator().next();
-			String accession = rpsRun.get("accession");
-			
-			log.debug("RawData "+rpsRun.get("listRawData"));
-			
-			System.out.println("Ecriture du run " + runCode);
-			chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
-			if (accession!=null && !accession.equals("")) {
-				chaine = chaine + " accession=\"" + accession + "\" ";
-			}
+			if(runCode!=null && !runCode.equals("")){
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+runCode);
+				ResourceProperties rpsRun = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+runCode,"bot").iterator().next();
+				String accession = rpsRun.get("accession");
 
-			long datetime = Long.parseLong(rpsRun.get("runDate"));
-			Timestamp timeStamp = new Timestamp(datetime);
-			Date dateRun = new Date(timeStamp.getTime());
-			//Format date
-			chaine =  chaine + "run_date=\""+ formatter.format(dateRun)+"\"  run_center=\""+rpsRun.get("runCenter")+ "\" ";
-			chaine = chaine + ">\n";
-			chaine = chaine + "    <EXPERIMENT_REF refname=\"" + rpsRun.get("expCode") + "\"/>\n";
-			chaine = chaine + "    <DATA_BLOCK>\n";
-			chaine = chaine + "      <FILES>\n";
-			
-			//get rawData
-			log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode"+runCode);
-			Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode"+runCode,"bot");
-			for (ResourceProperties rp: rpsRawData) {
-				String fileType = rp.get("extention");
-				String relatifName = rp.get("relatifName");
-				fileType = fileType.replace(".gz", "");
-				chaine = chaine + "        <FILE filename=\"" + relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rp.get("md5") + "\">\n";
-				if ( rpsRawData.size() == 2 ) {
-					chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
-					chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";
+				log.debug("RawData "+rpsRun.get("listRawData"));
+
+				System.out.println("Ecriture du run " + runCode);
+				chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
+				if (accession!=null && !accession.equals("")) {
+					chaine = chaine + " accession=\"" + accession + "\" ";
 				}
-				chaine = chaine + "        </FILE>\n";
+
+				long datetime = Long.parseLong(rpsRun.get("runDate"));
+				Timestamp timeStamp = new Timestamp(datetime);
+				Date dateRun = new Date(timeStamp.getTime());
+				//Format date
+				chaine =  chaine + "run_date=\""+ formatter.format(dateRun)+"\"  run_center=\""+rpsRun.get("runCenter")+ "\" ";
+				chaine = chaine + ">\n";
+				chaine = chaine + "    <EXPERIMENT_REF refname=\"" + rpsRun.get("expCode") + "\"/>\n";
+				chaine = chaine + "    <DATA_BLOCK>\n";
+				chaine = chaine + "      <FILES>\n";
+
+				//get rawData
+				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode"+runCode);
+				Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode"+runCode,"bot");
+				for (ResourceProperties rp: rpsRawData) {
+					String fileType = rp.get("extention");
+					String relatifName = rp.get("relatifName");
+					fileType = fileType.replace(".gz", "");
+					chaine = chaine + "        <FILE filename=\"" + relatifName + "\" "+"filetype=\"" + fileType + "\" checksum_method=\"MD5\" checksum=\"" + rp.get("md5") + "\">\n";
+					if ( rpsRawData.size() == 2 ) {
+						chaine = chaine + "          <READ_LABEL>F</READ_LABEL>\n";
+						chaine = chaine + "          <READ_LABEL>R</READ_LABEL>\n";
+					}
+					chaine = chaine + "        </FILE>\n";
+				}
+				chaine = chaine + "      </FILES>\n";
+				chaine = chaine + "    </DATA_BLOCK>\n";
+				chaine = chaine + "  </RUN>\n";
 			}
-			chaine = chaine + "      </FILES>\n";
-			chaine = chaine + "    </DATA_BLOCK>\n";
-			chaine = chaine + "  </RUN>\n";
 		}
 		chaine = chaine + "</RUN_SET>\n";
 		output_buffer.write(chaine);

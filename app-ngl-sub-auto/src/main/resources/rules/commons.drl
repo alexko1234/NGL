@@ -2,6 +2,11 @@
 package birds
 
 import java.util.Date;
+import fr.genoscope.lis.devsi.birds.api.jobscheduler.JobScheduler;
+import fr.cea.ig.auto.submission.SubmissionServices;
+import fr.cea.ig.auto.submission.SubmissionServicesFactory;
+import fr.cea.ig.auto.submission.ISubmissionServices;
+import fr.genoscope.lis.devsi.birds.api.entity.JobProperties;
 
 
 
@@ -41,6 +46,36 @@ rule "Syntax order command line for createXML specification"
 end
 
 
+#init property retryJob
+rule "Init property retry Job "
+@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 500
+	no-loop
+	when
+		$executionService : ExecutionService( status == ExecutionService.PRE_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification.specificationGroup == false,  treatmentSpecification.name != null , treatmentSpecification.name in ("sendXML", "transfertRawData", "sendReleaseXML"))
+		not ($jobProperties : JobProperties(key=="retryJob") from $job.jobProperties)
+	then
+		$job.setProperty("retryJob","1");
+end
+
+#retry 3 times when job error
+rule "Retry Job "
+@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 400
+	no-loop
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification.specificationGroup == false, executionState == Job.ERROR_STATUS,  treatmentSpecification.name != null , treatmentSpecification.name in ("sendXML", "transfertRawData", "sendReleaseXML"))
+		not ($jobProperties : JobProperties(key=="retryJob", value=="3") from $job.jobProperties)
+	then
+		int nb = Integer.parseInt($job.getProperty("retryJob")) +1;
+		$job.setProperty("retryJob",""+nb);
+		$job.setExecutionState(Job.NEW_STATUS);		
+end
+
 #Send mail when job is exited
 rule "Send error mail when job exited"
 @BirdsRule( ExecutionService )
@@ -51,15 +86,18 @@ rule "Send error mail when job exited"
 		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
 		$job : Job( treatmentSpecification.specificationGroup == false, executionState == Job.ERROR_STATUS )
 	then
-		//Send mail
-		String errorMessage = "Error during executing job. Check outputFile and log \n"+
-		"STDOUT "+$job.getProperty(Job.STDOUT)+"\n"+
-		"STDERR "+$job.getProperty(Job.STDERR)+"\n"+
-		"SCHEDULER STDOUT "+$job.getProperty(JobScheduler.JOB_SCHEDULER_STD_OUTPUT_PATH+JobScheduler.JOB_SCHEDULER_STD_OUTPUT_FILE)+"\n"+
-		"SCHEDULER STDERR "+$job.getProperty(JobScheduler.JOB_SCHEDULER_STD_ERROR_PATH+JobScheduler.JOB_SCHEDULER_STD_ERROR_FILE)+"\n"+
-		"Exception "+$job.getProperty("Exception");
+		if($job.getProperty("retryJob")==null || ($job.getProperty("retryJob")!=null && $job.getProperty("retryJob").equals("3"))){
+	
+			//Send mail
+			String errorMessage = "Error during executing job. Check outputFile and log \n"+
+			"STDOUT "+$job.getProperty(Job.STDOUT)+"\n"+
+			"STDERR "+$job.getProperty(Job.STDERR)+"\n"+
+			"SCHEDULER STDOUT "+$job.getProperty(JobScheduler.JOB_SCHEDULER_STD_OUTPUT_PATH+JobScheduler.JOB_SCHEDULER_STD_OUTPUT_FILE)+"\n"+
+			"SCHEDULER STDERR "+$job.getProperty(JobScheduler.JOB_SCHEDULER_STD_ERROR_PATH+JobScheduler.JOB_SCHEDULER_STD_ERROR_FILE)+"\n"+
+			"Exception "+$job.getProperty("Exception");
 		
-		MailServiceFactory.getInstance().sendMailWithProperties(MailUtil.MAIL_SUBJECT_ERROR, MailUtil.getMessage("Execution Job",$job,$job.getProperty("code"),"",errorMessage));
+			SubmissionServicesFactory.getInstance().sendMail("william","JOB ERROR "+$job.getId(),errorMessage);
+		}
 		
 		
 end

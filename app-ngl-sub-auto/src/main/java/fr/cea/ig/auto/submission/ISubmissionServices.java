@@ -8,6 +8,7 @@ import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
 import fr.genoscope.lis.devsi.birds.api.exception.JSONDeviceException;
+import fr.genoscope.lis.devsi.birds.extension.api.exception.MailServiceException;
 
 public interface ISubmissionServices {
 
@@ -24,4 +25,7 @@ public interface ISubmissionServices {
 	boolean treatmentFileSubmission(String ebiFileName, String submissionCode, String studyCode, String sampleCodes,
 			String experimentCodes, String runCodes, String creationUser)
 					throws FatalException, BirdsException, UnsupportedEncodingException;
+
+	void sendMail(String creationUser, String subject, String message)
+			throws FatalException, MailServiceException, UnsupportedEncodingException;
 }

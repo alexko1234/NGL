@@ -511,6 +511,7 @@ public class SubmissionServices implements ISubmissionServices{
 		return ebiSuccess;
 	}
 
+	@Override
 	public void sendMail(String creationUser, String subject, String message) throws FatalException, MailServiceException, UnsupportedEncodingException
 	{
 		IMailService mailService = MailServiceFactory.getInstance();
@@ -519,7 +520,7 @@ public class SubmissionServices implements ISubmissionServices{
 		String[] emailTo = ProjectProperties.getProperty(ProjectProperties.ADDRESSES_EMAIL).split(",");
 		Set<String> to = new HashSet<String>(Arrays.asList(emailTo));
 
-		if(!creationUser.equals("ngsrg") && !creationUser.equals("")){
+		if(creationUser!=null && !creationUser.equals("ngsrg") && !creationUser.equals("")){
 			to.add(creationUser);
 		}
 

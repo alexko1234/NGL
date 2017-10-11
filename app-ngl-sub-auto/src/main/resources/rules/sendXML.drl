@@ -54,13 +54,14 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 			ebiSuccess = SubmissionServicesFactory.getInstance().treatmentFileSubmission(pathAC, codeSubmission, studyCode, sampleCodes, experimentCodes, runCodes, creationUser);
 		}catch(Exception e){
 	    	$job.setExecutionState(Job.ERROR_STATUS);
+	    	log.debug("Exception "+e.getMessage());
 	    	$job.setProperty("Exception",e.getMessage());
 	    }
 		JSONDevice jsonDevice = new JSONDevice();
 		if(ebiSuccess){
 			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", "{\"code\":\"F-SUB\"}", "bot");
 		}else{
-			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", "{\"code\":\"FE-SUB-R\"}", "bot");
+			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", "{\"code\":\"FE-SUB\"}", "bot");
 			$job.setExecutionState(Job.ERROR_STATUS);
 		}
 end
