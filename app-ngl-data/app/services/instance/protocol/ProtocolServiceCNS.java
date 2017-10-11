@@ -114,13 +114,11 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("direct-rnasequencing","direct RNAsequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
 				concatMap(newPSV("libraryProtocol","direct RNAsequencing"))));
 		
-		/*
-		lp.add(newProtocol("cdna-pcr-sequencing","cDNA-PCR Sequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
-				concatMap(newPSV("libraryProtocol","cDNA-PCR Sequencing"))));
-		lp.add(newProtocol("direct-cdna-sequencing","Direct cDNA Sequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library"),
-				concatMap(newPSV("libraryProtocol","direct cDNA Sequencing"))));
-		*/
 		
+		lp.add(newProtocol("cdna-pcr-sequencing","cDNA-PCR Sequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
+				concatMap(newPSV("libraryProtocol","cDNA-PCR Sequencing"))));
+		lp.add(newProtocol("direct-cdna-sequencing","Direct cDNA Sequencing","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
+				concatMap(newPSV("libraryProtocol","Direct cDNA Sequencing"))));
 		
 		
 		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-end-prep","nanopore-pcr","nanopore-barcode-ligation","nanopore-pre-pcr-ligation","aliquoting")));
