@@ -420,24 +420,25 @@ angular.module('home').controller('AdditionalNormalizationCtrl',['$scope', '$par
 			//console.log(">>>outputContainerUsed.concentration.value="+ outputConc );
 			//console.log(">>>inputContainerUsed.concentration.value="+ inputConc );
 
-			// !! les cas ou la conc input = 0 existent et font planter la generation de la feuille de route !!
-			// => faire comme le cas conc trop forte
-			if (( outputConc > inputConc) || (inputConc=== 0 ))
-			{
-				console.log("concentration out trop forte OU concentration in  nulle!!");
+			// 11/10/2017 mettre ici la verification d'unite pour englober tous les cas
+			var input_unit= $parse("inputContainerUsed.concentration.unit")(value.data);
+			if (input_unit==='nM'){		
+				// !! les cas ou la conc input = 0 existent et font planter la generation de la feuille de route !!
+				// => faire comme le cas conc trop forte
+				if (( outputConc > inputConc) || (inputConc=== 0 ))
+				{
+					console.log("concentration out trop forte OU concentration in  nulle!!");
 				
-				// forcer valeurs
-				$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(value.data, 0); 
-				$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, outputVol);
-				$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
-			} else {
-				// 26/09/2017 NGL-1519: la normalisation se fait en nM, si les concentration venant de l'experience precedente sont en ng/ul=> pas de calcul
-				var input_unit= $parse("inputContainerUsed.concentration.unit")(value.data);
-				if (input_unit==='nM'){	
-			       computeVolumes(value.data);
+					// forcer valeurs
+					$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(value.data, 0); 
+					$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(value.data, outputVol);
+					$parse("outputContainerUsed.concentration.value").assign(value.data, inputConc);
 				} else {
+				//console.log("OK calculs");
+			       computeVolumes(value.data);
+				} 
+			} else {
 					console.log("Impossible de calculer les volumes: unité d'entrée n'est pas nM");
-				}
 			}
 		}
 	}
