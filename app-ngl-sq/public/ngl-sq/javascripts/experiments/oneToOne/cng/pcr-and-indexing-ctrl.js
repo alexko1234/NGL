@@ -1,4 +1,5 @@
-// FDS 01/08/2017 - copiee depuis library-prep-ctrl...... A ADAPTER
+// FDS 01/08/2017 - copiee depuis library-prep-ctrl
+//     10/10/2017 1er essai d'utilisationnde multiplaque: OK mais il faudra passer par un service pour eviter la duplication de code...
 angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
 	
@@ -220,7 +221,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				"dynamic":true,
 			},
 			"otherButtons": {
-				//30/08/2017 plus de volume in donc plus besoin de bouton de copie de volume.....
+				//30/08/2017 plus de volume in donc plus besoin de bouton de copie de volume...
 			}
 	}; // fin struct datatableConfig
 	
@@ -321,88 +322,6 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 		$scope.atmService = atmService;
 	}
 	
-	/* A SUPPRIMER ??????????
-	// Calculs 
-	$scope.updatePropertyFromUDT = function(value, col){
-		console.log("update from property : "+col.property);
-
-		// si l'utilisateur défini le volume a engager => calculer la quantité
-		if(col.property === 'inputContainerUsed.experimentProperties.inputVolumeLib.value'){
-			computeQuantity(value.data);
-		}
-		
-		// 05/08/2016 essai d'ajouter le calcul inverse...===> PB LES 2 MODIFICATIONS SE MARCHENT SUR LES PIEDS !!
-		//
-		// si l'utilisateur défini la quantité a engager => calculer le volume
-		//if(col.property === 'inputContainerUsed.experimentProperties.inputQuantityLib.value'){
-		//	computeVolume(value.data);
-		//}
-	}
-
-	// -1- inputQuantityLib=inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolumeLib.value
-	var computeQuantity = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value");
-
-		if($parse("inputContainerUsed.concentration.unit === 'nM'")(udtData)) {
-			console.log("unit = nM");
-		}
-		
-		var compute = {
-				inputConcUnit: $parse("inputContainerUsed.concentration.unit")(udtData),
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value")(udtData),		
-				isReady:function(){
-					/// return (this.inputVolume && this.inputConc); bug!!!  le calcul ne se fait pas si inputConc=0 ( par exemple WATER)
-					/// bloquer le calcul si l'unité n'est pas nM TODO...
-					return (this.inputVolume && (this.inputConc != undefined));
-				}
-		};
-		
-		if(compute.isReady()){
-			var result = $parse("inputConc * inputVolume")(compute);
-			console.log("result = "+result);
-			
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputQuantity = Math.round(result*10)/10;				
-			}else{
-				inputQuantity = undefined;
-			}	
-			getter.assign(udtData, inputQuantity);
-			
-		}else{
-			console.log("Missing values to calculate Quantity");
-		}
-	}
-	
-	// PLUS APPELLEE...voir plus haut...
-	// -2- inputVolumeLib= inputContainerUsed.experimentProperties.QuantityLib.value / inputContainerUsed.concentration.value
-	var computeVolume = function(udtData){
-		var getter = $parse("inputContainerUsed.experimentProperties.inputVolumeLib.value");
-
-		var compute = {
-				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
-				inputQuantity : $parse("inputContainerUsed.experimentProperties.inputQuantityLib.value")(udtData),		
-				isReady:function(){
-					return (this.inputConc && this.inputQuantity);
-				}
-		};
-		
-		if(compute.isReady()){
-			var result = $parse("inputQuantity / inputConc")(compute);
-			console.log("result = "+result);
-			
-			if(angular.isNumber(result) && !isNaN(result)){
-				inputVolume = Math.round(result*10)/10;				
-			}else{
-				inputVolume = undefined;
-			}	
-			getter.assign(udtData, inputVolume);
-			
-		}else{
-			console.log("Missing values to calculate Volume");
-		}
-	}
-	*/
 	
 	var importData = function(){
 		$scope.messages.clear();
@@ -439,8 +358,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
 		//console.log("previous code: "+ $scope.outputContainerSupport.code);
-	}
-	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
+	
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
@@ -464,30 +382,49 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
-	//actuellement 1 seule definie
+	// 10/10/2017 modifications pour possibilité d'utilisation plusieurs plaques
+	/*$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
+	                  {name:"DAP TruSeq DNA HT-X", tagCategory:"DUAL-INDEX", tags:[] } ];
+	*/
+	$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] } ];
+
+	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
+	// plaque originale "DAP TruSeq DNA HT"
+	$scope.plates[0].tags.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
+	$scope.plates[0].tags.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
+	$scope.plates[0].tags.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508");
+	$scope.plates[0].tags.push("D704-D501", "D704-D502", "D704-D503", "D704-D504", "D704-D505", "D704-D506", "D704-D507", "D704-D508"); 
+	$scope.plates[0].tags.push("D705-D501", "D705-D502", "D705-D503", "D705-D504", "D705-D505", "D705-D506", "D705-D507", "D705-D508"); 
+	$scope.plates[0].tags.push("D706-D501", "D706-D502", "D706-D503", "D706-D504", "D706-D505", "D706-D506", "D706-D507", "D706-D508"); 
+	$scope.plates[0].tags.push("D707-D501", "D707-D502", "D707-D503", "D707-D504", "D707-D505", "D707-D506", "D707-D507", "D707-D508"); 
+	$scope.plates[0].tags.push("D708-D501", "D708-D502", "D708-D503", "D708-D504", "D708-D505", "D708-D506", "D708-D507", "D708-D508"); 
+	$scope.plates[0].tags.push("D709-D501", "D709-D502", "D709-D503", "D709-D504", "D709-D505", "D709-D506", "D709-D507", "D709-D508"); 
+	$scope.plates[0].tags.push("D710-D501", "D710-D502", "D710-D503", "D710-D504", "D710-D505", "D710-D506", "D710-D507", "D710-D508"); 
+	$scope.plates[0].tags.push("D711-D501", "D711-D502", "D711-D503", "D711-D504", "D711-D505", "D711-D506", "D711-D507", "D711-D508"); 
+	$scope.plates[0].tags.push("D712-D501", "D712-D502", "D712-D503", "D712-D504", "D712-D505", "D712-D506", "D712-D507", "D712-D508"); 
+
+	/* 10/10/2017 TEST 
+	$scope.plates[1].tags.push("X701-X501", "X701-X502", "X701-X503", "X701-X504", "X701-X505", "X701-X506", "X701-X507", "X701-X508");
+	$scope.plates[1].tags.push("X702-X501", "X702-X502", "X702-X503", "X702-X504", "X702-X505", "X702-X506", "X702-X507", "X702-X508");
+	$scope.plates[1].tags.push("X703-X501", "X703-X502", "X703-X503", "X703-X504", "X703-X505", "X703-X506", "X703-X507", "X703-X508");
+	$scope.plates[1].tags.push("X704-X501", "X704-X502", "X704-X503", "X704-X504", "X704-X505", "X704-X506", "X704-X507", "X704-X508"); 
+	$scope.plates[1].tags.push("X705-X501", "X705-X502", "X705-X503", "X705-X504", "X705-X505", "X705-X506", "X705-X507", "X705-X508"); 
+	$scope.plates[1].tags.push("X706-X501", "X706-X502", "X706-X503", "X706-X504", "X706-X505", "X706-X506", "X706-X507", "X706-X508"); 
+	$scope.plates[1].tags.push("X707-X501", "X707-X502", "X707-X503", "X707-X504", "X707-X505", "X707-X506", "X707-X507", "X707-X508"); 
+	$scope.plates[1].tags.push("X708-X501", "X708-X502", "X708-X503", "X708-X504", "X708-X505", "X708-X506", "X708-X507", "X708-X508"); 
+	$scope.plates[1].tags.push("X709-X501", "X709-X502", "X709-X503", "X709-X504", "X709-X505", "X709-X506", "X709-X507", "X709-X508"); 
+	$scope.plates[1].tags.push("X710-X501", "X710-X502", "X710-X503", "X710-X504", "X710-X505", "X710-X506", "X710-X507", "X710-X508"); 
+	$scope.plates[1].tags.push("X711-X501", "X711-X502", "X711-X503", "X711-X504", "X711-X505", "X711-X506", "X711-X507", "X711-X508"); 
+	$scope.plates[1].tags.push("X712-X501", "X712-X502", "X712-X503", "X712-X504", "X712-X505", "X712-X506", "X712-X507", "X712-X508"); 
+	*/
 	
-	$scope.plates = [ {name:"DAP TruSeq DNA HT", tagCategory:"DUAL-INDEX"} ];
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
-	
-	// pour l'instant une seule plaque => faire un simple tableau
-	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
-	var tagPlateCode=[];
-	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
-	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
-	tagPlateCode.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508");
-	tagPlateCode.push("D704-D501", "D704-D502", "D704-D503", "D704-D504", "D704-D505", "D704-D506", "D704-D507", "D704-D508"); 
-	tagPlateCode.push("D705-D501", "D705-D502", "D705-D503", "D705-D504", "D705-D505", "D705-D506", "D705-D507", "D705-D508"); 
-	tagPlateCode.push("D706-D501", "D706-D502", "D706-D503", "D706-D504", "D706-D505", "D706-D506", "D706-D507", "D706-D508"); 
-	tagPlateCode.push("D707-D501", "D707-D502", "D707-D503", "D707-D504", "D707-D505", "D707-D506", "D707-D507", "D707-D508"); 
-	tagPlateCode.push("D708-D501", "D708-D502", "D708-D503", "D708-D504", "D708-D505", "D708-D506", "D708-D507", "D708-D508"); 
-	tagPlateCode.push("D709-D501", "D709-D502", "D709-D503", "D709-D504", "D709-D505", "D709-D506", "D709-D507", "D709-D508"); 
-	tagPlateCode.push("D710-D501", "D710-D502", "D710-D503", "D710-D504", "D710-D505", "D710-D506", "D710-D507", "D710-D508"); 
-	tagPlateCode.push("D711-D501", "D711-D502", "D711-D503", "D711-D504", "D711-D505", "D711-D506", "D711-D507", "D711-D508"); 
-	tagPlateCode.push("D712-D501", "D712-D502", "D712-D503", "D712-D504", "D712-D505", "D712-D506", "D712-D507", "D712-D508"); 
-	
+
 	var setTags = function(){
 		$scope.messages.clear();
-		//console.log("selected column=" +$scope.tagPlateColumn.name);
+		
+		console.log("selected plate is "+ $scope.tagPlate.name);
+		console.log("selected column is " + $scope.tagPlateColumn.name);
 		
         var dataMain = atmService.data.getData();
         // trier dans l'ordre "colonne d'abord"
@@ -519,7 +456,8 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				if(ocu.experimentProperties===undefined || ocu.experimentProperties===null){
 					ocu.experimentProperties={};
 				}				
-				ocu.experimentProperties["tag"]={"_type":"single","value":tagPlateCode[indexPos]};
+				// 10/10/2017 modification pour possibilité d'utilisation plusieurs plaques
+				ocu.experimentProperties["tag"]={"_type":"single","value":$scope.tagPlate.tags[indexPos]};
 				ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
 
 			} else {
@@ -532,10 +470,11 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	    atmService.data.setData(dataMain);
 	};
 	
-	$scope.selectCol = {
+	$scope.selectColOrPlate = {
 		isShow:function(){
 			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
 			},	
 		select:setTags,
 	};
+	
 }]);
