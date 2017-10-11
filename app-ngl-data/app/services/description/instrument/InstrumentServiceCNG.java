@@ -194,7 +194,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul (input tubes ou plaques / output tubes ou  plaques)
 		//FDS 13/07/2017 "Mastercycler Nexus-SX1" et "Mastercycler Nexus" sont le meme type => fusionner !!!
 		//               essai: mettre le nom de labo dans le "path"
-		//    01/08/2017 au labo LMPD il y a un Nexus Gradient !!!
 		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1", "mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerNexusProperties(), 
 				getInstruments(
 						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -202,7 +201,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						
 						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler-nexus8", "Mastercycler 8 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus Gradient)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -378,13 +377,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS 17/07/2017 NGL-1201 : pseudo instrument Masterycler EP-Gradient + Bravo
-		// ep-gradient 1 ou 2 + bravo 1 ou 2
+		// ep-gradient 1 ou 2 ou 4 + bravo 1 ou 2
 		l.add(newInstrumentUsedType("Mastercycler EP-Gradient + Bravo Workstation", "mastercycler-epg-and-bravows", InstrumentCategory.find.findByCode("thermocycler-and-liquid-handling-robot"), getMastercyclerEPGAndBravoWsProperties(), 
 				getInstruments(
 						createInstrument("mastercycler1-and-bravows1", "Mastercycler 1 (EP-Gradient) / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler1-and-bravows2", "Mastercycler 1 (EP-Gradient) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("mastercycler2-and-bravows1", "Mastercycler 2 (EP-Gradient) / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler2-and-bravows2", "Mastercycler 2 (EP-Gradient) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler2-and-bravows2", "Mastercycler 2 (EP-Gradient) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler4-and-bravows1", "Mastercycler 4 (EP-Gradient) / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler4-and-bravows2", "Mastercycler 4 (EP-Gradient) / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -787,7 +788,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, null, null , null, "single", null, true ,"14", null));
 
 		//Bravo 
-		l.add(newPropertiesDefinition("Ratio billes???","AdnBeadVolumeRatio???", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
+		// a voir si necessaire...
+		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
 				null, null, null , null, "single", null, true ,"0.8", null));
 		return l;
 	}
@@ -800,7 +802,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, null, null , null, "single", null, true ,"14", null));
 
 		//Bravo 
-		l.add(newPropertiesDefinition("Ratio billes???","AdnBeadVolumeRatio???", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
+		// a voir si necessaire...
+		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
 				null, null, null , null, "single", null, true ,"0.8", null));
 		return l;
 	}
