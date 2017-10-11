@@ -579,6 +579,9 @@ public class ExpWorkflowsHelper {
 				projectCodes.parallelStream().forEach(projectCode -> {
 					CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);				
 				});
+				newSampleCodes.forEach(newSampleCode -> {
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("sampleCodes", newSampleCode), DBUpdate.pull("sampleCodes", newSampleCode));
+				});
 			}			
 			//TODO Analyse if need to update lastSampleCode on project with the real exist sample. 
 		}
@@ -1483,6 +1486,12 @@ public class ExpWorkflowsHelper {
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", deleteSampleCodes));
 			}
 			
+			if(deleteSampleCodes != null && deleteSampleCodes.size() > 0){
+				deleteSampleCodes.forEach(deleteSampleCode -> {
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("sampleCodes", deleteSampleCode), DBUpdate.pull("sampleCodes", deleteSampleCode));
+				});				
+			}
+						
 			updateProjectCodes.parallelStream().forEach(projectCode -> {
 				CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);				
 			});
