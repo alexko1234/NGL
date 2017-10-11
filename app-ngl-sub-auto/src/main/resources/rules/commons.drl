@@ -98,7 +98,7 @@ rule "Send error mail when job exited"
 		
 			SubmissionServicesFactory.getInstance().sendMail("william","JOB ERROR "+$job.getId(),errorMessage);
 		}
-		
+
 end
 
 function void updateParameterXML(String valueParam, Job job, String resourceName)

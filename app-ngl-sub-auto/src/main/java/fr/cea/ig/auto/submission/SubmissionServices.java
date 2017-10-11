@@ -520,7 +520,6 @@ public class SubmissionServices implements ISubmissionServices{
 		Set<String> to = new HashSet<String>(Arrays.asList(emailTo));
 
 		if(creationUser!=null && !creationUser.equals("ngsrg") && !creationUser.equals("")){
-
 			to.add(creationUser);
 		}
 

@@ -28,5 +28,4 @@ public interface ISubmissionServices {
 
 	void sendMail(String creationUser, String subject, String message)
 			throws FatalException, MailServiceException, UnsupportedEncodingException;
-
 }
