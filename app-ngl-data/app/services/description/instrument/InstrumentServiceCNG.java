@@ -659,9 +659,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// 18/07/2017 aussi utilise en Fragmentation/capture !!!
-		//l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
-        //        newValues("PCR FREE PROD NGS FINAL"),"PCR FREE PROD NGS FINAL", "single"));
-		
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 newValues("PCR FREE PROD NGS FINAL",
                 		  "DEV: Fragmentation"),  

@@ -323,7 +323,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 
-if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture
 			l.add(newExperimentType("Fragmentation","fragmentation",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
@@ -357,8 +356,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					getInstrumentUsedTypes("mastercycler-nexus-and-bravows",
 							               "mastercycler-epg-and-bravows"),
 					"OneToOne",
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-} // END DEV	
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			
 			/** Quality Control, ordered by display order **/
             //NOTE: pas de Node a creer pour experiences type qualitycontrol
@@ -411,7 +409,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				    "OneToVoid", false,
 				    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	    
-if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			//FDS 27/07/2017 ajout NGL-1201: qc pour process Capture
 			l.add(newExperimentType("Dosage Fluo (Quant-iT)","fluo-quantification", null, 50,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
@@ -419,7 +416,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					getInstrumentUsedTypes("spectramax"), 
 					"OneToVoid",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
-} // END DEV	
 			
 			/** Purification, ordered by display order **/
                             /*vide*/
@@ -695,8 +691,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null, // pas de qc
 				null  // pas de transfert 
 				).save();
-				     	
-if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){		
+				     		
 	    //Les nodes pour process Capture doivent obligatoirement etre crees AVANT
 		//FDS ajout 11/07/2017 NGL-1201: processus capture
 		newExperimentTypeNode("fragmentation",getExperimentTypes("fragmentation").get(0),
@@ -754,21 +749,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 						           "labchip-migration-profile"),    // QUELS QC  ??????????????? un seul suffit
 				null  // pas tranfert
 				).save();
-		
-	} else {
-		//FDS commun WG_NANO et RNAseq
-		newExperimentTypeNode("pcr-and-purification",getExperimentTypes("pcr-and-purification").get(0),
-				true,false,false,
-				
-				getExperimentTypeNodes("library-prep",
-						               "prep-wg-nano"), // previous nodes
-				null, // pas de purif
-				getExperimentTypes("labchip-migration-profile"),
-				null  // pas de transfert
-				).save();
-		
-		
-	} // END DEV
 			
 		//FDS ajout 21/02/2017 NGL-1167: processus Chromium
 		newExperimentTypeNode("chromium-gem-generation",getExperimentTypes("chromium-gem-generation").get(0),
