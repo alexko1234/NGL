@@ -113,13 +113,6 @@ public class RunServiceCNG  extends AbstractRunService{
         
          // codes for Captures
          values.add(DescriptionFactory.newValue("CA","CA - DefCap008_Rg"));
-         values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
-         // 12/10/2017 manquait CAB, CAC, CAD, CAE qui existent pourtant dans Solexa depuis 2015 !!!!
-         values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
-         values.add(DescriptionFactory.newValue("CAC","CAC - DefCap025"));
-         values.add(DescriptionFactory.newValue("CAD","CAD - DefCap026"));
-         values.add(DescriptionFactory.newValue("CAE","CAE - DefCap027"));   
-         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));   // ajout aussi CAF
          values.add(DescriptionFactory.newValue("CB","CB - DefCap005_Ex"));
          values.add(DescriptionFactory.newValue("CC","CC - DefCap006_Ex"));
          values.add(DescriptionFactory.newValue("CD","CD - DefCap004_Rg"));
@@ -144,6 +137,13 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
          values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
          values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022"));
+         values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
+         // 12/10/2017 manquait CAB, CAC, CAD, CAE qui existent pourtant dans Solexa depuis 2015 !!!!
+         values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
+         values.add(DescriptionFactory.newValue("CAC","CAC - DefCap025"));
+         values.add(DescriptionFactory.newValue("CAD","CAD - DefCap026"));
+         values.add(DescriptionFactory.newValue("CAE","CAE - DefCap027"));   
+         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));   // ajout aussi CAF
          
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
