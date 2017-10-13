@@ -23,8 +23,6 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Submission submission, State nextState) {
-		Logger.debug("dans apply pre state rules avec nextState = '" + nextState.code + "'");
-		updateTraceInformation(submission.traceInformation, nextState); 
 		if("IP-SUB-R".equals(submission.state.code) && "F-SUB".equals(nextState.code)){
 			Logger.debug("call update submission Release");
 			submissionWorkflowsHelper.updateSubmissionRelease(submission);
@@ -34,8 +32,11 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 		}
 		
 		if("IW-SUB".equals(nextState.code)){
-			submissionWorkflowsHelper.activatePrimarySubmission(validation, submission);
+			submissionWorkflowsHelper.activationPrimarySubmission(validation, submission);
 		}
+		Logger.debug("dans apply pre state rules avec nextState = '" + nextState.code + "'");
+		updateTraceInformation(submission.traceInformation, nextState); 
+
 	}
 
 	@Override

@@ -130,7 +130,6 @@ public class SubmissionWorkflowsHelper {
 						for (Submission sub: submissionList) {
 							System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
 						}
-						validation.addErrors("experiment", "error.experiment.mulitple.submission",experimentCode);
 					} else {
 						// todo : verifier qu'on ne detruit que des experiments en new ou uservalidate
 						if ("N".equals(experiment.state.code) ||"V-SUB".equals(experiment.state.code)){
@@ -287,6 +286,12 @@ public class SubmissionWorkflowsHelper {
 		return (dataRep);
 	}	
 	
+	public void activationPrimarySubmission(ContextValidation contextValidation, Submission submission) {
+		checkForActivatePrimarySubmission(contextValidation, submission);
+		if (!contextValidation.hasErrors()) {
+			activatePrimarySubmission(contextValidation, submission);
+		}
+	}
 	
 	public void activatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
 	System.out.println("Dans SubmissionWorkflowsHelper.activatePrimarySubmission");
@@ -302,7 +307,10 @@ public class SubmissionWorkflowsHelper {
 				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
 	
 				System.out.println("exp = "+ expElt.code);
-				
+				contextValidation.addKeyToRootKeyName("experiment");
+				contextValidation.addKeyToRootKeyName("run");
+				contextValidation.addKeyToRootKeyName("rawData");
+
 				for (RawData rawData :expElt.run.listRawData) {
 					// Partie de code deportée dans activate : on met la variable location à CNS
 					// si les données sont physiquement au CNS meme si elles sont aussi au CCRT
@@ -315,31 +323,21 @@ public class SubmissionWorkflowsHelper {
 					}
 					
 					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
+					// verification dans check que fileCible est bien soit au CNS soit au CCRT.
 					if(fileCible.exists()){
 						System.out.println("le fichier "+ fileCible +"existe bien");
 						rawData.location = "CNS";
 						rawData.directory = cns_directory;
-					} else {
-						System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
-						if ("CNS".equalsIgnoreCase(readSet.location)) {
-							if (p.archive){
-								throw new SraException(rawData.relatifName + " n'existe pas sur les disques CNS, et Projet " + p.code + " avec archive=true, et readSet= " + readSet.code + " avec location = CNS");
-							} else {
-								throw new SraException(rawData.relatifName + " n'existe pas sur les disques CNS, et Projet " + p.code + " avec archive=false, et readSet " + readSet.code  + " localisée au CNS");
-							}
-						} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
+					} else {				
+						if ("CCRT".equalsIgnoreCase(readSet.location)) {
 							rawData.location = readSet.location;
-						} else {
-							throw new SraException(rawData.relatifName + " avec location inconnue => " + readSet.location);
 						}
 					}
 					if (rawData.extention.equalsIgnoreCase("fastq")) {
 						rawData.gzipForSubmission = true;
 					} else {
 						rawData.gzipForSubmission = false;
-						if (StringUtils.isBlank(rawData.md5)){
-							contextValidation.addErrors("md5", " valeur à null alors que donnée deja zippée pour "+ rawData.relatifName);
-						}
+						// verification dans check que md5 existe bien dans ce cas la.
 					}
 					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
 					// donnée est au CNS et si elle n'est pas à zipper
@@ -363,14 +361,20 @@ public class SubmissionWorkflowsHelper {
 					} else {
 						System.out.println("Donnée "+ rawData.relatifName + " localisée au " + rawData.location);
 					}
+					contextValidation.removeKeyFromRootKeyName("rawData");
+					contextValidation.removeKeyFromRootKeyName("run");
+					contextValidation.removeKeyFromRootKeyName("experiment");
 				}
+				
 				// sauver dans base la liste des rawData avec bonne location et bon directory:
 				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME,  Experiment.class, 
 					DBQuery.is("code", experimentCode),
 					DBUpdate.set("run.listRawData", expElt.run.listRawData));
 			}
+			
+
 		} catch (SraException e) {
-			contextValidation.addErrors("Dans activatePrimarySubmission", e.getMessage());
+			contextValidation.addErrors("submission", e.getMessage());
 		} catch (SecurityException e) {
 			contextValidation.addErrors("Dans activatePrimarySubmission, pb SecurityException: ", e.getMessage());
 		} catch (UnsupportedOperationException e) {
@@ -391,7 +395,80 @@ public class SubmissionWorkflowsHelper {
 		
 	}
 		
+	public void checkForActivatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
+	System.out.println("Dans SubmissionWorkflowsHelper.checkForActivatePrimarySubmission");
+			// verifications liens donnees brutes vers repertoire de soumission
+			for (String experimentCode: submission.experimentCodes) {
+				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+
+				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
+				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
 	
+				System.out.println("exp = "+ expElt.code);
+				contextValidation.addKeyToRootKeyName("experiment");
+				contextValidation.addKeyToRootKeyName("run");
+				contextValidation.addKeyToRootKeyName("rawData");
+
+				for (RawData rawData :expElt.run.listRawData) {
+					// Partie de code deportée dans activate : on met la variable location à CNS
+					// si les données sont physiquement au CNS meme si elles sont aussi au CCRT
+					// et on change le chemin pour remplacer /ccc/genostore/.../rawdata par /env/cns/proj/ 
+					String cns_directory = rawData.directory;
+					if(rawData.directory.startsWith("/ccc/genostore")){
+						int index = rawData.directory.indexOf("/rawdata/");
+						String lotseq_dir = rawData.directory.substring(index + 9);
+						cns_directory="/env/cns/proj/"+lotseq_dir;
+					}
+					
+					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
+					if(fileCible.exists()){
+						System.out.println("le fichier "+ fileCible +"existe bien");
+						rawData.location = "CNS";
+						rawData.directory = cns_directory;
+					} else {
+						System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
+						if ("CNS".equalsIgnoreCase(readSet.location)) {
+							if (p.archive){
+								contextValidation.addErrors("rawData", "rawData.activate.CNS.archive", rawData.relatifName, p.code, readSet.code);
+							} else {
+								contextValidation.addErrors("rawData", "rawData.activate.CNS.notArchive", rawData.relatifName, p.code, readSet.code);
+							}
+						} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
+							rawData.location = readSet.location;
+						} else {
+							contextValidation.addErrors("rawData", "rawData.activate.location", readSet.location, rawData.relatifName);
+						}
+					}
+					if (rawData.extention.equalsIgnoreCase("fastq")) {
+						rawData.gzipForSubmission = true;
+					} else {
+						rawData.gzipForSubmission = false;
+						if (StringUtils.isBlank(rawData.md5)){
+							contextValidation.addErrors("rawData", "rawData.activate.md5"+ rawData.relatifName);
+						}
+					}
+					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
+					// donnée est au CNS et si elle n'est pas à zipper
+					if ("CNS".equalsIgnoreCase(rawData.location) && ! rawData.gzipForSubmission) {
+						System.out.println("run = "+ expElt.run.code);
+						File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+						if(fileLien.exists()){
+							fileLien.delete();
+						}
+						System.out.println("fileCible = " + fileCible);
+						System.out.println("fileLien = " + fileLien);
+					} else {
+						System.out.println("Donnée "+ rawData.relatifName + " localisée au " + rawData.location);
+					}
+					contextValidation.removeKeyFromRootKeyName("rawData");
+					contextValidation.removeKeyFromRootKeyName("run");
+					contextValidation.removeKeyFromRootKeyName("experiment");
+				}
+				
+			}		
+
+	}
+			
 	
 	
 }
