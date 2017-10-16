@@ -240,7 +240,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				60,
 				null, // pas de propriétés ??  
 				getPETForTransfertQCPurif(),
-				getExperimentTypes("pool").get(0),                       //first experiment type ( 1 transfert n'importe lequel...?)
+				getExperimentTypes("tubes-to-plate").get(0),                       //first experiment type ( 1 transfert n'importe lequel...?)
 				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //last  experiment type ( doit etre la ext-to...)
 				getExperimentTypes("ext-to-transfert-qc-purif").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -507,7 +507,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			.collect(Collectors.toList());
 
 		pets.add(getPET("ext-to-transfert-qc-purif",-1));
-		pets.add(getPET("pool",0));
+		pets.add(getPET("tubes-to-plate",0));
 
 		return pets;		
 	}
