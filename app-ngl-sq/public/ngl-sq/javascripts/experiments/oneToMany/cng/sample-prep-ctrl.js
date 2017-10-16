@@ -1,7 +1,8 @@
-/* 11/08/2017 GA/FDS experience One to Many qui n'utilise pas de datatable... */
+/* 11/08/2017 GA/FDS experience One to Many */
+/* 16/10/2017 finalement il faut qd meme un datatable */
 
-angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService',
-                                                               function($scope, $parse, commonAtomicTransfertMethod, mainService ) {
+angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter','commonAtomicTransfertMethod','mainService','datatable',
+                                                               function($scope, $parse, $filter, commonAtomicTransfertMethod, mainService, datatable ) {
 	
 	
    var nbOutputSupport=1;  // essai d'initialisation
@@ -59,7 +60,7 @@ angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'comm
 	   }
 	}	
    
-
+   /* ancienne methode avant ajout datatable 
    // il faut la callbackFunction pour le $emit 
    function generateATM(callbackFunction){
 	    console.log ('ouput supports='+ $scope.outputContainerSupportCodes);
@@ -157,6 +158,8 @@ angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'comm
 						}
 					}
 			
+					
+					
 					//2.4 mettre l'atm dans l'expérience
 					$scope.experiment.atomicTransfertMethods.push(atm);
 	    	});
@@ -176,6 +179,7 @@ angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'comm
 			
 	    }
 	}
+	*/
 	
 	function getExperimentData(){	
 		//1 récupérer LE locationOnContainerSupport.code des containers (il ne peux y en avoir qu'un seul)
@@ -198,9 +202,19 @@ angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'comm
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 
-		generateATM(callbackFunction);
-		// le $emit est effectue DANS generateATM, APRES la creation des ATM !! (si il y a des ATMS)
-
+		//  ancienne methode avant ajout Datatable.... generateATM(callbackFunction);
+		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
+		if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
+			$scope.$emit('childSavedError', callbackFunction);
+			
+		    $scope.messages.clazz = "alert alert-danger";
+		    $scope.messages.text = Messages('experiments.output.error.minSupports',1);
+		    $scope.messages.showDetails = false;
+			$scope.messages.open(); 
+		} else {
+			$scope.$emit('childSaved', callbackFunction);
+		}
+		
 	});
 	
 	$scope.$on('refresh', function(e) {
@@ -219,49 +233,41 @@ angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'comm
 		// rien  ????
 	});
 	
-	/*Init*/
-	var $commonATM = commonAtomicTransfertMethod($scope);
-	
-	var newAtomicTransfertMethod = function(l,c){
-		return {
-			class:"OneToMany",
-			line: l, 
-			column: c, 				
-			inputContainerUseds:new Array(0), 
-			outputContainerUseds:new Array(0)
-		};
-	};
-
-	//defined default output unit
-	var defaultOutputUnit = {
-			volume : "µL",
-			concentration : "nM"
-	};
-	
-	//nécessaire pour newOutputContainerUsed meme si vide
-	var defaultOutputValue = {		
-	};
-	
-	
-	
-	/*----------------- TEST 30/08 il faut des datatables !!!! -----------------------------------------------
-	
-	var datatableConfigTest = {
-			//peut etre exporté CSV ??
-			name: $scope.experiment.typeCode+'_TEST'.toUpperCase(),
+	// A COMPLETER.....
+	var inputContainerDatatableConfig = {
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
+			        	 "property":"inputContainer.support.code",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         }    
-			         ],
+			         },
+			         { // Ligne
+			        	 "header":Messages("containers.table.support.line"),
+			        	 "property":"inputContainer.support.line",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":2,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         { // colonne
+			        	 "header":Messages("containers.table.support.column"),
+				         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 "property":"inputContainer.support.column*1",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":3,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         }   
+			],
 			compact:true,
+			// tout a false, on ne fait que de l'affichage
 			showTotalNumberRecords:false,
 			pagination:{
 				active:false
@@ -270,108 +276,165 @@ angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'comm
 				active:false
 			},
 			order:{
-				mode:'local', //or 
-				active:true,
-				by:'inputContainer.code'
+				active:false
 			},
 			remove:{
-				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				mode:'local'
+				active: false				
 			},
 			save:{
-				active:true,
-				withoutEdit: true,
-				keepEdit:true,
-				changeClass : false,
-				mode:'local',
-				showButton:false
+				active:false
 			},			
 			select:{
-				active:true
+				active:false
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				byDefault:($scope.isCreationMode()),
-				columnMode:true
+				active: false
 			},	
 			cancel : {
-				active:true
+				active:false
 			},
 			extraHeaders:{
 				number:1,
 				dynamic:true,
 			}
-
 	};
 	
-	
-	var atmService = atmToSingleDatatable($scope, datatableConfigTest);
-	atmService.newAtomicTransfertMethod = function(l, c){
-		return {
-			class:"OneToMany",
-			line: l, 
-			column: c, 				
-			inputContainerUseds:new Array(0), 
-			outputContainerUseds:new Array(0)
-		};
-	};
-    atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-	$scope.atmService = atmService;	
-		
-	var init = function(){
-		$scope.clearMessages();		
-		$scope.datatable = datatable(datatableConfigTest);
-	}
-	
-	// copiée de ngl-plates/ details-ctrl.js
-	var displayCellPlaque =function(x, y){
-		var wells = $scope.datatable.displayResult;
-		if(!angular.isUndefined(wells)){
-	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].data.x === (x) && wells[i].data.y===(y+'')) {
-		        	 return wells[i].data.name.replace(/_/g,' ');
-		         }
-	        }
-		}
-        return "------";
-     }
-	
-	var computeXY = function(){
-		var wells = $scope.datatable.displayResult;
-		var nbCol = 12;
-		var nbLine = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-		var x = 0;
-		for(var i = 0; i < nbCol ; i++){
-			for(var j = 0; j < nbLine.length; j++){
-				if(x < wells.length){
-					wells[x].data.y = nbLine[j]+'';
-					wells[x].data.x = i+1;					
+	//init data
+	//Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.
+	//Il faut refaire un atmService "allégé"
+	var atmService =  {
+			data:datatable(inputContainerDatatableConfig), //UDT
+			$commonATM : commonAtomicTransfertMethod($scope),
+			defaultOutputUnit : {
+					volume : "µL",
+					concentration : "nM"
+			},
+			defaultOutputValue :{},
+			newAtomicTransfertMethod : function(l,c){
+				return {
+					class:"OneToMany",
+					line: l, 
+					column: c, 				
+					inputContainerUseds:new Array(0), 
+					outputContainerUseds:new Array(0)
+				};
+			},
+			convertExperimentATMToDatatable: function(experimentATMs, experimentStateCode){
+				$that = this;
+				var atms = experimentATMs;
+				$that.$commonATM.loadInputContainerFromAtomicTransfertMethods(atms)
+					.then(function(result) {								
+						var allData = [];
+						var inputContainers = result.input;
+						var atomicIndex=0;
+						for(var i=0; i< atms.length;i++){
+							
+							if(atms[i] === null){
+								continue;
+							}
+							//var atm = angular.copy(atms[i]);
+							var atm = $.extend(true,{}, atms[i]);
+								
+							var inputContainerCode = atm.inputContainerUseds[0].code;
+							var inputContainer = inputContainers[inputContainerCode];
+							
+							var line = {atomicIndex:atomicIndex};
+							line.atomicTransfertMethod = atm;							              
+							line.inputContainer = inputContainer;	
+							line.inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[0]);
+							line.inputContainerUsed = $that.$commonATM.updateInputContainerUsedFromContainer(line.inputContainerUsed, inputContainer, experimentStateCode);							
+							allData.push(line);
+							atomicIndex++;
+						}
+						
+						allData = $filter('orderBy')(allData, ['inputContainer.support.code','inputContainer.support.column*1', 'inputContainer.support.line']);							
+						$that.data.setData(allData, allData.length);											
+				});		
+			},
+			addNewAtomicTransfertMethodsInData:function(){
+				if(null != mainService.getBasket() && null != mainService.getBasket().get()){
+					$that = this;
+					$that.$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+						.then(function(containers) {								
+							var allData = [], i = 0;
+							angular.forEach(containers, function(container){
+								var line = {};
+								line.atomicTransfertMethod =  $that.newAtomicTransfertMethod(container.support.line, container.support.column);
+								line.inputContainer = container;
+								line.inputContainerUsed = $that.$commonATM.convertContainerToInputContainerUsed(line.inputContainer);
+								allData.push(line);
+							});
+							allData = $filter('orderBy')(allData, ['inputContainer.support.code','inputContainer.support.column*1', 'inputContainer.support.line']);							
+							$that.data.setData(allData, allData.length);											
+					});
 				}
-				x++;
-			}
-		}		
+			},
+			experimentToView:function(experiment){
+				if(null === experiment || undefined === experiment){
+					throw 'experiment is required';
+				}
+				if(!$scope.isCreationMode()){
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);	
+				}else{
+					this.addNewAtomicTransfertMethodsInData();
+				}	
+								
+			},
+			viewToExperimentOneToMany :function(experimentIn){		
+				if(null === experimentIn || undefined === experimentIn){
+					throw 'experiment is required';
+				}
+				experiment = experimentIn;
+				var allData = this.data.getData();
+				if(allData != undefined){
+					experiment.atomicTransfertMethods = []; // to manage remove
+					//first reinitialise atomicTransfertMethod
+					for(var i=0;i<allData.length;i++){
+						var atomicIndex = allData[i].atomicIndex;								
+						experiment.atomicTransfertMethods[atomicIndex] = allData[i].atomicTransfertMethod
+						experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds = new Array(0);
+						var atm = experiment.atomicTransfertMethods[atomicIndex];
+						
+						//oneTo
+						var inputContainerUsed = allData[i].inputContainerUsed;
+						this.$commonATM.removeNullProperties(inputContainerUsed.instrumentProperties);
+						this.$commonATM.removeNullProperties(inputContainerUsed.experimentProperties);
+						atm.inputContainerUseds.push(inputContainerUsed);	
+						
+						// Ne recreer les outputs que dans les etats Nouveau ou en cours  ( mais PAS si elle est terminee)
+						if('F' !== experimentIn.state.code){
+							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds = new Array(0);
+							
+							for(var j = 0; j < $scope.outputContainerSupportCodes.length ; j++){
+								// si l'utilisateur a bien entré des supportCodes
+								if ($scope.outputContainerSupportCodes[j] !== undefined && $scope.outputContainerSupportCodes[j] !== null && $scope.outputContainerSupportCodes[j] !== ''){
+									var outputContainerUsed = this.$commonATM.newOutputContainerUsed(this.defaultOutputUnit, this.defaultOutputValue, atm.line, atm.column, inputContainerUsed);
+									//affectation du SupportCode
+									outputContainerUsed.locationOnContainerSupport.code=  $scope.outputContainerSupportCodes[j];
+									//affectation du storageCode si defini
+									if ( $scope.storageCodes[j] !== undefined && $scope.storageCodes[j] !== null){			  
+										  outputContainerUsed.locationOnContainerSupport.storageCode=  $scope.storageCodes[j];
+									}
+									atm.outputContainerUseds.push(outputContainerUsed);
+								}
+							}
+						}
+						
+					}
+					
+					//remove atomic null
+					var cleanAtomicTransfertMethods = [];
+					for(var i = 0; i < experiment.atomicTransfertMethods.length ; i++){
+						if(experiment.atomicTransfertMethods[i] !== null){
+							cleanAtomicTransfertMethods.push(experiment.atomicTransfertMethods[i]);
+						}
+					}
+					experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
+				}								
+			},
 	};
 	
-	// copiée de ngl-plates/ details-ctrl.js
-	var getClass = function(x, y){
-		var wells = $scope.datatable.displayResult;
-		if(!angular.isUndefined(wells)){
-	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].data.x === (x) && wells[i].data.y===(y+'')) {
-		        	 var well = wells[i];
-		        	 if(well.data.valid === "FALSE"){
-		        		 return "alert alert-danger hidden-print";
-		        	 }else if(well.data.valid === "TRUE"){
-		        		 return "alert alert-success hidden-print";
-		        	 }	        	
-		         }
-	        }
-		}
-        return "hidden-print";
-     }
-	*/
+	atmService.experimentToView($scope.experiment);
 	
+	$scope.atmService = atmService;
 }]);

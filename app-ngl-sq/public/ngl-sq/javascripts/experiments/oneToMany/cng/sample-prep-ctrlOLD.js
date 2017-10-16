@@ -1,7 +1,7 @@
 /* 11/08/2017 GA/FDS experience One to Many qui n'utilise pas de datatable... */
 /* 30/08/2017 finalement il faut meme plusieurs datatables ???  => injecter atmToSingleDatatable ???? .....*/
 
-angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService','atmToSingleDatatable',
+angular.module('home').controller('SamplePrepCtrlOLD',['$scope', '$parse', 'commonAtomicTransfertMethod','mainService','atmToSingleDatatable',
                                                                function($scope, $parse, commonAtomicTransfertMethod, mainService, atmToSingleDatatable ) {
 	
 	
