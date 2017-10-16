@@ -549,22 +549,11 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 	private static List<Value> getX5WgPcrFreeLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
-        // dans RunServiceCNG le nom reprend le code...
         values.add(DescriptionFactory.newValue("DA","DA - DNAseq"));
          
         return values;
 	}
 	
-	/* FDS 02/08/2017 NGL-1543 cette fonction a introduite des incohérences de codes supprimer...  
-	private static List<Value> getX5WgPcrFreeSequencingTypes(){
-        List<Value> values = new ArrayList<Value>();
-        
-         values.add(DescriptionFactory.newValue("RHS4000","Hiseq 4000"));
-         values.add(DescriptionFactory.newValue("RHSX","Hiseq X"));
-         
-        return values;
-	}
-	*/
 	
 	//FDS ajout 31/05/2016 pour JIRA NGL-1025: processus RNASeq; 18/01/2017 remommer en getPropertyDefinitionsRNAseq=> getPropertyDefinitionsRNAlib
 	private static List<PropertyDefinition> getPropertyDefinitionsRNAlib() throws DAOException {
@@ -644,7 +633,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 	private static List<Value> getX5WgNanoLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
-        // !! aussi dans RunServiceCNG
+        // !! garder les codes et labels en coherence avec  ImportServiceCNG et RunServiceCNG
         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));   
          
         return values;
