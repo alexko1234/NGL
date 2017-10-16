@@ -9,7 +9,8 @@
 							    	"header": Messages("runs.code"),
 							    	"type" :"text",
 							    	"order":true,
-							    	"position":1
+							    	"position":1,
+							    	"groupMethod":"count:true",
 								},
 								{	"property":"typeCode",
 									"header": Messages("runs.typeCode"),

@@ -40,7 +40,9 @@
 							header: Messages("runs.sequencingStartDate"),
 							type :"date",
 							order:true,
-				    	  	position:6});
+							position:6,
+							groupMethod:"unique",
+			});
 			if(mainService.getHomePage() == 'search'){
 					columns.push({	"property":"state.code",
 									"filter":"codes:'state'",

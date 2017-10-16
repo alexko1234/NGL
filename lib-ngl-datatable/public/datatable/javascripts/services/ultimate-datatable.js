@@ -665,11 +665,21 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 }
                 var groupGetter = $parse(propertyGroupGetter);
                 
+                var getGroupValue = function(value){
+                	var groupValue = groupGetter(value);
+            		if(groupValue !== null && groupValue !== undefined){
+            			groupValue = groupValue.toString();
+            		}else{
+            			groupValue = "";
+            		}
+                	return groupValue;
+                };
+                
                 var groupConfig = this.config.group;
-                displayResultTmp.forEach(function(element, index, array) {
-                    /* previous mode */
+                displayResultTmp.forEach(function(element, index, array) {                	
+                	/* previous mode */
                     if (!groupConfig.after && (index === 0 || 
-                    		(propertyGroupGetter!=="all" && groupGetter(element.data).toString() !== groupGetter(array[index - 1].data).toString()))) {
+                    		(propertyGroupGetter!=="all" && getGroupValue(element.data).toString() !== getGroupValue(array[index - 1].data).toString()))) {
                         var line = {
                             edit: undefined,
                             selected: undefined,
@@ -678,7 +688,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             "new": false
                         };
                         this.push({
-                            data: propertyGroupGetter!=="all" ? groupConfig.data[groupGetter(element.data).toString()]:groupConfig.data["all"],
+                            data: propertyGroupGetter!=="all" ? groupConfig.data[getGroupValue(element.data).toString()]:groupConfig.data["all"],
                             line: line
                         });
                     }
@@ -686,7 +696,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 
                     /* after mode */
                     if (groupConfig.after && (index === (array.length - 1) || 
-                    		(propertyGroupGetter!=="all" && groupGetter(element.data).toString() !== groupGetter(array[index + 1].data).toString()))) {
+                    		(propertyGroupGetter!=="all" && getGroupValue(element.data).toString() !== getGroupValue(array[index + 1].data).toString()))) {
                         var line = {
                             "edit": undefined,
                             "selected": undefined,
@@ -695,7 +705,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             "new": false
                         };
                         this.push({
-                            data: propertyGroupGetter!=="all" ? groupConfig.data[groupGetter(element.data).toString()]:groupConfig.data["all"],
+                            data: propertyGroupGetter!=="all" ? groupConfig.data[getGroupValue(element.data).toString()]:groupConfig.data["all"],
                             line: line
                         });
                     };
