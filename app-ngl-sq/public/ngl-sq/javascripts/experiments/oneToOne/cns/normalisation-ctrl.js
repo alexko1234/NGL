@@ -459,31 +459,72 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	
 	$scope.updatePropertyFromUDT = function(value, col){
 		console.log("update from property : "+col.property);
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.computeMode.value'){
+			resetAll(value.data);
+		}
 		var computeMode = $parse("data.inputContainerUsed.experimentProperties.computeMode.value")(value);
 		
-		if(col.property === 'outputContainerUsed.concentration.value'){
-			computeInputVolume(value.data);
-			//computeFinalVolume(value.data);
-			computeBufferVolume(value.data);
-		}else if(col.property === 'outputContainerUsed.volume.value'  && computeMode == 'fixeCfVf'){
-			computeInputVolume(value.data);
-			computeBufferVolume(value.data);
-		}else if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value'  && computeMode == 'fixeCfVi'){
-			computeFinalVolume(value.data);
-			computeBufferVolume(value.data);
-		}
+		if(computeMode == 'fixeCfVf'){
+			if(col.property === 'outputContainerUsed.volume.value' || col.property === 'outputContainerUsed.concentration.value'){
+				computeInputVolumeWithConc(value.data);
+				computeBufferVolume(value.data);
+			}			
+		}else if(computeMode == 'fixeCfVi'){
+			if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' 
+				|| col.property === 'outputContainerUsed.concentration.value'){
+				computeFinalVolumeWithConc(value.data);
+				computeBufferVolume(value.data);
+			}			
+		}		
 		computeOutputQuantity(value.data);
 	}
+	
+	var resetAll = function(udtData){
+		$parse("inputContainerUsed.experimentProperties.inputVolume.value").assign(udtData,null);
+		$parse("inputContainerUsed.experimentProperties.bufferVolume.value").assign(udtData,null);
+		$parse("outputContainerUsed.volume.value").assign(udtData,null);
+		$parse("outputContainerUsed.concentration.value").assign(udtData,null);
+		
+	};
+	
+	var computeConcentration = function(udtData){
+		var getter = $parse("outputContainerUsed.concentration.value");
+		var oldOutputConc = getter(udtData);
+		var newOutputConc;
+		var compute = {
+				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				isReady:function(){
+					return (this.inputConc && this.inputVol && this.outputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				newOutputConc = Math.round(result*10)/10;					
+			}else{
+				newOutputConc = undefined;
+			}	
+			if(newOutputConc !== oldOutputConc){
+				getter.assign(udtData, newOutputConc);
+			}
+		}else{
+			getter.assign(udtData, null);
+			console.log("not ready to computeConcentration");
+		}
+		
+	};
+	
 	//cOut * vOut / cIn : 
 	//outputContainerUsed.concentration.value * outputContainerUsed.volume.value / inputContainerUsed.concentration.value
-	var computeInputVolume = function(udtData){
+	var computeInputVolumeWithConc = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
-		var inputVolume = getter(udtData);
-		
-		var getterMIV = $parse("inputContainerUsed.volume.value");
-		var maxInputVolume = getterMIV(udtData);
-		
-		
+		var oldInputVolume = getter(udtData);
+		var newInputVolume;
 		var compute = {
 				outputConc : $parse("outputContainerUsed.concentration.value")(udtData),
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
@@ -497,27 +538,54 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			var result = $parse("(outputConc * outputVol) / inputConc")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				inputVolume = Math.round(result*10)/10;	
-				/*
-				if(inputVolume > maxInputVolume){
-					inputVolume = maxInputVolume;
-				}
-				*/
+				newInputVolume = Math.round(result*10)/10;					
 			}else{
-				inputVolume = undefined;
+				newInputVolume = undefined;
 			}	
-			
-			getter.assign(udtData, inputVolume);
+			if(newInputVolume !== oldInputVolume){
+				getter.assign(udtData, newInputVolume);
+			}
 		}else{
+			getter.assign(udtData, null);
+			console.log("not ready to computeInputVolume");
+		}
+		
+	};
+	var computeInputVolumeWithOtherVol = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var oldInputVolume = getter(udtData);
+		var newInputVolume;
+		var compute = {
+				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),
+				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
+				isReady:function(){
+					return (this.outputVol && this.bufferVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("outputVol - bufferVol")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				newInputVolume = Math.round(result*10)/10;					
+			}else{
+				newInputVolume = undefined;
+			}	
+			if(newInputVolume !== oldInputVolume){
+				getter.assign(udtData, newInputVolume);
+			}
+		}else{
+			getter.assign(udtData, null);
 			console.log("not ready to computeInputVolume");
 		}
 		
 	}
 	//cIn * inputVolume / cOut : 
 	//inputContainerUsed.concentration.value * inputContainerUsed.experimentProperties.inputVolume.value / outputContainerUsed.concentration.value
-	var computeFinalVolume = function(udtData){
+	var computeFinalVolumeWithConc = function(udtData){
 		var getter = $parse("outputContainerUsed.volume.value");
-		var outputVolume = getter(udtData);
+		var oldOutputVolume = getter(udtData);
+		var newOutputVolume;
 		
 		var compute = {
 				outputConc : $parse("outputContainerUsed.concentration.value")(udtData),
@@ -532,12 +600,46 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			var result = $parse("(inputConc * inputVol) / outputConc")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				outputVolume = Math.round(result*10)/10;				
+				newOutputVolume = Math.round(result*10)/10;				
 			}else{
-				outputVolume = undefined;
+				newOutputVolume = undefined;
 			}	
-			getter.assign(udtData, outputVolume);
+			if(newOutputVolume !== oldOutputVolume){
+				getter.assign(udtData, newOutputVolume);
+			}
 		}else{
+			getter.assign(udtData, null);
+			console.log("not ready to computeFinalVolume");
+		}
+		
+	};
+	
+	var computeFinalVolumeWithOtherVol = function(udtData){
+		var getter = $parse("outputContainerUsed.volume.value");
+		var oldOutputVolume = getter(udtData);
+		var newOutputVolume;
+		
+		var compute = {
+				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),
+				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
+				isReady:function(){
+					return (this.bufferVol && this.inputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("inputVol + bufferVol")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				newOutputVolume = Math.round(result*10)/10;				
+			}else{
+				newOutputVolume = undefined;
+			}	
+			if(newOutputVolume !== oldOutputVolume){
+				getter.assign(udtData, newOutputVolume);
+			}
+		}else{
+			getter.assign(udtData, null);
 			console.log("not ready to computeFinalVolume");
 		}
 		
@@ -546,8 +648,8 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	//outputContainerUsed.volume.value - inputContainerUsed.experimentProperties.inputVolume.value
 	var computeBufferVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
-		var bufferVolume = getter(udtData);
-		
+		var oldBufferVolume = getter(udtData);
+		var newBufferVolume;
 		var compute = {
 				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
 				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
@@ -560,12 +662,15 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			var result = $parse("(outputVol - inputVol)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				bufferVolume = Math.round(result*10)/10;				
+				newBufferVolume = Math.round(result*10)/10;				
 			}else{
-				bufferVolume = undefined;
+				newBufferVolume = undefined;
 			}	
-			getter.assign(udtData, bufferVolume);
+			if(newBufferVolume !== oldBufferVolume){
+				getter.assign(udtData, newBufferVolume);
+			}
 		}else{
+			getter.assign(udtData, null);
 			console.log("not ready to computeBufferVolume");
 		}
 	};

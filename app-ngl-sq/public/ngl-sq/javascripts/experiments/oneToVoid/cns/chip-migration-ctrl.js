@@ -277,7 +277,6 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 }
 		
 	$scope.atmService.data.setColumnsConfig(columns);
-
 	
 	$scope.button = {
 		isShow:function(){
@@ -297,6 +296,10 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			$scope.messages.open();	
 			//only atm because we cannot override directly experiment on scope.parent
 			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
+			$scope.experiment.atomicTransfertMethods.forEach(function(atm){
+				computeConcNm(atm,"inputContainerUseds[0]");
+			});
+			
 			$scope.file = undefined;
 			angular.element('#importFile')[0].value = null;
 			$scope.$emit('refresh');			
@@ -355,21 +358,24 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		}]);
 	}
 		
-	var computeConcNm = function(udtData){
-		var getter= $parse("inputContainerUsed.experimentProperties.nMcalculatedConcentration.value");
+	var computeConcNm = function(udtData, key){
+		
+		if(key === undefined)key="inputContainerUsed";
+		
+		var getter= $parse(key+".experimentProperties.nMcalculatedConcentration.value");
 		var nmConc=getter(udtData);
 		
 		var compute = {
-				conc : $parse ("inputContainerUsed.concentration.value")(udtData),
-				size : $parse ("inputContainerUsed.experimentProperties.measuredSize.value")(udtData),
+				conc : $parse(key+".concentration.value")(udtData),
+				size : $parse(key+".experimentProperties.measuredSize.value")(udtData),
 				isReady:function(){
 					return (this.conc && this.size);
 				}
 			};
 		
 		if(compute.isReady()){
-			if ("ng/µl" === $parse ("inputContainerUsed.concentration.unit")(udtData)){
-				console.log("unit OK "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+			if ("ng/µl" === $parse(key+".concentration.unit")(udtData)){
+				console.log("unit OK "+$parse(key+".concentration.unit")(udtData));
 			
 				var result = $parse("(conc / 660 / size * 1000000 )")(compute);
 				console.log("result = "+result);
@@ -380,7 +386,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 					nmConc = undefined;
 				}
 			}else{
-				console.log("unit "+$parse ("inputContainerUsed.concentration.unit")(udtData));
+				console.log("unit "+$parse(key+".concentration.unit")(udtData));
 				nmConc = undefined;	
 			}
 			getter.assign(udtData, nmConc);

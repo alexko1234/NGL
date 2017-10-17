@@ -147,6 +147,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
+			//FDS 10/10/2017 JIRA NGL-1625 dedoubler
+			l.add(newExperimentType("Ext to  TF / QC / purif","ext-to-transfert-qc-purif",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, 
+					null,
+					"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			
 			//FDS ajout 21/02/2017 NGL-1167: processus Chromium
 			l.add(newExperimentType("Ext to Prep Chromium WG","ext-to-wg-chromium-lib-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -577,7 +586,17 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null,
 				null,
 				null
-				).save();		
+				).save();	
+		
+		// FDS ajout 10/10/2017 JIRA NGL-1625
+		newExperimentTypeNode("ext-to-transfert-qc-purif", getExperimentTypes("ext-to-transfert-qc-purif").get(0), 
+				false, false, false, 
+				null, // no previous nodes
+				null,
+				null,
+				null
+				).save();
+		
 			
 		//FDS ajout 20/02/2017 JIRA NGL-1167
 		newExperimentTypeNode("ext-to-wg-chromium-lib-process", getExperimentTypes("ext-to-wg-chromium-lib-process").get(0), 
@@ -816,28 +835,11 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
 		new Nanopore().getExperimentTypeNode();
 			
-		// 05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
-		// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....		
-		newExperimentTypeNode("pool",getExperimentTypes("pool").get(0),
-				false, false,false,
-				// PB...getETNForPool(),  // previous nodes...
-				getExperimentTypeNodes("prep-pcr-free",
-						               "prep-wg-nano",
-						               "pcr-and-purification",
-						               "lib-normalization",
-						               "library-prep",
-						               "denat-dil-lib",
-						               "normalization-and-pooling",
-						               "nanopore-library",
-						               "fragmentation",
-						               "sample-prep",
-						               "capture",
-						               "pcr-and-indexing"),         // previous nodes
-				null, // pas de purif
-				null, // pas qc
-				null  // pas transfert
-				).save();	
-		
+			//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
+			// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....
+			// !!!!!		
+			
+			
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-prepa-flowcell",
@@ -870,17 +872,46 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		// quels previous faut-il exactement ????? test ajout des ext-to...
 		newExperimentTypeNode("tubes-to-plate",getExperimentTypes("tubes-to-plate").get(0),
 				false,false,false,
-				getExperimentTypeNodes("lib-normalization",
-								       "normalization-and-pooling",
-									   "ext-to-prepa-fc-ordered",
-									   "ext-to-denat-dil-lib"), // previous nodes
+				getETForTubesToPlate(),
 				null, // pas de purif
 				null, // pas qc
 				null  // pas transfert
 				).save();
+		
+		newExperimentTypeNode("labchip-migration-profile",getExperimentTypes("labchip-migration-profile").get(0),
+				false, false,false,
+				// PB...getETNForPool(),  // previous nodes...
+				getETForLabchipMigrationProfile(),
+				null,
+				null,
+				null
+				).save();	
+	}
 
 
 }
+	
+	private List<ExperimentTypeNode> getETForTubesToPlate(){
+		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
+			.stream()
+			.filter(e -> !e.code.contains("depot"))
+			.map(et -> getExperimentTypeNodes(et.code).get(0))
+			.collect(Collectors.toList());
+		pets.add(getExperimentTypeNodes("ext-to-transfert-qc-purif").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-prepa-fc-ordered").get(0));
+		pets.add(getExperimentTypeNodes("ext-to-denat-dil-lib").get(0));
+		return pets;		
+	}
+	
+	private List<ExperimentTypeNode> getETForLabchipMigrationProfile(){
+		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
+			.stream()
+			.filter(e -> !e.code.contains("depot"))
+			.map(et -> getExperimentTypeNodes(et.code).get(0))
+			.collect(Collectors.toList());
+		pets.add(getExperimentTypeNodes("ext-to-qc-transfert-purif").get(0));
+		return pets;		
+	}
 	
 	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -1385,15 +1416,6 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		return propertyDefinitions;
 	}
 	
-	// 05/12/2016 NGL-1164: trouver toutes les experiences de transformation SAUF les depot
-	private List<ExperimentTypeNode> getETNForPool(){
-		List<ExperimentTypeNode> pets = ExperimentType.find.findByCategoryCode("transformation")
-			.stream()
-			.filter(e -> !e.code.contains("depot"))
-			.map(et -> getExperimentTypeNodes(et.code).get(0))
-			.collect(Collectors.toList());
-		return pets;		
-	}
 	
 	// GA
 	private List<PropertyDefinition> getPropertyDefinitionsBankQC() throws DAOException {

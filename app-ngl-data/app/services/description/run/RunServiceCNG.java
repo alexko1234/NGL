@@ -96,11 +96,9 @@ public class RunServiceCNG  extends AbstractRunService{
 		
 		return propertyDefinitions;
 	}
-	
-	
-	
+		
 	// GA 24/07/2015 ajout des TagCategories
-	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java !!!!
+	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java et InportServiceCNG.java !!!!
 	private static List<Value> getTagCategories(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
@@ -110,6 +108,8 @@ public class RunServiceCNG  extends AbstractRunService{
 		return values;	
 	}
 	
+	// 12/10/2017: liste pour les run Illumina !!! il y a une autre liste pour Nanopore
+	//             PAS PRIS EN COMPTE POUR LES FILTRES...
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
@@ -141,6 +141,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CW","CW - DefCap019_Rg"));
          values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
          values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
+<<<<<<< HEAD
          values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6 (DefCap022)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
@@ -148,6 +149,16 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));  // NGL-1584 ajout
+=======
+         values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022"));
+         values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
+         // 12/10/2017 manquait CAB, CAC, CAD, CAE qui existent pourtant dans Solexa depuis 2015 !!!!
+         values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
+         values.add(DescriptionFactory.newValue("CAC","CAC - DefCap025"));
+         values.add(DescriptionFactory.newValue("CAD","CAD - DefCap026"));
+         values.add(DescriptionFactory.newValue("CAE","CAE - DefCap027"));   
+         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));   // ajout aussi CAF
+>>>>>>> master-isoprod-sq-1.33.X
          
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));

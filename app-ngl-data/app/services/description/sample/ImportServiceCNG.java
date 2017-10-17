@@ -116,7 +116,12 @@ public class ImportServiceCNG extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
+<<<<<<< HEAD
 	// GA/FDS 14/06/2017 (copié depuis RunServiceCNG.java) => garder en coherence avec ImportServiceCNG et RunServiceCNG
+=======
+	// GA/FDS 14/06/2017 (copié depuis RunServiceCNG.java mais est-ce encore necessaire dans RunServiceCNG.java ???)
+	// FDS 12/10/2017 les declarations dans RunServiceCNG.java ne sont pas prises en compte !!!!
+>>>>>>> master-isoprod-sq-1.33.X
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
@@ -147,6 +152,7 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("CW","CW - DefCap019_Rg"));
          values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
          values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
+<<<<<<< HEAD
          values.add(DescriptionFactory.newValue("CZ","CZ - Agilent : V6 (DefCap022)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAA","CAA - Agilent : V6+UTR (DefCap023)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
@@ -154,6 +160,16 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)")); // NGL-1584 ajout
+=======
+         values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022"));
+         values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
+         // 12/10/2017 manquait CAB, CAC, CAD, CAE qui existent pourtant dans Solexa depuis 2015 !!!!
+         values.add(DescriptionFactory.newValue("CAB","CAB - DefCap024"));
+         values.add(DescriptionFactory.newValue("CAC","CAC - DefCap025"));
+         values.add(DescriptionFactory.newValue("CAD","CAD - DefCap026"));
+         values.add(DescriptionFactory.newValue("CAE","CAE - DefCap027"));   
+         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));   // ajout aussi CAF ( !! voir definition plus bas)
+>>>>>>> master-isoprod-sq-1.33.X
          
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
