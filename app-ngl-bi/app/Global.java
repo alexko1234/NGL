@@ -18,6 +18,7 @@ import rules.services.RulesServices6;
 public class Global extends GlobalSettings {
 
 	
+	// Should use the same start sequence as NGL-SQ.
 	
 	@Override
 	public void onStart(Application app) {
@@ -33,7 +34,7 @@ public class Global extends GlobalSettings {
 			Logger.error("Error Load knowledge base");
 			e.printStackTrace();
 			//Shutdown application
-			Play.stop();
+			Play.stop(app.getWrappedApplication());
 		}
 		
 		/*
@@ -73,6 +74,7 @@ public class Global extends GlobalSettings {
 		return super.onRequest(request, actionMethod);
 	}
 
+	/*
 	@Override
     public <A> A getControllerInstance(Class<A> controllerClass) throws Exception {
       try{
@@ -81,7 +83,7 @@ public class Global extends GlobalSettings {
     	  return super.getControllerInstance(controllerClass);
       }
 	}
-
+*/
 
 	/**
      * Formatter for <code>java.util.Date</code> values.

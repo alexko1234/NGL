@@ -1,5 +1,7 @@
 @(code: String)
 
+@import views.html._
+ 
 @scripts() = {
 	 <script src="@controllers.analyses.tpl.routes.Analyses.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
      <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
@@ -18,5 +20,5 @@
      
 }
 
-@views.html.main("analyses.page.title", menu("analyses."+code), scripts)(views.html.contents.lefttabs())
+@main("analyses.page.title", menu("analyses."+code), scripts)(views.html.contents.lefttabs())
 

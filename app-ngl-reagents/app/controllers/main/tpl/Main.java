@@ -2,6 +2,8 @@ package controllers.main.tpl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
@@ -14,6 +16,7 @@ import org.mongojack.DBQuery;
 
 import play.Routes;
 import play.api.modules.spring.Spring;
+import play.libs.Scala;
 import play.mvc.Result;
 import views.html.home;
 import controllers.CommonController;
@@ -22,7 +25,14 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Main extends CommonController{
 
-	final static JsMessages messages = JsMessages.create(play.Play.application());
+	// final static JsMessages messages = JsMessages.create(play.Play.application());
+
+	private static JsMessages messages;
+
+	@Inject
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
+		messages = jsMessagesFactory.all();
+	}
 
 	public static Result home() {
 		return ok(home.render());
@@ -76,9 +86,8 @@ public class Main extends CommonController{
 
 
 	public static Result jsMessages() {
-
-
-		return ok(messages.generate("Messages")).as("application/javascript");
+		//return ok(messages.generate("Messages")).as("application/javascript");
+		return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
 	}
 
 }
