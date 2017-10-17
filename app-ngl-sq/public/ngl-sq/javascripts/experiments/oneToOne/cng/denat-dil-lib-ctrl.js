@@ -423,8 +423,10 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 
 	// 16/10/2017 restriction main: forcer tube en sortie
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
-		if  ($scope.experiment.instrument.typeCode === 'main')
+		if  ($scope.experiment.instrument.typeCode === "hand"){
+			//console.log("instrument.typeCode === "+ $scope.experiment.instrument.typeCode+ " force tube");
 			$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+		}
 	});
 	
 	// restriction  epmotion: uniquement tube en entree
