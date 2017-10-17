@@ -31,17 +31,16 @@ import play.libs.F;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-// Rename to NGLStartModule
-public class NGLStarterModule extends play.api.inject.Module {
+public class NGLSQStarterModule extends play.api.inject.Module {
 	
 	private static final Logger.ALogger logger; //  = Logger.of(Module.class);
 	
 	static {
-		logger = Logger.of(NGLStarterModule.class);
-		logger.debug("class " + NGLStarterModule.class + " has been loaded, expecting instance creation");
+		logger = Logger.of(NGLSQStarterModule.class);
+		logger.debug("class " + NGLSQStarterModule.class + " has been loaded, expecting instance creation");
 	}
 	
-	public NGLStarterModule(Environment environment, Configuration configuration) {
+	public NGLSQStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
 	}
@@ -57,19 +56,20 @@ public class NGLStarterModule extends play.api.inject.Module {
 		//   200:play.modules.jongo.MongoDBPlugin
 		// Added ngl drools startup.
 		return seq(
-				// bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
-				// bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
-				// bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
-				// bind(DroolsComponent.class                            ).toSelf().eagerly(),
-				// bind(OnStartComplete.class                            ).toSelf().eagerly()
-				bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
+				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
+				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
+				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
+				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
+				bind(rules.services.Rules6Component.class             ).toSelf().eagerly()
+				//bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
 			);
 	}
 	
 }
 
+/*
 @javax.inject.Singleton
-class NGLStarter {
+class NGLComponents {
 	public static final Logger.ALogger logger = Logger.of(NGLStarter.class);
 	@Inject
 	public NGLStarter(Application                       application,
@@ -89,6 +89,7 @@ class NGLStarter {
 		logger.info("NGL shutdown...");
 	}
 }
+*/
 
 // Either the object is injected at application start or the instance can be lazily
 // created after application start. Instance and injector instance should be the
@@ -122,41 +123,4 @@ class OnStartComplete {
 }
 */
 
-@javax.inject.Singleton
-class DroolsComponent {
-	
-	private static final Logger.ALogger logger = Logger.of(DroolsComponent.class);
-	
-	@Inject
-	public DroolsComponent(Application                                    app, 
-							ApplicationLifecycle                          lifecycle) {
-		logger.debug("injecting " + app);
-		onStart(app,lifecycle);
-		logger.debug("injected");
-	}
-	
-	public void onStart(Application app, ApplicationLifecycle lifecycle) {
-		logger.info("loading knowledge base");
-		try {
-			// RulesServices6.getInstance();
-			RulesServices6.initSingleton(app);
-			// Pretty much pointless, the message "NGL shutdown should not be displayed there
-			lifecycle.addStopHook(() -> { 
-						onStop(app); 
-						return F.Promise.pure(null);
-					});
-			logger.info("drools started");
-		} catch (Throwable e) {
-			logger.error("error loading drools knowledge base " + e.getMessage(),e);
-			//Shutdown application
-			// play.Play.stop(app.getWrappedApplication());
-			logger.info("shutting down app after drools initialization error");
-		}
-	}
-	
-	public void onStop(Application app) {
-		// logger.info("NGL shutdown...");
-	}
-	
-}
 
