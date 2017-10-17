@@ -223,6 +223,11 @@ factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse
 						if(data.treatments.ngsrg.default['1DReverse']!=null){
 							value+=data.treatments.ngsrg.default['1DReverse'].value.nbBases;
 						}
+					}else if(data.treatments.readQuality!=null){
+						value=data.treatments.readQuality.default['1DForward'].value.nbBases;
+						if(data.treatments.readQuality.default['1DReverse']!=null){
+							value+=data.treatments.readQuality.default['1DReverse'].value.nbBases;
+						}
 					}
 				}
 				return value;
