@@ -285,11 +285,12 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
 			
-			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, tube->tube =>  utiliser le janus
+			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, plaque-> tube, tube->tube => utiliser robot
+			// 16/10/2017  remplacer janus par EpMotion
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
-					getInstrumentUsedTypes("hand","janus"),
+					getInstrumentUsedTypes("hand","epmotion"),
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
