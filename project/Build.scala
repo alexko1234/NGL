@@ -10,6 +10,11 @@ import play.routes.compiler.StaticRoutesGenerator
 import play.sbt.routes.RoutesCompiler.autoImport._
 
 
+import play.sbt.routes.RoutesKeys.routesGenerator
+import play.routes.compiler.StaticRoutesGenerator
+// import play.routes.compiler.DynamicRoutesGenerator
+
+
 object ApplicationBuild extends Build {
 //
 	import BuildSettings._	
@@ -434,4 +439,5 @@ object ApplicationBuild extends Build {
 		     version := "0.1-SNAPHSHOT",
 		     globSettings
 		   )
+
 }
