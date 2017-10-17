@@ -1,33 +1,3 @@
-// import java.lang.reflect.Method;
-
-// import play.api.Application;
-import play.Logger;
-// import play.Play;
-//import play.api.Play;
-import play.Application;
-// import play.api.Application;
-//import play.mvc.Action;
-//import play.mvc.Http;
-//import play.mvc.Http.Request;
-import play.api.Configuration;
-import play.api.Environment;
-import play.api.inject.Binding;
-// import play.api.inject.Module;
-//import play.GlobalSettings;
-// import play.Logger;
-// import play.api.Play;
-//import play.mvc.Action;
-//import play.mvc.Http;
-//import play.mvc.Result;
-//import play.mvc.Http.Request;
-//import rules.services.RulesException;
-//import rules.services.RulesServices;
-import rules.services.RulesServices6;
-import scala.collection.Seq;
-//import java.lang.reflect.Method;
-import play.inject.ApplicationLifecycle;
-import play.libs.F;
-//import play.inject.ApplicationLifecycle;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,36 +14,6 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 	public NGLSQStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
-		/*
-		// Set env and config in some global as dependencis on Play.application() are mostly
-		// about the configuration.
-		fr.cea.ig.play.IGGlobals.environment   = new play.Environment(environment);
-		fr.cea.ig.play.IGGlobals.configuration = new play.Configuration(configuration);
-		// play.libs.Akka.system(); // This call fails in module/component parts
-		// Start a thread to acitvely wait on Play.application() and then start the 
-		// Spring "module".
-		if (false) {
-		new Thread(new Runnable() {
-			public void run() {
-				while (true) {
-					try {
-						Play.application();
-						try {
-							Logger.info("************** SPRING START ************");
-							// This would work if the Spring plugin defines a lock to access the spring instance
-							// while executing the constructor.
-							play.api.modules.spring.SpringPlugin pi = new play.api.modules.spring.SpringPlugin(Play.application().getWrappedApplication());
-							Logger.info("************** SPRING DONE  ************");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						return;
-					} catch (Exception e) {
-						// play.application() not set
-					}
-				}
-			}}).start();
-		}*/
 	}
 	
 	@Override
@@ -86,27 +26,13 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		//     1:controllers.resources.AssetPlugin
 		//   200:play.modules.jongo.MongoDBPlugin
 		// Added ngl drools startup.
-		// play.plugins still starts from the play-spring-module. The play.plugins
-		// file is started after the app injection i believe so the boot order is still
-		// correct. Component injection should have proper constructors so the
-		// start order has not to be hard coded here.
 		return seq(
-				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
-				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
-				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
+				bind(rules.services.Rules6Component.class             ).toSelf().eagerly()
 				//bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
-				// Force JsMessages init
-				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
-				// The plugins conf stated that it's started last. It should be started after the
-				// application is created because of global application instance access but it's not
-				// possible anymore. We should be able to use spring as the play injector but the
-				// eager initialization of the component-scan part of the configuration fails
-				// miserably. We should add @Lazy to @Component.
-				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
 			);
 	}
 	
@@ -138,9 +64,7 @@ class NGLComponents {
 
 // Either the object is injected at application start or the instance can be lazily
 // created after application start. Instance and injector instance should be the
-// same. The only required global is the injector that is defined in the play application
-// and in the spring plugin. It could be the same in the end but this requires that
-// we define an application loader.
+// same.
 @Singleton
 class LazyInit {
 	
@@ -160,14 +84,10 @@ class LazyInit {
 }
 
 /*
-@javax.inject.Singleton
-class OnStartComplete {
-	private static final Logger.ALogger logger = Logger.of(OnStartComplete.class);
-	@Inject
-	public OnStartComplete() {
-		logger.info("asset server url " + controllers.resources.AssetPlugin.getServer());
+public class Module extends NGLSQStarterModule {
+	public Module(play.api.Environment environment, play.api.Configuration configuration) {
+		super(environment,configuration);
 	}
 }
 */
-
 
