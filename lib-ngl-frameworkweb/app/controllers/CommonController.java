@@ -52,7 +52,7 @@ import fr.cea.ig.MongoDBResult.Sort;
 
 @Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public abstract class CommonController extends Controller{
+public abstract class CommonController extends Controller {
 
 	protected final static DynamicForm listForm = new DynamicForm();
 
