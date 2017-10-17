@@ -10,7 +10,6 @@
 ->	/admin	ngladmin.Routes
 ->  /authentication authentication.Routes
 
-
 # Home page
 GET     /                           									controllers.main.tpl.Main.home()
 GET     /tpl/js-routes                         							controllers.main.tpl.Main.javascriptRoutes()
@@ -62,9 +61,10 @@ GET 	/printing/:homecode/home										controllers.printing.tpl.Printing.home(ho
 GET		/tpl/printing/js-routes											controllers.printing.tpl.Printing.javascriptRoutes()
 GET		/tpl/printing/tags/display										controllers.printing.tpl.Tags.display()
 
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               									controllers.Assets.at(path="/public", file)
-GET     /messages.js                									controllers.main.tpl.Main.jsMessages()
+GET     /messages.js                									@controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()
 GET		/permissions.js													controllers.main.tpl.Main.jsPermissions()
 GET		/printTag.js													controllers.main.tpl.Main.jsPrintTag()

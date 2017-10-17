@@ -1,0 +1,16 @@
+
+-- ngl-sq 
+
+
+-- config file
+# Avoid hikaricp, see https://www.playframework.com/documentation/2.4.x/Migration24#JDBC-connection-pool
+play.db.pool = bonecp
+
+-- libraries
+Dependencies files are now in /lib/$lib in stead of /.
+
+-- lib-ngl-framework
+Renamed AssetPlugin class to avoid using it as it is defined in the auth lib.
+Renamed getAsset.scala.html to .off to avoid using it as it is defined in the auth lib.
+
+        

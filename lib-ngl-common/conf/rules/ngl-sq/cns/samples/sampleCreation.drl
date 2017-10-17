@@ -14,16 +14,17 @@ rule "Rules when sample is created in Tara Pacific project "
 	no-loop
     when
         $sample : Sample($code:code, $code != null, _id == null)
+        //$sample : Sample(code != null, _id == null)
         $projectCode : String(this == 'AA') from $sample.projectCodes
     then
-    	Logger.debug("Update Sample for Tara Pacific : "+$code);  
-       	$sample.referenceCollab = $code;
+    	Logger.debug("Update Sample for Tara Pacific : "+$sample.code);  
+       	$sample.referenceCollab = $sample.code;
        	
        	$sample.typeCode = "not-defined";
        	$sample.categoryCode = "unknown";
        	$sample.importTypeCode = "tara-reception-without-file";
        	
-       	PropertySingleValue psv = new PropertySingleValue($code);
+       	PropertySingleValue psv = new PropertySingleValue($sample.code);
        	$sample.properties = new HashMap<String, PropertyValue>();
        	$sample.properties.put("taraBarCode", psv);
 	end
