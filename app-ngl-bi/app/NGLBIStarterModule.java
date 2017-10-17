@@ -28,7 +28,6 @@ public class NGLBIStarterModule extends play.api.inject.Module {
 	public NGLBIStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-BI");
-		
 	}
 
 	// 0:fr.cea.ig.authentication.AuthenticatePlugin
