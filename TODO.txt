@@ -1,0 +1,2 @@
+
+Utiliser l'instance du service d'authentification dans le module/component authentication.  

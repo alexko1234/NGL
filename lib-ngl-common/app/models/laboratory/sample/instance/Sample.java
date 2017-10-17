@@ -91,6 +91,4 @@ public class Sample extends DBObject implements IValidation{
 		
 	}
 
-
-
 }

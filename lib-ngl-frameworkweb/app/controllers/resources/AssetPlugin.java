@@ -15,8 +15,10 @@ import play.Application;
 import play.Logger;
 import play.Plugin;
 
-public class AssetPlugin extends Plugin {
+// public class AssetPlugin extends Plugin {
 
+class UNUSED_AssetPlugin {
+	
 	private static final String ASSET_URL = "asset.url";
 	
 	private Application app;
@@ -25,13 +27,13 @@ public class AssetPlugin extends Plugin {
 	public static boolean loadOk = false;
 	public static String errorMessage = "";
 
-
+/*
 	public AssetPlugin(Application app)
 	{
 		super();
 		this.app = app;
 	}
-
+*/
 
 	 public void onStart() {
 		 if(pluginVarVerif() == true)

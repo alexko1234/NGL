@@ -13,8 +13,9 @@ import rules.services.RulesException;
 import rules.services.RulesServices;
 import rules.services.RulesServices6;
 
-public class Global extends GlobalSettings {
-
+// public class Global extends GlobalSettings {
+/*
+class Global__Unused extends GlobalSettings {
 	@Override
 	public void onStart(Application app) {
 		Logger.error("NGL-SQ has started");
@@ -27,22 +28,9 @@ public class Global extends GlobalSettings {
 			Logger.error("Error Load knowledge base");
 			Logger.error("Drools Singleton error: "+e.getMessage(),e);
 			//Shutdown application
-			// Play.stop(app);
+			Play.stop(app.getWrappedApplication());
 		}
-		
-		/*
-		RulesServices rulesServices = new RulesServices();
-		try {
-			rulesServices.buildKnowledgeBase();
-			
-		} catch (RulesException e) {
-			Logger.error("Error Load knowledge base");
-			Logger.error("Drools Singleton error: "+e.getMessage(),e);
-			//Shutdown application
-			Play.stop();
-		}
-		*/
-	}
+			}
 	
 	public Action onRequest(Request request, Method actionMethod) {
 		return super.onRequest(request, actionMethod);
@@ -60,3 +48,4 @@ public class Global extends GlobalSettings {
 
 
 }
+*/
