@@ -167,7 +167,8 @@ public class Main extends CommonController {
 	// public static Result jsMessages() {
 	public Result jsMessages() {
 		// return ok(messages.generate("Messages")).as("application/javascript");
-		return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
+		//return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
+		return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
 	}
 
 
