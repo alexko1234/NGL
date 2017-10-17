@@ -164,7 +164,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 
-if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){	
 			//FDS ajout 10/07/2017 NGL 1201: processus Capture principal (4000/X5 = FC ordonnée)
 			l.add(newExperimentType("Ext to Prep Capture","ext-to-capture-prep-process-fc-ord",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -227,8 +226,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					null, 
 					null,
 					"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-} // END DEV			
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 			
 			/** Transformation, ordered by display order **/
 			
@@ -286,7 +284,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
 			
 			// 04/10/2017 NGL-1589: plaque->plaque, tubes->plaque, plaque-> tube, tube->tube => utiliser robot
-			// 16/10/2017  remplacer janus par EpMotion
+			// 16/10/2017           remplacer janus par EpMotion
 			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsDenatDilLibCNG(),
@@ -370,6 +368,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			
 			/** Quality Control, ordered by display order **/
             //NOTE: pas de Node a creer pour experiences type qualitycontrol
+			//17/10/2017: sauf si existe  un processus commencant par exp type qualitycontrol...
 			
 			// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
 			// 22/09/2016 modification du name => suppression profil mais garder dans le code a cause existant ds base de données
@@ -431,7 +430,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
                             /*vide*/
 			
 			/** Transfert, ordered by display order **/
-			// NOTE: pas de Node a creer pour experiences type transfert...sauf cas particuliers
+			// NOTE: pas de Node a creer pour experiences type transfert
+			// 17/10/2017: sauf si existe un processus commencant par experiences type transfert...
 			
 			l.add(newExperimentType("Aliquot","aliquoting",null, 10300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
@@ -607,8 +607,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null,
 				null
 				).save();	
-		
-if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){		
+			
 		//FDS ajout 10/07/2017 NGL-1201: processus capture
 		newExperimentTypeNode("ext-to-capture-prep-process-fc-ord", getExperimentTypes("ext-to-capture-prep-process-fc-ord").get(0), 
 				false, false, false, 
@@ -644,8 +643,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null,
 				null
 				).save();
-		
-		
+			
 		//FDS ajout 10/07/2017 NGL-1201: processus capture reprise (2)
 		newExperimentTypeNode("ext-to-capture-pcr-indexing-fc-ord", getExperimentTypes("ext-to-capture-pcr-indexing-fc-ord").get(0), 
 				false, false, false, 
@@ -682,7 +680,6 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				null
 				).save();		
 		
-} // END DEV
 				
 		/** other nodes **/
 		
@@ -834,12 +831,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 
 		
 		//il faut les nodes Nanopore AVANt "pool" car pool s'y refere...
-		new Nanopore().getExperimentTypeNode();
-			
-			//05/12/2016 NGL-1164: GA dit qu'il faut ajouter un node pour pool
-			// 31/03/2017 VERIFIER SI MARCHE AVEC getETNForPool() sinon il faut maintenir la liste  a chaque ajout d'experience....
-			// !!!!!		
-			
+		new Nanopore().getExperimentTypeNode();			
 			
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
 				false,false,false,
@@ -870,10 +862,9 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 				).save();
 		
 		// FDS 06/06/2017: NGL-1447 => le noeud "tubes-to-plate" doit etre declaré pour les process commencant par un transfert
-		// quels previous faut-il exactement ????? test ajout des ext-to...
 		newExperimentTypeNode("tubes-to-plate",getExperimentTypes("tubes-to-plate").get(0),
 				false,false,false,
-				getETForTubesToPlate(),
+				getETForTubesToPlate(),  // previous nodes
 				null, // pas de purif
 				null, // pas qc
 				null  // pas transfert
@@ -881,8 +872,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 		
 		newExperimentTypeNode("labchip-migration-profile",getExperimentTypes("labchip-migration-profile").get(0),
 				false, false,false,
-				// PB...getETNForPool(),  // previous nodes...
-				getETForLabchipMigrationProfile(),
+				getETForLabchipMigrationProfile(),  // previous nodes
 				null,
 				null,
 				null

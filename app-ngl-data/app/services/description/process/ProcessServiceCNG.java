@@ -677,7 +677,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 
 		return pets;		
 	}
-// EN COURS 
+
 	// FDS ajout 10/07/2017 pour JIRA NGL-1201: processus capture
 	private static List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
