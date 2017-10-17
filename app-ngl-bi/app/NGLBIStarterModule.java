@@ -34,7 +34,9 @@ public class NGLBIStarterModule extends play.api.inject.Module {
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				// bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
-				bind(rules.services.Rules6Component.class             ).toSelf().eagerly()
+				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
+				// Force JsMessages init
+				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly()
 				);
 	}
 	
