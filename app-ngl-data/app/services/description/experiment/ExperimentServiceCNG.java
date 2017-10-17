@@ -889,7 +889,7 @@ if ( ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 	}
 
 
-}
+
 	
 	private List<ExperimentTypeNode> getETForTubesToPlate(){
 		List<ExperimentTypeNode> pets = ExperimentType.find.findActiveByCategoryCode("transformation")
