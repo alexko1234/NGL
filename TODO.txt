@@ -1,2 +1,6 @@
 
-Utiliser l'instance du service d'authentification dans le module/component authentication.  
+
+Fix the jsmessages uses/setup in controllers.main.tpl.Main.java(s).
+
+
+  

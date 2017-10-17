@@ -1,6 +1,7 @@
 @(code : String)
 
 @import models.laboratory.common.description.ObjectType
+@import views.html._
 
 @scripts() = {
     <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script>
@@ -25,4 +26,4 @@
 <link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/processes/create-processes.css")">
 }
 
-@views.html.main("processes.title", menu("processes."+code), scripts, css)(views.html.contents.lefttabs())
+@main("processes.title", menu("processes."+code), scripts, css)(views.html.contents.lefttabs())

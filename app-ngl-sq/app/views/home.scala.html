@@ -1,7 +1,7 @@
 @()
 
 @import play.mvc.Http.Context
-
+@import views.html._
 @scripts() = {
 	 <script src="@controllers.main.tpl.routes.Main.javascriptRoutes" type="text/javascript" charset="utf-8"></script> 
      <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
@@ -14,7 +14,7 @@
 	 <script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/property-value.js")" type="text/javascript" charset="utf-8"></script>
 }
 
-@views.html.main("index.title", menu("home"), scripts) {
+@main("index.title", menu("home"), scripts) {
 	<div  class="row">
 		<div  class="col-md-12 col-lg-12">
 		   <div class="jumbotron">

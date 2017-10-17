@@ -149,7 +149,7 @@ class DroolsComponent {
 		} catch (Throwable e) {
 			logger.error("error loading drools knowledge base " + e.getMessage(),e);
 			//Shutdown application
-			//Play.stop(app.getWrappedApplication());
+			// play.Play.stop(app.getWrappedApplication());
 			logger.info("shutting down app after drools initialization error");
 		}
 	}

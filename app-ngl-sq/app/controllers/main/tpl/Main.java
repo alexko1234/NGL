@@ -20,6 +20,7 @@ import models.utils.InstanceConstants;
 import play.Play;
 import play.Routes;
 import play.api.modules.spring.Spring;
+import play.libs.Scala;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import views.html.home;
@@ -32,7 +33,8 @@ public class Main extends CommonController {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
-	private final JsMessages messages;
+	// TODO fix static var, should be instance
+	private static JsMessages messages;
 
 	@Inject
 	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
@@ -165,7 +167,7 @@ public class Main extends CommonController {
 	// public static Result jsMessages() {
 	public Result jsMessages() {
 		// return ok(messages.generate("Messages")).as("application/javascript");
-		return ok(messages.apply(scala.Option.apply("window.Messages"),jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
+		return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
 	}
 
 

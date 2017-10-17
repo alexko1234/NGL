@@ -2,6 +2,8 @@ package controllers.main.tpl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
@@ -12,6 +14,7 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
+import play.libs.Scala;
 import play.mvc.Result;
 import jsmessages.JsMessages;
 import views.html.home ;
@@ -19,16 +22,22 @@ import views.html.home ;
 
 public class Main extends CommonController {
 
-   final static JsMessages messages = JsMessages.create(play.Play.application());	
-	
+   //final static JsMessages messages = JsMessages.create(play.Play.application());	
+	private static JsMessages messages;
+
+	@Inject
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
+		messages = jsMessagesFactory.all();
+	}
+
    public static Result home() {
 	   return ok(home.render());
         
     }
    
    public static Result jsMessages() {
-       return ok(messages.generate("Messages")).as("application/javascript");
-
+       // return ok(messages.generate("Messages")).as("application/javascript");
+	   return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
    }
    public static Result jsCodes() {
 	   return ok(generateCodeLabel()).as("application/javascript");
