@@ -70,7 +70,7 @@ public class RulesServices6 {
 			KieContainer kContainer = kieServices.newKieClasspathContainer(/*play.Play.application()*/app.classloader());
 		    KieBaseConfiguration kbaseConf = kieServices.newKieBaseConfiguration();
 		    kbase = kContainer.newKieBase(kbasename, kbaseConf); 		    
-		} else if(StringUtils.isBlank(kbasename)) {
+		} else if (StringUtils.isBlank(kbasename)) {
 			logger.warn("Load Drools Rules : rules.kbasename is empty");
 		}
 	}

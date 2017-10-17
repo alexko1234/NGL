@@ -24,23 +24,24 @@ import play.api.inject.Binding;
 import rules.services.RulesServices6;
 import scala.collection.Seq;
 //import java.lang.reflect.Method;
-import javax.inject.Inject;
 import play.inject.ApplicationLifecycle;
 import play.libs.F;
 //import play.inject.ApplicationLifecycle;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 // Rename to NGLStartModule
-public class Module extends play.api.inject.Module {
+public class NGLStarterModule extends play.api.inject.Module {
 	
 	private static final Logger.ALogger logger; //  = Logger.of(Module.class);
 	
 	static {
-		logger = Logger.of(Module.class);
-		logger.debug("class " + Module.class + " has been loaded, expecting instance creation");
+		logger = Logger.of(NGLStarterModule.class);
+		logger.debug("class " + NGLStarterModule.class + " has been loaded, expecting instance creation");
 	}
 	
-	public Module(Environment environment, Configuration configuration) {
+	public NGLStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
 	}
@@ -71,17 +72,46 @@ public class Module extends play.api.inject.Module {
 class NGLStarter {
 	public static final Logger.ALogger logger = Logger.of(NGLStarter.class);
 	@Inject
-	public NGLStarter(Application application,
-			ApplicationLifecycle lifecycle,
+	public NGLStarter(Application                       application,
+			ApplicationLifecycle                        lifecycle,
 			fr.cea.ig.authentication.AuthenticatePlugin auth,
 			controllers.resources.AssetPlugin           asset,
 			play.modules.jongo.MongoDBPlugin            jongo,
 			play.modules.mongojack.MongoDBPlugin        mongojack, 
 			DroolsComponent                             drools) {
+		lifecycle.addStopHook(() -> { 
+			onStop(application); 
+			return F.Promise.pure(null);
+		});
 		logger.info("injected NGL started");
+	}
+	private void onStop(Application application)  {
+		logger.info("NGL shutdown...");
 	}
 }
 
+// Either the object is injected at application start or the instance can be lazily
+// created after application start. Instance and injector instance should be the
+// same.
+@Singleton
+class LazyInit {
+	
+	private static LazyInit instance;
+	
+	public static LazyInit instance() {
+		if (instance == null)
+			instance = play.Play.application().injector().instanceOf(LazyInit.class);
+		return instance;
+	}
+	
+	@Inject
+	public LazyInit(Application app) {
+		
+	}
+	
+}
+
+/*
 @javax.inject.Singleton
 class OnStartComplete {
 	private static final Logger.ALogger logger = Logger.of(OnStartComplete.class);
@@ -90,6 +120,7 @@ class OnStartComplete {
 		logger.info("asset server url " + controllers.resources.AssetPlugin.getServer());
 	}
 }
+*/
 
 @javax.inject.Singleton
 class DroolsComponent {
@@ -124,7 +155,7 @@ class DroolsComponent {
 	}
 	
 	public void onStop(Application app) {
-		logger.info("NGL shutdown...");
+		// logger.info("NGL shutdown...");
 	}
 	
 }
