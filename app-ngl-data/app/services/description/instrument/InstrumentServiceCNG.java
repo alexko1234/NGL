@@ -293,11 +293,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
-		//FDS ajout 04/10/2016 Epimotion (input plate / output tubes)
+		//FDS ajout 04/10/2016 Epimotion (input plate / output tubes); 18/10/2017 ajout tube en entree
 		l.add(newInstrumentUsedType("EpMotion", "epmotion", InstrumentCategory.find.findByCode("liquid-handling-robot"), getEpMotionProperties(), 
 				getInstruments(
 						createInstrument("epmotion1", "EpMotion 1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
-				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
