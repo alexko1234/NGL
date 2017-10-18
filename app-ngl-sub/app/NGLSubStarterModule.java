@@ -6,7 +6,7 @@ import play.Application;
 import play.api.Configuration;
 import play.api.Environment;
 import play.api.inject.Binding;
-import rules.services.RulesServices6;
+//import rules.services.RulesServices6;
 import scala.collection.Seq;
 import play.inject.ApplicationLifecycle;
 import play.libs.F;
@@ -14,11 +14,11 @@ import play.libs.F;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-public class NGLBIStarterModule extends play.api.inject.Module {
+public class NGLSubStarterModule extends play.api.inject.Module {
 	
-	private static final Logger.ALogger logger = Logger.of(NGLBIStarterModule.class);
+	private static final Logger.ALogger logger = Logger.of(NGLSubStarterModule.class);
 
-	public NGLBIStarterModule(Environment environment, Configuration configuration) {
+	public NGLSubStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-BI");
 	}
@@ -33,7 +33,6 @@ public class NGLBIStarterModule extends play.api.inject.Module {
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				// bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
-				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
 				// Force JsMessages init
 				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly()
 				);

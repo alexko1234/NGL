@@ -14,6 +14,7 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 
+import play.Logger;
 import play.Routes;
 import play.api.modules.spring.Spring;
 import play.libs.Scala;
@@ -23,15 +24,18 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 
-public class Main extends CommonController{
+public class Main extends CommonController {
 
+	private static final Logger.ALogger logger = Logger.of(Main.class);
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
 	private static JsMessages messages;
 
 	@Inject
 	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
+		logger.debug("injecting " + jsMessagesFactory);
 		messages = jsMessagesFactory.all();
+		logger.info("injected");
 	}
 
 	public static Result home() {

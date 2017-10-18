@@ -25,6 +25,7 @@ public class Global extends GlobalSettings {
 		Logger.info("NGL-BI has started");		   	
 		Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
 		
+		/* Started using the module DI
 		Logger.info("Load knowledge base");
 		
 		
@@ -36,7 +37,7 @@ public class Global extends GlobalSettings {
 			//Shutdown application
 			Play.stop(app.getWrappedApplication());
 		}
-		
+		*/
 		/*
 		RulesServices rulesServices = new RulesServices();
 		try {
