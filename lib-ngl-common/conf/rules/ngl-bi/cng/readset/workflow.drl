@@ -11,6 +11,7 @@ rule "Set state to In Waiting Transfert CCRT from In Waiting BI Analyse readSet"
 		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
 		$readSet : ReadSet(location==null || (location!=null && location!="CCRT"))
 	then
+		Logger.debug("Set state readSet to IW-TF "+$readSet.code);
 		$nextState.code="IW-TF";
 end
 
@@ -21,8 +22,10 @@ rule "Set state to In Waiting BI Analyse from Finished Transfert CCRT"
 	no-loop
 	when
 		$nextState : State(code=="F-TF")
+		$readSet : ReadSet(location!=null, location=="CCRT")
 		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
 	then
+		Logger.debug("Set state readSet to IW-BA "+$readSet.code);
 		$nextState.code="IW-BA";
 end
 
@@ -36,5 +39,6 @@ rule "Set state to In Progress BI Analyse from In Waiting BI Analyse CCRT"
 		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
 		$readSet : ReadSet(location!=null, location=="CCRT")
 	then
+		Logger.debug("Set state readSet to IP-BA "+$readSet.code);
 		$nextState.code="IP-BA";
 end
