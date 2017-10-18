@@ -222,6 +222,43 @@ angular.module('home').controller('DNAseTreatmentCtrl',['$scope', '$parse', 'atm
 	});
 	//Init		
 
+	$scope.updatePropertyFromUDT = function(value, col){
+		computeInputQuantity(value.data);
+	}
+	
+	var computeInputQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputQuantity");
+		var inputQuantity = getter(udtData);
+		if(undefined == inputQuantity)inputQuantity={};
+		
+		var compute = {
+				intputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				intputConcUnit : $parse("inputContainerUsed.concentration.unit")(udtData),
+				intputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
+				isReady:function(){
+					return (this.intputConc && this.intputConcUnit && this.intputVol);
+				}
+			};
+		
+		if(compute.isReady()){
+			var result = $parse("intputConc * intputVol")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputQuantity.value = Math.round(result*10)/10;	
+				inputQuantity.unit = (compute.intputConcUnit === 'nM')?'nmol':'ng';
+			}else{
+				inputQuantity = undefined;
+			}	
+			getter.assign(udtData, inputQuantity);
+		}else{
+			inputQuantity = null;
+			getter.assign(udtData, inputQuantity);
+			console.log("not ready to computeInputQuantity");
+		}
+		
+	}
+	
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){

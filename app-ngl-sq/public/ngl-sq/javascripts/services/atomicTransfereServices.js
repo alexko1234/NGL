@@ -421,8 +421,8 @@ angular.module('atomicTransfereServices', [])
 				},
 				
 				customExperimentToView : undefined, //used to cutom the view with one atm
-				
-				convertExperimentATMToDatatable : function(experimentATMs, experimentStateCode){
+				updateUDTData : undefined, //used to update one line of UDT
+				convertExperimentATMToDatatable : function(experimentATMs, experimentStateCode, light){
 					var promises = [];
 					
 					var atms = experimentATMs;
@@ -478,7 +478,11 @@ angular.module('atomicTransfereServices', [])
 							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
 							              allData[l].outputContainerUsed = $commonATM.updateOutputContainerUsed(allData[l].outputContainerUsed, atm.line, atm.column);
 							              allData[l].outputContainer = outputContainer;
-							              l++;							             
+							              if($that.updateUDTData !== undefined){
+							            	  $that.updateUDTData(allData[l]) 
+							              }
+							              l++;	
+							              
 							        }
 									if($that.customExperimentToView !== undefined){
 										$that.customExperimentToView(atm, inputContainers, outputContainers);
@@ -490,10 +494,14 @@ angular.module('atomicTransfereServices', [])
 									allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
 									allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer, experimentStateCode);
 									allData[l].inputContainer = inputContainer;	
-									l++;
+									if($that.updateUDTData !== undefined){
+										$that.updateUDTData(allData[l]) 
+						             }
 									if($that.customExperimentToView !== undefined){
 										$that.customExperimentToView(atm, inputContainers);
 									}
+									l++;
+									
 								}
 							}
 							atomicIndex++;
@@ -524,6 +532,7 @@ angular.module('atomicTransfereServices', [])
 						
 						$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
 							.then(function(containers) {								
+								
 								var allData = [], i = 0;
 								var atomicTransfertMethod = undefined;
 								
@@ -577,18 +586,20 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					if(!$scope.isCreationMode()){
-						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);													
+						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code, false);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
 					this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);					
 				},
 				
-				refreshViewFromExperiment : function(experiment){
+				refreshViewFromExperiment : function(experiment, light){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);				
+					(light === undefined)?light=false:light=true;
+					
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code, light);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
@@ -623,7 +634,7 @@ angular.module('atomicTransfereServices', [])
 								cleanAtomicTransfertMethods.push(experiment.atomicTransfertMethods[i]);
 							}
 						}
-						experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
+						experiment.atomicTransfertMethods = $filter('orderBy')(cleanAtomicTransfertMethods,["inputContainerUseds[0].code"]);
 					}								
 				},
 				viewToExperimentOneToMany :function(experimentIn){		
@@ -666,7 +677,7 @@ angular.module('atomicTransfereServices', [])
 								cleanAtomicTransfertMethods.push(experiment.atomicTransfertMethods[i]);
 							}
 						}
-						experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
+						experiment.atomicTransfertMethods = $filter('orderBy')(cleanAtomicTransfertMethods,["inputContainerUseds[0].code"]);
 					}								
 				},
 				viewToExperimentManyToOne :function(experimentIn){		

@@ -606,6 +606,9 @@ public class ExpWorkflowsHelper {
 				projectCodes.parallelStream().forEach(projectCode -> {
 					CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);				
 				});
+				newSampleCodes.forEach(newSampleCode -> {
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("sampleCodes", newSampleCode), DBUpdate.pull("sampleCodes", newSampleCode));
+				});
 			}			
 			//TODO Analyse if need to update lastSampleCode on project with the real exist sample. 
 		}
@@ -1321,7 +1324,11 @@ public class ExpWorkflowsHelper {
 						Content content1 = ocu1.contents.get(0); //in theory only one content;
 						Content content2 = ocu2.contents.get(0); //in theory only one content;						
 						//TODO Add other field to compare in case of same sample. This other field need to be used in exp.js
-						return content1.sampleCode.compareTo(content2.sampleCode);						
+						int result = content1.sampleCode.compareTo(content2.sampleCode);
+						if(result == 0){
+							result = ocu1.code.compareTo(ocu2.code);
+						}						
+						return result;
 					}
 					
 				})
@@ -1506,6 +1513,12 @@ public class ExpWorkflowsHelper {
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", deleteSampleCodes));
 			}
 			
+			if(deleteSampleCodes != null && deleteSampleCodes.size() > 0){
+				deleteSampleCodes.forEach(deleteSampleCode -> {
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("sampleCodes", deleteSampleCode), DBUpdate.pull("sampleCodes", deleteSampleCode));
+				});				
+			}
+						
 			updateProjectCodes.parallelStream().forEach(projectCode -> {
 				CodeHelper.getInstance().updateProjectSampleCodeWithLastSampleCode(projectCode);				
 			});

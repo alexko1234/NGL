@@ -79,8 +79,10 @@ public class RunServiceCNG  extends AbstractRunService{
 		
 		//use only for dynamic filters and dynamic properties
 		// !! Look also in ImportServiceCNG.java for libProcessTypeCode !!!
+		/*
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
 				getLibProcessTypeCodeValues(), "single"));
+		*/
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Category d'index","tagCategory",LevelService.getLevels(Level.CODE.Content), String.class, false, getTagCategories(), "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% par piste","percentPerLane",LevelService.getLevels(Level.CODE.Content), Double.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Layout Nominal Length","libLayoutNominalLength",LevelService.getLevels(Level.CODE.Content), Integer.class, false, "single"));
@@ -94,11 +96,9 @@ public class RunServiceCNG  extends AbstractRunService{
 		
 		return propertyDefinitions;
 	}
-	
-	
-	
+		
 	// GA 24/07/2015 ajout des TagCategories
-	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java !!!!
+	// FDS 01/03/2017 ajout POOL-INDEX.... existe aussi dans AbstractExperimentService.java et InportServiceCNG.java !!!!
 	private static List<Value> getTagCategories(){
 		List<Value> values = new ArrayList<Value>();
 		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
@@ -108,6 +108,8 @@ public class RunServiceCNG  extends AbstractRunService{
 		return values;	
 	}
 	
+	// 12/10/2017: liste pour les run Illumina !!! il y a une autre liste pour Nanopore
+	//             PAS PRIS EN COMPTE POUR LES FILTRES...
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
@@ -145,8 +147,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CAC","CAC - Agilent : V6+Cosmic (DefCap025)")); // !! aussi dans ProcessServiceCNG / getCaptureLibProcessTypeCodeValues
          values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
-         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028"));  // NGL-1584 ajout
-         
+         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));  // NGL-1584 ajout
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));

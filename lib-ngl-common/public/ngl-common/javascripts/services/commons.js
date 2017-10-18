@@ -1422,7 +1422,7 @@ angular.module('commonsServices', []).
 	    			for(var i=0;i<array.length;i++){
 	    				if(null != property && undefined != property && array[i][property]){
 	    					flatArray = flatArray.concat(array[i][property]);
-	    				}else if(array[i]){
+	    				}else if((null === property || undefined === property) && array[i]){
 	    					flatArray = flatArray.concat(array[i]);
 	    				}
 	    			}

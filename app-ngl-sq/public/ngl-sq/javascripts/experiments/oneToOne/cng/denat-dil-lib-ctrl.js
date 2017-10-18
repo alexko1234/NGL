@@ -421,7 +421,26 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 
-	$scope.atmService = atmService;
+	// 16/10/2017 restriction main: forcer tube en sortie
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		if  ($scope.experiment.instrument.typeCode === "hand"){
+			//console.log("instrument.typeCode === "+ $scope.experiment.instrument.typeCode+ " force tube");
+			$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+		}
+	});
+	
+	// restriction  epmotion: uniquement tube en entree
+	if ( ($scope.experiment.instrument.typeCode === 'epmotion') && ($scope.experiment.instrument.inputContainerSupportCategoryCode !=="tube") ){
+		console.log("Le robot Epmotion n'autorise que des tubes en entrée");
+		
+		$scope.messages.clear();
+		$scope.messages.clazz = "alert alert-danger";
+		$scope.messages.text = Messages("experiments.input.error.instrument-input.only-tubes");
+		$scope.messages.showDetails = false;
+		$scope.messages.open();	
+	} else {
+		$scope.atmService = atmService;
+	}
 
 
 	/*  pas de sample sheet demandee pour l'instant...

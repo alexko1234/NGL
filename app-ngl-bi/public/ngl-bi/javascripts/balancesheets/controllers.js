@@ -93,6 +93,8 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http'
 		//for rsnanopore
 		form.includes.push("treatments.ngsrg.default.1DReverse");
 		form.includes.push("treatments.ngsrg.default.1DForward");
+		form.includes.push("treatments.readQuality.default.1DReverse");
+		form.includes.push("treatments.readQuality.default.1DForward");
 		form.limit = 100000;
 
 		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
@@ -453,6 +455,8 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', '$http','m
 		//for rsnanopore
 		form.includes.push("treatments.ngsrg.default.1DReverse");
 		form.includes.push("treatments.ngsrg.default.1DForward");
+		form.includes.push("treatments.readQuality.default.1DReverse");
+		form.includes.push("treatments.readQuality.default.1DForward");
 		form.includes.push("projectCode");
 		form.includes.push("runTypeCode");
 		form.includes.push("runSequencingStartDate");
