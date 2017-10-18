@@ -429,18 +429,18 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		}
 	});
 	
-	// restriction  epmotion: uniquement tube en entree
-	if ( ($scope.experiment.instrument.typeCode === 'epmotion') && ($scope.experiment.instrument.inputContainerSupportCategoryCode !=="tube") ){
-		console.log("Le robot Epmotion n'autorise que des tubes en entrée");
-		
+	// 16/10/2017 restriction epmotion: uniquement tube en entree TODO
+	
+	// FAUX il faut lister le type des container en entree et verifier qu'aucun n'est un puit!!!!
+	// fait ailleurs deja ???? verifier seulement si exp a etat new ???
+	//if ( ($scope.experiment.instrument.typeCode === 'epmotion') && ($scope.experiment.instrument.inputContainerSupportCategoryCode !=="tube") ){
+	//	console.log("Le robot Epmotion n'autorise que des tubes en entrée");
+	//	$scope.messages.setError(Messages("experiments.input.error.instrument-input.only-tubes"));
+	
+	//} else {
 		$scope.messages.clear();
-		$scope.messages.clazz = "alert alert-danger";
-		$scope.messages.text = Messages("experiments.input.error.instrument-input.only-tubes");
-		$scope.messages.showDetails = false;
-		$scope.messages.open();	
-	} else {
 		$scope.atmService = atmService;
-	}
+	//}
 
 
 	/*  pas de sample sheet demandee pour l'instant...
