@@ -43,7 +43,7 @@
 		</div>
 		
 		<div class="col-md-2 col-lg-2">
-           <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber") ({{nbOutputSupport}})</label>&nbsp;&nbsp;{{nbOutputSupport}}
+           <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber")</label>&nbsp;&nbsp;{{nbOutputSupport}}
 		</div> 
 	
 		<div class="col-md-4 col-lg-4" ng-show="nbOutputSupport > 0">
@@ -68,21 +68,21 @@
 	<!-- onglets-->
 	<div class="col-md-12 col-lg-12">
 		   <ul class="nav nav-tabs margin-bottom-5" role="tablist">
-		     <li class="active"><a href="" role="tab" data-target="#inputSupport"               data-toggle="tab" >@Messages("containers.table.support.in.code") : {{inputSupportCode}}</a></li>
-  	         <li ng-show="!mainservice.isCreationMode()" ng-repeat="code in outputContainerSupportCodes track by $index"><a href="" role="tab" data-target="#outputSupport{{$index+1}}" data-toggle="tab" >@Messages("containers.table.support.out.code")&nbsp;{{$index+1}} : {{ outputContainerSupportCodes[$index] }}</a></li>
+		     <li class="active"><a href="" role="tab" data-target="#inputSupport"             data-toggle="tab" >@Messages("containers.table.support.in.code") : {{inputSupportCode}}</a></li>
+  	         <li ng-show="!mainservice.isCreationMode()" ng-repeat="code in outputContainerSupportCodes track by $index">
+  	                           <a href="" role="tab" data-target="#outputSupport{{$index+1}}" data-toggle="tab" ng-click="plateUtils.computePlateCells(atmService, $index)">@Messages("containers.table.support.out.code")&nbsp;{{$index+1}} : {{ outputContainerSupportCodes[$index] }}</a></li>
 	       </ul>
 	
-  	<!-- les onglet de sortie ne doivent  etre affichés que si etat !en cours --> 
 	  	<div class="tab-content"  >
 			<div class="tab-pane active" id="inputSupport">	
-			
 				<div class="row">
-		    		<!--  <div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data">OUTPUTTTTTTTTTTT {{$index+1}}</div> -->
 		    		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data" ></div>
 		  		</div>
 	
 			</div> 
-			<div ng-show="!mainservice.isCreationMode()" class="tab-pane" id="outputSupport{{$index+1}}" ng-repeat="code in outputContainerSupportCodes track by $index">	
+			<!-- les onglets de sortie ne s'affichent que si etat !en creation --> 
+			<!-- $index est toujour celui du dernier ng-repeat !!! essayer $parent.index ??? -->
+			<div ng-show="!mainservice.isCreationMode()" class="tab-pane" id="outputSupport{{$index+1}}" ng-repeat="code in outputContainerSupportCodes track by $index"  >	
 		 		<div class="row">
 					<div class="col-md-12 col-lg-12">
 					<table class="table table-bordered table-condensed">
@@ -96,8 +96,8 @@
 	            		<tr ng-repeat="y in ['A','B','C','D','E','F','G','H']" class="total">
 	                		<td><strong>{{y}}</strong></td>
 	                		<td class="plates" ng-repeat="x in [1,2,3,4,5,6,7,8,9,10,11,12]" class="browser">
-	                	   		 <div ng-class="getClass(x, y)" ng-bind="displayCellPlaque(x, y)"/>
-	                	   		 <div class="visible-print-block" ng-bind="displayCellPlaque(x, y)"/>    						    					
+	                	   		 <div ng-bind="plateUtils.getCellPlateDataTEST($parent.$parent.$index, code , x, y)"></div>	
+	                	   		 <div ng-bind="plateUtils.getCellPlateData(x, y)">xx</div>	 	    					
 	                		</td>          
 	            		</tr>
 	        		<tbody>

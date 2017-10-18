@@ -60,7 +60,8 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 	   }
 	}	
    
-   /* ancienne methode avant ajout datatable 
+   /* ancienne methode avant ajout datatable  A PURGER SI TOUT OK.....
+    
    // il faut la callbackFunction pour le $emit 
    function generateATM(callbackFunction){
 	    console.log ('ouput supports='+ $scope.outputContainerSupportCodes);
@@ -233,7 +234,9 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 		// rien  ????
 	});
 	
-	// A COMPLETER.....
+	var inputExtraHeaders=Messages("experiments.inputs");
+	var outputExtraHeaders=Messages("experiments.outputs");	
+	
 	var inputContainerDatatableConfig = {
 			columns:[   
 					 {
@@ -264,7 +267,60 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 			        	 "type":"number",
 			        	 "position":3,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         }   
+			         },
+			         { // Projet(s)
+				        	"header":Messages("containers.table.projectCodes"),
+				 			"property": "inputContainer.projectCodes",
+				 			"order":true,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":4,
+				 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        	 "extraHeaders":{0: inputExtraHeaders}
+					     },
+					     { // Echantillon(s) 
+				        	"header":Messages("containers.table.sampleCodes"),
+				 			"property": "inputContainer.sampleCodes",
+				 			"order":true,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":5,
+				 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        	"extraHeaders":{0: inputExtraHeaders}
+					     },
+					     /*
+					     { // sampleAliquoteCode 
+					        "header":Messages("containers.table.codeAliquot"),
+					 		"property": "inputContainer.contents", 
+					 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
+					 		"order":true,
+					 		"hide":true,
+					 		"type":"text",
+					 		"position":6,
+					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					        "extraHeaders":{0: inputExtraHeaders}
+						 },
+						*/
+					     { 
+					       "header": Messages("containers.table.libProcessType"),
+					       "property" : "inputContainerUsed.contents",
+					       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
+					       "order":true,
+						   "edit":false,
+						   "hide":true,
+					       "type":"text",
+					       "position":8.2,
+					       "extraHeaders":{0:inputExtraHeaders}
+					     },
+				         { // Etat input Container 
+				        	 "header":Messages("containers.table.state.code"),
+				        	 "property":"inputContainer.state.code | codes:'state'",
+				        	 "order":true,
+							 "hide":true,
+				        	 "type":"text",
+				        	 "position":9,
+				        	 "extraHeaders":{0: inputExtraHeaders}
+				         }   		         
 			],
 			compact:true,
 			// tout a false, on ne fait que de l'affichage
@@ -300,8 +356,8 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 	};
 	
 	//init data
-	//Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.
-	//Il faut refaire un atmService "allégé"
+	//GA 16/10/2017 Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.
+	//=>Il faut refaire un atmService "allégé" par rapport a celui dans atomicTransfereServices.js
 	var atmService =  {
 			data:datatable(inputContainerDatatableConfig), //UDT
 			$commonATM : commonAtomicTransfertMethod($scope),
@@ -437,4 +493,64 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 	atmService.experimentToView($scope.experiment);
 	
 	$scope.atmService = atmService;
+	
+	
+	// TEST copié depuis details-ctrl.js
+	// mais prevu pour 1 seule plaque out put A MODIFIER !!!
+	var plateUtils = {
+		plateCells : undefined,
+		computePlateCells : function(atmService, i){
+			console.log ("computePlateCells for plate "+ i );
+			
+			// un seul tableau ne suffit plus !!! 
+			var plateCells = [];
+			
+			
+			var wells = atmService.data.displayResult;
+			// displayResult pas defini...?
+			//var  wells = atmService.data.getData();
+				
+			angular.forEach(wells, function(well){
+				var containerUsed = undefined;
+				
+				containerUsed = well.data.outputContainerUsed;
+
+				var line = containerUsed.locationOnContainerSupport.line;
+				var column = containerUsed.locationOnContainerSupport.column;
+				if(line && column){
+					if(plateCells[line] == undefined){
+						plateCells[line] = [];
+					}
+					var sampleCodeAndTags = [];
+					angular.forEach(containerUsed.contents, function(content){
+						var value = content.projectCode+" / "+content.sampleCode;
+						
+						if(content.properties && content.properties.libProcessTypeCode){
+							value = value +" / "+content.properties.libProcessTypeCode.value;
+						}
+						
+						if(content.properties && content.properties.tag){
+							value = value +" / "+content.properties.tag.value;
+						}
+						
+						sampleCodeAndTags.push(value);
+					});
+					plateCells[line][column] = sampleCodeAndTags;
+					
+				}						
+			})	
+			this.plateCells = plateCells;
+		},
+		getCellPlateData : function(line, column){
+			if(this.plateCells && this.plateCells[line] && this.plateCells[line][column]){
+				return this.plateCells[line][column];
+			}
+		},
+		getCellPlateDataTEST : function(output, plate, line, column){
+			return "("+output+")"+ plate+"/"+line+"/"+column;
+		}
+	};
+
+	$scope.plateUtils=plateUtils;
+	
 }]);
