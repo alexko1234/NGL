@@ -28,7 +28,6 @@ object ApplicationBuild extends Build {
     val projectsVersion = "1.3.1-SNAPSHOT"  
    val reagentsVersion = "1.3.0-SNAPSHOT" 
    val subVersion = "1.4.0-SNAPSHOT"  
-
    val libDatatableVersion = "1.2-SNAPSHOT"
    val libFrameworkWebVersion = "1.1-SNAPSHOT"
    
@@ -39,12 +38,18 @@ object ApplicationBuild extends Build {
   override def settings = super.settings ++ Seq(
         EclipseKeys.skipParents in ThisBuild := false
   )
-	val projectsVersion = "1.3.0-SNAPSHOT"  
-	val reagentsVersion = "1.3.0-SNAPSHOT"
 
-	val subVersion = "1.3.0-SNAPSHOT"  
-	val libDatatableVersion = "1.2-SNAPSHOT"
-	val libFrameworkWebVersion = "1.1-SNAPSHOT"
+  val distSuffix = ".2.4"
+  
+	val sqVersion  = "1.34.0"+distSuffix+"-SNAPSHOT"  
+	val biVersion  = "1.38.0"+distSuffix+"-SNAPSHOT"
+
+	val projectsVersion = "1.3.0"+distSuffix+"-SNAPSHOT"  
+	val reagentsVersion = "1.3.0"+distSuffix+"-SNAPSHOT"
+
+	val subVersion = "1.3.0"+distSuffix+"-SNAPSHOT"  
+	val libDatatableVersion = "1.2"+distSuffix+"-SNAPSHOT"
+	val libFrameworkWebVersion = "1.1"+distSuffix+"-SNAPSHOT"
 
 	val postgresql = "postgresql" % "postgresql" % "8.3-603.jdbc4"
 	//val postgresql = "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
@@ -53,7 +58,8 @@ object ApplicationBuild extends Build {
   val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.4-1.5-SNAPSHOT"
   val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.4-1.4-SNAPSHOT"
   // val ceaMongo   = "fr.cea.ig"         %% "mongodbplugin"      % "1.6.0-SNAPSHOT"
-  val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.0-SNAPSHOT"
+  // val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.0-SNAPSHOT"
+  val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.1-SNAPSHOT"
   val commonsLang = "commons-lang"       % "commons-lang"       % "2.4"
   // val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "1.6.2"
   val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "2.0.0" // play 2.4,2.5

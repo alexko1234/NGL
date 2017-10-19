@@ -30,7 +30,7 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
 
-public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T>{
+public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T> {
 
 	protected String collectionName;
 	protected List<String> defaultKeys;
@@ -59,19 +59,19 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
     	return MongoDBDAO.findOne(collectionName, type, query);
     }
 	
-	protected boolean isObjectExist(String code){
+	protected boolean isObjectExist(String code) {
 		return MongoDBDAO.checkObjectExistByCode(collectionName, type, code);
 	}
 	
-	protected boolean isObjectExist(Query query){
+	protected boolean isObjectExist(Query query) {
 		return MongoDBDAO.checkObjectExist(collectionName, type, query);
 	}
 	
-	protected T saveObject(T o){
+	protected T saveObject(T o) {
 		return MongoDBDAO.save(collectionName, o);
 	}
 	
-	protected void updateObject(T o){
+	protected void updateObject(T o) {
 		MongoDBDAO.update(collectionName, o);
 	}
 	

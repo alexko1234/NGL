@@ -16,8 +16,9 @@ import com.google.common.io.Files;
  * 
  * 
  */
-public class PropertyFileValue extends PropertyByteValue{
+public class PropertyFileValue extends PropertyByteValue {
 	
+	// TODO: Should provide protected constructors that take a type argument.
 	
 	public PropertyFileValue() {
 		super(PropertyValue.fileType);

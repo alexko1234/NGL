@@ -2,5 +2,6 @@
 
 Fix the jsmessages uses/setup in controllers.main.tpl.Main.java(s).
 
+Netty deprecated.
 
   

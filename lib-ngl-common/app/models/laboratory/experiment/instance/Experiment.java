@@ -89,20 +89,19 @@ public class Experiment extends DBObject implements IValidation {
 	
 	
 	
-	public Experiment(){
-		traceInformation=new TraceInformation();		
+	public Experiment() {
+		traceInformation = new TraceInformation();		
 	}
 	
-	public Experiment(String code){
-		this.code=code;		
+	public Experiment(String code) {
+		this.code = code;		
 	}
-	
 	
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		long t0 = System.currentTimeMillis();
-		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);
 			
 		}
