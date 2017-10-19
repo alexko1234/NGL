@@ -38,13 +38,13 @@ public class All extends CommonController {
 			MeasureService.main(errors);
 			ContainerService.main(errors);
 			InstrumentService.main(errors);
-			SampleService.main(errors);
-			ImportService.main(errors);
 			ExperimentService.main(errors);
 			ProcessService.main(errors);
 			ProjectService.main(errors);
-			RunService.main(errors);
-			TreatmentService.main(errors);
+			SampleService.main(errors);
+			//RunService.main(errors);
+			ImportService.main(errors);
+			//TreatmentService.main(errors);
 			if (errors.size() > 0) {
 				return badRequest(Json.toJson(errors));
 			} else {
