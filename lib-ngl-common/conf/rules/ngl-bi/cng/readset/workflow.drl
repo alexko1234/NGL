@@ -24,7 +24,7 @@ rule "Set state to In Waiting BI Analyse from Finished Transfert CCRT"
 		$nextState : State(code=="F-TF")
 		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
 	then
-		Logger.debug("Set state readSet to IW-BA "+$readSet.code);
+		Logger.debug("Set state readSet to IW-BA");
 		$nextState.code="IW-BA";
 end
 
