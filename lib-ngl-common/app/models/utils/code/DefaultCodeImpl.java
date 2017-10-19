@@ -23,6 +23,7 @@ public class DefaultCodeImpl implements Code {
 	}
 
 	protected synchronized String generateBarCode(){
+		Logger.debug("DefaultCodeImpl generateBarCode");
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
@@ -46,7 +47,7 @@ public class DefaultCodeImpl implements Code {
 			code += Integer.toString(minsec, 36);// minute
 
 			code += Integer.toString(Integer.valueOf(m.group(7)) + 36, 36);// millisecond
-			//Logger.debug("Container code generated "+code);
+			Logger.debug("Container code generated "+code);
 			return code.toUpperCase();
 		} else {
 			try {
@@ -66,6 +67,7 @@ public class DefaultCodeImpl implements Code {
 
 	// ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public synchronized String generateProcessCode(Process process) {
+		Logger.debug("DefaultCodeImpl generateProcessCode ");
 		return (process.sampleOnInputContainer.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
 	}
 
