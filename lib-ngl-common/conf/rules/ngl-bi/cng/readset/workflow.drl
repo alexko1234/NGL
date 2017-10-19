@@ -22,7 +22,6 @@ rule "Set state to In Waiting BI Analyse from Finished Transfert CCRT"
 	no-loop
 	when
 		$nextState : State(code=="F-TF")
-		$readSet : ReadSet(location!=null, location=="CCRT")
 		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
 	then
 		Logger.debug("Set state readSet to IW-BA "+$readSet.code);
