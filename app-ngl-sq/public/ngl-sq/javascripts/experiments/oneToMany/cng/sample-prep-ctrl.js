@@ -204,7 +204,9 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 		console.log("call event save");
 
 		//  ancienne methode avant ajout Datatable.... generateATM(callbackFunction);
+		
 		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
+		
 		if ( $scope.experiment.atomicTransfertMethods[0].outputContainerUseds.length === 0){
 			$scope.$emit('childSavedError', callbackFunction);
 			
@@ -366,6 +368,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 					concentration : "nM"
 			},
 			defaultOutputValue :{},
+			platesCells:[],
 			newAtomicTransfertMethod : function(l,c){
 				return {
 					class:"OneToMany",
@@ -383,6 +386,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 						var allData = [];
 						var inputContainers = result.input;
 						var atomicIndex=0;
+						var plateCells= new Array(0);// array local de travail...
 						for(var i=0; i< atms.length;i++){
 							
 							if(atms[i] === null){
@@ -392,19 +396,56 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 							var atm = $.extend(true,{}, atms[i]);
 								
 							var inputContainerCode = atm.inputContainerUseds[0].code;
-							var inputContainer = inputContainers[inputContainerCode];
-							
+							var inputContainer = inputContainers[inputContainerCode];	   
 							var line = {atomicIndex:atomicIndex};
 							line.atomicTransfertMethod = atm;							              
 							line.inputContainer = inputContainer;	
 							line.inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[0]);
 							line.inputContainerUsed = $that.$commonATM.updateInputContainerUsedFromContainer(line.inputContainerUsed, inputContainer, experimentStateCode);							
 							allData.push(line);
+									
+							// creation des plateCells 
+							// NOTE: en javascript il est possible d'avoir des index  de tableau non numeriques !!
+							var ocu=atm.outputContainerUseds;
+							for(var j=0; j < ocu.length;j++){
+								var code= ocu[j].locationOnContainerSupport.code;
+								 if(plateCells[code] == undefined){
+									plateCells[code] = new Array();
+								 }
+								   
+								 var ln = ocu[j].locationOnContainerSupport.line;
+								 var col = ocu[j].locationOnContainerSupport.column; 
+ 
+								 var sampleCodeAndTags = [];
+								 angular.forEach(ocu[j].contents, function(content){
+									var value = content.projectCode+" / "+content.sampleCode;
+									
+									if(content.properties && content.properties.libProcessTypeCode){
+										value = value +" / "+content.properties.libProcessTypeCode.value;
+									}
+									
+									if(content.properties && content.properties.tag){
+										value = value +" / "+content.properties.tag.value;
+									}
+									
+									sampleCodeAndTags.push(value);
+								 });
+									
+								 if(plateCells[code][ln] == undefined){
+										plateCells[code][ln] = new Array(); 
+								 }
+		
+								plateCells[code][ln][col] = sampleCodeAndTags;
+								console.log (">>>> plateCells "+code+"/"+ln+"/"+col+"="+sampleCodeAndTags);
+							}
+							
 							atomicIndex++;
 						}
 						
 						allData = $filter('orderBy')(allData, ['inputContainer.support.code','inputContainer.support.column*1', 'inputContainer.support.line']);							
-						$that.data.setData(allData, allData.length);											
+						$that.data.setData(allData, allData.length);	
+						
+						$that.plateCells=plateCells; 
 				});		
 			},
 			addNewAtomicTransfertMethodsInData:function(){
@@ -451,14 +492,13 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 						experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds = new Array(0);
 						var atm = experiment.atomicTransfertMethods[atomicIndex];
 						
-						//oneTo
 						var inputContainerUsed = allData[i].inputContainerUsed;
 						this.$commonATM.removeNullProperties(inputContainerUsed.instrumentProperties);
 						this.$commonATM.removeNullProperties(inputContainerUsed.experimentProperties);
 						atm.inputContainerUseds.push(inputContainerUsed);	
 						
 						// Ne recreer les outputs que dans les etats Nouveau ou en cours  ( mais PAS si elle est terminee)
-						if('F' !== experimentIn.state.code){
+						if('F' !== experiment.state.code){
 							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds = new Array(0);
 							
 							for(var j = 0; j < $scope.outputContainerSupportCodes.length ; j++){
@@ -488,69 +528,22 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 					experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
 				}								
 			},
+			getCellPlateData : function(code, column, line){
+				//console.log ( code+"/"+column+"/"+line);
+				if(this.plateCells && this.plateCells[code][line] && this.plateCells[code][line][column]){
+					return this.plateCells[code][line][column];
+				}
+			},
+			//for TEST
+			getCellPlateDataTEST : function(code, column, line){
+				console.log ("data="+ code+"/"+column+"/"+line);
+				return  code+"/"+column+"/"+line;
+			}
 	};
 	
 	atmService.experimentToView($scope.experiment);
 	
 	$scope.atmService = atmService;
-	
-	
-	// TEST copié depuis details-ctrl.js
-	// mais prevu pour 1 seule plaque out put A MODIFIER !!!
-	var plateUtils = {
-		plateCells : undefined,
-		computePlateCells : function(atmService, i){
-			console.log ("computePlateCells for plate "+ i );
-			
-			// un seul tableau ne suffit plus !!! 
-			var plateCells = [];
-			
-			
-			var wells = atmService.data.displayResult;
-			// displayResult pas defini...?
-			//var  wells = atmService.data.getData();
-				
-			angular.forEach(wells, function(well){
-				var containerUsed = undefined;
-				
-				containerUsed = well.data.outputContainerUsed;
-
-				var line = containerUsed.locationOnContainerSupport.line;
-				var column = containerUsed.locationOnContainerSupport.column;
-				if(line && column){
-					if(plateCells[line] == undefined){
-						plateCells[line] = [];
-					}
-					var sampleCodeAndTags = [];
-					angular.forEach(containerUsed.contents, function(content){
-						var value = content.projectCode+" / "+content.sampleCode;
-						
-						if(content.properties && content.properties.libProcessTypeCode){
-							value = value +" / "+content.properties.libProcessTypeCode.value;
-						}
-						
-						if(content.properties && content.properties.tag){
-							value = value +" / "+content.properties.tag.value;
-						}
-						
-						sampleCodeAndTags.push(value);
-					});
-					plateCells[line][column] = sampleCodeAndTags;
-					
-				}						
-			})	
-			this.plateCells = plateCells;
-		},
-		getCellPlateData : function(line, column){
-			if(this.plateCells && this.plateCells[line] && this.plateCells[line][column]){
-				return this.plateCells[line][column];
-			}
-		},
-		getCellPlateDataTEST : function(output, plate, line, column){
-			return "("+output+")"+ plate+"/"+line+"/"+column;
-		}
-	};
-
-	$scope.plateUtils=plateUtils;
+		
 	
 }]);
