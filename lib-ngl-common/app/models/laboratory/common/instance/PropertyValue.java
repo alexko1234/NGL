@@ -32,11 +32,11 @@ import validation.utils.ValidationHelper;
 })
 public abstract class PropertyValue<T> implements IValidation {
 	
-	public static final String singleType = "single";
-	public static final String listType = "list";
-	public static final String fileType = "file";
-	public static final String imgType = "img";
-	public static final String objectType = "object";
+	public static final String singleType     = "single";
+	public static final String listType       = "list";
+	public static final String fileType       = "file";
+	public static final String imgType        = "img";
+	public static final String objectType     = "object";
 	public static final String objectListType = "object_list";
 	
 	public String _type;

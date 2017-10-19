@@ -15,7 +15,7 @@ import models.laboratory.common.instance.PropertyValue;
  * @author mhaquell
  *
  */
-public class PropertySingleValue extends PropertyValue<Object>{
+public class PropertySingleValue extends PropertyValue<Object> {
 	
 	public PropertySingleValue() {
 		super(PropertyValue.singleType);
@@ -33,6 +33,7 @@ public class PropertySingleValue extends PropertyValue<Object>{
 	public String toString() {
 		return "PropertySingleValue[value=" + value + ", unit=" + unit +  ", class="+value.getClass().getName()+"]";
 	}
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);

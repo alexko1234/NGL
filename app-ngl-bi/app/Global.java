@@ -15,8 +15,8 @@ import play.mvc.Http.Request;
 import rules.services.RulesServices6;
 
 
-public class Global extends GlobalSettings {
-
+// public class Global extends GlobalSettings {
+class UNUSED_Global extends GlobalSettings {
 	
 	// Should use the same start sequence as NGL-SQ.
 	
