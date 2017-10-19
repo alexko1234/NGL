@@ -79,7 +79,7 @@ public class ExcelFileService extends FileService {
 			String value = ExcelHelper.convertToStringValue(cell);
 			
 			if(StringUtils.isNotBlank(value)){
-				value = value.trim();
+				value = value.trim().replaceAll("\u00A0","");
 				isBlankLine = false;
 				rowMap.put(columnIndex, value);
 			}
