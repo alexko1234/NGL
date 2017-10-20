@@ -507,22 +507,22 @@ experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience créée par
 experiments.table.status = Statut
 
+experiments.input.error.instrument-input.only-tubes = Cet instrument ne prend que des tubes en entrée (pour cette expérience)
 experiments.input.error.only-tubes = Seuls des tubes peuvent entrer dans cette expérience
-experiments.input.error.instrument-input.only-tubes = Cet instrument ne prend que des tubes en entrée
 experiments.input.error.only-tubes-or-strips = Seuls des tubes ou des strips peuvent entrer dans cette expérience
 experiments.input.error.only-plates = Seules des plaques peuvent entrer dans cette expérience
 experiments.input.error.only-1-plate= Une seule plaque peut entrer dans cette expérience
 experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les même
-experiments.input.error.maxContainers=Maximum {0} containers en entrée
-experiments.input.error.maxSupports=Maximum {0} supports en entrée
+experiments.input.error.maxContainers=Maximum {0} container(s) en entrée
+experiments.input.error.maxSupports=Maximum {0} support(s) en entrée
 
-experiments.output.error.maxSupports=Maximum {0} supports en sortie
+experiments.output.error.maxSupports=Maximum {0} support(s) en sortie
 experiments.output.error.minSupports=Minimum {0} support(s) en sortie
 
 experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 
 containers.table.outputNumber = Nb aliquots
-supports.outputNumber = Nb supports en sortie
+experiments.supports.outputNumber = Nb supports en sortie
 
 experiment.dispatch.title = Orientation des containers : 
 

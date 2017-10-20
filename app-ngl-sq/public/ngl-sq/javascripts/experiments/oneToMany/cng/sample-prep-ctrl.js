@@ -1,12 +1,159 @@
-/* 11/08/2017 GA/FDS experience One to Many */
-/* 16/10/2017 finalement il faut qd meme un datatable */
+// 11/08/2017 GA/FDS experience One to Many 
+// 16/10/2017 finalement il faut qd meme un datatable 
 
+/* 20/10/2017 FDS essai ajout '$q','$routeParams', $http......
 angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter','commonAtomicTransfertMethod','mainService','datatable',
                                                                function($scope, $parse, $filter, commonAtomicTransfertMethod, mainService, datatable ) {
+*/
+angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse', '$filter','$q','$routeParams','commonAtomicTransfertMethod','mainService','datatable',
+                                                               function($scope, $http, $parse, $filter, $q, $routeParams, commonAtomicTransfertMethod, mainService, datatable ) {
+	
+	var inputExtraHeaders=Messages("experiments.inputs");
+	var outputExtraHeaders=Messages("experiments.outputs");	
+	
+	var inputContainerDatatableConfig = {
+			columns:[   
+					 {
+			        	 "header":Messages("containers.table.support.name"),
+			        	 "property":"inputContainer.support.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":1,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         { // Ligne
+			        	 "header":Messages("containers.table.support.line"),
+			        	 "property":"inputContainer.support.line",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":2,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         { // colonne
+			        	 "header":Messages("containers.table.support.column"),
+				         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 "property":"inputContainer.support.column*1",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":3,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         { // Projet(s)
+				        "header":Messages("containers.table.projectCodes"),
+				 		"property": "inputContainer.projectCodes",
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":4,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				         "extraHeaders":{0: inputExtraHeaders}
+					  },
+					  { // Echantillon(s) 
+				        "header":Messages("containers.table.sampleCodes"),
+				 		"property": "inputContainer.sampleCodes",
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":5,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        "extraHeaders":{0: inputExtraHeaders}
+					  },
+					  /*
+					     { // sampleAliquoteCode 
+					        "header":Messages("containers.table.codeAliquot"),
+					 		"property": "inputContainer.contents", 
+					 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
+					 		"order":true,
+					 		"hide":true,
+					 		"type":"text",
+					 		"position":6,
+					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					        "extraHeaders":{0: inputExtraHeaders}
+						 },
+						*/
+					  { 
+					    "header": Messages("containers.table.libProcessType"),
+					    "property" : "inputContainerUsed.contents",
+					    "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
+					    "order":true,
+						"edit":false,
+						"hide":true,
+					    "type":"text",
+					    "position":8.2,
+					    "extraHeaders":{0:inputExtraHeaders}
+					  },
+				      { // niveau process uniquement =>  utiliser processProperties; ne fonctionne que a nouveau et en cours c'est normal !!
+				        "header": Messages("containers.table.baits"),
+				        "property" :"inputContainerUsed.contents",
+				        "filter" : "getArray:'processProperties.expectedBaits.value' | unique  | codes:'value'",
+				      	"order":true,
+					    "edit":false,
+					    "hide":true,
+				      	"type":"text",
+				      	"position":8.4,
+				      	"extraHeaders":{0:inputExtraHeaders}
+				      },
+			          { // contents => utiliser properties et pas processProperties
+			        	 "header": Messages("containers.table.captureProtocol"),
+			        	 "property" : "inputContainerUsed.contents",
+			        	 "filter" : "getArray:'properties.captureProtocol.value' | unique  | codes:'value'",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":8.6,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			          },
+				      { // Etat input Container 
+				        "header":Messages("containers.table.state.code"),
+				        "property":"inputContainer.state.code | codes:'state'",
+				        "order":true,
+						"hide":true,
+				        "type":"text",
+				        "position":9,
+				        "extraHeaders":{0: inputExtraHeaders}
+				       }   		         
+			],
+			compact:true,
+			// tout a false, on ne fait que de l'affichage
+			showTotalNumberRecords:false,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				active:false
+			},
+			remove:{
+				active: false				
+			},
+			save:{
+				active:false
+			},			
+			select:{
+				active:false
+			},
+			edit:{
+				active: false
+			},	
+			cancel : {
+				active:false
+			},
+			extraHeaders:{
+				number:1,
+				dynamic:true,
+			}
+	};
 	
 	
-   $scope.values=[1,2,3];
-   $scope.nbOutputSupport=$scope.values[0];
+   $scope.values=[1,2];
+   // Julie ne veut pas de preselection....$scope.nbOutputSupport=$scope.values[0];
 	
    // créer un tableau sur lequel pourra boucler ng-repeat
    // ce tableau est modifié sur onChange de "nbOutputSupport"
@@ -77,6 +224,25 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 	    //?? qu'est-ce qui prouve que les 2 tableaux locationOnContainerSupport.code  et locationOnContainerSupport.storageCode  sont récupéres dans le meme ordre ?????
 	}
 	
+	// TODO ???? peut-on recuperer l'etat d'un containerSupport ??
+	// voir containerSupport/details.js....
+	// voir 'ngl-sq.barCodeSearchServices'
+	$scope.getContainerSupportState =function(code){
+        console.log('get support data...');
+        
+        /* 
+		var promise = [];
+		promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
+		$q.all(promise).then(function(results){
+			$scope.support = results[0].data;
+			...
+		});		
+        */
+        
+		return ("TODO...");
+	}
+		
+	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 
@@ -109,126 +275,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$parse', '$filter
 		// rien  ????
 	});
 	
-	var inputExtraHeaders=Messages("experiments.inputs");
-	var outputExtraHeaders=Messages("experiments.outputs");	
-	
-	var inputContainerDatatableConfig = {
-			columns:[   
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         { // Ligne
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"inputContainer.support.line",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         { // colonne
-			        	 "header":Messages("containers.table.support.column"),
-				         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"inputContainer.support.column*1",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         { // Projet(s)
-				        	"header":Messages("containers.table.projectCodes"),
-				 			"property": "inputContainer.projectCodes",
-				 			"order":true,
-				 			"hide":true,
-				 			"type":"text",
-				 			"position":4,
-				 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        	 "extraHeaders":{0: inputExtraHeaders}
-					     },
-					     { // Echantillon(s) 
-				        	"header":Messages("containers.table.sampleCodes"),
-				 			"property": "inputContainer.sampleCodes",
-				 			"order":true,
-				 			"hide":true,
-				 			"type":"text",
-				 			"position":5,
-				 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        	"extraHeaders":{0: inputExtraHeaders}
-					     },
-					     /*
-					     { // sampleAliquoteCode 
-					        "header":Messages("containers.table.codeAliquot"),
-					 		"property": "inputContainer.contents", 
-					 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
-					 		"order":true,
-					 		"hide":true,
-					 		"type":"text",
-					 		"position":6,
-					 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-					        "extraHeaders":{0: inputExtraHeaders}
-						 },
-						*/
-					     { 
-					       "header": Messages("containers.table.libProcessType"),
-					       "property" : "inputContainerUsed.contents",
-					       "filter" : "getArray:'properties.libProcessTypeCode.value' |unique | codes:'value'",
-					       "order":true,
-						   "edit":false,
-						   "hide":true,
-					       "type":"text",
-					       "position":8.2,
-					       "extraHeaders":{0:inputExtraHeaders}
-					     },
-				         { // Etat input Container 
-				        	 "header":Messages("containers.table.state.code"),
-				        	 "property":"inputContainer.state.code | codes:'state'",
-				        	 "order":true,
-							 "hide":true,
-				        	 "type":"text",
-				        	 "position":9,
-				        	 "extraHeaders":{0: inputExtraHeaders}
-				         }   		         
-			],
-			compact:true,
-			// tout a false, on ne fait que de l'affichage
-			showTotalNumberRecords:false,
-			pagination:{
-				active:false
-			},		
-			search:{
-				active:false
-			},
-			order:{
-				active:false
-			},
-			remove:{
-				active: false				
-			},
-			save:{
-				active:false
-			},			
-			select:{
-				active:false
-			},
-			edit:{
-				active: false
-			},	
-			cancel : {
-				active:false
-			},
-			extraHeaders:{
-				number:1,
-				dynamic:true,
-			}
-	};
+
 	
 	//init data
 	//GA 16/10/2017 Cette experience est la seule qui fait du one to many avec plaque en entre/ plaques en sortie.

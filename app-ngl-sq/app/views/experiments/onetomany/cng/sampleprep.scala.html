@@ -8,7 +8,7 @@
 		</div>
 		
 		<div class="col-md-2 col-lg-2">
-		<label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber")</label>&nbsp;&nbsp;
+		<label for="NbOutputSupport" class="control-label">@Messages("experiments.supports.outputNumber")</label>&nbsp;&nbsp;
 		<select id="NbOutputSupport" ng-model="nbOutputSupport" ng-options="item for item in values"  ng-change="initOutputContainerSupportCodes(nbOutputSupport)" class="form-control">
 		</select>
 		</div>
@@ -18,14 +18,16 @@
 		   <!--  class="header"  marche pas ??=> utilisation de <strong> -->
 		   <thead>
 		     <tr>
-		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.support.out.code")</strong></td>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.codeSupport")</strong></td>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>
 		     </tr>
 		   </thead>
 		   <tbody>
 		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
 		      <td><input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" /></td>
 		      <td><input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" /></td>
+		      <td><div ng-bind="getContainerSupportState(code)"></div></td>
 		   </tr>
 		   </tbody>
 		</table>
@@ -40,7 +42,7 @@
 		</div>
 		
 		<div class="col-md-2 col-lg-2">
-           <label for="NbOutputSupport" class="control-label">@Messages("supports.outputNumber")</label>&nbsp;&nbsp;{{nbOutputSupport}}
+           <label for="NbOutputSupport" class="control-label">@Messages("experiments.supports.outputNumber")</label>&nbsp;&nbsp;{{nbOutputSupport}}
 		</div> 
 	
 		<div class="col-md-4 col-lg-4" ng-show="nbOutputSupport > 0">
@@ -48,14 +50,16 @@
 		<!--   class="header"  marche pas ??=> utilisation de <strong> -->
 		   <thead>
 		     <tr>
-		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.support.out.code")</strong></td>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.codeSupport")</strong></td>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
+		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>
 		     </tr>
 		   </thead>
 		   <tbody>
 		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
-		      <td>{{ outputContainerSupportCodes[$index] }}</td>
+		      <td>{{ code }}</td>
 		      <td>{{ storageCodes[$index] }}</td>
+		      <td><div ng-bind="getContainerSupportState(code)"></div></td>
 		   </tr>
 		   </tbody>
 		</table>
