@@ -166,6 +166,7 @@ documentation.optionnal=Information facultative
 documentation.possible.values=Valeurs possibles
 documentation.userFileReadSet=Fichier userFileReadSet
 documentation.userFileExperiments=Fichier userFileExperiments
+documentation.userFileSamples=Fichier userFileSamples
 documentation.userFileCloneToAc=Fichier userFileCloneToAc
 
 button.save=Save

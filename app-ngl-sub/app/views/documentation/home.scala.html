@@ -129,13 +129,11 @@
 			<li><strong>readSetCode</strong> :        Code du readSet.
 		</ul>		
 		<li><h4>Exemple de fichier :</h4>
-        #--------------------------------------------- <br>
-        experiment_alias	|	nominal_length         <br>  
-        #--------------------------------------------- <br>
-        AWP_AOSF_1_D0HW7ACXX.IND12	|	297 <br>
-        AWP_AOSF_4_D0HW7ACXX.IND12	|	297 <br>
-        AWP_AOSA_7_D0HW7ACXX	|	2852 <br>
-        AWP_AOSA_8_D0HW7ACXX	|	3292 <br>
+		#-------------------------------<br>
+		readSetCode<br>
+		#-------------------------------<br>
+		BAT_AAQOSW_1_C37T3ACXX.IND25<br>
+		BAT_ABAOSW_2_C39B2ACXX.IND30<br>
 		
 		
 	</div>	
@@ -172,6 +170,36 @@
 		
 		
 	</div>	
+	<div class="panel-heading">
+		<h3>@Messages("documentation.userFileSamples")</h3>
+	</div>
+	<div class="panel-body">
+		<ul>
+		<li><h4>utilité du fichier :</h4>
+		Il permet de surcharger certaines informations de NGL ou de la configuration de soumission pour construire les objets 'experiment'.
+		<li><h4>Format du fichier :</h4>
+		En colonnes délimitées par le caractère '|'. La premiere ligne du fichier permet de definir la legende (type-information de chaque colonne) tandis que les lignes suivantes du fichier correspondent aux valeurs. <br>
+		Les lignes commencant par le caractère '#' sont ignorées (commentaires).<br> 
+		La legende doit obligatoirement comporter le champs "sample_alias".<br>
+		<li><h4>Type d'informations pouvant apparaitre dans le fichier :</h4>
+		<ul>
+			<li><strong>sample_alias</strong> :       Valeur obligatoire de la forme 
+					'sample_codeProjet_taxonId' si STRATEGY_SAMPLE= strategy_sample_taxon 
+   					'sample_codeProjet_clone' si STRATEGY_SAMPLE= strategy_sample_clone    
+			<li><strong>scientific_name</strong> : Valeur de type chaine de caracteres sans accents ni caracteres speciaux (ex de caracteres à proscrire '&'). 
+			<li><strong>common_name</strong> :  Valeur de type chaine de caracteres sans accents ni caracteres speciaux (ex de caracteres à proscrire '&').  
+			<li><strong>title</strong> :  Valeur de type chaine de caracteres sans accents ni caracteres speciaux (ex de caracteres à proscrire '&').  
+			<li><strong>description</strong> : Valeur de type chaine de caracteres sans accents ni caracteres speciaux (ex de caracteres à proscrire '&'). 
+		</ul>		
+		<li><h4>Exemple de fichier :</h4>
+		#---------------------------------------------------------<br>
+        sample_alias|title|scientific_name|description<br>
+        #---------------------------------------------------------<br>
+        sample_ARI_408172_23DCM1CCII43|16S rDNA Gene Sequencing of Tara Oceans DNA samples corresponding to size fractions for prokaryotes|Marine metagenome|Station23 - Deep Chlorophyl Maximum - 0.2-1.6 µm - DNA <br>
+		sample_ARI_408172_23SUR1CCII43|16S rDNA Gene Sequencing of Tara Oceans DNA samples corresponding to size fractions for prokaryotes|Marine metagenome|Station23 - Surface - 0.2-1.6 µm - DNA <br>
+        sample_ARI_408172_30SUR2CCII43|16S rDNA Gene Sequencing of Tara Oceans DNA samples corresponding to size fractions for prokaryotes|Marine metagenome|Station30 - Surface - 0.2-1.6 µm - DNA <br>
+		
+	</div>		
 	<div class="panel-heading">
 		<h3>@Messages("documentation.userFileCloneToAc")</h3>
 	</div>
