@@ -82,6 +82,7 @@ rule "create xml file for submission"
 	     try{
 	    	SubmissionServicesFactory.getInstance().createXMLSubmission(codeSubmission, submissionDirectory,studyCode,sampleCodes,experimentCodes,runCodes);
 	    }catch(Exception e){
+	    	e.printStackTrace();
 	    	//Set job in error to send email in rules post execution ERROR
 	    	$job.setExecutionState(Job.ERROR_STATUS);
 	    	$job.setProperty("Exception",e.getMessage());

@@ -190,6 +190,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			}
 	}; // fin struct datatableConfig
 	
+	// attention: 18/10/2017 experiment.instrument.inContainerSupportCategoryCode  depend de l'ordre de selection des inputs !!!
 	// colonnes variables
 	//INPUT
 	if ( $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube" ){
@@ -429,16 +430,17 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		}
 	});
 	
-	// restriction  epmotion: uniquement tube en entree
-	if ( ($scope.experiment.instrument.typeCode === 'epmotion') && ($scope.experiment.instrument.inputContainerSupportCategoryCode !=="tube") ){
+	// 18/10/2017 restriction epmotion: uniquement tube en entree 
+    /* $scope.experiment.instrument.inContainerSupportCategoryCode  contient le code du premier input choisi !!!!!
+       ce qui ne repond pas a la vrai question=>  il faut lister le type de TOUS les containers en input et verifier qu'aucun n'est un puit!!!!
+	    ce type de code est utilisé partout !!!! BUGS....
+	*/
+	if ( ($scope.experiment.instrument.typeCode === 'epmotion') && ($scope.experiment.instrument.inContainerSupportCategoryCode !=="tube") ){
 		console.log("Le robot Epmotion n'autorise que des tubes en entrée");
-		
-		$scope.messages.clear();
-		$scope.messages.clazz = "alert alert-danger";
-		$scope.messages.text = Messages("experiments.input.error.instrument-input.only-tubes");
-		$scope.messages.showDetails = false;
-		$scope.messages.open();	
+		$scope.messages.setError(Messages("experiments.input.error.instrument-input.only-tubes"));
+	
 	} else {
+		$scope.messages.clear();
 		$scope.atmService = atmService;
 	}
 

@@ -61,24 +61,26 @@ public class SubmissionServices implements ISubmissionServices{
 		IXMLServices xmlServices = XMLServicesFactory.getInstance();
 		File studyFile = null;
 		// si on est dans soumission de données :
-		if (studyCode!=null && !studyCode.equals("")) {	
+		if (studyCode!=null && !studyCode.equals("") && !studyCode.equals("null")) {	
 			studyFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlStudies"));
 			xmlServices.writeStudyXml(studyFile, studyCode);
 		}
 		File sampleFile = null;
-		if (sampleCodes!=null){
+		if (sampleCodes!=null && !sampleCodes.equals("") && !sampleCodes.equals("null")){
 			sampleFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlSamples"));
 			xmlServices.writeSampleXml(sampleFile, sampleCodes); 
 		}
 		File experimentFile = null;
-		if (experimentCodes!=null){
+		if (experimentCodes!=null && !experimentCodes.equals("") && !experimentCodes.equals("null")){
+			log.debug("Create experiment file");
 			experimentFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlExperiments"));
 			xmlServices.writeExperimentXml(experimentFile, experimentCodes); 
 		} else {
 			log.debug("experimentCodes==0 ??????????");
 		}
 		File runFile = null;
-		if (runCodes!=null){
+		if (runCodes!=null && !runCodes.equals("") && !runCodes.equals("null")){
+			log.debug("create run file");
 			runFile = new File(submissionDirectory + File.separator + ProjectProperties.getProperty("xmlRuns"));
 			xmlServices.writeRunXml(runFile, runCodes); 
 		} else {
@@ -90,11 +92,29 @@ public class SubmissionServices implements ISubmissionServices{
 		
 		//Update xml fields
 		JSONDevice jsonDevice = new JSONDevice();
-		String submission = "{\"xmlSubmission\":\""+submissionFile.getName()+"\",\"xmlStudys\":\""+studyFile.getName()+"\",\"xmlSamples\":\""+sampleFile.getName()+"\",\"xmlExperiments\":\""+experimentFile.getName()+"\",\"xmlRuns\":\""+runFile.getName()+"\"}";
+		String fields = "?fields=xmlSubmission";
+		String submission = "{\"xmlSubmission\":\""+submissionFile.getName()+"\"";
+		if(studyFile!=null){
+			submission+=",\"xmlStudys\":\""+studyFile.getName()+"\"";
+			fields+="&fields=xmlStudys";
+		}
+		if(sampleFile!=null){
+			submission+=",\"xmlSamples\":\""+sampleFile.getName()+"\"";
+			fields+="&fields=xmlSamples";
+		}
+		if(experimentFile!=null){
+			submission+=",\"xmlExperiments\":\""+experimentFile.getName()+"\"";
+			fields+="&fields=xmlExperiments";
+		}
+		if(runFile!=null){
+			submission+=",\"xmlRuns\":\""+runFile.getName()+"\"";
+			fields+="&fields=xmlRuns";
+		}
+		submission+="}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+submissionCode+"?fields=xmlSubmission&fields=xmlStudys&fields=xmlSamples&fields=xmlExperiments&fields=xmlRuns");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+submissionCode+fields);
 		log.debug("with JSON "+submission);
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+submissionCode+"?fields=xmlSubmission&fields=xmlStudys&fields=xmlSamples&fields=xmlExperiments&fields=xmlRuns", submission,"bot");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+submissionCode+fields, submission,"bot");
 
 	}
 
@@ -236,7 +256,7 @@ public class SubmissionServices implements ISubmissionServices{
 		// Mise à jour des objets :
 		Boolean error = false;
 		sujet = "Probleme parsing fichier des AC : ";
-		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileName + "</br>";
+		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileName + "\n";
 
 		if (ebiSubmissionCode==null || (ebiSubmissionCode!=null && ebiSubmissionCode.equals(""))) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
@@ -245,14 +265,14 @@ public class SubmissionServices implements ISubmissionServices{
 		} 
 		if (! ebiSubmissionCode.equals(submissionCode)) {
 			//System.out.println("ebiSubmissionCode != submissionCode");
-			message += "- contient un ebiSubmissionCode ("  + ebiSubmissionCode + ") different du submissionCode passé en parametre "+ submissionCode + "</br>"; 
+			message += "- contient un ebiSubmissionCode ("  + ebiSubmissionCode + ") different du submissionCode passé en parametre "+ submissionCode + "\n"; 
 			error = true;
 		}
 		// Verifier que le nombre d'ac recuperés dans le fichier est bien celui attendu pour l'objet submission:
 		if (studyCode== null || (studyCode!=null && studyCode.equals(""))) {
 			if (studyAc== null || (studyAc!=null && studyAc.equals(""))) {
 				//System.out.println("studyAc attendu non trouvé pour " + submission.studyCode);
-				message += "- ne contient pas de valeur pour le studyCode " + studyCode+"</br>";
+				message += "- ne contient pas de valeur pour le studyCode " + studyCode+"\n";
 			}
 		}
 		if (sampleCodes != null && !sampleCodes.equals("")){
@@ -261,7 +281,7 @@ public class SubmissionServices implements ISubmissionServices{
 				String sampleCode = tabSampleCodes[i].replaceAll("\"", "");
 				if (!mapSamples.containsKey(sampleCode)){
 					//System.out.println("sampleAc attendu non trouvé pour " + submission.sampleCodes.get(i));
-					message += "- ne contient pas d'AC pour le sampleCode " + sampleCode+"</br>";
+					message += "- ne contient pas d'AC pour le sampleCode " + sampleCode+"\n";
 					error = true;
 
 				}	
@@ -273,7 +293,7 @@ public class SubmissionServices implements ISubmissionServices{
 				String experimentCode = tabExperimentCodes[i].replaceAll("\"", "");
 				if (!mapExperiments.containsKey(experimentCode)){
 					//System.out.println("experimentAc attendu non trouvé pour " + submission.experimentCodes.get(i));
-					message += "- ne contient pas d'AC pour l'experimentCode " + experimentCode + "</br>";
+					message += "- ne contient pas d'AC pour l'experimentCode " + experimentCode + "\n";
 					error = true;
 				}	
 			}
@@ -285,7 +305,7 @@ public class SubmissionServices implements ISubmissionServices{
 				//System.out.println("runCode========="+ submission.runCodes.get(i));
 				if (!mapRuns.containsKey(runCode)){
 					//System.out.println("runAc attendu non trouvé pour " + submission.runCodes.get(i));
-					message += "- ne contient pas d'AC pour le runCode " + runCode + "</br>";
+					message += "- ne contient pas d'AC pour le runCode " + runCode + "\n";
 					error = true;
 				}	
 			}
@@ -301,20 +321,20 @@ public class SubmissionServices implements ISubmissionServices{
 		calendar.add(Calendar.YEAR, 2);
 		Date release_date  = calendar.getTime();
 
-		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" </br></br>";
+		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" \n\n";
 
-		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
+		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "\n";  
 		updateSubmissionAC(submissionCode, submissionAc, date);
 		
 		if (ebiStudyCode!=null && !ebiStudyCode.equals("")) {	
-			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
+			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "\n";  
 			updateStudyAC(ebiStudyCode, studyAc, studyExtId, date, release_date);
 		}
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
 			String ac = entry.getValue();
 			String ext_id_ac = mapExtIdSamples.get(code);
-			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
+			message += "sampleCode = " + code + ",   AC = "+ ac + "\n";  
 			updateSampleAC(code, ac, ext_id_ac);
 			
 		}
@@ -322,14 +342,14 @@ public class SubmissionServices implements ISubmissionServices{
 		for(Entry<String, String> entry : mapExperiments.entrySet()) {
 			String code = entry.getKey();
 			String ac = entry.getValue();
-			message += "experimentCode = " + code + ",   AC = "+ ac + "</br>";  
+			message += "experimentCode = " + code + ",   AC = "+ ac + "\n";  
 			updateExperimentAC(code, ac);
 		}
 
 		for(Entry<String, String> entry : mapRuns.entrySet()) {
 			String code = entry.getKey();
 			String ac = entry.getValue();
-			message += "runCode = " + code + ",   AC = "+ ac  + "</br>";  
+			message += "runCode = " + code + ",   AC = "+ ac  + "\n";  
 			updateRunAC(code, ac);
 		}
 
@@ -504,7 +524,7 @@ public class SubmissionServices implements ISubmissionServices{
 			// mettre status à jour
 			sendMail(creationUser, "ngl-sub : Ebi Accession Reporting error", new String(message.getBytes(), "iso-8859-1"));
 		} else {
-			message = "Objets lies au studyAccession = " + studyAccession + " mis dans le domaine public via la soumission "+ submissionCode + "</br>"; 
+			message = "Objets lies au studyAccession = " + studyAccession + " mis dans le domaine public via la soumission "+ submissionCode + "\n"; 
 			sendMail(creationUser, "ngl-sub : Ebi Accession Reporting success", new String(message.getBytes(), "iso-8859-1"));
 		}
 		return ebiSuccess;
