@@ -770,6 +770,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 		 values.add(DescriptionFactory.newValue("V5+UTR","V5+UTR"));
 		 values.add(DescriptionFactory.newValue("V6",    "V6"));
 		 values.add(DescriptionFactory.newValue("V6+UTR","V6+UTR")); 
+		 values.add(DescriptionFactory.newValue("V6+Cosmic","V6+Cosmic")); 
 		 values.add(DescriptionFactory.newValue("custom","custom"));
 	
     	return values;
