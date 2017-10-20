@@ -87,7 +87,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 					    "extraHeaders":{0:inputExtraHeaders}
 					  },
 				      { // niveau process uniquement =>  utiliser processProperties; ne fonctionne que a nouveau et en cours c'est normal !!
-				        "header": Messages("containers.table.baits"),
+				        "header": Messages("containers.table.expectedBaits"),
 				        "property" :"inputContainerUsed.contents",
 				        "filter" : "getArray:'processProperties.expectedBaits.value' | unique  | codes:'value'",
 				      	"order":true,
@@ -159,7 +159,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
    // ce tableau est modifié sur onChange de "nbOutputSupport"
    $scope.initOutputContainerSupportCodes = function(nbOutputSupport){
 	   
-	   //$scope.nbOutputSupport=nbOutputSupport;//??
+	   $scope.nbOutputSupport=nbOutputSupport;//necessaire si pas de preselection
 	   
 		if($scope.isCreationMode() ){
 			$scope.outputContainerSupportCodes= new Array(nbOutputSupport*1);// *1 pour forcer en numerique nbOutputSupport qui est est un input type text
@@ -189,7 +189,7 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	   // trouver LE/LES codes des supports de tous les containers en entree de l'experience (il peut y en avoir plusieurs..)
 	   $scope.inputSupportCodes = $scope.$eval("getBasket().get()|getArray:'support.code'|unique", mainService); 
 	   
-	   $scope.initOutputContainerSupportCodes(0);// test ajout pour initaliser mais chge rien 
+	   $scope.initOutputContainerSupportCodes(0);
 	   
 	   if ($scope.inputSupportCodes.length > 1){
 		   $scope.messages.clear();
@@ -199,13 +199,32 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		   $scope.messages.open();
 	   } else {		  
 		   $scope.inputSupportCode=$scope.inputSupportCodes[0];
-		   $scope.outputContainerSupportCodes=['']; // essai ajout ''
-		   $scope.storageCodes=[''];// essai ajout ''
+		   $scope.outputContainerSupportCodes=[]; 
+		   $scope.storageCodes=[];
+		   $scope.outputContainerSupportStates=[];// ajout 20/10/2017;  il faudrait plutot creer un objet outputContainerSupports avec 3 champs code/storageCode/state !!!
 	   }
 	} else {
 		 getExperimentData();
 	}
   
+    // 20/10/2017 recuperer l'etat d'un containerSupport 
+	//            voir containerSupport/details.js....
+	//            voir 'ngl-sq.barCodeSearchServices'
+	function getOutputContainerSupportState(code){
+		if (undefined !== code ){
+       	console.log('get support data for '+ code);
+       
+       	/* 
+			var promise = [];
+			promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
+			$q.all(promise).then(function(results){
+			$scope.support = results[0].data;
+				...
+			});		
+       	 */
+       	return ("TODO: Etat de..."+code);
+	    }
+	}
 	
 	function getExperimentData(){	
 		//1 récupérer LE locationOnContainerSupport.code des containers (il ne peux y en avoir qu'un seul)
@@ -222,25 +241,14 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	    $scope.storageCodes=$scope.$eval("atomicTransfertMethods|flatArray:'outputContainerUseds'|getArray:'locationOnContainerSupport.storageCode'|unique",$scope.experiment);
 		
 	    //?? qu'est-ce qui prouve que les 2 tableaux locationOnContainerSupport.code  et locationOnContainerSupport.storageCode  sont récupéres dans le meme ordre ?????
+	    
+	    //20/10/2017 recuperer aussi l'etat des support output ?? ... et du coup on voit bien ici le probleme...
+	    $scope.outputContainerSupportStates=[];
+	    $scope.outputContainerSupportCodes.forEach(function(code) {
+	       $scope.outputContainerSupportStates.push( getOutputContainerSupportState(code) ); 
+	    });
 	}
 	
-	// TODO ???? peut-on recuperer l'etat d'un containerSupport ??
-	// voir containerSupport/details.js....
-	// voir 'ngl-sq.barCodeSearchServices'
-	$scope.getContainerSupportState =function(code){
-        console.log('get support data...');
-        
-        /* 
-		var promise = [];
-		promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
-		$q.all(promise).then(function(results){
-			$scope.support = results[0].data;
-			...
-		});		
-        */
-        
-		return ("TODO...");
-	}
 		
 	
 	$scope.$on('save', function(e, callbackFunction) {	
@@ -452,11 +460,6 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 				if(this.plateCells && this.plateCells[code][line] && this.plateCells[code][line][column]){
 					return this.plateCells[code][line][column];
 				}
-			},
-			//for TEST
-			getCellPlateDataTEST : function(code, column, line){
-				console.log ("data="+ code+"/"+column+"/"+line);
-				return  code+"/"+column+"/"+line;
 			}
 	};
 	
