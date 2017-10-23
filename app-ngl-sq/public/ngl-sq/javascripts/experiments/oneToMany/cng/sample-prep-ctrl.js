@@ -207,14 +207,14 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		 getExperimentData();
 	}
   
-    // 20/10/2017 recuperer l'etat d'un containerSupport 
+    // TODO  recuperer l'etat d'un containerSupport 
 	//            voir containerSupport/details.js....
 	//            voir 'ngl-sq.barCodeSearchServices'
 	function getOutputContainerSupportState(code){
 		if (undefined !== code ){
        	console.log('get support data for '+ code);
        
-       	/* 
+       	/* FDS essai abandonné pour l'instant
 			var promise = [];
 			promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
 			$q.all(promise).then(function(results){
@@ -242,11 +242,12 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 		
 	    //?? qu'est-ce qui prouve que les 2 tableaux locationOnContainerSupport.code  et locationOnContainerSupport.storageCode  sont récupéres dans le meme ordre ?????
 	    
-	    //20/10/2017 recuperer aussi l'etat des support output ?? ... et du coup on voit bien ici le probleme...
+	    /* TODO  recuperer aussi l'etat des support output ?? ... et du coup on voit bien ici le probleme...
 	    $scope.outputContainerSupportStates=[];
 	    $scope.outputContainerSupportCodes.forEach(function(code) {
 	       $scope.outputContainerSupportStates.push( getOutputContainerSupportState(code) ); 
 	    });
+	    */
 	}
 	
 		

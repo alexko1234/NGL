@@ -20,14 +20,14 @@
 		     <tr>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.codeSupport")</strong></td>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
-		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>
+		       <!-- TODO <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>-->
 		     </tr>
 		   </thead>
 		   <tbody>
 		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
 		      <td><input id="outputContainerSupportCodes{{$index}}" class="form-control input-sm" type="text" ng-model="outputContainerSupportCodes[$index]" /></td>
 		      <td><input id="storageCodes{{$index}}" class="form-control input-sm" type="text" ng-model="storageCodes[$index]" /></td>
-		      <td>{{ outputContainerSupportStates[$index] }}</td>
+		      <!--  TODO <td>{{ outputContainerSupportStates[$index] }}</td>-->
 		   </tr>
 		   </tbody>
 		</table>
@@ -52,14 +52,14 @@
 		     <tr>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.codeSupport")</strong></td>
 		       <td class="col-md-2 col-lg-2"><strong>@Messages("containers.table.storageCode")</strong></td>
-		       <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>
+		       <!--  TODO  <td class="col-md-2 col-lg-2"><strong>@Messages("containerSupports.table.state.code")</strong></td>-->
 		     </tr>
 		   </thead>
 		   <tbody>
 		   <tr ng-repeat="code in outputContainerSupportCodes track by $index">
 		      <td>{{ code }}</td>
 		      <td>{{ storageCodes[$index] }}</td>
-		      <td>{{ outputContainerSupportStates[$index]}}</td>
+		      <!--  TODO  <td>{{ outputContainerSupportStates[$index]}}</td>-->
 		   </tr>
 		   </tbody>
 		</table>
