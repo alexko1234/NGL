@@ -40,7 +40,7 @@ public class MigrationUpdateNCBITaxonSample extends CommonController {
 		int size = samples.size();
 		int nb = 1;
 		for(Sample sample : samples){
-			Logger.debug("Sample "+nb+"/"+size);
+			Logger.debug("Sample code: "+sample.code+" : "+nb+"/"+size);
 			migreSample(sample);
 			nb++;
 		}
