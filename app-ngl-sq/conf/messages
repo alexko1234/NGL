@@ -507,7 +507,7 @@ experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience créée par
 experiments.table.status = Statut
 
-experiments.input.error.instrument-input.only-tubes = Cet instrument ne prend que des tubes en entrée (pour cette expérience)
+experiments.input.error.instrument-input.only-tubes = Pour ce type d''expérience, cet instrument ne prend que des tubes en entrée 
 experiments.input.error.only-tubes = Seuls des tubes peuvent entrer dans cette expérience
 experiments.input.error.only-tubes-or-strips = Seuls des tubes ou des strips peuvent entrer dans cette expérience
 experiments.input.error.only-plates = Seules des plaques peuvent entrer dans cette expérience
