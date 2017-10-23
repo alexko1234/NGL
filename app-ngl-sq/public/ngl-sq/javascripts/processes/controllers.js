@@ -1,7 +1,7 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', 
+angular.module('home').controller('SearchContainersCtrl', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', 
                                                           function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
 	$scope.lists = lists;	
 	$scope.searchService = {};
@@ -509,6 +509,93 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 }]);
 
+angular.module('home').controller('SearchSamplesCtrl', ['$scope', '$parse','$filter','$http', 'datatable','basket','lists','mainService','tabService','samplesSearchService', 
+    function($scope, $parse,$filter,$http, datatable,basket, lists,mainService, tabService, samplesSearchService) {
+	var datatableConfig = {
+			group:{active:true},
+			search:{
+				url:jsRoutes.controllers.samples.api.Samples.list()
+			},
+			pagination:{
+				mode:'local'
+			},
+			group:{
+				active:true,
+				showOnlyGroups:true,
+				enableLineSelection:true,
+				showButton:true
+			},
+			hide:{
+				active:true
+			},
+			order:{
+				by:'code',
+				mode:'local'
+			},
+			exportCSV:{
+				active:true
+			},
+			show:{
+				active:true,
+				add:function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.samples.tpl.Samples.get(line.code).url, remove:true});
+				}
+			}
+			
+			,
+			edit:{
+				active:Permissions.check("writing")?true:false,
+				columnMode:true
+			},
+			save:{
+				active:Permissions.check("writing")?true:false,
+				url:function(value){
+					var fields = "fields=valuation";
+						if(value.comments)fields = fields+"&fields=comments";
+					
+					return jsRoutes.controllers.samples.api.Samples.update(value.code).url+"?"+fields;
+				},
+				method:'put',
+				mode:'remote'			
+			}
+		}
+
+		
+		
+		$scope.search = function(){		
+			$scope.form;
+			//$scope.searchService.search();
+		};
+		
+		$scope.reset = function(){
+			$scope.searchService.resetForm();		
+		};
+	
+		if(angular.isUndefined($scope.getHomePage())){
+			mainService.setHomePage('new');
+			tabService.addTabs({label:Messages('processes.tabs.create'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+			tabService.activeTab(0);
+		}
+		
+		$scope.searchService = samplesSearchService;
+		$scope.searchService.init(null, datatableConfig)
+		
+		$scope.searchService.lists.refresh.processCategories();
+		
+		$scope.changeProcessCategory = function(){
+			$scope.searchService.form.nextProcessTypeCode = undefined;
+			$scope.searchService.lists.clear("processTypes");
+
+			if($scope.searchService.form.processCategory !== undefined && $scope.searchService.form.processCategory !== null){
+				$scope.searchService.lists.refresh.processTypes({categoryCode:$scope.searchService.form.processCategory,isActive:true});
+			}
+		};
+		
+		$scope.changeProcessType = function(){
+			$scope.removeTab(1);
+			$scope.basket.reset();
+		};
+}]);
 
 angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter','$parse','$routeParams', 'mainService','tabService', 'datatable', 
                                                      function($scope,$http,$q,$filter,$parse,$routeParams,mainService,tabService,datatable) {

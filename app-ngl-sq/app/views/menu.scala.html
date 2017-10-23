@@ -45,7 +45,8 @@
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "processes.search"))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
 								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
-									<li class="@("active".when(nav == "processes.new"))"><a href="@controllers.processes.tpl.routes.Processes.home("new")">@Messages("processes.menu.creation")</a></li>
+									<li class="@("active".when(nav == "processes.new-from-containers"))"><a href="@controllers.processes.tpl.routes.Processes.home("new-from-containers")">@Messages("processes.menu.new-from-containers")</a></li>
+									<li class="@("active".when(nav == "processes.new-from-samples"))"><a href="@controllers.processes.tpl.routes.Processes.home("new-from-samples")">@Messages("processes.menu.new-from-samples")</a></li>
 									<li class="@("active".when(nav == "processes.remove"))"><a href="@controllers.processes.tpl.routes.Processes.home("remove")">@Messages("processes.menu.remove")</a></li>
 								}
 								@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){

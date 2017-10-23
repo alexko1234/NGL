@@ -10,6 +10,7 @@ import views.html.processes.home;
 import views.html.processes.newProcesses;
 import views.html.processes.search;
 import views.html.processes.searchContainers;
+import views.html.processes.searchSamples;
 import controllers.CommonController;
 
 public class Processes extends CommonController{
@@ -23,6 +24,10 @@ public class Processes extends CommonController{
 		return ok(searchContainers.render());
 	}
 
+	public static Result searchSamples(){
+		return ok(searchSamples.render());
+	}
+	
 	public static Result search(String processTypeCode){
 		return ok(search.render());
 	}
@@ -39,6 +44,7 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
 						controllers.processes.tpl.routes.javascript.Processes.search(),
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
+						controllers.processes.tpl.routes.javascript.Processes.searchSamples(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
 						controllers.processes.api.routes.javascript.Processes.update(),
 						controllers.processes.api.routes.javascript.Processes.save(),
@@ -69,7 +75,9 @@ public class Processes extends CommonController{
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
 			      		controllers.commons.api.routes.javascript.Values.list(),
 			      		controllers.commons.api.routes.javascript.Parameters.list(),
-			      		controllers.resolutions.api.routes.javascript.Resolutions.list()
+			      		controllers.resolutions.api.routes.javascript.Resolutions.list(),
+
+						controllers.protocols.api.routes.javascript.Protocols.list()
 						)	  	      
 				);
 	}
