@@ -93,7 +93,8 @@ public class StateService {
 		
 		l.add(newState("Transfert CCRT en attente", "IW-TF", true, 1101, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "TF"));
 		l.add(newState("Transfert CCRT en cours", "IP-TF", true, 1102, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.ReadSet.name()), true, "TF"));		
-		l.add(newState("Transfert CCRT terminé", "F-TF", true, 1103, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "TF"));		
+		l.add(newState("Transfert CCRT terminé", "F-TF", true, 1103, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "TF"));	
+		l.add(newState("Transfert CCRT en echec", "FE-TF", true, 1103, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "TF"));	
 		
 		l.add(newState("EVAL. Analyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()), true, "VBA"));
 		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "VBA"));		
