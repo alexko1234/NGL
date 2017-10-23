@@ -1601,13 +1601,9 @@ public class ExpWorkflowsHelper {
 									&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
-						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));	
-						if(content.properties.containsKey("libLayoutNominalLength")){
-							Logger.debug(container.code+" "+content.properties.get("libLayoutNominalLength").value.toString());
-						}
-						
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
-					});	
+						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));							
+					});
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", container.code), DBUpdate.set("contents", container.contents));
 			});
 			
 			
@@ -1621,6 +1617,7 @@ public class ExpWorkflowsHelper {
 						readset.traceInformation.setTraceInformation(validation.getUser());
 						readset.sampleOnContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
 						updatedProperties.forEach((k,v)-> readset.sampleOnContainer.properties.putIfAbsent(k, v));
+						readset.sampleOnContainer.lastUpdateDate = new Date();
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
 					}
 			});		
@@ -1635,6 +1632,7 @@ public class ExpWorkflowsHelper {
 					process.traceInformation.setTraceInformation(validation.getUser());
 					process.sampleOnInputContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
 					updatedProperties.forEach((k,v)-> process.sampleOnInputContainer.properties.putIfAbsent(k, v));
+					process.sampleOnInputContainer.lastUpdateDate = new Date();
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
 				}
 			});
@@ -1645,10 +1643,12 @@ public class ExpWorkflowsHelper {
 
 	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes) {
 		Set<String> tags = null;
+		/* bad because when change the tag not taken account
 		if(ocuContent.properties.containsKey(TAG_PROPERTY_NAME)){
 			tags = new TreeSet<String>();
 			tags.add(ocuContent.properties.get(TAG_PROPERTY_NAME).value.toString());
 		}else{
+		*/
 			DBQuery.Query query = DBQuery.in("code", containerCodes)
 					.size("contents", 1) //only one content is very important because we targeting the lib container and not a pool after lib prep.
 					.elemMatch("contents", DBQuery.in("sampleCode", sampleCodes)
@@ -1665,7 +1665,7 @@ public class ExpWorkflowsHelper {
 			}else{
 				tags = null;
 			}
-		}
+		//}
 		return tags;
 	}
 
