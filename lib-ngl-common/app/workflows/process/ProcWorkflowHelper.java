@@ -1,6 +1,7 @@
 package workflows.process;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -189,6 +190,7 @@ public class ProcWorkflowHelper {
 						readset.traceInformation.setTraceInformation(validation.getUser());
 						readset.sampleOnContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
 						updatedProperties.forEach((k,v)-> readset.sampleOnContainer.properties.putIfAbsent(k, v));
+						readset.sampleOnContainer.lastUpdateDate = new Date();
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
 					}
 			});			
@@ -204,6 +206,7 @@ public class ProcWorkflowHelper {
 					otherProcess.traceInformation.setTraceInformation(validation.getUser());
 					otherProcess.sampleOnInputContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
 					updatedProperties.forEach((k,v)-> otherProcess.sampleOnInputContainer.properties.putIfAbsent(k, v));
+					otherProcess.sampleOnInputContainer.lastUpdateDate = new Date();
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, otherProcess);
 				}
 			});
