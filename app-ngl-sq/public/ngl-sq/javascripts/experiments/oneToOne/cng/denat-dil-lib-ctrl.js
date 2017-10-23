@@ -107,8 +107,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "convertValue": {"active":true, "displayMeasureValue":"pM", "saveMeasureValue":"nM"},			        	 
 			        	 "order":true,
 						 "edit":true,
-						 "hide":false,// TEST 23/10
-						 "required":"isRequired('IP')",// TEST 23/10
+						 "hide":true,
+						 "required":"isRequired('IP')",// 23/10/2017 remplace validation par drools
 			        	 "type":"number",
 			        	 //"defaultValues":10,
 			        	 "position":130,
@@ -119,8 +119,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
-						 "hide":false,// TEST 23/10
-						 "required":"isRequired('IP')",// TEST 23/10
+						 "hide":true,
+						 "required":"isRequired('IP')",// 23/10/2017 remplace validation par drools
 			        	 "type":"number",
 			        	 "position":140,
 			        	 "extraHeaders":{0:outputExtraHeaders}
@@ -192,9 +192,11 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			}
 	}; // fin struct datatableConfig
 	
-	// attention: 18/10/2017 experiment.instrument.inContainerSupportCategoryCode  depend de l'ordre de selection des inputs !!!
 	// colonnes variables
 	//INPUT
+	// attention: 18/10/2017 experiment.instrument.inContainerSupportCategoryCode  depend de l'ordre de selection des inputs !!!
+	// => devrait etre un array et pas une var simple !!
+
 	if ( $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube" ){
 		 datatableConfig.columns.push({
 			// barcode plaque entree == input support Container code
