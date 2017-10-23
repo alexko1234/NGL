@@ -421,8 +421,8 @@ angular.module('atomicTransfereServices', [])
 				},
 				
 				customExperimentToView : undefined, //used to cutom the view with one atm
-				updateUDTData : undefined, //used to update one line of UDT
-				convertExperimentATMToDatatable : function(experimentATMs, experimentStateCode, light){
+				
+				convertExperimentATMToDatatable : function(experimentATMs, experimentStateCode){
 					var promises = [];
 					
 					var atms = experimentATMs;
@@ -478,11 +478,7 @@ angular.module('atomicTransfereServices', [])
 							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
 							              allData[l].outputContainerUsed = $commonATM.updateOutputContainerUsed(allData[l].outputContainerUsed, atm.line, atm.column);
 							              allData[l].outputContainer = outputContainer;
-							              if($that.updateUDTData !== undefined){
-							            	  $that.updateUDTData(allData[l]) 
-							              }
-							              l++;	
-							              
+							              l++;							             
 							        }
 									if($that.customExperimentToView !== undefined){
 										$that.customExperimentToView(atm, inputContainers, outputContainers);
@@ -494,9 +490,6 @@ angular.module('atomicTransfereServices', [])
 									allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
 									allData[l].inputContainerUsed = $commonATM.updateInputContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer, experimentStateCode);
 									allData[l].inputContainer = inputContainer;	
-									if($that.updateUDTData !== undefined){
-										$that.updateUDTData(allData[l]) 
-						             }
 									if($that.customExperimentToView !== undefined){
 										$that.customExperimentToView(atm, inputContainers);
 									}
@@ -532,7 +525,6 @@ angular.module('atomicTransfereServices', [])
 						
 						$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
 							.then(function(containers) {								
-								
 								var allData = [], i = 0;
 								var atomicTransfertMethod = undefined;
 								
@@ -586,20 +578,18 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					if(!$scope.isCreationMode()){
-						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code, false);													
+						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
 					this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);					
 				},
 				
-				refreshViewFromExperiment : function(experiment, light){
+				refreshViewFromExperiment : function(experiment){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					(light === undefined)?light=false:light=true;
-					
-					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code, light);				
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
