@@ -269,6 +269,16 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");
+		
+		// copié sur capture-ctrl.js
+		var dtConfig = $scope.atmService.data.getConfig();
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
+		dtConfig.edit.start = false;
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		$scope.atmService.data.setConfig(dtConfig);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
+		
 		$scope.$emit('viewRefeshed');
 	});
 	
@@ -454,6 +464,13 @@ angular.module('home').controller('SamplePrepCtrl',['$scope', '$http', '$parse',
 					}
 					experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
 				}								
+			},
+			// necessaire pour le refresh
+			refreshViewFromExperiment : function(experiment){
+				if(null === experiment || undefined === experiment){
+					throw 'experiment is required';
+				}
+				this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.state.code);				
 			},
 			getCellPlateData : function(code, column, line){
 				//console.log ( code+"/"+column+"/"+line);

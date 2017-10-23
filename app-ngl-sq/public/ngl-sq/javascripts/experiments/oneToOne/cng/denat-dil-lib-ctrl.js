@@ -107,7 +107,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "convertValue": {"active":true, "displayMeasureValue":"pM", "saveMeasureValue":"nM"},			        	 
 			        	 "order":true,
 						 "edit":true,
-						 "hide":true,
+						 "hide":false,// TEST 23/10
+						 "required":"isRequired('IP')",// TEST 23/10
 			        	 "type":"number",
 			        	 //"defaultValues":10,
 			        	 "position":130,
@@ -118,7 +119,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
-						 "hide":true,
+						 "hide":false,// TEST 23/10
+						 "required":"isRequired('IP')",// TEST 23/10
 			        	 "type":"number",
 			        	 "position":140,
 			        	 "extraHeaders":{0:outputExtraHeaders}
