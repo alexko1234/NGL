@@ -2117,7 +2117,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 									supportViewDataTmp[container.support.code].container.projectCodes = supportViewDataTmp[container.support.code].container.projectCodes.concat(container.projectCodes);
 									supportViewDataTmp[container.support.code].container.sampleCodes = supportViewDataTmp[container.support.code].container.sampleCodes.concat(container.sampleCodes);
 									supportViewDataTmp[container.support.code].container.contents = supportViewDataTmp[container.support.code].container.contents.concat(container.contents);
-									supportViewDataTmp[container.support.code].container.treeOfLife.from.containers = supportViewDataTmp[container.support.code].container.treeOfLife.from.containers.concat(container.treeOfLife.from.containers);
+									//supportViewDataTmp[container.support.code].container.treeOfLife.from.containers = supportViewDataTmp[container.support.code].container.treeOfLife.from.containers.concat(container.treeOfLife.from.containers);
 									supportViewDataTmp[container.support.code].container.processCodes = supportViewDataTmp[container.support.code].container.processCodes.concat(container.processCodes);
 									supportViewDataTmp[container.support.code].container.processTypeCodes = supportViewDataTmp[container.support.code].container.processTypeCodes.concat(container.processTypeCodes);
 									supportViewDataTmp[container.support.code].container.fromTransformationTypeCodes = supportViewDataTmp[container.support.code].container.fromTransformationTypeCodes.concat(container.fromTransformationTypeCodes);
