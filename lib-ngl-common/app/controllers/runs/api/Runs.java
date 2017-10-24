@@ -37,6 +37,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.Play;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
@@ -46,7 +47,7 @@ import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
-import workflows.run.Workflows;
+import workflows.run.RunWorkflows;
 /**
  * Controller around Run object
  *
@@ -62,7 +63,8 @@ public class Runs extends RunsController {
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "sequencingStartDate", "state", "valuation");
 
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-
+	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
 	@Permission(value={"reading"})
 	public static Result list(){
 
@@ -392,7 +394,7 @@ public class Runs extends RunsController {
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation).set("traceInformation", getUpdateTraceInformation(run)));			
 			run = getRun(code);
-			Workflows.nextRunState(ctxVal, run);
+			workflows.nextState(ctxVal, run);
 			
 		} 
 		if(!ctxVal.hasErrors()) {

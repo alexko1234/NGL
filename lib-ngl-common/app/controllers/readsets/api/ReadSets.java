@@ -42,6 +42,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import play.Logger;
 import play.Play;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Akka;
@@ -55,13 +56,14 @@ import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
-import workflows.run.Workflows;
+import workflows.readset.ReadSetWorkflows;
 
 
 
 public class ReadSets extends ReadSetsController{
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-
+	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
+	
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
 	final static Form<ReadSetValuation> valuationForm = form(ReadSetValuation.class);
@@ -357,7 +359,7 @@ public class ReadSets extends ReadSetsController{
 			ctxVal.putObject("external", false);
 
 		//Apply rules before validation
-		Workflows.applyReadSetPreStateRules(ctxVal, readSetInput);
+		workflows.applyPreStateRules(ctxVal, readSetInput, readSetInput.state);
 		
 		ctxVal.setCreationMode();
 		readSetInput.validate(ctxVal);	
@@ -542,7 +544,7 @@ public class ReadSets extends ReadSetsController{
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		Workflows.setReadSetState(ctxVal, readSet, state);
+		workflows.setState(ctxVal, readSet, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));
 		}else {
@@ -567,7 +569,7 @@ public class ReadSets extends ReadSetsController{
 						state.date = new Date();
 						state.user = user;
 						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-						Workflows.setReadSetState(ctxVal, readSet, state);
+						workflows.setState(ctxVal, readSet, state);
 						if (!ctxVal.hasErrors()) {
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
 						}else {
@@ -599,7 +601,7 @@ public class ReadSets extends ReadSetsController{
 					.set("bioinformaticValuation", valuations.bioinformaticValuation)
 					.set("traceInformation", getUpdateTraceInformation(readSet)));			
 			readSet = getReadSet(code);
-			Workflows.nextReadSetState(ctxVal, readSet);
+			workflows.nextState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -628,7 +630,7 @@ public class ReadSets extends ReadSetsController{
 									.set("bioinformaticValuation", element.data.bioinformaticValuation)
 									.set("traceInformation", getUpdateTraceInformation(readSet,user)));							
 							readSet = getReadSet(readSet.code);
-							Workflows.nextReadSetState(ctxVal, readSet);
+							workflows.nextState(ctxVal, readSet);
 							return new DatatableBatchResponseElement(OK, readSet, element.index);
 						}else {
 							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);

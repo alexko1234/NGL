@@ -15,18 +15,21 @@ import org.apache.commons.lang3.StringUtils;
 import controllers.authorisation.Permission;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.Run;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
-import workflows.run.Workflows;
+import workflows.run.RunWorkflows;
 
 public class State extends RunsController {
     final static Form<models.laboratory.common.instance.State> stateForm = form(models.laboratory.common.instance.State.class);
     final static Form<HistoricalStateSearchForm> historicalForm = form(HistoricalStateSearchForm.class);
     final static Form<RunBatchElement> batchElementForm = form(RunBatchElement.class);
     
+    final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
     @Permission(value={"reading"})
     public static Result get(String code) {
 	Run runValue = getRun(code, "state");
@@ -49,7 +52,7 @@ public class State extends RunsController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		Workflows.setRunState(ctxVal, run, state);
+		workflows.setState(ctxVal, run, state);
 		if (!ctxVal.hasErrors()) {
 		    return ok(Json.toJson(getRun(code)));
 		} else {
@@ -70,7 +73,7 @@ public class State extends RunsController {
 				state.date = new Date();
 				state.user = getCurrentUser();
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				Workflows.setRunState(ctxVal, run, state);
+				workflows.setState(ctxVal, run, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getRun(run.code), element.index));
 				}else {

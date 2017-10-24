@@ -21,9 +21,10 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import validation.ContextValidation;
-import workflows.run.Workflows;
+import workflows.readset.ReadSetWorkflows;
 
 /**
  * Update bioinformatic valuation for TARA data from file
@@ -34,6 +35,7 @@ import workflows.run.Workflows;
 public class MigrationUpdateReadSetTaraInvalid extends CommonController {
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
 	
 	public static Result migration() throws IOException, ParseException{
 		
@@ -65,7 +67,7 @@ public class MigrationUpdateReadSetTaraInvalid extends CommonController {
 			readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser());
 			ctxVal.setUpdateMode();
-			Workflows.nextReadSetState(ctxVal, readSet);
+			workflows.nextState(ctxVal, readSet);
 		}
 		
 		return ok("Migration Finish");

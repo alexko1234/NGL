@@ -35,7 +35,7 @@ import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import play.Logger;
 import validation.ContextValidation;
-import workflows.run.Workflows;
+import workflows.readset.ReadSetWorkflows;
 import workflows.sra.experiment.ExperimentWorkflows;
 import workflows.sra.sample.SampleWorkflows;
 import workflows.sra.study.StudyWorkflows;
@@ -53,6 +53,8 @@ public class SubmissionWorkflowsHelper {
 	SampleWorkflows sampleWorkflows;
 	@Autowired
 	ExperimentWorkflows experimentWorkflows;
+	@Autowired
+	ReadSetWorkflows readSetWorkflows;
 	
 
 	public void updateSubmissionRelease(Submission submission)
@@ -235,7 +237,7 @@ public class SubmissionWorkflowsHelper {
 
 				// Updater objet readSet :
 				ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
-				Workflows.setReadSetState(validation, readset, submission.state);
+				readSetWorkflows.setState(validation, readset,  submission.state);
 			}
 		}
 	}

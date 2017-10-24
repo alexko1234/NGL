@@ -9,6 +9,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+import org.springframework.stereotype.Controller;
+
+import com.mongodb.BasicDBObject;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import controllers.DocumentController;
+import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -18,39 +35,20 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
-import org.springframework.stereotype.Controller;
-
 import play.Logger;
 import play.Play;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
-import rules.services.RulesActor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
-import workflows.run.Workflows;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-import com.mongodb.BasicDBObject;
-
-import controllers.DocumentController;
-import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
+import workflows.analyses.AnalysisWorkflows;
 @Controller
 public class Analyses extends DocumentController<Analysis>{
 
@@ -62,6 +60,7 @@ public class Analyses extends DocumentController<Analysis>{
 	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
 	
 	public Analyses() {
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
@@ -271,7 +270,7 @@ public class Analyses extends DocumentController<Analysis>{
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		Workflows.setAnalysisState(ctxVal, objectInDB, state);
+		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		}else {
@@ -292,7 +291,7 @@ public class Analyses extends DocumentController<Analysis>{
 				state.date = new Date();
 				state.user = getCurrentUser();
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				Workflows.setAnalysisState(ctxVal, objectInDB, state);
+				workflows.setState(ctxVal, objectInDB, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getObject(objectInDB.code), element.index));
 				}else {
@@ -325,7 +324,7 @@ public class Analyses extends DocumentController<Analysis>{
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 										
 			objectInDB = getObject(code);
-			Workflows.nextAnalysisState(ctxVal, objectInDB);
+			workflows.nextState(ctxVal, objectInDB);
 			return ok(Json.toJson(objectInDB));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -351,7 +350,7 @@ public class Analyses extends DocumentController<Analysis>{
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 													
 					objectInDB = getObject(objectInDB.code);
-					Workflows.nextAnalysisState(ctxVal, objectInDB);
+					workflows.nextState(ctxVal, objectInDB);
 					response.add(new DatatableBatchResponseElement(OK, objectInDB, element.index));
 				}else {
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));

@@ -7,6 +7,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import com.mongodb.MongoException;
+
+import fr.cea.ig.MongoDBDAO;
 import models.Constants;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -18,29 +24,24 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
-import models.util.Workflows;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
 import play.Logger;
 import play.Play;
+import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.run.instance.LaneValidationHelper;
-
-import com.mongodb.MongoException;
-
-import fr.cea.ig.MongoDBDAO;
+import workflows.run.RunWorkflows;
 
 public class RunImportCNS extends AbstractImportDataCNS{
 
+	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
 	public RunImportCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
 		super("RunCNS",durationFromStart, durationFromNextIteration);
@@ -127,7 +128,7 @@ public class RunImportCNS extends AbstractImportDataCNS{
 				}catch (Exception e) {
 					contextValidation.addErrors("rules", e.toString()+ "runCode :"+run.code, run.code);
 				}
-				Workflows.nextRunState(contextValidation, newRun);
+				workflows.nextState(contextValidation, newRun);
 			}
 
 			if(!contextValidation.hasErrors()){

@@ -17,7 +17,7 @@ import models.util.Workflows;
 import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 
 import play.Logger;
@@ -25,13 +25,17 @@ import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import services.instance.run.UpdateReadSetCNS;
 import validation.ContextValidation;
+import workflows.readset.ReadSetWorkflows;
+import workflows.run.RunWorkflows;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 public class MigrationReadSetFileCNS  extends CommonController {
 
 	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
-
+	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
+	
 	private static final String RUN_COLL_NAME_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK_VALUATION";
 	private static final String READSET_COLL_NAME_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_VALUATION";
 
@@ -175,7 +179,7 @@ public class MigrationReadSetFileCNS  extends CommonController {
 					, DBQuery.is("code",runPiste.runCode)
 					, DBUpdate.set("valuation",runPiste.valuationRun).set("state",state));
 			run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,runPiste.runCode);
-			Workflows.nextRunState(contextValidation, run);
+			workflows.nextState(contextValidation, run);
 		}
 	}
 

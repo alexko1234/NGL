@@ -9,6 +9,12 @@ import static play.test.Helpers.status;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import junit.framework.Assert;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.container.instance.Container;
@@ -20,20 +26,18 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mongojack.DBQuery;
-
+import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import utils.AbstractTestsCNG;
 import utils.RunMockHelper;
-import workflows.run.Workflows;
-import fr.cea.ig.MongoDBDAO;
+import workflows.run.RunWorkflows;
+import workflows.run.RunWorkflowsHelper;
 
 
 public class StatesTests extends  AbstractTestsCNG {	
+	
+	final static RunWorkflowsHelper workflowsHelper = Spring.getBeanOfType(RunWorkflowsHelper.class);
+	
 	
 	static Container c;
 	Run run;
@@ -375,7 +379,7 @@ public class StatesTests extends  AbstractTestsCNG {
 		//make complete valuation
         run.valuation.valid = TBoolean.TRUE;
  
-        Assert.assertTrue(Workflows.atLeastOneValuation(run) == true);
+        Assert.assertTrue(workflowsHelper.atLeastOneValuation(run) == true);
         
 		r1 = callAction(controllers.runs.api.routes.ref.State.update(run.code),fakeRequest().withJsonBody(RunMockHelper.getJsonState(run.state)));
 		assertThat(status(r1)).isEqualTo(OK);

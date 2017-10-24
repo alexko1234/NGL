@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -33,9 +32,10 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.Logger.ALogger;
+import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import validation.ContextValidation;
-import workflows.run.Workflows;
+import workflows.run.RunWorkflows;
 
 /**
  * Create new run and readset for nanopore from file (codeRun,typeRun,flowCellCode,project,sample)
@@ -45,7 +45,8 @@ import workflows.run.Workflows;
 public class MigrationCreateRunNanopore extends CommonController{
 
 	static ALogger logger=Logger.of(MigrationCreateRunNanopore.class);
-
+	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
 	public static Result migration()
 	{
 		//Get File
@@ -199,7 +200,7 @@ public class MigrationCreateRunNanopore extends CommonController{
 					nextState.code = "IP-S";
 					nextState.date = new Date();
 					nextState.user = "ngl-bi";
-					Workflows.setRunState(ctxVal, run, nextState);
+					workflows.setState(ctxVal, run, nextState);
 				}else
 					return badRequest("No sample "+sampleCode);
 			}
