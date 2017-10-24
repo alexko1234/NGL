@@ -32,7 +32,7 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.MongoCollection;
 
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.IValidation;
 

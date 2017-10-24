@@ -5,19 +5,28 @@ import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE
 
 import static validation.experiment.instance.ExperimentValidationHelper.*;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -31,7 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
+// import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -49,12 +58,16 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
-public class Experiments extends DocumentController<Experiment>{
+public class Experiments extends DocumentController<Experiment> {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
 	final static Form<State> stateForm = form(State.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final Form<Experiment> experimentForm = form(Experiment.class);
+	
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
+	
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents");
 	
@@ -68,11 +81,11 @@ public class Experiments extends DocumentController<Experiment>{
 	
 	
 	@Permission(value={"reading"})
-	public Result list(){
+	public Result list() {
 		ExperimentSearchForm searchForm = filledFormQueryString(ExperimentSearchForm.class);
-		if(searchForm.reporting){
+		if (searchForm.reporting) {
 			return nativeMongoDBQuery(searchForm);
-		}else{
+		} else {
 			DBQuery.Query query = getQuery(searchForm);
 			return mongoJackQuery(searchForm, query);			
 		}
@@ -291,11 +304,171 @@ public class Experiments extends DocumentController<Experiment>{
 		}				
 	}
 	
+	// TODO: remove dead test code
+	/*
+	private void eq(String n, String s0, String s1) {
+		if (!s0.equals(s1))
+			throw new RuntimeException(n + " : " + s0 + " =/= " + s1);
+	}
+	
+	// Should provide some current and fields to swap
+	private String swap(Experiment good, Experiment bad, String... fieldNames) {
+		for (String fieldName : fieldNames) {
+			try {
+			java.lang.reflect.Field field = good.getClass().getField(fieldName);
+			Object badVal = field.get(bad);
+			field.set(bad, field.get(good));
+			try {
+				updateObject(bad);
+				// swap field swap has been enough, we're golden
+				return fieldName;
+			} catch (Exception e) {
+				// failed, reset and try next
+				field.set(bad, badVal);
+			}
+			} catch (Exception e) {
+				throw new RuntimeException("bad fail",e);
+			}
+		}
+		throw new RuntimeException("no single swap worked");
+	}
+	
+	// We trace the a's to avoid cycling.
+	static class Comp implements java.util.Comparator<Object> {
+		public int compare(Object a, Object b) {
+			if (a instanceof fr.cea.ig.DBObject) {
+				if (b instanceof fr.cea.ig.DBObject) {
+					return ((fr.cea.ig.DBObject)a)._id.compareTo(((fr.cea.ig.DBObject)b)._id);
+				}
+			}
+			return 0;
+		}
+	}
+	private void diff(Set<Object> done, String path, Object a, Object b) {
+		if (a == null && b == null) {
+		} else if (a == null && b != null) {
+			logger.debug(path + " null vs non null");
+		} else if (a != null && b == null) {
+			logger.debug(path + " not null and null");
+		} else if (done.contains(a)) {
+			// avoid recursion of checked objects
+		} else if (a.getClass() != b.getClass()) {
+			logger.debug(path + " class diff " + a.getClass() + " " + b.getClass());
+		} else {
+			// logger.debug("diff " + path + a.getClass() + " " + b.getClass() + " " + a + " / " + b);
+			if (a instanceof String) {
+				if (!a.equals(b)) 
+					logger.debug((path + " string diff " + a + " " + b));
+			} else if (a instanceof List) {
+				List<Object> l0 = (List<Object>)a;
+				List<Object> l1 = (List<Object>)b;
+				Collections.sort(l0,new Comp());
+				Collections.sort(l1,new Comp());
+				// Reorder using some criterion so the lists are the same
+				done.add(a);
+				for (int i=0; i<l0.size(); i++) 
+					diff(done,path+"["+i+"]",l0.get(i),l1.get(i));
+			} else if (a instanceof Set) {
+				Set<Object> s0 = (Set<Object>)a;
+				Set<Object> s1 = (Set<Object>)b;
+				if (!s0.containsAll(s1) || !s1.containsAll(s0))
+					logger.debug(path + " set diff " + s0 + " " + s1);
+			} else if (a instanceof Map) {
+				// throw new RuntimeException("map");
+			} else {
+				for (Field field : a.getClass().getFields()) {
+					done.add(a);
+					try {
+						diff(done,path+"/"+field.getName(),field.get(a),field.get(b));
+					} catch (IllegalAccessException e) {
+						logger.error("field error",e);
+					}
+				}
+			}
+		}
+	}
+	
+	private void compare(Experiment e0, Experiment e1) {
+		logger.debug("comparing " + e0 + " and " + e1);
+		
+		// public String typeCode;
+		eq("typeCode",e0.typeCode,e1.typeCode);
+		// public String categoryCode;
+		eq("categoryCode",e0.categoryCode,e1.categoryCode);
+		
+		// Expreiment class field names
+		public TraceInformation traceInformation = new TraceInformation();
+		public Map<String,PropertyValue> experimentProperties;
+		
+		public Map<String, PropertyValue> instrumentProperties;
+		
+		public InstrumentUsed instrument;
+		public String protocolCode;
+
+		public State state = new State();
+		public Valuation status = new Valuation();
+		
+		public List<AtomicTransfertMethod> atomicTransfertMethods; 
+		
+		public List<ReagentUsed> reagents;
+		
+		public List<Comment> comments;
+		
+		public Set<String> projectCodes;
+		public Set<String> sampleCodes;
+		
+		public Set<String> inputContainerSupportCodes;
+		public Set<String> inputContainerCodes;
+		public Set<String> inputProcessCodes;
+		public Set<String> inputProcessTypeCodes;
+		public Set<String> inputFromTransformationTypeCodes;
+		
+		public Set<String> outputContainerCodes;
+		public Set<String> outputContainerSupportCodes;
+		
+	}
+	*/
+	
+	private void findBigInts(Set<Object> done, String path, Object a) {
+		if (a == null) {
+		} else if (done.contains(a)) {
+			// avoid recursion of checked objects
+		} else if (a instanceof java.math.BigInteger) {
+			logger.debug("found bi : " + path + " bigint " + a);
+		} else {
+			// logger.debug("diff " + path + a.getClass() + " " + b.getClass() + " " + a + " / " + b);
+			if (a instanceof String) {
+			} else if (a instanceof List) {
+				List<Object> l0 = (List<Object>)a;
+				done.add(a);
+				for (int i=0; i<l0.size(); i++) 
+					findBigInts(done,path+"["+i+"]",l0.get(i));
+			} else if (a instanceof Set) {
+				Set<Object> s0 = (Set<Object>)a;
+				for (Object o : s0)
+					findBigInts(done,path+"[-]",o);
+			} else if (a instanceof Map) {
+				// throw new RuntimeException("map");
+			} else {
+				for (Field field : a.getClass().getFields()) {
+					done.add(a);
+					try {
+						findBigInts(done,path+"/"+field.getName(),field.get(a));
+					} catch (IllegalAccessException e) {
+						logger.error("field error",e);
+					}
+				}
+			}
+		}
+		// throw new RuntimeException("crash");
+	}
+	
 	@Permission(value={"writing"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
-	public Result update(String code) throws DAOException{
+	public Result update(String code) throws DAOException {
+		logger.debug("update '" + code + "'");
 		Experiment objectInDB =  getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) {
 			return badRequest("Experiment with code "+code+" does not exist");
 		}
 		
@@ -377,7 +550,7 @@ public class Experiments extends DocumentController<Experiment>{
 	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Experiment objectInDB = getObject(code);
-		if(objectInDB == null) {
+		if (objectInDB == null) {
 			return notFound();
 		}
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
@@ -388,11 +561,10 @@ public class Experiments extends DocumentController<Experiment>{
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
-		}else {
+		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
-	
 	
 	@Permission(value={"writing"})
 	public Result delete(String code){
@@ -405,7 +577,7 @@ public class Experiments extends DocumentController<Experiment>{
 		workflows.delete(contextValidation, objectInDB);
 		if (!contextValidation.hasErrors()) {
 			return ok();
-		}else {
+		} else {
 			return badRequest(deleteForm.errorsAsJson());
 		}
 		

@@ -21,4 +21,5 @@ public class DocumentController<T extends DBObject> extends MongoCommonControlle
 		ti.setTraceInformation(getCurrentUser());
 		return ti;
 	}
+	
 }
