@@ -63,7 +63,7 @@ import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import play.Logger;
+// import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
@@ -83,6 +83,8 @@ import fr.cea.ig.MongoDBResult.Sort;
 @Service
 public class ExpWorkflowsHelper {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(ExpWorkflowsHelper.class);
+	
 	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
 	private final String NEW_SAMPLE_CODES = "NEW_SAMPLE_CODES";
 	@Autowired
@@ -543,7 +545,7 @@ public class ExpWorkflowsHelper {
 						DBQuery.in("code", container.processCodes),
 						DBUpdate.pull("sampleCodes",container.sampleCodes.iterator().next()));
 						if(processusWithNewProjectCode.contains(container.code)){
-							Logger.debug("Pull container "+container.code+", projectCodes "+container.projectCodes.iterator().next());
+							logger.debug("Pull container "+container.code+", projectCodes "+container.projectCodes.iterator().next());
 							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 									DBQuery.in("code", container.processCodes),
 									DBUpdate.pull("projectCodes",container.projectCodes.iterator().next()));
@@ -599,7 +601,7 @@ public class ExpWorkflowsHelper {
 		if(experimentType.newSample){	
 			Set<String> newSampleCodes = (Set<String>)validation.getObject(NEW_SAMPLE_CODES);
 			if(null != newSampleCodes && newSampleCodes.size() > 0){
-				Logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
+				logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes)).toList();
 				Set<String> projectCodes = samples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes));
@@ -1565,7 +1567,7 @@ public class ExpWorkflowsHelper {
 			});			
 		}
 		long t2 = System.currentTimeMillis();
-		Logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
+		logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
 		
 	}
 	public static final String TAG_PROPERTY_NAME = "tag";

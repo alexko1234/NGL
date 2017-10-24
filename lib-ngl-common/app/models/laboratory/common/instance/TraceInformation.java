@@ -31,8 +31,8 @@ public class TraceInformation implements IValidation {
 	
 	public TraceInformation(String createUser) {
 		super();
-		if (createUser!=null){
-			this.createUser = createUser;
+		if (createUser != null) {
+			this.createUser   = createUser;
 			this.creationDate = new Date();
 		}
 	}
@@ -40,13 +40,13 @@ public class TraceInformation implements IValidation {
 	
 
 	@JsonIgnore
-	public void setTraceInformation(String user){
-		if (createUser==null){
-			createUser=user;
+	public void setTraceInformation(String user) {
+		if (createUser == null) {
+			createUser   = user;
 			creationDate = new Date();
 		} else {
-			modifyUser=user;
-			modifyDate=new Date();
+			modifyUser = user;
+			modifyDate = new Date();
 		}				
 	}
 

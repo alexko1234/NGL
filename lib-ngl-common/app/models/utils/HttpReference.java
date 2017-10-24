@@ -41,7 +41,9 @@ public class HttpReference<T> implements IFetch<T> {
 		//if (reponse.getStatus()!=play.mvc.Http.Status.OK) throw new Exception  
 				
 		try {
+			// TODO: Should probably be better to use the play object mapper
 			return new  ObjectMapper().readValue(reponse.getBody(),className);
+			// play.libs.Json.mapper().readValue(reponse.getBody(),className);
 		} catch (JsonParseException e) {
 			//TODO
 		} catch (JsonMappingException e) {

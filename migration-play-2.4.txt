@@ -13,4 +13,7 @@ Dependencies files are now in /lib/$lib in stead of /.
 Renamed AssetPlugin class to avoid using it as it is defined in the auth lib.
 Renamed getAsset.scala.html to .off to avoid using it as it is defined in the auth lib.
 
+-- Numbers in JSON deserialized as BigInteger
+https://github.com/playframework/playframework/issues/4897
+
         

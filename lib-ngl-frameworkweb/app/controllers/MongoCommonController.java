@@ -33,8 +33,8 @@ import fr.cea.ig.MongoDBResult.Sort;
 public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T> {
 
 	protected String collectionName;
-	protected List<String> defaultKeys;
 	
+	protected List<String> defaultKeys;
 	
 	protected MongoCommonController(String collectionName, Class<T> type) {
 		super(type);
@@ -241,7 +241,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	public Result get(String code) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		T o =  getObject(code, getKeys(updateForm(form)));		
-		if(o == null) {
+		if (o == null) {
 			return notFound();
 		} 
 		return ok(Json.toJson(o));		

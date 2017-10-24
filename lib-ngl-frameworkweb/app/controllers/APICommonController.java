@@ -27,13 +27,14 @@ import controllers.history.UserHistory;
 
 
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public abstract class APICommonController<T> extends Controller{
+public abstract class APICommonController<T> extends Controller {
 
 	protected final DynamicForm listForm = new DynamicForm();
+	
 	protected Class<T> type;
+	
 	protected final Form<T> mainForm = form(type);
 	
-
 	public APICommonController(Class<T> type) {
 		super();
 		this.type = type;
@@ -43,7 +44,7 @@ public abstract class APICommonController<T> extends Controller{
 	 * Filled the main form
 	 * @return
 	 */
-	protected Form<T> getMainFilledForm(){
+	protected Form<T> getMainFilledForm() {
 		return getFilledForm(mainForm, type); 
 	}
 	
@@ -65,7 +66,7 @@ public abstract class APICommonController<T> extends Controller{
 		List<Form<P>> results = new ArrayList<Form<P>>();
 		Iterator<JsonNode> iterator = json.elements();
 		
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			JsonNode jsonChild = iterator.next();
 			P input = Json.fromJson(jsonChild, clazz);
 			Form<P> filledForm = form.fill(input);
@@ -84,21 +85,20 @@ public abstract class APICommonController<T> extends Controller{
 	protected <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
 		Map<String, String[]> queryString =request().queryString();
 		Map<String, Object> transformMap = new HashMap<String, Object>();
-		for(String key :queryString.keySet()){			
+		for (String key :queryString.keySet()) {			
 			try {
-				if(isNotEmpty(queryString.get(key))){				
+				if (isNotEmpty(queryString.get(key))) {				
 					Field field = clazz.getField(key);
 					Class type = field.getType();
-					if(type.isArray() || Collection.class.isAssignableFrom(type)){
+					if (type.isArray() || Collection.class.isAssignableFrom(type)) {
 						transformMap.put(key, queryString.get(key));						
-					}else{
+					} else {
 						transformMap.put(key, queryString.get(key)[0]);						
 					}
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			} 
-
 		}
 
 		JsonNode json = Json.toJson(transformMap);

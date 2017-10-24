@@ -253,14 +253,14 @@ public class ValidationHelper {
 	}
 	
 	public static List<Object> convertStringToType(String type, List<String> values){
-		try{
+		try {
 			Class<?> valueClass = getClass(type);
 			List<Object> objects = new ArrayList<Object>(values.size());
-			for(String value : values){
+			for (String value : values) {
 				objects.add(convertValue(valueClass, value, null));
 			}			
 			return objects;
-		}catch(Throwable e){
+		} catch(Throwable e) {
 			Logger.error(e.getMessage(),e);			
 		}
 		return null;		
@@ -268,9 +268,9 @@ public class ValidationHelper {
 	
 	
 	public static Object convertValue(Class<?> valueClass, Object value, String inputFormat) {
-		if(Number.class.isAssignableFrom(value.getClass())){
+		if (Number.class.isAssignableFrom(value.getClass())) {
 			return convertValue(valueClass, (Number)value);
-		}else{
+		} else {
 			return convertValue(valueClass, value.toString(), inputFormat);
 		}
 	}
@@ -431,21 +431,19 @@ public class ValidationHelper {
 	}
 	
 	public static Object cleanValue(Object object){
-		if(object == null) {
+		if (object == null) {
 			return null;
-        }else if(object instanceof String && StringUtils.isBlank((String)object)) {
+        } else if (object instanceof String && StringUtils.isBlank((String)object)) {
         	return null;
-        }else if(object instanceof Collection && CollectionUtils.isEmpty((Collection)object)) {
+        } else if (object instanceof Collection && CollectionUtils.isEmpty((Collection)object)) {
         	return null;        	
-        }else if(object instanceof Map && MapUtils.isEmpty((Map)object)) {
+        } else if (object instanceof Map && MapUtils.isEmpty((Map)object)) {
         	return null;       	
-        }else if(object instanceof byte[] && ((byte[])object).length==0) {
+        } else if (object instanceof byte[] && ((byte[])object).length==0) {
         	return null;
-        }else{
+        } else {
         	return object;
         }
-               
-       		
 	}
 	
 	/**

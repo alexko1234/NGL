@@ -42,16 +42,16 @@ public abstract class PropertyValue<T> implements IValidation {
 	public String _type;
 	public T value;
 	
+	// TODO: remove super() calls that are implicit
 	public PropertyValue(String _type) {
 		super();
-		this._type=_type;
+		this._type = _type;
 	}
 	public PropertyValue(String _type, T value) {
 		super();
-		this._type=_type;
+		this._type = _type;
 		this.value = value;
 	}
-	
 	
 	public PropertyValue(String _type, T value, String unit) {
 		super();
@@ -69,4 +69,5 @@ public abstract class PropertyValue<T> implements IValidation {
 		Collection<PropertyDefinition> propertyDefinitions = (Collection<PropertyDefinition>) contextValidation.getObject("propertyDefinitions");
 		ValidationHelper.checkType(contextValidation, this, propertyDefinitions);
 	}
+	
 }
