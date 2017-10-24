@@ -509,8 +509,8 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope', 'datatable'
 	
 }]);
 
-angular.module('home').controller('SearchSamplesCtrl', ['$scope', '$parse','$filter','$http', 'datatable','basket','lists','mainService','tabService','samplesSearchService', 
-    function($scope, $parse,$filter,$http, datatable,basket, lists,mainService, tabService, samplesSearchService) {
+angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','basket','mainService','tabService','samplesSearchService', 
+    function($scope, $filter,basket, mainService, tabService, samplesSearchService) {
 	var datatableConfig = {
 			group:{active:true},
 			search:{
@@ -575,7 +575,7 @@ angular.module('home').controller('SearchSamplesCtrl', ['$scope', '$parse','$fil
 		$scope.searchService.lists.refresh.processCategories();
 		$scope.processForm = {};
 		
-		if(angular.isUndefined($scope.getBasket())){
+		if(angular.isUndefined(mainService.getBasket())){
 			$scope.basket = basket();			
 			mainService.setBasket($scope.basket);
 		}else{
@@ -617,7 +617,15 @@ angular.module('home').controller('SearchSamplesCtrl', ['$scope', '$parse','$fil
 			}
 		}
 }]);
-
+angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams', 'mainService','tabService','processesNewFromSampleService', 
+	function($scope,$routeParams,mainService,tabService,processesNewService) {
+	
+	if($routeParams.processTypeCode){
+		$scope.newService = processesNewService;
+		$scope.newService.init($routeParams.processTypeCode);
+	}
+	
+}]);
 angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter','$parse','$routeParams', 'mainService','tabService', 'datatable', 
                                                      function($scope,$http,$q,$filter,$parse,$routeParams,mainService,tabService,datatable) {
 
@@ -1157,3 +1165,5 @@ angular.module('home').controller('ListNewCtrl', ['$scope','$http','$q','$filter
 	init();
 	
 }]);
+
+

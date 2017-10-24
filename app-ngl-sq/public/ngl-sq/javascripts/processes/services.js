@@ -673,4 +673,111 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	};
 
 	return searchService;
-} ]);
+}]).factory('processesNewService', [ '$http', '$parse', '$filter', 'mainService', 'datatable', 
+    function($http, $parse, $filter, mainService, datatable) {
+
+	var getDisplayUnitFromProperty = function(propertyDefinition){
+		var unit = $parse("displayMeasureValue.value")(propertyDefinition);
+		if(undefined !== unit && null !== unit) return " ("+unit+")";
+		else return "";
+	};
+	var getPropertyColumnType = function(type){
+		if(type === "java.lang.String"){
+			return "text";
+		}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
+			return "number";
+		}else if(type === "java.util.Date"){
+			return "date";
+		}else if(type ==="java.io.File"){
+			return "file";
+		}else if(type ==="java.awt.Image"){
+			return "img";
+		}else if(type ==="java.lang.Boolean"){
+			return "boolean";	
+		}else{
+			throw 'not manage : '+type;
+		}
+
+		return type;
+	};
+
+	var newService = {
+		processPropertyColumns :[],
+		computeProcessColumns : function(properties){
+			this.processPropertyColumns = [];
+			if(properties){
+				properties.forEach(function(propertyDefinition){
+					
+					var column = {};
+					column.watch=true;
+					column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
+					column.required=propertyDefinition.required;
+					    				
+					column.property = "properties."+propertyDefinition.code+".value";
+					column.edit = propertyDefinition.editable;
+					column.type = getPropertyColumnType(propertyDefinition.valueType);
+					column.choiceInList = propertyDefinition.choiceInList;
+					column.position = (9+(propertyDefinition.displayOrder/1000));
+					column.defaultValues = propertyDefinition.defaultValue;
+					column.format = propertyDefinition.displayFormat;
+					
+					if(column.choiceInList){
+						if(propertyDefinition.possibleValues.length > 100){
+							column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
+						}else{
+							column.listStyle = "bt-select";
+						}
+						column.possibleValues = propertyDefinition.possibleValues; 
+						column.filter = "codes:'value."+propertyDefinition.code+"'";    					
+					}
+					
+					if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
+						column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
+								"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
+					}
+					
+					this.processPropertyColumns.push(column);					
+				},this);
+			}
+			
+		},
+		initProcessType : function(processTypeCode) {
+			if(processTypeCode){
+				$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{service:this})
+					.success(function(data, status,headers,config){
+						config.service.processType = data;
+						config.service.computeProcessColumns(data.propertiesDefinitions);							
+				});
+			}			
+		}
+	}
+	return newService;
+	
+}]).factory('processesNewFromSampleService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
+    function($http, $parse, $filter, mainService, lists, datatable, processesNewService) {
+	
+	var getDefaultColumns = function() {
+		var columns = [];
+		
+		
+		return columns;
+	};
+	
+	
+	var newService = {
+		datatable : undefined,
+		getDefaultColumns : getDefaultColumns,
+		computeData : function(){},
+		/**
+		 * initialise the service
+		 */
+		init : function(processTypeCode) {
+			this.initProcessType(processTypeCode);
+		}
+	}
+	
+	newService = $.extend(true,{},newService,processesNewService);
+	
+	return newService;
+	
+}]);
