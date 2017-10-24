@@ -5,12 +5,12 @@
 	<div class="row">
 		@columnSearchForm{			
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processCategory")"  ng-required="required" class="form-control"  ng-model="searchService.form.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processCategory")"  ng-required=true class="form-control" ng-class="getHasErrorClass('sampleSearchForm', 'processCategory')" name="processCategory" ng-model="processForm.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 		</div>
 		}}
 		@columnSearchForm{			
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")"  ng-required="required"  class="form-control" ng-disabled="searchService.form.processCategory == undefined"  ng-model="searchService.form.nextProcessTypeCode" bt-options="processType.code as processType.name for processType in  searchService.lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")"  ng-required=true  class="form-control" ng-class="getHasErrorClass('sampleSearchForm', 'nextProcessTypeCode')" ng-disabled="processForm.processCategory == undefined" name="nextProcessTypeCode" ng-model="processForm.nextProcessTypeCode" bt-options="processType.code as processType.name for processType in  searchService.lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
 		</div>
 		}}
 		@columnSearchForm{
@@ -128,8 +128,8 @@
 			
 		<div class="tab-content">
 		<div class="tab-pane active" id="filters">
-			<form class="well well-small" name="sampleSearchForm">
-			<div class="row">
+			<form class="well well-small">
+			<div ng-form  name="sampleSearchForm" class="row">
 			@form			
 			</div>		
 		</form>	
