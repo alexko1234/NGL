@@ -96,6 +96,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 					        	 "order":true,
 								 "edit":true,
 								 "hide":true,
+								 "required":"isRequired('F')"
 								 "type":"number",
 					        	 "position":51,
 					        	 "extraHeaders":{0:Messages("experiments.outputs")}

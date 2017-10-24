@@ -186,6 +186,10 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Tag16S_Full_Length_16S_V4V5_Fuhrman","Tag 16S_Full Length + 16S_V4V5_Fuhrman","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_16S_V1V2V3","Tag 16S_V1V2V3","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		
+		lp.add(newProtocol("Tag_16S_V4V5_archae","Tag 16S_V4V5_Archae","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_16S_V5V6_Procaryote","Tag 16S_V5V6_Procaryote","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_18S_V1_Metazoaire","Tag 18S_V1_Metazoaire","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+		lp.add(newProtocol("Tag_16S_V4_Procaryote","Tag 16S_V4_Procaryote","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		
 		
 		lp.add(newProtocol("amplif_ptr_sox_144-4","Amplif ptr Sox 144-4","path2","1","production",InstanceFactory.setExperimentTypeCodes("pcr-amplification-and-purification")));
