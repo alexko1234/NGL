@@ -431,7 +431,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
         var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']);
         
         //attention certains choix de colonne sont incorrrects !!! 
-        // NGL-1671 le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
+        // 24/10/2017 NGL-1671: le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
         //=>dernier puit si on a trié  dans l'ordre "colonne d'abord"
          
         var last=dataMain.slice(-1)[0];

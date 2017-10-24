@@ -122,7 +122,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null ,
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
+			
+			/*24/10/2017   A  SUPPRIMER remplacé par ext-to-norm-fc-ordered-depot
 			//FDS 12/12/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq 
 			l.add(newExperimentType("Ext to norm+pool,FC ord, dépôt","ext-to-norm-and-pool-fc-ord-depot",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
@@ -130,6 +131,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null ,
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			*/
 				
 			//FDS ajout 12/12/2016 JIRA NGL-1025: nouveau processus court pour RNAseq
 			l.add(newExperimentType("Ext to norm+pool, dénat, FC, dépôt","ext-to-norm-and-pool-denat-fc-depot",null,-1,
@@ -553,6 +555,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null
 				).save();
 
+		/* 24/10/2017 A SUPPRIME remplacé par ext-to-norm-fc-ordered-depot
 		//FDS ajout 12/12/2016 -- JIRA NGL-1025 RNA_Seq; processus long
 		newExperimentTypeNode("ext-to-norm-and-pool-fc-ord-depot",getExperimentTypes("ext-to-norm-and-pool-fc-ord-depot").get(0),
 				false,false,false,
@@ -561,8 +564,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null,
 				null
 				).save();	
+		*/
 		
-		// ??? FDS  ajout 06/10/2017 manque node ext-to-norm-and-pool-denat-fc-depot
+		// FDS  ajout 06/10/2017
 		newExperimentTypeNode("ext-to-norm-and-pool-denat-fc-depot",getExperimentTypes("ext-to-norm-and-pool-denat-fc-depot").get(0),
 				false,false,false,
 				null, // no previous nodes
@@ -788,9 +792,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS 12/12/2016 ajout prep-pcr-free en previous
 		//FDS 13/03/2017 -- JIRA NGL-1167: ajouter wg-chromium-lib-prep en previous 
 		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-and-indexing en previous
+		//FDS 24/10/2017 remplacer ext-to-norm-and-pool-fc-ord-depot  par  ext-to-norm-fc-ordered-depot
 		newExperimentTypeNode("normalization-and-pooling",getExperimentTypes("normalization-and-pooling").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-norm-and-pool-fc-ord-depot",
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot",
 						               "ext-to-norm-and-pool-denat-fc-depot", // FDS ajout 06/10/2017
 						               "pcr-and-purification",
 						               "prep-pcr-free",
@@ -806,9 +811,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS 01/09/2016 -- ajout "pcr-and-purification" en previous (fait partie de WG_Nano)
 		//FDS 13/03/2017 -- JIRA NGL-1167: processus chromium=> ajouter wg-chromium-lib-prep en previous 
 		//FDS 20/07/2017 -- JIRA NGL-1201: processs capture => ajouter pcr-and-indexing en previous
+		//FDS 24/10/2017 ajout ext-to-norm-and-pool-denat-fc-depot
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
 				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", 
+						               "ext-to-norm-and-pool-denat-fc-depot",
 						               "prep-pcr-free",
 						               "pcr-and-purification",
 						               "wg-chromium-lib-prep",
