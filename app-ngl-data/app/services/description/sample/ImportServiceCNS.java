@@ -66,6 +66,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		l.add(newImportType("Reception Lib. ADN sans index", "dna-library-without-index-reception", ImportCategory.find.findByCode("sample-import"), getDNALibraryWithoutIndexReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Reception Pool Lib.", "pool-library-reception", ImportCategory.find.findByCode("sample-import"), getPoolLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newImportType("Reception Lib. Amplicons", "amplicon-library-reception", ImportCategory.find.findByCode("sample-import"), getAmpliconLibraryReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
+		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
 	}
@@ -578,6 +581,40 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 6, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
+		
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getAmpliconLibraryReceptionPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 14, false, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
+				getTagCategories(), null,null,null,"single", 15, false, null,null));		
+			propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 7, false, null, null));
+		
+			propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+				null, null,null,null,"single", 17, false, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Content), String.class, true, null,
+				 DescriptionFactory.newValues("TA", "TB"),null,null,null,"single", 18, false, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("From", "fromTransformationTypeCodes", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
+				DescriptionFactory.newValues("pcr-amplification-and-purification","sizing"),null,null,null,"single", 19, true, null, null));
+		 propertyDefinitions.add(newPropertiesDefinition("Taille théorique sizing", "expectedSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, false, null,
+                 DescriptionFactory.newValues("280-310 (F300)","400-550 (ITS2)","450-550 (W500)","550-650 (W600)","500-650","550-700 (ITS2)","600-700 (W700)","650-750 (W700)","650-700 (W700)","650-800","700-800 (W800)","750-800", "autre"),  MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single", 20, true, null,null));
+
+		 propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+					DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV","CP23S primers","5.8S F1 / R1","18S_V4 primer", "COI primer m1COIintF / jgHCO2198","Sneed2015 27F / 519Rmodbio", "COI primer LCO1490/ HC02198"),
+					null, null, null,"single", 3, true, null,null));
+			propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+					DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","5.8S","16S_V1V2V3","18S_V4","COI"), null, null, null,"single", 4, true, null,null));
+			propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+					null,null,null,null,"single", 5, true, null, null));
+			propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon", "fromSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
+					DescriptionFactory.newValues("DNA","RNA"),null,null,null,"single", 6, true, null, null));
+
 		
 		return propertyDefinitions;
 	}
