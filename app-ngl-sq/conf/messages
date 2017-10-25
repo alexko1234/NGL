@@ -400,6 +400,8 @@ experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
 experiment.title.delete = Suppression de l''expérience
+experiment.title.saveAdmin = Sauvegarde globale par un admin
+experiment.question.saveAdmin =  Êtes-vous certain de vouloir sauvegarder l''expérience  et propager les valeurs des propriétés contents ?
 experiment.question.delete = Êtes-vous certain de vouloir supprimer l''expérience ?
 experiment.question.delete.yes = Oui
 experiment.question.delete.no = Non
@@ -588,6 +590,7 @@ button.print = Imprimer
 button.delete = Supprimer
 button.exportCSV = Export CSV
 button.dispatch= Orientation des containers
+button.validate.warning.content = Sauvegarder et déclencher une mise à jour en cascade des propriétés contents
 
 #select
 select.wrongStartColumnTagPlate= Colonne de début de la plaque d''index incorrecte

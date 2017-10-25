@@ -310,7 +310,33 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				endSaveSuccessCallbackFunction : endSaveSuccessCallbackFunction
 		};
 		
+		if($scope.experiment.state.code === 'F' && Permissions.check("writer")){
+			callbackFunctions.updateURL ='?fields=status&fields=reagents';
+		}
+		
 		$scope.$broadcast('saveReagents', callbackFunctions);		
+	};
+	$scope.askSaveAdmin = function(){
+		
+		angular.element('#saveAdminModal').modal('show');
+		
+	};
+	$scope.saveAdmin = function(){
+		if(Permissions.check("admin")){
+			$scope.messages.clear();
+			saveInProgress = true;
+			
+			var callbackFunctions = {
+					
+			};
+			
+			if($scope.experiment.state.code === 'F'){
+				callbackFunctions.updateURL ='?fields=all&&fields=updateContentProperties';
+			}			
+			
+			$scope.$broadcast('saveReagents', callbackFunctions);
+			angular.element('#saveAdminModal').modal('hide');
+		}			
 	};
 	
 	$scope.startExperiment = function(){
@@ -401,14 +427,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}else if(callbackFunctions.endSaveChildCallbackFunction){
 				callbackFunctions.endSaveChildCallbackFunction();
 		}else{
-			saveOnRemote(callbackFunctions.endSaveSuccessCallbackFunction);
+			saveOnRemote(callbackFunctions);
 		} 
 		
 	});
 	
-	var saveOnRemote = function(callbackFunction){
+	var saveOnRemote = function(callbackFunctions){
 		if(creationMode){
-			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
+			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
 				.success(function(data, status, headers, config) {
 					
 					creationMode = false;
@@ -433,7 +459,12 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				});
 		}else{
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunction})
+			var url = jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url;	
+			if(callbackFunctions.updateURL !== undefined && callbackFunctions.updateURL !== null){
+				url +=callbackFunctions.updateURL;
+			}
+		
+			$http.put(url, $scope.experiment, {callbackFunction:callbackFunctions.endSaveSuccessCallbackFunction})
 			.success(function(data, status, headers, config) {
 				if(config.callbackFunction){
 					config.callbackFunction(data);

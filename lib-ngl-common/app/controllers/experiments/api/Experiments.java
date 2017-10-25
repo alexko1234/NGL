@@ -1,6 +1,9 @@
 package controllers.experiments.api;
 
 import static play.data.Form.form;
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+
+import static validation.experiment.instance.ExperimentValidationHelper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +20,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 
@@ -41,16 +45,18 @@ import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
 public class Experiments extends DocumentController<Experiment>{
 	
 	final static Form<State> stateForm = form(State.class);
-	
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents");
 	
 	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
 	
@@ -71,50 +77,7 @@ public class Experiments extends DocumentController<Experiment>{
 			return mongoJackQuery(searchForm, query);			
 		}
 	}
-	/*
-	@Permission(value={"reading"})
-	public Result list(){
-		//Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
-		//ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
-		ExperimentSearchForm experimentsSearch = filledFormQueryString(ExperimentSearchForm.class);
-		BasicDBObject keys = getKeys(updateForm(experimentsSearch));
-		DBQuery.Query query = getQuery(experimentsSearch);
-
-		if(experimentsSearch.datatable){
-			MongoDBResult<Experiment> results =  mongoDBFinder(experimentsSearch, query, keys);
-			List<Experiment> experiments = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.count())));
-		}else if (experimentsSearch.list){
-			keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
-			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
-			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;				
-
-			MongoDBResult<Experiment> results = mongoDBFinder(experimentsSearch, query, keys);
-			List<Experiment> experiments = results.toList();
-			List<ListObject> los = new ArrayList<ListObject>();
-			for(Experiment p: experiments){					
-				los.add(new ListObject(p.code, p.code));								
-			}
-			return Results.ok(Json.toJson(los));
-		}else{
-			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
-			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;
-			MongoDBResult<Experiment> results = mongoDBFinder(experimentsSearch, query, keys);
-			List<Experiment> experiments = results.toList();
-			return ok(Json.toJson(experiments));
-		}
-	}
-
-	protected DatatableForm updateForm(ExperimentSearchForm form) {
-		if(form.includes.contains("default")){
-			form.includes.remove("default");
-			form.includes.addAll(defaultKeys);
-		}
-		return form;
-	}
-	*/
+	
 	/**
 	 * Construct the experiment query
 	 * @param experimentSearch
@@ -335,45 +298,80 @@ public class Experiments extends DocumentController<Experiment>{
 		if(objectInDB == null) {
 			return badRequest("Experiment with code "+code+" does not exist");
 		}
-		//TODO Peux t'on mettre à jour une expérience terminée
-		//	=> Oui mais on ne peut plus modifier sa structure juste les valeurs reagents et comments
-		//	=> comment vérifier le point précédent ????
+		
 		Form<Experiment> filledForm = getMainFilledForm();
 		Experiment input = filledForm.get();
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		
-		if (input.code.equals(code)) {
-			if(null != input.traceInformation){
-				input.traceInformation = getUpdateTraceInformation(input.traceInformation);
-			}else{
-				Logger.error("traceInformation is null !!");
-			}
+		if(queryFieldsForm.fields == null || queryFieldsForm.fields.contains("all")){
 			
-			if(!objectInDB.state.code.equals(input.state.code)){
-				return badRequest("you cannot change the state code. Please used the state url ! ");
-			}
-			long t1 = System.currentTimeMillis();
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-			ctxVal.setUpdateMode();
-			ExperimentHelper.doCalculations(input, calculationsRules);
-			long t2 = System.currentTimeMillis();
-			workflows.applyPreValidateCurrentStateRules(ctxVal, input);
-			long t3 = System.currentTimeMillis();
-			input.validate(ctxVal);			
-			if (!ctxVal.hasErrors()) {	
-				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
-				long t4 = System.currentTimeMillis();
-				updateObject(input);	
-				long t5 = System.currentTimeMillis();
-				//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));
+			if (input.code.equals(code)) {
+				if(null != input.traceInformation){
+					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
+				}else{
+					Logger.error("traceInformation is null !!");
+				}
 				
-				return ok(Json.toJson(input));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+				if(!objectInDB.state.code.equals(input.state.code)){
+					return badRequest("you cannot change the state code. Please used the state url ! ");
+				}
+				long t1 = System.currentTimeMillis();
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+				ctxVal.setUpdateMode();
+				//todo update in cascading contentProperties, only for administrator
+				if(queryFieldsForm.fields != null && queryFieldsForm.fields.contains("updateContentProperties")){
+					ctxVal.putObject("updateContentProperties", Boolean.TRUE);
+				}
+				
+				ExperimentHelper.doCalculations(input, calculationsRules);
+				long t2 = System.currentTimeMillis();
+				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
+				long t3 = System.currentTimeMillis();
+				input.validate(ctxVal);			
+				if (!ctxVal.hasErrors()) {	
+					workflows.applyPostValidateCurrentStateRules(ctxVal, input);
+					long t4 = System.currentTimeMillis();
+					updateObject(input);	
+					long t5 = System.currentTimeMillis();
+					//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));
+					
+					return ok(Json.toJson(input));
+				}else {
+					return badRequest(filledForm.errorsAsJson());			
+				}
+			}else{
+				return badRequest("Experiment code are not the same");
 			}
 		}else{
-			return badRequest("Experiment code are not the same");
-		}
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			contextValidation.setUpdateMode();
+			validateAuthorizedUpdateFields(contextValidation, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(contextValidation, queryFieldsForm.fields, filledForm);
+			if(!filledForm.hasErrors()){
+				TraceInformation ti = objectInDB.traceInformation;
+				ti.setTraceInformation(getCurrentUser());
+				contextValidation.putObject(FIELD_STATE_CODE , objectInDB.state.code);
 				
+				if(queryFieldsForm.fields.contains("status")){
+					validateStatus(objectInDB.typeCode, input.status, contextValidation);				
+				}
+				
+				if(queryFieldsForm.fields.contains("reagents")){
+					validateReagents(objectInDB.reagents, contextValidation);				
+				}
+				
+				if(!contextValidation.hasErrors()){
+					MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
+							DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields).set("traceInformation", ti));
+					return ok(Json.toJson(getObject(code)));
+				}else{
+					return badRequest(filledForm.errorsAsJson());
+				}				
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}
+		}							
 	}
 	
 	@Permission(value={"writing"})

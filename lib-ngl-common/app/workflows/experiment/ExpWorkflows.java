@@ -16,6 +16,7 @@ import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import controllers.authorisation.PermissionHelper;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -61,7 +62,9 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
 				expWorkflowsHelper.updateQCResultInInputContainers(validation, exp);
 			}
-			expWorkflowsHelper.updateContentPropertiesWithExperimentContentProperties(validation, exp);
+			if (PermissionHelper.checkPermission(validation.getUser(), "admin") && validation.getObject("updateContentProperties") != null){
+				expWorkflowsHelper.updateContentPropertiesWithExperimentContentProperties(validation, exp);
+			}
 		}	
 	}
 	
