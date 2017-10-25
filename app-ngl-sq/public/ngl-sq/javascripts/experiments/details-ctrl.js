@@ -310,7 +310,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				endSaveSuccessCallbackFunction : endSaveSuccessCallbackFunction
 		};
 		
-		if($scope.experiment.state.code === 'F' && Permissions.check("writer")){
+		if($scope.experiment.state.code === 'F' && Permissions.check("writing")){
 			callbackFunctions.updateURL ='?fields=status&fields=reagents';
 		}
 		
