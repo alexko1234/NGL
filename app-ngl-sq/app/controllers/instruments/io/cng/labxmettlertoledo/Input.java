@@ -24,23 +24,26 @@ public class Input extends AbstractInput {
 	
    /* 25/10/2017 NGL-1326
     * Description du fichier a importer: fichier CSV generé par le Logiciel LabX de Mettler Toledo connecté a une balance XPE4002S
+    * ";"  delim
+    * verifier que le nom du fichier convient ? ou se baser sur la ligne 5 ???
 
      ???????  fichier original recu en UTF-16 Litle Endian
    */
-	
-/*   CODE COPIE SUR SPECTRAMAX..... A ADAPTER */
+
+	///// voir spectramax.input
 
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 		Logger.info ("LABXMETTLERTOLEDO INPUT !!!!");	
 		
-		
 		// hashMap  pour stocker les concentrations fichier 
-		Map<String,SpectramaxData> dataMap = new HashMap<String,SpectramaxData>(0);
+		//VIEUX Map<String,SpectramaxData> dataMap = new HashMap<String,SpectramaxData>(0);
+		
 		
 		// charset detection (N. Wiart)
 		byte[] ibuf = pfv.value;
-		String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
+		//String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
+		String charset = "ISO-8859-15";
 		
 		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian
 		if (ibuf.length >= 2 && (0xff & ibuf[0]) == 0xff && (ibuf[1] & 0xff) == 0xfe) {
@@ -51,94 +54,103 @@ public class Input extends AbstractInput {
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
 		int n = 0;
-		boolean lastwell=false;
+		boolean lastResult=false;
 		String line="";
 		
-		// String unit="";  ne marche pas car le compilateur reclame un objet final...utiliser StringBuilder (N Wiart)
-		StringBuilder unit = new StringBuilder();
+// TRIMER  TOUT..........TODO
 		
-		// code pour trouver la bonne unité si jamais celle ci est variable dans le fichier!!!
-		//if ( fields[?????].matches("(.*)Conc.(.*)")){
-		//	unit.append("ng/µL");
-		//} else {
-		//	unit.append("nM");
-		//}
-		
-		unit.append("ng/µL");
-		
-		while (((line = reader.readLine()) != null) && !lastwell ){	 
+		while (((line = reader.readLine()) != null) && !lastResult ){	 
 			 // attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!
-			 String[] cols = line.replace (",", ".").split("\t");
+			 String[] cols = line.replace (",", ".").split(";");
 
-			// verifier la ligne d'entete (3 eme ligne du fichier)
-			if (n == 2) {
-				if ( ! cols[1].equals("Wells") ) {
-					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Wells");
-					return experiment;
-				}
-				if ( ! cols[7].equals("Moyenne") ) {
-					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Moyenne");
+			// verifier la 1 ere ligne : doit etre "Compte rendu de séquençage"
+			if (n == 0) {
+				if ( ! cols[0].trim().equals("Compte rendu de séquençage") ) {
+
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Compte rendu de séquençage");
 					return experiment;
 				}
 			}
 			
-			// commencer le traitement en sautant les 3 premieres lignes
-			if (n > 2 ) {
-				// ligne vide trouvée=fin des data intéressantes
-				if ( cols[0].equals("")){
-					lastwell=true;
-					continue;
+			if ( n == 5){
+				if ( ! cols[0].trim().equals("HiSeq X Flow Cell") ) {
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "HiSeq X Flow Cell");
+					return experiment;
 				} else {
-				    // description d'une ligne de donnees:A10_	A10	216.58	21.19	5.000	5.000	105.949	105.949
-				    if (( cols.length  != 8 )) {
-					    contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.linefields.unexpected",n );
-					    n++;
-					    continue; // ne pas sortir permet de verifier le fichier
-				    } else {
-				        String pos96=cols[1];
-				        // verifier que c'est une position 96 valide ???
-				        if ( !InputHelper.isPlatePosition(contextValidation, pos96 , 96, n)){
-					          n++;
-					         continue; // ne pas sortir permet de verifier le fichier
-				        } else {
-				             // Logger.info ("conc moyenne="+cols[7]);
-				             double conc=Double.parseDouble(cols[7]);
-				             // si la valeur trouv2ée est négative ????
+					// verifier le code flow cell
+					String flowcellId=cols[8];
+					Logger.info ("flowcellId="+flowcellId);
+					
+					 if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
+		        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell ligne 5 ("+flowcellId+") ne correspond pas à celui de l'expérience");
+						 return experiment;
+					}
+				}
+			}
+			
+			// commencer le traitement en sautant les 9 premieres lignes
+			if (n > 9 ) {
+				// ligne "Résultats principaux" =fin des data intéressantes
+				if ( cols[0].trim().matches("Résultats principaux(.*)")){
+					lastResult=true;
+					////////////break;
+				} else {
+					Logger.info ("processing ligne "+ n);
+					
+					// separer l'import enntre les 2 experiences prep-fc-ordered / illumina-depot ???
+					// ou pourrait-on tou charger pour prep-fc-ordered ????
+					//if ( experiment.typeCode.equals("prepa-fc-ordered") ){
+					//	Logger.info ("PREPA...");
+					//} else if ( experiment.typeCode.equals("illumina-depot") ){
+					//	Logger.info ("DEPOT...");
+					//}
+					
+					if ( cols[0].equals("") && ! cols[1].trim().equals("Position") ){
+						//reactifs en positions 1-->XX
+						String reagent=cols[2].trim();
+						Logger.info ("verifier si :"+reagent+" est un reactif d'une boite associé a "+ experiment.typeCode);
 
-				             SpectramaxData data=new SpectramaxData(conc);
-				             dataMap.put(pos96, data);
-				        }
-				    }
-		        } 
+						// verifier que le code barre se termine par -<REACTIF>
+						String reagentCode = cols[5].trim();
+						String reagentWeight = cols[15].trim();
+						if (reagentCode.matches("(.*)-"+reagent)) {
+							Logger.info ("code correct=> stocker code :"+ reagentCode + " et son poids:"+ reagentWeight );
+						} else {
+							 Logger.info ("code "+reagentCode+" ne se termine pas par -"+reagent+" =======> erreur"); 
+						}
+						
+					} else {
+						String itemName[]=cols[0].trim().split("LOT");	
+						if (itemName.length != 2){
+							//ignorer sans erreur ???
+							n++;
+							continue;
+						} else {
+							String itemCode=cols[8].trim();
+							Logger.info ("verifier si :"+itemName[1]+" est une boite ou un reactif associé a "+ experiment.typeCode);
+							Logger.info ("si oui stocker code :"+  itemCode);
+							Logger.info ("si non=> erreur");
+						}
+	
+					}	
+				}
 			}
 		
 			n++;
 		} //end while
 
 		reader.close();
+		Logger.info ("END READING FILE");	
 		
 		if (contextValidation.hasErrors()){ 
 			return experiment;
 		}
 		
-		// Verifier que tous les puits de l'experience ont des données dans le fichier  ???
-		/* 
-		if (!contextValidation.hasErrors()) {
-			experiment.atomicTransfertMethods
-				.stream()
-				.map(atm -> atm.inputContainerUseds.get(0))
-				.forEach(icu -> {
-					String icupos=InputHelper.getCodePosition(icu.code);
-
-				    if (!dataMap.containsKey(icupos) ){
-						contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.concentration.missing",icupos);
-					} 
-				});
-		}
-		*/
-		
 		// ne positionner les valeurs que s'il n'y a pas d'erreur a la vérification precedente...
 		if (!contextValidation.hasErrors()) {
+			Logger.info ("SETTING REAGENTS...TODO...");	
+			
+			/*
 			experiment.atomicTransfertMethods
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
@@ -152,17 +164,10 @@ public class Input extends AbstractInput {
 					}
 									
 				});
+			*/
 		}
 		
 		return experiment;
 	} // end import 
 	
-	// pas de size lue par le Spectramax...
-	public class SpectramaxData {
-		private double concentration;
-
-		public SpectramaxData ( double conc) {
-			concentration=conc;
-		}
-	}
 }
