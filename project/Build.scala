@@ -5,6 +5,7 @@ import com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys
 import play.sbt.routes.RoutesKeys.routesGenerator
 import play.routes.compiler.StaticRoutesGenerator
 // import play.routes.compiler.DynamicRoutesGenerator
+import play.sbt.routes.RoutesCompiler.autoImport._
 
 
 object ApplicationBuild extends Build {
@@ -23,7 +24,8 @@ object ApplicationBuild extends Build {
 
  	val appName    = "ngl"
 	val appVersion = "1.0-SNAPSHOT"
-  val scala      = "2.11.6"
+  // val scala      = "2.11.6"
+	val scala      = "2.11.8"
   
     val projectsVersion = "1.3.1-SNAPSHOT"  
    val reagentsVersion = "1.3.0-SNAPSHOT" 
@@ -55,11 +57,15 @@ object ApplicationBuild extends Build {
 	//val postgresql = "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
 	//val postgresql = "org.postgresql" % "postgresql" % "9.4.1208"
 	
-  val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.4-1.5-SNAPSHOT"
-  val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.4-1.4-SNAPSHOT"
+  // val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.4-1.5-SNAPSHOT"
+	val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.5-1.5.1-SNAPSHOT"
+  // val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.4-1.4-SNAPSHOT"
+  val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.5-1.4.1-SNAPSHOT"
   // val ceaMongo   = "fr.cea.ig"         %% "mongodbplugin"      % "1.6.0-SNAPSHOT"
   // val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.0-SNAPSHOT"
-  val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.1-SNAPSHOT"
+  // val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.1-SNAPSHOT"
+  val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.5-1.7.2-SNAPSHOT"
+  
   val commonsLang = "commons-lang"       % "commons-lang"       % "2.4"
   // val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "1.6.2"
   val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "2.0.0" // play 2.4,2.5
@@ -87,7 +93,7 @@ object ApplicationBuild extends Build {
 			version             := buildVersion,  
 			credentials         += Credentials(new File(sys.env.getOrElse("NEXUS_CREDENTIALS","") + "/nexus.credentials")),
 			publishMavenStyle   := true,
-					   
+			routesGenerator     := StaticRoutesGenerator,
 			       //dependencyOverrides += "io.netty" % "netty" % "3.10.1.Final",
 			       //dependencyOverrides += "org.jboss.logging" % "jboss-logging" % "3.1.1.GA",
  			       //dependencyOverrides += "com.google.guava" % "guava" % "15.0",

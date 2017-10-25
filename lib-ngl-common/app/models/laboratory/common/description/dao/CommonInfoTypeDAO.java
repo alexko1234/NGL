@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
+public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 
 	public CommonInfoTypeDAO() {
 		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 

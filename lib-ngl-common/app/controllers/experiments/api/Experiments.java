@@ -57,6 +57,9 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+
+// TODO: cleanup
 
 public class Experiments extends DocumentController<Experiment> {
 	
@@ -260,7 +263,8 @@ public class Experiments extends DocumentController<Experiment> {
 	}
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json10MB.class)
 	public Result save() throws DAOException{
 		Form<Experiment> filledForm = getMainFilledForm();
 		Experiment input = filledForm.get();
@@ -464,7 +468,8 @@ public class Experiments extends DocumentController<Experiment> {
 	}
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 10000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json10MB.class)
 	public Result update(String code) throws DAOException {
 		logger.debug("update '" + code + "'");
 		Experiment objectInDB =  getObject(code);

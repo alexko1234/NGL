@@ -43,6 +43,11 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 	public NGLSQStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
+		// Set env and config in some global as dependencis on Play.application() are mostly
+		// about the configuration.
+		fr.cea.ig.play.IGGlobals.environment   = new play.Environment(environment);
+		fr.cea.ig.play.IGGlobals.configuration = new play.Configuration(configuration);
+		// play.libs.Akka.system(); // This call fails in module/component parts
 	}
 	
 	@Override
@@ -57,8 +62,10 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		// Added ngl drools startup.
 		// play.plugins still starts from the play-spring-module. The play.plugins
 		// file is started after the app injection i believe so the boot order is still
-		// correct.
+		// correct. Component injection should have proper constructors so the
+		// start order has not to be hard coded here.
 		return seq(
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
@@ -99,7 +106,9 @@ class NGLComponents {
 
 // Either the object is injected at application start or the instance can be lazily
 // created after application start. Instance and injector instance should be the
-// same.
+// same. The only required global is the injector that is defined in the play application
+// and in the spring plugin. It could be the same in the end but this requires that
+// we define an application loader.
 @Singleton
 class LazyInit {
 	

@@ -29,7 +29,8 @@ import controllers.history.UserHistory;
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class APICommonController<T> extends Controller {
 
-	protected final DynamicForm listForm = new DynamicForm();
+	// TODO: fix initialization
+	protected final DynamicForm listForm = new DynamicForm(null,null,null); // = new DynamicForm();
 	
 	protected Class<T> type;
 	

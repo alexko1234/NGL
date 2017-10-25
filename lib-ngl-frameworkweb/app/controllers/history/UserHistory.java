@@ -8,11 +8,15 @@ import play.mvc.Http;
 import play.mvc.Http.Context;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
+
+import java.util.concurrent.CompletionStage;
+
 import fr.cea.ig.MongoDBDAO;
 import play.mvc.Result;
 import play.libs.F;
-import play.libs.F.Function0;
-import play.libs.F.Promise;
+//import play.libs.F.Function0;
+//import play.libs.F.Promise;
+
 /** 
  * Write user action into database
  * 
@@ -23,18 +27,20 @@ import play.libs.F.Promise;
  *@author ydeshayes
  */
 
-public class UserHistory extends Action.Simple{
+// TODO: clean 
+public class UserHistory extends Action.Simple {
 
 	@Override
 	//function called by play
-	public  F.Promise<Result> call(Http.Context context) throws Throwable {
-		if(Play.application().configuration().getBoolean("useraction.trace") != null && Play.application().configuration().getBoolean("useraction.trace") != false){
+	// public  F.Promise<Result> call(Http.Context context) throws Throwable {
+	public CompletionStage<Result> call(final play.mvc.Http.Context context) {
+		if (Play.application().configuration().getBoolean("useraction.trace") != null 
+			&& Play.application().configuration().getBoolean("useraction.trace") != false){
 			
+			// F.Promise<Result> res = null;
+			CompletionStage<Result> res = null;
 			
-			
-			F.Promise<Result> res = null;
-			
-			if(context.request().uri().startsWith("/api/") && !context.request().uri().contains("/authentication")){
+			if (context.request().uri().startsWith("/api/") && !context.request().uri().contains("/authentication")) {
 				String login = context.request().username();
 				String params = Json.toJson(context.request().queryString()).toString();
 				String action = context.request().toString();
@@ -54,13 +60,14 @@ public class UserHistory extends Action.Simple{
 				//after request
 				//ecriture de l'info
 				MongoDBDAO.save("UserHistory", new UserAction(login,params,body,action,timeRequest));
-			}else{
+			} else {
 				res = delegate.call(context);
 			}
-			
 			return res;
-		}else{
+		} else {
 			return delegate.call(context);
 		}
 	}
 }
+
+

@@ -54,7 +54,8 @@ import fr.cea.ig.MongoDBResult.Sort;
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class CommonController extends Controller {
 
-	protected final static DynamicForm listForm = new DynamicForm();
+	// TODO: fix initialization
+	protected final static DynamicForm listForm = new DynamicForm(null,null,null); // new DynamicForm()
 
 
 	/**

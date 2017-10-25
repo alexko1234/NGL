@@ -69,6 +69,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.IGBodyParsers;
 
 public class Containers extends CommonController {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
@@ -147,7 +148,8 @@ public class Containers extends CommonController {
 
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result update(String code){
 		Container container = findContainer(code);
 		if(container == null){

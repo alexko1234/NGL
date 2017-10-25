@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import play.Logger;
-import play.Play;
+// import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -84,10 +84,18 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 			Logger.error("Problem on ContSupportWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
 		}
 	}
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-
+	
+	//private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef _rulesActor;
+	static ActorRef rulesActor() {
+		if (_rulesActor == null)
+			_rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+		return _rulesActor;
+	}
+	
 	public static void callWorkflowRules(ContextValidation validation, ContainerSupport containerSupport) {
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
+		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
+		 rulesActor().tell(new RulesMessage(fr.cea.ig.play.IGGlobals.configuration.getString("rules.key"), "workflow", containerSupport, validation),null);
 	}
 
 	@Override
