@@ -216,16 +216,7 @@ public class SubmissionWorkflowsHelper {
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 			// Recuperer object study pour mettre historique des state traceInformation à jour:
-			if (! submission.state.code.equalsIgnoreCase("F-SUB-R")){
-				studyWorkflows.setState(validation, study, submission.state);
-			} else {
-				// Mettre etat du study à F-SUB si etat de submission est à F-SUB-R :
-				State state_replacement = new State();
-				state_replacement.code = "F-SUB";
-				state_replacement.user = submission.state.user;
-				state_replacement.date = submission.state.date;
-				studyWorkflows.setState(validation, study, state_replacement);
-			}
+			studyWorkflows.setState(validation, study, submission.state);
 			Logger.debug("mise à jour du study avec state.code=" + study.state.code);
 		}
 		//Normalement une soumission pour release doit concerner uniquement un study, donc pas de test pour status F-SUB-R		

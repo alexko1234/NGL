@@ -130,12 +130,12 @@ public class SubmissionServices {
 		
 		// updater dans base si besoin le study pour le statut 'N-R' 
 		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
-			study.state.code = "N-R";
+			study.state.code = "IW-SUB-R";
 			study.traceInformation.modifyDate = new Date();
 			study.traceInformation.modifyUser = user;
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", study.code),
-					DBUpdate.set("state.code", "N-R").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
+					DBUpdate.set("state.code", study.state.code).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
 			}
 		
 		// puis valider et sauver submission
@@ -763,8 +763,15 @@ public class SubmissionServices {
 			// enlever les samples, experiments et submission qui ont ete crées par le service et remettre
 			// readSet.submissionState à NONE, et si studyCode utilisé par cette seule soumission remettre studyCode.state.code=N
 			// et si config utilisé par cette seule soumission remettre configCode.state.code=N
-			cleanDataBase(submission.code, contextValidation);		
-			throw new SraException("SubmissionServices::initPrimarySubmission::probleme validation  voir log: ");
+			//cleanDataBase(submission.code, contextValidation);		
+			//throw new SraException("SubmissionServices::initPrimarySubmission::probleme validation  voir log: ");
+			submissionWorkflowsHelper.rollbackSubmission(submission, contextValidation);	
+			contextValidation.displayErrors(Logger.of("SRA"));
+			throw new SraException("SubmissionServices::initReleaseSubmission::probleme validation  voir log: ");
+			
+			
+			
+			
 		} 	
 		System.out.println("Creation de la soumission " + submission.code);
 		return submission.code;
