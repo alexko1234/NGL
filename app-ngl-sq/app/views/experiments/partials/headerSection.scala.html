@@ -51,7 +51,7 @@
 			 		
 			 		<button class="btn btn-default" ng-if="isExperimentDeleteAvailable('@Context.current().request().username()')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
 				 	
-				 	<button class="btn btn-danger" ng-if="isFinishState()" ng-disabled="isSaveInProgress()" ng-click="askSaveAdmin()" data-toggle="tooltip" title="@Messages("button.validate.warning.content")" ><i class="fa fa-save"></i></button>				 	
+				 	<button class="btn btn-danger" ng-if="isFinishState() && isEditModeAvailable()" ng-disabled="isSaveInProgress()" ng-click="askSaveAdmin()" data-toggle="tooltip" title="@Messages("button.validate.warning.content")" ><i class="fa fa-save"></i></button>				 	
 			 	}
 			 				 					
 			</div>	
