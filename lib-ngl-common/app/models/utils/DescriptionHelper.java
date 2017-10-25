@@ -32,6 +32,24 @@ public class DescriptionHelper {
 		//return new ArrayList<String>();
 	}
 
+	/*public static void _initInstitute(){
+		institute = null;
+	}*/
+
+	public static List<String> getInstitute() {
+		if (institute == null) {
+			// String appInstitute = Play.application().configuration().getString("institute");
+			String appInstitute = fr.cea.ig.play.IGGlobals.configuration.getString("institute");
+			if (StringUtils.isNotBlank(appInstitute)) {
+				institute = Arrays.asList(appInstitute.split("\\s*,\\s*"));
+			} else {
+				institute = new ArrayList<String>();
+			}			
+		}
+		return institute;
+		//return new ArrayList<String>();
+	}
+
 	/*
 	public static PropertyDefinition getPropertyDefinition(String keyCode, String keyName, Boolean required, Boolean active, Boolean choiceInList,
 			List<Value> possiblesValues , Class<?> type, String description, String  displayFormat, int displayOrder
