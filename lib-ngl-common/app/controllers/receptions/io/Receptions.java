@@ -13,7 +13,10 @@ import validation.ContextValidation;
 import controllers.TPLCommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
 
+
+// TODO: cleanup
 
 public class Receptions extends TPLCommonController {
 
@@ -23,7 +26,8 @@ public class Receptions extends TPLCommonController {
 		return MongoDBDAO.findByCode(InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class, code);
 	}
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
 	public Result importFile(String receptionConfigCode){
 		ReceptionConfiguration configuration = getReceptionConfig(receptionConfigCode);

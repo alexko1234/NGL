@@ -17,6 +17,10 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.IGBodyParsers;
+
+// TODO: cleanup
+
 @Controller
 public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment>{
 
@@ -38,14 +42,17 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	
 	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
 			return notFound();
-		}else if(request().body().isMaxSizeExceeded()){
-			return badRequest("Max size exceeded");
 		}
+		// Supposed to be an exception in 2.5
+		/*else if(request().body().isMaxSizeExceeded()){
+			return badRequest("Max size exceeded");
+		}*/
 		
 		Form<Treatment> filledForm = getSubFilledForm();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
@@ -66,7 +73,8 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {

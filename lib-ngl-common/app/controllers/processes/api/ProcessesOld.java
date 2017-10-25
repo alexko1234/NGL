@@ -74,7 +74,9 @@ import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
-public class ProcessesOld extends CommonController{
+// TODO: cleanup
+
+public class ProcessesOld extends CommonController {
 
 	final static Form<ProcessesSaveQueryForm> processSaveQueryForm = form(ProcessesSaveQueryForm.class);
 	final static Form<Process> processForm = form(Process.class);
@@ -86,11 +88,12 @@ public class ProcessesOld extends CommonController{
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
 	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
+	
 	@Permission(value={"reading"})
 	public static Result head(String processCode) {
-		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
+		if (MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)) {			
 			return ok();					
-		}else{
+		} else {
 			return notFound();
 		}	
 	}
@@ -98,7 +101,7 @@ public class ProcessesOld extends CommonController{
 	@Permission(value={"reading"})
 	public static Result get(String code){
 		Process process = getProcess(code);
-		if(process == null){
+		if (process == null) {
 			return notFound();
 		}
 		return ok(Json.toJson(process));
@@ -118,7 +121,7 @@ public class ProcessesOld extends CommonController{
 			process.traceInformation.setTraceInformation(getCurrentUser());
 			//the default status
 			process.state = new State("N", getCurrentUser());
-		}else {
+		} else {
 			return badRequest("use PUT method to update the process");
 		}
 
@@ -127,11 +130,11 @@ public class ProcessesOld extends CommonController{
 		if (!filledForm.hasErrors()) {
 			contextValidation.setCreationMode();
 			contextValidation.putObject("workflow", true);
-			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
+			if (StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)) {			
 				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm.get(), contextValidation);
-			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
+			} else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
 
-				if(!contextValidation.hasErrors()){
+				if (!contextValidation.hasErrors()) {
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, queryFieldsForm.fromContainerInputCode);
 					Process p = filledForm.get();
 					p.inputContainerCode = container.code;
@@ -139,20 +142,19 @@ public class ProcessesOld extends CommonController{
 					valdateCommonProcessAttribut(p, contextValidation);
 					processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 				}				
-			}else{
+			} else {
 				return badRequest("Params 'from object' required!");
 			}
 		}
 
-		if(contextValidation.hasErrors())
-		{
+		if (contextValidation.hasErrors()) {
 			return badRequest(filledForm.errorsAsJson());
-		}else {
+		} else {
 			return ok(Json.toJson(processes));
 		}
 	}
 
-	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation){			
+	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation) {			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode).is("state.code","IW-P")).toList();
 		
@@ -187,7 +189,9 @@ public class ProcessesOld extends CommonController{
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		ProcessesSaveQueryForm processesSaveQueryForm=filledQueryFieldsForm.get();
 
-		Form<Process> batchForm = new Form<Process>(Process.class);
+		// Form<Process> batchForm = new Form<Process>(Process.class);
+		Form<Process> batchForm = new Form<Process>(Process.class,null,null,null);
+		
 		List<Process> processes = new ArrayList<Process>();
 		ContextValidation contextValidation =new ContextValidation(getCurrentUser(), batchForm.errors());
 
@@ -394,7 +398,8 @@ public class ProcessesOld extends CommonController{
 	@Permission(value={"writing"})
 	public static Result delete(String code) throws DAOException{
 		Process process = getProcess(code);
-		Form deleteForm = new Form(Process.class);
+		// Form deleteForm = new Form(Process.class);
+		Form deleteForm = new Form(Process.class,null,null,null);
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");

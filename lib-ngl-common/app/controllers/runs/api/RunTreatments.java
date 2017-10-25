@@ -16,6 +16,9 @@ import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+
+// TODO: cleanup
 
 public class RunTreatments extends RunsController{
 
@@ -53,7 +56,8 @@ public class RunTreatments extends RunsController{
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result save(String runCode){
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
@@ -81,7 +85,8 @@ public class RunTreatments extends RunsController{
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result update(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));

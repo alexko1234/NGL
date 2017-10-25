@@ -13,9 +13,11 @@ package controllers.resources;
 
 import play.Application;
 import play.Logger;
-import play.Plugin;
+// import play.Plugin;
 
 // public class AssetPlugin extends Plugin {
+
+// TODO: resolve conflictual definition with AssetPlugin in auth lib 
 
 class UNUSED_AssetPlugin {
 	

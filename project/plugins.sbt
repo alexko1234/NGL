@@ -12,7 +12,8 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 // Use the Play sbt plugin for Play projects
 // addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.9")
 // addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.0")
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.11")
+// addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.11")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.18")
 
 // bytecode enhancement has been pulled out of core play 
 addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.1.0")

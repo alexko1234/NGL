@@ -16,8 +16,12 @@ import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
 
-public class ReadSetTreatments extends ReadSetsController{
+
+// TODO: cleanup
+
+public class ReadSetTreatments extends ReadSetsController {
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
@@ -53,14 +57,17 @@ public class ReadSetTreatments extends ReadSetsController{
 	}
 	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result save(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest();
-		}else if(request().body().isMaxSizeExceeded()){
-			return badRequest("Max size exceeded");
 		}
+		// WARN: this is supposed to be standard parser behavior in play 2.5
+		/*else if(request().body().isMaxSizeExceeded()) {
+			return badRequest("Max size exceeded");
+		}*/
 		
 		
 		Form<Treatment> filledForm = getFilledForm(treatmentForm, Treatment.class);
@@ -85,7 +92,8 @@ public class ReadSetTreatments extends ReadSetsController{
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result update(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -112,7 +120,7 @@ public class ReadSetTreatments extends ReadSetsController{
 			} else {
 				return badRequest(filledForm.errorsAsJson());			
 			}
-		}else{
+		} else {
 			return badRequest("treatment code are not the same");
 		}
 	}

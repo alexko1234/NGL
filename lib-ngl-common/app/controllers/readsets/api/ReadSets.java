@@ -57,6 +57,8 @@ import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.readset.ReadSetWorkflows;
+import workflows.run.Workflows;
+import fr.cea.ig.play.IGBodyParsers;
 
 
 
@@ -398,7 +400,8 @@ public class ReadSets extends ReadSetsController{
 
 
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {

@@ -24,6 +24,7 @@ import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
 
 public class IO extends TPLCommonController {
 	
@@ -114,7 +115,8 @@ public class IO extends TPLCommonController {
 		return badRequest(filledForm.errorsAsJson());
 	}
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
 	public Result importFile(String experimentCode, String extraInstrument){ // FDS 25/10 ajout param optionnel pour instrument additionnel  (voir apinglsq.routes??)
 		Experiment experiment = getExperiment(experimentCode);
