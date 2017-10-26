@@ -469,7 +469,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope', 'datatable'
 
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('new');
-		tabService.addTabs({label:Messages('processes.tabs.create.new-from-containers'),href:jsRoutes.controllers.processes.tpl.Processes.home("new-from-samples").url,remove:false});
+		tabService.addTabs({label:Messages('processes.tabs.create.new-from-containers'),href:jsRoutes.controllers.processes.tpl.Processes.home("new-from-containers").url,remove:false});
 		tabService.activeTab(0);
 	}
 
@@ -617,7 +617,16 @@ angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','bask
 			}
 		}
 }]);
-angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams', 'mainService','tabService','processesNewFromSampleService', 
+angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams', 'mainService','tabService','processesNewFromSamplesService', 
+	function($scope,$routeParams,mainService,tabService,processesNewService) {
+	
+	if($routeParams.processTypeCode){
+		$scope.newService = processesNewService;
+		$scope.newService.init($routeParams.processTypeCode);
+	}
+	
+}]);
+angular.module('home').controller('NewFromContainersCtrl', ['$scope','$routeParams', 'mainService','tabService','processesNewFromContainersService', 
 	function($scope,$routeParams,mainService,tabService,processesNewService) {
 	
 	if($routeParams.processTypeCode){
