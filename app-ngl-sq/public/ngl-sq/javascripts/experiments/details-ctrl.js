@@ -296,7 +296,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					}
 				});		
 			};
-			saveOnRemote(endSaveSuccessCallbackFunction);
+			saveOnRemote({endSaveSuccessCallbackFunction:endSaveSuccessCallbackFunction});
 		}		
 		
 	};
