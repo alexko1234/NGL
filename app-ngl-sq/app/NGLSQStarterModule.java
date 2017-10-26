@@ -1,4 +1,5 @@
 
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -19,6 +20,30 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		fr.cea.ig.play.IGGlobals.environment   = new play.Environment(environment);
 		fr.cea.ig.play.IGGlobals.configuration = new play.Configuration(configuration);
 		// play.libs.Akka.system(); // This call fails in module/component parts
+		// Start a thread to acitvely wait on Play.application() and then start the 
+		// Spring "module".
+		if (false) {
+		new Thread(new Runnable() {
+			public void run() {
+				while (true) {
+					try {
+						Play.application();
+						try {
+							Logger.info("************** SPRING START ************");
+							// This would work if the Spring plugin defines a lock to access the spring instance
+							// while executing the constructor.
+							play.api.modules.spring.SpringPlugin pi = new play.api.modules.spring.SpringPlugin(Play.application().getWrappedApplication());
+							Logger.info("************** SPRING DONE  ************");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						return;
+					} catch (Exception e) {
+						// play.application() not set
+					}
+				}
+			}}).start();
+		}
 	}
 	
 	@Override
@@ -36,7 +61,6 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		// correct. Component injection should have proper constructors so the
 		// start order has not to be hard coded here.
 		return seq(
-				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
@@ -45,7 +69,13 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
 				//bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
 				// Force JsMessages init
-				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly()
+				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
+				// The plugins conf stated that it's started last. It should be started after the
+				// application is created because of global application instance access but it's not
+				// possible anymore. We should be able to use spring as the play injector but the
+				// eager initialization of the component-scan part of the configuration fails
+				// miserably. We should add @Lazy to @Component.
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
 			);
 	}
 	
