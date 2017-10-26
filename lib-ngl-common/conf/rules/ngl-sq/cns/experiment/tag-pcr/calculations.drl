@@ -61,6 +61,8 @@ rule "Set good project code for Amplicon"
 			outputProjectCode.value = "CBR";
 		}else if("BMI".equals($inputProjectCode)){
 			outputProjectCode.value = "CCC";
+		}else if("BMZ".equals($inputProjectCode)){
+			outputProjectCode.value = "CCC";
 		}else if("CCQ".equals($inputProjectCode)){
 			outputProjectCode.value = "CCR";
 		}else if("CCT".equals($inputProjectCode)){
@@ -71,10 +73,6 @@ rule "Set good project code for Amplicon"
 			outputProjectCode.value = "CCR";
 		}else if("CDD".equals($inputProjectCode)){
 			outputProjectCode.value = "CDE";
-		}else if("CDH".equals($inputProjectCode)){
-			outputProjectCode.value = "CDI";
-		}else if("CDK".equals($inputProjectCode)){
-			outputProjectCode.value = "CDL";
 		}else{
 			outputProjectCode.value = null;
 		}
