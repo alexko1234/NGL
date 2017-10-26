@@ -427,8 +427,15 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
         // trier dans l'ordre "colonne d'abord"
         var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']);
         
-       //attention certains choix de colonne sont incorrrects !!!
-		if  ($scope.tagPlateColumn.position + dataMain.length > 96 ) {			
+        //attention certains choix de colonne sont incorrrects !!!
+        // 26/10/2017 NGL-1671: le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
+        //=>dernier puit si on a trié  dans l'ordre "colonne d'abord"
+        
+        var last=dataMain.slice(-1)[0];
+        var maxcol=last.atomicTransfertMethod.column*1;
+        console.log("last col in input plate="+maxcol);
+        
+        if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){			
 			$scope.messages.clazz="alert alert-danger";
 			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
 			$scope.messages.text=Messages('select.wrongStartColumnTagPlate');

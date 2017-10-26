@@ -382,9 +382,9 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	                 ];
 	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
 	
-	// 10/10/2017 modifications pour possibilité d'utilisation plusieurs plaques
+	// 10/10/2017 modifications pour possibilité d'utiliser plusieurs plaques
 	/*$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
-	                  {name:"DAP TruSeq DNA HT-X", tagCategory:"DUAL-INDEX", tags:[] } ];
+	                  {name:"DAP TruSeq DNA HT-X", tagCategory:"DUAL-INDEX", tags:[] } ];/// nom et composition pas encore données par la la prod....
 	*/
 	$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] } ];
 
@@ -430,15 +430,22 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
         // trier dans l'ordre "colonne d'abord"
         var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']);
         
-       //attention certains choix de colonne sont incorrrects !!!
-		if  ($scope.tagPlateColumn.position + dataMain.length > 96 ) {			
-			$scope.messages.clazz="alert alert-danger";
-			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
-			$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
-			$scope.messages.showDetails = false;
-			$scope.messages.open();	
-			return;
-		}
+        //attention certains choix de colonne sont incorrrects !!! 
+        // 24/10/2017 NGL-1671: le controle doit porter sur la valeur maximale de colonne trouvee sur la plaque a indexer
+        //=>dernier puit si on a trié  dans l'ordre "colonne d'abord"
+         
+        var last=dataMain.slice(-1)[0];
+        var maxcol=last.atomicTransfertMethod.column*1;
+        console.log("last col in input plate="+maxcol);
+        
+        if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){
+        	$scope.messages.clazz="alert alert-danger";
+
+        	$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
+        	$scope.messages.showDetails = false;
+        	$scope.messages.open();	
+        	return;
+        }
        
 	    for(var i = 0; i < dataMain.length; i++){
 			var udtData = dataMain[i];
