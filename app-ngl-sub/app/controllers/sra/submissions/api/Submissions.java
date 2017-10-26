@@ -146,7 +146,7 @@ public class Submissions extends DocumentController<Submission>{
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission ", " not exist");
@@ -155,7 +155,6 @@ public class Submissions extends DocumentController<Submission>{
 		Submission submissionInput = filledForm.get();
 
 		if(queryFieldsForm.fields == null){
-
 			if (code.equals(submissionInput.code)) {	
 				ctxVal.setUpdateMode();
 				ctxVal.getContextObjects().put("type","sra");
@@ -193,7 +192,7 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	public Result updateState(String code){
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
+		
 		//Get Submission from DB 
 		System.out.println("Dans Submissions.updateState, submission.code="+ code);
 		Submission submission = getSubmission(code); // ou bien Submission submission2 = getObject(code);
@@ -201,7 +200,7 @@ public class Submissions extends DocumentController<Submission>{
 		State state = filledForm.get();
 		state.date = new Date();
 		state.user = getCurrentUser();
-
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	

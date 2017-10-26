@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -435,14 +436,14 @@ public class SubmissionWorkflowsHelper {
 						System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
 						if ("CNS".equalsIgnoreCase(readSet.location)) {
 							if (p.archive){
-								contextValidation.addErrors("rawData", "rawData.activate.CNS.archive", rawData.relatifName, p.code, readSet.code);
+								contextValidation.addErrors("rawData", "error.rawData.activate.CNS.archive", rawData.relatifName, p.code, readSet.code);
 							} else {
-								contextValidation.addErrors("rawData", "rawData.activate.CNS.notArchive", rawData.relatifName, p.code, readSet.code);
+								contextValidation.addErrors("rawData", "error.rawData.activate.CNS.notArchive", rawData.relatifName, p.code, readSet.code);
 							}
 						} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
 							rawData.location = readSet.location;
 						} else {
-							contextValidation.addErrors("rawData", "rawData.activate.location", readSet.location, rawData.relatifName);
+							contextValidation.addErrors("rawData", "error.rawData.activate.location", readSet.location, rawData.relatifName);
 						}
 					}
 					if (rawData.extention.equalsIgnoreCase("fastq")) {
@@ -450,7 +451,7 @@ public class SubmissionWorkflowsHelper {
 					} else {
 						rawData.gzipForSubmission = false;
 						if (StringUtils.isBlank(rawData.md5)){
-							contextValidation.addErrors("rawData", "rawData.activate.md5"+ rawData.relatifName);
+							contextValidation.addErrors("rawData", "error.rawData.activate.md5"+ rawData.relatifName);
 						}
 					}
 					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 

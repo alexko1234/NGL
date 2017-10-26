@@ -64,7 +64,7 @@ public class Experiments extends DocumentController<Experiment> {
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 
-		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
 		Experiment experiment = getObject(code);
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
