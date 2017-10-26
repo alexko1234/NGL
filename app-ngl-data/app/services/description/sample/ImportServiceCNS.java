@@ -499,13 +499,19 @@ public class ImportServiceCNS extends AbstractImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 3, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
-				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 4, false, null, null));
+		//propertyDefinitions.add(newPropertiesDefinition("% GC théorique", "theoricalGCPercent", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Double.class, false, null, null, "single", 3, false, null, null));
+	//	propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Long.class, false, null, 
+		//		null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 4, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom scientifique collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 5, false, null,null));		
-		propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
-				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+	//	propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+		//		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Fraction", "sizeFraction", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm",">3 µm","0.2-3 µm","0.22-200 µm","<0.2 µm"), null,null,null,"single", 6, false, null,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Profondeur / Couche", "depthOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				newValues("0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+	
 		
 		return propertyDefinitions;
 	}
