@@ -894,7 +894,7 @@ public class ExpWorkflowsHelper {
 
 		if(null != ocu && ocu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(ocu.experimentProperties.entrySet().stream()
-						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
 		}
 
@@ -904,7 +904,7 @@ public class ExpWorkflowsHelper {
 
 		if(null != ocu && ocu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0){			
 			propertiesForALevel.putAll(ocu.instrumentProperties.entrySet().stream()
-						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));								
 		}
 		
@@ -919,7 +919,7 @@ public class ExpWorkflowsHelper {
 
 		if(null != icu && icu.experimentProperties != null && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(icu.experimentProperties.entrySet().stream()
-						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));					
 		}
 		
@@ -929,7 +929,7 @@ public class ExpWorkflowsHelper {
 
 		if(null != icu && icu.instrumentProperties != null && instrumentPropertyDefinitionCodes.size() > 0){			
 			propertiesForALevel.putAll(icu.instrumentProperties.entrySet().stream()
-						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));								
 		}
 		
@@ -943,7 +943,7 @@ public class ExpWorkflowsHelper {
 		if(processesPropertyDefinitionCodes.size() >0){
 			propertiesForALevel.putAll(getProcessesProperties(icu)
 					.stream()
-					.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()))
+					.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
 		}
 		
@@ -970,7 +970,7 @@ public class ExpWorkflowsHelper {
 		if(null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(exp.experimentProperties.entrySet()
 					.stream()
-					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
 		
@@ -983,7 +983,7 @@ public class ExpWorkflowsHelper {
 
 		if(null != icu.experimentProperties && icu.experimentProperties.size() > 0){
 			propertiesForALevel.putAll(icu.experimentProperties.entrySet().stream()
-					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))					
+					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)					
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 					
 		}
@@ -995,12 +995,12 @@ public class ExpWorkflowsHelper {
 		if(null != exp.instrumentProperties && instrumentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(exp.instrumentProperties.entrySet()
 					.stream()
-					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
 		if(null != icu.instrumentProperties && icu.instrumentProperties.size() > 0){
 			propertiesForALevel.putAll(icu.instrumentProperties.entrySet().stream()
-					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 							
 		}
@@ -1012,7 +1012,7 @@ public class ExpWorkflowsHelper {
 			if(processesPropertyDefinitionCodes.size() >0){
 				propertiesForALevel.putAll(getProcessesProperties(icu)
 						.stream()
-						.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()))
+						.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()) && entry.getValue() != null)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
 			}
 		}
@@ -1584,6 +1584,10 @@ public class ExpWorkflowsHelper {
 																		.filter(entry ->contentPropertyCodes.contains(entry.getKey()))
 																		.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 			
+			Set<String> deletedPropertyCodes = contentPropertyCodes
+													.stream()
+													.filter(code -> !updatedProperties.containsKey(code))
+													.collect(Collectors.toSet());
 			
 			List<Sample> allSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  
 					DBQuery.or(DBQuery.is("code", ocuContent.sampleCode), DBQuery.regex("life.path", Pattern.compile(","+ocuContent.sampleCode+"$|,"+ocuContent.sampleCode+","))))
@@ -1601,7 +1605,8 @@ public class ExpWorkflowsHelper {
 									&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
-						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));							
+						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));
+						deletedPropertyCodes.forEach(code -> content.properties.remove(code));
 					});
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", container.code), DBUpdate.set("contents", container.contents));
 			});
@@ -1617,6 +1622,7 @@ public class ExpWorkflowsHelper {
 						readset.traceInformation.setTraceInformation(validation.getUser());
 						readset.sampleOnContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
 						updatedProperties.forEach((k,v)-> readset.sampleOnContainer.properties.putIfAbsent(k, v));
+						deletedPropertyCodes.forEach(code -> readset.sampleOnContainer.properties.remove(code));
 						readset.sampleOnContainer.lastUpdateDate = new Date();
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
 					}
@@ -1632,6 +1638,7 @@ public class ExpWorkflowsHelper {
 					process.traceInformation.setTraceInformation(validation.getUser());
 					process.sampleOnInputContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
 					updatedProperties.forEach((k,v)-> process.sampleOnInputContainer.properties.putIfAbsent(k, v));
+					deletedPropertyCodes.forEach(code -> process.sampleOnInputContainer.properties.remove(code));
 					process.sampleOnInputContainer.lastUpdateDate = new Date();
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
 				}
