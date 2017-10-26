@@ -196,13 +196,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		
 		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
-		.success(function(data, status, headers, config) {
-			
-			// a remplacer par message.setSuccess(txt); ???
-			$scope.messages.clazz="alert alert-success";
-			$scope.messages.text=Messages('experiments.msg.import.success');
-			$scope.messages.showDetails = false;
-			$scope.messages.open();	
+		.success(function(data, status, headers, config) {		
+			$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
 			
 			// data est l'experience retournée par input.java
 			// 16/01/2017 recuperer instrumentProperties 
@@ -220,12 +215,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		})
 		.error(function(data, status, headers, config) {
-			// a remplacer par message.setError(txt); ???
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.import.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();	
+			$scope.messages.setError(Messages('experiments.msg.import.error'));	
 			
 			// reinit select File..
 			$scope.file = undefined;
@@ -254,13 +244,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		///$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
 		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url+"?extraInstrument=labxmettlertoledo", $scope.file)
 		.success(function(data, status, headers, config) {
-			
-			// a remplacer par message.setSuccess(txt); ???
-			$scope.messages.clazz="alert alert-success";
-			$scope.messages.text=Messages('experiments.msg.import.success');
-			$scope.messages.showDetails = false;
-			$scope.messages.open();	
-			
+			$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
+
 			// data est l'experience retournée par input.java
 			$scope.experiment.instrumentProperties= data.instrumentProperties;
 			
@@ -276,12 +261,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		})
 		.error(function(data, status, headers, config) {
-			// a remplacer par message.setError(txt); ???
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.import.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();	
+			$scope.messages.setError(Messages('experiments.msg.import.error'));
 			
 			// reinit select File..
 			$scope.file = undefined;

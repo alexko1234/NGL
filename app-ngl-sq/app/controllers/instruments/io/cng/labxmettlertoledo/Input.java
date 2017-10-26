@@ -12,13 +12,19 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.index.Index;
+import models.utils.InstanceConstants;
 import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.InputHelper;
+import fr.cea.ig.MongoDBDAO;
+
+import models.laboratory.reagent.description.BoxCatalog;
+import models.laboratory.reagent.description.KitCatalog;
+import models.laboratory.reagent.description.ReagentCatalog;
+
+import org.mongojack.DBQuery;
 
 public class Input extends AbstractInput {
 	
@@ -36,29 +42,46 @@ public class Input extends AbstractInput {
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 		Logger.info ("LABXMETTLERTOLEDO INPUT !!!!");	
 		
-		// hashMap  pour stocker les concentrations fichier 
+		// hashMap  pour stocker les infos......
 		//VIEUX Map<String,SpectramaxData> dataMap = new HashMap<String,SpectramaxData>(0);
+		// TODO pour les kit/box/reagents
 		
 		
-		// charset detection (N. Wiart)
+		
 		byte[] ibuf = pfv.value;
-		//String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
-		String charset = "ISO-8859-15";
-		
-		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian
-		if (ibuf.length >= 2 && (0xff & ibuf[0]) == 0xff && (ibuf[1] & 0xff) == 0xfe) {
-			charset = "UTF-16LE";
-		}
-		
 		InputStream is = new ByteArrayInputStream(ibuf);
 		
+		// le fichier CSV sorti par le logiciel Labx est en ISO-8859 ( valeur retournee par la commande "file" Linux)
+		String charset = "ISO-8859-15";
+		
+		// charset detection (N. Wiart)
+		//String charset = "UTF-8"; //par defaut, convient aussi pour de l'ASCII pur
+		// si le fichier commence par les 2 bytes ff/fe  alors le fichier est encodé en UTF-16 little endian
+		//if (ibuf.length >= 2 && (0xff & ibuf[0]) == 0xff && (ibuf[1] & 0xff) == 0xfe) {
+		//	charset = "UTF-16LE";
+		//}
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
+		
 		int n = 0;
 		boolean lastResult=false;
-		String line="";
+		String line="";	
 		
-// TRIMER  TOUT..........TODO
+		// avant de commencer le parsing du fichier recupere la liste des kits possibles pour le type d'experience...
+		// attention du coup si on veut traiter les 2 experiences en un seul import.... 
 		
+		//List<KitCatalog> kitList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
+		//		 DBQuery.is("category", "Kit").and(DBQuery.is("experimentTypeCodes", experiment.typeCode))).toList();
+		
+		//if (null == kitList) {
+		//	contextValidation.addErrors("Erreurs fichier","Aucun Kit disponible pour ce type d'experience");
+		//	return experiment;
+		//}
+		List<KitCatalog> kitCatalogs = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList();
+		for(KitCatalog kc:  kitCatalogs){
+        Logger.info ("OK KIT TROUVE "+kc.name);
+		}
+
 		while (((line = reader.readLine()) != null) && !lastResult ){	 
 			 // attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!
 			 String[] cols = line.replace (",", ".").split(";");
@@ -107,16 +130,24 @@ public class Input extends AbstractInput {
 					
 					if ( cols[0].equals("") && ! cols[1].trim().equals("Position") ){
 						//reactifs en positions 1-->XX
-						String reagent=cols[2].trim();
-						Logger.info ("verifier si :"+reagent+" est un reactif d'une boite associé a "+ experiment.typeCode);
-
+						String reagentName=cols[2].trim();
+						Logger.info ("verifier si :"+reagentName+" est un reactif d'une boite associé a "+ experiment.typeCode);
+						
+						ReagentCatalog reagent = MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, 
+                       		 DBQuery.is("category", "Reagent").and(DBQuery.is("name", reagentName)));
+						if ( null != reagent ){
+							Logger.info ("OK REAGENT="+reagent.name);
+						} else {
+							Logger.info ("NOT REAGENT");
+						}
+						
 						// verifier que le code barre se termine par -<REACTIF>
 						String reagentCode = cols[5].trim();
 						String reagentWeight = cols[15].trim();
-						if (reagentCode.matches("(.*)-"+reagent)) {
+						if (reagentCode.matches("(.*)-"+reagentName)) {
 							Logger.info ("code correct=> stocker code :"+ reagentCode + " et son poids:"+ reagentWeight );
 						} else {
-							 Logger.info ("code "+reagentCode+" ne se termine pas par -"+reagent+" =======> erreur"); 
+							 Logger.info ("code "+reagentCode+" ne se termine pas par -"+reagentName+" =======> erreur"); 
 						}
 						
 					} else {
@@ -130,8 +161,30 @@ public class Input extends AbstractInput {
 							Logger.info ("verifier si :"+itemName[1]+" est une boite ou un reactif associé a "+ experiment.typeCode);
 							Logger.info ("si oui stocker code :"+  itemCode);
 							Logger.info ("si non=> erreur");
+							
+							// ON NE DEVRAIT PAS AVOIR DE KIT ICI !!!
+							//KitCatalog kit = MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
+							//         DBQuery.is("category", "Kit").and(DBQuery.is("name", reagent)).and(DBQuery.is("experimentTypeCodes", experiment.typeCode)));
+					        //Logger.info ("OK KIT="+kit.name);
+					
+							// le meme nom de boite peut exister dans plusieurs kits...
+							BoxCatalog box = MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, 
+                           		 				DBQuery.is("category", "Box").and(DBQuery.is("name",itemName[1])).and(DBQuery.is("experimentTypeCodes", experiment.typeCode)));
+							if ( null != box) {
+								Logger.info ("OK BOX="+box.name);
+							} else {
+								Logger.info ("NOT BOX");
+							}
+					
+
+							ReagentCatalog reagent = MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, 
+													DBQuery.is("category", "Reagent").and(DBQuery.is("name", itemName[1])));
+							if ( null != reagent) {
+								Logger.info ("OK REAGENT="+reagent.name);
+							} else {
+								Logger.info ("NOT REAGENT");
+							}
 						}
-	
 					}	
 				}
 			}
