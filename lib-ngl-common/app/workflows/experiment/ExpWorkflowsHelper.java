@@ -1174,7 +1174,13 @@ public class ExpWorkflowsHelper {
 		}
 
 	}
-	private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private ActorRef _rulesActor;
+	private ActorRef rulesActor() {
+		if (_rulesActor == null)
+			_rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+		return _rulesActor;
+	}
 
 	public void callWorkflowRules(ContextValidation validation, Experiment exp) {
 		ArrayList<Object> facts = new ArrayList<Object>();
@@ -1186,7 +1192,7 @@ public class ExpWorkflowsHelper {
 			facts.add(atomic);
 		}
 		
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
+		rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 	}
 
 	/**

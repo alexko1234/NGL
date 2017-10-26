@@ -25,6 +25,7 @@ import workflows.process.ProcWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
+
 @Service
 public class ContWorkflows extends Workflows<Container> {
 
@@ -110,10 +111,20 @@ public class ContWorkflows extends Workflows<Container> {
 			Logger.error("Problem on ContWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
 		}
 	}
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// Same actor as in ContSupportWorkflow
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// Try lazy init
+	private static ActorRef _rulesActor;
+	static ActorRef rulesActor() {
+		if (_rulesActor == null)
+			_rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+		return _rulesActor;
+	}
+
 
 	public static void callWorkflowRules(ContextValidation validation, Container container) {
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", container, validation),null);
+		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", container, validation),null);
+		rulesActor().tell(new RulesMessage(fr.cea.ig.play.IGGlobals.configuration.getString("rules.key"), "workflow", container, validation),null);
 	}
 	
 	@Override
