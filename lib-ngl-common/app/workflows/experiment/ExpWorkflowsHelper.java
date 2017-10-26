@@ -1591,7 +1591,7 @@ public class ExpWorkflowsHelper {
 			
 			Set<String> projectCodes = allSamples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 			Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
-			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes);
+			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes, updatedProperties);
 			
 			containerMustBeUpdated.forEach(container -> {
 				container.traceInformation.setTraceInformation(validation.getUser());
@@ -1641,14 +1641,14 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes) {
+	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes, Map<String, PropertyValue> updatedProperties) {
 		Set<String> tags = null;
-		/* bad because when change the tag not taken account
-		if(ocuContent.properties.containsKey(TAG_PROPERTY_NAME)){
+		
+		if(!updatedProperties.containsKey(TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(TAG_PROPERTY_NAME)){
 			tags = new TreeSet<String>();
 			tags.add(ocuContent.properties.get(TAG_PROPERTY_NAME).value.toString());
 		}else{
-		*/
+		
 			DBQuery.Query query = DBQuery.in("code", containerCodes)
 					.size("contents", 1) //only one content is very important because we targeting the lib container and not a pool after lib prep.
 					.elemMatch("contents", DBQuery.in("sampleCode", sampleCodes)
@@ -1665,7 +1665,7 @@ public class ExpWorkflowsHelper {
 			}else{
 				tags = null;
 			}
-		//}
+		}
 		return tags;
 	}
 
