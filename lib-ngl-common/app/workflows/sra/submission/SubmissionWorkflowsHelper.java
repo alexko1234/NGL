@@ -71,6 +71,15 @@ public class SubmissionWorkflowsHelper {
 		MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 				DBQuery.is("accession", study.accession),
 				DBUpdate.set("releaseDate", release_date));
+		
+		//Update release date on experiment and ReadSet
+		Experiment experiment = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("studyCode", study.code));
+		MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
+				DBQuery.is("studyCode", study.code),
+				DBUpdate.set("releaseDate", release_date));
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.is("code", experiment.readSetCode),
+				DBUpdate.set("releaseDate", release_date));
 	}
 
 	public void createDirSubmission(Submission submission,ContextValidation validation){
@@ -235,9 +244,13 @@ public class SubmissionWorkflowsHelper {
 				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, submission.experimentCodes.get(i));
 				experimentWorkflows.setState(validation, experiment, submission.state);
 
-				// Updater objet readSet :
+				// Update objet readSet :
+				
 				ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
-				readSetWorkflows.setState(validation, readset,  submission.state);
+				
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+						DBQuery.is("code", readset.code),
+						DBUpdate.set("submissionState.code", submission.state.code).set("traceInformation.modifyUser", validation.getUser()).set("traceInformation.modifyDate", new Date()));
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package models.sra.submit.sra.instance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +56,7 @@ public class Experiment extends DBObject implements IValidation {
 	public String adminComment; // commentaire privé "reprise historique"				
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
+	public Date releaseDate; 
 
 	// ajouter instrumentModel et libraryName.
 
