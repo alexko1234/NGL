@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 // We should define a singleton that should be injected when needed.
 public class DescriptionHelper {
 
-	static List<String> institute;
+	private static List<String> institute;
 
 	/*public static void _initInstitute(){
 		institute = null;

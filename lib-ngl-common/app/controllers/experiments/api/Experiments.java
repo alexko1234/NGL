@@ -474,7 +474,7 @@ public class Experiments extends DocumentController<Experiment> {
 		logger.debug("update '" + code + "'");
 		Experiment objectInDB =  getObject(code);
 		if (objectInDB == null) {
-			return badRequest("Experiment with code "+code+" does not exist");
+			return badRequest("Experiment with code " + code + " does not exist");
 		}
 		
 		Form<Experiment> filledForm = getMainFilledForm();
