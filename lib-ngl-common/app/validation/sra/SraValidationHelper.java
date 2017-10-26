@@ -8,6 +8,7 @@ import models.sra.submit.util.VariableSRA;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
+import org.apache.commons.lang3.StringUtils;
 
 public class SraValidationHelper extends CommonValidationHelper{
 
@@ -25,7 +26,15 @@ public class SraValidationHelper extends CommonValidationHelper{
 		}
 	}
 	
-	
+	public static void validateFreeText(ContextValidation contextValidation, String nameField, String chaine) {
+		String forbidden = "(à, é, è, &)";
+		if (!StringUtils.isNotBlank(chaine)){
+			if (chaine.contains("&") || chaine.contains("é") || chaine.contains("è") || chaine.contains("à")) {
+				contextValidation.addErrors(nameField + " avec valeur '" + chaine + "' qui contient des caractères non autorisés ", forbidden);
+			}
+		}
+	}
+
 	public static void validateReadSpecs(ContextValidation contextValidation, Experiment experiment){
 		if ("ILLUMINA".equalsIgnoreCase(experiment.typePlatform)){
 			validateReadSpecsILLUMINA(contextValidation, experiment);

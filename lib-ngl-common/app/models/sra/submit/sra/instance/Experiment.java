@@ -65,6 +65,7 @@ public class Experiment extends DBObject implements IValidation {
 		contextValidation.addKeyToRootKeyName("experiment");
 		// Verifier que status est bien rensigne, et si != new alors libraryName renseigné :
 		//System.out.println("Dans exp.validate, stateCode =" +state.code);
+		SraValidationHelper.validateFreeText(contextValidation,"title", this.title);
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 		ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :

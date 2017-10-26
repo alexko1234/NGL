@@ -39,7 +39,9 @@ public class Sample extends AbstractSample {
 		//Logger.info("ok dans Sample.validate\n");
 		contextValidation.addKeyToRootKeyName("sample");
 		SraValidationHelper.validateId(this, contextValidation);
-		
+		SraValidationHelper.validateFreeText(contextValidation,"description", this.description);
+		SraValidationHelper.validateFreeText(contextValidation,"title", this.title);
+		SraValidationHelper.validateFreeText(contextValidation,"anonymizedName", this.anonymizedName);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		//SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
