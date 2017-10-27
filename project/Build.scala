@@ -31,6 +31,7 @@ object ApplicationBuild extends Build {
 	
  	val appName    = "ngl"
 	val appVersion = "1.0-SNAPSHOT"
+  val scala            = "2.12.3"
 
   // Dist suffix should be "-SNAPSHOT" for the master and "xxx-SNAPSHOT" for specific branches
   // so the deployed application do not land in the same directories. This could be defined 
@@ -434,6 +435,5 @@ object ApplicationBuild extends Build {
     resolvers           := nexus
 	)
 		   */
-
 
 }

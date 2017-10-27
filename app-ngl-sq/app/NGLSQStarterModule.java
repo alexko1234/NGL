@@ -15,6 +15,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 	public NGLSQStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
+		/*
 		// Set env and config in some global as dependencis on Play.application() are mostly
 		// about the configuration.
 		fr.cea.ig.play.IGGlobals.environment   = new play.Environment(environment);
@@ -43,7 +44,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 					}
 				}
 			}}).start();
-		}
+		}*/
 	}
 	
 	@Override
@@ -61,6 +62,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		// correct. Component injection should have proper constructors so the
 		// start order has not to be hard coded here.
 		return seq(
+				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
