@@ -1,6 +1,9 @@
 package controllers.containers.tpl;
 
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
+
 import play.mvc.Result;
 import views.html.containerSupports.details;
 import views.html.containerSupports.home;
@@ -36,7 +39,8 @@ public class ContainerSupports extends CommonController{
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",	  
   	        // Routes
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),

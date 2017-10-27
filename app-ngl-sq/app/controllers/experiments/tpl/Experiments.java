@@ -1,6 +1,10 @@
 package controllers.experiments.tpl;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 
 import java.lang.reflect.Method;
 
@@ -8,7 +12,6 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.DescriptionHelper;
 import play.Logger;
-import play.Routes;
 import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
@@ -130,7 +133,8 @@ public class Experiments extends CommonController{
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      // Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),

@@ -1,6 +1,7 @@
 package controllers.admin.supports.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +60,8 @@ public class NGLObjects extends APICommonController<NGLObject>{
 	public Result list() {
 		NGLObjectsSearchForm form = filledFormQueryString(NGLObjectsSearchForm.class);
 		
-		Form d = Form.form(); //just used to have errors
+		//Form d = Form.form(); //just used to have errors
+		Form d = form();
 		ContextValidation cv = new ContextValidation(getCurrentUser(), d.errors());
 		form.validate(cv);
 		if(cv.hasErrors()){

@@ -1,6 +1,8 @@
 package controllers.projects.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +30,7 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
+//import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Project object
@@ -52,7 +54,8 @@ public class Projects extends DocumentController<Project> {
 		BasicDBObject keys = getKeys(form);
 		if (form.datatable) {			
 			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);			
-			return ok(new MongoDBDatatableResponseChunks<Project>(results)).as("application/json");
+			// return ok(new MongoDBDatatableResponseChunks<Project>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		} else if(form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field

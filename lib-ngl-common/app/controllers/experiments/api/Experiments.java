@@ -1,9 +1,11 @@
 package controllers.experiments.api;
 
-import static play.data.Form.form;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 
 import static validation.experiment.instance.ExperimentValidationHelper.*;
+
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

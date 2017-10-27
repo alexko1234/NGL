@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reagent.description.AbstractCatalog;

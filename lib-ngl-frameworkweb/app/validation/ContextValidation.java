@@ -15,9 +15,10 @@ import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 import play.i18n.Messages;
 
+// TODO: cleanup
+
 public class ContextValidation {
 
-	
 	private enum Mode {
 		CREATION, UPDATE, DELETE, NOT_DEFINED;
 	}
@@ -25,24 +26,24 @@ public class ContextValidation {
 	private String user = null;
 
 	private Mode mode = Mode.NOT_DEFINED;
-	
-	
+		
 	private String rootKeyName = "";
+	
 	public Map<String,List<ValidationError>> errors;
+	
 	private Map<String,Object> contextObjects;
 
-	public ContextValidation(String user){
-		errors= new TreeMap<String, List<ValidationError>>();
-		contextObjects= new TreeMap<String, Object>();
-		this.user = user;
+	public ContextValidation(String user) {
+		errors         = new TreeMap<String, List<ValidationError>>();
+		contextObjects = new TreeMap<String, Object>();
+		this.user      = user;
 	}
 
 	public ContextValidation(String user, Map<String,List<ValidationError>> errors){
-		this.errors = errors;
-		contextObjects= new TreeMap<String, Object>();
-		this.user = user;
+		this.errors    = errors;
+		contextObjects = new TreeMap<String, Object>();
+		this.user      = user;
 	}
-
 	
 	public String getUser() {
 		return user;
@@ -54,7 +55,7 @@ public class ContextValidation {
 	 * @return
 	 */
 	public Object getObject(String key){
-		if(contextObjects.containsKey(key)) {
+		if (contextObjects.containsKey(key)) {
 			return contextObjects.get(key);
 		} else {
 			return null;
@@ -117,7 +118,6 @@ public class ContextValidation {
 	private String getKey(String property) {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
 	}
-
 
 	/**
 	 *
@@ -203,8 +203,7 @@ public class ContextValidation {
 	public Mode getMode() {
 		return this.mode;
 	}
-	
-	
+		
 	/***
 	 *
 	 */
@@ -215,19 +214,17 @@ public class ContextValidation {
 		mode=Mode.NOT_DEFINED;
 	}
 
-	
 	public void displayErrors(ALogger logger) {
-		Iterator entries = this.errors.entrySet().iterator();
+		Iterator<Entry<String,List<ValidationError>>> entries = this.errors.entrySet().iterator();
 		while (entries.hasNext()) {
-			Entry thisEntry = (Entry) entries.next();
-			String key = (String) thisEntry.getKey();
-			List<ValidationError> value = (List<ValidationError>) thisEntry.getValue();	  
-
+			Entry<String,List<ValidationError>> thisEntry = /*(Entry)*/ entries.next();
+			String key = /*(String)*/ thisEntry.getKey();
+			List<ValidationError> value = /*(List<ValidationError>)*/ thisEntry.getValue();	  
 			for(ValidationError validationError:value){
-				logger.error( key+ " : "+Messages.get(validationError.message(),validationError.arguments()));
+				// logger.error(key + " : " + Messages.get(validationError.message(),validationError.arguments()));
+				logger.error(key + " : " + fr.cea.ig.play.IGGlobals.messages().at(validationError.message(),validationError.arguments()));
 			}
 		}
-		
 	}
 
 }

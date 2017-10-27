@@ -1,6 +1,9 @@
 package controllers.admin.supports.tpl;
 
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
+
 import play.mvc.Result;
 import views.html.admin.supports.*;
 import controllers.CommonController;
@@ -25,7 +28,8 @@ public class Supports extends CommonController{
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      // Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),

@@ -14,20 +14,24 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.mvc.Result;
+
+import fr.cea.ig.mongo.MongoStreamer;
+
 /**
  * Controller that manage the readset archive
+ * 
  * @author galbini
  *
  */
-public class ReadSets extends CommonController{
-/**
-	 *
+public class ReadSets extends CommonController {
+	
+	/**
 	 * @param archive : default 2
 	 * @return
 	 */
@@ -41,9 +45,9 @@ public class ReadSets extends CommonController{
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
-		return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");		
+		// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");
+		return ok(MongoStreamer.streamUDT(results, r -> convertToArchive(archive, r))).as("application/json");
 	}
-
 
 	private static Archive convertToArchive(Integer archive, ReadSet readSet) {
 		if (readSet != null) {
@@ -55,8 +59,6 @@ public class ReadSets extends CommonController{
 		}
 		return null;
 	}
-
-
 
 	private static Integer getArchiveValue() {
 		try {

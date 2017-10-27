@@ -1,8 +1,8 @@
 package controllers.processes.api;
 
-import static play.data.Form.form;
-
-
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form; 
+import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,8 +70,8 @@ import controllers.authorisation.Permission;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
 // TODO: cleanup
@@ -427,7 +427,7 @@ public class ProcessesOld extends CommonController {
 	}
 
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public static Result list() throws DAOException {
 		//Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);
 
@@ -436,7 +436,8 @@ public class ProcessesOld extends CommonController {
 		
 		if(processesSearch.datatable){
 			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
-			return ok(new MongoDBDatatableResponseChunks<Process>(results)).as("application/json");
+			//return ok(new MongoDBDatatableResponseChunks<Process>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}else if(processesSearch.list){
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -452,7 +453,8 @@ public class ProcessesOld extends CommonController {
 			return ok(Json.toJson(los));
 		}else{
 			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
-			return ok(new MongoDBResponseChunks<Process>(results)).as("application/json");		
+			// return ok(new MongoDBResponseChunks<Process>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}
 	}
 

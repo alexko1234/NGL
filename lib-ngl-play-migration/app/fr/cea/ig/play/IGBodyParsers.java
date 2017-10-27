@@ -10,6 +10,9 @@ import play.mvc.BodyParser;
  * 
  * Could provide some custom json parser if the play provided one is still 
  * not using the play defined json parser.
+ * 
+ * @author vrd
+ * 
  */
 public class IGBodyParsers {
 	

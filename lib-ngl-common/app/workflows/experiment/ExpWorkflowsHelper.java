@@ -1,5 +1,7 @@
 package workflows.experiment;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1178,7 +1180,8 @@ public class ExpWorkflowsHelper {
 	private ActorRef _rulesActor;
 	private ActorRef rulesActor() {
 		if (_rulesActor == null)
-			_rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 		return _rulesActor;
 	}
 

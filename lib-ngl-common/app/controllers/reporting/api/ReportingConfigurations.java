@@ -1,7 +1,8 @@
 package controllers.reporting.api;
 
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

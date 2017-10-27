@@ -18,7 +18,9 @@ import models.laboratory.valuation.instance.ValuationCriteria;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 import play.Play;
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.api.modules.spring.Spring;
 import play.libs.Scala;
 import play.mvc.Http.Context;
@@ -154,7 +156,8 @@ public class Main extends CommonController {
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
-				Routes.javascriptRouter("jsRoutes",  	       
+				// Routes.javascriptRouter("jsRoutes",  	   
+				JavaScriptReverseRouter.create("jsRoutes",  	   
 						controllers.experiments.api.routes.javascript.Experiments.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
 						controllers.processes.api.routes.javascript.Processes.list(),

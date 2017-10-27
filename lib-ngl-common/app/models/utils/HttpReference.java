@@ -1,5 +1,7 @@
 package models.utils;
 
+import static fr.cea.ig.play.IGGlobals.ws;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +40,8 @@ public class HttpReference<T> implements IFetch<T> {
 		try {
 		// execute GET external URL
 		// WSResponse reponse = WS.url(code).get().get(10, TimeUnit.SECONDS);
-		WSResponse reponse = WS.url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
+		// WSResponse reponse = WS.url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
+		WSResponse reponse = ws().url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
 		//if (reponse.getStatus()!=play.mvc.Http.Status.OK) throw new Exception  
 				
 			// TODO: Should probably be better to use the play object mapper

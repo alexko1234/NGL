@@ -1,5 +1,8 @@
 package workflows.container;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+import static fr.cea.ig.play.IGGlobals.configuration;
+
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE;
 
@@ -91,13 +94,14 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 	private static ActorRef _rulesActor;
 	static ActorRef rulesActor() {
 		if (_rulesActor == null)
-			_rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 		return _rulesActor;
 	}
 	
 	public static void callWorkflowRules(ContextValidation validation, ContainerSupport containerSupport) {
 		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
-		rulesActor().tell(new RulesMessage(fr.cea.ig.play.IGGlobals.configuration.getString("rules.key"), "workflow", containerSupport, validation),null);
+		rulesActor().tell(new RulesMessage(configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
 	}
 
 	@Override

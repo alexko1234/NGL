@@ -1,7 +1,12 @@
 package controllers.experiments.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import fr.cea.ig.util.Streamer;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -57,7 +62,7 @@ public class ExperimentReagents extends Experiments{
 		AggregationResult<Experiment> ar =collection.aggregate(pipeline, Experiment.class);
 		
 		if(experimentsSearch.datatable){
-			return ok(
+			/*return ok(
 				new StringChunks() {
 					@Override
 					public void onReady(Out<String> out) {
@@ -78,10 +83,29 @@ public class ExperimentReagents extends Experiments{
 					    out.close();					
 					}
 				}
-				).as("application/json");
-			
-		}else{
-			return ok(
+				).as("application/json");*/
+			return ok(Streamer.stream(new Streamer.IStreamer() {
+				@Override
+				public void streamTo(OutputStream _out) throws IOException {
+					PrintWriter out = new PrintWriter(_out);
+					AggregationOutput output = ar.getAggregationOutput();
+					Iterable<DBObject> iterable = output.results();
+					Iterator<DBObject> iter = iterable.iterator();
+					int count = 0;
+					out.write("{\"data\":[");
+					while (iter.hasNext()) {
+						count++;
+						Experiment exp = collection.convertFromDbObject(iter.next(), Experiment.class);
+						out.write(Json.toJson(exp).toString());
+						if (iter.hasNext()) out.write(",");
+					}					
+					out.write("],\"recordsNumber\":"+count);
+					out.write("}");
+					out.close();					
+				}
+			})).as("application/json");
+		} else {
+			/*return ok(
 					new StringChunks() {
 						@Override
 						public void onReady(Out<String> out) {
@@ -101,7 +125,26 @@ public class ExperimentReagents extends Experiments{
 						    out.close();					
 						}
 					}
-					).as("application/json");
+					).as("application/json");*/
+			return ok(Streamer.stream(new Streamer.IStreamer() {
+				@Override
+				public void streamTo(OutputStream _out) throws IOException {
+					PrintWriter out = new PrintWriter(_out);
+					AggregationOutput output = ar.getAggregationOutput();
+					Iterable<DBObject> iterable = output.results();
+					Iterator<DBObject> iter = iterable.iterator();
+					int count = 0;
+					out.write("[");
+					while (iter.hasNext()) {
+						count++;
+						Experiment exp = collection.convertFromDbObject(iter.next(), Experiment.class);
+						out.write(Json.toJson(exp).toString());
+						if (iter.hasNext()) out.write(",");
+					}					
+					out.write("]");
+					out.close();					
+				}
+			})).as("application/json");
 		}
 	}
 	

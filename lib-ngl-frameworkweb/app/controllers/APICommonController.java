@@ -1,6 +1,6 @@
 package controllers;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -34,7 +34,8 @@ public abstract class APICommonController<T> extends Controller {
 	
 	protected Class<T> type;
 	
-	protected final Form<T> mainForm = form(type);
+	// protected final Form<T> mainForm = form(type);
+	protected final Form<T> mainForm = fr.cea.ig.play.IGGlobals.form(type);
 	
 	public APICommonController(Class<T> type) {
 		super();

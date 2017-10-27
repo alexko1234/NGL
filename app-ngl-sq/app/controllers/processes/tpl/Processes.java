@@ -3,7 +3,9 @@ package controllers.processes.tpl;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import play.Logger;
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.libs.Json;
 import play.mvc.Result;
 import views.html.processes.home;
@@ -34,7 +36,8 @@ public class Processes extends CommonController{
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
-				Routes.javascriptRouter("jsRoutes",
+				// Routes.javascriptRouter("jsRoutes",
+			JavaScriptReverseRouter.create("jsRoutes",
 						// Routes
 						controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
 						controllers.processes.tpl.routes.javascript.Processes.search(),

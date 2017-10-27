@@ -1,6 +1,7 @@
 package controllers.samples.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import static validation.sample.instance.SampleValidationHelper.*;
 
@@ -50,7 +51,7 @@ import controllers.authorisation.Permission;
 import controllers.containers.api.ContainerBatchElement;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
+//import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.IGBodyParsers;
 

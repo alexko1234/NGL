@@ -1,5 +1,7 @@
 package controllers.migration;		
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -38,7 +40,8 @@ import fr.cea.ig.MongoDBResult.Sort;
  */
 public class MigrationUpdateReadSetNbCycles extends CommonController {
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	//private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	public static Result migration(){
 		

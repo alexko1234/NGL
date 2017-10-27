@@ -19,7 +19,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import play.Logger;
-import play.cache.Cache;
+// import play.cache.Cache;
+import static fr.cea.ig.play.IGGlobals.cache;
 
 /**
  * Common operations between Simple DAO et DAO Using mappingQuery
@@ -126,7 +127,8 @@ public abstract class AbstractDAO<T> {
 		if(null != code){
 			try {
 				String key = entityClass.toString()+"."+code;
-				return (T) Cache.get(key);				
+				// return (T) Cache.get(key);
+				return (T)cache().get(key);
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
 			}
@@ -137,14 +139,16 @@ public abstract class AbstractDAO<T> {
 	
 	protected void setObjectInCache(T o, String code){
 		if(null != o && null != code){
-			Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
+			// Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
+			cache().set(entityClass.toString()+"."+code, o, 60 * 60);
 		}		
 	}
 	
 	public void cleanCache(){
 		List<T> l = this.findAll();
 		l.forEach(o -> {
-			Cache.remove(entityClass.toString()+"."+((Model)o).code);
+			// Cache.remove(entityClass.toString()+"."+((Model)o).code);
+			cache().remove(entityClass.toString()+"."+((Model)o).code);
 		});
 		
 	}

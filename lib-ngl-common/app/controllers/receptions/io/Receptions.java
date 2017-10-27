@@ -1,6 +1,8 @@
 package controllers.receptions.io;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.reception.instance.ReceptionConfiguration;
 import models.utils.InstanceConstants;

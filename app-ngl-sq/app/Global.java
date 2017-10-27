@@ -1,4 +1,7 @@
+// TODO: remove
 
+
+/*
 import java.lang.reflect.Method;
 
 import play.Application;
@@ -13,10 +16,8 @@ import rules.services.RulesException;
 import rules.services.RulesServices;
 import rules.services.RulesServices6;
 
-// TODO: remove
-
 // public class Global extends GlobalSettings {
-/*
+
 class Global__Unused extends GlobalSettings {
 	@Override
 	public void onStart(Application app) {

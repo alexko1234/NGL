@@ -12,9 +12,24 @@ import java.util.Map;
 
 import play.data.Form;
 import play.data.Form.Field;
+
+// This is an interface and we need some injected implementation.
+// Inject something like MessagesApi. 
 import play.i18n.Messages;
 import views.components.datatable.DatatableColumn;
+
+
+// TODO: cleanup
+
 public class DatatableHelpers {
+	
+	// We need a MessagesApi injected to be used by static methods. We hardocde this
+	// through the application injector hoping that the application has been created.
+	private static Messages messages() {
+		// return play.Play.application().injector().instanceOf(play.i18n.MessagesApi.class).preferred(new java.util.ArrayList<play.i18n.Lang>());
+		return fr.cea.ig.play.IGGlobals.messages();
+	}
+	
 	public static DatatableColumn getColumn(String property, String header) {
 		return getColumn(property, header, false, false, false);
 	}
@@ -30,30 +45,31 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		//column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
-		column1.hide=hide;
-		
+		column1.hide=hide;	
 		return column1;
 	}
 	
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		// column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
 		column1.filter=filter;
-		
 		return column1;
 	}
 	
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter,String render) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		//column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
@@ -65,12 +81,12 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		// column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
 		column1.choiceInList = choiceInList;
-		
 		return column1;
 	}
 	
@@ -78,7 +94,8 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList, String filter) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		//column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
@@ -90,7 +107,8 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList,String type,Map<Integer,String> headers) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		//column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
@@ -102,7 +120,8 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList,Map<Integer,String> headers) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		//column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
@@ -114,7 +133,8 @@ public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList,Map<Integer,String> headers,String render) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header = Messages.get(header);
+		//column1.header = Messages.get(header);
+		column1.header = messages().at(header);
 		column1.order=order;
 		column1.edit=edit;
 		column1.hide=hide;
@@ -127,7 +147,8 @@ public class DatatableHelpers {
 	public static DatatableColumn getDateColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header =  Messages.get(header);
+		// column1.header =  Messages.get(header);
+		column1.header =  messages().at(header);
 		column1.type = "Date";
 		column1.order=order;
 		column1.edit=edit;
@@ -140,7 +161,8 @@ public class DatatableHelpers {
 	public static DatatableColumn getDateColumn(String property, String header, Boolean order, Boolean edit, Boolean hide) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
-		column1.header =  Messages.get(header);
+		// column1.header =  Messages.get(header);
+		column1.header =  messages().at(header);
 		column1.type = "Date";
 		column1.order=order;
 		column1.edit=edit;
