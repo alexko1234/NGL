@@ -673,8 +673,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	};
 
 	return searchService;
-}]).factory('processesNewService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'datatable', 
-    function($q, $http, $parse, $filter, mainService, datatable) {
+}]).factory('processesNewService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'datatable', 'messages',
+    function($q, $http, $parse, $filter, mainService, datatable,messages) {
 
 	var getDisplayUnitFromProperty = function(propertyDefinition){
 		var unit = $parse("displayMeasureValue.value")(propertyDefinition);
@@ -748,6 +748,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		        	 transformKey: function(key, args) {
 			             return Messages(key, args);
 		        	 }
+		         },
+		         cancel:{
+		        	 active:false
 		         },
 		         otherButtons :newService.udtOtherButtons()
 		};
@@ -871,6 +874,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	
 	var newService = {
 			datatable : undefined,
+			messages:messages(),
 			processesDoneWithSuccess : [],
 			getEditDatatableConfig : getEditDatatableConfig,
 			getProcessColumnOk : getProcessColumnOk,
@@ -937,11 +941,10 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		}
 		return newService;
 	
-}]).factory('processesNewFromSamplesService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
-    function($http, $parse, $filter, mainService, lists, datatable, processesNewService) {
+}]).factory('processesNewFromSamplesService', ['$q', '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
+    function($q, $http, $parse, $filter, mainService, lists, datatable, processesNewService) {
 	
 	var getDefaultColumns = function() {
-		var columns = [];
 		var columns = [];
 		
 		columns.push({
@@ -1006,36 +1009,112 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"type":"text",			
 			"groupMethod":"collect:true"
 		});	
-		
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
 		return columns;
 	};
 	
 	
 	var newService = {
 		getDefaultColumns : getDefaultColumns,
+		sampleViewData : undefined,
 		computeData : function(){
-			return mainService.getBasket().get();					
+			this.sampleViewData = {};
+			var samples = mainService.getBasket().get();
+			samples.forEach(function(sample){
+				this.sampleViewData[sample.code]=sample;
+			},this);
+			return samples;
+		},
+		swithToSampleErrorView : function(){
+			var samples = [];
+			this.messages.setError("save");
+			for(var key in this.sampleViewData){
+				if(this.sampleViewData[key].onError){
+					samples.push(this.sampleViewData[key]);
+					this.messages.addDetails(this.sampleViewData[key].errors);						
+				}
+			}
+			samples = $filter('orderBy')(samples, ['sampleCodes']);
+			
+			this.datatable = datatable(this.getEditDatatableConfig(newService));
+			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
+			this.datatable.setData(samples);
 		},
 		udtSaveCallback : function(datatable){
-			console.log("noting");
+			this.messages.clear();
+			var data = datatable.getData();
+			var allProcesses = [];
+			data.forEach(function(value, index){
+				var process = {};
+				process.typeCode = this.processType.code;
+				process.categoryCode = this.processType.category.code;
+				process.properties = value.properties;
+				process.comments = value.comments;	
+				process.sampleCodes = [value.code];
+				allProcesses.push({data:process, index:index});
+			},this);
+			
+			var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+			var queries = [];
+	        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+	        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+	        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch().url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+	        }
+			var $that = this;
+			$q.all(queries).then(function(results) {
+				var atLeastOneError = false;
+				
+				results.forEach(function(result){
+					if (result.status !== 200) {
+						console.log("Batch in error");					
+		            } else {
+		            	result.data.forEach(function(data){
+		            		
+		            		if (data.status === 200) {
+		            			$that.sampleViewData[data.data[0].sampleCodes[0]].trClass = "success";
+		            			$that.processesDoneWithSuccess = $that.processesDoneWithSuccess.concat(data.data);
+		            		}else{
+		            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+		            			$that.sampleViewData[process.data.sampleCodes[0]].trClass = "danger";
+		            			$that.sampleViewData[process.data.sampleCodes[0]].onError = true;
+		            			$that.sampleViewData[process.data.sampleCodes[0]].errors = {};
+		            			$that.sampleViewData[process.data.sampleCodes[0]].errors[process.data.sampleCodes[0]] = data.data;
+		            			atLeastOneError = true;		            					            			
+		            		}	            		
+		            	});	            	
+		            }
+				});
+				
+				if(atLeastOneError){
+					$that.swithToSampleErrorView();
+	    		}else{
+	    			$that.setDatatableProcessOk();		    					    		
+	    		}
+				
+			});
 		},
 		udtRemoveCallback : function(datatable){
 			mainService.getBasket().reset();
 			datatable.getData().forEach(function(elt){
 				mainService.getBasket().add(elt);
-			});				        		
+			});				 
+			this.computeData();	 
 		},
 		udtTrClass : function(data, line){
-    		/*
-    		if($scope.supportView && supportViewData[data.support.code]){
-    			return supportViewData[data.support.code].trClass
-    		}else if(containerViewData[data.code[0]]){	        			
-    			return containerViewData[data.code[0]].trClass	        			
+    		if(this.sampleViewData[data.code]){
+    			return this.sampleViewData[data.code].trClass
     		}else{
     			return '';
-    		}
-    		*/
-    		return '';
+    		}    		
     	},
     	udtOtherButtons : function(){return undefined;},
     	/**
@@ -1218,8 +1297,12 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			},
 			swithToContainerErrorView : function(){
 				var containers = [];
+				this.messages.setError("save");
 				for(var key in this.containerViewData){
-					if(this.containerViewData[key].onError)containers.push(this.containerViewData[key]);
+					if(this.containerViewData[key].onError){
+						containers.push(this.containerViewData[key]);
+						this.messages.addDetails(this.containerViewData[key].errors);
+					}
 				}
 				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
 				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
@@ -1291,6 +1374,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
 			            			$that.containerViewData[process.data.inputContainerCode].trClass = "danger";
 			            			$that.containerViewData[process.data.inputContainerCode].onError = true;
+			            			$that.containerViewData[process.data.inputContainerCode].errors = {};
+			            			$that.containerViewData[process.data.inputContainerCode].errors[process.data.inputContainerCode] = data.data;
 			            			$that.supportViewData[process.data.inputContainerSupportCode].trClass = "danger";
 			            			atLeastOneError = true;
 			            		}	            		
