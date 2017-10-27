@@ -1,11 +1,8 @@
 package services.ncbi;
 
-<<<<<<< HEAD
 import static fr.cea.ig.play.IGGlobals.ws;
 import static fr.cea.ig.play.IGGlobals.cache;
 
-=======
->>>>>>> Ngl-sq compiles.
 import java.io.IOException;
 import java.io.StringReader;
 

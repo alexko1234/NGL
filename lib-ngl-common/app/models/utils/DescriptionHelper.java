@@ -39,7 +39,7 @@ public class DescriptionHelper {
 	public static List<String> getInstitute() {
 		if (institute == null) {
 			// String appInstitute = Play.application().configuration().getString("institute");
-			String appInstitute = fr.cea.ig.play.IGGlobals.configuration.getString("institute");
+			String appInstitute = fr.cea.ig.play.IGGlobals.configuration().getString("institute");
 			if (StringUtils.isNotBlank(appInstitute)) {
 				institute = Arrays.asList(appInstitute.split("\\s*,\\s*"));
 			} else {
