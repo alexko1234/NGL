@@ -56,7 +56,7 @@ public class SubmissionWorkflowsHelper {
 	ExperimentWorkflows experimentWorkflows;
 	@Autowired
 	ReadSetWorkflows readSetWorkflows;
-	
+
 
 	public void updateSubmissionRelease(Submission submission)
 	{
@@ -72,20 +72,22 @@ public class SubmissionWorkflowsHelper {
 		MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 				DBQuery.is("accession", study.accession),
 				DBUpdate.set("releaseDate", release_date));
-		
+
 		//Update release date on experiment and ReadSet
-		Experiment experiment = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("studyCode", study.code));
-		MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
-				DBQuery.is("studyCode", study.code),
-				DBUpdate.set("releaseDate", release_date));
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.is("code", experiment.readSetCode),
-				DBUpdate.set("releaseDate", release_date));
+		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("studyCode", study.code)).toList();
+		for(Experiment experiment : experiments){
+			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
+					DBQuery.is("code", experiment.code),
+					DBUpdate.set("releaseDate", release_date));
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", experiment.readSetCode),
+					DBUpdate.set("releaseDate", release_date));
+		}
 	}
 
 	public void createDirSubmission(Submission submission,ContextValidation validation){
 		// Determiner le repertoire de soumission:
-		
+
 		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.code; 
 		if (submission.release) {
 			submission.submissionDirectory = submission.submissionDirectory + "_release"; 
@@ -104,8 +106,8 @@ public class SubmissionWorkflowsHelper {
 				DBQuery.is("code", submission.code),
 				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
 	}
-	
-	
+
+
 	public void rollbackSubmission(Submission submission,ContextValidation validation){
 		// Si la soumission est connu de l'EBI on ne pourra pas l'enlever de la base :
 		if (StringUtils.isNotBlank(submission.accession)){
@@ -220,11 +222,11 @@ public class SubmissionWorkflowsHelper {
 		Logger.debug("deletion dans base pour submission "+submission.code);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submission.code);
 	}
-	
+
 	public void updateSubmissionChildObject(Submission submission, ContextValidation validation)
 	{
 		Logger.debug("dans applySuccessPostStateRules submission=" + submission.code + " avec state.code='"+submission.state.code+"'");
-		
+
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 			// Recuperer object study pour mettre historique des state traceInformation à jour:
@@ -246,9 +248,9 @@ public class SubmissionWorkflowsHelper {
 				experimentWorkflows.setState(validation, experiment, submission.state);
 
 				// Update objet readSet :
-				
+
 				ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
-				
+
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 						DBQuery.is("code", readset.code),
 						DBUpdate.set("submissionState.code", submission.state.code).set("traceInformation.modifyUser", validation.getUser()).set("traceInformation.modifyDate", new Date()));
@@ -256,13 +258,13 @@ public class SubmissionWorkflowsHelper {
 		}
 	}
 
-	
+
 	public File createDirSubmission(Submission submission) throws SraException{
 		// Determiner le repertoire de soumission:
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);
-					
+
 		String syntProjectCode = submission.code;
 		/*
 		for (String projectCode: submission.projectCodes) {
@@ -273,7 +275,7 @@ public class SubmissionWorkflowsHelper {
 		if (StringUtils.isNotBlank(syntProjectCode)){
 			syntProjectCode = syntProjectCode.replaceFirst("_", "");
 		}
-		*/			
+		 */			
 		//submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
 		//submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
 		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.code; 
@@ -292,17 +294,17 @@ public class SubmissionWorkflowsHelper {
 		}
 		return (dataRep);
 	}	
-	
+
 	public void activationPrimarySubmission(ContextValidation contextValidation, Submission submission) {
 		checkForActivatePrimarySubmission(contextValidation, submission);
 		if (!contextValidation.hasErrors()) {
 			activatePrimarySubmission(contextValidation, submission);
 		}
 	}
-	
+
 	public void activatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
-	System.out.println("Dans SubmissionWorkflowsHelper.activatePrimarySubmission");
-	// creer repertoire de soumission sur disque et faire liens sur données brutes
+		System.out.println("Dans SubmissionWorkflowsHelper.activatePrimarySubmission");
+		// creer repertoire de soumission sur disque et faire liens sur données brutes
 		try {
 			// creation repertoire de soumission :
 			File dataRep = createDirSubmission(submission);
@@ -312,7 +314,7 @@ public class SubmissionWorkflowsHelper {
 
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
 				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-	
+
 				System.out.println("exp = "+ expElt.code);
 				contextValidation.addKeyToRootKeyName("experiment");
 				contextValidation.addKeyToRootKeyName("run");
@@ -328,7 +330,7 @@ public class SubmissionWorkflowsHelper {
 						String lotseq_dir = rawData.directory.substring(index + 9);
 						cns_directory="/env/cns/proj/"+lotseq_dir;
 					}
-					
+
 					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
 					// verification dans check que fileCible est bien soit au CNS soit au CCRT.
 					if(fileCible.exists()){
@@ -354,7 +356,7 @@ public class SubmissionWorkflowsHelper {
 						if(fileLien.exists()){
 							fileLien.delete();
 						}
-						
+
 						System.out.println("fileCible = " + fileCible);
 						System.out.println("fileLien = " + fileLien);
 
@@ -372,13 +374,13 @@ public class SubmissionWorkflowsHelper {
 					contextValidation.removeKeyFromRootKeyName("run");
 					contextValidation.removeKeyFromRootKeyName("experiment");
 				}
-				
+
 				// sauver dans base la liste des rawData avec bonne location et bon directory:
 				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME,  Experiment.class, 
-					DBQuery.is("code", experimentCode),
-					DBUpdate.set("run.listRawData", expElt.run.listRawData));
+						DBQuery.is("code", experimentCode),
+						DBUpdate.set("run.listRawData", expElt.run.listRawData));
 			}
-			
+
 
 		} catch (SraException e) {
 			contextValidation.addErrors("submission", e.getMessage());
@@ -391,91 +393,91 @@ public class SubmissionWorkflowsHelper {
 		} catch (IOException e) {
 			contextValidation.addErrors(" Dans activatePrimarySubmission, pb IOException: ", e.getMessage());		
 		}
-		
+
 		if (! contextValidation.hasErrors()) {
-		// updater la soumission dans la base pour le repertoire de soumission (la date de soumission sera mise à la reception des AC)
-		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
-				DBQuery.is("code", submission.code),
-				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
+			// updater la soumission dans la base pour le repertoire de soumission (la date de soumission sera mise à la reception des AC)
+			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
+					DBQuery.is("code", submission.code),
+					DBUpdate.set("submissionDirectory", submission.submissionDirectory));
 		} 
-		
-		
+
+
 	}
-		
+
 	public void checkForActivatePrimarySubmission(ContextValidation contextValidation, Submission submission) {
-	System.out.println("Dans SubmissionWorkflowsHelper.checkForActivatePrimarySubmission");
-			// verifications liens donnees brutes vers repertoire de soumission
-			for (String experimentCode: submission.experimentCodes) {
-				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+		System.out.println("Dans SubmissionWorkflowsHelper.checkForActivatePrimarySubmission");
+		// verifications liens donnees brutes vers repertoire de soumission
+		for (String experimentCode: submission.experimentCodes) {
+			Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 
-				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
-				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-	
-				System.out.println("exp = "+ expElt.code);
-				contextValidation.addKeyToRootKeyName("experiment");
-				contextValidation.addKeyToRootKeyName("run");
-				contextValidation.addKeyToRootKeyName("rawData");
+			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
+			Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
 
-				for (RawData rawData :expElt.run.listRawData) {
-					// Partie de code deportée dans activate : on met la variable location à CNS
-					// si les données sont physiquement au CNS meme si elles sont aussi au CCRT
-					// et on change le chemin pour remplacer /ccc/genostore/.../rawdata par /env/cns/proj/ 
-					String cns_directory = rawData.directory;
-					if(rawData.directory.startsWith("/ccc/genostore")){
-						int index = rawData.directory.indexOf("/rawdata/");
-						String lotseq_dir = rawData.directory.substring(index + 9);
-						cns_directory="/env/cns/proj/"+lotseq_dir;
-					}
-					
-					File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
-					if(fileCible.exists()){
-						System.out.println("le fichier "+ fileCible +"existe bien");
-						rawData.location = "CNS";
-						rawData.directory = cns_directory;
-					} else {
-						System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
-						if ("CNS".equalsIgnoreCase(readSet.location)) {
-							if (p.archive){
-								contextValidation.addErrors("rawData", "error.rawData.activate.CNS.archive", rawData.relatifName, p.code, readSet.code);
-							} else {
-								contextValidation.addErrors("rawData", "error.rawData.activate.CNS.notArchive", rawData.relatifName, p.code, readSet.code);
-							}
-						} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
-							rawData.location = readSet.location;
-						} else {
-							contextValidation.addErrors("rawData", "error.rawData.activate.location", readSet.location, rawData.relatifName);
-						}
-					}
-					if (rawData.extention.equalsIgnoreCase("fastq")) {
-						rawData.gzipForSubmission = true;
-					} else {
-						rawData.gzipForSubmission = false;
-						if (StringUtils.isBlank(rawData.md5)){
-							contextValidation.addErrors("rawData", "error.rawData.activate.md5"+ rawData.relatifName);
-						}
-					}
-					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
-					// donnée est au CNS et si elle n'est pas à zipper
-					if ("CNS".equalsIgnoreCase(rawData.location) && ! rawData.gzipForSubmission) {
-						System.out.println("run = "+ expElt.run.code);
-						File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
-						if(fileLien.exists()){
-							fileLien.delete();
-						}
-						System.out.println("fileCible = " + fileCible);
-						System.out.println("fileLien = " + fileLien);
-					} else {
-						System.out.println("Donnée "+ rawData.relatifName + " localisée au " + rawData.location);
-					}
-					contextValidation.removeKeyFromRootKeyName("rawData");
-					contextValidation.removeKeyFromRootKeyName("run");
-					contextValidation.removeKeyFromRootKeyName("experiment");
+			System.out.println("exp = "+ expElt.code);
+			contextValidation.addKeyToRootKeyName("experiment");
+			contextValidation.addKeyToRootKeyName("run");
+			contextValidation.addKeyToRootKeyName("rawData");
+
+			for (RawData rawData :expElt.run.listRawData) {
+				// Partie de code deportée dans activate : on met la variable location à CNS
+				// si les données sont physiquement au CNS meme si elles sont aussi au CCRT
+				// et on change le chemin pour remplacer /ccc/genostore/.../rawdata par /env/cns/proj/ 
+				String cns_directory = rawData.directory;
+				if(rawData.directory.startsWith("/ccc/genostore")){
+					int index = rawData.directory.indexOf("/rawdata/");
+					String lotseq_dir = rawData.directory.substring(index + 9);
+					cns_directory="/env/cns/proj/"+lotseq_dir;
 				}
-				
-			}		
+
+				File fileCible = new File(cns_directory + File.separator + rawData.relatifName);
+				if(fileCible.exists()){
+					System.out.println("le fichier "+ fileCible +"existe bien");
+					rawData.location = "CNS";
+					rawData.directory = cns_directory;
+				} else {
+					System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
+					if ("CNS".equalsIgnoreCase(readSet.location)) {
+						if (p.archive){
+							contextValidation.addErrors("rawData", "error.rawData.activate.CNS.archive", rawData.relatifName, p.code, readSet.code);
+						} else {
+							contextValidation.addErrors("rawData", "error.rawData.activate.CNS.notArchive", rawData.relatifName, p.code, readSet.code);
+						}
+					} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
+						rawData.location = readSet.location;
+					} else {
+						contextValidation.addErrors("rawData", "error.rawData.activate.location", readSet.location, rawData.relatifName);
+					}
+				}
+				if (rawData.extention.equalsIgnoreCase("fastq")) {
+					rawData.gzipForSubmission = true;
+				} else {
+					rawData.gzipForSubmission = false;
+					if (StringUtils.isBlank(rawData.md5)){
+						contextValidation.addErrors("rawData", "error.rawData.activate.md5"+ rawData.relatifName);
+					}
+				}
+				// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
+				// donnée est au CNS et si elle n'est pas à zipper
+				if ("CNS".equalsIgnoreCase(rawData.location) && ! rawData.gzipForSubmission) {
+					System.out.println("run = "+ expElt.run.code);
+					File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+					if(fileLien.exists()){
+						fileLien.delete();
+					}
+					System.out.println("fileCible = " + fileCible);
+					System.out.println("fileLien = " + fileLien);
+				} else {
+					System.out.println("Donnée "+ rawData.relatifName + " localisée au " + rawData.location);
+				}
+				contextValidation.removeKeyFromRootKeyName("rawData");
+				contextValidation.removeKeyFromRootKeyName("run");
+				contextValidation.removeKeyFromRootKeyName("experiment");
+			}
+
+		}		
 
 	}
-			
-	
-	
+
+
+
 }
