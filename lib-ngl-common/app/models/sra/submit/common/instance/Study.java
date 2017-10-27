@@ -51,6 +51,10 @@ public class Study extends AbstractStudy {
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
+		
+		SraValidationHelper.validateFreeText(contextValidation, "title", this.title);
+		SraValidationHelper.validateFreeText(contextValidation, "studyAbstract", this.studyAbstract);
+		SraValidationHelper.validateFreeText(contextValidation,"description", this.description);
 
 		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){
 			contextValidation.addErrors(" study non evaluable ", "sans type de contexte de validation");
