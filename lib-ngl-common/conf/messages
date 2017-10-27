@@ -134,8 +134,8 @@ error.directory.release.exist=Le repertoire {0} existe deja !!! (soumission conc
 error.directory.release.create=Impossible de creer le repertoire {0} pour la soumission {1}
 error.experiment.mulitple.submission=Experiment {0} utilise par plusieurs objets submissions
 
-error.rawData.activate.CNS.archive = Le fichier {0} n''existe pas sur les disques CNS et Projet {1} avec archive=true et localisation du readset {2} au CNS
-error.rawData.activate.CNS.notArchive = Le fichier {0} n''existe pas sur les disques CNS et Projet {1} avec archive=false et localisation du readset {2} au CNS
+error.rawData.activate.CNS.archive = Le fichier {0} n''existe pas sur les disques et Projet {1} avec archive=true et localisation du readset {2} au CNS
+error.rawData.activate.CNS.notArchive = Le fichier {0} n''existe pas sur les disques et Projet {1} avec archive=false et localisation du readset {2} au CNS
 error.rawData.activate.location=localisation inconnue {0} pour le fichier {1}
 error.rawData.activate.md5=valeur de md5=null alors que donnée deja zippée pour {0}
 
