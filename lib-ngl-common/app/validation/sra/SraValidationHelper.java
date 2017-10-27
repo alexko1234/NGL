@@ -28,7 +28,7 @@ public class SraValidationHelper extends CommonValidationHelper{
 	
 	public static void validateFreeText(ContextValidation contextValidation, String nameField, String chaine) {
 		String forbidden = "(à, é, è, &)";
-		if (!StringUtils.isNotBlank(chaine)){
+		if (StringUtils.isNotBlank(chaine)){
 			if (chaine.contains("&") || chaine.contains("é") || chaine.contains("è") || chaine.contains("à")) {
 				contextValidation.addErrors(nameField + " avec valeur '" + chaine + "' qui contient des caractères non autorisés ", forbidden);
 			}
