@@ -1,6 +1,8 @@
 package controllers.runs.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 

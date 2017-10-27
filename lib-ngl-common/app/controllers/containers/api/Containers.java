@@ -1,6 +1,9 @@
 package controllers.containers.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import fr.cea.ig.mongo.MongoStreamer;
+
 import static validation.container.instance.ContainerValidationHelper.validateConcentration;
 import static validation.container.instance.ContainerValidationHelper.validateQuantity;
 import static validation.container.instance.ContainerValidationHelper.validateSize;
@@ -49,8 +52,8 @@ import play.modules.jongo.MongoDBPlugin;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.Results.StringChunks;
-import play.mvc.Results.Chunks.Out;
+// import play.mvc.Results.StringChunks;
+// import play.mvc.Results.Chunks.Out;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
@@ -66,8 +69,8 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.IGBodyParsers;
 
@@ -119,7 +122,8 @@ public class Containers extends CommonController {
 		}else{
 			if(containersSearch.datatable){
 				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
+				// return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
+				return ok(MongoStreamer.stream(results)).as("application/json");
 			}else if(containersSearch.count){
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("code", 1);
@@ -141,7 +145,8 @@ public class Containers extends CommonController {
 			}else{
 				MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
 
-				return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");	
+				// return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");
+				return ok(MongoStreamer.stream(results)).as("application/json");	
 			}
 		}			
 	}

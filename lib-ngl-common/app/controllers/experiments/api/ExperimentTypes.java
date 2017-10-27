@@ -1,6 +1,8 @@
 package controllers.experiments.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 
-public class ExperimentTypes extends CommonController{
+public class ExperimentTypes extends CommonController {
 	
 	final static Form<ExperimentTypesSearchForm> experimentTypeForm = form(ExperimentTypesSearchForm.class);
 	

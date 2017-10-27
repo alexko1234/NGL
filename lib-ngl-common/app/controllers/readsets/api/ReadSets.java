@@ -1,6 +1,9 @@
 package controllers.readsets.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +29,8 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -60,11 +63,13 @@ import workflows.readset.ReadSetWorkflows;
 import workflows.run.Workflows;
 import fr.cea.ig.play.IGBodyParsers;
 
-
+// TODO: cleanup
 
 public class ReadSets extends ReadSetsController{
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
+	
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
@@ -89,7 +94,8 @@ public class ReadSets extends ReadSetsController{
 
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
-			return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");			
+			// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}else if(form.count){
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
@@ -106,7 +112,8 @@ public class ReadSets extends ReadSetsController{
 			return ok(Json.toJson(toListObjects(results.toList())));
 		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
-			return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");	
+			// return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}
 	}
 

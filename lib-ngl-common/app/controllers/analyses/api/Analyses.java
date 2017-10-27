@@ -1,6 +1,8 @@
 package controllers.analyses.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,8 +61,9 @@ public class Analyses extends DocumentController<Analysis>{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	public Analyses() {
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		

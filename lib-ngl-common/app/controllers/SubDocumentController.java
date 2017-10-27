@@ -1,6 +1,8 @@
 package controllers;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 import org.mongojack.DBQuery.Query;
 import models.laboratory.common.instance.TraceInformation;
 import play.data.Form;

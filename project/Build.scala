@@ -24,32 +24,17 @@ object ApplicationBuild extends Build {
 
  	val appName    = "ngl"
 	val appVersion = "1.0-SNAPSHOT"
-  // val scala      = "2.11.6"
-	val scala      = "2.11.8"
-  
-    val projectsVersion = "1.3.1-SNAPSHOT"  
-   val reagentsVersion = "1.3.0-SNAPSHOT" 
-   val subVersion = "1.4.0-SNAPSHOT"  
-   val libDatatableVersion = "1.2-SNAPSHOT"
-   val libFrameworkWebVersion = "1.1-SNAPSHOT"
-   
-   val postgresql = "postgresql" % "postgresql" % "8.3-603.jdbc4"
-   //val postgresql = "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
-   //val postgresql = "org.postgresql" % "postgresql" % "9.4.1208"
-   
-  override def settings = super.settings ++ Seq(
-        EclipseKeys.skipParents in ThisBuild := false
-  )
 
+  val scala            = "2.12.3"
   val distSuffix = ".2.4"
   
-	val sqVersion  = "1.34.0"+distSuffix+"-SNAPSHOT"  
+	val sqVersion  = "1.35.0"+distSuffix+"-SNAPSHOT"  
 	val biVersion  = "1.38.0"+distSuffix+"-SNAPSHOT"
 
-	val projectsVersion = "1.3.0"+distSuffix+"-SNAPSHOT"  
+	val projectsVersion = "1.3.1"+distSuffix+"-SNAPSHOT"  
 	val reagentsVersion = "1.3.0"+distSuffix+"-SNAPSHOT"
 
-	val subVersion = "1.3.0"+distSuffix+"-SNAPSHOT"  
+	val subVersion = "1.4.0"+distSuffix+"-SNAPSHOT"  
 	val libDatatableVersion = "1.2"+distSuffix+"-SNAPSHOT"
 	val libFrameworkWebVersion = "1.1"+distSuffix+"-SNAPSHOT"
 
@@ -58,17 +43,21 @@ object ApplicationBuild extends Build {
 	//val postgresql = "org.postgresql" % "postgresql" % "9.4.1208"
 	
   // val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.4-1.5-SNAPSHOT"
-	val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.5-1.5.1-SNAPSHOT"
+	// val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.5-1.5.1-SNAPSHOT"
+	val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.6-1.5.2-SNAPSHOT"
   // val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.4-1.4-SNAPSHOT"
-  val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.5-1.4.1-SNAPSHOT"
+  // val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.5-1.4.1-SNAPSHOT"
+	val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
   // val ceaMongo   = "fr.cea.ig"         %% "mongodbplugin"      % "1.6.0-SNAPSHOT"
   // val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.0-SNAPSHOT"
   // val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.4-1.7.1-SNAPSHOT"
-  val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.5-1.7.2-SNAPSHOT"
+  // val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.5-1.7.2-SNAPSHOT"
+	val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.6-1.7.3-SNAPSHOT"
   
   val commonsLang = "commons-lang"       % "commons-lang"       % "2.4"
   // val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "1.6.2"
-  val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "2.0.0" // play 2.4,2.5
+  // val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "2.0.0" // play 2.4,2.5
+  val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "3.0.0" // play 2.6
   // val scalaLib    = "org.scala-lang"     % "scala-library"      % scala 
     
 	override def settings = super.settings ++ Seq(
@@ -146,36 +135,44 @@ object ApplicationBuild extends Build {
 	   val nexusigpublish = if (buildVersion.endsWith("SNAPSHOT")) nexusigsnapshot else nexusigrelease				
    } 
  
-   object Dependencies {
-	   val nglcommonDependencies = Seq(
-			   javaCore,
-			   javaJdbc, 
-			   javaWs,
-			   //"fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
-			   // "fr.cea.ig" %% "play-spring-module" % "2.4-1.4-SNAPSHOT",
-			   ceaSpring,
-			   "mysql" % "mysql-connector-java" % "5.1.18",
-			   "net.sourceforge.jtds" % "jtds" % "1.2.2",
-			   // "net.sourceforge.jtds" % "jtds" % "1.3.1",
-			   "net.sf.opencsv" % "opencsv" % "2.0",
-			   "commons-collections" % "commons-collections" % "3.2.1",
-			   "org.springframework" % "spring-jdbc" % "4.0.3.RELEASE",		
-			   "org.springframework" % "spring-test" % "4.0.3.RELEASE",
-			   // "org.julienrf" %% "play-jsmessages" % "1.6.2",
-			   jsMessages,
-			   "javax.mail" % "mail" % "1.4.2",
-			   "org.codehaus.janino" % "janino" % "2.5.15",
-			   "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
-			   "org.javassist" % "javassist" % "3.20.0-GA",
-			   commonsLang,
-			   cache
-			   )	
-			   val ngldatatableDependencies = Seq(
-					   javaCore
-					   )
-			   val nglreagentsDependencies = Seq(
-					   javaCore
-					   )
+  object Dependencies {
+    
+	  val nglcommonDependencies = Seq(
+		  javaCore,
+		  javaJdbc, 
+		  javaWs,
+		  //"fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
+		  // "fr.cea.ig" %% "play-spring-module" % "2.4-1.4-SNAPSHOT",
+		  ceaSpring,
+		  "mysql" % "mysql-connector-java" % "5.1.18",
+		  "net.sourceforge.jtds" % "jtds" % "1.2.2",
+		  // "net.sourceforge.jtds" % "jtds" % "1.3.1",
+		  "net.sf.opencsv" % "opencsv" % "2.0",
+		  "commons-collections" % "commons-collections" % "3.2.1",
+		  "org.springframework" % "spring-jdbc" % "4.0.3.RELEASE",		
+		  "org.springframework" % "spring-test" % "4.0.3.RELEASE",
+		  // "org.julienrf" %% "play-jsmessages" % "1.6.2",
+		  jsMessages,
+		  "javax.mail" % "mail" % "1.4.2",
+		  "org.codehaus.janino" % "janino" % "2.5.15",
+		  "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.0",
+		  "org.javassist" % "javassist" % "3.20.0-GA",
+		  commonsLang,
+		  ws
+		  
+		  // cacheApi,
+		  // cache
+		)	
+			   
+	  val ngldatatableDependencies = Seq(
+		  // javaCore
+			javaForms
+	  )
+
+	  val nglreagentsDependencies = Seq(
+			  javaCore
+			  )
+					   
 			   val nglframeworkwebDependencies = Seq(
 					   javaCore,
 					   javaWs,
@@ -204,7 +201,8 @@ object ApplicationBuild extends Build {
 					   // Add your project dependencies here,
 					   // "postgresql" % "postgresql" % "8.3-603.jdbc4",
 					   postgresql,
-					   "org.assertj" % "assertj-core" % "1.7.1"
+					   "org.assertj" % "assertj-core" % "1.7.1",
+					   guice
 					   )
 /*
 	val nglauthDependencies = Seq(
@@ -222,7 +220,6 @@ object ApplicationBuild extends Build {
 
 	val ngldataDependencies = Seq(
 		javaCore, javaJdbc,
-		  // Add your project dependencies here,
 		  //"postgresql" % "postgresql" % "8.3-603.jdbc4"
 		  postgresql
 		)
@@ -231,13 +228,29 @@ object ApplicationBuild extends Build {
 	    //"uk.co.panaxiom" %% "play-jongo" % "0.7.1-jongo1.0"
 	)
 
-	val nglprojectsDependencies = Seq(
+	  val nglprojectsDependencies = Seq(
 	    javaCore, javaJdbc,
-		//"postgresql" % "postgresql" % "8.3-603.jdbc4"
+		  //"postgresql" % "postgresql" % "8.3-603.jdbc4"
 	    postgresql
-	)
+	  )
 
+	  val nglPlayMigrationDependencies = Seq(
+	    ceaMongo,
+	    // cacheApi,
+	    ehcache,
+	    ws
+    )
+    
   }
+
+  val nglPlayMigration =  Project("ngl-play-migration",file("lib-ngl-play-migration"),settings = buildSettings)
+      .enablePlugins(play.sbt.PlayJava)
+      .settings(
+    libraryDependencies ++= nglPlayMigrationDependencies,   
+    version              := "0.1-SNAPHSHOT",
+    resolvers            := nexus
+	)
+	
 
   val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
     // Add your own project settings here
@@ -255,7 +268,7 @@ object ApplicationBuild extends Build {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    })
+    }).dependsOn(nglPlayMigration)
 
   val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
     // Add your own project settings here     
@@ -292,7 +305,7 @@ object ApplicationBuild extends Build {
     // (resourceDirectory.in(Test)).<<=(baseDirectory.value./("conftest"))
     // resourceDirectory.in(Test).:=(baseDirectory.value./("conftest"))
     resourceDirectory in Test := baseDirectory.value / "conftest"
-    ).dependsOn(nglframeworkweb)
+    ).dependsOn(nglframeworkweb).dependsOn(nglPlayMigration)
 
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here      
@@ -357,23 +370,21 @@ object ApplicationBuild extends Build {
     ).dependsOn(nglcommon % "test->test;compile->compile")
 
 
-    val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-       // Add your own project settings here      
-	     version := appVersion,
+  val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(      
+    version              := appVersion,
 		libraryDependencies ++= ngldevguideDependencies,
-       resolvers := nexus,
-       publishArtifact in makePom := false,
-       publishTo := Some(nexusigpublish) 
-    ).dependsOn(nglcommon % "test->test;compile->compile")
+    resolvers            := nexus,
+    publishArtifact in makePom := false,
+    publishTo            := Some(nexusigpublish) 
+  ).dependsOn(nglcommon % "test->test;compile->compile")
 
-   val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-       // Add your own project settings here   
+  val nglprojects = Project(appName + "-projects", file("app-ngl-projects"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		version := projectsVersion,
 		libraryDependencies ++= nglprojectsDependencies,   
-       resolvers := nexus,
-       publishArtifact in makePom := false,
-       publishTo := Some(nexusigpublish)
-     ).dependsOn(nglcommon % "test->test;compile->compile")
+    resolvers := nexus,
+    publishArtifact in makePom := false,
+    publishTo := Some(nexusigpublish)
+  ).dependsOn(nglcommon % "test->test;compile->compile")
 	 
 	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
        // Add your own project settings here   
@@ -384,7 +395,19 @@ object ApplicationBuild extends Build {
        publishTo := Some(nexusigpublish)
      ).dependsOn(nglcommon % "test->test;compile->compile")
 
-     /*
+  val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
+		version := appVersion,			  
+    resolvers := nexus,
+    publishArtifact in makePom := false,
+    publishTo := Some(nexusigpublish)
+  ).aggregate(
+   	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub,nglreagents,nglprojects,nglPlayMigration
+   	//,bcRoute,bcRouteCommon,bcRouteAuth
+  )
+
+  
+  // TODO: remove dead code
+       /*
    val bcRoute = Project("bc-route",file("buildcheck/route"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		     version := "0.1-SNAPHSHOT"
 		     )
@@ -410,17 +433,5 @@ object ApplicationBuild extends Build {
     resolvers           := nexus
 	)
 		   */
-     
-   val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-      // Add your own project settings here     
-		version := appVersion,			  
-      resolvers := nexus,
-      publishArtifact in makePom := false,
-      publishTo := Some(nexusigpublish)
-    ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub,nglreagents,nglprojects
-     	//,bcRoute,bcRouteCommon,bcRouteAuth
-    )
-
 
 }

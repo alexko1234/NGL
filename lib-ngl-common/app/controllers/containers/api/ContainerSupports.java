@@ -1,7 +1,8 @@
 package controllers.containers.api;
 
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,13 +58,17 @@ import fr.cea.ig.MongoDBResult;
 public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
+	
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 
 	final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
+	
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
+	
 	final static List<String> authorizedUpdateFields = Arrays.asList("storageCode"); //liste des champs qui peuvent etre mis a jour
 	
 	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
+	
 	final static Form<State> stateForm = form(State.class);
 	
 	final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);

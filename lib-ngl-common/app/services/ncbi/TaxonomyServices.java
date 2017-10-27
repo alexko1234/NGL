@@ -1,5 +1,8 @@
 package services.ncbi;
 
+import static fr.cea.ig.play.IGGlobals.ws;
+import static fr.cea.ig.play.IGGlobals.cache;
+
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -18,8 +21,8 @@ import org.xml.sax.SAXParseException;
 
 import models.utils.dao.DAOException;
 // import play.Logger;
-import play.cache.Cache;
-import play.libs.ws.WS;
+// import play.cache.Cache;
+// import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 // import scala.concurrent.Future;
 import validation.ContextValidation;
@@ -45,7 +48,8 @@ public class TaxonomyServices {
 			NCBITaxon taxon = getObjectInCache(taxonCode);
 			if (null == taxon) {
 				// Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
-				CompletionStage<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
+				// CompletionStage<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
+				CompletionStage<WSResponse> homePage = ws().url(URLNCBI+"&id="+taxonCode).get();
 				// Promise<NCBITaxon> xml = homePage.map(response -> {
 				CompletionStage<NCBITaxon> xml = homePage.thenApplyAsync(response -> {
 					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -80,7 +84,8 @@ public class TaxonomyServices {
 		if (null != code) {
 			try {
 				String key = NCBITaxon.class.toString()+"."+code;
-				return (NCBITaxon) Cache.get(key);				
+				// return (NCBITaxon) Cache.get(key);
+				return (NCBITaxon) cache().get(key);
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
 			}
@@ -91,7 +96,8 @@ public class TaxonomyServices {
 	
 	private static void setObjectInCache(NCBITaxon o, String code) {
 		if (null != o && null != code) {
-			Cache.set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+			// Cache.set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
+			cache().set(NCBITaxon.class.toString()+"."+code, o, 60 * 60 * 24);
 		}		
 	}
 	
@@ -106,7 +112,8 @@ public class TaxonomyServices {
 				Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
 				return doc;
 			});*/
-			CompletionStage<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
+			// CompletionStage<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
+			CompletionStage<WSResponse> homePage = ws().url(URLNCBI+"&id="+taxonCode).get();
 			CompletionStage<Document> xml = homePage.thenApplyAsync(response -> {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				try {

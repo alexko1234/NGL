@@ -1,4 +1,7 @@
- package controllers.readsets.api;
+package controllers.readsets.api;
+
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -13,7 +16,6 @@ import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import play.data.Form;
-import static play.data.Form.form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;

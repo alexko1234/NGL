@@ -3,7 +3,9 @@ package controllers.containers.tpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.i18n.Messages;
 import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
@@ -38,7 +40,8 @@ public class Containers extends CommonController {
     public static Result javascriptRoutes() {
         response().setContentType("text/javascript");
         return ok(
-          Routes.javascriptRouter("jsRoutes",
+          // Routes.javascriptRouter("jsRoutes",
+        		JavaScriptReverseRouter.create("jsRoutes", 
             // Routes
                 controllers.projects.api.routes.javascript.Projects.list(),
                 controllers.containers.tpl.routes.javascript.Containers.get(),
