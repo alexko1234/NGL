@@ -1,7 +1,6 @@
 package controllers.experiments.api;
 
 // import static play.data.Form.form;
-
 import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import play.Logger;
+// import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -25,6 +24,12 @@ import controllers.authorisation.Permission;
 
 public class ExperimentTypes extends CommonController {
 	
+	/**
+	 * Logger.
+	 */
+	private final static play.Logger.ALogger logger = play.Logger.of(ExperimentTypes.class);
+	
+	
 	final static Form<ExperimentTypesSearchForm> experimentTypeForm = form(ExperimentTypesSearchForm.class);
 	
 	@Permission(value={"reading"})
@@ -33,17 +38,16 @@ public class ExperimentTypes extends CommonController {
 		try {
 			experimentType = ExperimentType.find.findByCode(code);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			Logger.error("DAO error: "+e.getMessage(),e);
+			logger.error("DAO error: "+e.getMessage(),e);
+			throw new RuntimeException("get experiment('" + code + "' failed",e);
 		}
-		if(experimentType == null){
+		if (experimentType == null)
 			return notFound();
-		}
 		return ok(Json.toJson(experimentType));
 	}
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public static Result list() throws DAOException {
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
@@ -88,7 +92,7 @@ public class ExperimentTypes extends CommonController {
 				return Results.ok(Json.toJson(experimentTypes));
 			}
 		}catch (DAOException e) {
-			Logger.error("DAO error: "+e.getMessage(),e);
+			logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

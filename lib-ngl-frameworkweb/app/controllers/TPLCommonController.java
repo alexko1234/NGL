@@ -11,6 +11,7 @@ import play.mvc.Http.Context;
 
 @With({fr.cea.ig.authentication.Authenticate.class})
 public abstract class TPLCommonController extends Controller {
+	
 	/**
 	 * Fill a form in json mode
 	 * @param form
@@ -24,7 +25,10 @@ public abstract class TPLCommonController extends Controller {
 		return filledForm;
 	}
 	
-	protected String getCurrentUser(){
-		return Context.current().request().username();
+	protected String getCurrentUser() {
+		// return Context.current().request().username();
+		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
+		return fr.cea.ig.authentication.Helper.username(Context.current().session());
 	}
+	
 }

@@ -20,10 +20,10 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containerSupports.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "containerSupports.search"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("search")">@Messages("containerSupports.menu.search")</a></li>
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+								@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
 									<li class="@("active".when(nav == "containerSupports.state"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("state")">@Messages("containerSupports.menu.state")</a></li>
 									}
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
+								@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "admin")){
 								<li class="@("active".when(nav == "containerSupports.scanner"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.homeScanner()">@Messages("containerSupports.menu.scanner")</a></li>
 								}
 							</ul>
@@ -33,7 +33,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containers.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "containers.search"))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+								@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
 									<li class="@("active".when(nav == "containers.state"))"><a href="@controllers.containers.tpl.routes.Containers.home("state")">@Messages("containers.menu.state")</a></li>																				
 									<li class="@("active".when(nav == "container.new"))"><a href="@controllers.containers.tpl.routes.Containers.home("new")">@Messages("containers.menu.new_from_file")</a></li>																												
 								}
@@ -44,11 +44,11 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("processes.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "processes.search"))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+								@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
 									<li class="@("active".when(nav == "processes.new"))"><a href="@controllers.processes.tpl.routes.Processes.home("new")">@Messages("processes.menu.creation")</a></li>
 									<li class="@("active".when(nav == "processes.remove"))"><a href="@controllers.processes.tpl.routes.Processes.home("remove")">@Messages("processes.menu.remove")</a></li>
 								}
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
+								@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "admin")){
 									<li class="@("active".when(nav == "processes.state"))"><a href="@controllers.processes.tpl.routes.Processes.home("state")">@Messages("processes.menu.state")</a></li>									
 								}		
 							</ul>
@@ -58,7 +58,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("experiments.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav ==  "experiments.search"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("search")">@Messages("experiments.menu.search")</a></li>
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+								@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
 									<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
 								}
 								<li class="@("active".when(nav == "experiments.reagents"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("reagents")">@Messages("experiments.menu.reagents")</a></li>
@@ -106,7 +106,7 @@
 						}
 						
 						
-						@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
+						@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "admin")){
 							<li class="dropdown @("active".when(nav.startsWith("admin")))">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="admin"><i class="fa fa-users"></i> @Messages("admin.menu")<b class="caret"></b></a>
 								<ul class="dropdown-menu" role="menu" aria-labelledby="users">
@@ -122,7 +122,7 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li>
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="user">
-				<i class="fa fa-user"></i> @Context.current().request().username() <b class="caret"></b></a>
+				<i class="fa fa-user"></i> @fr.cea.ig.authentication.Helper.username(Context.current().session()) <b class="caret"></b></a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="user">
 						<li><a href="/authentication/logout">@Messages("authentification.dropdown_list.signout")</a></li>
 				</ul>
