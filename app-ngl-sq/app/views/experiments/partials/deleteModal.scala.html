@@ -17,7 +17,7 @@
 					 </div>
 	      		</div>	
 	      </div>
-	      @if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+	      @if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
 		      <div class="modal-footer">
 		          <button class="btn btn-danger" ng-click="deleteExperiment()" >@Messages("experiment.question.delete.yes")</i></button>
 		          <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("experiment.question.delete.no")</button>							      

@@ -41,7 +41,9 @@ public class UserHistory extends Action.Simple {
 			CompletionStage<Result> res = null;
 			
 			if (context.request().uri().startsWith("/api/") && !context.request().uri().contains("/authentication")) {
-				String login = context.request().username();
+				// String login = context.request().username();
+				// String login = fr.cea.ig.authentication.Helper.username(context.request());
+				String login = fr.cea.ig.authentication.Helper.username(context.session());
 				String params = Json.toJson(context.request().queryString()).toString();
 				String action = context.request().toString();
 				

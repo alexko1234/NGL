@@ -158,8 +158,9 @@ public abstract class APICommonController<T> extends Controller {
 	}
 
 	protected String getCurrentUser(){
-		return Context.current().request().username();
+		//return Context.current().request().username();
+		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
+		return fr.cea.ig.authentication.Helper.username(Context.current().session());
 	}
-	
 	
 }
