@@ -1041,9 +1041,13 @@ balanceSheets.december = Decembre
 stats.page.title=Statistiques
 stats.menu = Statistiques
 stats.menu.readsets = Readsets
+stats.menu.lanes = Lanes
 stats.page.tab.readsets.select = Selectionner des Readsets
 stats.page.tab.readsets.config = Configuration Statistiques
 stats.page.tab.show = Visualiser les Graphiques
+
+stats.page.tab.lanes.select = Selectionner des Runs
+stats.page.tab.lanes.config = Configuration Statistiques
 
 stats.tabs.charts = Graphiques
 stats.tabs.exclude = Valeurs exclues

@@ -1,6 +1,6 @@
  "use strict";
  
- angular.module('ngl-bi.StatsServices', []).
+ angular.module('ngl-bi.ReadSetsStatsServices', []).
 	factory('statsConfigReadSetsService', ['$http', '$filter', 'lists', 'datatable', function($http, $filter, lists, datatable){
 		var datatableConfig = {
 				search : {
