@@ -17,3 +17,5 @@ Renamed getAsset.scala.html to .off to avoid using it as it is defined in the au
 https://github.com/playframework/playframework/issues/4897
 
         
+-- 2.6
+Downgrade jackson to 2.7.x: https://github.com/FasterXML/jackson-databind/issues/1339

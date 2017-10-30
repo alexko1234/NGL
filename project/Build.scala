@@ -99,10 +99,15 @@ object ApplicationBuild extends Build {
              //dependencyOverrides += "org.springframework" % "spring-core" % "3.2.8.RELEASE",
              //dependencyOverrides += "com.typesafe.play" % "play_2.11" % "2.3.0",
              //dependencyOverrides += "xml-apis" % "xml-apis" % "1.0.b2",
+			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-core"            % "2.7.3",
+			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-databind"        % "2.7.3",
+			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-annotations"     % "2.7.3",
+			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.7.3",
+			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
              // routesGenerator := StaticRoutesGenerator, // default value, supposed no efect
 					   // routesGenerator := DynamicRoutesGenerator,
              //libraryDependencies += guice,
-			       scalaVersion        := scala // play 2.4 req
+			scalaVersion        := scala
 		)
 
 		val buildSettings =  Seq (
