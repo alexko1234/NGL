@@ -38,8 +38,9 @@ public class MongoStreamer {
 	
 	/**
 	 * Cursor to full json list.
+	 * @param <T> mongo collection element type
 	 * @param all cursor for the full collection
-	 * @return input stream that provide a json list of collection objects
+	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> InputStream stream(MongoCursor<T> all) {
 		return stream(new IStreamer() {
@@ -61,8 +62,9 @@ public class MongoStreamer {
 	
 	/**
 	 * Cursor to UDT json list.
+	 * @param <T> mongo collection element type
 	 * @param all cursor for the full collection
-	 * @return input stream that provide a json list of collection objects
+	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> InputStream streamUDT(MongoCursor<T> all) {
 		return stream(new IStreamer() {
@@ -84,8 +86,9 @@ public class MongoStreamer {
 	
 	/**
 	 * MongoDBResult to full json list.
+	 * @param <T> mongo collection element type
 	 * @param all cursor for the full collection
-	 * @return input stream that provide a json list of collection objects
+	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> InputStream stream(MongoDBResult<T> all) {
 		return stream(new IStreamer() {
@@ -106,8 +109,9 @@ public class MongoStreamer {
 	
 	/**
 	 * MongoDBResult to UDT json list.
+ 	 * @param <T> mongo collection element type
 	 * @param all cursor for the full collection
-	 * @return input stream that provide a json list of collection objects
+	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> InputStream streamUDT(MongoDBResult<T> all) {
 		return stream(new IStreamer() {
@@ -130,9 +134,10 @@ public class MongoStreamer {
 	
 	/**
 	 * MongoDBResult are applied a given transform and streamed as UDT json list.
-	 * @param all cursor for the full collection
+ 	 * @param <T>       mongo collection element type
+	 * @param data      cursor for the full collection
 	 * @param transform transform to apply to result elements
-	 * @return input stream that provide a json list of transformed collection objects
+	 * @return          input stream that provide a json list of transformed collection objects
 	 */
 	public static <T extends DBObject,R> InputStream streamUDT(MongoDBResult<T> data, Function<T,R> transform) {
 		return stream(new IStreamer() {

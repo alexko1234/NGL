@@ -19,7 +19,8 @@ import play.i18n.Messages;
 
 public class ContextValidation {
 
-	private enum Mode {
+	// private enum Mode {
+	public enum Mode {
 		CREATION, UPDATE, DELETE, NOT_DEFINED;
 	}
 
