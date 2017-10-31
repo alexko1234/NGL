@@ -38,11 +38,10 @@ import javax.inject.Singleton;
  * will trigger compilation errors of access to globals to remove. 
  * 
  * This "works" as long any we do not trigger application() calls
- * through indirect calls. This fails for Akka.system() as this
- * internally relies on application(). 
+ * through indirect calls.
  * 
- * We should have access to the injector as it is low level enough to be accessed
- * from here.
+ * We have access to the injector as it is low level enough to be accessed
+ * from here. 
  * 
  * @author vrd
  * 
@@ -106,6 +105,18 @@ public class IGGlobals {
 	}
 	
 	/**
+	 * Default synchronized cache instance.
+	 * @return synchronized cache instance
+	 */
+	public static SyncCacheApi cache() {
+		// return injector().instanceOf(SyncCacheApi.class);
+		// NoCache or HashCache resolve the security exception problem.
+		// return NoCache.instance();
+		// return HashCache.instance();
+		return assertInitialized("cache",cache);
+	}
+
+	/**
 	 * Throw a runtime exception if a null value is passed as t.
 	 * @param name name of the static field to check
 	 * @param t value of the static field to check
@@ -113,14 +124,15 @@ public class IGGlobals {
 	 */
 	private static <T> T assertInitialized(String name, T t) {
 		if (t == null)
-			throw new RuntimeException("IGGlobals are not intiailzed");
+			throw new RuntimeException("IGGlobals '" + name + "()' is not intiailzed");
 		return t;
 	}
-	
+
 	// -------------------------------------
 	// Implementation of methods that are removed from play but still needed by 
-	// static methods.
+	// NGL static methods.
 	
+	// TODO: inject
 	public static FormFactory formFactory() {
 		return injector().instanceOf(FormFactory.class);
 	}
@@ -129,6 +141,7 @@ public class IGGlobals {
 		return formFactory().form(clazz);
 	}
 
+	// TODO: inject
 	public static DynamicForm form() {
 		return formFactory().form();
 	}
@@ -138,26 +151,22 @@ public class IGGlobals {
 	}
 	
 	// TODO: possibly use httpcontext, maybe some lang at least
+	// TODO: inject
 	public static Messages messages() {
 		return messagesApi().preferred(new ArrayList<Lang>());
 	}
 	
+	// TODO:inject
 	public static ActorSystem akkaSystem() {
 		return injector().instanceOf(ActorSystem.class);
 	}
 	
-	public static SyncCacheApi cache() {
-		// return injector().instanceOf(SyncCacheApi.class);
-		// NoCache or HashCache resolve the security exception problem.
-		// return NoCache.instance();
-		// return HashCache.instance();
-		return cache;
-	}
-	
+	// TODO: inject
 	public static WSClient ws() {
 		return injector().instanceOf(WSClient.class);
 	}
 	
+	/*
 	static class NoCache implements SyncCacheApi {
 		private  static NoCache instance;
 		public static NoCache instance() {
@@ -221,6 +230,6 @@ public class IGGlobals {
 		public void set(String key, Object value, int expiration) {
 			set(key,value);
 		}
-	}
+	}*/
 	
 }
