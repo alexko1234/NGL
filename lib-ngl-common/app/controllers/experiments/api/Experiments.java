@@ -490,7 +490,7 @@ public class Experiments extends DocumentController<Experiment> {
 				if(null != input.traceInformation){
 					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
 				}else{
-					Logger.error("traceInformation is null !!");
+					logger.error("traceInformation is null !!");
 				}
 				
 				if(!objectInDB.state.code.equals(input.state.code)){

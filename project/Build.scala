@@ -19,17 +19,14 @@ object ApplicationBuild extends Build {
 	// import PlayKeys._
 	import play.sbt.PlayImport._
 
-   val sqVersion = "1.36.0-SNAPSHOT"  
-   val biVersion = "1.38.0-SNAPSHOT"
-
  	val appName    = "ngl"
 	val appVersion = "1.0-SNAPSHOT"
 
   val scala            = "2.12.3"
   val distSuffix = ".2.4"
   
-	val sqVersion  = "1.35.0"+distSuffix+"-SNAPSHOT"  
-	val biVersion  = "1.38.0"+distSuffix+"-SNAPSHOT"
+	val sqVersion       = "1.36.0"+distSuffix+"-SNAPSHOT"  
+	val biVersion       = "1.38.0"+distSuffix+"-SNAPSHOT"
 
 	val projectsVersion = "1.3.1"+distSuffix+"-SNAPSHOT"  
 	val reagentsVersion = "1.3.0"+distSuffix+"-SNAPSHOT"
@@ -99,6 +96,7 @@ object ApplicationBuild extends Build {
              //dependencyOverrides += "org.springframework" % "spring-core" % "3.2.8.RELEASE",
              //dependencyOverrides += "com.typesafe.play" % "play_2.11" % "2.3.0",
              //dependencyOverrides += "xml-apis" % "xml-apis" % "1.0.b2",
+			// jackson 2.8 series is problematic 
 			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-core"            % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-databind"        % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-annotations"     % "2.7.3",
@@ -175,24 +173,24 @@ object ApplicationBuild extends Build {
 	  )
 
 	  val nglreagentsDependencies = Seq(
-			  javaCore
-			  )
+		  javaCore
+		)
 					   
-			   val nglframeworkwebDependencies = Seq(
-					   javaCore,
-					   javaWs,
-					   "javax.mail" % "mail" % "1.4.2",
-					   "org.drools" % "drools-core" % "6.1.0.Final",
-					   "org.drools" % "drools-compiler" % "6.1.0.Final",
-					   "org.drools" % "knowledge-api" % "6.1.0.Final",
-					   "org.kie" % "kie-api" % "6.1.0.Final",
-					   "org.kie" % "kie-internal" % "6.1.0.Final",
-					   // "fr.cea.ig.modules" %% "authentication" % "1.4-SNAPSHOT",
-					   // "fr.cea.ig.modules" %% "authentication" % "2.4-1.5-SNAPSHOT",
-					   // "fr.cea.ig" %% "mongodbplugin" % "1.6.0-SNAPSHOT"
-					   ceaAuth,
-					   ceaMongo
-					   )
+		val nglframeworkwebDependencies = Seq(
+		  javaCore,
+		  javaWs,
+		  "javax.mail" % "mail" % "1.4.2",
+		  "org.drools" % "drools-core" % "6.1.0.Final",
+		  "org.drools" % "drools-compiler" % "6.1.0.Final",
+		  "org.drools" % "knowledge-api" % "6.1.0.Final",
+		  "org.kie" % "kie-api" % "6.1.0.Final",
+		  "org.kie" % "kie-internal" % "6.1.0.Final",
+		  // "fr.cea.ig.modules" %% "authentication" % "1.4-SNAPSHOT",
+		  // "fr.cea.ig.modules" %% "authentication" % "2.4-1.5-SNAPSHOT",
+		  // "fr.cea.ig" %% "mongodbplugin" % "1.6.0-SNAPSHOT"
+		  ceaAuth,
+		  ceaMongo
+		)
 			   val nglbiDependencies = Seq(
 					   // Add your project dependencies here,
 					   javaCore, javaJdbc,

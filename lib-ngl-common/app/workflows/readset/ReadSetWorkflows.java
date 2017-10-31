@@ -1,5 +1,7 @@
 package workflows.readset;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.util.ArrayList;
 
 import org.mongojack.DBQuery;
@@ -37,7 +39,9 @@ public class ReadSetWorkflows extends Workflows<ReadSet>{
 	@Autowired
 	ReadSetWorkflowsHelper readSetWorkflowsHelper;
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	
 	private static final String ruleFQC="F_QC_1";
 	private static final String ruleFRG="F_RG_1";
 	private static final String ruleIPS="IP_S_1";

@@ -124,7 +124,7 @@ public abstract class AbstractDAO<T> {
 	
 	@SuppressWarnings("unchecked")
 	protected T getObjectInCache(String code){
-		if(null != code){
+		if (null != code) {
 			try {
 				String key = entityClass.toString()+"."+code;
 				// return (T) Cache.get(key);
@@ -132,7 +132,7 @@ public abstract class AbstractDAO<T> {
 			} catch (DAOException e) {
 				throw new RuntimeException(e);
 			}
-		}else{
+		} else {
 			return null;
 		}		
 	}
@@ -150,6 +150,6 @@ public abstract class AbstractDAO<T> {
 			// Cache.remove(entityClass.toString()+"."+((Model)o).code);
 			cache().remove(entityClass.toString()+"."+((Model)o).code);
 		});
-		
 	}
+	
 }

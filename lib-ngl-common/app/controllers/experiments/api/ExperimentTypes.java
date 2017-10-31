@@ -39,7 +39,7 @@ public class ExperimentTypes extends CommonController {
 			experimentType = ExperimentType.find.findByCode(code);
 		} catch (DAOException e) {
 			logger.error("DAO error: "+e.getMessage(),e);
-			throw new RuntimeException("get experiment('" + code + "' failed",e);
+			// throw new RuntimeException("get experiment('" + code + "') failed",e);
 		}
 		if (experimentType == null)
 			return notFound();
