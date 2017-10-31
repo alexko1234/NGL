@@ -1,13 +1,13 @@
-@()
+@(read: String)
 
 <div class="row">
 	<div class="col-md-2 col-lg-2 col-xs-4">
-		<div id="panel_softwareVersion" class="panel panel-default text-center" ng-if="readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].software != null">
+		<div id="panel_softwareVersion" class="panel panel-default text-center" ng-if='@("readset.treatments.taxonomy."+read+".software != null")'>
 			<div class="panel-heading">
 				<strong>@Messages("readsets.treatments.taxonomy.software") : </strong>
 			</div>
 			<div class="panel-body">
-				{{readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].software.value}}
+				{{@("readset.treatments.taxonomy."+read+".software.value")}}
 			</div>
 		</div>
 	</div>
@@ -34,7 +34,7 @@
 				<tbody>
 				<tr>
 					<td>
-						{{readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].sampleInput.value | number}}
+						{{@("readset.treatments.taxonomy."+read+".sampleInput.value") | number}}
 					</td>
 					<td>
 						{{sample.ncbiScientificName}}
@@ -71,14 +71,14 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="obj in readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].taxonBilan.value" ng-if="obj.percent>filterTaxonBilanDefault">
+			<tr ng-repeat='obj in @("readset.treatments.taxonomy."+read+".taxonBilan.value")' ng-if="obj.percent>filterTaxonBilanDefault">
 				<td>									
 					 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
 				</td>
 				<td>
 					 {{obj.nbSeq | number}}													
 				</td>
-				<td ng-class="highLight('treatments.taxonomy' + (readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1' + '.taxonBilan.value|filter:\''+obj.taxon+'\'|sum:\'percent\'')">
+				<td ng-class="highLight('treatments.taxonomy' + @(read) + '.taxonBilan.value|filter:\''+obj.taxon+'\'|sum:\'percent\'')">
 					{{ obj.percent | number:2}} @Messages("unit.percent")												
 				</td>
 			</tr>
@@ -105,14 +105,14 @@
 				</tr>					
 				</thead>
 				<tbody>
-				<tr ng-repeat="obj in readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].divisionBilan.value">
+				<tr ng-repeat='obj in @("readset.treatments.taxonomy."+read+".divisionBilan.value")'>
 					<td>							
 						 {{obj.division}}
 					</td>
 					<td>
 						 {{obj.nbSeq | number}}												
 					</td>
-					<td ng-class="highLight('treatments.taxonomy' + (readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1' + '.divisionBilan.value|filter:\''+obj.division+'\'|sum:\'percent\'')">
+					<td ng-class="highLight('treatments.taxonomy' + @(read) + '.divisionBilan.value|filter:\''+obj.division+'\'|sum:\'percent\'')">
 						 {{ obj.percent | number:2}} @Messages("unit.percent")												
 					</td>
 				</tr>
@@ -137,14 +137,14 @@
 			</tr>					
 			</thead>
 			<tbody>	
-			<tr ng-repeat="obj in readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].keywordBilan.value">	
+			<tr ng-repeat='obj in @("readset.treatments.taxonomy."+read+".keywordBilan.value")'>	
 				<td>
 					 {{obj.keyword}}							
 				</td>
 				<td>
 					 {{obj.nbSeq | number}}												
 				</td>
-				<td ng-class="highLight('treatments.taxonomy' + (readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1' + '.keywordBilan.value|filter:\''+obj.keyword+'\'|sum:\'percent\'')">
+				<td ng-class="highLight('treatments.taxonomy' + @(read) + '.keywordBilan.value|filter:\''+obj.keyword+'\'|sum:\'percent\'')">
 					 {{ obj.percent | number:2}} @Messages("unit.percent")			
 				</td>
 			</tr>
@@ -155,14 +155,14 @@
 	</div>
 	
 	<div class="col-md-4 col-lg-4">
-		<div ng-if="readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].taxonBilanMitochondrion != null" >
-		@taxonomy_main_taxon("taxonBilanMitochondrion","filterTaxonBilanMitochondrion")	
+		<div ng-if='@("readset.treatments.taxonomy."+read+".taxonBilanMitochondrion") != null' >
+		@taxonomy_main_taxon("taxonBilanMitochondrion","filterTaxonBilanMitochondrion",read)	
 		</div>
-		<div ng-if="readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].taxonBilanPlastid != null" >
-		@taxonomy_main_taxon("taxonBilanPlastid","filterTaxonBilanPlastid")	
+		<div ng-if='@("readset.treatments.taxonomy."+read+".taxonBilanPlastid") != null' >
+		@taxonomy_main_taxon("taxonBilanPlastid","filterTaxonBilanPlastid",read)	
 		</div>
-		<div ng-if="readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1'].taxonBilanContamination != null" >
-		@taxonomy_main_taxon("taxonBilanContamination","filtertaxonBilanContamination")	
+		<div ng-if='@("readset.treatments.taxonomy."+read+".taxonBilanContamination") != null' >
+		@taxonomy_main_taxon("taxonBilanContamination","filtertaxonBilanContamination",read)	
 		</div>
 	</div>
 	
