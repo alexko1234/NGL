@@ -7,7 +7,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import play.Application;
-import play.Configuration; // This is already deprecated
+// TODO: use play.api.Configuration
+import play.Configuration;
 import play.Environment;
 
 import play.cache.SyncCacheApi;
@@ -49,9 +50,10 @@ import javax.inject.Singleton;
 @Singleton
 public class IGGlobals {
 	
-	// Requisites could be lowered to the needed set
-	// This is started as a component and before anyother that requires 
-	// access to globals.
+	// This is started as a component and before any other that requires 
+	// access to globals. This component or part of this component should
+	// be injected when needed but this sets up globals as static component
+	// require that.
 	@Inject
 	public IGGlobals(Configuration conf, Environment env, Injector inj, SyncCacheApi cac) {
 		configuration = conf; // app.configuration();
