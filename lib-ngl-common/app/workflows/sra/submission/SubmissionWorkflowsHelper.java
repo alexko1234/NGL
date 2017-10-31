@@ -59,7 +59,7 @@ public class SubmissionWorkflowsHelper {
 
 
 	public void updateSubmissionRelease(Submission submission)
-	{
+	{	
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 		Calendar calendar = Calendar.getInstance();
 		Date date  = calendar.getTime();		
