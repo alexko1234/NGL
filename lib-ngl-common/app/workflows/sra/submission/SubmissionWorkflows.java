@@ -27,12 +27,17 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			Logger.debug("call update submission Release");
 			submissionWorkflowsHelper.updateSubmissionRelease(submission);
 		}
+		
 		if("IW-SUB-R".equals(nextState.code)){
 			submissionWorkflowsHelper.createDirSubmission(submission, validation);
 		}
 		
 		if("IW-SUB".equals(nextState.code)){
 			submissionWorkflowsHelper.activationPrimarySubmission(validation, submission);
+		}
+		if("IP-SUB".equals(submission.state.code) && "F-SUB".equals(nextState.code)){
+			Logger.debug("call update submission Release");
+			submissionWorkflowsHelper.updateSubmissionForDates(submission);
 		}
 		Logger.debug("dans apply pre state rules avec nextState = '" + nextState.code + "'");
 		updateTraceInformation(submission.traceInformation, nextState); 
@@ -51,7 +56,6 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Submission submission) {
-		
 		if (! submission.state.code.equalsIgnoreCase("N") && ! submission.state.code.equalsIgnoreCase("N-R") && !submission.state.code.equalsIgnoreCase("IW-SUB-R")){
 			submissionWorkflowsHelper.updateSubmissionChildObject(submission, validation);
 		}

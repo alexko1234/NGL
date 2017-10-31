@@ -57,6 +57,7 @@ public class Experiment extends DBObject implements IValidation {
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 	public Date releaseDate; 
+	public Date firstSubmissionDate; 
 
 	// ajouter instrumentModel et libraryName.
 

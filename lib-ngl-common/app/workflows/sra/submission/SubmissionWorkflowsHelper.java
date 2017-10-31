@@ -85,6 +85,38 @@ public class SubmissionWorkflowsHelper {
 		}
 	}
 
+	public void updateSubmissionForDates(Submission submission) {
+		Calendar calendar = Calendar.getInstance();
+		Date date  = calendar.getTime();		
+		calendar.add(Calendar.YEAR, 2);
+		Date release_date  = calendar.getTime();
+		
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
+				DBQuery.is("code", submission.code),
+				DBUpdate.set("submissionDate", date));	
+		
+		if (submission.studyCode != null) {
+			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+				DBQuery.is("accession", submission.studyCode),
+				DBUpdate.set("firstSubmissionDate", date).set("releaseDate", release_date));
+		}
+		for(String sampleCode : submission.sampleCodes){
+			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, 
+					DBQuery.is("code", sampleCode),
+					DBUpdate.set("firstSubmissionDate", date));
+		}
+		for(String experimentCode : submission.experimentCodes){
+			Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, experiment.studyCode);			
+			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
+					DBQuery.is("code", experimentCode),
+					DBUpdate.set("releaseDate", study.releaseDate).set("firstSubmissionDate", study.firstSubmissionDate));
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", experiment.readSetCode),
+					DBUpdate.set("releaseDate", study.releaseDate).set("submissionDate", study.firstSubmissionDate));
+		}
+	}
+
 	public void createDirSubmission(Submission submission,ContextValidation validation){
 		// Determiner le repertoire de soumission:
 

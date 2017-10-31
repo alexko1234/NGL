@@ -51,7 +51,8 @@ public class ReadSet extends DBObject implements IValidation{
 	//insert after ngsrg
 	public SampleOnContainer sampleOnContainer;
 	public Date releaseDate; 
-	
+	public Date submissionDate; 
+
 	
 	//TODO BA Ref !!!!
 	

@@ -27,6 +27,7 @@ public class Sample extends AbstractSample {
 	public Date releaseDate;         // required, date de mise à disposition en public par l'EBI
 	//public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" mis dans AbstractSample
 	//public TraceInformation traceInformation = new TraceInformation(); champs mis dans AbstractSample
+	public Date firstSubmissionDate;        
 
 	public Sample() {
 		super(AbstractSample.sampleType);
