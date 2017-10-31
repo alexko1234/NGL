@@ -1,6 +1,9 @@
 package fr.cea.ig.play;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import java.util.concurrent.Callable;
 
 import play.Application;
@@ -51,10 +54,11 @@ public class IGGlobals {
 	// This is started as a component and before anyother that requires 
 	// access to globals.
 	@Inject
-	public IGGlobals(Configuration conf, Environment env, Injector inj) {
+	public IGGlobals(Configuration conf, Environment env, Injector inj, SyncCacheApi cac) {
 		configuration = conf; // app.configuration();
 		environment   = env;  // app.environment();
 		injector      = inj;  // app.injector();
+		cache         = cac;
 	}
 	
 	/**
@@ -71,6 +75,11 @@ public class IGGlobals {
 	 * Play injector.
 	 */
 	private static Injector injector;
+	
+	/**
+	 * Default cache.
+	 */
+	private static SyncCacheApi cache;
 	
 	/**
 	 * Play configuration. 
@@ -138,8 +147,11 @@ public class IGGlobals {
 	}
 	
 	public static SyncCacheApi cache() {
-		return injector().instanceOf(SyncCacheApi.class);
+		// return injector().instanceOf(SyncCacheApi.class);
+		// NoCache or HashCache resolve the security exception problem.
 		// return NoCache.instance();
+		// return HashCache.instance();
+		return cache;
 	}
 	
 	public static WSClient ws() {
@@ -171,6 +183,43 @@ public class IGGlobals {
 		public void set(String key, Object value) {
 		}
 		public void set(String key, Object value, int expiration) {
+		}
+	}
+	
+	static class HashCache implements SyncCacheApi {
+		private  static HashCache instance;
+		public static HashCache instance() {
+			if (instance == null)
+				instance = new HashCache();
+			return instance;
+		}
+		private Map<String,Object> cache = new HashMap<String,Object>();
+		public <T> T get(String key) { 
+			return (T)cache.get(key); 
+		}
+		public <T> T getOrElseUpdate(String key, Callable<T> block) {
+			T t = get(key);
+			if (t != null)
+				return t;
+			try {
+				t = block.call();
+				cache.put(key,t);
+				return t;
+			} catch (Exception e) {
+				throw new RuntimeException("block call failed",e);
+			}
+		}
+		public <T> T getOrElseUpdate(String key, Callable<T> block, int expiration) { 
+			return getOrElseUpdate(key,block);
+		}
+		public void remove(String key) {
+			cache.remove(key);
+		}
+		public void set(String key, Object value) {
+			cache.put(key,value);
+		}
+		public void set(String key, Object value, int expiration) {
+			set(key,value);
 		}
 	}
 	

@@ -40,8 +40,11 @@ public class ContextValidation {
 		this.user      = user;
 	}
 
-	public ContextValidation(String user, Map<String,List<ValidationError>> errors){
-		this.errors    = errors;
+	public ContextValidation(String user, Map<String,List<ValidationError>> errors) {
+		// this.errors    = errors;
+		// Provide a modifiable collection from the provided errors.
+		this.errors    = new TreeMap<String, List<ValidationError>>(errors);
+		// this.errors.putAll(errors);
 		contextObjects = new TreeMap<String, Object>();
 		this.user      = user;
 	}
