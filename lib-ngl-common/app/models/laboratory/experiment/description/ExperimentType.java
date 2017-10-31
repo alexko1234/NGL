@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author ejacoby
  *
  */
-public class ExperimentType extends CommonInfoType{
+public class ExperimentType extends CommonInfoType {
  
 	public ExperimentCategory category;
 	//Relationship accessible by the parent table in the database
@@ -44,7 +44,7 @@ public class ExperimentType extends CommonInfoType{
 		return getPropertyDefinitionByLevel(models.laboratory.common.description.Level.CODE.Experiment);
 	}
 	
-	public static class ExperimentTypeFinder extends CommonInfoType.AbstractCommonInfoTypeFinder<ExperimentType>{
+	public static class ExperimentTypeFinder extends CommonInfoType.AbstractCommonInfoTypeFinder<ExperimentType> {
 
 		public ExperimentTypeFinder() {
 			super(ExperimentTypeDAO.class);

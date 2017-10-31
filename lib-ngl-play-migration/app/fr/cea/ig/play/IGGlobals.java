@@ -1,12 +1,13 @@
 package fr.cea.ig.play;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import play.Application;
 import play.Configuration; // This is already deprecated
 import play.Environment;
 
-import play.cache.AsyncCacheApi;
+import play.cache.SyncCacheApi;
 
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -52,8 +53,8 @@ public class IGGlobals {
 	@Inject
 	public IGGlobals(Configuration conf, Environment env, Injector inj) {
 		configuration = conf; // app.configuration();
-		environment   = env; // app.environment();
-		injector      = inj; // app.injector();
+		environment   = env;  // app.environment();
+		injector      = inj;  // app.injector();
 	}
 	
 	/**
@@ -119,7 +120,6 @@ public class IGGlobals {
 		return formFactory().form(clazz);
 	}
 
-	// Need from() factory method
 	public static DynamicForm form() {
 		return formFactory().form();
 	}
@@ -128,7 +128,7 @@ public class IGGlobals {
 		return injector().instanceOf(MessagesApi.class);
 	}
 	
-	// TODO: possibly use some httpcontext, maybe some lang at least
+	// TODO: possibly use httpcontext, maybe some lang at least
 	public static Messages messages() {
 		return messagesApi().preferred(new ArrayList<Lang>());
 	}
@@ -137,12 +137,41 @@ public class IGGlobals {
 		return injector().instanceOf(ActorSystem.class);
 	}
 	
-	public static AsyncCacheApi cache() {
-		return injector().instanceOf(AsyncCacheApi.class);
+	public static SyncCacheApi cache() {
+		return injector().instanceOf(SyncCacheApi.class);
+		// return NoCache.instance();
 	}
 	
 	public static WSClient ws() {
 		return injector().instanceOf(WSClient.class);
+	}
+	
+	static class NoCache implements SyncCacheApi {
+		private  static NoCache instance;
+		public static NoCache instance() {
+			if (instance == null)
+				instance = new NoCache();
+			return instance;
+		}
+		public <T> T get(String key) { 
+			return null; 
+		}
+		public <T> T getOrElseUpdate(String key, Callable<T> block) { 
+			try {
+				return block.call();
+			} catch (Exception e) {
+				throw new RuntimeException("block call failed",e);
+			}
+		}
+		public <T> T getOrElseUpdate(String key, Callable<T> block, int expiration) { 
+			return getOrElseUpdate(key,block);
+		}
+		public void remove(String key) {
+		}
+		public void set(String key, Object value) {
+		}
+		public void set(String key, Object value, int expiration) {
+		}
 	}
 	
 }

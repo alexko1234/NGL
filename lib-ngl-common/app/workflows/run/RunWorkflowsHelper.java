@@ -1,5 +1,7 @@
 package workflows.run;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -36,7 +38,8 @@ public class RunWorkflowsHelper {
 	@Autowired
 	ReadSetWorkflows readSetWorkflows;
 
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	//private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 
 	public void updateDispatchRun(Run run)
 	{

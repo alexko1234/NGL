@@ -555,12 +555,11 @@ public class CommonValidationHelper {
 	
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
 				
-		for(Object obj:factsAfterRules){
-			if(ContextValidation.class.isInstance(obj)){
+		for (Object obj : factsAfterRules) {
+			if (ContextValidation.class.isInstance(obj)) {
 				contextValidation.errors.putAll(((ContextValidation) obj).errors);
 			}
 		}
-
 	}
 	/*
 	public static void validateRules(Object object,ContextValidation contextValidation){

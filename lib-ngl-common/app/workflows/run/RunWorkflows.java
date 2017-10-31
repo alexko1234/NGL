@@ -1,5 +1,7 @@
 package workflows.run;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,9 @@ public class RunWorkflows extends Workflows<Run>{
 	@Autowired
 	RunWorkflowsHelper runWorkflowsHelper;
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	
 	private static final String ruleFRG="F_RG_1";
 	private static final String ruleIPS="IP_S_1";
 	private static final String ruleFV="F_V_1";
