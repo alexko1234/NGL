@@ -17,6 +17,7 @@
 									"type" :"text",
 							    	"order":true,
 							    	"group":true,
+							    	"groupMethod":"countDistinct",
 							    	"position":2
 								},
 								{	"property":"sequencingStartDate",
