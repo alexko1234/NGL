@@ -28,7 +28,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 
 	var statsService = {
 			datatable:undefined,
-			statColumns:[{header:'SAV Q30', code:'sav.q30',name:'Q30',property:'lanes.treatments.sav'}],
+			statColumns:[{header:'SAV Q30', code:'sav.q30',name:'Q30',property:'lanes.treatments.sav', value:'greaterQ30Perc',treatment:'sav'}],
 			select : {
 				properties:[]
 			},
@@ -202,6 +202,9 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	var computeData = function(dataRun)
 	{
 		
+		var treatment = statsConfigs[0].column.treatment;
+		var value = statsConfigs[0].column.value;
+		
 		var dataSeries = new Map();
 		for(var i=0; i<dataRun.length; i++){
 			//get run code
@@ -223,21 +226,21 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 					}
 					
 					
-					if(dataRun[i].lanes[l].treatments.sav !=null){
-						if(dataRun[i].lanes[l].treatments.sav.read1!=null && dataRun[i].lanes[l].treatments.sav.read1.greaterQ30Perc!=null){
-							dataLane.dataRead1.push([runCode,dataRun[i].lanes[l].treatments.sav.read1.greaterQ30Perc.value]);
+					if(dataRun[i].lanes[l].treatments[treatment] !=null){
+						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
+							dataLane.dataRead1.push([runCode,dataRun[i].lanes[l].treatments[treatment].read1[value].value]);
 							dataLane.existRead1Value=true;
 						}else{
 							dataLane.dataRead1.push([runCode,0]);
 						}
-						if(dataRun[i].lanes[l].treatments.sav.read2!=null && dataRun[i].lanes[l].treatments.sav.read2.greaterQ30Perc!=null){
-							dataLane.dataRead2.push([runCode,dataRun[i].lanes[l].treatments.sav.read2.greaterQ30Perc.value]);
+						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
+							dataLane.dataRead2.push([runCode,dataRun[i].lanes[l].treatments[treatment].read2[value].value]);
 							dataLane.existRead2Value=true;
 						}else{
 							dataLane.dataRead2.push([runCode,0]);
 						}
-						if(dataRun[i].lanes[l].treatments.sav.default!=null && dataRun[i].lanes[l].treatments.sav.default.greaterQ30Perc!=null){
-							dataLane.dataDefault.push([runCode,dataRun[i].lanes[l].treatments.sav.default.greaterQ30Perc.value]);
+						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
+							dataLane.dataDefault.push([runCode,dataRun[i].lanes[l].treatments[treatment].default[value].value]);
 							dataLane.existDefaultValue=true;
 						}else{
 							dataLane.dataDefault.push([runCode,0]);
