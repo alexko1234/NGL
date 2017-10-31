@@ -162,6 +162,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		for(var i = 0; i < statsConfigs.length; i++){
 			properties.push(statsConfigs[i].column.property);			
 		}
+		properties.push("lanes.number");
 
 		var promises = [];
 		for(var i = 0; i < queriesConfigs.length ; i++){
@@ -191,36 +192,78 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		var data = readsetDatatable.getData();
 		//compute data
 		charts = [];
-		//get first chart 
-		charts.push(getChart(data));
+		var mapSeriesLane = computeData(data);
+		for(var key of mapSeriesLane.keys()){
+			charts.push(getChart(mapSeriesLane.get(key)));
+		}
+		
 	};
 	
-	var getChart = function(data) {
+	var computeData = function(dataRun)
+	{
 		
-		var allSeries = [];
-		var runCodes = [];
-		var dataRead1 = [];
-		//var dataRead2 = [];
-		//var dataDefault = [];
-		for(var i=0; i<data.length; i++){
+		var dataSeries = new Map();
+		for(var i=0; i<dataRun.length; i++){
 			//get run code
-			var runCode = data[i].code;
-			if(data[i].lanes !=null){
-				if(data[i].lanes[0].treatments.sav !=null){
-					if(data[i].lanes[0].treatments.sav.read1.greaterQ30Perc!=null){
-						dataRead1.push([data[i].lanes[0].treatments.sav.read1.greaterQ30Perc.value]);
-						runCodes.push(runCode);
+			var runCode = dataRun[i].code;
+			if(dataRun[i].lanes !=null){
+				for(var l=0; l<dataRun[i].lanes.length; l++){
+					var nbLane = dataRun[i].lanes[l].number;
+					var dataLane ={
+						laneNumber:nbLane,
+						dataRead1:[],
+						dataRead2:[],
+						dataDefault:[],
+						existRead1Value:false,
+						existRead2Value:false,
+						existDefaultValue:false
+					};
+					if(dataSeries.get(nbLane)!=null){
+						dataLane=dataSeries.get(nbLane);
 					}
-				//	if(data[i].lanes[0].treatments.sav.read2.greaterQ30Perc!=null){
-				//		dataRead2.push([runCode,data[i].lanes[0].treatments.sav.read2.greaterQ30Perc.value]);
-				//	}
 					
+					
+					if(dataRun[i].lanes[l].treatments.sav !=null){
+						if(dataRun[i].lanes[l].treatments.sav.read1!=null && dataRun[i].lanes[l].treatments.sav.read1.greaterQ30Perc!=null){
+							dataLane.dataRead1.push([runCode,dataRun[i].lanes[l].treatments.sav.read1.greaterQ30Perc.value]);
+							dataLane.existRead1Value=true;
+						}else{
+							dataLane.dataRead1.push([runCode,0]);
+						}
+						if(dataRun[i].lanes[l].treatments.sav.read2!=null && dataRun[i].lanes[l].treatments.sav.read2.greaterQ30Perc!=null){
+							dataLane.dataRead2.push([runCode,dataRun[i].lanes[l].treatments.sav.read2.greaterQ30Perc.value]);
+							dataLane.existRead2Value=true;
+						}else{
+							dataLane.dataRead2.push([runCode,0]);
+						}
+						if(dataRun[i].lanes[l].treatments.sav.default!=null && dataRun[i].lanes[l].treatments.sav.default.greaterQ30Perc!=null){
+							dataLane.dataDefault.push([runCode,dataRun[i].lanes[l].treatments.sav.default.greaterQ30Perc.value]);
+							dataLane.existDefaultValue=true;
+						}else{
+							dataLane.dataDefault.push([runCode,0]);
+						}
+						
+					}
+					dataSeries.set(nbLane,dataLane);
 				}
 			}
 		}
-		allSeries.push({data:[dataRead1]});
-		//allSeries.push({data:[dataRead2]});
-		//allSeries.push({data:[dataDefault]});
+		return dataSeries;
+	};
+	
+	var getChart = function(dataLane) {
+		
+		var allSeries = [];
+		
+		if(dataLane.existRead1Value){
+			allSeries.push({name:'read1',data:dataLane.dataRead1,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
+		}
+		if(dataLane.existRead2Value){
+			allSeries.push({name:'read2',data:dataLane.dataRead2,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
+		}
+		if(dataLane.existDefaultValue){
+			allSeries.push({name:'default',data:dataLane.dataDefault,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
+		}
 		
 		var chart = {
 
@@ -229,21 +272,20 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				height : 770
 			},
 			title : {
-				text : 'Q30 Value'
+				text : 'Q30 Value for Lane '+dataLane.laneNumber,
 			},
 			xAxis : {
-				categories:runCodes,
 				title : {
 					text : 'RunCode',
 				},
 				type : "category",
-				tickPixelInterval : 1
 			},
 
 			yAxis : {
 				title : {
 					text : 'Q30'
-				}
+				},
+				min : 0
 			},
 			series : allSeries,
 		}
