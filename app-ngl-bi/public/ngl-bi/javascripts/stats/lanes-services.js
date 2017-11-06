@@ -149,28 +149,49 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 			"hide":true,
 			"position":101
 		} ,
-		{  	"property":function(value){
-			if(angular.isDefined(value.lanes)){
+		{  	"property":"lanes",
+			"render": function(value){
+			if(angular.isDefined(value)){
 				var display = "";
 				var treatment = statsConfigs[0].column.treatment;
 				var valueColumn = statsConfigs[0].column.value;
+				display+="<table class=\"table table-condensed table-hover table-bordered\">";
+				display+="<thead>";
+				display+="<tr>";
+				display+="<th>Property</th>";
 				for(var l=0; l<value.lanes.length; l++){
 					var nbLane = value.lanes[l].number;
 					display += "Lane "+nbLane+" ";
+					display+="<th>Lane "+nbLane+"</th>";
+				}
+				display+="</tr></thead><tbody>";
+				var mapData = getDataLane(value.lanes,treatment,valueColumn);
+				for(var key of mapData.keys()){
+					display += "<tr><td>"+key+"</td>";
+					var tabData = mapData.get(key);
+					for(var t=0; tabData.length; t++){
+						display+="<td>"+tabData[t]+"</td>";
+					}
+					display+="</tr>";
+				}
+				/*for(var l=0; l<value.lanes.length; l++){
+					var nbLane = value.lanes[l].number;
+					display += "<td>";
 					if(value.lanes[l].treatments[treatment] !=null){
 						if(value.lanes[l].treatments[treatment].read1!=null && value.lanes[l].treatments[treatment].read1[valueColumn]!=null){
-							display += "Read 1 "+value.lanes[l].treatments[treatment].read1[valueColumn];
+							display += "R1 "+value.lanes[l].treatments[treatment].read1[valueColumn].value;
 						}
 						if(value.lanes[l].treatments[treatment].read2!=null && value.lanes[l].treatments[treatment].read2[valueColumn]!=null){
-							display +=" Read 2 "+value.lanes[l].treatments[treatment].read2[valueColumn];
+							display +=" R2 "+value.lanes[l].treatments[treatment].read2[valueColumn].value;
 						}
 						if(value.lanes[l].treatments[treatment].default!=null && value.lanes[l].treatments[treatment].default[valueColumn]!=null){
-							display +=" Default "+value.lanes[l].treatments[treatment].default[valueColumn];
+							display +=" Default "+value.lanes[l].treatments[treatment].default[valueColumn].value;
 						}
-						
+					
 					}
-					display +="</BR>";
-				}
+					display += "</td>";
+				}*/
+				display +="</tbody></table>";
 				return display;
 			}
 				
@@ -181,6 +202,39 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
     	"order":false
 		}
 		];	
+	
+	var getDataLane = function(lanes, treatment,valueColumn){
+		var mapData = new Map();
+		for(var l=0; l<lanes.length; l++){
+			if(lanes[l].treatments[treatment] !=null){
+				if(lanes[l].treatments[treatment].read1!=null && lanes[l].treatments[treatment].read1[valueColumn]!=null){
+					var tabValue = [];
+					if(mapData.get("read1")!=undefined){
+						tabValue=mapData.get("read1");
+					}
+					tabValue.push(lanes[l].treatments[treatment].read1[valueColumn].value);
+					mapData.set("read1",tabValue);
+				}
+				if(lanes[l].treatments[treatment].read2!=null && lanes[l].treatments[treatment].read2[valueColumn]!=null){
+					var tabValue = [];
+					if(mapData.get("read2")!=undefined){
+						tabValue=mapData.get("read2");
+					}
+					tabValue.push(lanes[l].treatments[treatment].read2[valueColumn].value);
+					mapData.set("read2",tabValue);
+				}
+				if(lanes[l].treatments[treatment].default!=null && lanes[l].treatments[treatment].default[valueColumn]!=null){
+					var tabValue = [];
+					if(mapData.get("default")!=undefined){
+						tabValue=mapData.get("default");
+					}
+					tabValue.push(lanes[l].treatments[treatment].default[valueColumn].value);
+					mapData.set("default",tabValue);
+				}
+			}
+		}
+		return mapData;
+	}
 	var statsConfigs, queriesConfigs = [];
 	var readsetDatatable;
 	var charts = [];
