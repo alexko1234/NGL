@@ -123,7 +123,7 @@ public class Containers extends CommonController {
 			if(containersSearch.datatable){
 				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 				// return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
-				return ok(MongoStreamer.stream(results)).as("application/json");
+				return ok(MongoStreamer.streamUDT(results)).as("application/json");
 			}else if(containersSearch.count){
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("code", 1);

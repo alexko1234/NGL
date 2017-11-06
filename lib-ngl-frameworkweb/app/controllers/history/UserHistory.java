@@ -1,6 +1,8 @@
 package controllers.history;
 
-import play.Logger;
+// import play.api.Configuration;
+
+// import play.Logger;
 import play.Play;
 import play.libs.Json;
 import play.mvc.Action;
@@ -12,24 +14,37 @@ import play.mvc.Result;
 import java.util.concurrent.CompletionStage;
 
 import fr.cea.ig.MongoDBDAO;
-import play.mvc.Result;
+// import play.mvc.Result;
 import play.libs.F;
 //import play.libs.F.Function0;
 //import play.libs.F.Promise;
 
+import javax.inject.Inject;
+
 /** 
- * Write user action into database
+ * Write user action into database.
  * 
+ * Use with :  @With(UserHistory.class)
  *
- *Use with :  @With(UserHistory.class)
+ * This class handle the request of the user and write the action to database
  *
- *This class handle the request of the user and write the action to database
  *@author ydeshayes
  */
 
 // TODO: clean 
 public class UserHistory extends Action.Simple {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(UserHistory.class);
+	
+	/*
+	private Configuration configuration;
+	
+	@Inject
+	public UserHistory(Configuration configuration) {
+		this.configuration = configuration;
+	}
+	*/
+	
 	@Override
 	//function called by play
 	// public  F.Promise<Result> call(Http.Context context) throws Throwable {
@@ -53,15 +68,13 @@ public class UserHistory extends Action.Simple {
 					body = rb.asJson().toString();
 				}
 				
-				
+				logger.debug("running delegate " + delegate);
 				long start = System.currentTimeMillis();
 				res = delegate.call(context);
 				long timeRequest = (System.currentTimeMillis() - start);
-				Logger.debug("("+login+") - " +action+ " -> " + (System.currentTimeMillis() - start) + " ms.");
-				
-				//after request
-				//ecriture de l'info
+				logger.debug("(" + login + ") - " + action + " -> " + (System.currentTimeMillis() - start) + " ms.");
 				MongoDBDAO.save("UserHistory", new UserAction(login,params,body,action,timeRequest));
+				logger.debug("saved action, user:" + login + ", action:" + action);
 			} else {
 				res = delegate.call(context);
 			}
@@ -70,6 +83,7 @@ public class UserHistory extends Action.Simple {
 			return delegate.call(context);
 		}
 	}
+	
 }
 
 

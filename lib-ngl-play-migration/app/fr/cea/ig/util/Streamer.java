@@ -8,6 +8,8 @@ import java.io.PipedOutputStream;
 import java.io.PrintWriter;
 import java.util.Iterator;
 
+import fr.cea.ig.io.OutToInStreams;
+
 // import org.jongo.MongoCursor;
 
 // import play.libs.Json;
@@ -48,12 +50,14 @@ public class Streamer {
 	/**
 	 * Input stream to return to callers.
 	 */
-	private PipedInputStream in;
+	// private PipedInputStream in;
 	
 	/**
 	 * Output stream for streamer to write to.
 	 */
-	private PipedOutputStream out;
+	// private PipedOutputStream out;
+	
+	private OutToInStreams ois;
 	
 	/**
 	 * Thread that runs the IStreamer writes. 
@@ -71,12 +75,15 @@ public class Streamer {
 	 */
 	public Streamer(IStreamer streamer) {
 		this.streamer = streamer;
+		/*
 		in = new PipedInputStream();
 		try {
 			out = new PipedOutputStream(in);
 		} catch (IOException e) {
 			throw new RuntimeException("streamer initialization failed",e);
 		}
+		*/
+		ois = new OutToInStreams();
 	}
 	
 	/**
@@ -89,7 +96,12 @@ public class Streamer {
 			thread = new Thread(new Runnable() {
 				public void run() {
 					try {
-						streamer.streamTo(out);
+						streamer.streamTo(ois.getOutputStream());
+						logger.debug("streaming of " + streamer + " done");
+						// out.flush();
+						// out.close();
+						// in.close();
+						// logger.debug("streams closed");
 					} catch (IOException e) {
 						logger.error("stream error",e);
 					}
@@ -97,7 +109,7 @@ public class Streamer {
 			});
 			thread.start();
 		}
-		return in;
+		return ois.getInputStream();
 	}
 
 	/**

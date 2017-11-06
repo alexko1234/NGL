@@ -65,8 +65,8 @@ import fr.cea.ig.mongo.MongoStreamer;
 public abstract class CommonController extends Controller {
 
 	// TODO: fix initialization
-	protected final static DynamicForm listForm = new DynamicForm(null,null,null); // new DynamicForm()
-
+	protected final static DynamicForm listForm = // new DynamicForm(null,null,null); // new DynamicForm()
+			fr.cea.ig.play.IGGlobals.form();
 	/**
 	 * Fill a form in json mode
 	 * @param form
