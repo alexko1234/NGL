@@ -1052,6 +1052,7 @@ stats.page.tab.lanes.config = Configuration Statistiques
 stats.tabs.charts = Graphiques
 stats.tabs.exclude = Valeurs exclues
 stats.tabs.query = Requête
+stats.property = Propriété
 
 stats.removedReadsEcoli = % Removed Reads (E. coli)
 stats.bacteria = % Bacteria

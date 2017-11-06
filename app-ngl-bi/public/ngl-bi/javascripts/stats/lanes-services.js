@@ -148,7 +148,38 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 			"type" :"text",
 			"hide":true,
 			"position":101
-		} 
+		} ,
+		{  	"property":function(value){
+			if(angular.isDefined(value.lanes)){
+				var display = "";
+				var treatment = statsConfigs[0].column.treatment;
+				var valueColumn = statsConfigs[0].column.value;
+				for(var l=0; l<value.lanes.length; l++){
+					var nbLane = value.lanes[l].number;
+					display += "Lane "+nbLane+" ";
+					if(value.lanes[l].treatments[treatment] !=null){
+						if(value.lanes[l].treatments[treatment].read1!=null && value.lanes[l].treatments[treatment].read1[valueColumn]!=null){
+							display += "Read 1 "+value.lanes[l].treatments[treatment].read1[valueColumn];
+						}
+						if(value.lanes[l].treatments[treatment].read2!=null && value.lanes[l].treatments[treatment].read2[valueColumn]!=null){
+							display +=" Read 2 "+value.lanes[l].treatments[treatment].read2[valueColumn];
+						}
+						if(value.lanes[l].treatments[treatment].default!=null && value.lanes[l].treatments[treatment].default[valueColumn]!=null){
+							display +=" Default "+value.lanes[l].treatments[treatment].default[valueColumn];
+						}
+						
+					}
+					display +="</BR>";
+				}
+				return display;
+			}
+				
+				
+		},
+    	"header": Messages("stats.property"),
+    	"type":"text",
+    	"order":false
+		}
 		];	
 	var statsConfigs, queriesConfigs = [];
 	var readsetDatatable;
@@ -159,8 +190,10 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		readsetDatatable.config.spinner.start = true;
 
 		var properties = ["default"];
+		var propExistingFiels = [];
 		for(var i = 0; i < statsConfigs.length; i++){
-			properties.push(statsConfigs[i].column.property);			
+			properties.push(statsConfigs[i].column.property);	
+			propExistingFiels.push(statsConfigs[i].column.property);	
 		}
 		properties.push("lanes.number");
 
@@ -168,6 +201,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		for(var i = 0; i < queriesConfigs.length ; i++){
 			var form = angular.copy(queriesConfigs[i].form);
 			form.includes = properties;
+			form.existingFields = propExistingFiels;
 			promises.push($http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:form}));			
 		}
 
@@ -206,6 +240,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		var value = statsConfigs[0].column.value;
 		
 		var dataSeries = new Map();
+		var newData = [];
 		for(var i=0; i<dataRun.length; i++){
 			//get run code
 			var runCode = dataRun[i].code;
@@ -275,7 +310,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				height : 770
 			},
 			title : {
-				text : 'Q30 Value for Lane '+dataLane.laneNumber,
+				text : statsConfigs[0].column.header+' Lane '+dataLane.laneNumber,
 			},
 			xAxis : {
 				title : {
@@ -286,7 +321,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 
 			yAxis : {
 				title : {
-					text : 'Q30'
+					text :  statsConfigs[0].column.name
 				},
 				min : 0
 			},
