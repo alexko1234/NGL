@@ -120,7 +120,7 @@ public class Input extends AbstractInput {
 					String flowcellId=cols[8].trim();
 					Logger.info ("flowcellId="+flowcellId);
 					
-					 if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
+					if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
 		        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell ligne 5 ("+flowcellId+") ne correspond pas à celui de l'expérience");
 						 return experiment;
 					}
@@ -132,97 +132,125 @@ public class Input extends AbstractInput {
 				// ligne "Résultats principaux..." = fin des données a parser
 				if ( cols[0].trim().matches("Résultats principaux(.*)")){
 					lastResult=true;
+				} 
+
+				if ( !cols[0].trim().equals("") ){
+					//Logger.info ("processing ligne "+ n +" section  boites..)...");	
+					// voir avec Florence: c'est les lignes LOT ou RGT  qu'il faut traiter ?? voire les 2 ??????
+					String item[]=cols[0].trim().split("LOT");	
+					if (item.length != 2){
+						//ignorer sans erreur ???  ( ligne Code Barre ou ligne Résultat ou ligne RGT...)
+						n++;
+						continue;
+					} else {
+						String fileItemName=item[1].trim(); // trim !!!!
+						String fileItemCode=cols[8].trim();
+						if ( fileItemCode.equals("")){
+							//code barre manquant !!
+							Logger.info ("ERROR line "+ n +": reagent barcode missing");
+						}
+						
+						///Logger.info ("ligne "+ n +" chercher si :"+fileItemName+" est une boite OU un reactif associé");		
+						//-1- chercher dans boxMap
+						if ( boxMap.containsKey(fileItemName) ){	
+							Logger.info (fileItemName+ " TROUVE DANS HASH BOX");
+							BoxCatalog bc= boxMap.get(fileItemName);
+							boxCodeMap.put(bc.code, fileItemCode+"_");// stocker le barcode de boite pour ses reagents plus tard...
+							
+							//  A FAIRE ??? ou faut il traiter les boites sans les reagents ?????
+							  //construire un reagentUsed et l'ajouter a l'experiment
+							  ReagentUsed ru=new ReagentUsed();  
+							  ru.kitCatalogCode=bc.kitCatalogCode;  Logger.info("kitCatalogCode="+ru.kitCatalogCode);
+							  ru.boxCatalogCode=bc.code; Logger.info("boxCatalogCode="+ru.boxCatalogCode);
+							  ru.boxCode=fileItemCode+"_" ;  Logger.info("boxCode="+ ru.boxCode);  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite;
+							
+						      experiment.reagents.add(ru);  //a faire uniquement si pas d'erreur !!!!
+						
+						} 
+						//-2- chercher dans mapReagent
+						else if ( reagentMap.containsKey(fileItemName) ){	
+							Logger.info (fileItemName+ " TROUVE DANS HASH REAGENT");
+							ReagentCatalog rc= reagentMap.get(fileItemName);
+							
+							if ( null == boxCodeMap.get(rc.boxCatalogCode));
+							{
+							  // la boite de ce reactif n'est pas presente dans la section de declaration des boites !!!
+							  // que fait-on ????
+							  Logger.info("WARNING line "+n+" reagent box not declared in file.!!!! pour l'instant continuer qd meme");
+							}
+							
+							//construire un reagentUsed et l'ajouter a l'experiment
+							ReagentUsed ru=new ReagentUsed();  
+							ru.kitCatalogCode=rc.kitCatalogCode; Logger.info("kitCatalogCode="+ru.kitCatalogCode);
+							ru.boxCatalogCode=rc.boxCatalogCode; Logger.info("boxCatalogCode="+ru.boxCatalogCode);
+							ru.reagentCatalogCode=rc.code; Logger.info("reagentCatalogCode="+ru.reagentCatalogCode);
+							 
+							ru.boxCode=boxCodeMap.get(rc.boxCatalogCode);  Logger.info("boxCode="+ru.boxCode); 
+							ru.code=fileItemCode+"_" ; Logger.info("code="+ ru.code); // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+							// ru.description=fileReagentWeight;	// pas de description dans cette section du fichier...	 
+								
+							experiment.reagents.add(ru);  //a faire uniquement si pas d'erreur !!!!
+						} 
+						else { Logger.info ("WARNING line "+ n +": item <"+fileItemName+ "> is not a reagent nor a box; continuer ????");}
+					}
 				} else {
-					//Logger.info ("processing ligne "+ n);	
-					if ( cols[0].trim().equals("") && ! cols[1].trim().equals("Position") ){
+					if ( ! cols[1].trim().equals("Position") ){
+						//Logger.info ("processing ligne "+ n +" section  position...");		
 						//reactifs en positions 1-->XX
 						String fileReagentName=cols[2].trim();
+						if ( fileReagentName.equals("")){
+							// nom du reactif manquant....
+							Logger.info("ERROR line "+ n+": reagent name missing");
+						}
 						
 						// dans cette section ne doivent se trouver que des reactifs (pas de boites ni de kits)
-						Logger.info ("ligne "+ n+ " chercher si :"+fileReagentName+" est un reactif actif");
+						Logger.info ("ligne "+ n+ " chercher si :<"+fileReagentName+"> est un reactif actif");
 						
 						//chercher dans reagentMap
 						if (reagentMap.containsKey(fileReagentName) ){	
 							Logger.info (fileReagentName+" TROUVE DANS HASH REAGENT");
 							ReagentCatalog rc= reagentMap.get(fileReagentName);
 							
+							if ( null == boxCodeMap.get(rc.boxCatalogCode));
+							{
+							  // la boite de ce reactif n'est pas presente dans la section de declaration des boites !!!
+							  // que fait-on ????
+							  Logger.info("WARNING line "+ n+": reagent box not declared in file.  !!!! pour l'instant continuer qd meme");
+							}
+							
 							// verifier que le code barre se termine par -<REACTIF>
 							String fileReagentCode = cols[5].trim();
-							String fileReagentWeight = cols[15].trim();
+							if ( fileReagentCode.equals("")){
+								// code barre reactif manquant
+								Logger.info("ERROR line "+ n+": barcode missing");
+							}
+
 							if (fileReagentCode.matches("(.*)-"+fileReagentName)) {	
-								Logger.info ("code correct:"+ fileReagentCode + "  poids:"+ fileReagentWeight );
+								
+								Logger.info ("code correct:"+ fileReagentCode);
 								
 								//construire un reagent et l'ajouter a l'experiment...EN COURS
 								ReagentUsed ru=new ReagentUsed();  
 
-							    ru.kitCatalogCode=rc.kitCatalogCode; 
-							    ru.boxCatalogCode=rc.boxCatalogCode;
-							    ru.reagentCatalogCode=rc.code;
+							    ru.kitCatalogCode=rc.kitCatalogCode; Logger.info ("kitCatalogCode="+ru.kitCatalogCode);
+							    ru.boxCatalogCode=rc.boxCatalogCode; Logger.info ("boxCatalogCode="+ru.boxCatalogCode);
+							    ru.reagentCatalogCode=rc.code; Logger.info ("reagentCatalogCode"+ru.reagentCatalogCode);
 							    
-							    ru.boxCode=boxCodeMap.get(rc.boxCatalogCode);  // attention null pointer !!!
-							    ru.code=fileReagentCode+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
-							    ru.description=fileReagentWeight;		 
+							    ru.boxCode=boxCodeMap.get(rc.boxCatalogCode);  Logger.info ("boxCode="+ru.boxCode);
+							    ru.code=fileReagentCode+"_" ;   Logger.info ("code="+ru.code); // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+							    String fileReagentWeight = cols[15].trim();
+							    if ( !fileReagentWeight.equals("") ){
+							    	ru.description=fileReagentWeight;	Logger.info ("description="+ ru.description);
+							    }
 								
-							    experiment.reagents.add(ru); // a faire uniquement si pas d'erreur !!!!
+							    experiment.reagents.add(ru); // a faire uniquement si pas d'erreur !!!!!!!!!!!
 
 							} else {
-								 Logger.info ("code "+fileReagentCode+" ne se termine pas par -"+fileReagentName+" =======> erreur"); 
-								 // important ou pas  ??? sort ou non ???
+								 Logger.info ("ERROR line "+ n +": barcode "+fileReagentCode+" must end with -"+fileReagentName); 
 							}
 						} 
 						//else {Logger.info (fileReagentName+ " PAS TROUVE DANS HASH REAGENT..."); }// DEBUG
-						
-					} else {	
-						// voir avec Florence: c'est les lignes LOT ou RGT  qu'il faut traiter ?? voire les 2 ??????
-						String item[]=cols[0].trim().split("LOT");	
-						if (item.length != 2){
-							//ignorer sans erreur ???
-							n++;
-							continue;
-						} else {
-							String fileItemName=item[1].trim(); // trim !!!!
-							String fileItemCode=cols[8].trim();
-							
-							///Logger.info ("ligne "+ n +" chercher si :"+fileItemName+" est une boite OU un reactif associé");
-							// PAS DE KIT DANS CETTE SECTION...
-							
-							//-1- chercher dans boxMap
-							if ( boxMap.containsKey(fileItemName) ){	
-								Logger.info (fileItemName+ " TROUVE DANS HASH BOX");
-								BoxCatalog bc= boxMap.get(fileItemName);
-								boxCodeMap.put(bc.code, fileItemCode+"_");// stocker le barcode de boite pour ses reagents plus tard...
-								
-								//construire un reagentUsed et l'ajouter a l'experiment
-								ReagentUsed ru=new ReagentUsed();  
-								ru.kitCatalogCode=bc.kitCatalogCode; 
-								ru.boxCatalogCode=bc.code;
-								ru.boxCode=fileItemCode+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite;
-								
-							    experiment.reagents.add(ru);  //a faire uniquement si pas d'erreur !!!!
-							
-							} 
-							//-2- chercher dans mapReagent
-							else if ( reagentMap.containsKey(fileItemName) ){	
-								Logger.info (fileItemName+ " TROUVE DANS HASH REAGENT");
-								ReagentCatalog rc= reagentMap.get(fileItemName);
-								
-								//construire un reagentUsed et l'ajouter a l'experiment
-								ReagentUsed ru=new ReagentUsed();  
-								ru.kitCatalogCode=rc.kitCatalogCode; 
-								ru.boxCatalogCode=rc.boxCatalogCode;
-								ru.reagentCatalogCode=rc.code;
-								 
-								ru.boxCode=boxCodeMap.get(rc.boxCatalogCode);  // attention null pointer !!!
-										
-								ru.code=fileItemCode+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
-								// ru.description=fileReagentWeight;	// pas de description dans cette section du fichier...	 
-									
-								experiment.reagents.add(ru);  //a faire uniquement si pas d'erreur !!!!
-								
-							} 
-							//else { Logger.info (fileItemName+ " PAS TROUVE DANS HASH BOX NI HASH REAGENT...");} // DEBUG
-						}
-					}	
+					} // else = ligne position|nom du reactif...	
 				}
 			}
 		
@@ -240,21 +268,7 @@ public class Input extends AbstractInput {
 		if (!contextValidation.hasErrors()) {
 			Logger.info ("SETTING REAGENTS...TODO...");	
 			
-			/*
-			experiment.atomicTransfertMethods
-				.stream()
-				.map(atm -> atm.inputContainerUseds.get(0))
-				.forEach(icu -> {
-					String icupos=InputHelper.getCodePosition(icu.code);				
-					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
-					if(dataMap.containsKey(icupos)){
-						concentration1.value = dataMap.get(icupos).concentration;
-						// concentration1.unit = unit; ne marche pas si unit n'est pas "final"
-						concentration1.unit = unit.toString();
-					}
-									
-				});
-			*/
+			
 		}
 		
 		return experiment;
