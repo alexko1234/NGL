@@ -399,7 +399,8 @@ public class ProcessesOld extends CommonController {
 	public static Result delete(String code) throws DAOException{
 		Process process = getProcess(code);
 		// Form deleteForm = new Form(Process.class);
-		Form deleteForm = new Form(Process.class,null,null,null);
+		// Form deleteForm = new Form(Process.class,null,null,null);
+		Form deleteForm = fr.cea.ig.play.IGGlobals.form(Process.class);
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");

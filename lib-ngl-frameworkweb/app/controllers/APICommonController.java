@@ -30,8 +30,8 @@ import controllers.history.UserHistory;
 public abstract class APICommonController<T> extends Controller {
 
 	// TODO: fix initialization
-	protected final DynamicForm listForm = new DynamicForm(null,null,null); // = new DynamicForm();
-	
+	protected final DynamicForm listForm = // new DynamicForm(null,null,null); // = new DynamicForm();
+	    fr.cea.ig.play.IGGlobals.form();
 	protected Class<T> type;
 	
 	// protected final Form<T> mainForm = form(type);
