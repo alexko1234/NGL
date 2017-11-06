@@ -10,14 +10,13 @@
 							    	"type" :"text",
 							    	"order":true,
 							    	"position":1,
-							    	"groupMethod":"count:true",
+							    	"groupMethod":"countDistinct"
 								},
 								{	"property":"typeCode",
 									"header": Messages("runs.typeCode"),
 									"type" :"text",
 							    	"order":true,
 							    	"group":true,
-							    	"groupMethod":"countDistinct",
 							    	"position":2
 								},
 								{	"property":"sequencingStartDate",
