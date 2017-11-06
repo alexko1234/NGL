@@ -507,7 +507,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	//	propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
 		//		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
 		
-		propertyDefinitions.add(newPropertiesDefinition("Fraction", "sizeFraction", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+		propertyDefinitions.add(newPropertiesDefinition("Fraction de taille", "sizeFraction", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
 				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm",">3 µm","0.2-3 µm","0.22-200 µm","<0.2 µm"), null,null,null,"single", 6, false, null,null));		
 		propertyDefinitions.add(newPropertiesDefinition("Profondeur / Couche", "depthOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
 				newValues("0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
