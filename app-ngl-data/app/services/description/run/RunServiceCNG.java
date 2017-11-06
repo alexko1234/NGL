@@ -165,6 +165,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("FG","FG - GROSeq"));
          values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
          values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
+         values.add(DescriptionFactory.newValue("FJ","FJ - RRBSeq")); // SUPSQCNG-497: ajout 06/11/2017 car manquant
          values.add(DescriptionFactory.newValue("HIC","HIC - HiC"));
          
          // codes for RNA sequencing
