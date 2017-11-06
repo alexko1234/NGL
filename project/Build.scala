@@ -41,7 +41,8 @@ object ApplicationBuild extends Build {
 	
   // val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.4-1.5-SNAPSHOT"
 	// val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.5-1.5.1-SNAPSHOT"
-	val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.6-1.5.2-SNAPSHOT"
+	// val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.6-1.5.2-SNAPSHOT"
+	val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
   // val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.4-1.4-SNAPSHOT"
   // val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.5-1.4.1-SNAPSHOT"
 	val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"

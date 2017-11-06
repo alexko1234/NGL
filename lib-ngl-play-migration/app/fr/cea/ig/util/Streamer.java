@@ -83,7 +83,7 @@ public class Streamer {
 			throw new RuntimeException("streamer initialization failed",e);
 		}
 		*/
-		ois = new OutToInStreams();
+		ois = new OutToInStreams(8192);
 	}
 	
 	/**
