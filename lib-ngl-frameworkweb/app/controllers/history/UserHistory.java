@@ -1,13 +1,14 @@
 package controllers.history;
 
 // import play.api.Configuration;
-
+// import com.typesafe.config.Config;
+import fr.cea.ig.play.IGConfig;
 // import play.Logger;
-import play.Play;
+// import play.Play;
 import play.libs.Json;
 import play.mvc.Action;
-import play.mvc.Http;
-import play.mvc.Http.Context;
+// import play.mvc.Http;
+// import play.mvc.Http.Context;
 import play.mvc.Http.RequestBody;
 import play.mvc.Result;
 
@@ -28,29 +29,44 @@ import javax.inject.Inject;
  *
  * This class handle the request of the user and write the action to database
  *
- *@author ydeshayes
+ * @author ydeshayes
+ * 
  */
 
 // TODO: clean 
 public class UserHistory extends Action.Simple {
 
+	/**
+	 * Logger.
+	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(UserHistory.class);
 	
-	/*
-	private Configuration configuration;
+	/**
+	 * Configuration path for user action tracing.
+	 */
+	public static final String USER_ACTION_TRACE_PATH = "useraction.trace";
+	/**
+	 * Configuration.
+	 */
+	private final IGConfig config;
 	
+	/**
+	 * Constructor.
+	 * @param config play configuration to use
+	 */
 	@Inject
-	public UserHistory(Configuration configuration) {
-		this.configuration = configuration;
+	public UserHistory(IGConfig config) {
+		this.config = config;
 	}
-	*/
+	
 	
 	@Override
 	//function called by play
 	// public  F.Promise<Result> call(Http.Context context) throws Throwable {
 	public CompletionStage<Result> call(final play.mvc.Http.Context context) {
-		if (Play.application().configuration().getBoolean("useraction.trace") != null 
-			&& Play.application().configuration().getBoolean("useraction.trace") != false){
+		// if (Play.application().configuration().getBoolean("useraction.trace") != null
+		if (config.getBoolean(USER_ACTION_TRACE_PATH,false)) {
+			// && Play.application().configuration().getBoolean("useraction.trace") != false){
 			
 			// F.Promise<Result> res = null;
 			CompletionStage<Result> res = null;

@@ -20,6 +20,9 @@ import static play.test.Helpers.*;
 import javax.inject.*;
 import play.inject.guice.GuiceApplicationBuilder;
 
+import play.mvc.Result;
+import play.mvc.Http.RequestBuilder;
+
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
@@ -61,15 +64,19 @@ public class ExperimentTest { // extends WithApplication {
 		String str = "Hello world";
 		assertFalse(str.isEmpty());
 	}
-	
+	/*
 	static GuiceApplicationBuilder applicationBuilder;
+	
 	static Application application;
+	
 	public static Application devapp() {
 		if (applicationBuilder == null) {
 			System.setProperty("config.file", "c:\\projets\\config\\ngl-sq-dev.conf");
 			System.setProperty("logger.file", "c:\\projets\\config\\logger.xml");
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
-			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
+			Environment env = new Environment(
+			           //new File("path/to/app"), classLoader, 
+			            play.Mode.DEV);
 		    applicationBuilder = new GuiceApplicationBuilder().in(env);
 		    application = applicationBuilder.build();
 		}
@@ -77,7 +84,10 @@ public class ExperimentTest { // extends WithApplication {
 		// This does not properly sets the Play.application() instance.
 		return application;
 	}
-	
+	*/
+	public static Application devapp() {
+		return fr.cea.ig.play.test.DevAppTesting.devapp();
+	}
 	// @Test
 	public void startApp() {
 		// Try to emulate the -D that should land in system.properties.
@@ -261,13 +271,41 @@ public class ExperimentTest { // extends WithApplication {
 	// - v0':PropertySingleValue[value=44, unit=�L, class=java.lang.Integer]
 	// 2017-10-23 13:03:05,202 [INFO] from controllers.experiments.api.Experiments in application-akka.actor.default-dispatcher-5
 	// - v1':PropertySingleValue[value=44, unit=�L, class=java.math.BigInteger]
-	@Test
+	//@Test
 	public void jsonAndRe() throws Exception {
 		Application app = devapp();
 		// copy/paste from log
 		String v0s = "{\"_type\":\"single\",\"value\":44,\"unit\":\"�L\"}";
 		String v1s = "{\"_type\":\"single\",\"value\":44,\"unit\":\"�L\"}";
 		// Waste of time as the string deserialization is already correct.
+	}
+
+	// Scripting 
+	/*
+	@Test
+	public void testInServer() throws Exception {
+	    TestServer server = testServer(3333);
+	    running(server, () -> {
+	        try (WSClient ws = play.test.WSTestClient.newClient(3333)) {
+	            CompletionStage<WSResponse> completionStage = ws.url("/").get();
+	            WSResponse response = completionStage.toCompletableFuture().get();
+	            assertEquals(OK, response.getStatus());
+	        } catch (Exception e) {
+	            logger.error(e.getMessage(), e);
+	        }
+	    });
+	}*/
+	
+	// @Test
+	public void testBadRoute() {
+		Application app = devapp();
+	    RequestBuilder request = Helpers.fakeRequest()
+	            .method(GET)
+	            .uri("/xx/Kiwi");
+
+	    Result result = route(app, request);
+	    assertEquals(NOT_FOUND, result.status());
+	    //assertEquals("bad","good");
 	}
 	
 }
