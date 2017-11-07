@@ -3,12 +3,14 @@ package fr.cea.ig.play;
 import com.typesafe.config.Config;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Config facade defining accessors with defaults.
  * @author vrd
  *
  */
+@Singleton
 public class IGConfig {
 	
 	/**
@@ -45,6 +47,16 @@ public class IGConfig {
 		if (!config.hasPath(path))
 			return defaultValue;
 		return config.getBoolean(path);
+	}
+	
+	public String getCheckedString(String path, String[] values) {
+		if (!config.hasPath(path))
+			throw new RuntimeException(path + " has no value in configuraiton");
+		String value = config.getString(path);
+		for (String s : values)
+			if (s.equals(value))
+				return value;
+		throw new RuntimeException("value " + value + " at " + path + " not in allowed values:" + String.join(",", values));
 	}
 	
 }

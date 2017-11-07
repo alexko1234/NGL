@@ -1,12 +1,5 @@
 package controllers.authorisation;
 
-/**
- * Permission and team manager
- * 
- * @author ydeshayes
- * @author michieli
- */
-
 import java.util.List;
 
 import play.mvc.Http.Session;
@@ -16,9 +9,12 @@ import models.administration.authorisation.User;
 import models.administration.authorisation.Permission;
 import models.utils.dao.DAOException;
 
-
-
-
+/**
+ * Permission and team manager.
+ * 
+ * @author ydeshayes
+ * @author michieli
+ */
 public class PermissionHelper {
 	
 	/**

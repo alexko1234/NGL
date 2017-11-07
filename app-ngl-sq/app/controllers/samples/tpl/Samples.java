@@ -12,26 +12,37 @@ import views.html.samples.search;
 import controllers.CommonController;
 import play.routing.JavaScriptReverseRouter;
 
+
+// TODO: clean, comment*
 public class Samples extends CommonController{
 
-
-	public static Result home(String code){
+	private final home home;
+	private final search search;
+	private final details details;
+	
+	public Samples(home home, search search, details details) {
+		this.home = home;
+		this.search = search;
+		this.details = details;
+	}
+	
+	public /*static*/ Result home(String code){
 		return ok(home.render(code));
 	}
 
-	public static Result search(){
+	public /*static*/ Result search(){
 		return ok(search.render());
 	}
 
-	public static Result get(String code) {
+	public /*static*/ Result get(String code) {
 		return ok(home.render("search"));
 	}
 
-	public static Result details() {
+	public /*static*/ Result details() {
 		return ok(details.render());
 	}
 
-	public static Result javascriptRoutes() {
+	public /*static*/ Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
 				// Routes.javascriptRouter("jsRoutes",

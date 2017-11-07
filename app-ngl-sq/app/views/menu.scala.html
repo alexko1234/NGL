@@ -1,3 +1,4 @@
+@this(tools : fr.cea.ig.play.NGLTools)
 @(nav: String = "")
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
@@ -5,7 +6,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@helper.env()</a>
+			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">tools.messageEnv("application.name")</a>
     	</div>
     	
     	<div class="collapse navbar-collapse">
@@ -122,7 +123,7 @@
 			<ul class="nav navbar-nav navbar-right">
 				<li>
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="user">
-				<i class="fa fa-user"></i> @fr.cea.ig.authentication.Helper.username(Context.current().session()) <b class="caret"></b></a>
+				<i class="fa fa-user"></i> tools.currentUser() <b class="caret"></b></a>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="user">
 						<li><a href="/authentication/logout">@Messages("authentification.dropdown_list.signout")</a></li>
 				</ul>
