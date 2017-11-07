@@ -269,7 +269,7 @@ public class QualityControl extends AbstractDeclaration {
 		
 	private List<PropertyDefinition> getPropertyDefinitionsExternalQC() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
+
 		propertyDefinitions.add(newPropertiesDefinition("Volume fourni", "providedVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 11, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Concentration fournie", "providedConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
@@ -278,27 +278,32 @@ public class QualityControl extends AbstractDeclaration {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode("ng"),"single", 15, true, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille fournie", "providedSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, 
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode("pb"),"single", 16, true, null,null));
-		
+
 		propertyDefinitions.add(newPropertiesDefinition("RIN", "providedRin", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, 
 				null, "single", 17, false, null, null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Méthode quantification", "collabQuantificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+		        null, null, null, null,"single", 18, true, null,null));
 		
-		   propertyDefinitions.add(newPropertiesDefinition("Méthode quantification", "collabQuantificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
-	                null, null, null, null,"single", 18, true, null,null));
-	        propertyDefinitions.add(newPropertiesDefinition("A260/A280 fourni", "providedA260A280Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
-	                null, null, null, null,"single", 19, true, null,null));
-	        propertyDefinitions.add(newPropertiesDefinition(" A260/A230 fourni", "providedA260A230Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
-	                null, null, null, null,"single", 20, true, null,null));
-	        propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules", "providedMoleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null,
-	                null, null, null, null,"single", 18, true, null,null));   
-	        propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
-	                null, null, null, null,"single", 22, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("A260/A280 fourni", "providedA260A280Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+				null, null, null, null,"single", 19, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition(" A260/A230 fourni", "providedA260A230Ratio", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
+				null, null, null, null,"single", 20, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules", "providedMoleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null,
+				null, null, null, null,"single", 18, true, null,null));   
 		
+		//Remplacé par dnaTreatment
+		//propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+			//	null, null, null, null,"single", 22, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN", "dnaTreatment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
+				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated"), null, null, null,"single", 22, true, null,null));
+
 		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 				null, null, null, null,"single", 18, true, null,null));
 
-		
+
 		return propertyDefinitions;
-		
+
 	}
 	
 	

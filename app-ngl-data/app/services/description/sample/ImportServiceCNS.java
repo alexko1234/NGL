@@ -489,8 +489,19 @@ public class ImportServiceCNS extends AbstractImportService {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
 				null, null,null,null,"single", 17, false, null,null));		
+		// A supprimer car uniquement utilisé dans l'import d'echantillons bio cf NGL-1663
 		propertyDefinitions.add(newPropertiesDefinition("Fraction / couche", "sizeFractionOrLayer", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
-				newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+		newValues(">20 µm","2-20 µm","0.2-2 µm",">2 µm","0.1 cm","1-3 cm","3-5 cm","5-10 cm","10-15 cm","15-30 cm"), null,null,null,"single", 6, false, null,null));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN", "dnaTreatment", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated"), null, null, null,"single", 18, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction_DNA", "extractionDnaBlankSampleCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 19, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction_RNA", "extractionRnaBlankSampleCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null,
+				null, null, null, null,"single", 20, true, null,null));
+
 		
 		return propertyDefinitions;
 	}
