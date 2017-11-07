@@ -22,28 +22,47 @@ import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 import controllers.CommonController;
+import fr.cea.ig.play.NGLTools;
+import javax.inject.Inject;
+
+// TODO: cleanup, comment
 
 public class Experiments extends CommonController{
 	
-	final static Form<Experiment> experimentForm = form(Experiment.class);
+	private final home home;
+	private final details details;
+	private final search search;
+	private final searchContainers searchContainers;
+	private final Form<Experiment> experimentForm;
 	
-	public static Result home(String code){
+	// final static Form<Experiment> experimentForm = form(Experiment.class);
+	
+	@Inject
+	public Experiments(NGLTools tools, home home, details details, search search, searchContainers searchContainers) {
+		experimentForm = tools.form(Experiment.class);
+		this.home = home;
+		this.details = details;
+		this.search = search;
+		this.searchContainers = searchContainers;
+	}
+	
+	public /*static*/ Result home(String code){
 		return ok(home.render(code));
 	}
 	
-	public static Result get(String code){
+	public /*static*/ Result get(String code){
 		return ok(home.render("search"));
 	}
 	
-	public static Result details(){
+	public /*static*/ Result details(){
 		return ok(details.render(getCurrentUser()));
 	}
 	
-	public static Result search(String experimentType){
+	public /*static*/ Result search(String experimentType){
 		return ok(search.render());
 	}
 	
-	public static Result searchContainers(){
+	public /*static*/ Result searchContainers(){
 		return ok(searchContainers.render());
 	}
 	

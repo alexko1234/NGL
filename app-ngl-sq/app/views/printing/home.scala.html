@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code : String)
 
 @import models.laboratory.common.description.ObjectType
@@ -15,4 +16,4 @@
 
 }
 
-@views.html.main("printing.title."+code, menu("printing."+code), scripts,css)(views.html.contents.lefttabs())
+@views.html.main("printing.title."+code, menu_("printing."+code), scripts,css)(views.html.contents.lefttabs())

@@ -8,13 +8,21 @@ import play.mvc.Result;
 import views.html.printing.home;
 
 
+// TODO: clean, comment
 
 public class Printing extends Controller {
-	public static Result home(String code){
+	
+	private final home home;
+	
+	public Printing(home home) {
+		this.home = home;
+	}
+	
+	public /*static*/ Result home(String code){
 		return ok(home.render(code));
 	}
 	
-	public static Result javascriptRoutes() {
+	public /*static*/ Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
   	  	      // Routes.javascriptRouter("jsRoutes",

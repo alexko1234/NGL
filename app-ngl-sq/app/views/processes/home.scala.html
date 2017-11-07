@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code : String)
 
 @import models.laboratory.common.description.ObjectType
@@ -13,8 +14,8 @@
 	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/bt-input.js")" type="text/javascript" charset="utf-8"></script> 	
 	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 
-	 	<script src="@routes.Assets.at("lib/lib-frameworkweb/ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script> 
-	 	<script src="@routes.Assets.at("ngl-sq/javascripts/processes/services.js")" type="text/javascript" charset="utf-8"></script>  	
+	<script src="@routes.Assets.at("lib/lib-frameworkweb/ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script> 
+	<script src="@routes.Assets.at("ngl-sq/javascripts/processes/services.js")" type="text/javascript" charset="utf-8"></script>  	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/processes/controllers.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-sq/javascripts/processes/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>    
     
@@ -26,4 +27,4 @@
 <link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/processes/create-processes.css")">
 }
 
-@main("processes.title", menu("processes."+code), scripts, css)(views.html.contents.lefttabs())
+@main("processes.title", menu_("processes."+code), scripts, css)(views.html.contents.lefttabs())

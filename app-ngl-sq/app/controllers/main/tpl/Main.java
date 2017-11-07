@@ -30,20 +30,24 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import javax.inject.Inject;
 
+// TODO: define only instance methods
 
 public class Main extends CommonController {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
 	// TODO fix static var, should be instance
-	private static JsMessages messages;
+	//private static JsMessages messages;
+	private final JsMessages messages;
+	private final home home;
 
 	@Inject
-	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
 		messages = jsMessagesFactory.all();
+		this.home = home;
 	}
 
-	public static Result home() {
+	public /*static*/ Result home() {
 		return ok(home.render());
 	}
 

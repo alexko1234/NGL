@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @()
 
 @scripts() = {
@@ -15,7 +16,7 @@
 }
 
 
-@views.html.main("containerSupports.scanner.title", menu("containerSupports.scanner"), scripts,css){
+@views.html.main("containerSupports.scanner.title", menu_("containerSupports.scanner"), scripts,css){
 <div class="row scanner"  ng-controller="SearchScan" ng-app="home">
 	<div class="col-xs-12">
 	

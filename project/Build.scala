@@ -19,6 +19,9 @@ object ApplicationBuild extends Build {
 	// import PlayKeys._
 	import play.sbt.PlayImport._
 
+	// Disable paralell test execution (hoped to fixed test failure but didn't work)
+	// parallelExecution in Global := false
+	
  	val appName    = "ngl"
 	val appVersion = "1.0-SNAPSHOT"
 
