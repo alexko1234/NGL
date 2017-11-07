@@ -161,7 +161,6 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				display+="<th>Property</th>";
 				for(var l=0; l<value.lanes.length; l++){
 					var nbLane = value.lanes[l].number;
-					display += "Lane "+nbLane+" ";
 					display+="<th>Lane "+nbLane+"</th>";
 				}
 				display+="</tr></thead><tbody>";
@@ -169,7 +168,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				for(var key of mapData.keys()){
 					display += "<tr><td>"+key+"</td>";
 					var tabData = mapData.get(key);
-					for(var t=0; tabData.length; t++){
+					for(var t=0; t<tabData.length; t++){
 						display+="<td>"+tabData[t]+"</td>";
 					}
 					display+="</tr>";
