@@ -487,6 +487,9 @@ readsets.treatments.mapping.estimatedPEInsertSize = Estimated PE insert size
 readsets.treatments.mapping.estimatedMPInsertSize = Estimated MP insert size
 readsets.treatments.mapping.readPosition = Errors position in reads
 readsets.treatments.mapping.softwareVersion = Version logiciel
+readsets.treatments.mapping.forwardAlignedReads = Forward aligned reads
+readsets.treatments.mapping.reverseAlignedReads = Reverse aligned reads
+readsets.treatments.mapping.alignedReadsPercent = % Non-chimeric aligned reads
 
 readsets.treatments.merging.mergedReads = Merged reads
 readsets.treatments.merging.medianeSize = Mediane size (bases)
