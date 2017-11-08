@@ -37,7 +37,7 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {		
 		
-		Logger.info ("--------GET CATALOG INFO----------");
+		Logger.info ("--------GET CATALOG INFO ("+experiment.typeCode+")----------");
 		// Avant de commencer le parsing du fichier récupérer la liste des kits actifs / boites actives / reagents actifs pour le type d'expérience
 		List<KitCatalog> experimentKitList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
 				DBQuery.is("category", "Kit").and(DBQuery.is("active", true)).and(DBQuery.in("experimentTypeCodes", experiment.typeCode))).toList();
@@ -50,7 +50,7 @@ public class Input extends AbstractInput {
 		
 		if ( experimentKitList.isEmpty() ) {
 			Logger.info ("PAS DE KIT ACTIF TROUVE");
-			contextValidation.addErrors("Erreurs fichier","Aucun kit actif n'est défini pour ce type d'expérience");
+			contextValidation.addErrors("Erreur catalogue","Aucun kit actif n'est défini pour ce type d'expérience");
 			return experiment;
 		} else {
 			for(KitCatalog kit:  experimentKitList){
@@ -101,23 +101,36 @@ public class Input extends AbstractInput {
 			
 			// attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!
 			String[] cols = line.replace (",", ".").split(";");
+			
+			//DEBUG
+			Logger.info ("ligne "+n+" nbre colonne="+cols.length);
 
 			// verifier la 1 ere ligne : doit etre "Compte rendu de séquençage"
 			if (n == 0) {
+				/* marche pas....length=2 pour un fichier EXcel mais =1 pour un fichier CSV !!!!!!!
+				  if (cols.length != 15) {
+
+					// pas un fichier CSV ?????
+					contextValidation.addErrors("Erreurs fichier","Le fichier ne semble pas être au format CSV / LabX");
+					Logger.info ("col 0="+cols[0]);
+					break; // si ce n'est pas le bon type de fichier la suite va sortir des erreurs incomprehensibles...terminer		
+				}
+				*/
+				
 				if ( !cols[0].trim().equals("Compte rendu de séquençage") ) {
 					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Compte rendu de séquençage");
 					break; // si ce n'est pas le bon type de fichier la suite va sortir des erreurs incomprehensibles...terminer
 				}
 			}
 			
-			// en 6eme ligne il y actuellement le nom d'un kit "principal" qui permet de verifier que le fichier correspond au type d'expérience
+			// en 6eme ligne (n=5) il y actuellement le nom d'un kit "principal" qui permet de verifier que le fichier correspond au type d'expérience
 			if ( n == 5){
 				if ( cols[0].trim().equals("HiSeq X Flow Cell")  ||  cols[0].trim().equals("HiSeq 3000/4000 PE Flow Cell")) {
 					// verifier le code flow cell
 					String flowcellId=cols[8].trim();
 					Logger.info ("flowcellId="+flowcellId);
 					
-					//'janus-and-cBotV2' ???????
+
 					if ( experiment.typeCode.equals("prepa-fc-ordered") || experiment.typeCode.equals("prepa-flowcell") ) {
 						// prepa flowcell: propriete d'instrument ( ou container out)
 						if ( !experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {

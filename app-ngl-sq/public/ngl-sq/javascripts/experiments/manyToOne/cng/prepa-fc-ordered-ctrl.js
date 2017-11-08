@@ -224,7 +224,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		});		
 	};
 	
-	$scope.button = {
+	// 08/11/2017 renommage button=>buttonCbot
+	$scope.buttonCbot = {
 			isShow:function(){
 				// 31/01/2017  activer le bouton d'import si l'experience est a InProgress
 				return ($scope.isInProgressState());
@@ -275,10 +276,12 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		});		
 	};
 	
-	/* 25/10/2017 FDS ajout pour l'import du fichier Mettler */
-	$scope.button2 = {
+	// 25/10/2017 FDS ajout pour l'import du fichier Mettler; 08/11/2017 renommage button2=>buttonMettler
+	$scope.buttonMettler = {
 			isShow:function(){
-				return ($scope.isInProgressState());
+				// visible meme si terminé, mais seulement en mode edition
+				//return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); MARCHE PAS !!!!
+				return ( $scope.isInProgressState()||$scope.isFinishState() );
 				},
 			isFileSet:function(){
 				return ($scope.file === undefined)?"disabled":"";
