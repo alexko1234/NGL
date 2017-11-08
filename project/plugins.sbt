@@ -32,6 +32,8 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 // SBT plugin for running mocha JavaScript unit tests on node
 // addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
+// Twirl support maybe needed.
+// addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.4")
 
 // Eclipse project generation
 // addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.2")

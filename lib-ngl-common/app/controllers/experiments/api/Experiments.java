@@ -61,6 +61,8 @@ import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
 
+import javax.inject.Inject;
+
 // TODO: cleanup
 
 public class Experiments extends DocumentController<Experiment> {
