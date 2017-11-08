@@ -143,6 +143,8 @@ public class Input extends AbstractInput {
 						
 						//TODO      experience.inputContainerSupportcodes
 						
+						contextValidation.addErrors("Erreurs fichier", "TODO");
+						break; // terminer
 					}		
 				} else {	
 					Logger.info ("unsupported LabX file type...");
