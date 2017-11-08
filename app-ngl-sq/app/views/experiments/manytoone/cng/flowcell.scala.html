@@ -6,7 +6,7 @@
      FDS 23/01/2017  janus-and-cBotV2 || cBotV2;  uniquement pour prepa-fc-ordered
      FDS 25/10/2017 ajout bouton import fichier Mettler
 -->
-<div class="col-md-12 col-lg-offset-6" ng-show="('prepa-fc-ordered'=== experiment.typeCode) && (('janus-and-cBotV2' === experiment.instrument.typeCode)||('cBotV2' === experiment.instrument.typeCode))"> 
+<div class="col-md-12 col-lg-offset-7" ng-show="('prepa-fc-ordered'=== experiment.typeCode) && (('janus-and-cBotV2' === experiment.instrument.typeCode)||('cBotV2' === experiment.instrument.typeCode))"> 
   <form class="form-horizontal" role="form">
    <div class="row margin-bottom-7">
         <div class="form-group col-lg-6"  ng-show="button.isShow()">
@@ -24,6 +24,8 @@
                 </span> 
             </div> 
             </div>
+            
+            <!--  deplacer plus bas ?????
             <div class="col-lg-6">
              <label for="importFileMettler" class="control-label">Fichier Mettler</label>
              <div class="input-group" style="width:100%">
@@ -38,6 +40,7 @@
                 </span> 
             </div> 
             </div> 
+            -->
                                     				  
          </div>              			
        </div>  
@@ -286,4 +289,28 @@
 	</div>
 	</div>
 </div>
+</div>
+
+<!-- TEST -->
+<div class="col-md-12 col-lg-offset-7" ng-show="('prepa-fc-ordered'=== experiment.typeCode) && (('janus-and-cBotV2' === experiment.instrument.typeCode)||('cBotV2' === experiment.instrument.typeCode))"> 
+  <form class="form-horizontal" role="form">
+   <div class="row margin-bottom-7">
+        <div class="form-group col-lg-6"  ng-show="button.isShow()">         
+            <div class="col-lg-6">
+             <label for="importFileMettler" class="control-label">Fichier Mettler</label>
+             <div class="input-group" style="width:100%">
+                <input class="form-control input-sm" type="file" 
+                                                     base64-file="file" 
+                                                     id="importFileMettler" />
+                <span class="input-group-btn">									 
+                     <button class="btn btn-primary" ng-click="button2.click()" 
+                                                     ng-disabled="button2.isFileSet()" 
+                                                     title="@Messages("button.import.file")"><i class="fa fa-upload"></i> 
+                     </button>     
+                </span> 
+            </div> 
+            </div>                				  
+         </div>              			
+       </div>  
+  </form>
 </div>

@@ -241,7 +241,6 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		console.log('Import Mettler file');
 		
 		$scope.messages.clear();
-		///$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
 		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url+"?extraInstrument=labxmettlertoledo", $scope.file)
 		.success(function(data, status, headers, config) {
 			$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
@@ -261,8 +260,14 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		})
 		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.import.error'));
+			///$scope.messages.setError(Messages('experiments.msg.import.error')); // Ne fonctionne que pour une seule erreur !!!!!!!
 			
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();	
+	
 			// reinit select File..
 			$scope.file = undefined;
 			// il faut aussi réinitaliser le bouton d'import
