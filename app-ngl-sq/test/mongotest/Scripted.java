@@ -14,8 +14,15 @@ import play.test.Helpers;
 
 import static play.test.Helpers.*;
 import play.test.*;
+import play.libs.Json;
 import play.libs.ws.*;
 import java.util.concurrent.CompletionStage;
+import static fr.cea.ig.play.test.DevAppTesting.*;
+import java.util.function.Consumer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+
 
 // Infrastructure for ngl testing through routes
 //
@@ -57,8 +64,9 @@ public class Scripted {
 	    assertEquals(Status.OK, result.status());
 	}
 	
-	@Test
-	public void testInServer() throws Exception {
+	
+	// @Test
+	public void test00() throws Exception {
 	    TestServer server = testServer(3333,devapp());
 	    running(server, () -> {
 	        try (WSClient ws = WSTestClient.newClient(3333)) {
@@ -71,6 +79,53 @@ public class Scripted {
 	            play.Logger.error(e.getMessage(), e);
 	        	// throw e;
 	        }
+	    });
+	}
+	
+	@Test
+	public void test01() throws Exception {
+	    testInServer(ws -> {
+	    	// WSResponse r0 = get(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA");
+	    	// assertEquals(OK, r0.getStatus());
+	    	
+	    	// Assuming that we have a json response from server that that the get/put
+	    	// urls are properly defined, we provide a json alteration function that is
+	    	// compared to the get after the put. The other way around is to assert that modified values
+	    	// in the input are stored and thus access the values by path and not do a full comparison.
+	    	rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
+	    			js -> { /*((ObjectNode)js).set("typeCode",new TextNode("chip-migration-" + System.currentTimeMillis()));*/ },
+	    			js -> { ((ObjectNode)js).remove("traceInformation");
+	    					// ((ObjectNode)js.path("state")).remove("historical");
+	    					((ObjectNode)js.path("status")).remove("date");
+	    			});
+	    	
+	    	/*
+	    	// Fetch body as json tree, update and put modified stuff.
+	    	JsonNode jsn = Json.parse(r0.getBody());
+	    	System.out.println("******* " + jsn.getNodeType());
+	    	for (String s : new String[] { "_id","code","typeCode" }) {
+	    		System.out.println("******* " + s + " : " + jsn.path(s)); // jsn.path("traceInformation").path("modifyUser") + "'");
+	    	}
+	    	System.out.println("******* " + jsn.path("traceInformation").path("modifyUser"));
+	    	
+	    	WSResponse r1 = get(ws,"/api/experiments/THIS_PROBABLY_DOES_NOT_EXIST");
+	    	assertEquals(NOT_FOUND, r1.getStatus());
+	    	*/
+	    	
+	    	// WSResponse r2 = get(ws,"/api/experiments/THIS_PROBABLY_DOES_NOT_EXIST");
+	    	// assertEquals(OK, r2.getStatus());
+	    	// 
+	    });
+	}
+	
+	// @Test
+	public void runInBrowser() {
+		TestServer server = testServer(3333,devapp());
+	    running(server, HTMLUNIT, browser -> {
+	        browser.goTo("/");
+	        assertEquals("Welcome to Play!", browser.$("#title").text());
+	        browser.$("a").click();
+	        assertEquals("login", browser.url());
 	    });
 	}
 	
