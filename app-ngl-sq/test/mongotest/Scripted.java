@@ -112,4 +112,21 @@ public class Scripted {
 	}
 	*/
 	
+	@Test
+	public void testInServer() throws Exception {
+	    TestServer server = testServer(3333,devapp());
+	    running(server, () -> {
+	        try (WSClient ws = WSTestClient.newClient(3333)) {
+	            // CompletionStage<WSResponse> completionStage = ws.url("/api/experiments/CHIP-MIGRATION-20170915_144939CDA").get();
+	        	CompletionStage<WSResponse> completionStage = ws.url("/experiments/CHIP-MIGRATION-20170915_144939CDA").get();
+	            WSResponse response = completionStage.toCompletableFuture().get();
+	            assertEquals(OK, response.getStatus());
+	            System.out.println(response.getBody());
+	        } catch (Exception e) {
+	            play.Logger.error(e.getMessage(), e);
+	        	// throw e;
+	        }
+	    });
+	}
+	
 }

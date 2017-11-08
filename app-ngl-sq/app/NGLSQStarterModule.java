@@ -63,6 +63,10 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		// start order has not to be hard coded here.
 		return seq(
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
+				
+				// Check injector creation of:
+				bind(controllers.experiments.tpl.Experiments.class    ).toSelf().eagerly(),
+				
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
