@@ -568,6 +568,7 @@ readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy
 readsets.treatments.taxonomy.phylogeneticTree = Arbre phylogénétique
 readsets.treatments.taxonomy.krona = Krona
 readsets.treatments.taxonomy.software = Logiciel
+readsets.treatments.taxonomy.databaseVersion = Version Base de données
 readsets.treatments.taxonomy.tabs.pairs = Read1+Read2 merged
 readsets.treatments.taxonomy.tabs.read1 = Read 1
 
