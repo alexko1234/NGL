@@ -8,7 +8,7 @@ import javax.inject.Singleton;
 import play.i18n.Lang;
 import play.i18n.MessagesApi;
 import play.i18n.Messages;
-
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.data.Form;
@@ -29,6 +29,8 @@ import fr.cea.ig.play.NGLConfig;
 @Singleton
 public class NGLTools {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(NGLTools.class);
+	
 	private final NGLConfig config;
 	private final MessagesApi messagesApi;
 	private final FormFactory formFactory;
@@ -48,6 +50,8 @@ public class NGLTools {
 	
 	public String message(String key) {
 		return messages().at(key);
+		// return play.api.i18n.Messages.get(key);
+		// return "Messages(" + key + ")";
 	}
 	
 	public String messageEnv(String key) {
@@ -61,9 +65,11 @@ public class NGLTools {
 	}
 	
 	public Messages messages() {
+		logger.debug("messages(");
 		return messagesApi.preferred(new ArrayList<Lang>());
+		// return Messages;
 	}
-
+	
 	public FormFactory formFactory() {
 		return formFactory;
 	}
