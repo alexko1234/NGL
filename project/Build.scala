@@ -109,6 +109,7 @@ object ApplicationBuild extends Build {
              // routesGenerator := StaticRoutesGenerator, // default value, supposed no efect
 					   // routesGenerator := DynamicRoutesGenerator,
              //libraryDependencies += guice,
+			// TwirlKeys.constructorAnnotations += "@javax.inject.Inject()",
 			scalaVersion        := scala
 		)
 
@@ -330,7 +331,10 @@ object ApplicationBuild extends Build {
     publishArtifact in makePom := false,
     publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
 
-  val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
+  val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings)
+                 .enablePlugins(play.sbt.PlayJava)
+                 // .enablePlugins(play.twirl.sbt.SbtTwirl)
+                 .settings(
     version              := sqVersion,
     libraryDependencies ++= nglsqDependencies,
     resolvers            := nexus,
@@ -339,7 +343,7 @@ object ApplicationBuild extends Build {
     sources in (Compile,doc) := Seq.empty,
     publishArtifact in makePom := false,
     publishTo            := Some(nexusigpublish)
-    ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile")
 
   val nglsub = Project(appName + "-sub", file("app-ngl-sub"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here    

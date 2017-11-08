@@ -20,6 +20,7 @@ public class DevAppTesting {
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
 		    applicationBuilder = new GuiceApplicationBuilder().in(env);
 		    application = applicationBuilder.build();
+		    //System.out.println("** injector " + application.injector());
 		}
 		// return applicationBuilder.build();
 		// This does not properly sets the Play.application() instance.

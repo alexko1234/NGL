@@ -29,17 +29,23 @@ import controllers.history.UserHistory;
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class APICommonController<T> extends Controller {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(APICommonController.class);
+	
 	// TODO: fix initialization
-	protected final DynamicForm listForm = // new DynamicForm(null,null,null); // = new DynamicForm();
-	    fr.cea.ig.play.IGGlobals.form();
-	protected Class<T> type;
+	protected final DynamicForm listForm; //  = // new DynamicForm(null,null,null); // = new DynamicForm();
+	    //fr.cea.ig.play.IGGlobals.form();
+	protected final Class<T> type;
 	
 	// protected final Form<T> mainForm = form(type);
-	protected final Form<T> mainForm = fr.cea.ig.play.IGGlobals.form(type);
+	protected final Form<T> mainForm; //  = fr.cea.ig.play.IGGlobals.form(type);
 	
 	public APICommonController(Class<T> type) {
 		super();
 		this.type = type;
+		// logger.debug("initializing forms");
+		listForm = fr.cea.ig.play.IGGlobals.form();
+		mainForm = fr.cea.ig.play.IGGlobals.form(type);
+		// logger.debug("intialization done");
 	}
 
 	/**

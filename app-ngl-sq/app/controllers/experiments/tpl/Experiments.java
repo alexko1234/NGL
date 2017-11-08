@@ -24,10 +24,14 @@ import views.html.experiments.searchContainers;
 import controllers.CommonController;
 import fr.cea.ig.play.NGLTools;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 // TODO: cleanup, comment
 
-public class Experiments extends CommonController{
+// @Singleton
+public class Experiments extends CommonController {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
 	private final home home;
 	private final details details;
@@ -37,6 +41,17 @@ public class Experiments extends CommonController{
 	
 	// final static Form<Experiment> experimentForm = form(Experiment.class);
 	
+	/*
+	private Experiments() {
+		experimentForm = null;
+		this.home = null;
+		this.details = null;
+		this.search = null;
+		this.searchContainers = null;
+		throw new RuntimeException("why ?");
+	}
+	*/
+	
 	@Inject
 	public Experiments(NGLTools tools, home home, details details, search search, searchContainers searchContainers) {
 		experimentForm = tools.form(Experiment.class);
@@ -44,6 +59,7 @@ public class Experiments extends CommonController{
 		this.details = details;
 		this.search = search;
 		this.searchContainers = searchContainers;
+		logger.debug("created injected instance " + this);
 	}
 	
 	public /*static*/ Result home(String code){
@@ -53,6 +69,8 @@ public class Experiments extends CommonController{
 	public /*static*/ Result get(String code){
 		return ok(home.render("search"));
 	}
+	
+	public static Result _get(String code) { return ok(code); }
 	
 	public /*static*/ Result details(){
 		return ok(details.render(getCurrentUser()));

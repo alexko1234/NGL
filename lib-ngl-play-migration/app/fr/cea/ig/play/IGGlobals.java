@@ -50,6 +50,8 @@ import javax.inject.Singleton;
 @Singleton
 public class IGGlobals {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(IGGlobals.class);
+	
 	// This is started as a component and before any other that requires 
 	// access to globals. This component or part of this component should
 	// be injected when needed but this sets up globals as static component
@@ -60,6 +62,7 @@ public class IGGlobals {
 		environment   = env;  // app.environment();
 		injector      = inj;  // app.injector();
 		cache         = cac;
+		logger.debug("setup globals");
 	}
 	
 	/**
