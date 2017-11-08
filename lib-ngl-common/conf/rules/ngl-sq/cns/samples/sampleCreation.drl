@@ -28,3 +28,21 @@ rule "Rules when sample is created in Tara Pacific project "
        	$sample.properties.put("taraBarCode", psv);
 	end
 	
+rule "Add property negativeControl when sample is imported "
+	@nglSQ( sampleCreation )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+        $sample : Sample($properties:properties, $properties!=null)
+        not PropertyValue() from $properties.get("negativeControl")
+        $projectCode : String(this in ('CDU','CDW','CDX','CDY','CDZ','CEA','CEB')) from $sample.projectCodes
+    then
+    	Logger.debug("Add property negative control to : "+$sample.code);  
+       	
+       	PropertySingleValue psv = new PropertySingleValue(true);
+       	$sample.properties = new HashMap<String, PropertyValue>();
+       	$sample.properties.put("negativeControl", psv);
+	end
+	
+	

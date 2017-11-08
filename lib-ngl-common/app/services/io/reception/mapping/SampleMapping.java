@@ -6,6 +6,8 @@ import java.util.Map;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.project.instance.Project;
@@ -16,6 +18,10 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import play.Play;
+import play.libs.Akka;
+import rules.services.RulesActor6;
+import rules.services.RulesMessage;
 import services.io.reception.Mapping;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
@@ -24,6 +30,9 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult.Sort;
 
 public class SampleMapping extends Mapping<Sample> {
+	
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	
 	/**
 	 * 
 	 * @param objects : list of all db objects need by type samples, supports, containers
@@ -111,6 +120,9 @@ public class SampleMapping extends Mapping<Sample> {
 		}else{
 			sample.life = null;
 		}
+		
+		//Call rules to add properties to sample
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),"sampleCreation", sample),null);	
 		
 	}
 
