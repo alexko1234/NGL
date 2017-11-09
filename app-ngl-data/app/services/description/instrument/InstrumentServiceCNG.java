@@ -884,7 +884,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// propriété CNS.. a adapter !!!!
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.5-spot-on"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true, "single",200,"R9.4-spot-on"));
        
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Identifiant PC", "pcId", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
