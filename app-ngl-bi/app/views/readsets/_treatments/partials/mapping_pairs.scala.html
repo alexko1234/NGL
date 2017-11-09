@@ -51,8 +51,8 @@
 	</div>	
 </div>
 
-<div class="row"> 
-	<div class="col-md-12 col-lg-12">
+<div class="row" ng-if="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.forwardAlignedReads!=null || readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].pairs.reverseAlignedReads!=null"> 
+	<div class="col-md-5 col-lg-5">
 	 <table class="table table-condensed table-hover table-bordered">
 		<thead>
 			<tr>
