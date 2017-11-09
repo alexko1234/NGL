@@ -821,7 +821,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
-		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		
 		return l;

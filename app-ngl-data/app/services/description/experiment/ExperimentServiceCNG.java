@@ -1484,7 +1484,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		// FDS 09/11/2017 NGL-1691: ajout propriété de niveau Global (experiment) :Temps d'hybridation==hybridizationTime : saisie libre texte, non obligatoire
 		// que veut dire le parametre "position" pour les propriété de niveau Global ??
 		propertyDefinitions.add(newPropertiesDefinition("Temps d'hybridation", "hybridizationTime", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
-				null, "single",13, true, null, null));	
+				null, "single",13,true,null,null));	
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null, null,
@@ -1507,7 +1507,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
 				null, null, null,
 				"single",12,true,"F",null));
-		
 			
 		return propertyDefinitions;
 	}
