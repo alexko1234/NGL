@@ -5,9 +5,13 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,26 +31,51 @@ import static play.test.Helpers.running;
 import static play.test.Helpers.testServer;
 import static play.mvc.Http.Status;
 
+/**
+ * Test support for NGL on DEV server.
+ * The application is a singleton as the shutdown is not properly managed. All the
+ * tests then share the same application instance and this could go wrong.
+ * 
+ * Configuration files are located using the class loader.
+ * 
+ * @author vrd
+ *
+ */
 public class DevAppTesting {
 	
-	static GuiceApplicationBuilder applicationBuilder;
+	// static GuiceApplicationBuilder applicationBuilder;
+	/**
+	 * Application singleton instance.
+	 */
+	private static Application application;
 	
-	static Application application;
+	public static String resourceFileName(String name) {
+		URL resource = DevAppTesting.class.getClassLoader().getResource(name);
+		if (resource == null)
+			throw new RuntimeException("could not locate resource '" + name + "' using classloader");
+		try {
+			File confFile = new File(resource.toURI());
+			return confFile.toString();
+		} catch (Exception e) {
+			throw new RuntimeException("resource " + resource + " cannot be converted to File");
+		}
+	}
 	
+	/**
+	 * DEV application singleton instance. This does not sets the play global application
+	 * instance.
+	 * @return
+	 */
 	public static Application devapp() {
-		if (applicationBuilder == null) {
-			// This should fetch the config files from the resources directory
-			// or from a preset classpath.
-			System.setProperty("config.file", "c:\\projets\\config\\ngl-sq-dev.2.6.conf");
-			System.setProperty("logger.file", "c:\\projets\\config\\logger.xml");
+		if (application == null) {
+			ClassLoader classLoader = DevAppTesting.class.getClassLoader();
+			System.setProperty("config.file", resourceFileName("conf/ngl-sq-test.conf"));
+			System.setProperty("logger.file", resourceFileName("conf/logger.xml"));
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-		    applicationBuilder = new GuiceApplicationBuilder().in(env);
+			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
 		    application = applicationBuilder.build();
-		    //System.out.println("** injector " + application.injector());
 		}
-		// return applicationBuilder.build();
-		// This does not properly sets the Play.application() instance.
 		return application;
 	}
 
@@ -59,6 +88,7 @@ public class DevAppTesting {
 			throw new RuntimeException(e);
 		}
 	}
+	
 	public static WSResponse put(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
 		try {
 			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").put(payload);
