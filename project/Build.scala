@@ -71,6 +71,13 @@ object ApplicationBuild extends Build {
 		val buildOrganization = "fr.cea.ig"
 		val buildVersion      = appVersion
 
+		// 
+		// Probably poor scala style
+    val gg = if (System.getProperty("ngl.test.conf.dir") != null)
+	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("ngl.test.conf.dir")))
+	      else
+	        Seq()
+	        
 	  val globSettings = Seq(
       // scalacOptions += "-deprecation",
 			//javacOptions  ++= Seq("-Xlint:deprecation","-Xlint:unchecked")
@@ -111,7 +118,7 @@ object ApplicationBuild extends Build {
              //libraryDependencies += guice,
 			// TwirlKeys.constructorAnnotations += "@javax.inject.Inject()",
 			scalaVersion        := scala
-		)
+		) ++ gg
 
 		val buildSettings =  Seq (
 		  organization   := buildOrganization+"."+appName
@@ -333,8 +340,11 @@ object ApplicationBuild extends Build {
 
   val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings)
                  .enablePlugins(play.sbt.PlayJava)
+                 .configs( IntegrationTest )
                  // .enablePlugins(play.twirl.sbt.SbtTwirl)
+                 .settings(Defaults.itSettings : _*)
                  .settings(
+                    
     version              := sqVersion,
     libraryDependencies ++= nglsqDependencies,
     resolvers            := nexus,
@@ -342,6 +352,9 @@ object ApplicationBuild extends Build {
     //publishArtifact in packageDoc := false,
     sources in (Compile,doc) := Seq.empty,
     publishArtifact in makePom := false,
+    // test/resources is supposed to be in the classpath...
+    // resourceDirectory in Test <<= (baseDirectory) apply  { (baseDir: File) => baseDir / "test" / "resources" },
+    // resourceDirectory in Test := baseDirectory.value / "test",
     publishTo            := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile")
 
