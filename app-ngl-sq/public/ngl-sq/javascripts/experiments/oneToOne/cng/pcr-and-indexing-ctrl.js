@@ -384,39 +384,41 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	
 	// 10/10/2017 modifications pour possibilité d'utiliser plusieurs plaques
 	/*$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] }, 
-	                  {name:"DAP TruSeq DNA HT-X", tagCategory:"DUAL-INDEX", tags:[] } ];/// nom et composition pas encore données par la la prod....
+	                    {name:"DAP TruSeq DNA HT-X", tagCategory:"DUAL-INDEX", tags:[] } ];/// nom et composition pas encore données par la la prod....
 	*/
-	$scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] } ];
+	// 09/11/2017 NGL-1691 NON pas ici!!!   $scope.plates = [ {name:"DAP TruSeq DNA HT",   tagCategory:"DUAL-INDEX", tags:[] } ];
+	$scope.plates = [ {name:"Agilent SureSelect [bleue]",   tagCategory:"SINGLE-INDEX", tags:[] } ];
 
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
-	// plaque originale "DAP TruSeq DNA HT"
-	$scope.plates[0].tags.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
-	$scope.plates[0].tags.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
-	$scope.plates[0].tags.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508");
-	$scope.plates[0].tags.push("D704-D501", "D704-D502", "D704-D503", "D704-D504", "D704-D505", "D704-D506", "D704-D507", "D704-D508"); 
-	$scope.plates[0].tags.push("D705-D501", "D705-D502", "D705-D503", "D705-D504", "D705-D505", "D705-D506", "D705-D507", "D705-D508"); 
-	$scope.plates[0].tags.push("D706-D501", "D706-D502", "D706-D503", "D706-D504", "D706-D505", "D706-D506", "D706-D507", "D706-D508"); 
-	$scope.plates[0].tags.push("D707-D501", "D707-D502", "D707-D503", "D707-D504", "D707-D505", "D707-D506", "D707-D507", "D707-D508"); 
-	$scope.plates[0].tags.push("D708-D501", "D708-D502", "D708-D503", "D708-D504", "D708-D505", "D708-D506", "D708-D507", "D708-D508"); 
-	$scope.plates[0].tags.push("D709-D501", "D709-D502", "D709-D503", "D709-D504", "D709-D505", "D709-D506", "D709-D507", "D709-D508"); 
-	$scope.plates[0].tags.push("D710-D501", "D710-D502", "D710-D503", "D710-D504", "D710-D505", "D710-D506", "D710-D507", "D710-D508"); 
-	$scope.plates[0].tags.push("D711-D501", "D711-D502", "D711-D503", "D711-D504", "D711-D505", "D711-D506", "D711-D507", "D711-D508"); 
-	$scope.plates[0].tags.push("D712-D501", "D712-D502", "D712-D503", "D712-D504", "D712-D505", "D712-D506", "D712-D507", "D712-D508"); 
-
-	/* 10/10/2017 TEST 
-	$scope.plates[1].tags.push("X701-X501", "X701-X502", "X701-X503", "X701-X504", "X701-X505", "X701-X506", "X701-X507", "X701-X508");
-	$scope.plates[1].tags.push("X702-X501", "X702-X502", "X702-X503", "X702-X504", "X702-X505", "X702-X506", "X702-X507", "X702-X508");
-	$scope.plates[1].tags.push("X703-X501", "X703-X502", "X703-X503", "X703-X504", "X703-X505", "X703-X506", "X703-X507", "X703-X508");
-	$scope.plates[1].tags.push("X704-X501", "X704-X502", "X704-X503", "X704-X504", "X704-X505", "X704-X506", "X704-X507", "X704-X508"); 
-	$scope.plates[1].tags.push("X705-X501", "X705-X502", "X705-X503", "X705-X504", "X705-X505", "X705-X506", "X705-X507", "X705-X508"); 
-	$scope.plates[1].tags.push("X706-X501", "X706-X502", "X706-X503", "X706-X504", "X706-X505", "X706-X506", "X706-X507", "X706-X508"); 
-	$scope.plates[1].tags.push("X707-X501", "X707-X502", "X707-X503", "X707-X504", "X707-X505", "X707-X506", "X707-X507", "X707-X508"); 
-	$scope.plates[1].tags.push("X708-X501", "X708-X502", "X708-X503", "X708-X504", "X708-X505", "X708-X506", "X708-X507", "X708-X508"); 
-	$scope.plates[1].tags.push("X709-X501", "X709-X502", "X709-X503", "X709-X504", "X709-X505", "X709-X506", "X709-X507", "X709-X508"); 
-	$scope.plates[1].tags.push("X710-X501", "X710-X502", "X710-X503", "X710-X504", "X710-X505", "X710-X506", "X710-X507", "X710-X508"); 
-	$scope.plates[1].tags.push("X711-X501", "X711-X502", "X711-X503", "X711-X504", "X711-X505", "X711-X506", "X711-X507", "X711-X508"); 
-	$scope.plates[1].tags.push("X712-X501", "X712-X502", "X712-X503", "X712-X504", "X712-X505", "X712-X506", "X712-X507", "X712-X508"); 
+	/* 09/11/2017 NGL-1691 NON pas ici!!! "DAP TruSeq DNA HT"
+	$scope.plates[0].tags.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508"); //colonne 1
+	$scope.plates[0].tags.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508"); //colonne 2
+	$scope.plates[0].tags.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508"); //colonne 3
+	$scope.plates[0].tags.push("D704-D501", "D704-D502", "D704-D503", "D704-D504", "D704-D505", "D704-D506", "D704-D507", "D704-D508"); //colonne 4
+	$scope.plates[0].tags.push("D705-D501", "D705-D502", "D705-D503", "D705-D504", "D705-D505", "D705-D506", "D705-D507", "D705-D508"); //colonne 5
+	$scope.plates[0].tags.push("D706-D501", "D706-D502", "D706-D503", "D706-D504", "D706-D505", "D706-D506", "D706-D507", "D706-D508"); //colonne 6
+	$scope.plates[0].tags.push("D707-D501", "D707-D502", "D707-D503", "D707-D504", "D707-D505", "D707-D506", "D707-D507", "D707-D508"); //colonne 7
+	$scope.plates[0].tags.push("D708-D501", "D708-D502", "D708-D503", "D708-D504", "D708-D505", "D708-D506", "D708-D507", "D708-D508"); //colonne 8
+	$scope.plates[0].tags.push("D709-D501", "D709-D502", "D709-D503", "D709-D504", "D709-D505", "D709-D506", "D709-D507", "D709-D508"); //colonne 9
+	$scope.plates[0].tags.push("D710-D501", "D710-D502", "D710-D503", "D710-D504", "D710-D505", "D710-D506", "D710-D507", "D710-D508"); //colonne 10
+	$scope.plates[0].tags.push("D711-D501", "D711-D502", "D711-D503", "D711-D504", "D711-D505", "D711-D506", "D711-D507", "D711-D508"); //colonne 11
+	$scope.plates[0].tags.push("D712-D501", "D712-D502", "D712-D503", "D712-D504", "D712-D505", "D712-D506", "D712-D507", "D712-D508"); //colonne 12
 	*/
+
+	// 09/11/2017  NGL-1691 voici la bonne plaque: Plaque Agilent SureSelect (SR8100258293) [plaque bleue]
+	//             c'est le nom ou le code qu'il faut mettre ici ??? exemple:  AglSSXT-01(name)/aglSSXT-01(code) ??????????
+	$scope.plates[0].tags.push("AglSSXT-01", "AglSSXT-13", "AglSSXT-25", "AglSSXT-37", "AglSSXT-49", "AglSSXT-61", "AglSSXT-73", "AglSSXT-85"); //colonne 1
+	$scope.plates[0].tags.push("AglSSXT-02", "AglSSXT-14", "AglSSXT-26", "AglSSXT-38", "AglSSXT-50", "AglSSXT-62", "AglSSXT-74", "AglSSXT-86"); //colonne 2
+	$scope.plates[0].tags.push("AglSSXT-03", "AglSSXT-15", "AglSSXT-27", "AglSSXT-39", "AglSSXT-51", "AglSSXT-63", "AglSSXT-75", "AglSSXT-87"); //colonne 3
+	$scope.plates[0].tags.push("AglSSXT-04", "AglSSXT-16", "AglSSXT-28", "AglSSXT-40", "AglSSXT-52", "AglSSXT-64", "AglSSXT-76", "AglSSXT-88"); //colonne 4
+	$scope.plates[0].tags.push("AglSSXT-05", "AglSSXT-17", "AglSSXT-29", "AglSSXT-41", "AglSSXT-53", "AglSSXT-65", "AglSSXT-77", "AglSSXT-89"); //colonne 5
+	$scope.plates[0].tags.push("AglSSXT-06", "AglSSXT-18", "AglSSXT-30", "AglSSXT-42", "AglSSXT-54", "AglSSXT-66", "AglSSXT-78", "AglSSXT-89"); //colonne 6
+	$scope.plates[0].tags.push("AglSSXT-07", "AglSSXT-19", "AglSSXT-31", "AglSSXT-43", "AglSSXT-55", "AglSSXT-67", "AglSSXT-79", "AglSSXT-90"); //colonne 7	
+	$scope.plates[0].tags.push("AglSSXT-08", "AglSSXT-20", "AglSSXT-32", "AglSSXT-44", "AglSSXT-56", "AglSSXT-68", "AglSSXT-80", "AglSSXT-91"); //colonne 8
+	$scope.plates[0].tags.push("AglSSXT-09", "AglSSXT-21", "AglSSXT-33", "AglSSXT-45", "AglSSXT-57", "AglSSXT-69", "AglSSXT-81", "AglSSXT-92"); //colonne 9
+	$scope.plates[0].tags.push("AglSSXT-10", "AglSSXT-22", "AglSSXT-34", "AglSSXT-46", "AglSSXT-58", "AglSSXT-70", "AglSSXT-82", "AglSSXT-93"); //colonne 10
+	$scope.plates[0].tags.push("AglSSXT-11", "AglSSXT-23", "AglSSXT-35", "AglSSXT-47", "AglSSXT-59", "AglSSXT-71", "AglSSXT-83", "AglSSXT-94"); //colonne 11
+	$scope.plates[0].tags.push("AglSSXT-12", "AglSSXT-24", "AglSSXT-36", "AglSSXT-48", "AglSSXT-60", "AglSSXT-72", "AglSSXT-84", "AglSSXT-95"); //colonne 12
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 
@@ -440,7 +442,6 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
         
         if  ($scope.tagPlateColumn.name*1 + maxcol > 13 ){
         	$scope.messages.clazz="alert alert-danger";
-
         	$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
         	$scope.messages.showDetails = false;
         	$scope.messages.open();	
@@ -468,8 +469,7 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 				ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
 
 			} else {
-				//l'utilisateur n'a rien selectionné => suprimer les PSV tagCategory et tagCode 
-				
+				//l'utilisateur n'a rien selectionné => suprimer les PSV tagCategory et tagCode 		
 				ocu.experimentProperties["tag"]= undefined;
 				ocu.experimentProperties["tagCategory"]=undefined;
 			}

@@ -303,11 +303,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate)
 		// FDS 10/07/2017 inversion code/name
-		// FDS 04/09/2017 Pas de properties...
-		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
+		// FDS 09/11/2017 ajout de properties...
+		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getBravoWorkstationProperties(), 
 				getInstruments(
 						createInstrument("bravo-workstation1", "Bravo Workstation 1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("bravo-workstation2", "Bravo Workstation 2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("bravo-workstation2", "Bravo Workstation 2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("bravo-workstation3", "Bravo Workstation 3",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
@@ -625,9 +626,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		progList.add("TruSEQ_DNA_PCR_Free_Library_Prep");
 		progList.add("TruSEQ_DNA_PCR_Free_Library_Prep_DAP_Plate");
 		
-		//18/07/2017 ESSAI
-		progList.add("ESSAI: Fragmentation pour capture");
-		progList.add("ESSAI: Prep. pour capture");
+		//09/11/2017 Capture (valeurs reelles)
+		progList.add("SureSelect XT initial SPRI cleanup");
+		progList.add("SureSelect XT library prep");
 
 		//transformer ArrayList progList en Array progList2 car newValue() prend un Array en argument !!
 		String progList2[] = new String[progList.size()];
@@ -661,10 +662,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// 18/07/2017 aussi utilise en Fragmentation/capture !!!
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 newValues("PCR FREE PROD NGS FINAL",
-                		  "DEV: Fragmentation"),  
+                		  "SureSelect96 final"),  
                 "single", null, false ,null, null));
 
-		//l.addAll(getCovarisProperties());
 		l.addAll(getScicloneNGSXProperties());
 		
 		// optionnel
@@ -778,33 +778,54 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	// FDS 17/07/2017 NGL-1201  ajout propriétés pseudo instrument Mastercycler EP-Gradient + Bravo Workstation
+	//     09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerEPGAndBravoWsProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		//Mastercycler
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
-				null, null, null , null, "single", null, true ,"14", null));
+				null, null, null , null, "single", null, true ,null, null));
 
 		//Bravo 
 		// a voir si necessaire...
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
-				null, null, null , null, "single", null, true ,"0.8", null));
+				null, null, null , null, "single", null, true ,null, null));
+		
+		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
+		l.add(newPropertiesDefinition("program Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+				null, null, null , null, "single", null, true ,null, null));
+		
 		return l;
 	}
 	
 	// FDS 17/07/2017 NGL-1201 Mastercycler Nexus SX1 + Bravo Workstation
+    //     09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerNexusAndBravoWsProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		//Mastercycler Nexus
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
-				null, null, null , null, "single", null, true ,"14", null));
+				null, null, null , null, "single", null, true ,null, null));
 
 		//Bravo 
 		// a voir si necessaire...
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
-				null, null, null , null, "single", null, true ,"0.8", null));
+				null, null, null , null, "single", null, true ,null, null));
+		
+		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
+		l.add(newPropertiesDefinition("program Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+				null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
 	
+	// FDS 09/11/2017 ajout pour NGL-1691 dans le cas ou instrument utilisé seul
+	private static List<PropertyDefinition>getBravoWsProperties()throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
+		l.add(newPropertiesDefinition("program Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+				null, null, null , null, "single", null, true ,null, null));
+		
+		return l;
+	}
 	
 	//FDS 20/02/2017 NGL-1167: Chromium controller
 	private static List<PropertyDefinition> getChromiumControllerProperties() throws DAOException {
