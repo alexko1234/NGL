@@ -406,19 +406,19 @@ angular.module('home').controller('PcrAndIndexingCtrl',['$scope', '$parse',  '$f
 	*/
 
 	// 09/11/2017  NGL-1691 voici la bonne plaque: Plaque Agilent SureSelect (SR8100258293) [plaque bleue]
-	//             c'est le nom ou le code qu'il faut mettre ici ??? exemple:  AglSSXT-01(name)/aglSSXT-01(code) ??????????
-	$scope.plates[0].tags.push("AglSSXT-01", "AglSSXT-13", "AglSSXT-25", "AglSSXT-37", "AglSSXT-49", "AglSSXT-61", "AglSSXT-73", "AglSSXT-85"); //colonne 1
-	$scope.plates[0].tags.push("AglSSXT-02", "AglSSXT-14", "AglSSXT-26", "AglSSXT-38", "AglSSXT-50", "AglSSXT-62", "AglSSXT-74", "AglSSXT-86"); //colonne 2
-	$scope.plates[0].tags.push("AglSSXT-03", "AglSSXT-15", "AglSSXT-27", "AglSSXT-39", "AglSSXT-51", "AglSSXT-63", "AglSSXT-75", "AglSSXT-87"); //colonne 3
-	$scope.plates[0].tags.push("AglSSXT-04", "AglSSXT-16", "AglSSXT-28", "AglSSXT-40", "AglSSXT-52", "AglSSXT-64", "AglSSXT-76", "AglSSXT-88"); //colonne 4
-	$scope.plates[0].tags.push("AglSSXT-05", "AglSSXT-17", "AglSSXT-29", "AglSSXT-41", "AglSSXT-53", "AglSSXT-65", "AglSSXT-77", "AglSSXT-89"); //colonne 5
-	$scope.plates[0].tags.push("AglSSXT-06", "AglSSXT-18", "AglSSXT-30", "AglSSXT-42", "AglSSXT-54", "AglSSXT-66", "AglSSXT-78", "AglSSXT-89"); //colonne 6
-	$scope.plates[0].tags.push("AglSSXT-07", "AglSSXT-19", "AglSSXT-31", "AglSSXT-43", "AglSSXT-55", "AglSSXT-67", "AglSSXT-79", "AglSSXT-90"); //colonne 7	
-	$scope.plates[0].tags.push("AglSSXT-08", "AglSSXT-20", "AglSSXT-32", "AglSSXT-44", "AglSSXT-56", "AglSSXT-68", "AglSSXT-80", "AglSSXT-91"); //colonne 8
-	$scope.plates[0].tags.push("AglSSXT-09", "AglSSXT-21", "AglSSXT-33", "AglSSXT-45", "AglSSXT-57", "AglSSXT-69", "AglSSXT-81", "AglSSXT-92"); //colonne 9
-	$scope.plates[0].tags.push("AglSSXT-10", "AglSSXT-22", "AglSSXT-34", "AglSSXT-46", "AglSSXT-58", "AglSSXT-70", "AglSSXT-82", "AglSSXT-93"); //colonne 10
-	$scope.plates[0].tags.push("AglSSXT-11", "AglSSXT-23", "AglSSXT-35", "AglSSXT-47", "AglSSXT-59", "AglSSXT-71", "AglSSXT-83", "AglSSXT-94"); //colonne 11
-	$scope.plates[0].tags.push("AglSSXT-12", "AglSSXT-24", "AglSSXT-36", "AglSSXT-48", "AglSSXT-60", "AglSSXT-72", "AglSSXT-84", "AglSSXT-95"); //colonne 12
+	//             c'est le code des index qu'il faut mettre ici ??? exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
+	$scope.plates[0].tags.push("aglSSXT-01", "aglSSXT-13", "aglSSXT-25", "aglSSXT-37", "aglSSXT-49", "aglSSXT-61", "aglSSXT-73", "aglSSXT-85"); //colonne 1
+	$scope.plates[0].tags.push("aglSSXT-02", "aglSSXT-14", "aglSSXT-26", "aglSSXT-38", "aglSSXT-50", "aglSSXT-62", "aglSSXT-74", "aglSSXT-86"); //colonne 2
+	$scope.plates[0].tags.push("aglSSXT-03", "aglSSXT-15", "aglSSXT-27", "aglSSXT-39", "aglSSXT-51", "aglSSXT-63", "aglSSXT-75", "aglSSXT-87"); //colonne 3
+	$scope.plates[0].tags.push("aglSSXT-04", "aglSSXT-16", "aglSSXT-28", "aglSSXT-40", "aglSSXT-52", "aglSSXT-64", "aglSSXT-76", "aglSSXT-88"); //colonne 4
+	$scope.plates[0].tags.push("aglSSXT-05", "aglSSXT-17", "aglSSXT-29", "aglSSXT-41", "aglSSXT-53", "aglSSXT-65", "aglSSXT-77", "aglSSXT-89"); //colonne 5
+	$scope.plates[0].tags.push("aglSSXT-06", "aglSSXT-18", "aglSSXT-30", "aglSSXT-42", "aglSSXT-54", "aglSSXT-66", "aglSSXT-78", "aglSSXT-89"); //colonne 6
+	$scope.plates[0].tags.push("aglSSXT-07", "aglSSXT-19", "aglSSXT-31", "aglSSXT-43", "aglSSXT-55", "aglSSXT-67", "aglSSXT-79", "aglSSXT-90"); //colonne 7	
+	$scope.plates[0].tags.push("aglSSXT-08", "aglSSXT-20", "aglSSXT-32", "aglSSXT-44", "aglSSXT-56", "aglSSXT-68", "aglSSXT-80", "aglSSXT-91"); //colonne 8
+	$scope.plates[0].tags.push("aglSSXT-09", "aglSSXT-21", "aglSSXT-33", "aglSSXT-45", "aglSSXT-57", "aglSSXT-69", "aglSSXT-81", "aglSSXT-92"); //colonne 9
+	$scope.plates[0].tags.push("aglSSXT-10", "aglSSXT-22", "aglSSXT-34", "aglSSXT-46", "aglSSXT-58", "aglSSXT-70", "aglSSXT-82", "aglSSXT-93"); //colonne 10
+	$scope.plates[0].tags.push("aglSSXT-11", "aglSSXT-23", "aglSSXT-35", "aglSSXT-47", "aglSSXT-59", "aglSSXT-71", "aglSSXT-83", "aglSSXT-94"); //colonne 11
+	$scope.plates[0].tags.push("aglSSXT-12", "aglSSXT-24", "aglSSXT-36", "aglSSXT-48", "aglSSXT-60", "aglSSXT-72", "aglSSXT-84", "aglSSXT-95"); //colonne 12
 	
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 

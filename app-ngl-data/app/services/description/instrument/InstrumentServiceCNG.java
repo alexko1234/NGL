@@ -304,7 +304,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//FDS ajout 26/06/2017 Bravo WorkStation (input plate / output plate)
 		// FDS 10/07/2017 inversion code/name
 		// FDS 09/11/2017 ajout de properties...
-		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getBravoWorkstationProperties(), 
+		l.add(newInstrumentUsedType("Bravo WorkStation","bravo-workstation", InstrumentCategory.find.findByCode("liquid-handling-robot"), getBravoWsProperties(), 
 				getInstruments(
 						createInstrument("bravo-workstation1", "Bravo Workstation 1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("bravo-workstation2", "Bravo Workstation 2",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -821,7 +821,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
-		l.add(newPropertiesDefinition("program Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		
 		return l;

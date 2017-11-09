@@ -1458,14 +1458,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("pb"),
 				"single", 16, true, null,null));
 		
-		return propertyDefinitions;
-		
+		return propertyDefinitions;	
 	}
 	
 	//FDS ajout 18/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsSamplePrepCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
+		
+		// pas de propriétés pour l'instant..
 		return propertyDefinitions;
 	}
 	
@@ -1480,14 +1480,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	//FDS ajout 18/07//2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-			
+		
+		// FDS 09/11/2017 NGL-1691: ajout propriété de niveau Global (experiment) :Temps d'hybridation==hybridizationTime : saisie libre texte, non obligatoire
+		// que veut dire le parametre "position" pour les propriété de niveau Global ??
+		propertyDefinitions.add(newPropertiesDefinition("Temps d'hybridation", "hybridizationTime", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
+				null, "single",13, true, null, null));	
+		
 		//InputContainer
-		// pas editable=> calculé
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
 				MeasureUnit.find.findByCode("µL"), 
-				"single",10, false,null,null));
+				"single",10,false,null,null));          // pas editable=> calculé !
 		
 		// editable
 		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
@@ -1496,6 +1500,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("ng"),
 				"single",11,true,null,null));
 		
+		//OuputContainer 
 		// Liste; valeur par defaut= celle qui se trouve dans processus dans expectedBaits ?. PAS POSSIBLE!!!
 		// 31/08/2017 erreur de spec, mettre sur ContainerOut 
 		//            il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) ??????
@@ -1503,14 +1508,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, null, null,
 				"single",12,true,"F",null));
 		
-		// FDS 09/11/2017 NGL-1691: ajout propriété Temps d'hybridation (hybridizationTime) : saisie libre texte, non obligatoire
-		propertyDefinitions.add(newPropertiesDefinition("Temps d'hybridation", "hybridizationTime", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null,
-				null, "single",13, false, null, null));
-		
-		//OuputContainer 
 			
 		return propertyDefinitions;
-	
 	}
 	
 	//FDS ajout 18/07/2017 NGL-1201
