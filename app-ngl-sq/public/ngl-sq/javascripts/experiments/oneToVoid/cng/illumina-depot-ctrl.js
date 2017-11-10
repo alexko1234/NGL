@@ -1,4 +1,5 @@
 // 08/11/2017 NGL-1326:  le bouton specifique CNG d'import des balances Mettler
+// essai avec ou sans mainService
 angular.module('home').controller('IlluminaDepotCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse, $http) {
 	
@@ -41,12 +42,21 @@ angular.module('home').controller('IlluminaDepotCNGCtrl',['$scope', '$parse','$h
 		});		
 	};
 	
+	// evenement pas recu ????
+	$scope.$on('activeEditMode', function(e) {
+		console.log("XXXXXXXX  activeEditMode");
+	});
+	
 	// 25/10/2017 FDS ajout pour l'import du fichier Mettler; 08/11/2017 renommage button2=>buttonMettler
 	$scope.buttonMettler = {
 			isShow:function(){
-				// visible meme si terminé, mais seulement en mode edition
-				// return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); MARCHE PAS !!
-				return ( $scope.isInProgressState()||$scope.isFinishState() );
+
+				// console.log('progressState:'+$scope.isInProgressState());
+				// console.log('finishState:'+$scope.isFinishState() );
+				console.log('editMode:'+$scope.isEditMode() );// isEditMode est toujours false l'action d'activation du bouton edition n'est pas vue ici... !!!
+				
+				//return ( ($scope.isInProgressState() || $scope.isInFinishState() ) && $scope.isEditMode() ) ;
+				return ( $scope.isInProgressState() || $scope.isFinishState() );
 				},
 			isFileSet:function(){
 				return ($scope.file === undefined)?"disabled":"";

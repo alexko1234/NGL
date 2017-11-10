@@ -37,8 +37,10 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {		
 		
+
+		//-1- Avant de commencer le parsing du fichier récupérer la liste des kits actifs / boites actives / reagents actifs pour le type d'expérience
 		Logger.info ("--------GET CATALOG INFO ("+experiment.typeCode+")----------");
-		// Avant de commencer le parsing du fichier récupérer la liste des kits actifs / boites actives / reagents actifs pour le type d'expérience
+		
 		List<KitCatalog> experimentKitList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
 				DBQuery.is("category", "Kit").and(DBQuery.is("active", true)).and(DBQuery.in("experimentTypeCodes", experiment.typeCode))).toList();
 
@@ -75,6 +77,8 @@ public class Input extends AbstractInput {
 			}
 		}
 		 
+		//-2- Parsing
+		Logger.info ("--------START PARSING----------");
 		
 		byte[] ibuf = pfv.value;
 		InputStream is = new ByteArrayInputStream(ibuf);
@@ -91,32 +95,32 @@ public class Input extends AbstractInput {
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is, charset));
 		
+		int nbReagentsFound=0;
 		int n = 0;
 		boolean lastResult=false;
 		String line="";	
-		
-		Logger.info ("--------START PARSING----------");
 		
 		while (((line = reader.readLine()) != null) && !lastResult ){	 
 			
 			// attention si le fichier vient d'une machine avec LOCALE = FR les décimaux utilisent la virgule!!!
 			String[] cols = line.replace (",", ".").split(";");
 			
-			//DEBUG
-			Logger.info ("ligne "+n+" nbre colonne="+cols.length);
 
 			// verifier la 1 ere ligne : doit etre "Compte rendu de séquençage"
 			if (n == 0) {
+				// verifier que c'est bien un fichier CSV ;delimited...
+				Logger.info ("ligne "+n+" nbre colonne="+cols.length);
 				/* marche pas....length=2 pour un fichier EXcel mais =1 pour un fichier CSV !!!!!!!
 				  if (cols.length != 15) {
 
 					// pas un fichier CSV ?????
-					contextValidation.addErrors("Erreurs fichier","Le fichier ne semble pas être au format CSV / LabX");
+					contextValidation.addErrors("Erreurs fichier","Le fichier ne semble pas être au format CSV / ;");
 					Logger.info ("col 0="+cols[0]);
 					break; // si ce n'est pas le bon type de fichier la suite va sortir des erreurs incomprehensibles...terminer		
 				}
 				*/
 				
+				//  verifier que c'est bien un fichier LabX
 				if ( !cols[0].trim().equals("Compte rendu de séquençage") ) {
 					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.header-label.missing","1", "Compte rendu de séquençage");
 					break; // si ce n'est pas le bon type de fichier la suite va sortir des erreurs incomprehensibles...terminer
@@ -129,30 +133,28 @@ public class Input extends AbstractInput {
 					// verifier le code flow cell
 					String flowcellId=cols[8].trim();
 					Logger.info ("flowcellId="+flowcellId);
-					
 
 					if ( experiment.typeCode.equals("prepa-fc-ordered") || experiment.typeCode.equals("prepa-flowcell") ) {
-						// prepa flowcell: propriete d'instrument ( ou container out)
+						//  propriete d'instrument ( ou container out)
 						if ( !experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
-						    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience");
+						    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.");
 							break; // terminer
 						}
 					}
 					// depot sequenceur: container in
 					if ( experiment.typeCode.equals("illumina-depot") ) {
-						
-						//TODO      experience.inputContainerSupportcodes
-						
-						contextValidation.addErrors("Erreurs fichier", "TODO");
-						break; // terminer
+						//inputContainerSupportcodes
+						if ( ! experiment.inputContainerSupportCodes.contains(flowcellId) )  {
+						    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.=="+ experiment.inputContainerSupportCodes);
+							break; // terminer
+						}
 					}		
 				} else {	
 					Logger.info ("unsupported LabX file type...");
-					contextValidation.addErrors("Erreurs fichier","ligne 6 :'"+ cols[0].trim() + "' : type de fichier LabX non pris en charge");
+					contextValidation.addErrors("Erreurs fichier","ligne 6 :'"+ cols[0].trim() + "' : type de fichier LabX non pris en charge.");
 					break; 
 				} 
 			}
-			
 			
 			if (n > 5 ) {
 				// ligne "Résultats principaux..." = fin des données a parser
@@ -193,13 +195,14 @@ public class Input extends AbstractInput {
 							ru.kitCatalogCode=bc.kitCatalogCode;  
 							ru.boxCatalogCode=bc.code; 
 							ru.boxCode=fileItemCode+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite;
-							  
+			  
+						    experiment.reagents.add(ru); 
+						    nbReagentsFound++;
+						    
 							//DEBUG
 							Logger.info("kitCatalogCode="+ru.kitCatalogCode);
 							Logger.info("boxCatalogCode="+ru.boxCatalogCode);
-							Logger.info("boxCode="+ ru.boxCode);  
-							  
-						    experiment.reagents.add(ru); 
+							Logger.info("boxCode="+ ru.boxCode); 
 						} 
 						//-2- chercher dans mapReagent
 						else if ( reagentMap.containsKey(fileItemName) ){	
@@ -209,7 +212,7 @@ public class Input extends AbstractInput {
 							if (null == boxCodeMap.get(rc.boxCatalogCode)){
 							  // la boite de ce reactif n'est pas presente dans la section de declaration des boites !!!
 							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileItemName+"' not declared in file.");
-						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileItemName+ "' non trouvée dans le fichier");
+						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileItemName+ "' non trouvée dans le fichier.");
 							} 
 							// construire un reagentUsed et l'ajouter a l'experiment
 							ReagentUsed ru=new ReagentUsed();  
@@ -221,6 +224,7 @@ public class Input extends AbstractInput {
 							ru.code=fileItemCode+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 							// ru.description=....     // pas de description dans cette section du fichier...	
 							experiment.reagents.add(ru); 
+							nbReagentsFound++;
 							
 							//DEBUG
 							Logger.info("kitCatalogCode="+ru.kitCatalogCode);
@@ -228,9 +232,7 @@ public class Input extends AbstractInput {
 							Logger.info("reagentCatalogCode="+ru.reagentCatalogCode);
 							Logger.info("boxCode="+ru.boxCode); 
 							Logger.info("code="+ ru.code); 
-							 
-
-						
+							
 						} else { 
 							Logger.info ("DEBUG line ("+ n +"): item <"+fileItemName+ ">PAS TROUVE DANS HASHREAGENT NI HASHBOX ...pour type experience en cours");
 						}
@@ -253,7 +255,7 @@ public class Input extends AbstractInput {
 							if ( null == boxCodeMap.get(rc.boxCatalogCode)){
 							  // la boite de ce reactif n'est pas presente dans la section de déclaration des boites !!!
 							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileReagentName+"' not declared in file.");
-						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileReagentName+ "' non trouvée dans le fichier");
+						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileReagentName+ "' non trouvée dans le fichier.");
 							}
 							
 							String fileReagentCode = cols[5].trim();
@@ -276,6 +278,7 @@ public class Input extends AbstractInput {
 							ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
 							
 							experiment.reagents.add(ru);  
+							nbReagentsFound++;
 							
 							//DEBUG
 							Logger.info ("kitCatalogCode="+ru.kitCatalogCode);
@@ -298,6 +301,11 @@ public class Input extends AbstractInput {
 
 		reader.close();
 		Logger.info ("--------END PARSING----------");
+		
+		//TEST
+		if (nbReagentsFound==0 ) {
+			contextValidation.addErrors("Erreurs fichier","Aucun reactif trouvé pour ce type d'experience dans le fichier");
+		}
 		
 		return experiment;
 	}
