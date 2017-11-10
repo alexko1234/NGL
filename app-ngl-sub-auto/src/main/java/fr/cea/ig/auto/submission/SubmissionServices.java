@@ -324,11 +324,11 @@ public class SubmissionServices implements ISubmissionServices{
 		message = "Liste des AC attribues pour la soumission "  + submissionCode + " en mode confidentiel jusqu'au : " + release_date +" \n\n";
 
 		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "\n";  
-		updateSubmissionAC(submissionCode, submissionAc, date);
+		updateSubmissionAC(submissionCode, submissionAc);
 		
 		if (ebiStudyCode!=null && !ebiStudyCode.equals("")) {	
 			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "\n";  
-			updateStudyAC(ebiStudyCode, studyAc, studyExtId, date, release_date);
+			updateStudyAC(ebiStudyCode, studyAc, studyExtId);
 		}
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
@@ -358,30 +358,25 @@ public class SubmissionServices implements ISubmissionServices{
 		return ebiSuccess;
 	}
 
-	private void updateSubmissionAC(String code, String accession, Date date) throws FatalException, JSONDeviceException
+	private void updateSubmissionAC(String code, String accession) throws FatalException, JSONDeviceException
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		String dateToInsert = formatter.format(date);
 		//Update submission acNumber and date
 		JSONDevice jsonDevice = new JSONDevice();
-		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"submissionDate\":\""+dateToInsert+"\"}";
+		String submission = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession");
 		log.debug("with JSON "+submission);
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession&fields=submissionDate", submission,"bot");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+code+"?fields=accession", submission,"bot");
 	}
 
-	private void updateStudyAC(String code, String accession, String externalId, Date firstSubmissionDate,Date releaseDate) throws FatalException, JSONDeviceException
+	private void updateStudyAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		String firstSubDateToInsert = formatter.format(firstSubmissionDate);
-		String releaseDateToInsert = formatter.format(releaseDate);
 		JSONDevice jsonDevice = new JSONDevice();
-		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"firstSubmissionDate\":\""+firstSubDateToInsert+"\",\"releaseDate\":\""+releaseDateToInsert+"\"}";
+		String study = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\"}";
 		//Call PUT update with submission modified
-		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate");
+		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession");
 		log.debug("with JSON "+study);
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession&fields=firstSubmissionDate&fields=releaseDate", study,"bot");
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/studies/internal/"+code+"?fields=accession", study,"bot");
 	}
 
 	private void updateSampleAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
