@@ -1,9 +1,6 @@
 package fr.cea.ig.play.test;
 
 import static org.junit.Assert.assertEquals;
-// import static fr.cea.ig.play.test.ReadUpdateReadTest.*;
-import static fr.cea.ig.play.test.WSHelper.get;
-import static fr.cea.ig.play.test.ReadUpdateReadTest.notEqualsPath;
 
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -13,11 +10,9 @@ import java.util.function.Consumer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -26,8 +21,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.node.IntNode;
 
 import play.Application;
 import play.Environment;
@@ -45,8 +38,6 @@ import static play.mvc.Http.Status;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.io.Resources;
-
 /**
  * Test support for NGL on DEV server.
  * The application is a singleton as the shutdown is not properly managed. All the
@@ -63,62 +54,29 @@ import com.google.common.io.Resources;
  */
 public class DevAppTesting {
 	
+	// static GuiceApplicationBuilder applicationBuilder;
 	/**
-	 * Logger.
+	 * Application singleton instance.
 	 */
-	private static final play.Logger.ALogger logger = play.Logger.of(DevAppTesting.class);
+	private static Application application;
 	
-	
-	private static String testTimeKey = null;
-	
-	public static String testTimeKey() {
-		if (testTimeKey == null) {
-			testTimeKey = Long.toHexString(System.currentTimeMillis());
-			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
-			// Could map 0-F -> A-. for non numeric stuff
-		}
-		return testTimeKey;
-	}
-
-	// Generate a key from some components
-	public static String code(String head) {
-		String testRunner = System.getProperty("user.name");
-		String datePart   = testTimeKey();
-		return head + testRunner + datePart;
-	}
-	
-
 	/**
 	 * Get the full name of the file that mathces the given resource. 
 	 * @param name name of the resource to find
 	 * @return     full path to the found file
 	 */
-	// TODO: fix resource lookup
 	public static String resourceFileName(String name) {
-		try {
-		List<URL> resources = Collections.list(DevAppTesting.class.getClassLoader().getResources(name));
-		if (resources.size() == 0)
+		URL resource = DevAppTesting.class.getClassLoader().getResource(name);
+		if (resource == null)
 			throw new RuntimeException("could not locate resource '" + name + "' using classloader");
-		for (URL url : resources) {
-			try {
-				logger.info("trying to load " + name + " from " + url);
-				File file = new File(url.toURI());
-				return file.toString();
-			} catch (Exception e) {
-				// throw new RuntimeException("resource " + resources.get(0) + " cannot be converted to File",e);
-			}
+		try {
+			File confFile = new File(resource.toURI());
+			return confFile.toString();
+		} catch (Exception e) {
+			throw new RuntimeException("resource " + resource + " cannot be converted to File",e);
 		}
-		} catch (IOException e) {
-			throw new RuntimeException("classloader get resource failed",e);
-		}
-		throw new RuntimeException("resource could not be loaded '" + name + "'");
 	}
 	
-	private static GuiceApplicationBuilder applicationBuilder;
-	/*
-	 * Application singleton instance.
-	 */
-	// private static Application application;
 	/**
 	 * DEV application singleton instance. This does not sets the play global application
 	 * instance. Actual configuration should be done using an application specifc tag that
@@ -129,57 +87,45 @@ public class DevAppTesting {
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
 	public static Application devapp(String appConfFile, String logConfFile) {
-		// if (application == null) {
-		if (applicationBuilder == null) {
-			try {
-			File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
-			// System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
-			System.setProperty("config.file", unfragedConf.toString());
+		if (application == null) {
+			System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
 			System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
-			if (false) {
-			logger.debug("conn " + resourceFileName("jconn4.jar"));
-			try {
-			logger.debug("sybase driver " + DevAppTesting.class.getClassLoader().loadClass("com.sybase.jdbc4.jdbc.SybDriver").getName());
-			} catch (Exception e) {
-				throw new RuntimeException("sybdriver",e);
-			}
-			}
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-			applicationBuilder = new GuiceApplicationBuilder().in(env);
-			} catch (IOException e) {
-				throw new RuntimeException("application build init failed",e);
-			}
-			// GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
-			// Application builder runs the db connection pool manager.
-			//throw new RuntimeException("abort application creation");
-		    // application = applicationBuilder.build();
+			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+		    application = applicationBuilder.build();
 		}
-		// return application; //Builder.build();
-		return applicationBuilder.build();
+		return application;
+	}
+
+	public static WSResponse get(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).get();
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static WSResponse put(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").put(payload);
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 		
-	/**
-	 * Default port for tests http server.
-	 */
 	public static final int TESTS_PORT = 3333;
 	
-	/**
-	 * Run the given test using the app and the default port for the http server.
-	 * @param app   application to test
-	 * @param toRun test to run
-	 */
 	public static void testInServer(Application app, Consumer<WSClient> toRun) {
 		testInServer(app,TESTS_PORT,toRun);
 	}
 	
-	/**
-	 * Run the given test using the app and the http server at the given port.
-	 * @param app
-	 * @param port
-	 * @param toRun
-	 */
 	public static void testInServer(Application app, int port, Consumer<WSClient> toRun) {
+		// TestServer server = testServer(port,devapp());
 		TestServer server = testServer(port,app);
 	    running(server, () -> {
 	        try (WSClient ws = WSTestClient.newClient(port)) {
@@ -190,6 +136,7 @@ public class DevAppTesting {
 	    });
 	}
 	
+	
 	/**
 	 * Read, modify data, update, read again and compare read data to modified data.
 	 * @param ws       web client
@@ -197,19 +144,20 @@ public class DevAppTesting {
 	 * @param modify   JSON modification to run
 	 * @param preCheck JSON before check modification
 	 */
-	/*
+	// TODO: use logger
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify, Consumer<JsonNode> preCheck) {
 		// Read
-		logger.debug("GET - " + url);
+		System.out.println("GET - " + url);
 		WSResponse r0 = get(ws,url,Status.OK);
+		// assertEquals(Status.OK, r0.getStatus());
 		JsonNode js0 = Json.parse(r0.getBody());
 		modify.accept(js0);
 		// Update
-		logger.debug("PUT - " + url);		
+		System.out.println("PUT - " + url);		
 		WSResponse r1 = put(ws,url,js0.toString());
 		assertEquals(Status.OK, r1.getStatus());
 		// Read updated
-		logger.debug("GET - " + url);
+		System.out.println("GET - " + url);
 		WSResponse r2 = get(ws,url);
 		assertEquals(Status.OK, r2.getStatus());
 		JsonNode js1 = Json.parse(r2.getBody());
@@ -220,30 +168,11 @@ public class DevAppTesting {
 		cmp("",js0,js1);
 	}
 	
-	
 	// RUR could be made a class with some configuration and run methods
 	// Could check that we get come error code instead of asserting equality 
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify) {
-		rur(ws,url,modify,js -> { remove(js,"traceInformation"); });
+		rur(ws,url,modify,js -> { ((ObjectNode)js).remove("traceInformation"); });
 	}
-	
-	public static void rur(WSClient ws, String url) {
-		rur(ws,url,js -> {});
-	}
-	*/
-	
-	/**
-	 * Standard RUR test that checks that the traceInformation has chnaged after the udate.
-	 * @param url url to check
-	 * @param ws  web client to use
-	 */
-	public static void rurNeqTraceInfo(String url, WSClient ws) {
-		new ReadUpdateReadTest(url)
-			.assertion(notEqualsPath("traceInformation"))
-			.run(ws);
-	}
-	
-	
 	
 	public static final void cmp(JsonNode n0, JsonNode n1) {
 		cmp("",n0,n1);
@@ -311,81 +240,99 @@ public class DevAppTesting {
 		}
 	}
 	
-	public static void checkRoutes(WSClient ws) {
-		RoutesTest.checkRoutes(ws);
-	}
-	
-}
-
-/**
- * Fragmeneted configuration loading so that configuration changes are done in a fragment
- * and then propragated to all the including configuration files.
- * 
- * @author vrd
- *
- */ 
-class FragmentedConfiguration {
-
-	private static final play.Logger.ALogger logger = play.Logger.of(FragmentedConfiguration.class);
-	
-	private static Pattern includePat = Pattern .compile("@include\\s+(\\S+)\\s*");
-	
-	public static File file(String name) throws IOException {
-			// Load the main fragment, should check that the name ends with ".frag"
-			File main = new File(DevAppTesting.resourceFileName(name));
-			// Load the file and build the target
-			// FileReader r = new FileReader(main);
-			// StringBuilder out = new StringBuilder();
-			FragmentedConfiguration fc = new FragmentedConfiguration();
-			fc.include(main);
-			String text = fc.text();
-			// System.out.println(out.toString());
-			// Generate tmp file with givne content
-			String cleanName = main.getName().replace(".frag", "");
-			File generated = new File(System.getProperty("java.io.tmpdir"),cleanName);
-			logger.debug("generating file '" + generated + "'");
-			FileWriter f = new FileWriter(generated);
-			f.append(text);
-			f.close();
-			return generated;
-	}
-
-	private StringBuilder out;
-	
-	public FragmentedConfiguration() {
-		out = new StringBuilder();
-	}
-	
-	public void include( File f) throws IOException {
-		StringBuilder b = out;
-		Pattern p = includePat; // Pattern .compile("@include\s+(\S+)\s*");
-		logger.debug("loading fragment '" + f + "'");
-		b.append("# including --------- ");
-		b.append(f);
-		b.append('\n');
-		BufferedReader r = new BufferedReader(new FileReader(f));
-		String line;
-		while ((line = r.readLine()) != null) {
-			Matcher m = p.matcher(line);
-			if (m.matches()) {
-				String include = m.group(1);
-				File includedFile = new File(f.getParent(),include);
-				include(new File(f.getParent(),include));
-			} else {
-				b.append(line);
-				b.append('\n');
+	static class Routes {
+		private boolean loadRedirects = false;
+		static class Entry {
+			public String method,url,target;
+			public Entry(String method, String url, String target) {
+				this.method = method;
+				this.url = url;
+				this.target = target;
 			}
 		}
-		r.close();
-		b.append("# end --------------- ");
-		b.append(f);
-		b.append('\n');
-		logger.debug("loaded fragment '" + f + "'");
+		public List<Entry> entries = new ArrayList<Entry>();
+		public void load(String name) throws IOException,java.net.URISyntaxException {
+			URL resource = DevAppTesting.class.getClassLoader().getResource(name);
+			if (resource == null) {
+				System.out.println("skipping route file " + name);
+				return;
+			}
+			File file = new File(resource.toURI());
+			BufferedReader r = new BufferedReader(new FileReader(file));
+			String l;
+			Pattern pat = Pattern.compile("(\\S+)\\s+(\\S+)\\s+\\S+(\\([^\\)]*\\))\\s*");
+			Pattern blanks = Pattern.compile("\\s*");
+			Pattern com    = Pattern.compile("#.*");
+			Pattern redirect = Pattern.compile("->\\s+(\\S+)\\s+(\\S+)\\s*"); 
+			while ((l = r.readLine()) != null) {
+				Matcher m = pat.matcher(l);
+				if (m.matches()) {
+					Entry e = new Entry(m.group(1),m.group(2),m.group(3));
+					entries.add(e);
+					//System.out.println("matched entry    " + l);
+				} else if ((m = blanks.matcher(l)).matches()) {
+					//System.out.println("matched blanks   " + l);
+				} else if ((m = com.matcher(l)).matches()) {
+					//System.out.println("matched comments " + l);
+				} else if ((m = redirect.matcher(l)).matches()) {
+					//System.out.println("matched redirect " + l);
+					if (loadRedirects)
+						load(m.group(2));
+				} else {
+					throw new RuntimeException("unmacthed line in " + name + " " + l);
+				}
+			}
+		}
 	}
-	public String text() {
-		return out.toString();
+	
+	public static Routes loadRoutes() {
+		try {
+		Routes routes = new Routes();
+		routes.load("routes");
+		return routes;
+		} catch (Exception e) {
+			throw new RuntimeException("route loading failed",e); 
+		}
 	}
+		
+	public static void checkRoutes(WSClient ws) {
+		Routes routes = loadRoutes();
+		for (Routes.Entry e : routes.entries) {
+			String url = e.url;
+			if (e.method.equals("GET")) {
+				if (!(url.contains(":") || url.contains("*"))) {
+					get(ws,url,Status.OK);
+				} else if (url.contains(":homecode")) {
+					get(ws,url.replace(":homecode","search"),Status.OK);
+				}
+			}
+		}
+	}
+	
+	public static WSResponse get(WSClient ws, String url, int status) {
+		WSResponse r = get(ws,url);
+		assertEquals(url, status, r.getStatus());
+		return r;
+	}
+
+	// public static void rcrud()
+	
+	// Could provide a / separator to split the path.
+	public static void remove(JsonNode n, String... path) {
+		String[] parts = path; //path.split("/");
+		for (int i=0; i<parts.length-1; i++) {
+			JsonNode m = n.get(parts[i]);
+			if (m != null)
+				n = m;
+			else
+				throw new RuntimeException("could not find " + parts[i] + " in node for path " + path);
+		}
+		((ObjectNode)n).remove(parts[parts.length-1]);
+	}
+	// provide static methods to alter JSON with ease
+	public static void set(JsonNode node, String path, String value) { throw new RuntimeException("not implemented"); }
+	public static void set(JsonNode node, String path, int value) { throw new RuntimeException("not implemented"); }
+	public static JsonNode get(JsonNode node, String path) { throw new RuntimeException("not implemented"); }
+
+	
 }
-
-
-
