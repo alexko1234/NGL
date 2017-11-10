@@ -258,7 +258,7 @@ object ApplicationBuild extends Build {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    }).dependsOn(ngldatatable)
+  }).dependsOn(ngldatatable)
 
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here   
@@ -277,23 +277,23 @@ object ApplicationBuild extends Build {
     // (resourceDirectory.in(Test)).<<=(baseDirectory.value./("conftest"))
     // resourceDirectory.in(Test).:=(baseDirectory.value./("conftest"))
     resourceDirectory in Test := baseDirectory.value / "conftest"
-    ).dependsOn(nglframeworkweb).dependsOn(nglPlayMigration)
+  ).dependsOn(nglframeworkweb,nglPlayMigration)
 
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    // Add your own project settings here      
-    version := biVersion,
-    libraryDependencies ++= nglbiDependencies,
-    resolvers := nexus,
+    version                    := biVersion,
+    libraryDependencies       ++= nglbiDependencies,
+    resolvers                  := nexus,
     publishArtifact in makePom := false,
-    publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
+    publishTo                  := Some(nexusigpublish)
+  ).dependsOn(nglcommon % "test->test;compile->compile")
 
   val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    // Add your own project settings here 
-    version := appVersion,
-    libraryDependencies ++= ngldataDependencies,
-    resolvers := nexus,
+    version                    := appVersion,
+    libraryDependencies       ++= ngldataDependencies,
+    resolvers                  := nexus,
     publishArtifact in makePom := false,
-    publishTo := Some(nexusigpublish)).dependsOn(nglcommon % "test->test;compile->compile")
+    publishTo                  := Some(nexusigpublish)
+  ).dependsOn(nglcommon % "test->test;compile->compile")
 
   val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings)
                  .enablePlugins(play.sbt.PlayJava)
