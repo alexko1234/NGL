@@ -65,7 +65,7 @@ public class NGLTools {
 	}
 	
 	public Messages messages() {
-		logger.debug("messages(");
+		// logger.debug("messages");
 		return messagesApi.preferred(new ArrayList<Lang>());
 		// return Messages;
 	}
