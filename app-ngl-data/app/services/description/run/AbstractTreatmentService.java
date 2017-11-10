@@ -431,6 +431,11 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Reference","reference",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, true, "single"));
 		//21-07-2014
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Errors position in reads","errorPosition",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, true, "img"));	
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Forward aligned reads","forwardAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Reverse aligned reads","reverseAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Forward aligned reads / Non-chimeric aligned reads","forwardAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Reverse aligned reads / Non-chimeric aligned reads","reverseAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, false, "single"));	
 
 		return propertyDefinitions;		
 	}
@@ -510,6 +515,15 @@ public abstract class AbstractTreatmentService {
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs quality (read)","identityPercentVsReadQuality",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs longueur alignée (read)","identityPercentVsReadAlignedLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Chimeric aligned reads","chimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Non-chimeric aligned reads","nonChimericAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% chimeric aligned reads","chimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% non-chimeric aligned reads","nonChimericAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Forward aligned reads","forwardAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb Reverse aligned reads","reverseAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Forward aligned reads / Non-chimeric aligned reads","forwardAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));	
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Reverse aligned reads / Non-chimeric aligned reads","reverseAlignedReadsPercent",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));	
 
 		return propertyDefinitions;	
 	}

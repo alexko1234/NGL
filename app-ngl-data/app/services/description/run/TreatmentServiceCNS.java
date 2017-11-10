@@ -202,6 +202,8 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), String.class, false,
 		DescriptionFactory.newValues("kraken","megablast_megan","sortmerna2.1","centrifuge1.0.3.b"),"single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version base de données","databaseVersion",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), String.class, false, "single"));
+
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), Long.class, false, "single"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Organisme","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Pairs), String.class, false, "single"));

@@ -487,6 +487,9 @@ readsets.treatments.mapping.estimatedPEInsertSize = Estimated PE insert size
 readsets.treatments.mapping.estimatedMPInsertSize = Estimated MP insert size
 readsets.treatments.mapping.readPosition = Errors position in reads
 readsets.treatments.mapping.softwareVersion = Version logiciel
+readsets.treatments.mapping.forwardAlignedReads = Forward aligned reads
+readsets.treatments.mapping.reverseAlignedReads = Reverse aligned reads
+readsets.treatments.mapping.alignedReadsPercent = % Non-chimeric aligned reads
 
 readsets.treatments.merging.mergedReads = Merged reads
 readsets.treatments.merging.medianeSize = Mediane size (bases)
@@ -565,6 +568,9 @@ readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy
 readsets.treatments.taxonomy.phylogeneticTree = Arbre phylogénétique
 readsets.treatments.taxonomy.krona = Krona
 readsets.treatments.taxonomy.software = Logiciel
+readsets.treatments.taxonomy.databaseVersion = Version Base de données
+readsets.treatments.taxonomy.tabs.pairs = Read1+Read2 merged
+readsets.treatments.taxonomy.tabs.read1 = Read 1
 
 readsets.treatments.trimming.read1 = Read 1
 readsets.treatments.trimming.read2 = Read 2

@@ -1,4 +1,4 @@
-@(keyBilan: String, filterKeyBilan: String)
+@(keyBilan: String, filterKeyBilan: String, read: String)
 
 <div class="panel panel-info">
   <div class="panel-heading"><strong>@(Messages("readsets.treatments.taxonomy."+keyBilan))</strong></div>	
@@ -20,7 +20,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<tr ng-repeat='obj in @("readset.treatments.taxonomy[(readset.treatments.taxonomy.pairs!==undefined)?'pairs':'read1']."+keyBilan+".value")' ng-if='obj.percent>@(filterKeyBilan)'>
+		<tr ng-repeat='obj in @("readset.treatments.taxonomy."+read+"."+keyBilan+".value")' ng-if='obj.percent>@(filterKeyBilan)'>
 			<td>									
 				 <a href="{{ncbiUrl + obj.taxon.replace(' ','+') }}" target="_blank">{{obj.taxon}}</a>									
 			</td>
