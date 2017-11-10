@@ -41,7 +41,6 @@ rule "Add property negativeControl when sample is imported "
     	Logger.debug("Add property negative control to : "+$sample.code);  
        	
        	PropertySingleValue psv = new PropertySingleValue(true);
-       	$sample.properties = new HashMap<String, PropertyValue>();
        	$sample.properties.put("negativeControl", psv);
 	end
 	

@@ -18,6 +18,8 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import models.utils.instance.SampleHelper;
+import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
@@ -122,8 +124,9 @@ public class SampleMapping extends Mapping<Sample> {
 		}
 		
 		//Call rules to add properties to sample
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),"sampleCreation", sample),null);	
-		
+		Logger.debug("sample "+sample);
+		SampleHelper.executeRules(sample, "sampleCreation");
+		Logger.debug("sample "+sample);
 	}
 
 
