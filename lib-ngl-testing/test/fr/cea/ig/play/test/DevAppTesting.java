@@ -54,6 +54,11 @@ import java.util.regex.Pattern;
  */
 public class DevAppTesting {
 	
+	/**
+	 * Logger.
+	 */
+	private static final play.Logger.ALogger logger = play.Logger.of(DevAppTesting.class);
+	
 	// static GuiceApplicationBuilder applicationBuilder;
 	/**
 	 * Application singleton instance.
@@ -97,35 +102,28 @@ public class DevAppTesting {
 		}
 		return application;
 	}
-
-	public static WSResponse get(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
-		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).get();
-			WSResponse response = completionStage.toCompletableFuture().get();	
-			return response;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	public static WSResponse put(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
-		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").put(payload);
-			WSResponse response = completionStage.toCompletableFuture().get();	
-			return response;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
 		
+	/**
+	 * Default port for tests http server.
+	 */
 	public static final int TESTS_PORT = 3333;
 	
+	/**
+	 * Run the given test using the app and the default port for the http server.
+	 * @param app   application to test
+	 * @param toRun test to run
+	 */
 	public static void testInServer(Application app, Consumer<WSClient> toRun) {
 		testInServer(app,TESTS_PORT,toRun);
 	}
 	
+	/**
+	 * Run the given test using the app and the http server at the given port.
+	 * @param app
+	 * @param port
+	 * @param toRun
+	 */
 	public static void testInServer(Application app, int port, Consumer<WSClient> toRun) {
-		// TestServer server = testServer(port,devapp());
 		TestServer server = testServer(port,app);
 	    running(server, () -> {
 	        try (WSClient ws = WSTestClient.newClient(port)) {
@@ -135,7 +133,6 @@ public class DevAppTesting {
 	        }
 	    });
 	}
-	
 	
 	/**
 	 * Read, modify data, update, read again and compare read data to modified data.
@@ -147,17 +144,16 @@ public class DevAppTesting {
 	// TODO: use logger
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify, Consumer<JsonNode> preCheck) {
 		// Read
-		System.out.println("GET - " + url);
+		logger.debug("GET - " + url);
 		WSResponse r0 = get(ws,url,Status.OK);
-		// assertEquals(Status.OK, r0.getStatus());
 		JsonNode js0 = Json.parse(r0.getBody());
 		modify.accept(js0);
 		// Update
-		System.out.println("PUT - " + url);		
+		logger.debug("PUT - " + url);		
 		WSResponse r1 = put(ws,url,js0.toString());
 		assertEquals(Status.OK, r1.getStatus());
 		// Read updated
-		System.out.println("GET - " + url);
+		logger.debug("GET - " + url);
 		WSResponse r2 = get(ws,url);
 		assertEquals(Status.OK, r2.getStatus());
 		JsonNode js1 = Json.parse(r2.getBody());
@@ -171,7 +167,11 @@ public class DevAppTesting {
 	// RUR could be made a class with some configuration and run methods
 	// Could check that we get come error code instead of asserting equality 
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify) {
-		rur(ws,url,modify,js -> { ((ObjectNode)js).remove("traceInformation"); });
+		rur(ws,url,modify,js -> { remove(js,"traceInformation"); });
+	}
+	
+	public static void rur(WSClient ws, String url) {
+		rur(ws,url,js -> {});
 	}
 	
 	public static final void cmp(JsonNode n0, JsonNode n1) {
@@ -309,8 +309,57 @@ public class DevAppTesting {
 		}
 	}
 	
+	// ------------------------------------------------------------
+	// Http shortcuts
+	/**
+	 * Shorcut for http get. Exceptions are converted to runtime
+	 * exceptions.
+	 * @param ws  web client to use
+	 * @param url url to get 
+	 * @return    web response for the given url
+	 */
+	public static WSResponse get(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).get();
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Execute a get request and assert the response status. 
+	 * @param ws     web client
+	 * @param url    url to get
+	 * @param status status to assert
+	 * @return       request response
+	 */
 	public static WSResponse get(WSClient ws, String url, int status) {
 		WSResponse r = get(ws,url);
+		assertEquals(url, status, r.getStatus());
+		return r;
+	}
+
+	/**
+	 * Short for http put with some payload.
+	 * @param ws      web client to use
+	 * @param url     url to put to
+	 * @param payload payload to send along the put request
+	 * @return        web response
+	 */
+	public static WSResponse put(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").put(payload);
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static WSResponse put(WSClient ws, String url, String payload, int status) {
+		WSResponse r = put(ws,url,payload);
 		assertEquals(url, status, r.getStatus());
 		return r;
 	}
@@ -327,7 +376,10 @@ public class DevAppTesting {
 			else
 				throw new RuntimeException("could not find " + parts[i] + " in node for path " + path);
 		}
-		((ObjectNode)n).remove(parts[parts.length-1]);
+		if (n instanceof ObjectNode)
+			((ObjectNode)n).remove(parts[parts.length-1]);
+		else
+			throw new RuntimeException(String.join(".",path) + " does not lead to an object");
 	}
 	// provide static methods to alter JSON with ease
 	public static void set(JsonNode node, String path, String value) { throw new RuntimeException("not implemented"); }
