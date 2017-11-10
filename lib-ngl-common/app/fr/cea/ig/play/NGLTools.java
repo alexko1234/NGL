@@ -82,4 +82,8 @@ public class NGLTools {
 		return formFactory().form();
 	}
 
+	public String getInstitute() {
+		return config().getInstitute();
+	}
+	
 }
