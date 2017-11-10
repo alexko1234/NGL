@@ -15,7 +15,8 @@ import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 
 import play.Logger;
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
 import play.api.modules.spring.Spring;
 import play.libs.Scala;
 import play.mvc.Result;
@@ -30,15 +31,18 @@ public class Main extends CommonController {
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
 	private static JsMessages messages;
+	
+	private final home home;
 
 	@Inject
-	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
 		logger.debug("injecting " + jsMessagesFactory);
 		messages = jsMessagesFactory.all();
+		this.home = home;
 		logger.info("injected");
 	}
 
-	public static Result home() {
+	public /*static*/ Result home() {
 		return ok(home.render());
 	}
 
@@ -82,7 +86,8 @@ public class Main extends CommonController {
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
-				Routes.javascriptRouter("jsRoutes"  	       
+				// Routes.javascriptRouter("jsRoutes"
+				JavaScriptReverseRouter.create("jsRoutes"
 						// Routes	  	         	        
 						)
 				);

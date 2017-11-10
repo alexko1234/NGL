@@ -31,6 +31,8 @@ import com.fasterxml.jackson.databind.node.TextNode;
 // something along those lines. The other way around is to have the mongo client
 // use a mocked db.
 // 
+
+// TODO: move and rename
 public class Scripted {
 
 	// Should be in some global. 
@@ -53,16 +55,28 @@ public class Scripted {
 	    	checkRoutes(ws);
 	    	
 	    	// RUR tests are currently not modifying anything as we use the
-	    	// RUR method with the default values.
+	    	// RUR method with the default values so those are barely tests. 
+	    	// The confirmation of success could come from the update date that would be different.
+	    	// We use the object names to trigger the view template and the rur.
+	    	
 	    	// Echantillons - samples
 	    	rur(ws,"/api/samples/AAAA-A120_ST147_T0_A");
+	    	get(ws,"/samples/AAAA-A120_ST147_T0_A",OK);
+	    	
 	    	// Supports - supports
 	    	rur(ws,"/api/supports/2A4F4FL2H");
+	    	get(ws,"/supports/2A4F4FL2H",OK);
+	    	
 	    	// Containers - containers
 	    	rur(ws,"/api/containers/HLMF5BBXX_8");
 		    rur(ws,"/api/containers/29J81XXL4");
+		    get(ws,"/containers/29J81XXL4",OK);
+		    
 		    // Processus - processes 
 		    rur(ws,"/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK");
+		    // This is a 404
+		    // get(ws,"/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",OK);
+		    
 		    // Experiences - experiments
 		    rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
 		    	js -> { },
@@ -70,7 +84,7 @@ public class Scripted {
 		    	        remove(js,"status","date");
 		    	      }
 		    	);
-	    	
+	    	get(ws,"/experiments/CHIP-MIGRATION-20170915_144939CDA",OK);
 	    	
 	    });
 	}

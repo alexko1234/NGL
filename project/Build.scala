@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
+
 import com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys
+import com.typesafe.sbteclipse.core.EclipsePlugin._
 
 import play.sbt.routes.RoutesKeys.routesGenerator
 import play.routes.compiler.StaticRoutesGenerator
@@ -52,8 +54,15 @@ object ApplicationBuild extends Build {
   val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "3.0.0" 
     
 	override def settings = super.settings ++ Seq(
-		EclipseKeys.skipParents in ThisBuild := false
-	)
+		EclipseKeys.skipParents in ThisBuild := false,
+    // Compile the project before generating Eclipse files,
+    // so that generated .scala or .class files for views and routes are present
+    // EclipseKeys.preTasks := Seq(compile in Compile),
+    // Java project. Don't expect Scala IDE
+    EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+    // Use .class files instead of generated .scala files for views and routes
+    // EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
+  )
 
 	object BuildSettings {
 
@@ -240,7 +249,8 @@ object ApplicationBuild extends Build {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-    }).dependsOn(nglPlayMigration)
+    }
+  ).dependsOn(nglPlayMigration)
 
   val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
     // Add your own project settings here     
@@ -258,7 +268,8 @@ object ApplicationBuild extends Build {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
-  }).dependsOn(ngldatatable)
+    }
+  ).dependsOn(ngldatatable)
 
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // Add your own project settings here   
@@ -303,7 +314,7 @@ object ApplicationBuild extends Build {
     version                    := sqVersion,
     libraryDependencies       ++= nglsqDependencies,
     resolvers                  := nexus,
-	//publishArtifact in (Compile, packageDoc) := false,
+	  //publishArtifact in (Compile, packageDoc) := false,
     //publishArtifact in packageDoc := false,
     sources in (Compile,doc)   := Seq.empty,
     publishArtifact in makePom := false,
@@ -333,7 +344,6 @@ object ApplicationBuild extends Build {
     publishTo                  := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile")
 
-
   val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(      
     version                    := appVersion,
 		libraryDependencies       ++= ngldevguideDependencies,
@@ -356,7 +366,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		version                    := appVersion,			  

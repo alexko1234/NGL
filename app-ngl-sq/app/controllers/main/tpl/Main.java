@@ -36,7 +36,6 @@ public class Main extends CommonController {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
-	// TODO fix static var, should be instance
 	//private static JsMessages messages;
 	private final JsMessages messages;
 	private final home home;

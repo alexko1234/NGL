@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code : String)
 
 @import models.laboratory.common.description.ObjectType
@@ -19,4 +20,4 @@
 <link rel="stylesheet" href="@routes.Assets.at("ngl-reagents/css/reagents/creation.css")">
 }
 
-@views.html.main("catalogs.title", menu("catalogs."+code), scripts, css)(views.html.contents.lefttabs())
+@views.html.main("catalogs.title", menu_("catalogs."+code), scripts, css)(views.html.contents.lefttabs())
