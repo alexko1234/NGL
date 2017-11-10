@@ -18,7 +18,7 @@ public class NGLReagentsStarterModule extends play.api.inject.Module {
 
 	public NGLReagentsStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
-		logger.info("starting NGL-BI");
+		logger.info("starting NGL-Reagents");
 	}
 
 	// 0:fr.cea.ig.authentication.AuthenticatePlugin
