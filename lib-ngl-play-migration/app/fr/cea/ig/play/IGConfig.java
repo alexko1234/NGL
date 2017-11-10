@@ -59,4 +59,9 @@ public class IGConfig {
 		throw new RuntimeException("value " + value + " at " + path + " not in allowed values:" + String.join(",", values));
 	}
 	
+	public String getString(String path) {
+		if (!config.hasPath(path))
+			throw new RuntimeException(path + " has no value in configuraiton");
+		return config.getString(path);
+	}
 }

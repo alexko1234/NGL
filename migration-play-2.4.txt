@@ -19,3 +19,23 @@ https://github.com/playframework/playframework/issues/4897
         
 -- 2.6
 Downgrade jackson to 2.7.x: https://github.com/FasterXML/jackson-databind/issues/1339
+
+DI:
+  helper -> fr.cea.ig.play.NGLTools
+  @message...@helper.env() -> @tools.messageEnv("application.name")
+  @HttpContext...username() -> @tools.currentUser()
+  
+  import play.Routes; -> import play.routing.JavaScriptReverseRouter;
+  Routes.javascriptRouter("jsRoutes", -> JavaScriptReverseRouter.create("jsRoutes",
+  
+  
+  -- possible changes (non blocking)
+  play.Play.application().configuration().getString("institute") -> tools.getInstitute()
+  fr.cea.ig.authentication.Helper.username(Context.current().session()) -> tools.currentUser()
+
+Plugins
+  eager bind in starter module
+  ! starter modules should have some factored out base
+
+
+  

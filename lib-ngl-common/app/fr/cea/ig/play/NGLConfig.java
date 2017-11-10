@@ -20,7 +20,7 @@ public class NGLConfig {
 	public static final String UNDEFINED_STRING = "#UNDEFINED#";
 	
 	/**
-	 * NGL configuration path.
+	 * NGL configuration path in configuration.
 	 */
 	public static final String NGL_ENV_PATH = "ngl.env";
 	
@@ -28,6 +28,11 @@ public class NGLConfig {
 	 * Valid values for the NGL_ENV_PATH value.
 	 */
 	public static final String[] NGL_ENV_VALUES = { "DEV", "PROD" };
+	
+	/**
+	 * NGL institute path in configuration.
+	 */
+	public static final String NGL_INSTITUTE_PATH = "institute"; 
 	
 	/**
 	 * Configuration to use.
@@ -54,6 +59,10 @@ public class NGLConfig {
 	
 	public boolean isNGLEnvDev() {
 		return "DEV".equals(nglEnv());
+	}
+	
+	public String getInstitute() {
+		return config.getString(NGL_INSTITUTE_PATH);
 	}
 	
 }
