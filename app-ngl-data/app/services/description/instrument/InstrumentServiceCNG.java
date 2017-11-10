@@ -791,7 +791,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, null, null , null, "single", null, true ,null, null));
 		
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
-		l.add(newPropertiesDefinition("program Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		
 		return l;
@@ -811,7 +811,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, null, null , null, "single", null, true ,null, null));
 		
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
-		l.add(newPropertiesDefinition("program Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
