@@ -233,6 +233,13 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 			computeTagCategory(value.data);			
 		}
 		
+		if( col.property === 'inputContainerUsed.experimentProperties.libraryInputQuantity.value'){
+			computeInputVolume(value.data);			
+		}
+		
+		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
+			computelibraryInputQuantity(value.data);				
+		}
 	}
 	
 
@@ -262,6 +269,62 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		
 	}
 	
+	
+	var computelibraryInputQuantity = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.libraryInputQuantity.value");
+		var libraryInputQuantity = getter(udtData);
+		
+		var compute = {
+				inputVolume : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
+				conc : $parse("inputContainerUsed.concentration.value")(udtData),
+				
+				isReady:function(){
+					return (this.inputVolume && this.conc);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.inputVolume * compute.conc;
+			console.log("result = "+result);
+			if(result){
+				libraryInputQuantity = result;				
+			}else{
+				libraryInputQuantity = undefined;
+			}	
+			getter.assign(udtData, libraryInputQuantity);
+		}else {
+			console.log("not ready");
+			getter.assign(udtData, undefined);
+		}
+		
+	}
+	
+	var computeInputVolume = function(udtData){
+		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
+		var inputVolume = getter(udtData);
+		
+		var compute = {
+				libraryInputQuantity : $parse("inputContainerUsed.experimentProperties.libraryInputQuantity.value")(udtData),
+				conc : $parse("inputContainerUsed.concentration.value")(udtData),
+				
+				isReady:function(){
+					return (this.libraryInputQuantity && this.conc);
+				}
+			};
+		if(compute.isReady()){
+			var result = compute.libraryInputQuantity / compute.conc;
+			console.log("result = "+result);
+			if(result){
+				inputVolume = result;				
+			}else{
+				inputVolume = undefined;
+			}	
+			getter.assign(udtData, inputVolume);
+		}else {
+			console.log("not ready");
+			getter.assign(udtData, undefined);
+		}
+		
+	}
 	
 	var populateIndex12LinePlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
