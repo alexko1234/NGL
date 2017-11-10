@@ -50,7 +50,6 @@ public class Scripted {
 	    	// urls are properly defined, we provide a json alteration function that is
 	    	// compared to the get after the put. The other way around is to assert that modified values
 	    	// in the input are stored and thus access the values by path and not do a full comparison.
-	    	// get(ws,"/processes/search/home",OK);
 	    	checkRoutes(ws);
 	    	
 	    	// RUR tests are currently not modifying anything as we use the
