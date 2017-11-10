@@ -33,61 +33,15 @@ import com.fasterxml.jackson.databind.node.TextNode;
 // 
 public class Scripted {
 
-	public static Application devapp() {
-		return fr.cea.ig.play.test.DevAppTesting.devapp();
+	public static Application devapp() { 
+		return fr.cea.ig.play.test.DevAppTesting.devapp("conf/ngl-sq-test.conf","conf/logger.xml");
 	}
 
-	// @Test
-	public void testBadRoute() {
-		Application app = devapp();
-	    RequestBuilder request = Helpers.fakeRequest()
-	            .method(GET)
-	            .uri("/xx/Kiwi");
-
-	    Result result = route(app, request);
-	    assertEquals(Status.NOT_FOUND, result.status());
-	}
-	
-	//@Test
-	public void testGoodRoute() {
-		Application app = devapp();
-		
-		controllers.experiments.tpl.Experiments exps = app.injector().instanceOf(controllers.experiments.tpl.Experiments.class);
-		Result r = exps.get("CHIP-MIGRATION-20170915_144939CDA");
-		assertEquals(Status.OK, r.status());
-		
-	    RequestBuilder request = Helpers.fakeRequest()
-	            .method(GET)
-	            .uri("/experiments/CHIP-MIGRATION-20170915_144939CDA");
-
-	    Result result = route(app, request);
-	    assertEquals(Status.OK, result.status());
-	}
-	
-	
-	// @Test
-	public void test00() throws Exception {
-	    TestServer server = testServer(3333,devapp());
-	    running(server, () -> {
-	        try (WSClient ws = WSTestClient.newClient(3333)) {
-	            // CompletionStage<WSResponse> completionStage = ws.url("/api/experiments/CHIP-MIGRATION-20170915_144939CDA").get();
-	        	CompletionStage<WSResponse> completionStage = ws.url("/experiments/CHIP-MIGRATION-20170915_144939CDA").get();
-	            WSResponse response = completionStage.toCompletableFuture().get();
-	            assertEquals(OK, response.getStatus());
-	            System.out.println(response.getBody());
-	        } catch (Exception e) {
-	            play.Logger.error(e.getMessage(), e);
-	        	// throw e;
-	        }
-	    });
-	}
 	
 	@Test
 	public void test01() throws Exception {
-	    testInServer(ws -> {
-	    	// WSResponse r0 = get(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA");
-	    	// assertEquals(OK, r0.getStatus());
-	    	
+	    testInServer(devapp(),
+	    		ws -> {	    	
 	    	// Assuming that we have a json response from server that that the get/put
 	    	// urls are properly defined, we provide a json alteration function that is
 	    	// compared to the get after the put. The other way around is to assert that modified values
@@ -96,39 +50,41 @@ public class Scripted {
 	    	checkRoutes(ws);
 	    	
 	    	if (true) {
-	    	rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
-	    			js -> { /*((ObjectNode)js).set("typeCode",new TextNode("chip-migration-" + System.currentTimeMillis()));*/ },
-	    			js -> { remove(js,"traceInformation");
-	    					remove(js,"status","date");
-	    			});
-	    	rur(ws,"/api/containers/29J81XXL4",
-	    			js -> {},
-	    			js -> { remove(js,"traceInformation"); });
-	    	rur(ws,"/api/samples/AAAA-A120_ST147_T0_A",
-	    			js -> {},
-	    			js -> { remove(js,"traceInformation"); });
+	    		// Echantillons - samples
+	    		rur(ws,"/api/samples/AAAA-A120_ST147_T0_A",
+	    				js -> { },
+	    				js -> { remove(js,"traceInformation"); });
+		    	// Supports - supports
+		    	rur(ws,"/api/supports/2A4F4FL2H",
+		    			js -> { },
+		    			js -> { remove(js,"traceInformation"); });
+		    	// Containers - containers
+		    	rur(ws,"/api/containers/HLMF5BBXX_8",
+		    			js -> { },
+		    			js -> { remove(js,"traceInformation"); });
+		    	rur(ws,"/api/containers/29J81XXL4",
+		    			js -> { },
+		    			js -> { remove(js,"traceInformation"); });
+		    	// Processus - processes 
+		    	rur(ws,"/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",
+		    			js -> { },
+		    			js -> { remove(js,"traceInformation"); });
+		    	// Experiences - experiments
+		    	rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
+		    			js -> { },
+		    			js -> { remove(js,"traceInformation");
+		    			remove(js,"status","date");
+		    			});
 	    	}
 	    	
-	    	/*
-	    	// Fetch body as json tree, update and put modified stuff.
-	    	JsonNode jsn = Json.parse(r0.getBody());
-	    	System.out.println("******* " + jsn.getNodeType());
-	    	for (String s : new String[] { "_id","code","typeCode" }) {
-	    		System.out.println("******* " + s + " : " + jsn.path(s)); // jsn.path("traceInformation").path("modifyUser") + "'");
-	    	}
-	    	System.out.println("******* " + jsn.path("traceInformation").path("modifyUser"));
-	    	
-	    	WSResponse r1 = get(ws,"/api/experiments/THIS_PROBABLY_DOES_NOT_EXIST");
-	    	assertEquals(NOT_FOUND, r1.getStatus());
-	    	*/
-	    	
-	    	// WSResponse r2 = get(ws,"/api/experiments/THIS_PROBABLY_DOES_NOT_EXIST");
-	    	// assertEquals(OK, r2.getStatus());
-	    	// 
 	    });
 	}
 	
+	/*
+	 * Browser level testing does not seem to be at the 
+	 * proper granularity level. 
 	// @Test
+	
 	public void runInBrowser() {
 		TestServer server = testServer(3333,devapp());
 	    running(server, HTMLUNIT, browser -> {
@@ -138,5 +94,6 @@ public class Scripted {
 	        assertEquals("login", browser.url());
 	    });
 	}
+	*/
 	
 }

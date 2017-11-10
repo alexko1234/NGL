@@ -38,13 +38,16 @@ import static play.mvc.Http.Status;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO: move to some lib so projects can use this base.
 /**
  * Test support for NGL on DEV server.
  * The application is a singleton as the shutdown is not properly managed. All the
  * tests then share the same application instance and this could go wrong.
  * 
- * Configuration files are located using the class loader.
+ * Configuration files are located using the class loader. The "ngl.test.dir" environment
+ * variable content is added to the classpath in the build file.
+ * 
+ * The configuration files are loaded from the classpath and this does not differ from loading
+ * the directory taht is added to the classpath.
  * 
  * @author vrd
  *
@@ -57,8 +60,11 @@ public class DevAppTesting {
 	 */
 	private static Application application;
 	
-	// Load JSON file from class 
-	
+	/**
+	 * Get the full name of the file that mathces the given resource. 
+	 * @param name name of the resource to find
+	 * @return     full path to the found file
+	 */
 	public static String resourceFileName(String name) {
 		URL resource = DevAppTesting.class.getClassLoader().getResource(name);
 		if (resource == null)
@@ -67,21 +73,23 @@ public class DevAppTesting {
 			File confFile = new File(resource.toURI());
 			return confFile.toString();
 		} catch (Exception e) {
-			throw new RuntimeException("resource " + resource + " cannot be converted to File");
+			throw new RuntimeException("resource " + resource + " cannot be converted to File",e);
 		}
 	}
 	
 	/**
 	 * DEV application singleton instance. This does not sets the play global application
-	 * instance. 
+	 * instance. Actual configuration should be done using an application specifc tag that
+	 * is used to look for the application configuration that is in "ngl-{tag}-test.conf" 
+	 * file. Logger configuration comes from the "logger.xml" file.
+	 * 
 	 * @return dev application instance
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
-	public static Application devapp() {
+	public static Application devapp(String appConfFile, String logConfFile) {
 		if (application == null) {
-		    // loadRoutes();
-			System.setProperty("config.file", resourceFileName("conf/ngl-sq-test.conf"));
-			System.setProperty("logger.file", resourceFileName("conf/logger.xml"));
+			System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
+			System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
 			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
@@ -112,12 +120,13 @@ public class DevAppTesting {
 		
 	public static final int TESTS_PORT = 3333;
 	
-	public static void testInServer(Consumer<WSClient> toRun) {
-		testInServer(TESTS_PORT,toRun);
+	public static void testInServer(Application app, Consumer<WSClient> toRun) {
+		testInServer(app,TESTS_PORT,toRun);
 	}
 	
-	public static void testInServer(int port, Consumer<WSClient> toRun) {
-		TestServer server = testServer(port,devapp());
+	public static void testInServer(Application app, int port, Consumer<WSClient> toRun) {
+		// TestServer server = testServer(port,devapp());
+		TestServer server = testServer(port,app);
 	    running(server, () -> {
 	        try (WSClient ws = WSTestClient.newClient(port)) {
 	        	toRun.accept(ws);
@@ -139,8 +148,8 @@ public class DevAppTesting {
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify, Consumer<JsonNode> preCheck) {
 		// Read
 		System.out.println("GET - " + url);
-		WSResponse r0 = get(ws,url);
-		assertEquals(Status.OK, r0.getStatus());
+		WSResponse r0 = get(ws,url,Status.OK);
+		// assertEquals(Status.OK, r0.getStatus());
 		JsonNode js0 = Json.parse(r0.getBody());
 		modify.accept(js0);
 		// Update
@@ -163,6 +172,10 @@ public class DevAppTesting {
 	// Could check that we get come error code instead of asserting equality 
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify) {
 		rur(ws,url,modify,js -> { ((ObjectNode)js).remove("traceInformation"); });
+	}
+	
+	public static final void cmp(JsonNode n0, JsonNode n1) {
+		cmp("",n0,n1);
 	}
 	
 	// Assert equals
@@ -296,11 +309,14 @@ public class DevAppTesting {
 		}
 	}
 	
-	public static void get(WSClient ws, String url, int status) {
+	public static WSResponse get(WSClient ws, String url, int status) {
 		WSResponse r = get(ws,url);
 		assertEquals(url, status, r.getStatus());
+		return r;
 	}
 
+	// public static void rcrud()
+	
 	// Could provide a / separator to split the path.
 	public static void remove(JsonNode n, String... path) {
 		String[] parts = path; //path.split("/");

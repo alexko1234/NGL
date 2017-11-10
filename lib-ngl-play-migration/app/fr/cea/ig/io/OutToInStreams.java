@@ -65,16 +65,19 @@ public class OutToInStreams {
      */
     private Input  input;
 
-
-    
+    /**
+     * Constructor. 
+     */
     public OutToInStreams() {
     	this(DEFAULT_BUFFER_SIZE);
     }
     
+    /**
+     * Construct an instance with the specified buffer size.
+     * @param bufferSize size in bytes of buffer to use
+     */
     public OutToInStreams(int bufferSize) {
     	buffer = new byte[bufferSize];
-    	// This will disappear
-    	// status = Status.Waiting;
     	output = new Output();
     	input  = new Input();
     	start = end = 0;
@@ -117,6 +120,8 @@ public class OutToInStreams {
     	public void write(int b) throws IOException {
     		if (closed)
     			throw new IOException("stream closed");
+    		if (OutToInStreams.this.output.closed)
+    			throw new IOException("output has been closed");
     		OutToInStreams.this.write(b);
     	}
     	/*

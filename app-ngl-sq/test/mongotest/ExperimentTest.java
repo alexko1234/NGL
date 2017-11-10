@@ -49,7 +49,10 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 
 
 public class ExperimentTest { // extends WithApplication {
-
+	
+	public static Application devapp() { 
+		return Scripted.devapp();
+	}
 	// @Inject
 	// Application application;
 	
@@ -85,9 +88,6 @@ public class ExperimentTest { // extends WithApplication {
 		return application;
 	}
 	*/
-	public static Application devapp() {
-		return fr.cea.ig.play.test.DevAppTesting.devapp();
-	}
 	// @Test
 	public void startApp() {
 		// Try to emulate the -D that should land in system.properties.
