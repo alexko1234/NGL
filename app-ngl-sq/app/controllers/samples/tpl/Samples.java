@@ -9,6 +9,9 @@ import play.mvc.Result;
 import views.html.samples.details;
 import views.html.samples.home;
 import views.html.samples.search;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 import play.routing.JavaScriptReverseRouter;
 
@@ -20,6 +23,7 @@ public class Samples extends CommonController{
 	private final search search;
 	private final details details;
 	
+	@Inject
 	public Samples(home home, search search, details details) {
 		this.home = home;
 		this.search = search;

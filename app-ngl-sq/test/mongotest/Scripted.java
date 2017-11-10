@@ -92,14 +92,23 @@ public class Scripted {
 	    	// urls are properly defined, we provide a json alteration function that is
 	    	// compared to the get after the put. The other way around is to assert that modified values
 	    	// in the input are stored and thus access the values by path and not do a full comparison.
+	    	// get(ws,"/processes/search/home",OK);
+	    	checkRoutes(ws);
+	    	
 	    	if (true) {
 	    	rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
 	    			js -> { /*((ObjectNode)js).set("typeCode",new TextNode("chip-migration-" + System.currentTimeMillis()));*/ },
-	    			js -> { ((ObjectNode)js).remove("traceInformation");
-	    					// ((ObjectNode)js.path("state")).remove("historical");
-	    					((ObjectNode)js.path("status")).remove("date");
+	    			js -> { remove(js,"traceInformation");
+	    					remove(js,"status","date");
 	    			});
+	    	rur(ws,"/api/containers/29J81XXL4",
+	    			js -> {},
+	    			js -> { remove(js,"traceInformation"); });
+	    	rur(ws,"/api/samples/AAAA-A120_ST147_T0_A",
+	    			js -> {},
+	    			js -> { remove(js,"traceInformation"); });
 	    	}
+	    	
 	    	/*
 	    	// Fetch body as json tree, update and put modified stuff.
 	    	JsonNode jsn = Json.parse(r0.getBody());

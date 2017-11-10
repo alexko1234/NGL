@@ -5,7 +5,11 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+//import java.util.regex.Pattern;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,6 +35,10 @@ import static play.test.Helpers.running;
 import static play.test.Helpers.testServer;
 import static play.mvc.Http.Status;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+// TODO: move to some lib so projects can use this base.
 /**
  * Test support for NGL on DEV server.
  * The application is a singleton as the shutdown is not properly managed. All the
@@ -49,6 +57,8 @@ public class DevAppTesting {
 	 */
 	private static Application application;
 	
+	// Load JSON file from class 
+	
 	public static String resourceFileName(String name) {
 		URL resource = DevAppTesting.class.getClassLoader().getResource(name);
 		if (resource == null)
@@ -63,12 +73,13 @@ public class DevAppTesting {
 	
 	/**
 	 * DEV application singleton instance. This does not sets the play global application
-	 * instance.
-	 * @return
+	 * instance. 
+	 * @return dev application instance
 	 */
+	// TODO: provide support for other project by supporting a project name (e.g. "sq").
 	public static Application devapp() {
 		if (application == null) {
-			ClassLoader classLoader = DevAppTesting.class.getClassLoader();
+		    // loadRoutes();
 			System.setProperty("config.file", resourceFileName("conf/ngl-sq-test.conf"));
 			System.setProperty("logger.file", resourceFileName("conf/logger.xml"));
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
@@ -116,10 +127,6 @@ public class DevAppTesting {
 	    });
 	}
 	
-	// provide static methods to alter JSON with ease
-	public static void set(JsonNode node, String path, String value) { throw new RuntimeException("not implemented"); }
-	public static void set(JsonNode node, String path, int value) { throw new RuntimeException("not implemented"); }
-	public static JsonNode get(JsonNode node, String path) { throw new RuntimeException("not implemented"); }
 	
 	/**
 	 * Read, modify data, update, read again and compare read data to modified data.
@@ -128,6 +135,7 @@ public class DevAppTesting {
 	 * @param modify   JSON modification to run
 	 * @param preCheck JSON before check modification
 	 */
+	// TODO: use logger
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify, Consumer<JsonNode> preCheck) {
 		// Read
 		System.out.println("GET - " + url);
@@ -151,6 +159,7 @@ public class DevAppTesting {
 		cmp("",js0,js1);
 	}
 	
+	// RUR could be made a class with some configuration and run methods
 	// Could check that we get come error code instead of asserting equality 
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify) {
 		rur(ws,url,modify,js -> { ((ObjectNode)js).remove("traceInformation"); });
@@ -217,5 +226,97 @@ public class DevAppTesting {
 			}
 		}
 	}
+	
+	static class Routes {
+		private boolean loadRedirects = false;
+		static class Entry {
+			public String method,url,target;
+			public Entry(String method, String url, String target) {
+				this.method = method;
+				this.url = url;
+				this.target = target;
+			}
+		}
+		public List<Entry> entries = new ArrayList<Entry>();
+		public void load(String name) throws IOException,java.net.URISyntaxException {
+			URL resource = DevAppTesting.class.getClassLoader().getResource(name);
+			if (resource == null) {
+				System.out.println("skipping route file " + name);
+				return;
+			}
+			File file = new File(resource.toURI());
+			BufferedReader r = new BufferedReader(new FileReader(file));
+			String l;
+			Pattern pat = Pattern.compile("(\\S+)\\s+(\\S+)\\s+\\S+(\\([^\\)]*\\))\\s*");
+			Pattern blanks = Pattern.compile("\\s*");
+			Pattern com    = Pattern.compile("#.*");
+			Pattern redirect = Pattern.compile("->\\s+(\\S+)\\s+(\\S+)\\s*"); 
+			while ((l = r.readLine()) != null) {
+				Matcher m = pat.matcher(l);
+				if (m.matches()) {
+					Entry e = new Entry(m.group(1),m.group(2),m.group(3));
+					entries.add(e);
+					//System.out.println("matched entry    " + l);
+				} else if ((m = blanks.matcher(l)).matches()) {
+					//System.out.println("matched blanks   " + l);
+				} else if ((m = com.matcher(l)).matches()) {
+					//System.out.println("matched comments " + l);
+				} else if ((m = redirect.matcher(l)).matches()) {
+					//System.out.println("matched redirect " + l);
+					if (loadRedirects)
+						load(m.group(2));
+				} else {
+					throw new RuntimeException("unmacthed line in " + name + " " + l);
+				}
+			}
+		}
+	}
+	
+	public static Routes loadRoutes() {
+		try {
+		Routes routes = new Routes();
+		routes.load("routes");
+		return routes;
+		} catch (Exception e) {
+			throw new RuntimeException("route loading failed",e); 
+		}
+	}
+		
+	public static void checkRoutes(WSClient ws) {
+		Routes routes = loadRoutes();
+		for (Routes.Entry e : routes.entries) {
+			String url = e.url;
+			if (e.method.equals("GET")) {
+				if (!(url.contains(":") || url.contains("*"))) {
+					get(ws,url,Status.OK);
+				} else if (url.contains(":homecode")) {
+					get(ws,url.replace(":homecode","search"),Status.OK);
+				}
+			}
+		}
+	}
+	
+	public static void get(WSClient ws, String url, int status) {
+		WSResponse r = get(ws,url);
+		assertEquals(url, status, r.getStatus());
+	}
+
+	// Could provide a / separator to split the path.
+	public static void remove(JsonNode n, String... path) {
+		String[] parts = path; //path.split("/");
+		for (int i=0; i<parts.length-1; i++) {
+			JsonNode m = n.get(parts[i]);
+			if (m != null)
+				n = m;
+			else
+				throw new RuntimeException("could not find " + parts[i] + " in node for path " + path);
+		}
+		((ObjectNode)n).remove(parts[parts.length-1]);
+	}
+	// provide static methods to alter JSON with ease
+	public static void set(JsonNode node, String path, String value) { throw new RuntimeException("not implemented"); }
+	public static void set(JsonNode node, String path, int value) { throw new RuntimeException("not implemented"); }
+	public static JsonNode get(JsonNode node, String path) { throw new RuntimeException("not implemented"); }
+
 	
 }
