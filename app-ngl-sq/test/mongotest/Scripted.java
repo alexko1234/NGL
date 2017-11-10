@@ -142,33 +142,25 @@ public class Scripted {
 	    	// get(ws,"/processes/search/home",OK);
 	    	checkRoutes(ws);
 	    	
-	    	if (true) {
-	    		// Echantillons - samples
-	    		rur(ws,"/api/samples/AAAA-A120_ST147_T0_A",
-	    				js -> { },
-	    				js -> { remove(js,"traceInformation"); });
-		    	// Supports - supports
-		    	rur(ws,"/api/supports/2A4F4FL2H",
-		    			js -> { },
-		    			js -> { remove(js,"traceInformation"); });
-		    	// Containers - containers
-		    	rur(ws,"/api/containers/HLMF5BBXX_8",
-		    			js -> { },
-		    			js -> { remove(js,"traceInformation"); });
-		    	rur(ws,"/api/containers/29J81XXL4",
-		    			js -> { },
-		    			js -> { remove(js,"traceInformation"); });
-		    	// Processus - processes 
-		    	rur(ws,"/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",
-		    			js -> { },
-		    			js -> { remove(js,"traceInformation"); });
-		    	// Experiences - experiments
-		    	rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
-		    			js -> { },
-		    			js -> { remove(js,"traceInformation");
-		    			remove(js,"status","date");
-		    			});
-	    	}
+	    	// RUR tests are currently not modifying anything as we use the
+	    	// RUR method with the default values.
+	    	// Echantillons - samples
+	    	rur(ws,"/api/samples/AAAA-A120_ST147_T0_A");
+	    	// Supports - supports
+	    	rur(ws,"/api/supports/2A4F4FL2H");
+	    	// Containers - containers
+	    	rur(ws,"/api/containers/HLMF5BBXX_8");
+		    rur(ws,"/api/containers/29J81XXL4");
+		    // Processus - processes 
+		    rur(ws,"/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK");
+		    // Experiences - experiments
+		    rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
+		    	js -> { },
+		    	js -> { remove(js,"traceInformation");
+		    	        remove(js,"status","date");
+		    	      }
+		    	);
+	    	
 	    	
 	    });
 	}
