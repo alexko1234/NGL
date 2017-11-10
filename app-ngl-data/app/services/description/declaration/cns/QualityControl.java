@@ -292,12 +292,10 @@ public class QualityControl extends AbstractDeclaration {
 		propertyDefinitions.add(newPropertiesDefinition("Taille estimée des molécules", "providedMoleculeEstimatedSize", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null,
 				null, null, null, null,"single", 18, true, null,null));   
 		
-		//Remplacé par dnaTreatment
+		//Remplacé par dnaTreatment niveau Sample dans import echantillon bio
 		//propertyDefinitions.add(newPropertiesDefinition("Méthode d'amplification", "amplificationMethod", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
 			//	null, null, null, null,"single", 22, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Méthode préparation ADN", "dnaTreatment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null,
-				DescriptionFactory.newValues("MDA","size selection using ampure","EtOH-reconcentrated"), null, null, null,"single", 22, true, null,null));
-
+		
 		propertyDefinitions.add(newPropertiesDefinition("Commentaire", "comment", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
 				null, null, null, null,"single", 18, true, null,null));
 
