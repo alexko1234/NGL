@@ -5,12 +5,15 @@ import java.io.*;
 /**
  * Output stream that can be written to connected to an input stream that
  * can be read from.
- *  
+ * 
  * @author vrd
  *
  */
 
 // TODO: create a implement read/write buffers methods.
+
+// The implementation of the input and ouput streams delegate the write and read calls
+// to the enclosing OutToInStreams instance.
 public class OutToInStreams {
 
 	/**
@@ -84,198 +87,35 @@ public class OutToInStreams {
     }
     
     /**
-     * Output stream that writes to the OutToInStreams instance.
-     * 
-     * @author vrd
-     *
+     * Output stream.
+     * @return output stream
      */
-    class Output extends OutputStream {
-
-    	/**
-    	 * Is the stream closed ?
-    	 */
-    	private boolean closed;
-    	
-    	/**
-    	 * Constructor.
-    	 */
-    	private Output() {
-    		closed = false;
-    	}
-    	
-    	// Default implementations rely on the write byte method
-    	/*
-    	public void write(byte[] b) throws IOException {
-    		if (closed)
-    			throw new IOException("stream closed");
-    		write(b,0,b.length);
-    	}
-    	public void write(byte[] b, int off, int len) throws IOException {
-    		for (int i=0; i<len; i++)
-    			write(b[off+i]);
-    	}
-    	*/
-    	
-    	@Override
-    	public void write(int b) throws IOException {
-    		if (closed)
-    			throw new IOException("stream closed");
-    		if (OutToInStreams.this.output.closed)
-    			throw new IOException("output has been closed");
-    		OutToInStreams.this.write(b);
-    	}
-    	/*
-    	public void write(byte[] b, int off, int len) throws IOException {
-    		for (int i=0; i<len; i++)
-    			OutToInStreams.this.write(b,off,len);
-    	}
-   	*/
-    	/**
-    	 * Close the stream so that no more data can be written.
-    	 */
-    	@Override
-    	public void 	close() throws IOException {
-    		// OutToInStreams.this.close();
-    		closed = true;
-    	}
-    	    	
+    public OutputStream getOutputStream() { 
+    	return output; 	
     }
-
+    
     /**
-     * Input stream that reads data from the OutToInStreams instance.
-     * 
-     * @author vrd
-     *
+     * Input stream.
+     * @return input stream
      */
-    class Input extends InputStream {
-        
-    	/**
-    	 * Is the stream closed ?
-    	 */
-    	private boolean closed;
-    	
-    	/**
-    	 * Constructor.
-    	 */
-        private Input() {
-        	closed = false;
-        }
-        
-        /**
-         * Returns the number of available byte in the OutToInStreams instance.
-         */
-        @Override
-        public int available() {
-        	return OutToInStreams.this.available();
-        }
-        
-        /**
-         * Closes the streams so no data can be read from it.
-         */
-        @Override
-        public void close() throws IOException {
-        	logger.info("input/close");
-        	closed = true;
-        }
-        
-        // see parent class for method comments
-        
-        @Override
-        public int read() throws IOException {
-        	if (closed)
-        		throw new IOException("stream closed");
-        	return OutToInStreams.this.read();
-        }
-        
-        /*
-        @Override
-        public int read(byte[] b) throws IOException {
-        	if (closed)
-        		throw new IOException("stream closed");
-        	return read(b,0,b.length);
-        }
-
-        @Override
-        public int read(byte[] buf, int off, int len) throws IOException {
-        	if (closed)
-        		throw new IOException("stream closed");
-        	return OutToInStreams.this.read(buf,off,len);
-        }
-        */
-        /*
-        // This is the basic implementation that does the byte read like the
-        // default method.
-        @Override
-        public int read(byte[] buf, int off, int len) throws IOException {
-        	if (closed)
-        		throw new IOException("stream closed");
-        	int b;
-        	for (int i=0; i<len; i++) {
-        		b = read();
-        		if (b == -1) {
-        			if (i == 0) {
-        				logger.info("input/read end -1");
-        				return -1;
-        			}
-        			logger.info("input/read partial " + i);
-        			return i;
-        		}
-        		buf[off + i] = (byte)(b-128);
-        	}
-        	logger.info("input/read full " + len);
-        	return len;
-        }
-        */
-        
-        // Use default methods that implements unsupported marking 
-        // public boolean 	markSupported() { return false; }
-        // public void mark(int readlimit) { throw new UnsupportedOperationException(); }
-        // public void 	reset() { throw new UnsupportedOperationException(); }
-
+    public InputStream  getInputStream()  { 
+    	return input; 
     }
-
     
-    public OutputStream getOutputStream() { return output; }
-    public InputStream  getInputStream()  { return input; }
-    
+    /**
+     * Available bytes to read from the buffer. 
+     * @return available bytes to read from the buffer 
+     */
     public int available() {
-    	/*if (status == Status.Ready)
-    		return 1;
-    	return 0;*/
     	return end - start;
     }
-    
-    // Those are in fact reads and write on a single value that is
-    // tutorial level stuff. The status representation way be quite a bad idea.
-    // This must be synchronized otherwise the read and write may conflict
-    // when accessing the buffer.
-    /*
-    public synchronized void write(int i) throws IOException {
-    	byte b = (byte)(i&0xFF); // The byte is passed directly.
-    	try {
-    		while (true) {
-    			// This supplies the value and notify the waiter.
-    			switch (status) {
-    			// Easy case
-    			case Waiting:
-    				value = b;
-    				status = Status.Ready;
-    				notify();
-    				// System.out.println("bridge write " + value + " -> " + status);
-    				return;
-    			case Ready:
-    				wait();
-    				break;
-    			case Closed:
-    				throw new IOException("write on closed stream");
-    			}
-    		}
-    	} catch (InterruptedException e) {
-    		throw new IOException("internal synch failed",e);
-    	}
-    }
-    */
-    
+        
+    /**
+     * Output stream write implementation.
+     * @see java.io.OutputStream#write(int) 
+     * @param i byte value to write
+     * @throws IOException
+     */
     public synchronized void write(int i) throws IOException {
     	byte b = (byte)(i&0xFF); // The byte is passed directly.
     	try {
@@ -295,27 +135,34 @@ public class OutToInStreams {
     	}
     }
     
+    /**
+     * Output stream byte buffer write implementation.
+     * @see java.io.OutputStream#write(byte[],int,int)
+     * @param buf buffer to write from
+     * @param off offset of the data start
+     * @param len length of the data
+     * @throws IOException the stream is closed or a wait is interrupted
+     */
     public synchronized void write(byte[] buf, int off, int len) throws IOException {
     	try {
     		while (true) {
+				if (len == 0) 
+					return;
     			// check if the buffer has some available space
 				int available = buffer.length - end + start; 
     			if (available > 0) {
     				// How much can we write til the buffer end ? We start the
-    				// write at end % buffer.length.
+    				// write at (end % buffer.length).
     			    int wStart = end % buffer.length;
     			    int toEnd = Math.min(available,buffer.length - wStart);
     			    int wLen  = Math.min(toEnd, len);
-    			    // logger.debug("writing " + off + "/" + len + " to " + end + ":" + wStart + "/" + wLen);
+    			    logger.debug("writing " + off + "/" + len + " to " + end + ":" + wStart + "/" + wLen);
     			    System.arraycopy(buf, off, buffer, wStart, wLen);
     			    notify();
     			    end += wLen;
     			    len -= wLen;
-    			    if (len > 0) 
-    			    	// Write the rest
-    			    	write(buf,off+wLen,len);
-    			    else
-    			    	return;
+    			    off += wLen;
+    			    available = buffer.length - end + start; 
     			} else {
     				wait();
     			}
@@ -323,10 +170,18 @@ public class OutToInStreams {
     	} catch (InterruptedException e) {
     		// Close the output stream as this kind of failure is pretty bad
     		output.closed = true;
+    		// Unlock the waiting input.
+    		OutToInStreams.this.input.notify();
     		throw new IOException("internal synch failed",e);
     	}    	
     }
     
+    /**
+     * Implementation of the input stream byte read.
+     * @see java.io.InputStream#read()
+     * @return the read byte
+     * @throws IOException stream is closed or a wait is interrupted
+     */
     public synchronized int read() throws IOException {
     	try {
     		while (true) {
@@ -346,12 +201,37 @@ public class OutToInStreams {
     	}
     }
     
+    /**
+     * Implementation of the byte buffer read of input streams.
+     * @see java.io.InputStream#read(byte[], int, int) 
+     * @param buf buffer to write read data to
+     * @param off offset in the provided buffer to start the write at
+     * @param len length of the data to read 
+     * @return    number of read bytes
+     * @throws IOException stream is closed or a wait is interrupted
+     */
     public synchronized int read(byte[] buf, int off, int len) throws IOException {
     	try {
     		while (true) {
     			// Something to read
     			if (end > start) {
-    				
+    				int available = end - start;
+    				// read no more than len
+    				int rLen = Math.min(available,len);
+    				// Copy block using the buffer limits
+    				int rStart = start % buffer.length;
+    				int rEnd   = rStart + rLen;
+    				logger.debug("read " + start + "/" + rLen + " to " + off + "/" + len);
+    				if (rEnd >= buffer.length) {
+    					int s0len = buffer.length - rStart;
+    					System.arraycopy(buffer, rStart, buf,         off, s0len);
+    					System.arraycopy(buffer,      0, buf, off + s0len, rLen - s0len);
+    				} else {
+    					System.arraycopy(buffer, rStart, buf, off, rLen);
+    				}
+    				start += rLen;
+    				notify();
+					return rLen;
     			} else if (output.closed) {
     				return -1;
     			} else {
@@ -360,6 +240,7 @@ public class OutToInStreams {
     		}
     	} catch (InterruptedException e) {
     		input.closed = true;
+    		// Close outout and wake waiters
     		throw new IOException("internal synch failed",e);
     	}
     }
@@ -416,7 +297,157 @@ public class OutToInStreams {
     	}
     }
     */
-    
+ 
+    /**
+     * Output stream that writes to the OutToInStreams instance.
+     * 
+     * @author vrd
+     *
+     */
+    class Output extends OutputStream {
+
+    	/**
+    	 * Is this stream closed ?
+    	 */
+    	private boolean closed;
+    	
+    	/**
+    	 * Constructor.
+    	 */
+    	private Output() {
+    		closed = false;
+    	}
+    	
+    	// Default implementations rely on the write byte method
+    	/*
+    	public void write(byte[] b) throws IOException {
+    		if (closed)
+    			throw new IOException("stream closed");
+    		write(b,0,b.length);
+    	}
+    	public void write(byte[] b, int off, int len) throws IOException {
+    		for (int i=0; i<len; i++)
+    			write(b[off+i]);
+    	}
+    	*/
+    	
+    	@Override
+    	public void write(int b) throws IOException {
+    		if (closed)
+    			throw new IOException("stream closed");
+    		if (OutToInStreams.this.output.closed)
+    			throw new IOException("output has been closed");
+    		OutToInStreams.this.write(b);
+    	}
+    	
+    	public void write(byte[] b, int off, int len) throws IOException {
+    		OutToInStreams.this.write(b,off,len);
+    	}
+    	
+    	/**
+    	 * Close the stream so that no more data can be written.
+    	 */
+    	@Override
+    	public void 	close() throws IOException {
+    		// OutToInStreams.this.close();
+    		closed = true;
+    	}
+    	    	
+    }
+
+    /**
+     * Input stream that reads data from the OutToInStreams instance.
+     * 
+     * @author vrd
+     *
+     */
+    class Input extends InputStream {
+        
+    	/**
+    	 * Is this stream closed ?
+    	 */
+    	private boolean closed;
+    	
+    	/**
+    	 * Constructor.
+    	 */
+        private Input() {
+        	closed = false;
+        }
+        
+        /**
+         * Returns the number of available byte in the OutToInStreams instance.
+         */
+        @Override
+        public int available() {
+        	return OutToInStreams.this.available();
+        }
+        
+        /**
+         * Closes the streams so no data can be read from it.
+         */
+        @Override
+        public void close() throws IOException {
+        	logger.info("input/close");
+        	closed = true;
+        }
+        
+        // see parent class for method comments
+        
+        @Override
+        public int read() throws IOException {
+        	if (closed)
+        		throw new IOException("stream closed");
+        	return OutToInStreams.this.read();
+        }
+        
+        /*
+        @Override
+        public int read(byte[] b) throws IOException {
+        	if (closed)
+        		throw new IOException("stream closed");
+        	return read(b,0,b.length);
+        }
+*/
+        @Override
+        public int read(byte[] buf, int off, int len) throws IOException {
+        	if (closed)
+        		throw new IOException("stream closed");
+        	return OutToInStreams.this.read(buf,off,len);
+        }
+        
+        /*
+        // This is the basic implementation that does the byte read like the
+        // default method.
+        @Override
+        public int read(byte[] buf, int off, int len) throws IOException {
+        	if (closed)
+        		throw new IOException("stream closed");
+        	int b;
+        	for (int i=0; i<len; i++) {
+        		b = read();
+        		if (b == -1) {
+        			if (i == 0) {
+        				logger.info("input/read end -1");
+        				return -1;
+        			}
+        			logger.info("input/read partial " + i);
+        			return i;
+        		}
+        		buf[off + i] = (byte)(b-128);
+        	}
+        	logger.info("input/read full " + len);
+        	return len;
+        }
+        */
+        
+        // Use default methods that implements unsupported marking 
+        // public boolean 	markSupported() { return false; }
+        // public void mark(int readlimit) { throw new UnsupportedOperationException(); }
+        // public void 	reset() { throw new UnsupportedOperationException(); }
+
+    }
+
 }
 
 

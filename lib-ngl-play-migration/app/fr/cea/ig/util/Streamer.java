@@ -3,21 +3,14 @@ package fr.cea.ig.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintWriter;
+// import java.io.PrintWriter;
 import java.util.Iterator;
 
 import fr.cea.ig.io.OutToInStreams;
 
-// import org.jongo.MongoCursor;
-
-// import play.libs.Json;
-
-// import fr.cea.ig.DBObject;
-// import fr.cea.ig.MongoDBResult;
-
 // Logger aside this has no play dependency.
+
+// TODO: move this class to fr.cea.ig.io
 
 /**
  * Streamer is an output stream writer that provide the written data
@@ -48,15 +41,8 @@ public class Streamer {
 	private static final play.Logger.ALogger logger = play.Logger.of(Streamer.class);
 	
 	/**
-	 * Input stream to return to callers.
+	 * Streams.
 	 */
-	// private PipedInputStream in;
-	
-	/**
-	 * Output stream for streamer to write to.
-	 */
-	// private PipedOutputStream out;
-	
 	private OutToInStreams ois;
 	
 	/**
@@ -70,24 +56,30 @@ public class Streamer {
 	IStreamer streamer;
 	
 	/**
+	 * Default buffer size.
+	 */
+	public static final int DEFAULT_BUFFER_SIZE = 16 * 1024;
+	
+	/**
 	 * Builds a Streamer that uses the provided IStreamer to write data.
 	 * @param streamer data writer
 	 */
 	public Streamer(IStreamer streamer) {
-		this.streamer = streamer;
-		/*
-		in = new PipedInputStream();
-		try {
-			out = new PipedOutputStream(in);
-		} catch (IOException e) {
-			throw new RuntimeException("streamer initialization failed",e);
-		}
-		*/
-		ois = new OutToInStreams(8192);
+		this(DEFAULT_BUFFER_SIZE,streamer);
 	}
 	
 	/**
-	 * Input stream.
+	 * Builds a Streamer that uses the provided IStreamer to write data.
+	 * @param bufferSize IO buffer size
+	 * @param streamer   data writer
+	 */
+	public Streamer(int bufferSize, IStreamer streamer) {
+		this.streamer = streamer;
+		ois = new OutToInStreams(bufferSize);
+	}
+	
+	/**
+	 * Starts the write thread and returns the input stream to read from.
 	 * @return input stream to read IStreamer writes from
 	 */
 	public InputStream inputStream() {
@@ -98,10 +90,6 @@ public class Streamer {
 					try {
 						streamer.streamTo(ois.getOutputStream());
 						logger.debug("streaming of " + streamer + " done");
-						// out.flush();
-						// out.close();
-						// in.close();
-						// logger.debug("streams closed");
 					} catch (IOException e) {
 						logger.error("stream error",e);
 					}
@@ -119,6 +107,10 @@ public class Streamer {
 	 */
 	public static InputStream stream(IStreamer streamer) {
 		return new Streamer(streamer).inputStream();
+	}
+
+	public static InputStream stream(int bufferSize, IStreamer streamer) {
+		return new Streamer(bufferSize,streamer).inputStream();
 	}
 
 }
