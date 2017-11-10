@@ -9,6 +9,9 @@ import views.html.containerSupports.details;
 import views.html.containerSupports.home;
 import views.html.containerSupports.homeScanner;
 import views.html.containerSupports.search;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 
 // TODO: cleanup and comment
@@ -19,6 +22,7 @@ public class ContainerSupports extends CommonController{
 	private final details details;
 	private final homeScanner homeScanner;
 	
+	@Inject
 	public ContainerSupports(home home, details details, homeScanner homeScanner) {
 		this.home = home;
 		this.details = details;
