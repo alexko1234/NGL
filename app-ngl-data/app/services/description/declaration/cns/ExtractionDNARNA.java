@@ -207,6 +207,12 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 				null, null ,null ,null ,"single", 20, false, null,null));
 		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, null, null, null,"single", 25, false, null,null));
+		
+		//Attention caractère requis dépend du type d'échantillon => géré au niveau du javascript NGL-1666
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction_ADN", "extractionDnaBlankSampleCode", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, false, null, 
+				null, null, null, null,"single", 26, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition(" Code éch. témoin négatif extraction_ARN", "extractionRnaBlankSampleCode", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, false, null, 
+				null, null, null, null,"single", 27, true, null,null));
 
 		return propertyDefinitions;
 	}
