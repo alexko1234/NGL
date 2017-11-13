@@ -260,6 +260,7 @@
 				reportingConfigurationCode:undefined,
 				reportingConfiguration:undefined,
 				additionalColumns:[],
+				mapAdditionnalColumn : new Map(),
 				additionalFilters:[],
 				selectedAddColumns:[],
 				
@@ -366,7 +367,8 @@
 					
 					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
 						var formColumns = [];
-						var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+						//var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+						var allColumns = this.computeMapAdditionnalColumns();
 						var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
 						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
 							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
@@ -377,6 +379,22 @@
 						}
 						this.additionalColumns = formColumns;
 					}
+				},
+				
+				computeMapAdditionnalColumns:function(){
+					var allColumns = angular.copy(lists.get("readsets-addcolumns")[0].columns);
+					var allColumnsFiltered = [];
+					for(var i=0; i<allColumns.length; i++){
+						if(this.mapAdditionnalColumn.get(allColumns[i].position)==undefined){
+							allColumnsFiltered.push(allColumns[i]);
+							var tabColumn=[];
+							tabColumn.push(allColumns[i]);
+							this.mapAdditionnalColumn.set(allColumns[i].position,tabColumn);
+						}else{
+							this.mapAdditionnalColumn.get(allColumns[i].position).push(allColumns[i]);
+						}
+					}
+					return allColumnsFiltered;
 				},
 				
 				getAddColumnsToForm : function(){
@@ -394,7 +412,10 @@
 					for(var i = 0 ; i < this.additionalColumns.length ; i++){
 						for(var j = 0; j < this.additionalColumns[i].length; j++){
 							if(this.additionalColumns[i][j].select){
-								this.selectedAddColumns.push(this.additionalColumns[i][j]);
+								//this.selectedAddColumns.push(this.additionalColumns[i][j]);
+								for(var c=0; c<this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position).length; c++){
+									this.selectedAddColumns.push(this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position)[c]);
+								}
 							}
 						}
 					}
