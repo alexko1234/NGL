@@ -304,7 +304,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglsq = Project(appName + "-sq", file("app-ngl-sq"), settings = buildSettings)
                  .enablePlugins(play.sbt.PlayJava)
@@ -382,8 +382,8 @@ object ApplicationBuild extends Build {
    	nglsq,       // 2.6
    	nglbi,
    	nglassets,   // 2.6 - empty
-   	nglplates,
-   	ngldata,
+   	nglplates,   // 2.6 - compiles, test fail
+   	ngldata,     // 2.6 - compiles, test fail
    	nglsub,
    	nglreagents, // 2.6
    	nglprojects, // 2.6

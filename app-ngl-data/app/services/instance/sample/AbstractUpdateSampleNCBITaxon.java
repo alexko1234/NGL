@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -14,8 +16,9 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.SampleHelper;
 import play.Logger;
-import play.libs.F.Callback;
-import play.libs.F.Promise;
+import play.libs.concurrent.Futures;
+// import play.libs.F.Callback;
+// import play.libs.F.Promise;
 import rules.services.RulesException;
 
 import org.mongojack.DBQuery;
@@ -70,15 +73,22 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 		Logger.info("update sample without ncbi data : "+samples.size());
 		Map<String, List<Sample>> samplesByTaxon = samples.stream().collect(Collectors.groupingBy(sample -> sample.taxonCode));
 		
-		List<Promise<NCBITaxon>> promises = samplesByTaxon.keySet()
+		// List<Promise<NCBITaxon>> promises = samplesByTaxon.keySet()
+		List<CompletionStage<NCBITaxon>> promises = samplesByTaxon.keySet()
 			.stream()
 			.map(taxonCode -> TaxonomyServices.getNCBITaxon(taxonCode))
 			.collect(Collectors.toList());
 		
 		
-		Promise.sequence(promises).onRedeem(new Callback<List<NCBITaxon>>() {
+		// Promise.
+		Futures.sequence(promises)
+		//.onRedeem(
+		.thenAcceptAsync(
+				// new Callback<List<NCBITaxon>>() {
+				new Consumer<List<NCBITaxon>>() {
 			    @Override
-			    public void invoke(List<NCBITaxon> taxons)  {
+			    // public void invoke(List<NCBITaxon> taxons)  {
+			    public void accept(List<NCBITaxon> taxons)  {
 			        taxons.forEach(taxon -> {
 				        if(taxon.error){
 				        	contextError.addErrors(taxon.code, "error to find taxon");

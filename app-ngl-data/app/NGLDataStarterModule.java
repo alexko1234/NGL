@@ -1,4 +1,7 @@
 import play.api.Configuration;
+
+import javax.inject.Inject;
+
 import play.Logger;
 import play.api.Environment;
 import scala.collection.Seq;
@@ -17,15 +20,16 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 		// -- Recreating the play.conf boot order
 		return seq(
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
+				bind(GlobalStarterComponent.class                     ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
-				/*bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
+				//bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
 				//bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
 				// Force JsMessages init
-				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
+				//bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
 				// The plugins conf stated that it's started last. It should be started after the
 				// application is created because of global application instance access but it's not
 				// possible anymore. We should be able to use spring as the play injector but the
@@ -37,3 +41,14 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 
 	
 }
+
+// Start the old global instance using module level binding.
+class GlobalStarterComponent {
+	
+	@Inject
+	public GlobalStarterComponent(play.Application app) {
+		new Global().onStart(app);
+	}
+	
+}
+
