@@ -1,6 +1,9 @@
 package mongotest;
 
 import static org.junit.Assert.assertEquals;
+import static fr.cea.ig.play.test.WSHelper.*;
+import static fr.cea.ig.play.test.DevAppTesting.*;
+
 import org.junit.Test;
 
 import static play.mvc.Http.Status;
@@ -17,7 +20,6 @@ import play.test.*;
 import play.libs.Json;
 import play.libs.ws.*;
 import java.util.concurrent.CompletionStage;
-import static fr.cea.ig.play.test.DevAppTesting.*;
 import java.util.function.Consumer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -37,7 +39,7 @@ public class Scripted {
 
 	// Should be in some global. 
 	public static Application devapp() { 
-		return fr.cea.ig.play.test.DevAppTesting.devapp("conf/ngl-sq-test.conf","conf/logger.xml");
+		return ngl.sq.Global.devapp();
 	}
 
 	/**
@@ -46,8 +48,12 @@ public class Scripted {
 	 */
 	@Test
 	public void test01() throws Exception {
+		JsonNode sample_0 = ngl.sq.SamplesTest.create_00(code("TEST"));
+		// if (true) throw new RuntimeException("" + sample_0.path("code"));
+		
 	    testInServer(devapp(),
 	    		ws -> {	    	
+	    			
 	    	// Assuming that we have a json response from server that that the get/put
 	    	// urls are properly defined, we provide a json alteration function that is
 	    	// compared to the get after the put. The other way around is to assert that modified values
@@ -80,6 +86,12 @@ public class Scripted {
 		    // Experiences - experiments
 		    rurNeqTraceInfo("/api/experiments/CHIP-MIGRATION-20170915_144939CDA",ws);
 	    	get(ws,"/experiments/CHIP-MIGRATION-20170915_144939CDA",OK);
+	    	
+	    	// Create container  - create and get code/id
+	    	// probably /api/containers
+	    	
+	    	// Create experiment - create and get code/id
+	    	
 	    	
 	    });
 	}

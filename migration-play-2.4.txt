@@ -21,7 +21,9 @@ https://github.com/playframework/playframework/issues/4897
 Downgrade jackson to 2.7.x: https://github.com/FasterXML/jackson-databind/issues/1339
 
 DI:
-  helper -> fr.cea.ig.play.NGLTools
+  add bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(), to starter module
+
+  helper -> fr.cea.ig.play.NGLContext
   @message...@helper.env() -> @tools.messageEnv("application.name")
   @HttpContext...username() -> @tools.currentUser()
   

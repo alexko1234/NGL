@@ -9,7 +9,7 @@ public class Heavy {
 	
 	// Should be in some global. 
 	public static Application devapp() { 
-		return fr.cea.ig.play.test.DevAppTesting.devapp("conf/ngl-reagents-test.conf","conf/logger.xml");
+		return fr.cea.ig.play.test.DevAppTesting.devapp("conf/ngl-projects-test.conf","conf/logger.xml");
 	}
 
 	@Test
@@ -21,5 +21,4 @@ public class Heavy {
 	}	
 	
 }
-
 

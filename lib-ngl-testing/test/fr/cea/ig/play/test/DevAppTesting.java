@@ -1,7 +1,9 @@
 package fr.cea.ig.play.test;
 
 import static org.junit.Assert.assertEquals;
-import static fr.cea.ig.play.test.ReadUpdateReadTest.*;
+// import static fr.cea.ig.play.test.ReadUpdateReadTest.*;
+import static fr.cea.ig.play.test.WSHelper.get;
+import static fr.cea.ig.play.test.ReadUpdateReadTest.notEqualsPath;
 
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -23,6 +25,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.fasterxml.jackson.databind.node.IntNode;
 
 import play.Application;
 import play.Environment;
@@ -39,6 +43,8 @@ import static play.mvc.Http.Status;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.google.common.io.Resources;
 
 /**
  * Test support for NGL on DEV server.
@@ -67,6 +73,25 @@ public class DevAppTesting {
 	 */
 	private static Application application;
 	
+	private static String testTimeKey = null;
+	
+	public static String testTimeKey() {
+		if (testTimeKey == null) {
+			testTimeKey = Long.toHexString(System.currentTimeMillis());
+			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
+			// Could map 0-F -> A-. for non numeric stuff
+		}
+		return testTimeKey;
+	}
+
+	// Generate a key from some components
+	public static String code(String head) {
+		String testRunner = System.getProperty("user.name");
+		String datePart   = testTimeKey();
+		return head + testRunner + datePart;
+	}
+	
+
 	/**
 	 * Get the full name of the file that mathces the given resource. 
 	 * @param name name of the resource to find
@@ -326,97 +351,5 @@ public class DevAppTesting {
 		}
 	}
 	
-	// ------------------------------------------------------------
-	// Http shortcuts
-	/**
-	 * Shorcut for http get. Exceptions are converted to runtime
-	 * exceptions.
-	 * @param ws  web client to use
-	 * @param url url to get 
-	 * @return    web response for the given url
-	 */
-	public static WSResponse get(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
-		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).get();
-			WSResponse response = completionStage.toCompletableFuture().get();	
-			return response;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Execute a get request and assert the response status. 
-	 * @param ws     web client
-	 * @param url    url to get
-	 * @param status status to assert
-	 * @return       request response
-	 */
-	public static WSResponse get(WSClient ws, String url, int status) {
-		WSResponse r = get(ws,url);
-		assertEquals(url, status, r.getStatus());
-		return r;
-	}
-
-	/**
-	 * Short for http put with some payload.
-	 * @param ws      web client to use
-	 * @param url     url to put to
-	 * @param payload payload to send along the put request
-	 * @return        web response
-	 */
-	public static WSResponse put(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
-		try {
-			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").put(payload);
-			WSResponse response = completionStage.toCompletableFuture().get();	
-			return response;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static WSResponse put(WSClient ws, String url, String payload, int status) {
-		WSResponse r = put(ws,url,payload);
-		assertEquals(url, status, r.getStatus());
-		return r;
-	}
-
-	// -- JSON shortcuts
-	
-	// public static void rcrud()
-	
-	// Could provide a / separator to split the path.
-	public static void remove(JsonNode n, String... path) {
-		/*
-		String[] parts = path; //path.split("/");
-		for (int i=0; i<parts.length-1; i++) {
-			JsonNode m = n.get(parts[i]);
-			if (m != null)
-				n = m;
-			else
-				throw new RuntimeException("could not find " + parts[i] + " in node for path " + String.join("/", path));
-		}
-		*/
-		n = get(n,Arrays.copyOf(path, path.length-1));
-		if (n instanceof ObjectNode)
-			((ObjectNode)n).remove(path[path.length-1]);
-		else
-			throw new RuntimeException(String.join(".",path) + " does not lead to an object");
-	}
-	// provide static methods to alter JSON with ease
-	public static void set(JsonNode node, String path, String value) { throw new RuntimeException("not implemented"); }
-	public static void set(JsonNode node, String path, int value) { throw new RuntimeException("not implemented"); }
-	
-	public static JsonNode get(JsonNode n, String... path) {
-		for (int i=0; i<path.length-1; i++) {
-			JsonNode m = n.get(path[i]);
-			if (m != null)
-				n = m;
-			else
-				throw new RuntimeException("could not find " + path[i] + " in node for path " + String.join("/", path));
-		}
-		return n;
-	}
-
 	
 }
