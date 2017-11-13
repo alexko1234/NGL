@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code :String)
 
 @scripts() = {
@@ -15,5 +16,5 @@
 	 <script src="@controllers.plates.tpl.routes.Plates.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
 }
 
-@views.html.main("plates.title."+code, menu("plates."+code), scripts)(views.html.contents.lefttabs())
+@views.html.main("plates.title."+code, menu_("plates."+code), scripts)(views.html.contents.lefttabs())
 

@@ -1,6 +1,7 @@
 package controllers.plates.io;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -37,7 +38,8 @@ public class Plates extends TPLCommonController {
 	final static Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
 	
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = fr.cea.ig.play.IGBodyParsers.Json5MB.class)
 	public Result importFile(Integer emnco){
 		
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
