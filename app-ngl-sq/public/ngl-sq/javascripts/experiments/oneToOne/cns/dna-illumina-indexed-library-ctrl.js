@@ -232,7 +232,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		if(col.property === 'outputContainerUsed.experimentProperties.tag.value'){
 			computeTagCategory(value.data);			
 		}
-		
+		/*
 		if( col.property === 'inputContainerUsed.experimentProperties.libraryInputQuantity.value'){
 			computeInputVolume(value.data);			
 		}
@@ -240,6 +240,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
 			computelibraryInputQuantity(value.data);				
 		}
+		*/
 	}
 	
 
@@ -269,7 +270,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		
 	}
 	
-	
+	/*
 	var computelibraryInputQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.libraryInputQuantity.value");
 		var libraryInputQuantity = getter(udtData);
@@ -325,7 +326,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		}
 		
 	}
-	
+	*/
 	var populateIndex12LinePlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
 		
