@@ -21,23 +21,26 @@ public class Main extends CommonController {
 
 	private static JsMessages messages;
 
+	private home home;
+	
 	@Inject
-	public Main(jsmessages.JsMessagesFactory jsMessagesFactory) {
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
 		messages = jsMessagesFactory.all();
+		this.home = home;
 	}
 
-	public static Result home() {
+	public Result home() {
 		return ok(home.render());    
 	}
 
-	public static Result jsMessages() {
+	public Result jsMessages() {
 		// return ok(messages.generate("Messages")).as("application/javascript");
 		//return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
 		return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
 
 	}
 
-	public static Result jsCodes() {
+	public Result jsCodes() {
 		return ok(generateCodeLabel()).as("application/javascript");
 	}
 
