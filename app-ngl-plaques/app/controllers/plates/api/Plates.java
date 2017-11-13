@@ -1,6 +1,8 @@
 package controllers.plates.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.required;
 

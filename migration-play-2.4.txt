@@ -30,7 +30,9 @@ DI:
   import play.Routes; -> import play.routing.JavaScriptReverseRouter;
   Routes.javascriptRouter("jsRoutes", -> JavaScriptReverseRouter.create("jsRoutes",
   
+  import static play.data.Form.form; -> import static fr.cea.ig.play.IGGlobals.form;
   
+  @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024) -> @BodyParser.Of(value = fr.cea.ig.play.IGBodyParsers.Json5MB.class)
   -- possible changes (non blocking)
   play.Play.application().configuration().getString("institute") -> tools.getInstitute()
   fr.cea.ig.authentication.Helper.username(Context.current().session()) -> tools.currentUser()

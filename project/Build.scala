@@ -342,7 +342,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(      
     version                    := appVersion,
@@ -374,8 +374,22 @@ object ApplicationBuild extends Build {
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
   ).aggregate(
-   	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub,nglreagents,nglprojects,
-   	nglPlayMigration,nglTesting
+    // libs
+   	nglcommon,
+   	nglframeworkweb,
+   	ngldatatable,
+    // applications
+   	nglsq,       // 2.6
+   	nglbi,
+   	nglassets,   // 2.6 - empty
+   	nglplates,
+   	ngldata,
+   	nglsub,
+   	nglreagents, // 2.6
+   	nglprojects, // 2.6
+    // play migration and testing
+    nglPlayMigration,
+   	nglTesting
    	//,bcRoute,bcRouteCommon,bcRouteAuth
   )
 
