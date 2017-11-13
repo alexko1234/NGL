@@ -96,10 +96,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				tabService.addTabs({label:$scope.sample.code,href:jsRoutes.controllers.samples.tpl.Samples.get($scope.sample.code).url,remove:true});
 				tabService.activeTab($scope.getTabs(1));
 			}
-
-			$scope.lists.refresh.samples();
 			$scope.lists.refresh.resolutions({"objectTypeCode":"Sample"}, "sampleResolutions");
-
 			if(undefined === mainService.get('sampleActiveTab')){
 				mainService.put('sampleActiveTab', 'general');
 
@@ -108,9 +105,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}
 
 		});
-
-
-
 	
 		$http.get(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,{params:{'levelCode':'Sample'}}).then(function(response) {
 
