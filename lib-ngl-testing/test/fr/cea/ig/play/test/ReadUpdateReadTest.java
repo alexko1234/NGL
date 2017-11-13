@@ -1,6 +1,10 @@
 package fr.cea.ig.play.test;
 
-import static fr.cea.ig.play.test.DevAppTesting.*;
+// import static fr.cea.ig.play.test.DevAppTesting.*;
+import fr.cea.ig.play.test.WSHelper;
+// import static fr.cea.ig.play.test.WSHelper.*;
+import static fr.cea.ig.play.test.JsonHelper.*;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -54,16 +58,16 @@ public class ReadUpdateReadTest {
 	public void run(WSClient ws) {
 		// Read json from URL
 		logger.debug("GET - " + url);
-		WSResponse r0 = get(ws,url,Status.OK);
+		WSResponse r0 = WSHelper.get(ws,url,Status.OK);
 		JsonNode js0 = Json.parse(r0.getBody());
 		// Apply modification to read json
 		beforeUpdate.accept(js0);
 		// Update
 		logger.debug("PUT - " + url);		
-		WSResponse r1 = put(ws,url,js0.toString(),Status.OK);
+		WSResponse r1 = WSHelper.put(ws,url,js0.toString(),Status.OK);
 		// Read updated data
 		logger.debug("GET - " + url);
-		WSResponse r2 = get(ws,url,Status.OK);
+		WSResponse r2 = WSHelper.get(ws,url,Status.OK);
 		JsonNode js1 = Json.parse(r2.getBody());
 		// apply precheck to js0 and js1
 		beforeAssertion.accept(js0);
