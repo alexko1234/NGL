@@ -33,7 +33,9 @@ public class NGLProjectsStarterModule extends play.api.inject.Module {
 				// bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				// Force JsMessages init
-				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly()
+				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
+
 				);
 	}
 	

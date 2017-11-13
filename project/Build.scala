@@ -358,7 +358,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 	 
 	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		version                    := reagentsVersion,

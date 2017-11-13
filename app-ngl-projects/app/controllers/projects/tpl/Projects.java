@@ -1,7 +1,11 @@
 package controllers.projects.tpl;
 
+import javax.inject.Inject;
+
 import controllers.CommonController;
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.mvc.Result;
 import views.html.projects.*;
 
@@ -12,29 +16,36 @@ import views.html.projects.*;
  */
 public class Projects extends CommonController {
 	
-	public static Result home(String homecode) {
+	private home home;
+	@Inject
+	public Projects(home home) {
+		this.home = home;
+	}
+	
+	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	public static Result get(String code) {
+	public Result get(String code) {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result search(String type) {
+	public Result search(String type) {
 		return ok(search.render(Boolean.TRUE));
 	}
 
 	
-	public static Result details() {
+	public Result details() {
 		return ok(details.render());
 	}
 	
 	
-	public static Result javascriptRoutes() {
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
-  	        // Routes
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
+  	    				// Routes
   	    		controllers.projects.tpl.routes.javascript.Projects.home(),  
   	    		controllers.projects.tpl.routes.javascript.Projects.get(), 
   	    		controllers.projects.tpl.routes.javascript.Projects.search(),
