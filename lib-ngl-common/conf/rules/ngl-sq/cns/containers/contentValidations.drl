@@ -1,0 +1,22 @@
+//created on: Apr 21, 2015
+package rules
+
+
+
+rule "Check content extractionBlankSampleCode properties"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    Container($code:code)
+	Content(properties != null, $extractionBlankSampleCode:properties.get("extractionBlankSampleCode"))
+	$contextValidation:ContextValidation()	
+	eval($extractionBlankSampleCode !=null) 
+	then
+		Logger.debug("Check content extractionBlankSampleCode properties "+$extractionBlankSampleCode.value.toString());
+		if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  $extractionBlankSampleCode.value.toString())){
+			$contextValidation.addErrors("properties.extractionBlankSampleCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, $extractionBlankSampleCode.value.toString(), "Sample");
+		}		
+	end
+

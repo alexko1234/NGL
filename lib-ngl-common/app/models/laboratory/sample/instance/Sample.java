@@ -86,6 +86,7 @@ public class Sample extends DBObject implements IValidation{
 
 		SampleValidationHelper.validateSampleType(typeCode,importTypeCode,properties,contextValidation);
 		SampleValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		SampleValidationHelper.validateRules(this, contextValidation);
 		//TODO validation taxon
 		
 	}

@@ -282,6 +282,12 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}
 	}
 	
+	public static void validateRules(Container container, ContextValidation contextValidation){
+		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		validationfacts.add(container);
+		validationfacts.addAll(container.contents);
+		validateRules(validationfacts, contextValidation);
+	}
 	
 	@Deprecated
 	public static void validateProcessTypeCode(String processTypeCode,

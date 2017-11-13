@@ -6,9 +6,13 @@ import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
+import models.laboratory.sample.instance.Sample;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -41,5 +45,11 @@ public class SampleValidationHelper extends CommonValidationHelper {
 			if(proDefinitions.size() > 0){
 				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions,false); //need false because we generate sample from another sample
 			}
+	}
+	
+	public static void validateRules(Sample sample,ContextValidation contextValidation){
+		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		validationfacts.add(sample);
+		validateRules(validationfacts, contextValidation);
 	}
 }

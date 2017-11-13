@@ -143,7 +143,7 @@ public class Container extends DBObject implements IValidation {
 		validateQuantity(quantity, contextValidation);
 		validateVolume(volume, contextValidation);
 		validateSize(size, contextValidation);
-		
+		validateRules(this, contextValidation);
 	}
 
 	
