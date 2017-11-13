@@ -11,7 +11,9 @@ import com.mongodb.MongoException;
 
 import play.Logger;
 import play.Logger.ALogger;
-import play.libs.Akka;
+// import play.libs.Akka;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import validation.ContextValidation;
@@ -31,8 +33,13 @@ public abstract class AbstractImportData implements Runnable{
 		
 		Logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
 		
-		Akka.system().scheduler().schedule(durationFromStart,durationFromNextIteration
-				, this, Akka.system().dispatcher()
+		//Akka.system()
+		akkaSystem()
+		.scheduler().schedule(durationFromStart,durationFromNextIteration
+				, this, 
+				// Akka.system()
+				akkaSystem()
+				.dispatcher()
 				);
 				 
 	}
