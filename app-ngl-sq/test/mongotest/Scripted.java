@@ -60,30 +60,25 @@ public class Scripted {
 	    	// We use the object names to trigger the view template and the rur.
 	    	
 	    	// Echantillons - samples
-	    	rur(ws,"/api/samples/AAAA-A120_ST147_T0_A");
+	    	rurNeqTraceInfo("/api/samples/AAAA-A120_ST147_T0_A",ws);
 	    	get(ws,"/samples/AAAA-A120_ST147_T0_A",OK);
 	    	
 	    	// Supports - supports
-	    	rur(ws,"/api/supports/2A4F4FL2H");
+	    	rurNeqTraceInfo("/api/supports/2A4F4FL2H",ws);
 	    	get(ws,"/supports/2A4F4FL2H",OK);
 	    	
 	    	// Containers - containers
-	    	rur(ws,"/api/containers/HLMF5BBXX_8");
-		    rur(ws,"/api/containers/29J81XXL4");
+	    	rurNeqTraceInfo("/api/containers/HLMF5BBXX_8",ws);
+		    rurNeqTraceInfo("/api/containers/29J81XXL4",ws);
 		    get(ws,"/containers/29J81XXL4",OK);
 		    
 		    // Processus - processes 
-		    rur(ws,"/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK");
+		    rurNeqTraceInfo("/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",ws);
 		    // This is a 404
 		    // get(ws,"/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",OK);
 		    
 		    // Experiences - experiments
-		    rur(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA",
-		    	js -> { },
-		    	js -> { remove(js,"traceInformation");
-		    	        remove(js,"status","date");
-		    	      }
-		    	);
+		    rurNeqTraceInfo("/api/experiments/CHIP-MIGRATION-20170915_144939CDA",ws);
 	    	get(ws,"/experiments/CHIP-MIGRATION-20170915_144939CDA",OK);
 	    	
 	    });
