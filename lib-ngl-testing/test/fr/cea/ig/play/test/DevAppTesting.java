@@ -1,6 +1,7 @@
 package fr.cea.ig.play.test;
 
 import static org.junit.Assert.assertEquals;
+import static fr.cea.ig.play.test.ReadUpdateReadTest.*;
 
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -13,6 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -141,7 +143,7 @@ public class DevAppTesting {
 	 * @param modify   JSON modification to run
 	 * @param preCheck JSON before check modification
 	 */
-	// TODO: use logger
+	/*
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify, Consumer<JsonNode> preCheck) {
 		// Read
 		logger.debug("GET - " + url);
@@ -164,6 +166,7 @@ public class DevAppTesting {
 		cmp("",js0,js1);
 	}
 	
+	
 	// RUR could be made a class with some configuration and run methods
 	// Could check that we get come error code instead of asserting equality 
 	public static void rur(WSClient ws, String url, Consumer<JsonNode> modify) {
@@ -173,6 +176,20 @@ public class DevAppTesting {
 	public static void rur(WSClient ws, String url) {
 		rur(ws,url,js -> {});
 	}
+	*/
+	
+	/**
+	 * Standard RUR test that checks that the traceInformation has chnaged after the udate.
+	 * @param url url to check
+	 * @param ws  web client to use
+	 */
+	public static void rurNeqTraceInfo(String url, WSClient ws) {
+		new ReadUpdateReadTest(url)
+			.assertion(notEqualsPath("traceInformation"))
+			.run(ws);
+	}
+	
+	
 	
 	public static final void cmp(JsonNode n0, JsonNode n1) {
 		cmp("",n0,n1);
@@ -364,27 +381,42 @@ public class DevAppTesting {
 		return r;
 	}
 
+	// -- JSON shortcuts
+	
 	// public static void rcrud()
 	
 	// Could provide a / separator to split the path.
 	public static void remove(JsonNode n, String... path) {
+		/*
 		String[] parts = path; //path.split("/");
 		for (int i=0; i<parts.length-1; i++) {
 			JsonNode m = n.get(parts[i]);
 			if (m != null)
 				n = m;
 			else
-				throw new RuntimeException("could not find " + parts[i] + " in node for path " + path);
+				throw new RuntimeException("could not find " + parts[i] + " in node for path " + String.join("/", path));
 		}
+		*/
+		n = get(n,Arrays.copyOf(path, path.length-1));
 		if (n instanceof ObjectNode)
-			((ObjectNode)n).remove(parts[parts.length-1]);
+			((ObjectNode)n).remove(path[path.length-1]);
 		else
 			throw new RuntimeException(String.join(".",path) + " does not lead to an object");
 	}
 	// provide static methods to alter JSON with ease
 	public static void set(JsonNode node, String path, String value) { throw new RuntimeException("not implemented"); }
 	public static void set(JsonNode node, String path, int value) { throw new RuntimeException("not implemented"); }
-	public static JsonNode get(JsonNode node, String path) { throw new RuntimeException("not implemented"); }
+	
+	public static JsonNode get(JsonNode n, String... path) {
+		for (int i=0; i<path.length-1; i++) {
+			JsonNode m = n.get(path[i]);
+			if (m != null)
+				n = m;
+			else
+				throw new RuntimeException("could not find " + path[i] + " in node for path " + String.join("/", path));
+		}
+		return n;
+	}
 
 	
 }
