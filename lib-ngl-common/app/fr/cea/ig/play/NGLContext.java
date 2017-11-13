@@ -27,18 +27,18 @@ import fr.cea.ig.play.NGLConfig;
  *
  */
 @Singleton
-public class NGLTools {
+public class NGLContext {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(NGLTools.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(NGLContext.class);
 	
 	private final NGLConfig config;
 	private final MessagesApi messagesApi;
 	private final FormFactory formFactory;
 	
 	@Inject
-	public NGLTools(NGLConfig config,
-			MessagesApi messagesApi,
-			FormFactory formFactory) {
+	public NGLContext(NGLConfig   config,
+					  MessagesApi messagesApi,
+			          FormFactory formFactory) {
 		this.config   = config;
 		this.messagesApi = messagesApi;
 		this.formFactory = formFactory;

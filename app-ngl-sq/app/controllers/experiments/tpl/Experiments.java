@@ -22,7 +22,7 @@ import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 import controllers.CommonController;
-import fr.cea.ig.play.NGLTools;
+import fr.cea.ig.play.NGLContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -53,7 +53,7 @@ public class Experiments extends CommonController {
 	*/
 	
 	@Inject
-	public Experiments(NGLTools tools, home home, details details, search search, searchContainers searchContainers) {
+	public Experiments(NGLContext tools, home home, details details, search search, searchContainers searchContainers) {
 		experimentForm = tools.form(Experiment.class);
 		this.home = home;
 		this.details = details;
