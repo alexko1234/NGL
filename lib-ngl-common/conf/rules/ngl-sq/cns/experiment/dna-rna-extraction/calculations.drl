@@ -2,7 +2,7 @@
 package rules
 
 
-rule "Set good project and extractionDnaBlankSampleCode code for DNA"
+rule "Set good project code for DNA"
     @nglSQ( calculations )
 	dialect "java"
 	salience 900
@@ -14,7 +14,7 @@ rule "Set good project and extractionDnaBlankSampleCode code for DNA"
 		$outputContainerUsed: OutputContainerUsed($outputSampleTypeCode:experimentProperties.get("sampleTypeCode"), $outputSampleTypeCode != null) from $outputContainerUseds		
     	eval("DNA".equals($outputSampleTypeCode.value))
     then
-        Logger.debug("Set good project code and extractionDnaBlankSampleCode for DNA calculation");
+        Logger.debug("Set good project code for DNA calculation");
 		
 		PropertySingleValue outputProjectCode = (PropertySingleValue)$outputContainerUsed.experimentProperties.get("projectCode");
 		if(null == outputProjectCode){
@@ -47,15 +47,6 @@ rule "Set good project and extractionDnaBlankSampleCode code for DNA"
 		}
 		
 		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
-		
-		PropertySingleValue extractionDnaBlankSampleCode = (PropertySingleValue)$outputContainerUsed.experimentProperties.get("extractionDnaBlankSampleCode");
-		if(null == extractionDnaBlankSampleCode){
-			extractionDnaBlankSampleCode=new PropertySingleValue();
-			extractionDnaBlankSampleCode.value = "tot";
-			$outputContainerUsed.experimentProperties.put("extractionDnaBlankSampleCode",extractionDnaBlankSampleCode);
-		}
-		
-		
 		
 end
 
