@@ -1,5 +1,7 @@
 package services.io.reception.mapping;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -33,7 +35,8 @@ import fr.cea.ig.MongoDBResult.Sort;
 
 public class SampleMapping extends Mapping<Sample> {
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	/**
 	 * 

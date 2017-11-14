@@ -20,13 +20,13 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 		// -- Recreating the play.conf boot order
 		return seq(
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
-				bind(GlobalStarterComponent.class                     ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				//bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
+				bind(GlobalStarterComponent.class                     ).toSelf().eagerly(),
 				//bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
 				// Force JsMessages init
 				//bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),

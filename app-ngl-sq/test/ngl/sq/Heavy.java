@@ -1,52 +1,22 @@
-package mongotest;
 
-import static org.junit.Assert.assertEquals;
-import static fr.cea.ig.play.test.WSHelper.*;
-import static fr.cea.ig.play.test.DevAppTesting.*;
+package ngl.sq;
 
 import org.junit.Test;
 
-import static play.mvc.Http.Status;
-import static play.test.Helpers.GET;
-import static play.test.Helpers.route;
-
-import play.Application;
-import play.mvc.Result;
-import play.mvc.Http.RequestBuilder;
-import play.test.Helpers;
-
-import static play.test.Helpers.*;
-import play.test.*;
-import play.libs.Json;
-import play.libs.ws.*;
-import java.util.concurrent.CompletionStage;
-import java.util.function.Consumer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 
+import static fr.cea.ig.play.test.DevAppTesting.code;
+import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
+import static fr.cea.ig.play.test.DevAppTesting.testInServer;
+import static fr.cea.ig.play.test.RoutesTest.checkRoutes;
+import static fr.cea.ig.play.test.WSHelper.get;
 
-// Infrastructure for ngl testing through routes
-//
-// One of the first stage would be to clear data that is related to testing
-// Using the mongo client we would delete all the data whose name contains TEST or 
-// something along those lines. The other way around is to have the mongo client
-// use a mocked db.
-// 
+import static ngl.sq.Global.devapp;
 
-// TODO: move and rename
-public class Scripted {
+import static play.test.Helpers.OK;
 
-	// Should be in some global. 
-	public static Application devapp() { 
-		return ngl.sq.Global.devapp();
-	}
-
-	/**
-	 * Super heavy all in one test.
-	 * @throws Exception
-	 */
-	/*@Test
+public class Heavy {
+	@Test
 	public void test01() throws Exception {
 		JsonNode sample_0 = ngl.sq.SamplesTest.create_00(code("TEST"));
 		// if (true) throw new RuntimeException("" + sample_0.path("code"));
@@ -94,22 +64,5 @@ public class Scripted {
 	    	
 	    	
 	    });
-	}*/
-	
-	/*
-	 * Browser level testing does not seem to be at the 
-	 * proper granularity level. 
-	// @Test
-	
-	public void runInBrowser() {
-		TestServer server = testServer(3333,devapp());
-	    running(server, HTMLUNIT, browser -> {
-	        browser.goTo("/");
-	        assertEquals("Welcome to Play!", browser.$("#title").text());
-	        browser.$("a").click();
-	        assertEquals("login", browser.url());
-	    });
 	}
-	*/
-	
 }
