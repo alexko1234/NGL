@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code: String)
 
 @import views.html._
@@ -20,5 +21,5 @@
      
 }
 
-@main("analyses.page.title", menu("analyses."+code), scripts)(views.html.contents.lefttabs())
+@main("analyses.page.title", menu_("analyses."+code), scripts)(views.html.contents.lefttabs())
 

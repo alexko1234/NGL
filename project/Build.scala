@@ -52,7 +52,7 @@ object ApplicationBuild extends Build {
 	val postgresql  = "postgresql"         % "postgresql"         % "8.3-603.jdbc4"  
   val commonsLang = "commons-lang"       % "commons-lang"       % "2.4"
   val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "3.0.0" 
-  //val fest        = "org.easytesting"    % "fest-assert"        % "1.4" % "test"
+  val fest        = "org.easytesting"    % "fest-assert"        % "1.4" % "test"
 
 	override def settings = super.settings ++ Seq(
 		EclipseKeys.skipParents in ThisBuild := false,
@@ -177,7 +177,8 @@ object ApplicationBuild extends Build {
 		val nglbiDependencies = Seq(
 			javaCore, 
 			javaJdbc,
-			postgresql
+			postgresql,
+			fest
 		)
 		
 		val nglsqDependencies = Seq(
@@ -303,7 +304,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := appVersion,

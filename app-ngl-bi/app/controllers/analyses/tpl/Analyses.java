@@ -1,11 +1,15 @@
 package controllers.analyses.tpl;
 
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.analyses.details;
 import views.html.analyses.home;
 import views.html.analyses.search;
 import views.html.analyses.treatments;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 
 /**
@@ -14,35 +18,47 @@ import controllers.CommonController;
  *
  */
 public class Analyses extends CommonController {
+	private final home home;
+	private final search search;
+	private final details details;
+	private final treatments treatments;
+	@Inject
+	public Analyses(home home, search search, details details, treatments treatments) {
+		this.home = home; 
+		this.search = search;
+		this.details = details;
+		this.treatments= treatments;
+	}
 	
-	public static Result home(String homecode) {
+	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	public static Result get(String code) {
+	public Result get(String code) {
 		return ok(home.render("search")); 
 	}
 
-	public static Result valuation(String code) {
+	public Result valuation(String code) {
 		return ok(home.render("valuation")); 
 	}
 	
-	public static Result search(String type) {
+	public Result search(String type) {
 		return ok(search.render());
 	}
 	
-	public static Result details() {
+	public Result details() {
 		return ok(details.render());
 	}
 	
-	public static Result treatments(String code) {
+	public Result treatments(String code) {
 		return ok(treatments.render(code));
 	}
 	
-	public static Result javascriptRoutes() {
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.analyses.tpl.routes.javascript.Analyses.home(),  
   	    		controllers.analyses.tpl.routes.javascript.Analyses.get(), 

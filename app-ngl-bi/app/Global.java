@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import play.Application;
-import play.GlobalSettings;
+//import play.GlobalSettings;
 import play.Logger;
 import play.api.Play;
 import play.api.modules.spring.Spring;
@@ -16,14 +16,14 @@ import rules.services.RulesServices6;
 
 
 // public class Global extends GlobalSettings {
-class UNUSED_Global extends GlobalSettings {
+class UNUSED_Global { // extends GlobalSettings {
 	
 	// Should use the same start sequence as NGL-SQ.
 	
-	@Override
+	// @Override
 	public void onStart(Application app) {
 		Logger.info("NGL-BI has started");		   	
-		Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
+		//Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
 		
 		/* Started using the module DI
 		Logger.info("Load knowledge base");
@@ -56,15 +56,15 @@ class UNUSED_Global extends GlobalSettings {
 	
 
 
-	@Override
+	// @Override
 	public void onStop(Application app) {
 		Logger.info("NGL-BI shutdown...");
 	}  
 
 	
 	
-	
-	@Override
+	/*
+	// @Override
 	public Action onRequest(Request request, Method actionMethod) {
 		//if(Integer.valueOf(request.getHeader("Content-Length")).intValue() < (100*1024) ){
 		if(!request.uri().contains("/authentication")){
@@ -75,7 +75,7 @@ class UNUSED_Global extends GlobalSettings {
 		return super.onRequest(request, actionMethod);
 	}
 
-	/*
+	
 	@Override
     public <A> A getControllerInstance(Class<A> controllerClass) throws Exception {
       try{

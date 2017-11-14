@@ -1,3 +1,4 @@
+@this(ctx : fr.cea.ig.play.NGLContext)
 @(nav: String = "")
 @import play.mvc.Http.Context
 @import play.api.Play
@@ -11,7 +12,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@Messages("application.name")@helper.env() @helper.version()</a>
+			<a class="navbar-brand" href="@controllers.main.tpl.routes.Main.home()">@ctx.messageEnv("application.name") @helper.version()</a>
     	</div>
 
     	<div class="collapse navbar-collapse">

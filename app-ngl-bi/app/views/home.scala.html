@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @()
 
 @import play.mvc.Http.Context
@@ -15,7 +16,7 @@
 	 <script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/property-value.js")" type="text/javascript" charset="utf-8"></script>	
 }
 
-@views.html.main("home.title.name", menu("home"), scripts) {
+@views.html.main("home.title.name", menu_("home"), scripts) {
  <div  class="row">
   <div class="col-md-12 col-lg-12">
   	<div class="jumbotron">

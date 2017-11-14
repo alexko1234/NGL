@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code: String, year: String)
 
 @scripts() = {
@@ -21,4 +22,4 @@
 	<link rel="stylesheet" href="@routes.Assets.at("ngl-bi/css/balancesheets/balancesheets.css")">
 }
 
-@views.html.main("balanceSheets.page.title", menu("balanceSheets." + code), scripts, css)(views.html.contents.lefttabs())
+@views.html.main("balanceSheets.page.title", menu_("balanceSheets." + code), scripts, css)(views.html.contents.lefttabs())

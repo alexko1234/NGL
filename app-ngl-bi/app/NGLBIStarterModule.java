@@ -23,7 +23,7 @@ import javax.inject.Singleton;
 
 public class NGLBIStarterModule extends play.api.inject.Module {
 	
-	private static final Logger.ALogger logger = Logger.of(NGLBIStarterModule.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(NGLBIStarterModule.class);
 
 	public NGLBIStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
@@ -37,6 +37,7 @@ public class NGLBIStarterModule extends play.api.inject.Module {
 	public Seq<Binding<?>> bindings(Environment environment, Configuration configuration) {
 		logger.debug("bindings are requested for module " + this);
 		return seq(
+				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
 				bind(StaticInitComponent.class                        ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
@@ -44,7 +45,8 @@ public class NGLBIStarterModule extends play.api.inject.Module {
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
 				// Force JsMessages init
-				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly()
+				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
 				);
 	}
 	
@@ -53,7 +55,8 @@ public class NGLBIStarterModule extends play.api.inject.Module {
 
 class StaticInitComponent {
 	public StaticInitComponent() {
-		play.data.format.Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
+		// TODO: fix/check disabled date formatting 
+		// play.data.format.Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
 	}
     public static class DateFormatter extends Formatters.SimpleFormatter<Date> {
         
