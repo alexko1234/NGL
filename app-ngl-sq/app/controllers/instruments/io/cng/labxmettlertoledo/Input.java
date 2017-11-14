@@ -56,13 +56,13 @@ public class Input extends AbstractInput {
 			return experiment;
 		} else {
 			for(KitCatalog kit:  experimentKitList){
-				Logger.info ("KIT TROUVE : "+kit.name + " ("+ kit.code+")");
+				Logger.info ("KIT TROUVE : '"+kit.name + "'("+ kit.code+")");
 				// trouver les boites de chacun des kits
 				List<BoxCatalog> kitBoxList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, 
 						DBQuery.is("category", "Box").and(DBQuery.is("active", true)).and(DBQuery.is("kitCatalogCode", kit.code))).toList();
 				
 				for(BoxCatalog box:  kitBoxList){
-					Logger.info (" >BOITE ACTIVE TROUVEE :"+ box.name + " ("+box.code+")");
+					Logger.info (" >BOITE ACTIVE TROUVEE :'"+ box.name + "'("+box.code+")");
 					boxMap.put(box.name, box);
 					
 					// trouverles reactifs de chaque boite
@@ -70,7 +70,7 @@ public class Input extends AbstractInput {
                      		 DBQuery.is("category", "Reagent").and(DBQuery.is("active", true)).and(DBQuery.is("boxCatalogCode", box.code))).toList();
 					
 					for(ReagentCatalog reagent:  boxReagentList){
-						Logger.info ("  >>REACTIF ACTIF TROUVE :"+reagent.name + " ("+reagent.code+ ")");
+						Logger.info ("  >>REACTIF ACTIF TROUVE :'"+reagent.name + "'("+reagent.code+ ")");
 						reagentMap.put(reagent.name, reagent);
 					}
 				}
@@ -211,7 +211,7 @@ public class Input extends AbstractInput {
 							
 							if (null == boxCodeMap.get(rc.boxCatalogCode)){
 							  // la boite de ce reactif n'est pas presente dans la section de declaration des boites !!!
-							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileItemName+"' not declared in file.");
+							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileItemName+"' not declared in file. (looking for:"+rc.boxCatalogCode+")");
 						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileItemName+ "' non trouvée dans le fichier.");
 							} 
 							// construire un reagentUsed et l'ajouter a l'experiment
@@ -254,7 +254,7 @@ public class Input extends AbstractInput {
 							
 							if ( null == boxCodeMap.get(rc.boxCatalogCode)){
 							  // la boite de ce reactif n'est pas presente dans la section de déclaration des boites !!!
-							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileReagentName+"' not declared in file.");
+							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileReagentName+"' not declared in file.(looking for:"+rc.boxCatalogCode+")");
 						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileReagentName+ "' non trouvée dans le fichier.");
 							}
 							
