@@ -2327,7 +2327,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                 	header = that.config.messages.transformKey(header);
                                 }
                                 
-                                if (that.isGroupActive()) {
+                                if (that.isGroupActive() && column.property!=that.config.group.by.property) {
                                     if (column.groupMethod === "sum") {
                                         header = header + this.messages.Messages('datatable.export.sum');
                                     } else if (column.groupMethod === "average") {
@@ -2336,6 +2336,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         header = header + this.messages.Messages('datatable.export.unique');
                                     } else if (column.groupMethod === "countDistinct") {
                                         header = header + this.messages.Messages('datatable.export.countDistinct');
+                                    }else if (column.groupMethod === "collect") {
+                                        header = header + this.messages.Messages('datatable.export.collect');
                                     }
                                 }
                                 lineValue = lineValue + header + delimiter;

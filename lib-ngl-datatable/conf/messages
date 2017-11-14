@@ -27,6 +27,7 @@ datatable.export.sum =  (Somme)
 datatable.export.average =  (Moyenne)
 datatable.export.unique =  (Valeur uniq.)
 datatable.export.countDistinct =  (Nb. distinct d'occurence)
+datatable.export.collect =  (Valeur collect.)
 datatable.export.yes = Oui
 datatable.export.no = Non
 
