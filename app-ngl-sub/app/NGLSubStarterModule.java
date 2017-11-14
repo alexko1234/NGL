@@ -20,7 +20,7 @@ public class NGLSubStarterModule extends play.api.inject.Module {
 
 	public NGLSubStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
-		logger.info("starting NGL-BI");
+		logger.info("starting NGL-Sub");
 	}
 
 	// 0:fr.cea.ig.authentication.AuthenticatePlugin
@@ -29,12 +29,14 @@ public class NGLSubStarterModule extends play.api.inject.Module {
 	public Seq<Binding<?>> bindings(Environment environment, Configuration configuration) {
 		logger.debug("bindings are requested for module " + this);
 		return seq(
+				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				// bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				// Force JsMessages init
-				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly()
+				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
 				);
 	}
 	

@@ -52,7 +52,8 @@ object ApplicationBuild extends Build {
 	val postgresql  = "postgresql"         % "postgresql"         % "8.3-603.jdbc4"  
   val commonsLang = "commons-lang"       % "commons-lang"       % "2.4"
   val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "3.0.0" 
-    
+  //val fest        = "org.easytesting"    % "fest-assert"        % "1.4" % "test"
+
 	override def settings = super.settings ++ Seq(
 		EclipseKeys.skipParents in ThisBuild := false,
     // Compile the project before generating Eclipse files,
@@ -200,7 +201,9 @@ object ApplicationBuild extends Build {
 		
 	  val nglsubDependencies = Seq(
 	    javaCore, 
-	    javaJdbc
+	    javaJdbc,
+	    // fest,
+	    "xerces" % "xercesImpl" % "2.8.0"
   	)
 
 	  val nglprojectsDependencies = Seq(
@@ -327,7 +330,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
-  ).dependsOn(nglcommon % "test->test;compile->compile")
+  ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
 		version                    := appVersion,				

@@ -2,7 +2,8 @@ package controllers.sra.api;
 
 
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;

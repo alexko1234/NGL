@@ -1,6 +1,7 @@
 package controllers.sra.submissions.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.File;
 import java.io.IOException;
@@ -225,7 +226,7 @@ public class Submissions extends DocumentController<Submission>{
 		// pouvoir afficher l'ensemble des erreurs.
 		//Form initialise avec l'objet submission car pas d'objet submission dans le body
 		//Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
-		Form<Submission> filledForm = Form.form(Submission.class);
+		Form<Submission> filledForm = /*Form.*/form(Submission.class);
 		filledForm.fill(submission);
 
 		if (submission == null) {
@@ -316,12 +317,14 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	// methode appelée  depuis interface submissions.create-ctrl.js (submissions.create.scala.html)
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
+	@BodyParser.Of(value = fr.cea.ig.play.IGBodyParsers.Json5MB.class)
 	public Result save() throws SraException, IOException {
 
-		if(request().body().isMaxSizeExceeded()){
-			return badRequest("Max size exceeded");
-		}
+		// play 2.6: This should not be needed as the body parser should fail if the limit is exceeeded
+		//if(request().body().isMaxSizeExceeded()){
+		//	return badRequest("Max size exceeded");
+		//}
 
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		Logger.debug("filledForm "+filledForm);
