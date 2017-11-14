@@ -71,11 +71,15 @@ object ApplicationBuild extends Build {
 		val buildVersion      = appVersion
 
 		// Probably poor scala style
-    val gg = if (System.getProperty("ngl.test.conf.dir") != null)
+    val tev0 = if (System.getProperty("ngl.test.conf.dir") != null)
 	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("ngl.test.conf.dir")))
 	      else
 	        Seq()
-	        
+	  val tev1 = if (System.getProperty("NGL_CONF_TEST_DIR") != null)
+	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("NGL_CONF_TEST_DIR")))
+	      else
+	        Seq()
+	  
 	  val globSettings = Seq(
 	    // -- Scala compilation options are not defined as there are no scala sources
       // scalacOptions += "-deprecation",
@@ -97,7 +101,7 @@ object ApplicationBuild extends Build {
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
 			scalaVersion        := scala
-		) ++ gg
+		) ++ tev0 ++ tev1
 
 		val buildSettings =  Seq (
 		  organization   := buildOrganization + "." + appName
@@ -383,11 +387,11 @@ object ApplicationBuild extends Build {
    	ngldatatable,
     // applications
    	nglsq,       // 2.6
-   	nglbi,
+   	nglbi,       // 
    	nglassets,   // 2.6 - empty
-   	nglplates,   // 2.6 - compiles, test fail
-   	ngldata,     // 2.6 - compiles, test fail
-   	nglsub,
+   	nglplates,   // 2.6 - compiles, partial routes
+   	ngldata,     // 2.6 - compiles, routes fail, test removed
+   	nglsub,      // 2.6 - compiles, partial routes
    	nglreagents, // 2.6
    	nglprojects, // 2.6
     // play migration and testing
