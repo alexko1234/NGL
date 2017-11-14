@@ -1,6 +1,7 @@
 package controllers.stats.tpl;
 
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.stats.choice;
 import views.html.stats.configReadSets;
@@ -8,6 +9,9 @@ import views.html.stats.configLanes;
 import views.html.stats.home;
 import views.html.stats.showReadSets;
 import views.html.stats.showLanes;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 
 /**
@@ -16,8 +20,19 @@ import controllers.CommonController;
  *
  */
 public class Stats extends CommonController {
+	private final home home;
+	private final config config;
+	private final show show;
+	private final choice choice;
+	@Inject
+	public Stats(home home, config config, show show, choice choice) {
+		this.home = home;
+		this.config= config;
+		this.show= show;
+		this.choice = choice;
+	}
 	
-	public static Result home(String homecode) {
+	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
@@ -41,14 +56,15 @@ public class Stats extends CommonController {
 			return ok(showReadSets.render());
 	}
 	
-	public static Result choice(String type) {
+	public Result choice(String type) {
 		return ok(choice.render());
 	}
 	
-	public static Result javascriptRoutes() {
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      // Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.stats.tpl.routes.javascript.Stats.home(),  
   	    		controllers.stats.tpl.routes.javascript.Stats.config(),

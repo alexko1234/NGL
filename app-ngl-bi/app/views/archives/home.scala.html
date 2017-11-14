@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code: String)
 
 @scripts() = {
@@ -11,4 +12,4 @@
         <script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script>             
 }
 
-@views.html.main("archives.page.title", menu("archives" + code), scripts)(views.html.contents.lefttabs())
+@views.html.main("archives.page.title", menu_("archives" + code), scripts)(views.html.contents.lefttabs())
