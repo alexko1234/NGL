@@ -357,7 +357,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("Capture & wash (post)","capture",null,710,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
-					getInstrumentUsedTypes("bravo-workstation"),
+					getInstrumentUsedTypes("bravo-workstation","mastercycler-epg-and-bravows"),
 					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			

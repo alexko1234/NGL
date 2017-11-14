@@ -16,7 +16,7 @@ import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
 
-public class Output extends AbstractOutput {
+public class BravoWorkstationOutput extends AbstractOutput {
 
 	@Override
 	public File generateFile(Experiment experiment,ContextValidation contextValidation) throws Exception {

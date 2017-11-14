@@ -765,15 +765,16 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	
 	// FDS 29/07/2016 JIRA NGL-1027 ajout propriétés pseudo instrument Masterycler EP-Gradient + Zephyr 
+    //  09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerEPGAndZephyrProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		//Mastercycler
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
-				null, null, null , null, "single", null, true ,"14", null));
+				null, null, null , null, "single", null, true ,null, null));
 
 		//Zephyr
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
-				null, null, null , null, "single", null, true ,"0.8", null));
+				null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -791,7 +792,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, null, null , null, "single", null, true ,null, null));
 		
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
-		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		
 		return l;
@@ -811,7 +812,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, null, null , null, "single", null, true ,null, null));
 		
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
-		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
@@ -821,7 +822,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
-		l.add(newPropertiesDefinition("Programme Bravo Workstation","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
+		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 				null, null, null , null, "single", null, true ,null, null));
 		
 		return l;
