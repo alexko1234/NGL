@@ -178,7 +178,7 @@ public class Scripted {
 	    	
 	    	
 	    });
-	}
+	}*/
 	
 	/*
 	 * Browser level testing does not seem to be at the 
