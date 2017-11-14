@@ -1,3 +1,4 @@
+@this(menu_ : menu)
 @(code: String)
 
 @scripts() = {
@@ -19,5 +20,5 @@
 }
 <!-- home code au niveau du controller : donc create 
 appel de main.scala.html de views de ngl-common avec en parametre les javascripts dont studies/app.js-->
-@views.html.main("studies.page.title", views.html.menu("studies."+code), scripts)(views.html.contents.lefttabs())
+@views.html.main("studies.page.title", menu_("studies."+code), scripts)(views.html.contents.lefttabs())
 

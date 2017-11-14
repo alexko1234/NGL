@@ -5,18 +5,18 @@
 ->  /authentication authentication.Routes
 
 # Home page
-GET		/											controllers.main.tpl.Main.home()
+GET		/											@controllers.main.tpl.Main.home()
 
 #------------
 # Submission
 #------------
-GET		/sra/submissions/:homeCode/home					controllers.sra.submissions.tpl.Submissions.home(homeCode : java.lang.String)
-GET		/sra/submissions/:code							controllers.sra.submissions.tpl.Submissions.get(code : java.lang.String)
-GET		/tpl/sra/submissions/create						controllers.sra.submissions.tpl.Submissions.create()
-GET		/tpl/sra/submissions/activate					controllers.sra.submissions.tpl.Submissions.activate()
-GET		/tpl/sra/submissions/consultation				controllers.sra.submissions.tpl.Submissions.consultation()
-GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submissions.details()
-GET		/tpl/sra/submissions/js-routes					controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
+GET		/sra/submissions/:homeCode/home					@controllers.sra.submissions.tpl.Submissions.home(homeCode : java.lang.String)
+GET		/sra/submissions/:code							@controllers.sra.submissions.tpl.Submissions.get(code : java.lang.String)
+GET		/tpl/sra/submissions/create						@controllers.sra.submissions.tpl.Submissions.create()
+GET		/tpl/sra/submissions/activate					@controllers.sra.submissions.tpl.Submissions.activate()
+GET		/tpl/sra/submissions/consultation				@controllers.sra.submissions.tpl.Submissions.consultation()
+GET		/tpl/sra/submissions/details					@controllers.sra.submissions.tpl.Submissions.details()
+GET		/tpl/sra/submissions/js-routes					@controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
 PUT		/api/sra/submissions/:submissionCode/activate	@controllers.sra.submissions.api.Submissions.activate(submissionCode : java.lang.String)
 
 # Mise à jour d'un objet submission et de ses composants :
@@ -38,15 +38,15 @@ PUT		/sra/submissions/:code/release					@controllers.sra.submissions.api.Submiss
 # Configurations
 #-----------------
 
-GET		/sra/configurations/:homeCode/home			controllers.sra.configurations.tpl.Configurations.home(homeCode: java.lang.String)
-GET		/sra/configurations/:code			     	controllers.sra.configurations.tpl.Configurations.get(code: java.lang.String)
-GET		/tpl/sra/configurations/create				controllers.sra.configurations.tpl.Configurations.create()
-GET		/tpl/sra/configurations/js-routes			controllers.sra.configurations.tpl.Configurations.javascriptRoutes()
+GET		/sra/configurations/:homeCode/home			@controllers.sra.configurations.tpl.Configurations.home(homeCode: java.lang.String)
+GET		/sra/configurations/:code			     	@controllers.sra.configurations.tpl.Configurations.get(code: java.lang.String)
+GET		/tpl/sra/configurations/create				@controllers.sra.configurations.tpl.Configurations.create()
+GET		/tpl/sra/configurations/js-routes			@controllers.sra.configurations.tpl.Configurations.javascriptRoutes()
 # version avec details inutilisee
 #GET	/tpl/sra/configurations/details				controllers.sra.configurations.tpl.Configurations.details()
 
 GET 	/api/sra/configurations					    @controllers.sra.configurations.api.Configurations.list()
-GET		/tpl/sra/configurations/consultation		controllers.sra.configurations.tpl.Configurations.consultation()
+GET		/tpl/sra/configurations/consultation		@controllers.sra.configurations.tpl.Configurations.consultation()
 GET		/api/sra/variables			           		controllers.sra.api.Variables.list()
 GET		/api/sra/variables/:type/:code         		controllers.sra.api.Variables.get(type: java.lang.String, code: java.lang.String)
 
@@ -62,22 +62,22 @@ POST	/api/sra/configurations					    @controllers.sra.configurations.api.Configu
 #----------
 # Studies
 #----------
-GET		/sra/studies/:homeCode/home					controllers.sra.studies.tpl.Studies.home(homeCode: java.lang.String)
+GET		/sra/studies/:homeCode/home					@controllers.sra.studies.tpl.Studies.home(homeCode: java.lang.String)
 #http://localhost:9000/api/sra/studies?
 #http://localhost:9000/api/sra/studies?datatable=true&paginationMode=local&projCode=BCZ
 GET		/api/sra/studies							@controllers.sra.studies.api.Studies.list()
 POST	/api/sra/studies							@controllers.sra.studies.api.Studies.save()
-GET		/tpl/sra/studies/create					    controllers.sra.studies.tpl.Studies.create()
+GET		/tpl/sra/studies/create					    @controllers.sra.studies.tpl.Studies.create()
 ###release fait dans menu details mais si on fait un menu release dedié alors prevoir url:
 #GET		/tpl/sra/studies/release					controllers.sra.studies.tpl.Studies.release()
-GET		/tpl/sra/studies/js-routes				   	controllers.sra.studies.tpl.Studies.javascriptRoutes()
-GET		/tpl/sra/studies/details				    controllers.sra.studies.tpl.Studies.details()
+GET		/tpl/sra/studies/js-routes				   	@controllers.sra.studies.tpl.Studies.javascriptRoutes()
+GET		/tpl/sra/studies/details				    @controllers.sra.studies.tpl.Studies.details()
 
 # methode get du controlleur api qui est heritée d'un parent de DocumentController
 GET		/api/sra/studies/:code			        	@controllers.sra.studies.api.Studies.get(code: java.lang.String)
-GET		/sra/studies/:code			            	controllers.sra.studies.tpl.Studies.get(code: java.lang.String)
+GET		/sra/studies/:code			            	@controllers.sra.studies.tpl.Studies.get(code: java.lang.String)
 
-GET		/tpl/sra/studies/consultation	        	controllers.sra.studies.tpl.Studies.consultation()
+GET		/tpl/sra/studies/consultation	        	@controllers.sra.studies.tpl.Studies.consultation()
 # Mise à jour d'un objet study et de ses composants :
 PUT		/sra/studies/:code 							@controllers.sra.studies.api.Studies.update(code: java.lang.String) 
 PUT		/sra/studies/internal/:code					@controllers.sra.studies.api.StudiesInternal.update(code: java.lang.String)
@@ -133,11 +133,11 @@ GET		/api/commons/states							controllers.commons.api.States.list()
 #----------------
 # documentation
 #----------------
-GET		/sra/documentation/home						controllers.sra.documentation.tpl.Documentation.home()
+GET		/sra/documentation/home						@controllers.sra.documentation.tpl.Documentation.home()
 
 
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               									controllers.Assets.at(path="/public", file)
-GET     /messages.js                									controllers.main.tpl.Main.jsMessages()
-GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()
+GET     /messages.js                									@controllers.main.tpl.Main.jsMessages()
+GET     /codes.js        	        									@controllers.main.tpl.Main.jsCodes()

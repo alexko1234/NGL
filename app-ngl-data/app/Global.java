@@ -65,7 +65,8 @@ public class Global { // extends GlobalSettings {
 			Logger.info("NGL import data has started");
 			try {
 
-				String institute=play.Play.application().configuration().getString("import.institute");
+				// String institute=play.Play.application().configuration().getString("import.institute");
+				IGGlobals.configuration().getString("import.institute");
 				Logger.info("Import institute "+ institute);
 
 				if("CNG".equals(institute)){
@@ -91,7 +92,8 @@ public class Global { // extends GlobalSettings {
 			Logger.info("NGL reporting has started");
 			try {
 
-				String institute=play.Play.application().configuration().getString("institute");
+				// String institute=play.Play.application().configuration().getString("institute");
+				String institute = IGGlobals.configuration().getString("institute");
 				Logger.info("institute for the reporting : "+ institute);
 
 				if (institute.equals("CNS")) {
