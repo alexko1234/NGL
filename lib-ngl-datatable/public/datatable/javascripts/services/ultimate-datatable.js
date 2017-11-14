@@ -4108,6 +4108,7 @@ factory('udtI18n', [function() {
 							"datatable.export.average" : "(Moyenne)",
 							"datatable.export.unique" :"(Valeur uniq.)",
 							"datatable.export.countDistinct" :"(Nb. distinct d'occurence)",
+							"datatable.export.collect" :"(Valeur collect.)",
 							"datatable.export.yes" : "Oui",
 							"datatable.export.no" : "Non",
 							"datatable.button.group" : "Grouper / D\u00e9grouper",
