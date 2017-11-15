@@ -27,43 +27,57 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 
 
 	var statsService = {
-			datatable:undefined,
-			statColumns:[{header:'SAV Q30', code:'sav.q30',name:'Q30',property:'lanes.treatments.sav', value:'greaterQ30Perc',treatment:'sav'}],
+			lists : lists,
+			treatmentType:undefined,
+			properties:[],
+			property:undefined,
+			//statColumns:[{header:'SAV Q30', code:'sav.q30',name:'Q30',property:'lanes.treatments.sav', value:'greaterQ30Perc',treatment:'sav'}],
 			select : {
 				properties:[]
 			},
+			
+			
 			reset : function(){
 				this.select =  {
 						properties:[]
 				};
 			},
-			add : function(){
-				var data = [];
-				for(var i = 0; i < this.select.properties.length; i++){
-					for(var j = 0; j < this.statColumns.length; j++){
-						if(this.select.properties[i] === this.statColumns[j].header){
-							data.push({column: this.statColumns[j]});
-						}
-					}						
-				}		
-				this.datatable.addData(data);
-				this.reset();
+			
+			getTreatmentType : function(){
+				return this.treatmentType;
 			},
-			setData : function(values){
-				this.datatable.setData(values);
-			},
-			getData : function(){
-				return this.datatable.getData();
+			getProperty : function(){
+				return this.property;
 			},
 			isData : function(){
-				return (this.datatable && this.datatable.getData().length > 0);
+				if(this.treatmentType!=undefined && this.property!=undefined){
+					return true;
+				}else{
+					return false;
+				}
 			},
-			getStatColumns : function(){
-				return this.statColumns;									
+			getData : function(){
+				var statConfig = {header:this.treatmentType+' '+this.property, code:this.treatmentType+'.'+this.property,property:'lanes.treatments.'+this.treatmentType,value:this.property,treatment:this.treatmentType};
+				return statConfig;
+			},
+			refreshProperty:function()
+			{
+				if(this.treatmentType!=undefined){
+					$http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(this.treatmentType).url,{params:{levels:"Lane"}}).success(function(data) {
+						statsService.properties=data.propertiesDefinitions;
+					});
+				};
+			},
+			initListService : function(){
+				if(!isInit){
+					lists.refresh.treatmentTypes({levels:'Lane'});
+					isInit=true;
+				};
 			},
 			init : function(){
 				this.datatable= datatable(datatableConfig);
 				this.datatable.setData([], 0);
+				this.initListService();
 			}
 	};
 	if(!isInit){
@@ -77,7 +91,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 			group : {
 				active : true,
 				callback:function(datatable){
-					computeCharts();
+					computeChart();
 				}
 			},
 			search : {
@@ -90,7 +104,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				mode:'local',
 				orderBy:'code',
 				callback:function(datatable){
-					computeCharts();
+					computeChart();
 				}
 			},
 			hide:{
@@ -153,8 +167,8 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 			"render": function(value){
 			if(angular.isDefined(value)){
 				var display = "";
-				var treatment = statsConfigs[0].column.treatment;
-				var valueColumn = statsConfigs[0].column.value;
+				var treatment = statsConfigs.treatment;
+				var valueColumn = statsConfigs.value;
 				display+="<table class=\"table table-condensed table-hover table-bordered\">";
 				display+="<thead>";
 				display+="<tr>";
@@ -169,27 +183,10 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 					display += "<tr><td>"+key+"</td>";
 					var tabData = mapData.get(key);
 					for(var t=0; t<tabData.length; t++){
-						display+="<td>"+tabData[t]+"</td>";
+						display+="<td>{{"+tabData[t]+"|number:2}}</td>";
 					}
 					display+="</tr>";
 				}
-				/*for(var l=0; l<value.lanes.length; l++){
-					var nbLane = value.lanes[l].number;
-					display += "<td>";
-					if(value.lanes[l].treatments[treatment] !=null){
-						if(value.lanes[l].treatments[treatment].read1!=null && value.lanes[l].treatments[treatment].read1[valueColumn]!=null){
-							display += "R1 "+value.lanes[l].treatments[treatment].read1[valueColumn].value;
-						}
-						if(value.lanes[l].treatments[treatment].read2!=null && value.lanes[l].treatments[treatment].read2[valueColumn]!=null){
-							display +=" R2 "+value.lanes[l].treatments[treatment].read2[valueColumn].value;
-						}
-						if(value.lanes[l].treatments[treatment].default!=null && value.lanes[l].treatments[treatment].default[valueColumn]!=null){
-							display +=" Default "+value.lanes[l].treatments[treatment].default[valueColumn].value;
-						}
-					
-					}
-					display += "</td>";
-				}*/
 				display +="</tbody></table>";
 				return display;
 			}
@@ -234,9 +231,10 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		}
 		return mapData;
 	}
-	var statsConfigs, queriesConfigs = [];
+	var queriesConfigs = [];
 	var readsetDatatable;
 	var charts = [];
+	var statsConfigs;
 
 	var generateCharts = function() {
 		readsetDatatable = datatable(datatableConfig);
@@ -244,10 +242,8 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 
 		var properties = ["default"];
 		var propExistingFiels = [];
-		for(var i = 0; i < statsConfigs.length; i++){
-			properties.push(statsConfigs[i].column.property);	
-			propExistingFiels.push(statsConfigs[i].column.property);	
-		}
+		properties.push(statsConfigs.property);	
+		propExistingFiels.push(statsConfigs.property);	
 		properties.push("lanes.number");
 
 		var promises = [];
@@ -279,6 +275,11 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		var data = readsetDatatable.getData();
 		//compute data
 		charts = [];
+		if(readsetDatatable.config.group.by != undefined){
+			var propertyGroupGetter = readsetDatatable.config.group.by.property;
+			var groupGetter = $parse(propertyGroupGetter);
+		}
+		
 		var mapSeriesLane = computeData(data);
 		for(var key of mapSeriesLane.keys()){
 			charts.push(getChart(mapSeriesLane.get(key)));
@@ -289,8 +290,8 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	var computeData = function(dataRun)
 	{
 		
-		var treatment = statsConfigs[0].column.treatment;
-		var value = statsConfigs[0].column.value;
+		var treatment = statsConfigs.treatment;
+		var value = statsConfigs.value;
 		
 		var dataSeries = new Map();
 		var newData = [];
@@ -363,7 +364,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				height : 770
 			},
 			title : {
-				text : statsConfigs[0].column.header+' Lane '+dataLane.laneNumber,
+				text : statsConfigs.header+' Lane '+dataLane.laneNumber,
 			},
 			xAxis : {
 				title : {
@@ -374,7 +375,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 
 			yAxis : {
 				title : {
-					text :  statsConfigs[0].column.name
+					text :  statsConfigs.name
 				},
 				min : 0
 			},
@@ -390,7 +391,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 			queriesConfigs = queriesConfigReadSetsService.queries;
 			generateCharts();
 		}else{
-			statsConfigs=[];
+			statsConfigs=undefined;
 			queriesConfigs=[];
 			charts=[];
 			readsetDatatable=undefined;

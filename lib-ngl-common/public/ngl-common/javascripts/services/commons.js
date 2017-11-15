@@ -214,6 +214,9 @@ angular.module('commonsServices', []).
     				propertyDefinitions : function(params, key){
     					load(jsRoutes.controllers.commons.api.PropertyDefinitions.list().url,params,(key)?key:'propertyDefinitions');    				
     				},
+    				treatmentTypes : function(params, key){
+    					load(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.list().url,params,(key)?key:'treatmentTypes');    				
+    				},
     				values : function(params, key){
     					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
     				},
@@ -378,6 +381,13 @@ angular.module('commonsServices', []).
     				key = (key)?key:'propertyDefinitions';
     				if(results[key] === undefined){
     					refresh.propertyDefinitions(params, key);
+    				}
+    				return results[key];
+    			},
+    			getTreatmentTypes : function(params, key){
+    				key = (key)?key:'treatmentTypes';
+    				if(results[key] === undefined){
+    					refresh.treatmentTypes(params, key);
     				}
     				return results[key];
     			},

@@ -103,6 +103,7 @@ search.placeholder.isSentCollaborator = Envoyé Collaborateur ?
 search.placeholder.sequencingProgramTypes = Type de lectures
 search.placeholder.analyseValuationUser = Analyse évaluée par : 
 search.placeholder.stats.configuration = Configuration
+search.placeholder.treatment = Traitement
 
 search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
 search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
