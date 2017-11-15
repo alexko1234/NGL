@@ -71,7 +71,11 @@ public class Input extends AbstractInput {
 					
 					for(ReagentCatalog reagent:  boxReagentList){
 						Logger.info ("  >>REACTIF ACTIF TROUVE :'"+reagent.name + "'("+reagent.code+ ")");
-						reagentMap.put(reagent.name, reagent);
+						/*!! meme reactif peut exister dans 2 boites!!! => cle serait reagent.name/reagent.boxCatalogCode
+						     reagentMap.put(reagent.name+"/"+reagent.boxCatalogCode , reagent);
+						     mais ensuite lors de la recherche d'1 reagent ca complique....TODO ???
+						*/
+						reagentMap.put(reagent.name , reagent);
 					}
 				}
 			}
