@@ -94,10 +94,8 @@ public class SampleMapping extends Mapping<Sample> {
 		}else{
 			sample.traceInformation = new TraceInformation(contextValidation.getUser());
 		}
-		//TODO update categoryCode if not a code but a label.
-		if(sample.categoryCode == null){
-			sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
-		}	
+		//update categoryCode by default.
+		sample.categoryCode = SampleType.find.findByCode(sample.typeCode).category.code;
 		
 		if(sample.life != null && sample.life.from != null && sample.life.from.sampleCode != null){
 			Sample parentSample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.life.from.sampleCode).in("projectCodes", sample.life.from.projectCode));
