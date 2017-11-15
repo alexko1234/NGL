@@ -2334,10 +2334,14 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         header = header + this.messages.Messages('datatable.export.average');
                                     } else if (column.groupMethod === "unique") {
                                         header = header + this.messages.Messages('datatable.export.unique');
-                                    } else if (column.groupMethod === "countDistinct") {
+                                    } else if (column.groupMethod === "countDistinct" || column.groupMethod === "count:true") {
                                         header = header + this.messages.Messages('datatable.export.countDistinct');
-                                    }else if (column.groupMethod === "collect") {
+                                    } else if (column.groupMethod === "count" || column.groupMethod =="count:false" ) {
+                                            header = header + this.messages.Messages('datatable.export.count');
+                                    } else if (column.groupMethod === "collect" || column.groupMethod === "collect:false") {
                                         header = header + this.messages.Messages('datatable.export.collect');
+                                    } else if (column.groupMethod === "collect:true") {
+                                        header = header + this.messages.Messages('datatable.export.collectDistinct');
                                     }
                                 }
                                 lineValue = lineValue + header + delimiter;
@@ -4107,8 +4111,10 @@ factory('udtI18n', [function() {
 							"datatable.export.sum" : "(Somme)",
 							"datatable.export.average" : "(Moyenne)",
 							"datatable.export.unique" :"(Valeur uniq.)",
-							"datatable.export.countDistinct" :"(Nb. distinct d'occurence)",
-							"datatable.export.collect" :"(Valeur collect.)",
+							"datatable.export.count" : "(Nb. valeurs)",
+							"datatable.export.countDistinct" :"(Nb. valeurs diff\u00e9rentes)",
+							"datatable.export.collect" :"(Liste valeurs)",
+							"datatable.export.collectDistinct" :"(Liste valeurs diff\u00e9rentes)",
 							"datatable.export.yes" : "Oui",
 							"datatable.export.no" : "Non",
 							"datatable.button.group" : "Grouper / D\u00e9grouper",
