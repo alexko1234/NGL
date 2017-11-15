@@ -364,6 +364,7 @@
 				initAdditionalColumns:function(){
 					this.additionalColumns=[];
 					this.selectedAddColumns=[];
+					this.mapAdditionnalColumn=new Map();
 					
 					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
 						var formColumns = [];
