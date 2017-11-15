@@ -245,7 +245,9 @@ public class SubmissionWorkflowsHelper {
 
 				// Updater objet readSet :
 				ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
-				Workflows.setReadSetState(validation, readset, submission.state);
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+						DBQuery.is("code", readset.code),
+						DBUpdate.set("submissionState.code", submission.state.code).set("traceInformation.modifyUser", validation.getUser()).set("traceInformation.modifyDate", new Date()));
 			}
 		}
 	}
