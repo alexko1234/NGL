@@ -20,63 +20,14 @@ rule "Set good project code for Amplicon"
 			outputProjectCode=new PropertySingleValue();
 			$outputContainerUsed.experimentProperties.put("projectCode",outputProjectCode);
 		}
+		MapParameter mapping = (MapParameter)MongoDBDAO.findByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class,  "tag-pcr-mapping-rules");
 		
-		if("BUB".equals($inputProjectCode)){
-			outputProjectCode.value = "BUD";
-		}else if("BUF".equals($inputProjectCode)){
-			outputProjectCode.value = "BUH";
-		}else if("BUK".equals($inputProjectCode)){
-			outputProjectCode.value = "BUM";
-		}else if("BUP".equals($inputProjectCode)){
-			outputProjectCode.value = "BUR";
-		}else if("BUT".equals($inputProjectCode)){
-			outputProjectCode.value = "BUW";
-		}else if("BUY".equals($inputProjectCode)){
-			outputProjectCode.value = "BWA";
-		}else if("BWC".equals($inputProjectCode)){
-			outputProjectCode.value = "BWE";
-		}else if("BXH".equals($inputProjectCode)){
-			outputProjectCode.value = "BXK";
-		}else if("BUZ".equals($inputProjectCode)){
-			outputProjectCode.value = "BYS";
-		}else if("BYU".equals($inputProjectCode)){
-			outputProjectCode.value = "BZA";
-		}else if("BYX".equals($inputProjectCode)){
-			outputProjectCode.value = "BYZ";
-		}else if("AHX".equals($inputProjectCode)){
-			outputProjectCode.value = "BZM";
-		}else if("BHN".equals($inputProjectCode)){
-			outputProjectCode.value = "BZP";
-		}else if("APY".equals($inputProjectCode)){
-			outputProjectCode.value = "BZQ";
-		}else if("ANB".equals($inputProjectCode)){
-			outputProjectCode.value = "BZQ";
-		}else if("CAA".equals($inputProjectCode)){
-			outputProjectCode.value = "BZZ";
-		}else if("CAM".equals($inputProjectCode)){
-			outputProjectCode.value = "CAN";
-		}else if("CBB".equals($inputProjectCode)){
-			outputProjectCode.value = "CBC";
-		}else if("CAT".equals($inputProjectCode)){
-			outputProjectCode.value = "CBR";
-		}else if("BMI".equals($inputProjectCode)){
-			outputProjectCode.value = "CCC";
-		}else if("BMZ".equals($inputProjectCode)){
-			outputProjectCode.value = "CCC";
-		}else if("CCQ".equals($inputProjectCode)){
-			outputProjectCode.value = "CCR";
-		}else if("CCT".equals($inputProjectCode)){
-			outputProjectCode.value = "CCU";
-		}else if("CCX".equals($inputProjectCode)){
-			outputProjectCode.value = "CCY";
-		}else if("CCQ".equals($inputProjectCode)){
-			outputProjectCode.value = "CCR";
-		}else if("CDD".equals($inputProjectCode)){
-			outputProjectCode.value = "CDE";
+		if(mapping.map.containsKey($inputProjectCode)){
+			outputProjectCode.value = mapping.map.get($inputProjectCode);
 		}else{
+			Logger.error("Tag-PCR mapping not defined for project "+$inputProjectCode);
 			outputProjectCode.value = null;
 		}
-		
 		Logger.debug("Input project code = "+$inputProjectCode+" / "+$outputSampleTypeCode.value+" => Output project code ="+outputProjectCode.value);
 		
 end
