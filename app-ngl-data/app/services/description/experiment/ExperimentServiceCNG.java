@@ -353,11 +353,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 						
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
-			//    09/11/2017 NGL-1691: renommage label
+			//    09/11/2017 NGL-1691: renommage label; 15/11/2017 ajout "bravows-and-mastercycler-epg" ( ce n'est pas une erreur: bravows d'abord)
 			l.add(newExperimentType("Capture & wash (post)","capture",null,710,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
-					getInstrumentUsedTypes("bravo-workstation","mastercycler-epg-and-bravows"),
+					getInstrumentUsedTypes("bravo-workstation",
+							               "bravows-and-mastercycler-epg"), 
 					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			

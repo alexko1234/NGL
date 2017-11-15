@@ -396,9 +396,10 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		});
 	};
 	
+	// FDS 15/11/2017 ajout 'bravows-mastercycler-epg'
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')|| ($scope.experiment.instrument.typeCode=== 'mastercycler-epg-and-bravows'))}, 
+		isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')||($scope.experiment.instrument.typeCode=== 'bravows-and-mastercycler-epg'))}, 
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);
@@ -443,6 +444,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 		}else{
 			console.log("Impossible de calculer les volumes: valeurs manquantes OU concentration avec unité incorrecte");
 			getterEngageVol.assign(udtData, undefined);
+			//getterEngageVol.assign(udtData, 999);//DEBUG...
 		}
 	}
 	
