@@ -1158,7 +1158,8 @@ public class SubmissionServices {
 		experiment.traceInformation.setTraceInformation(user);
 		System.out.println("expCode =" + experiment.code);
 		String laboratoryRunCode = readSet.runCode;
-		
+		System.out.println("laboratoryRunCode =" + laboratoryRunCode);
+
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
 		Set <String> listKeysSampleOnContainerProperties = null;

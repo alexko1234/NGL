@@ -139,7 +139,6 @@ public class SubmissionWorkflowsHelper {
 				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
 	}
 
-
 	public void rollbackSubmission(Submission submission,ContextValidation validation){
 		// Si la soumission est connu de l'EBI on ne pourra pas l'enlever de la base :
 		if (StringUtils.isNotBlank(submission.accession)){
@@ -282,14 +281,12 @@ public class SubmissionWorkflowsHelper {
 				// Update objet readSet :
 
 				ReadSet readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, experiment.readSetCode);
-
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 						DBQuery.is("code", readset.code),
 						DBUpdate.set("submissionState.code", submission.state.code).set("traceInformation.modifyUser", validation.getUser()).set("traceInformation.modifyDate", new Date()));
 			}
 		}
 	}
-
 
 	public File createDirSubmission(Submission submission) throws SraException{
 		// Determiner le repertoire de soumission:
@@ -307,7 +304,7 @@ public class SubmissionWorkflowsHelper {
 		if (StringUtils.isNotBlank(syntProjectCode)){
 			syntProjectCode = syntProjectCode.replaceFirst("_", "");
 		}
-		 */			
+		*/			
 		//submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + st_my_date;
 		//submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + syntProjectCode + File.separator + "tmp_" + st_my_date;
 		submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.code; 
@@ -346,7 +343,6 @@ public class SubmissionWorkflowsHelper {
 
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, expElt.readSetCode);
 				Project p = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
-
 				System.out.println("exp = "+ expElt.code);
 				contextValidation.addKeyToRootKeyName("experiment");
 				contextValidation.addKeyToRootKeyName("run");
@@ -372,6 +368,20 @@ public class SubmissionWorkflowsHelper {
 					} else {				
 						if ("CCRT".equalsIgnoreCase(readSet.location)) {
 							rawData.location = readSet.location;
+/*
+					} else {
+						System.out.println("le fichier "+ fileCible +"n'existe pas au CNS");
+						if ("CNS".equalsIgnoreCase(readSet.location)) {
+							if (p.archive){
+								throw new SraException(rawData.relatifName + " n'existe pas sur les disques CNS, et Projet " + p.code + " avec archive=true, et readSet= " + readSet.code + " avec location = CNS");
+							} else {
+								throw new SraException(rawData.relatifName + " n'existe pas sur les disques CNS, et Projet " + p.code + " avec archive=false, et readSet " + readSet.code  + " localisée au CNS");
+							}
+						} else if ("CCRT".equalsIgnoreCase(readSet.location)) {
+							rawData.location = readSet.location;
+						} else {
+							throw new SraException(rawData.relatifName + " avec location inconnue => " + readSet.location);
+*/
 						}
 					}
 					if (rawData.extention.equalsIgnoreCase("fastq")) {
@@ -379,6 +389,11 @@ public class SubmissionWorkflowsHelper {
 					} else {
 						rawData.gzipForSubmission = false;
 						// verification dans check que md5 existe bien dans ce cas la.
+/*
+						if (StringUtils.isBlank(rawData.md5)){
+							contextValidation.addErrors("md5", " valeur à null alors que donnée deja zippée pour "+ rawData.relatifName);
+						}
+*/
 					}
 					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
 					// donnée est au CNS et si elle n'est pas à zipper
@@ -388,7 +403,6 @@ public class SubmissionWorkflowsHelper {
 						if(fileLien.exists()){
 							fileLien.delete();
 						}
-
 						System.out.println("fileCible = " + fileCible);
 						System.out.println("fileLien = " + fileLien);
 
@@ -509,7 +523,5 @@ public class SubmissionWorkflowsHelper {
 		}		
 
 	}
-
-
 
 }
