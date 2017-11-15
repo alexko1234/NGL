@@ -398,7 +398,7 @@ angular.module('home').controller('CaptureCtrl',['$scope', '$parse', '$http', 'a
 	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === 'bravo-workstation')}, 
+		isShow:function(){return (($scope.experiment.instrument.typeCode === 'bravo-workstation')|| ($scope.experiment.instrument.typeCode=== 'mastercycler-epg-and-bravows'))}, 
 		click: generateSampleSheet,
 		label:Messages("experiments.sampleSheet") 
 	}]);

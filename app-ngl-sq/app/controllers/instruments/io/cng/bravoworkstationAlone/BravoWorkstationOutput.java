@@ -1,6 +1,5 @@
-/* 06/09/2017 FDS: copy de l'epimotion .... */
-
-package controllers.instruments.io.cng.bravoworkstation;
+/* 14/11/2017 renommé pour etre commun aux differnent instrument hybrides incluant le bravoworkstation */
+package controllers.instruments.io.cng.bravoworkstationAlone;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +9,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
-import controllers.instruments.io.cng.bravoworkstation.tpl.txt.*;
+import controllers.instruments.io.cng.bravoworkstationAlone.tpl.txt.*;
 
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
