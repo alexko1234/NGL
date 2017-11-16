@@ -13,6 +13,7 @@ import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import views.html.experiments.details;
+import views.html.experiments.graph;
 import views.html.experiments.home;
 import views.html.experiments.listContainers;
 import views.html.experiments.search;
@@ -45,6 +46,10 @@ public class Experiments extends CommonController{
 	
 	public static Result listContainers(){
 		return ok(listContainers.render());
+	}
+	
+	public static Result graph(){
+		return ok(graph.render());
 	}
 	
 	/*This controller return a Result that contain the template, searching for the class that fit the most
@@ -129,6 +134,7 @@ public class Experiments extends CommonController{
   	        // Routes
   	    		controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.graph(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.listContainers(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.getTemplate(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),  	    		
@@ -148,6 +154,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentComments.delete(),
   	    		
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.get(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentReagents.list(),
   	    		
   	    		controllers.containers.api.routes.javascript.Containers.updateState(),

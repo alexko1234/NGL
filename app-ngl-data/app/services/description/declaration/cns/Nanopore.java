@@ -496,7 +496,7 @@ public class Nanopore extends AbstractDeclaration{
 		
 
 		ExperimentTypeNode etn = getExperimentTypeNodes("nanopore-end-prep").get(0);
-	    etn.previousExperimentType=getExperimentTypeNodes("ext-to-nanopore-process-dev-2","nanopore-fragmentation", "nanopore-frg","nanopore-dna-reparation","nanopore-pcr");
+	    etn.previousExperimentTypeNodes=getExperimentTypeNodes("ext-to-nanopore-process-dev-2","nanopore-fragmentation", "nanopore-frg","nanopore-dna-reparation","nanopore-pcr");
     
 
 //Just update previousExperimentNode 

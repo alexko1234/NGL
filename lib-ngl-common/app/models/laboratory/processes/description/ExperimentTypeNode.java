@@ -22,7 +22,8 @@ public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 	public boolean mandatoryTransfert=Boolean.FALSE;
 
 	public ExperimentType experimentType;
-	public List<ExperimentTypeNode> previousExperimentType=new ArrayList<ExperimentTypeNode>();;
+	public List<ExperimentTypeNode> previousExperimentTypeNodes=new ArrayList<ExperimentTypeNode>();;
+	public List<ExperimentType> previousExperimentTypes;
 	public List<ExperimentType> possibleQualityControlTypes=new ArrayList<ExperimentType>();
 	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();
 	public List<ExperimentType> possibleTransferts=new ArrayList<ExperimentType>();

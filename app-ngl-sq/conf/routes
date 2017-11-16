@@ -42,6 +42,7 @@ GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javas
 GET 	/experiments/:homecode/home																controllers.experiments.tpl.Experiments.home(homecode:java.lang.String)
 GET 	/experiments/:code																		controllers.experiments.tpl.Experiments.get(code:java.lang.String)
 GET		/tpl/experiments/details																controllers.experiments.tpl.Experiments.details()		
+GET		/tpl/experiments/graph																	controllers.experiments.tpl.Experiments.graph()		
 GET		/tpl/experiments/search-containers														controllers.experiments.tpl.Experiments.searchContainers()
 GET		/tpl/experiments/list-containers														controllers.experiments.tpl.Experiments.listContainers()
 GET		/tpl/experiments/get-template/:atomicType/:outputCategoryCode/:experimentCategoryCode/:experimentType			controllers.experiments.tpl.Experiments.getTemplate(atomicType:java.lang.String,outputCategoryCode:java.lang.String, experimentCategoryCode:java.lang.String, experimentType:java.lang.String)

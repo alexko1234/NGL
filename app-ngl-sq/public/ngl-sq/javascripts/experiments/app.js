@@ -18,6 +18,11 @@ angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 
 		controller : 'SearchReagentsCtrl'
 	});
 	
+	$routeProvider.when('/experiments/graph/home', {
+		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.graph().url},
+		controller : 'SearchGraphCtrl'
+	});
+	
 	$routeProvider.when('/experiments/:code', {
 		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.details().url},
 		controller : 'DetailsCtrl'

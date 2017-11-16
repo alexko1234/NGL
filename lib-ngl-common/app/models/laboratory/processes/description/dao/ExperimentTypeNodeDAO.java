@@ -60,8 +60,8 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 			insertSatellites(experimentTypes, value.id, false);
 		}
 
-		if(value.previousExperimentType != null && value.previousExperimentType.size() > 0){
-			insertPrevious(value.previousExperimentType, value.id, false);
+		if(value.previousExperimentTypeNodes != null && value.previousExperimentTypeNodes.size() > 0){
+			insertPrevious(value.previousExperimentTypeNodes, value.id, false);
 		}
 		
 		Logger.debug("saveExperimentTypeNode : "+ value.code);
@@ -131,7 +131,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 	  */
 	@Override
 	public void update(ExperimentTypeNode etn) throws DAOException {
-		insertPrevious(etn.previousExperimentType,etn.id,false);
+		insertPrevious(etn.previousExperimentTypeNodes,etn.id,false);
 		//throw new UnsupportedOperationException();
 	}
 
