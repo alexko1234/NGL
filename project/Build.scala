@@ -45,14 +45,16 @@ object ApplicationBuild extends Build {
 	val libFrameworkWebVersion = "1.1"    + distSuffix
 
 	// IG libraries
-  val ceaAuth     = "fr.cea.ig.modules" %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
-	val ceaSpring   = "fr.cea.ig"         %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
-	val ceaMongo    = "fr.cea.ig"         %% "mongodbplugin"      % "2.6-1.7.3-SNAPSHOT"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
+	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
+	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions
-	val postgresql  = "postgresql"         % "postgresql"         % "8.3-603.jdbc4"  
-  val commonsLang = "commons-lang"       % "commons-lang"       % "2.4"
-  val jsMessages  = "org.julienrf"      %% "play-jsmessages"    % "3.0.0" 
-  val fest        = "org.easytesting"    % "fest-assert"        % "1.4" % "test"
+	val postgresql  = "postgresql"           % "postgresql"         % "8.3-603.jdbc4"  
+  val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
+  val jsMessages  = "org.julienrf"        %% "play-jsmessages"    % "3.0.0" 
+  val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
+  // val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.2.2"
+  val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
 
 	override def settings = super.settings ++ Seq(
 		EclipseKeys.skipParents in ThisBuild := false,
@@ -75,10 +77,10 @@ object ApplicationBuild extends Build {
 	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("ngl.test.conf.dir")))
 	      else
 	        Seq()
-	  val tev1 = if (System.getProperty("NGL_CONF_TEST_DIR") != null)
+	  val tev1 = /*if (System.getProperty("NGL_CONF_TEST_DIR") != null)
 	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("NGL_CONF_TEST_DIR")))
 	      else
-	        Seq()
+	        */Seq()
 	  
 	  val globSettings = Seq(
 	    // -- Scala compilation options are not defined as there are no scala sources
@@ -140,9 +142,9 @@ object ApplicationBuild extends Build {
 		  ceaSpring,
 		  jsMessages,
 		  commonsLang,
-		  // ws,
+			fest,
+		  jtds,
 		  "mysql"                % "mysql-connector-java"      % "5.1.18",
-		  "net.sourceforge.jtds" % "jtds"                      % "1.2.2",
 		  "net.sf.opencsv"       % "opencsv"                   % "2.0",
 		  "commons-collections"  % "commons-collections"       % "3.2.1",
 		  "org.springframework"  % "spring-jdbc"               % "4.0.3.RELEASE",		
@@ -177,8 +179,7 @@ object ApplicationBuild extends Build {
 		val nglbiDependencies = Seq(
 			javaCore, 
 			javaJdbc,
-			postgresql,
-			fest
+			postgresql
 		)
 		
 		val nglsqDependencies = Seq(
@@ -207,7 +208,6 @@ object ApplicationBuild extends Build {
 	  val nglsubDependencies = Seq(
 	    javaCore, 
 	    javaJdbc,
-	    // fest,
 	    "xerces" % "xercesImpl" % "2.8.0"
   	)
 
@@ -296,7 +296,7 @@ object ApplicationBuild extends Build {
     // (resourceDirectory.in(Test)).<<=(baseDirectory.value./("conftest"))
     // resourceDirectory.in(Test).:=(baseDirectory.value./("conftest"))
     resourceDirectory in Test := baseDirectory.value / "conftest"
-  ).dependsOn(nglframeworkweb,nglPlayMigration)
+  ).dependsOn(nglframeworkweb,nglPlayMigration, nglTesting % "test->test")
 
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := biVersion,
