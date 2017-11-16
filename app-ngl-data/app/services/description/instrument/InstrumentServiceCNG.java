@@ -342,6 +342,30 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
+		// 16/11/2017 NGL-1691 ajout "Covaris LE220 + Bravo Workstation" 
+		// Covaris 2 ; ET Bravo Workstation 1, 2 et 3
+		l.add(newInstrumentUsedType("Covaris LE220 + Bravo WS", "covaris-le220-and-bravows", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndBravoWsProperties(), 
+				getInstruments(
+						createInstrument("covaris2-and-bravows1", "Covaris 2 / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
+						createInstrument("covaris2-and-bravows2", "Covaris 2 / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("covaris2-and-bravows3", "Covaris 2 / Bravo Workstation 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate" }), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+		
+		
+		// 16/11/2017 NGL-1691 ajout "Covaris E220 + Bravo Workstation"
+		// Covaris 3 ; ET Bravo Workstation 1, 2 et 3
+		l.add(newInstrumentUsedType("Covaris E220 +  Bravo WS", "covaris-e220-and-bravows", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndBravoWsProperties(), 
+				getInstruments(
+						createInstrument("covaris3-and-bravows1", "Covaris 3 / Bravo Workstation 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
+						createInstrument("covaris3-and-bravows2", "Covaris 3 / Bravo Workstation 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("covaris3-and-bravows3", "Covaris 3 / Bravo Workstation 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate" }), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+		
+		
 		// FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot  
 		//  23/01/2017 les cbots ancien modele n'existent plus => desactiver ??? on ne peut plus faire de recherche !!!
 		l.add(newInstrumentUsedType("Janus + cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
@@ -590,7 +614,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
-                null, "single",null,true, null,null));
+										null, "single",null,true, null,null));
 
 		return l;
 	}
@@ -600,7 +624,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         // 18/07/2017 correction !!! nbCycles => pcrCycleNumber		
 		
 		l.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-                null, "single",null,true, null,null));
+                						null, "single",null,true, null,null));
 
 		return l;
 	}
@@ -610,7 +634,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 				
 		l.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-                null, "single",null,true, null,null));
+                						null, "single",null,true, null,null));
 
 		return l;
 	}
@@ -670,7 +694,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getScicloneNGSXProperties());
 		
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
-				null, null, null, null, "single", null, true ,null, null));
+										null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -681,16 +705,32 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// 18/07/2017 aussi utilise en Fragmentation/capture !!!
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-                newValues("PCR FREE PROD NGS FINAL",
-                		  "SureSelect96 final"),  
-                "single", null, false ,null, null));
+                						newValues("PCR FREE PROD NGS FINAL",
+                								  "SureSelect96 final"),  
+                						"single", null, false ,null, null));
 
 		l.addAll(getScicloneNGSXProperties());
 		
 		// optionnel
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
-				null, null, null, null, "single", null, true ,null, null));
+										null, null, null, null, "single", null, true ,null, null));
 		return l;
+	}
+	// FDS 16/11/2017 NLG-1691: ajout
+	//  Programme Covaris (obligatoire) : SureSelect96 final (menu déroulant avec juste cette valeur)
+	//  Programme Bravo WS : saisie libre NON obligatoire
+	private static List<PropertyDefinition> getCovarisAndBravoWsProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+                						newValues( "SureSelect96 final"),  
+                						"single", null, false ,null, null));
+		
+		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
+				null, null, null , null, "single", null, true ,null, null));
+		
+		return l;
+		
 	}
 	
 	//FDS 29/01/2016 ajout Janus -- JIRA NGL-894 
@@ -700,10 +740,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//FDS 05/08/2016 le Janus est utilisé dans certaines experiences ou on ne veut pas tracer le programme => rendre cette propriété non obligatoire !
 		//FDS 25/10/2016 -- NGL-1025 : nouvelle liste (!! pas de contextualisation, tous les programmes seront listés dans toutes les experiences)
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
-				newValues("programme 1_normalisation",    // normalization
-						  "1_HiseqCluster_Normalisation_V0",
-						  "1_HiseqCluster_Normalisation_gros_vol_tris"), 
-				"single", null, false ,null, null));
+										newValues("programme 1_normalisation",    // normalization
+												  "1_HiseqCluster_Normalisation_V0",
+												  "1_HiseqCluster_Normalisation_gros_vol_tris"), 
+										"single", null, false ,null, null));
 		
 		return l;
 	}
@@ -711,17 +751,20 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	//FDS 22/03/2016 ajout Janus+cbot --JIRA NGL-982
 	//    17/01/2017 numérotation des propriétés;
-	 private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
+	private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
+				 						newValues("Clusterstripprepworklist"), 
+				 						"single", 40, false ,null, null));
 		
 		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				newValues("1","2","3","4"), "single", 50, true ,null, null));
+										newValues("1","2","3","4"), 
+										"single", 50, true ,null, null));
 		
         l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
-				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true , null, null));
+        								Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), 
+        								"single", 2, true , null, null));
 				
 		l.addAll(getCBotProperties());
 		
@@ -736,25 +779,26 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 			
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
+				 						newValues("Clusterstripprepworklist"), "single", 40, false ,null, null));
 		/* 
-		         newValues("Clusterstripprepworklist","2_HiseqCluster_ClusterStripPrep_worklist_US_plaque"), "single", 40, false ,null, null));
+		         						newValues("Clusterstripprepworklist",
+		         						"2_HiseqCluster_ClusterStripPrep_worklist_US_plaque"), "single", 40, false ,null, null));
 		*/
 		//FDS 04/08/2017: evolution du janus=> passer a 6 strips.
 		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				newValues("1","2","3","4","5","6"), "single", 50, true ,null, null));
+										newValues("1","2","3","4","5","6"), "single", 50, true ,null, null));
 
 		//FDS 04/08/2017: evolution du janus=> passer a 8 sources
 	    l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
-				 Arrays.asList(newValue("1", "Source 1"), 
-						       newValue("2", "Source 2"), 
-						       newValue("3", "Source 3"),
-						       newValue("4", "Source 4"),
-						       newValue("5", "Source 5"), 
-						       newValue("6", "Source 6"),
-						       newValue("7", "Source 7"),
-						       newValue("8", "Source 8")), 
-				"single", 2, true , null, null));
+										 Arrays.asList(newValue("1", "Source 1"), 
+												       newValue("2", "Source 2"), 
+												       newValue("3", "Source 3"),
+												       newValue("4", "Source 4"),
+												       newValue("5", "Source 5"), 
+												       newValue("6", "Source 6"),
+												       newValue("7", "Source 7"),
+												       newValue("8", "Source 8")), 
+										"single", 2, true , null, null));
 					
 	    l.addAll(getCBotV2Properties());
 			
@@ -767,9 +811,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 			// propriete obligatoire ou pas ??????
 			// liste des programmes pas encore definie
 			l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,
-					newValues("programme 1",  
-							  "---"),                         // ajouté pour éviter selection par defaut
-							  "single", null, false ,null, null));
+											newValues("programme 1",  
+													  "---"),                         // ajouté pour éviter selection par defaut
+											"single", null, false ,null, null));
 			return l;
 	} 
 	 
@@ -778,7 +822,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Secteur Plaque 96","sector96", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null,
-				newValues("1-48","49-96"), null, null , null, "single", null, false ,null, null));
+										newValues("1-48","49-96"), null, null , null, 
+										"single", null, false ,null, null));
 		
 		return l;
 	}
@@ -790,11 +835,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		//Mastercycler
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 
 		//Zephyr
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -804,16 +849,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		//Mastercycler
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 
-		//Bravo 
-		// a voir si necessaire...
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
-				null, null, null , null, "single", null, true ,null, null));
-		
+										null, null, null , null, "single", null, true ,null, null));
+		 
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 		
 		return l;
 	}
@@ -824,16 +867,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		//Mastercycler Nexus
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 
-		//Bravo 
-		// a voir si necessaire...
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 		
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -843,7 +884,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// propriété "Programme Bravo WS" en saisie libre, non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
-				null, null, null , null, "single", null, true ,null, null));
+										null, null, null , null, "single", null, true ,null, null));
 		
 		return l;
 	}
@@ -855,8 +896,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience...
 		//14 03 essayer ne ne mettre obligatoire qu'a 'F' ??????? =>pire
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
-					newValues("1","2","3","4","5","6","7","8"), 
-					"single",23, true, null,null));
+										newValues("1","2","3","4","5","6","7","8"), 
+										"single",23, true, null,null));
 
 		return l;
 	}
@@ -871,8 +912,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// reunion avec Marc23/03/2017: la puce  HS n' a que 11 positions utilisable mais les puces 1K, 12K en ont 12=> ajouter position 12
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
-					newValues("1","2","3","4","5","6","7","8","9","10","11","12"), 
-					"single", 11, true, null,null));
+										newValues("1","2","3","4","5","6","7","8","9","10","11","12"), 
+										"single", 11, true, null,null));
 		
 		return l;
 	}
@@ -970,7 +1011,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		instruments.add(createInstrument("HISEQ8", "HISEQ8", null, true, "/env/ig/atelier/illumina/cng/HISEQ8/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
-
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
@@ -980,10 +1020,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H3", true, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
-	
-	
-	
-	
 	
 	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
 	private static List<Instrument> getInstrumentMKIB() throws DAOException {

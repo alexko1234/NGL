@@ -338,7 +338,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsFragmentation(),
 					getInstrumentUsedTypes("covaris-e220-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx",
-							               "covaris-e220","covaris-le220"),                                 // ajoutés 29/08/2017
+							               "covaris-e220","covaris-le220",                                 // ajoutés 29/08/2017
+							               "covaris-e220-and-bravows","covaris-le220-and-bravows"),        // ajoutés 16/11/2017
 							               
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -353,8 +354,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 						
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
-			//    09/11/2017 NGL-1691: renommage label; 15/11/2017 ajout "bravows-and-mastercycler-epg" ( ce n'est pas une erreur: bravows d'abord)
-			l.add(newExperimentType("Capture & wash (post)","capture",null,710,
+			//    09/11/2017 NGL-1691: renommage label ( ajout wash) ; 15/11/2017 ajout "bravows-and-mastercycler-epg"
+			//    16/11/2017 NGL-1691: renommage label ( ajout Hybridation)
+			l.add(newExperimentType("Hybridation, capture & wash (post)","capture",null,710,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
 					getInstrumentUsedTypes("bravo-workstation",
