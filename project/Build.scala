@@ -185,8 +185,7 @@ object ApplicationBuild extends Build {
 		val nglbiDependencies = Seq(
 			javaCore, 
 			javaJdbc,
-			postgresql,
-			fest
+			postgresql
 		)
 		
 		val nglsqDependencies = Seq(

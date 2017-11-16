@@ -34,7 +34,7 @@ public class DescriptionHelper {
 
 	/*public static void _initInstitute(){
 		institute = null;
-	}*/
+	}
 
 	public static List<String> getInstitute() {
 		if (institute == null) {
