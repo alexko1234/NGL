@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,11 +68,6 @@ public class DevAppTesting {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(DevAppTesting.class);
 	
-	// static GuiceApplicationBuilder applicationBuilder;
-	/**
-	 * Application singleton instance.
-	 */
-	private static Application application;
 	
 	private static String testTimeKey = null;
 	
@@ -97,18 +93,32 @@ public class DevAppTesting {
 	 * @param name name of the resource to find
 	 * @return     full path to the found file
 	 */
+	// TODO: fix resource lookup
 	public static String resourceFileName(String name) {
-		URL resource = DevAppTesting.class.getClassLoader().getResource(name);
-		if (resource == null)
-			throw new RuntimeException("could not locate resource '" + name + "' using classloader");
 		try {
-			File confFile = new File(resource.toURI());
-			return confFile.toString();
-		} catch (Exception e) {
-			throw new RuntimeException("resource " + resource + " cannot be converted to File",e);
+		List<URL> resources = Collections.list(DevAppTesting.class.getClassLoader().getResources(name));
+		if (resources.size() == 0)
+			throw new RuntimeException("could not locate resource '" + name + "' using classloader");
+		for (URL url : resources) {
+			try {
+				logger.info("trying to load " + name + " from " + url);
+				File file = new File(url.toURI());
+				return file.toString();
+			} catch (Exception e) {
+				// throw new RuntimeException("resource " + resources.get(0) + " cannot be converted to File",e);
+			}
 		}
+		} catch (IOException e) {
+			throw new RuntimeException("classloader get resource failed",e);
+		}
+		throw new RuntimeException("resource could not be loaded '" + name + "'");
 	}
 	
+	private static GuiceApplicationBuilder applicationBuilder;
+	/*
+	 * Application singleton instance.
+	 */
+	// private static Application application;
 	/**
 	 * DEV application singleton instance. This does not sets the play global application
 	 * instance. Actual configuration should be done using an application specifc tag that
@@ -119,15 +129,34 @@ public class DevAppTesting {
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
 	public static Application devapp(String appConfFile, String logConfFile) {
-		if (application == null) {
-			System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
+		// if (application == null) {
+		if (applicationBuilder == null) {
+			try {
+			File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
+			// System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
+			System.setProperty("config.file", unfragedConf.toString());
 			System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
+			if (false) {
+			logger.debug("conn " + resourceFileName("jconn4.jar"));
+			try {
+			logger.debug("sybase driver " + DevAppTesting.class.getClassLoader().loadClass("com.sybase.jdbc4.jdbc.SybDriver").getName());
+			} catch (Exception e) {
+				throw new RuntimeException("sybdriver",e);
+			}
+			}
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
-		    application = applicationBuilder.build();
+			applicationBuilder = new GuiceApplicationBuilder().in(env);
+			} catch (IOException e) {
+				throw new RuntimeException("application build init failed",e);
+			}
+			// GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+			// Application builder runs the db connection pool manager.
+			//throw new RuntimeException("abort application creation");
+		    // application = applicationBuilder.build();
 		}
-		return application;
+		// return application; //Builder.build();
+		return applicationBuilder.build();
 	}
 		
 	/**
@@ -287,3 +316,76 @@ public class DevAppTesting {
 	}
 	
 }
+
+/**
+ * Fragmeneted configuration loading so that configuration changes are done in a fragment
+ * and then propragated to all the including configuration files.
+ * 
+ * @author vrd
+ *
+ */ 
+class FragmentedConfiguration {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(FragmentedConfiguration.class);
+	
+	private static Pattern includePat = Pattern .compile("@include\\s+(\\S+)\\s*");
+	
+	public static File file(String name) throws IOException {
+			// Load the main fragment, should check that the name ends with ".frag"
+			File main = new File(DevAppTesting.resourceFileName(name));
+			// Load the file and build the target
+			// FileReader r = new FileReader(main);
+			// StringBuilder out = new StringBuilder();
+			FragmentedConfiguration fc = new FragmentedConfiguration();
+			fc.include(main);
+			String text = fc.text();
+			// System.out.println(out.toString());
+			// Generate tmp file with givne content
+			String cleanName = main.getName().replace(".frag", "");
+			File generated = new File(System.getProperty("java.io.tmpdir"),cleanName);
+			logger.debug("generating file '" + generated + "'");
+			FileWriter f = new FileWriter(generated);
+			f.append(text);
+			f.close();
+			return generated;
+	}
+
+	private StringBuilder out;
+	
+	public FragmentedConfiguration() {
+		out = new StringBuilder();
+	}
+	
+	public void include( File f) throws IOException {
+		StringBuilder b = out;
+		Pattern p = includePat; // Pattern .compile("@include\s+(\S+)\s*");
+		logger.debug("loading fragment '" + f + "'");
+		b.append("# including --------- ");
+		b.append(f);
+		b.append('\n');
+		BufferedReader r = new BufferedReader(new FileReader(f));
+		String line;
+		while ((line = r.readLine()) != null) {
+			Matcher m = p.matcher(line);
+			if (m.matches()) {
+				String include = m.group(1);
+				File includedFile = new File(f.getParent(),include);
+				include(new File(f.getParent(),include));
+			} else {
+				b.append(line);
+				b.append('\n');
+			}
+		}
+		r.close();
+		b.append("# end --------------- ");
+		b.append(f);
+		b.append('\n');
+		logger.debug("loaded fragment '" + f + "'");
+	}
+	public String text() {
+		return out.toString();
+	}
+}
+
+
+
