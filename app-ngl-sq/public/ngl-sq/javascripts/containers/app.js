@@ -17,7 +17,7 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 	});
 	
 	$routeProvider.when('/containers/:code', {
-		templateUrl : '/tpl/containers/details',
+		templateUrl : jsRoutes.controllers.containers.tpl.Containers.details().url,
 		controller : 'DetailsCtrl'
 	});
 	
