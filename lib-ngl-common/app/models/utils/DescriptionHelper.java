@@ -14,9 +14,9 @@ public class DescriptionHelper {
 
 	private static List<String> institute;
 
-	/*public static void _initInstitute(){
+	public static void initInstitute(){
 		institute = null;
-	}*/
+	}
 
 	public static List<String> getInstitute() {
 		if (institute == null) {

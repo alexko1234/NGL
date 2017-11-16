@@ -39,22 +39,27 @@ public class TaxonomyServices {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(TaxonomyServices.class);
 	
-	private static String URLNCBI = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&retmote=xml";
-
+	// private static String URLNCBI = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&retmote=xml";
+	
+	private static String URLNCBI = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&retmote=xml";
+	
 	// public static Promise<NCBITaxon> getNCBITaxon(String taxonCode) {
 	public static CompletionStage<NCBITaxon> getNCBITaxon(String taxonCode) {
 		if (taxonCode != null) {
-			logger.debug("Get taxo info for code : "+taxonCode);
+			logger.debug("Get taxon info for code : "+taxonCode);
 			NCBITaxon taxon = getObjectInCache(taxonCode);
 			if (null == taxon) {
 				// Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
 				// CompletionStage<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
-				CompletionStage<WSResponse> homePage = ws().url(URLNCBI+"&id="+taxonCode).get();
+				String url = URLNCBI + "&id=" + taxonCode;
+				logger.debug("accessing taxon " + url);
+				CompletionStage<WSResponse> homePage = ws().url(url).get();
 				// Promise<NCBITaxon> xml = homePage.map(response -> {
 				CompletionStage<NCBITaxon> xml = homePage.thenApplyAsync(response -> {
 					DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 					try {
 						DocumentBuilder db = dbf.newDocumentBuilder();
+						// logger.debug("read : " + response.getBody());
 						Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
 						NCBITaxon newTaxon = new NCBITaxon(taxonCode, doc);
 						setObjectInCache(newTaxon, taxonCode);
@@ -103,7 +108,7 @@ public class TaxonomyServices {
 	
 	@Deprecated
 	public static String getTaxonomyInfo(String taxonCode, String expression) throws XPathExpressionException {
-		if (taxonCode!=null && expression!=null) {
+		if (taxonCode != null && expression != null) {
 			logger.debug("Get taxo info for "+expression+" for taxon "+taxonCode);
 			/*Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
 			Promise<Document> xml = homePage.map(response -> {
