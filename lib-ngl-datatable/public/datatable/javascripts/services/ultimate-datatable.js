@@ -2351,15 +2351,21 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                 	header = that.config.messages.transformKey(header);
                                 }
                                 
-                                if (that.isGroupActive()) {
+                                if (that.isGroupActive() && column.property!=that.config.group.by.property) {
                                     if (column.groupMethod === "sum") {
                                         header = header + this.messages.Messages('datatable.export.sum');
                                     } else if (column.groupMethod === "average") {
                                         header = header + this.messages.Messages('datatable.export.average');
                                     } else if (column.groupMethod === "unique") {
                                         header = header + this.messages.Messages('datatable.export.unique');
-                                    } else if (column.groupMethod === "countDistinct") {
+                                    } else if (column.groupMethod === "countDistinct" || column.groupMethod === "count:true") {
                                         header = header + this.messages.Messages('datatable.export.countDistinct');
+                                    } else if (column.groupMethod === "count" || column.groupMethod =="count:false" ) {
+                                            header = header + this.messages.Messages('datatable.export.count');
+                                    } else if (column.groupMethod === "collect" || column.groupMethod === "collect:false") {
+                                        header = header + this.messages.Messages('datatable.export.collect');
+                                    } else if (column.groupMethod === "collect:true") {
+                                        header = header + this.messages.Messages('datatable.export.collectDistinct');
                                     }
                                 }
                                 lineValue = lineValue + header + delimiter;
@@ -4015,7 +4021,10 @@ factory('udtI18n', [function() {
 							"datatable.export.sum" : "(Somme)",
 							"datatable.export.average" : "(Moyenne)",
 							"datatable.export.unique" :"(Valeur uniq.)",
-							"datatable.export.countDistinct" :"(Nb. distinct d'occurence)",
+							"datatable.export.count" : "(Nb. valeurs)",
+							"datatable.export.countDistinct" :"(Nb. valeurs diff\u00e9rentes)",
+							"datatable.export.collect" :"(Liste valeurs)",
+							"datatable.export.collectDistinct" :"(Liste valeurs diff\u00e9rentes)",
 							"datatable.export.yes" : "Oui",
 							"datatable.export.no" : "Non",
 							"datatable.button.group" : "Grouper / D\u00e9grouper",
@@ -4052,7 +4061,10 @@ factory('udtI18n', [function() {
 							"datatable.export.sum" : "(Sum)",
 							"datatable.export.average" : "(Average)",
 							"datatable.export.unique" :"(Single value)",
+							"datatable.export.count" : "(Nb. of values)",
 							"datatable.export.countDistinct" :"(Num. of distinct occurrence)",
+							"datatable.export.collect" :"(List of values)",
+							"datatable.export.collectDistinct" :"(List of different values)",
 							"datatable.export.yes" : "Yes",
 							"datatable.export.no" : "No",
 							"datatable.button.group" : "Group / Ungroup",
@@ -4089,7 +4101,10 @@ factory('udtI18n', [function() {
 							"datatable.export.sum": "(Som)",
 							"datatable.export.average": "(Gemiddeld)",
 							"datatable.export.unique":"(Enkele waarde)",
+							"datatable.export.count" : "(Aantal waarden)",
 							"datatable.export.countDistinct": "(Aantal unieke waarden)",
+							"datatable.export.collect" :"(Lijst met waarden)",
+							"datatable.export.collectDistinct" :"(Lijst met verschillende waarden)",
 							"datatable.export.yes": "Ja",
 							"datatable.export.no": "Nee",
 							"datatable.button.group": "Groeperen / Degroeperen",

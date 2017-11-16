@@ -80,6 +80,9 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			hide:{
 				active:true
 			},
+			exportCSV:{
+				active:true
+			},
 			messages:{active:true}
 	};
 	
