@@ -395,18 +395,19 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		var allSeries = [];
 		
 		if(dataLane.dataRead1.length>0){
-			allSeries.push({name:'read1',data:dataLane.dataRead1,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
+			allSeries.push({name:'read1',data:dataLane.dataRead1});
 		}
 		if(dataLane.dataRead2.length>0){
-			allSeries.push({name:'read2',data:dataLane.dataRead2,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
+			allSeries.push({name:'read2',data:dataLane.dataRead2});
 		}
 		if(dataLane.dataDefault.length>0){
-			allSeries.push({name:'default',data:dataLane.dataDefault,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
+			allSeries.push({name:'default',data:dataLane.dataDefault});
 		}
 		
 		var chart = {
 
 			chart : {
+				type: 'scatter',
 				zoomType : 'x',
 				height : 770
 			},
@@ -427,6 +428,30 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				},
 				tickInterval : 2,
 			},
+			plotOptions: {
+		        scatter: {
+		            marker: {
+		                radius: 3,
+		                states: {
+		                    hover: {
+		                        enabled: true,
+		                        lineColor: 'rgb(100,100,100)'
+		                    }
+		                }
+		            },
+		            states: {
+		                hover: {
+		                    marker: {
+		                        enabled: false
+		                    }
+		                }
+		            },
+		            tooltip: {
+		                headerFormat: '<b>{series.name} </b><br>',
+		                pointFormat: '{point.y}'
+		            }
+		        }
+		    },
 			series : allSeries,
 		}
 		return chart;
@@ -470,7 +495,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		    plotOptions: {
 		        scatter: {
 		            marker: {
-		                radius: 5,
+		                radius: 3,
 		                states: {
 		                    hover: {
 		                        enabled: true,
