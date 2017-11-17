@@ -567,6 +567,17 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
 
+# schema-processus CNG
+docs.schema-processus.chromiumWG=Schéma processus Chromium WG
+docs.schema-processus.ExpSatellites=Schéma processus Exp satellites uniquement
+docs.schema-processus.RNAseq=Schéma processus RNAseq
+docs.schema-processus.WGNANO=Schéma processus WG NANO
+docs.schema-processus.WGPCRfree=Schéma processus WG PCR free
+docs.schema-processus.Capture=Schémas processus CAPTURE
+docs.schema-processus.LibSeqIllumina=Schémas processus Librairies pour séquençage Illumina
+docs.schema-processus.repriseNorm=Schémas processus reprise débutant par Normalisation
+docs.schema-processus.sequencing=Schémas processus Séquençage
+
 docs.illumina=Séquençage Illumina
 docs.nanopore=Séquençage Nanopore
 docs.opticalmapping.opgen=Optical mapping Opgen

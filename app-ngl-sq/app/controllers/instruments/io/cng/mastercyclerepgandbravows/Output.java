@@ -1,5 +1,5 @@
-/* 14/11/2017 code deporté dans bravoworkstationAlone */
-package controllers.instruments.io.cng.bravoworkstation;
+/* 14/11/2017 FDS: copy du bravoworkstation*/
+package controllers.instruments.io.cng.mastercyclerepgandbravows;
 
 import controllers.instruments.io.cng.bravoworkstationAlone.BravoWorkstationOutput;
 

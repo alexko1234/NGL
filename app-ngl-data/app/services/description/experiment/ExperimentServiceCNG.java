@@ -338,24 +338,29 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsFragmentation(),
 					getInstrumentUsedTypes("covaris-e220-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx",
-							               "covaris-e220","covaris-le220"),                                 // ajoutés 29/08/2017
+							               "covaris-e220","covaris-le220",                                 // ajoutés 29/08/2017
+							               "covaris-e220-and-bravows","covaris-le220-and-bravows"),        // ajoutés 16/11/2017
 							               
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
+			//    09/11/2017 NGL-1691: ajout type Bravo WorkStation
 			l.add(newExperimentType("Sample prep (pré-capture)","sample-prep",null,660,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsSamplePrepCapture(),
-					getInstrumentUsedTypes("sciclone-ngsx"),
+					getInstrumentUsedTypes("sciclone-ngsx","bravo-workstation"),
 					"OneToMany",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 						
 			//FDS 10/07/2017 NGL-1201: experiences transformation pour Capture (Sure Select implicite)
-			l.add(newExperimentType("Capture","capture",null,710,
+			//    09/11/2017 NGL-1691: renommage label ( ajout wash) ; 15/11/2017 ajout "bravows-and-mastercycler-epg"
+			//    16/11/2017 NGL-1691: renommage label ( ajout Hybridation)
+			l.add(newExperimentType("Hybridation, capture & wash (post)","capture",null,710,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsCapture(),
-					getInstrumentUsedTypes("bravo-workstation"),
+					getInstrumentUsedTypes("bravo-workstation",
+							               "bravows-and-mastercycler-epg"), 
 					"OneToOne",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -1313,12 +1318,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		// volume engagé editable et obligatoire, qté pas editable calculée en fonction volume engagé et pas sauvegardée
-		// 27/09/2016 ajout default value '25"
+		// 27/09/2016 ajout default value '25"; 09/11/2017 NGL-1691: supression valeur par defaut
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),
 				MeasureUnit.find.findByCode("µL"),
 				MeasureUnit.find.findByCode("µL"),
-				"single", 20, true, "25",null));
+				"single", 20, true, null, null));
 		
 		//OuputContainer 
 		// rien...??
@@ -1456,15 +1461,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("pb"),
 				"single", 16, true, null,null));
 		
-		return propertyDefinitions;
-		
+		return propertyDefinitions;	
 	}
 	
 	//FDS ajout 18/07/2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsSamplePrepCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		// pas de propriétés pour l'instant...
-
+		
+		// pas de propriétés pour l'instant..
 		return propertyDefinitions;
 	}
 	
@@ -1479,14 +1483,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	//FDS ajout 18/07//2017 NGL-1201
 	private List<PropertyDefinition> getPropertyDefinitionsCapture() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-			
+		
+		// FDS 09/11/2017 NGL-1691: ajout propriété de niveau Global (experiment) :Temps d'hybridation==hybridizationTime : saisie libre texte, non obligatoire
+		// que veut dire le parametre "position" pour les propriété de niveau Global ??
+		propertyDefinitions.add(newPropertiesDefinition("Temps d'hybridation", "hybridizationTime", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
+				null, "single",13,true,null,null));	
+		
 		//InputContainer
-		// pas editable=> calculé
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
 				MeasureUnit.find.findByCode("µL"), 
-				"single",10, false,null,null));
+				"single",10,false,null,null));          // pas editable=> calculé !
 		
 		// editable
 		propertyDefinitions.add(newPropertiesDefinition("Qté. engagée", "inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, null,
@@ -1495,17 +1503,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureUnit.find.findByCode("ng"),
 				"single",11,true,null,null));
 		
+		//OuputContainer 
 		// Liste; valeur par defaut= celle qui se trouve dans processus dans expectedBaits ?. PAS POSSIBLE!!!
 		// 31/08/2017 erreur de spec, mettre sur ContainerOut 
 		//            il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) ??????
 		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
 				null, null, null,
 				"single",12,true,"F",null));
-		
-		//OuputContainer 
 			
 		return propertyDefinitions;
-	
 	}
 	
 	//FDS ajout 18/07/2017 NGL-1201
