@@ -32,6 +32,7 @@ public class Input extends AbstractInput {
 	
    /* 25/10/2017 NGL-1326
     * Description du fichier a importer: fichier CSV ";"  delimité generé par le Logiciel LabX de Mettler Toledo 
+    * LabX fait lui meme des controles, donc certains cas ne doivent pas etre gérés ici: codes barres manquants ou mal formés...
     */
 
 	@Override
@@ -39,7 +40,7 @@ public class Input extends AbstractInput {
 		
 
 		//-1- Avant de commencer le parsing du fichier récupérer la liste des kits actifs / boites actives / reagents actifs pour le type d'expérience
-		Logger.info ("--------GET CATALOG INFO ("+experiment.typeCode+")----------");
+		Logger.debug ("--GET CATALOG INFO ("+experiment.typeCode+")--");
 		
 		List<KitCatalog> experimentKitList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
 				DBQuery.is("category", "Kit").and(DBQuery.is("active", true)).and(DBQuery.in("experimentTypeCodes", experiment.typeCode))).toList();
@@ -51,18 +52,17 @@ public class Input extends AbstractInput {
 		Map<String,String> boxCodeMap = new HashMap<String,String>(0);
 		
 		if ( experimentKitList.isEmpty() ) {
-			Logger.info ("PAS DE KIT ACTIF TROUVE");
 			contextValidation.addErrors("Erreur catalogue","Aucun kit actif n'est défini pour ce type d'expérience");
 			return experiment;
 		} else {
 			for(KitCatalog kit:  experimentKitList){
-				Logger.info ("KIT TROUVE : '"+kit.name + "'("+ kit.code+")");
+				//Logger.debug ("KIT TROUVE : '"+kit.name + "'("+ kit.code+")");
 				// trouver les boites de chacun des kits
 				List<BoxCatalog> kitBoxList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, 
 						DBQuery.is("category", "Box").and(DBQuery.is("active", true)).and(DBQuery.is("kitCatalogCode", kit.code))).toList();
 				
 				for(BoxCatalog box:  kitBoxList){
-					Logger.info (" >BOITE ACTIVE TROUVEE :'"+ box.name + "'("+box.code+")");
+					//Logger.debug (" >BOITE ACTIVE TROUVEE :'"+ box.name + "'("+box.code+")");
 					boxMap.put(box.name, box);
 					
 					// trouverles reactifs de chaque boite
@@ -70,10 +70,11 @@ public class Input extends AbstractInput {
                      		 DBQuery.is("category", "Reagent").and(DBQuery.is("active", true)).and(DBQuery.is("boxCatalogCode", box.code))).toList();
 					
 					for(ReagentCatalog reagent:  boxReagentList){
-						Logger.info ("  >>REACTIF ACTIF TROUVE :'"+reagent.name + "'("+reagent.code+ ")");
-						/*!! meme reactif peut exister dans 2 boites!!! => cle serait reagent.name/reagent.boxCatalogCode
+						//Logger.debug ("  >>REACTIF ACTIF TROUVE :'"+reagent.name + "'("+reagent.code+ ")");
+						/*!! si le meme reactif existe dans 2 boites pb !!=> la cle serait reagent.name/reagent.boxCatalogCode
 						     reagentMap.put(reagent.name+"/"+reagent.boxCatalogCode , reagent);
-						     mais ensuite lors de la recherche d'1 reagent ca complique....TODO ???
+						     mais ensuite lors de la recherche d'1 reagent ca complique. 
+						     CE CAS NE DOIT PAS EXISTER d'apres la prod (17/11/2017)
 						*/
 						reagentMap.put(reagent.name , reagent);
 					}
@@ -82,7 +83,7 @@ public class Input extends AbstractInput {
 		}
 		 
 		//-2- Parsing
-		Logger.info ("--------START PARSING----------");
+		Logger.debug ("--START PARSING--");
 		
 		byte[] ibuf = pfv.value;
 		InputStream is = new ByteArrayInputStream(ibuf);
@@ -113,7 +114,7 @@ public class Input extends AbstractInput {
 			// verifier la 1 ere ligne : doit etre "Compte rendu de séquençage"
 			if (n == 0) {
 				// verifier que c'est bien un fichier CSV ;delimited...
-				Logger.info ("ligne "+n+" nbre colonne="+cols.length);
+				//Logger.info ("ligne "+n+" nbre colonne="+cols.length);
 				/* marche pas....length=2 pour un fichier EXcel mais =1 pour un fichier CSV !!!!!!!
 				  if (cols.length != 15) {
 
@@ -136,27 +137,26 @@ public class Input extends AbstractInput {
 				if ( cols[0].trim().equals("HiSeq X Flow Cell")  ||  cols[0].trim().equals("HiSeq 3000/4000 PE Flow Cell")) {
 					// verifier le code flow cell
 					String flowcellId=cols[8].trim();
-					Logger.info ("flowcellId="+flowcellId);
+					//Logger.info ("flowcellId="+flowcellId);
 
 					if ( experiment.typeCode.equals("prepa-fc-ordered") || experiment.typeCode.equals("prepa-flowcell") ) {
-						//  propriete d'instrument ( ou container out)
+						// barcode FC dans propriete d'instrument ( ou container out)
 						if ( !experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
 						    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.");
 							break; // terminer
 						}
 					}
-					// depot sequenceur: container in
+					
 					if ( experiment.typeCode.equals("illumina-depot") ) {
-						//inputContainerSupportcodes
+						//barcode FC dans container ininputContainerSupportcodes
 						if ( ! experiment.inputContainerSupportCodes.contains(flowcellId) )  {
 						    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.=="+ experiment.inputContainerSupportCodes);
 							break; // terminer
 						}
 					}		
 				} else {	
-					Logger.info ("unsupported LabX file type...");
-					contextValidation.addErrors("Erreurs fichier","ligne 6 :'"+ cols[0].trim() + "' : type de fichier LabX non pris en charge.");
-					break; 
+					contextValidation.addErrors("Erreurs fichier","ligne 6 :'"+ cols[0].trim() + "': type de fichier LabX non pris en charge.");
+					break; // terminer
 				} 
 			}
 			
@@ -178,21 +178,19 @@ public class Input extends AbstractInput {
 					
 					if ( null == item){
 						// ignorer (ligne Code Barre ou ligne Résultat ou ...)
-						Logger.info ("skip line ("+ n +") :"+ cols[0].trim() );
+						//Logger.info ("skip line ("+ n +") :"+ cols[0].trim() );
 						n++;
 						continue;
 					} else {
 						String fileItemName=item[1].trim();
 						String fileItemCode=cols[8].trim();
 						
-						// code barre manquant ??  07/11/2017 F. Jobard dit pas possible, sinon fichier pas généré
-						
 						// Logger.info ("ligne "+ n +" chercher si :"+fileItemName+" est une boite OU un reactif actifs");		
 						//-1- chercher dans boxMap
 						if ( boxMap.containsKey(fileItemName) ){	
-							Logger.info (fileItemName+ " TROUVE DANS HASH BOX");
+							Logger.debug (fileItemName+ ": TROUVE DANS HASH BOX");
 							BoxCatalog bc= boxMap.get(fileItemName);
-							boxCodeMap.put(bc.code, fileItemCode+"_");// stocker le barcode de boite pour ses reagents plus tard...
+							boxCodeMap.put(bc.code, fileItemCode+"_"); // stocker le barcode de boite pour ses reagents plus tard...
 							
 							// construire un reagentUsed et l'ajouter a l'experiment
 							ReagentUsed ru=new ReagentUsed();  
@@ -204,97 +202,103 @@ public class Input extends AbstractInput {
 						    nbReagentsFound++;
 						    
 							//DEBUG
+						    /*
 							Logger.info("kitCatalogCode="+ru.kitCatalogCode);
 							Logger.info("boxCatalogCode="+ru.boxCatalogCode);
 							Logger.info("boxCode="+ ru.boxCode); 
+							*/
 						} 
 						//-2- chercher dans mapReagent
 						else if ( reagentMap.containsKey(fileItemName) ){	
-							Logger.info (fileItemName+ " TROUVE DANS HASH REAGENT");
+							Logger.debug (fileItemName+ ": TROUVE DANS HASH REAGENT");
 							ReagentCatalog rc= reagentMap.get(fileItemName);
 							
 							if (null == boxCodeMap.get(rc.boxCatalogCode)){
-							  // la boite de ce reactif n'est pas presente dans la section de declaration des boites !!!
-							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileItemName+"' not declared in file. (looking for:"+rc.boxCatalogCode+")");
-						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileItemName+ "' non trouvée dans le fichier.");
+							   /* la boite de ce reactif n'est pas presente dans la section de déclaration des boites !!!
+							    *  => mauvaise declaration du catalog
+							    *  => peut aussi arriver si un reactif apparait dans 2 boites actives: CE CAS NE DOIT PAS EXISTER d'apres la prod (17/11/2017)
+							    */	
+								contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boîte du réactif '"+ fileItemName+ "' non trouvée dans le fichier OU réactif trouvé dans plus d'une boîte.");
 							} 
 							// construire un reagentUsed et l'ajouter a l'experiment
 							ReagentUsed ru=new ReagentUsed();  
 							ru.kitCatalogCode=rc.kitCatalogCode; 
 						    ru.boxCatalogCode=rc.boxCatalogCode; 
-							ru.reagentCatalogCode=rc.code;
-							 
+							ru.reagentCatalogCode=rc.code; 
 							ru.boxCode=boxCodeMap.get(rc.boxCatalogCode); 
 							ru.code=fileItemCode+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 							// ru.description=....     // pas de description dans cette section du fichier...	
+							
 							experiment.reagents.add(ru); 
 							nbReagentsFound++;
 							
 							//DEBUG
+							/*
 							Logger.info("kitCatalogCode="+ru.kitCatalogCode);
 							Logger.info("boxCatalogCode="+ru.boxCatalogCode);
 							Logger.info("reagentCatalogCode="+ru.reagentCatalogCode);
 							Logger.info("boxCode="+ru.boxCode); 
 							Logger.info("code="+ ru.code); 
-							
+							*/
 						} else { 
-							Logger.info ("DEBUG line ("+ n +"): item <"+fileItemName+ ">PAS TROUVE DANS HASHREAGENT NI HASHBOX ...pour type experience en cours");
+							Logger.debug ("line ("+ n +"): item <"+fileItemName+ ">PAS TROUVE DANS HASHREAGENT NI HASHBOX ...pour type experience en cours");
 						}
 					}
 				} else {
 					// changement de section...
 					if ( !cols[1].trim().equals("Position") ){
-						Logger.info ("processing ligne "+ n +" section  position...");		
+						//Logger.info ("processing ligne "+ n +" section  position...");		
 						// reactifs en positions 1-->N
 						String fileReagentName=cols[2].trim();
 						
-						// nom du reactif manquant ?? 07/11/2017 F. Jobard dit pas possible, sinon fichier pas généré
-
 						// dans cette section ne doivent se trouver QUE des reactifs (pas de boites ni de kits)	=> chercher dans reagentMap
 						// Logger.info ("ligne "+ n+ " chercher si :<"+fileReagentName+"> est un reactif actif");
 						if (reagentMap.containsKey(fileReagentName) ){	
-							Logger.info (fileReagentName+" TROUVE DANS HASH REAGENT");
+							Logger.debug (fileReagentName+": TROUVE DANS HASH REAGENT");
 							ReagentCatalog rc= reagentMap.get(fileReagentName);
 							
 							if ( null == boxCodeMap.get(rc.boxCatalogCode)){
-							  // la boite de ce reactif n'est pas presente dans la section de déclaration des boites !!!
-							  Logger.info("ERROR line ("+ n +") reagent box of '"+fileReagentName+"' not declared in file.(looking for:"+rc.boxCatalogCode+")");
-						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boite du réactif '"+ fileReagentName+ "' non trouvée dans le fichier.");
+							  /* la boite de ce reactif n'est pas presente dans la section de déclaration des boites !!!
+							   *  => mauvaise declaration du catalog
+							   *  => peut aussi arriver si un reactif apparait dans 2 boites actives: CE CAS NE DOIT PAS EXISTER d'apres la prod (17/11/2017)
+							   */
+							  //Logger.info("ERROR line ("+ n +") reagent box of '"+fileReagentName+"' not declared in file.(looking for:"+rc.boxCatalogCode+")");
+						      contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": boîte du réactif '"+ fileReagentName+ "' non trouvée dans le fichier OU réactif trouvé dans plus d'une boîte.");
 							}
 							
 							String fileReagentCode = cols[5].trim();
-							// code barre reactif manquant + verifier que le code barre se termine par -<REACTIF> ; 07/11/2017 F.Jobard dit deja fait par LabX
-
 							//construire un reagent et l'ajouter a l'experiment
 							ReagentUsed ru=new ReagentUsed();  
 
 							ru.kitCatalogCode=rc.kitCatalogCode; 
 							ru.boxCatalogCode=rc.boxCatalogCode; 
-							ru.reagentCatalogCode=rc.code; 
-							    
+							ru.reagentCatalogCode=rc.code;    
 							ru.boxCode=boxCodeMap.get(rc.boxCatalogCode);  
 							ru.code=fileReagentCode+"_" ;    // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 							    
 							String fileInputReagentWeight = cols[6].trim();
 							String fileOutputReagentWeight = cols[11].trim();
 							String fileDiffReagentWeight = cols[15].trim();
-
+							// meme si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
 							ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
 							
 							experiment.reagents.add(ru);  
 							nbReagentsFound++;
 							
 							//DEBUG
+							/*
 							Logger.info ("kitCatalogCode="+ru.kitCatalogCode);
 							Logger.info ("boxCatalogCode="+ru.boxCatalogCode);
 							Logger.info ("reagentCatalogCode"+ru.reagentCatalogCode);
 							Logger.info ("boxCode="+ru.boxCode);
 							Logger.info ("code="+ru.code);
 							Logger.info ("description="+ ru.description);
+							*/
 						} 
-						else {
+						/*else {
 							Logger.info ("DEBUG line ("+ n +"): <"+fileReagentName+ "> PAS TROUVE DANS HASH REAGENT...de ce type d'experience"); 
 						}
+						*/
 					} 
 					// else = ligne position|nom du reactif...	
 				}
@@ -304,11 +308,11 @@ public class Input extends AbstractInput {
 		} //end while
 
 		reader.close();
-		Logger.info ("--------END PARSING----------");
+		Logger.debug ("--END PARSING--");
 		
-		//TEST
+		// Dans quel cas ca peut sortir ? Mauvais fichier LabX selectionné
 		if (nbReagentsFound==0 ) {
-			contextValidation.addErrors("Erreurs fichier","Aucun reactif trouvé pour ce type d'experience dans le fichier");
+			contextValidation.addErrors("Erreurs fichier","Aucun réactif trouvé dans le fichier pour ce type d'expérience.");
 		}
 		
 		return experiment;
