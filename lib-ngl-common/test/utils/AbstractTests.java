@@ -22,6 +22,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractTests {
 	
+	
 	// protected static FakeApplication app;
 	protected static Application app;
 	
@@ -48,7 +49,7 @@ public abstract class AbstractTests {
 	public static Application getFakeApplication(){
 		// return fakeApplication();
 		// throw new RuntimeException("fake application is not yet replaced");
-		return fr.cea.ig.play.test.DevAppTesting.devapp("conf/ngl-common-test.conf","conf/logger.xml");
+		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common-test.conf","logger.xml");
 	}
 	
 	public static <T extends DBObject> T saveDBOject(Class<T> type, String collectionName,String code)
