@@ -94,7 +94,7 @@ public class DevAppTesting {
 	}
 	
 
-	/**
+	/*
 	 * Get the full name of the file that mathces the given resource. 
 	 * @param name name of the resource to find
 	 * @return     full path to the found file
@@ -102,18 +102,18 @@ public class DevAppTesting {
 	// TODO: fix resource lookup
 	public static String resourceFileName(String name) {
 		try {
-		List<URL> resources = Collections.list(DevAppTesting.class.getClassLoader().getResources(name));
-		if (resources.size() == 0)
-			throw new RuntimeException("could not locate resource '" + name + "' using classloader");
-		for (URL url : resources) {
-			try {
-				logger.info("trying to load " + name + " from " + url);
-				File file = new File(url.toURI());
-				return file.toString();
-			} catch (Exception e) {
-				// throw new RuntimeException("resource " + resources.get(0) + " cannot be converted to File",e);
+			List<URL> resources = Collections.list(DevAppTesting.class.getClassLoader().getResources(name));
+			if (resources.size() == 0)
+				throw new RuntimeException("could not locate resource '" + name + "' using classloader");
+			for (URL url : resources) {
+				try {
+					logger.info("trying to load " + name + " from " + url);
+					File file = new File(url.toURI());
+					return file.toString();
+				} catch (Exception e) {
+					// throw new RuntimeException("resource " + resources.get(0) + " cannot be converted to File",e);
+				}
 			}
-		}
 		} catch (IOException e) {
 			throw new RuntimeException("classloader get resource failed",e);
 		}
@@ -147,30 +147,28 @@ public class DevAppTesting {
 		
 		if (application == null) {
 			try {
-			File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
-			// System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
-			System.setProperty("config.file", unfragedConf.toString());
-			System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
-			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
-			if (false) {
-			logger.debug("conn " + resourceFileName("jconn4.jar"));
-			try {
-			logger.debug("sybase driver " + DevAppTesting.class.getClassLoader().loadClass("com.sybase.jdbc4.jdbc.SybDriver").getName());
+				// File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
+				// String confFileName = resourceFileName(appConfFile);
+				String confFileName = appConfFile;
+				// String confFileName = "conf.play.frag";
+				logger .debug("using config file '" + confFileName + "'");
+				//logger.debug("config file name : " + confFileName + " " + resourceFileName(confFileName));
+				System.setProperty("config.resource", confFileName); // + ".frag")); // resourceFileName("conf/ngl-sq-test.conf"));
+				//System.setProperty("config.file", resourceFileName(confFileName));
+				//System.setProperty("config.file", unfragedConf.toString());
+				System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
+				System.setProperty("play.server.netty.maxInitialLineLength", "16384");
+				// TODO: use play.Mode.TEST
+				Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
+				GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+				application = applicationBuilder.build();
 			} catch (Exception e) {
-				throw new RuntimeException("sybdriver",e);
-			}
-			}
-			// TODO: use play.Mode.TEST
-			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
-			application = applicationBuilder.build();
-			} catch (IOException e) {
 				throw new RuntimeException("application build init failed",e);
 			}
 			// GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
 			// Application builder runs the db connection pool manager.
 			//throw new RuntimeException("abort application creation");
-		    //application = applicationBuilder.build();
+			//application = applicationBuilder.build();
 		}
 		// Register an aplication lifecycle cleaner.
 		application.injector().instanceOf(Cleaner.class);
@@ -351,13 +349,13 @@ public class DevAppTesting {
 	
 }
 
-/**
- * Fragmeneted configuration loading so that configuration changes are done in a fragment
+/*
+ * Fragmented configuration loading so that configuration changes are done in a fragment
  * and then propragated to all the including configuration files.
  * 
  * @author vrd
  *
- */ 
+ * 
 class FragmentedConfiguration {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(FragmentedConfiguration.class);
@@ -420,6 +418,7 @@ class FragmentedConfiguration {
 		return out.toString();
 	}
 }
+*/
 
 
 
