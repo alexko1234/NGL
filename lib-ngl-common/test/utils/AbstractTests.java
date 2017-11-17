@@ -31,13 +31,13 @@ public abstract class AbstractTests {
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
 		// System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-common-test.conf"));
 		app = getFakeApplication();
-		Helpers.start(app);
+		// Helpers.start(app);
 		DescriptionHelper.initInstitute();
 	}
 
 	@AfterClass
 	public  static void endTest() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		app = getFakeApplication();
+		// app = getFakeApplication();
 		Helpers.stop(app);
 		app.asScala().stop();
 		DescriptionHelper.initInstitute();
