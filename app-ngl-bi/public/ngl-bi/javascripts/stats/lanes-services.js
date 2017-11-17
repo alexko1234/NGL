@@ -165,7 +165,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		} ,
 		{  	"property":"lanes",
 			"render": function(value){
-			if(angular.isDefined(value)){
+			if(angular.isDefined(value) && angular.isDefined(value.lanes)){
 				var display = "";
 				var treatment = statsConfigs.treatment;
 				var valueColumn = statsConfigs.value;
@@ -235,6 +235,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	var readsetDatatable;
 	var charts = [];
 	var statsConfigs;
+	var propertyGroupGetter;
 
 	var generateCharts = function() {
 		readsetDatatable = datatable(datatableConfig);
@@ -275,24 +276,33 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		var data = readsetDatatable.getData();
 		//compute data
 		charts = [];
+		propertyGroupGetter = undefined;
 		if(readsetDatatable.config.group.by != undefined){
-			var propertyGroupGetter = readsetDatatable.config.group.by.property;
-			var groupGetter = $parse(propertyGroupGetter);
+			propertyGroupGetter = readsetDatatable.config.group.by.property;
 		}
 		
-		var mapSeriesLane = computeData(data);
+		var mapSeriesLane = undefined;
+		if(propertyGroupGetter!=undefined){
+			mapSeriesLane = computeDataGroup(data, propertyGroupGetter);
+		}else{
+			mapSeriesLane = computeData(data);
+		}
+		
 		for(var key of mapSeriesLane.keys()){
-			charts.push(getChart(mapSeriesLane.get(key)));
+			if(propertyGroupGetter!=undefined){
+				charts.push(getChartGroup(mapSeriesLane.get(key),propertyGroupGetter));
+			}else{
+				charts.push(getChart(mapSeriesLane.get(key)));
+			}
 		}
-		
+		console.log(charts);
 	};
+	
 	
 	var computeData = function(dataRun)
 	{
-		
 		var treatment = statsConfigs.treatment;
 		var value = statsConfigs.value;
-		
 		var dataSeries = new Map();
 		var newData = [];
 		for(var i=0; i<dataRun.length; i++){
@@ -306,33 +316,22 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 						dataRead1:[],
 						dataRead2:[],
 						dataDefault:[],
-						existRead1Value:false,
-						existRead2Value:false,
-						existDefaultValue:false
 					};
+					
+					var mapGroup = new Map();
+					
 					if(dataSeries.get(nbLane)!=null){
 						dataLane=dataSeries.get(nbLane);
 					}
-					
-					
 					if(dataRun[i].lanes[l].treatments[treatment] !=null){
 						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
-							dataLane.dataRead1.push([runCode,dataRun[i].lanes[l].treatments[treatment].read1[value].value]);
-							dataLane.existRead1Value=true;
-						}else{
-							dataLane.dataRead1.push([runCode,0]);
+							dataLane.dataRead1.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'}});
 						}
 						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
-							dataLane.dataRead2.push([runCode,dataRun[i].lanes[l].treatments[treatment].read2[value].value]);
-							dataLane.existRead2Value=true;
-						}else{
-							dataLane.dataRead2.push([runCode,0]);
+							dataLane.dataRead2.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'}});
 						}
 						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
-							dataLane.dataDefault.push([runCode,dataRun[i].lanes[l].treatments[treatment].default[value].value]);
-							dataLane.existDefaultValue=true;
-						}else{
-							dataLane.dataDefault.push([runCode,0]);
+							dataLane.dataDefault.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'}});
 						}
 						
 					}
@@ -343,17 +342,65 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		return dataSeries;
 	};
 	
+	var computeDataGroup = function(dataRun, propertyGroup)
+	{
+		var treatment = statsConfigs.treatment;
+		var value = statsConfigs.value;
+		var dataSeries = new Map();
+		var newData = [];
+		for(var i=0; i<dataRun.length; i++){
+			//get run code
+			var runCode = dataRun[i].code;
+			var group = dataRun[i][propertyGroup];
+			
+			if(dataRun[i].lanes !=null){
+				for(var l=0; l<dataRun[i].lanes.length; l++){
+					var nbLane = dataRun[i].lanes[l].number;
+					var dataLane ={
+						laneNumber:nbLane,
+						groupValue:group,
+						dataGroup:[],
+					};
+					
+					var mapGroup = new Map();
+					if(dataSeries.get(nbLane)!=null){
+						mapGroup = dataSeries.get(nbLane);
+						if(mapGroup.get(group)!=null){
+							dataLane=mapGroup.get(group);
+						}
+					}
+					
+					if(dataRun[i].lanes[l].treatments[treatment] !=null){
+						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
+							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'},'_group':'read1'});
+						}
+						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
+							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'},'_group':'read2'});
+						}
+						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
+							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'},'_group':'default'});
+						}
+						
+					}
+						mapGroup.set(group,dataLane);
+						dataSeries.set(nbLane,mapGroup);
+				}
+			}
+		}
+		return dataSeries;
+	};
+	
 	var getChart = function(dataLane) {
 		
 		var allSeries = [];
 		
-		if(dataLane.existRead1Value){
+		if(dataLane.dataRead1.length>0){
 			allSeries.push({name:'read1',data:dataLane.dataRead1,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
 		}
-		if(dataLane.existRead2Value){
+		if(dataLane.dataRead2.length>0){
 			allSeries.push({name:'read2',data:dataLane.dataRead2,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
 		}
-		if(dataLane.existDefaultValue){
+		if(dataLane.dataDefault.length>0){
 			allSeries.push({name:'default',data:dataLane.dataDefault,lineWidth:0,states:{hover:{lineWidthPlus: 0}}});
 		}
 		
@@ -371,13 +418,14 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 					text : 'RunCode',
 				},
 				type : "category",
+				tickPixelInterval : 1
 			},
 
 			yAxis : {
 				title : {
 					text :  statsConfigs.name
 				},
-				min : 0
+				tickInterval : 2,
 			},
 			series : allSeries,
 		}
@@ -385,6 +433,69 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	};
 
 
+	var getChartGroup = function(dataLane,propertyGroup) {
+		
+		var allSeries = [];
+		
+		for(var key of dataLane.keys()){
+			var data = dataLane.get(key);
+			allSeries.push({name:key,data:data.dataGroup});
+		}
+		
+		var chart = {
+
+			chart : {
+				type: 'scatter',
+				zoomType : 'x',
+				height : 770
+			},
+			title : {
+				text : statsConfigs.header+' Lane '+dataLane.laneNumber,
+			},
+			xAxis : {
+				title : {
+					text : 'Run Code',
+				},
+				type : "category",
+				tickPixelInterval : 1
+			},
+
+			yAxis : {
+				title : {
+					text :  statsConfigs.name
+				},
+				tickInterval : 2,
+				min : 0,
+			},
+		    plotOptions: {
+		        scatter: {
+		            marker: {
+		                radius: 5,
+		                states: {
+		                    hover: {
+		                        enabled: true,
+		                        lineColor: 'rgb(100,100,100)'
+		                    }
+		                }
+		            },
+		            states: {
+		                hover: {
+		                    marker: {
+		                        enabled: false
+		                    }
+		                }
+		            },
+		            tooltip: {
+		                headerFormat: '<b>{series.name} </b><br>',
+		                pointFormat: '{point.y} ({point._group})'
+		            }
+		        }
+		    },
+			series :allSeries
+		}
+		return chart;
+	};
+	
 	var loadData = function() {
 		if(statsConfigLanesService.isData() && queriesConfigReadSetsService.queries.length > 0){
 			statsConfigs = statsConfigLanesService.getData();
