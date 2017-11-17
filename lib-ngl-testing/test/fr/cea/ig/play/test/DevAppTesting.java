@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static fr.cea.ig.play.test.WSHelper.get;
 import static fr.cea.ig.play.test.ReadUpdateReadTest.notEqualsPath;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import play.Application;
 import play.Environment;
 import play.inject.guice.GuiceApplicationBuilder;
+import play.inject.ApplicationLifecycle;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
@@ -44,6 +47,8 @@ import static play.mvc.Http.Status;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
@@ -76,6 +81,7 @@ public class DevAppTesting {
 			testTimeKey = Long.toHexString(System.currentTimeMillis());
 			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
 			// Could map 0-F -> A-. for non numeric stuff
+			// testTimeKey = org.apache.commons.lang.StringUtils.replaceChars(testTimeKey,"0123456789ABCDEF","ABCDEFGHIJKLMONP");			                                                                                
 		}
 		return testTimeKey;
 	}
@@ -114,11 +120,16 @@ public class DevAppTesting {
 		throw new RuntimeException("resource could not be loaded '" + name + "'");
 	}
 	
-	private static GuiceApplicationBuilder applicationBuilder;
+	/*
+	 * Application builder instance, should either be destroyed  
+	 */
+	// private static GuiceApplicationBuilder applicationBuilder;
+	
 	/*
 	 * Application singleton instance.
 	 */
-	// private static Application application;
+	private static Application application;
+	
 	/**
 	 * DEV application singleton instance. This does not sets the play global application
 	 * instance. Actual configuration should be done using an application specifc tag that
@@ -129,8 +140,12 @@ public class DevAppTesting {
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
 	public static Application devapp(String appConfFile, String logConfFile) {
-		// if (application == null) {
-		if (applicationBuilder == null) {
+		if (application != null) {
+			logger.warn("returning already application");
+			return application;
+		}
+		
+		if (application == null) {
 			try {
 			File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
 			// System.setProperty("config.file", resourceFileName(appConfFile)); // resourceFileName("conf/ngl-sq-test.conf"));
@@ -145,20 +160,39 @@ public class DevAppTesting {
 				throw new RuntimeException("sybdriver",e);
 			}
 			}
+			// TODO: use play.Mode.TEST
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-			applicationBuilder = new GuiceApplicationBuilder().in(env);
+			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+			application = applicationBuilder.build();
 			} catch (IOException e) {
 				throw new RuntimeException("application build init failed",e);
 			}
 			// GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
 			// Application builder runs the db connection pool manager.
 			//throw new RuntimeException("abort application creation");
-		    // application = applicationBuilder.build();
+		    //application = applicationBuilder.build();
 		}
-		// return application; //Builder.build();
-		return applicationBuilder.build();
+		// Register an aplication lifecycle cleaner.
+		application.injector().instanceOf(Cleaner.class);
+		return application; //Builder.build();
+		// return applicationBuilder.build();		
 	}
 		
+	static class Cleaner {
+		@Inject
+		public Cleaner(ApplicationLifecycle c) {
+			// c.addStopHook(new Callable() {
+			//	public CompletionStage call() throws Exception {		
+			//	}
+			//});
+			c.addStopHook(() -> {
+				logger.debug("clearing application reference");
+				application = null;
+				return  CompletableFuture.completedFuture(null);
+			});
+		}
+	}
+	
 	/**
 	 * Default port for tests http server.
 	 */
