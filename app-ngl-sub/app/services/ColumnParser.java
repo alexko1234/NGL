@@ -170,7 +170,7 @@ public class ColumnParser {
 						//System.out.println("nameFieldsInFile = " + nameFieldsInFile[i]);
 						Tools tools = new Tools();
 						mapLine.put(nameFieldsInFile[i], tools.clean(valFieldsInFile[i]));
-						//System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
+						System.out.println("Champ '" + nameFieldsInFile[i] + "' et valeur '"+tools.clean(valFieldsInFile[i])+"'");
 					} 	
 					userCnsObject.add(factory.create(mapLine));
 				}

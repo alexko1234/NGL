@@ -241,7 +241,9 @@ public class XmlServices {
 				chaine = chaine + "    <STUDY_REF ";
 				//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
 				if (StringUtils.isNotBlank(experiment.studyCode)) { 
-					chaine = chaine + " refname=\"" + experiment.studyCode +"\"";
+					if (! experiment.studyCode.startsWith("external")){
+						chaine = chaine + " refname=\"" + experiment.studyCode +"\"";
+					}
 				}
 				if (StringUtils.isNotBlank(experiment.studyAccession)){
 					chaine = chaine + " accession=\"" + experiment.studyAccession + "\"";
@@ -253,7 +255,10 @@ public class XmlServices {
 				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
 				//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
 				if (StringUtils.isNotBlank(experiment.sampleCode)){
-					chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
+					// Ecrire le nom du sample uniquement si sample Genoscope car nom "bidon" pour les samples externe
+					if (! experiment.sampleCode.startsWith("external")){
+						chaine = chaine+  "refname=\"" + experiment.sampleCode + "\"";
+					}
 				}
 				if (StringUtils.isNotBlank(experiment.sampleAccession)){
 					chaine = chaine + " accession=\""+experiment.sampleAccession + "\"";
