@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import static fr.cea.ig.play.test.DevAppTesting.code;
+import static fr.cea.ig.play.test.DevAppTesting.cr;
 import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
 import static fr.cea.ig.play.test.RoutesTest.checkRoutes;
@@ -14,6 +15,7 @@ import static fr.cea.ig.play.test.WSHelper.get;
 import static ngl.sq.Global.devapp;
 
 import static play.test.Helpers.OK;
+import static play.test.Helpers.NOT_FOUND;
 
 public class Heavy {
 	@Test
@@ -23,18 +25,24 @@ public class Heavy {
 		
 	    testInServer(devapp(),
 	    		ws -> {	    	
+	    			get(ws,"/",OK);
+	    			get(ws,"/404",NOT_FOUND);
+	    	    	cr(ws,"/api/samples",sample_0);
+	    	    	if (true) throw new RuntimeException("ok");
+
 	    			
 	    	// Assuming that we have a json response from server that that the get/put
 	    	// urls are properly defined, we provide a json alteration function that is
 	    	// compared to the get after the put. The other way around is to assert that modified values
 	    	// in the input are stored and thus access the values by path and not do a full comparison.
 	    	checkRoutes(ws);
+	  
 	    	
 	    	// RUR tests are currently not modifying anything as we use the
 	    	// RUR method with the default values so those are barely tests. 
 	    	// The confirmation of success could come from the update date that would be different.
 	    	// We use the object names to trigger the view template and the rur.
-	    	
+	  
 	    	// Echantillons - samples
 	    	rurNeqTraceInfo("/api/samples/AAAA-A120_ST147_T0_A",ws);
 	    	get(ws,"/samples/AAAA-A120_ST147_T0_A",OK);
@@ -44,7 +52,7 @@ public class Heavy {
 	    	get(ws,"/supports/2A4F4FL2H",OK);
 	    	
 	    	// Containers - containers
-	    	rurNeqTraceInfo("/api/containers/HLMF5BBXX_8",ws);
+	    	//rurNeqTraceInfo("/api/containers/HLMF5BBXX_8",ws);
 		    rurNeqTraceInfo("/api/containers/29J81XXL4",ws);
 		    get(ws,"/containers/29J81XXL4",OK);
 		    

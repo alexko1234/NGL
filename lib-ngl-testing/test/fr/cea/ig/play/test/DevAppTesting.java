@@ -38,6 +38,7 @@ import play.inject.ApplicationLifecycle;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
+import play.mvc.Http.Status;
 import play.test.TestServer;
 import play.test.WSTestClient;
 
@@ -81,7 +82,7 @@ public class DevAppTesting {
 			testTimeKey = Long.toHexString(System.currentTimeMillis());
 			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
 			// Could map 0-F -> A-. for non numeric stuff
-			// testTimeKey = org.apache.commons.lang.StringUtils.replaceChars(testTimeKey,"0123456789ABCDEF","ABCDEFGHIJKLMONP");			                                                                                
+			testTimeKey = org.apache.commons.lang3.StringUtils.replaceChars(testTimeKey,"0123456789ABCDEF","ABCDEFGHIJKLMONP").toUpperCase();			                                                                                
 		}
 		return testTimeKey;
 	}
@@ -156,7 +157,8 @@ public class DevAppTesting {
 				System.setProperty("config.resource", confFileName); // + ".frag")); // resourceFileName("conf/ngl-sq-test.conf"));
 				//System.setProperty("config.file", resourceFileName(confFileName));
 				//System.setProperty("config.file", unfragedConf.toString());
-				System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
+				// System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
+				System.setProperty("logger.resource",logConfFile);
 				System.setProperty("play.server.netty.maxInitialLineLength", "16384");
 				// TODO: use play.Mode.TEST
 				Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
@@ -275,7 +277,20 @@ public class DevAppTesting {
 			.run(ws);
 	}
 	
-	
+	public static void cr(WSClient ws, String url, JsonNode data) {
+		// This must post data to fill a form server side (Form<Sample>)
+		// The provided json data has to be converted to form data.
+		// With some luck we can map the provided json fields to the
+		// corresponding sample attribute.
+		// @see models.laboratory.sample.instance.Sample
+		WSResponse r0 = WSHelper.post(ws,url,data.toString(),Status.OK);
+		// logger.debug("post " + url + " : " + r0.getBody());
+		// assertEquals(Status.OK,r0.getStatus());
+		JsonNode js0 = Json.parse(r0.getBody());
+		WSResponse r1 = WSHelper.get(ws,url + "/" + JsonHelper.get(js0,"code").textValue(),Status.OK);
+		JsonNode js1 = Json.parse(r1.getBody());
+		cmp(js0,js1);
+	}
 	
 	public static final void cmp(JsonNode n0, JsonNode n1) {
 		cmp("",n0,n1);

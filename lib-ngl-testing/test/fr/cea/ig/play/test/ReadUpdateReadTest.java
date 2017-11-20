@@ -98,11 +98,7 @@ public class ReadUpdateReadTest {
 	}
 	
 	public static BiConsumer<JsonNode,JsonNode> notEqualsPath(String... path) {
-		return new BiConsumer<JsonNode,JsonNode>() {
-			public void accept(JsonNode jOld, JsonNode jNew) {
-				assertNotEquals(String.join("/", path),get(jOld,path),get(jNew,path));
-			}
-		};
+		return (jOld,jNew) -> { assertNotEquals(String.join("/", path),get(jOld,path),get(jNew,path)); };
 	}
 	
 	public static final BiConsumer<JsonNode,JsonNode> notEqualsTrace =
