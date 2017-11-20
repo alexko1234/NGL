@@ -1,7 +1,7 @@
 package controllers.samples.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import static validation.sample.instance.SampleValidationHelper.*;
 
@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -54,21 +56,29 @@ import fr.cea.ig.MongoDBDAO;
 //import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
-public class Samples extends DocumentController<Sample>{
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static Form<Sample> sampleForm = form(Sample.class);
-	final static Form<SamplesSearchForm> sampleSearchForm = form(SamplesSearchForm.class);
-	final static Form<SampleBatchElement> batchElementForm = form(SampleBatchElement.class);
+public class Samples extends DocumentController<Sample> {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
+	
+	private final Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	private final Form<Sample> sampleForm; // = form(Sample.class);
+	private final Form<SamplesSearchForm> sampleSearchForm; // = form(SamplesSearchForm.class);
+	private final Form<SampleBatchElement> batchElementForm; // = form(SampleBatchElement.class);
 
-	final static List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
-	final static List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
+	private static final  List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
+	private static final List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
 	
-	
-	public Samples() {
-		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);	
+	@Inject
+	public Samples(NGLContext ctx) {
+		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);
+		updateForm       = ctx.form(QueryFieldsForm.class);
+		sampleForm       = ctx.form(Sample.class);
+		sampleSearchForm = ctx.form(SamplesSearchForm.class);
+		batchElementForm = ctx.form(SampleBatchElement.class);
 	}
 	
 	

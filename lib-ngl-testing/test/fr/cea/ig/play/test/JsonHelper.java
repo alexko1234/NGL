@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 
 import play.libs.Json;
 
+
 public class JsonHelper {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(JsonHelper.class);
@@ -62,6 +63,10 @@ public class JsonHelper {
 		return node;
 	}
 
+	//public static String getString(JsonNode node, String... path) {
+	//	return ((TextNode)get(node,path)).
+	//}
+	
 	/*public static JsonNode get(JsonNode n, String... path) {
 		for (int i=0; i<path.length-1; i++) {
 			JsonNode m = n.get(path[i]);

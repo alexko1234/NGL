@@ -61,7 +61,7 @@ public class WSHelper {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	/**
 	 * Short for http put with some payload.
 	 * @param ws      web client to use
@@ -76,5 +76,35 @@ public class WSHelper {
 		return r;
 	}
 
+	/**
+	 * Short for http post with some payload.
+	 * @param ws      web client to use
+	 * @param url     url to post to
+	 * @param payload payload to send along the post request
+	 * @return        web response
+	 */
+	public static WSResponse post(WSClient ws, String url, String payload) { // throws InterruptedException,ExecutionException {
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).setContentType("application/json;charset=UTF-8").post(payload);
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Short for http post with some payload.
+	 * @param ws      web client to use
+	 * @param url     url to post to
+	 * @param payload payload to send along the post request
+	 * @param status  expected http status
+	 * @return        web response
+	 */
+	public static WSResponse post(WSClient ws, String url, String payload, int status) {
+		WSResponse r = post(ws,url,payload);
+		assertEquals(url, status, r.getStatus());
+		return r;
+	}
 
 }

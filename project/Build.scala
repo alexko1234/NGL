@@ -80,13 +80,16 @@ object ApplicationBuild extends Build {
 
 		// Probably poor scala style
     val tev0 = if (System.getProperty("ngl.test.conf.dir") != null)
-	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("ngl.test.conf.dir")))
+	        Seq(unmanagedResourceDirectories in Compile += file(System.getProperty("ngl.test.conf.dir")),
+	            dependencyClasspath in Compile += file(System.getProperty("ngl.test.conf.dir")),
+	            dependencyClasspath in Test += file(System.getProperty("ngl.test.conf.dir")))
 	      else
 	        Seq()
-	  val tev1 = /*if (System.getProperty("NGL_CONF_TEST_DIR") != null)
-	        Seq(unmanagedResourceDirectories in Test += file(System.getProperty("NGL_CONF_TEST_DIR")))
+	  val tev1 = if (System.getProperty("NGL_CONF_TEST_DIR") != null)
+	        Seq(dependencyClasspath in Test += file(System.getProperty("NGL_CONF_TEST_DIR")),
+	            dependencyClasspath in Compile += file(System.getProperty("NGL_CONF_TEST_DIR")))
 	      else
-	        */Seq()
+	        Seq()
 	  
 	  val globSettings = Seq(
 	    // -- Scala compilation options are not defined as there are no scala sources
