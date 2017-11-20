@@ -1,5 +1,21 @@
 @()
 
 <div class="col-md-12 col-lg-12"  ng-controller="TagPCRCtrl">
+<form class="form-horizontal" name="DnaRnaExtractionCtrl">
+
+			<div class="  form-group">
+
+				<label class="col-md-2 col-lg-2 control-label">@Messages("property_definition.tagPcrBlank1SampleCode")
+				</label>
+				<p class="col-md-2 col-lg-2 form-control-control"
+						ng-bind="tagPcrBlank1SampleCode" />
+			<div>
+				<label class="col-md-2 col-lg-2 control-label">@Messages("property_definition.tagPcrBlank2SampleCode")
+				</label>
+				<p class="col-md-2 col-lg-2 form-control-control"
+						ng-bind="tagPcrBlank2SampleCode" />
+			</div>
+	</div>
+		</form>
 	@views.html.experiments.onetoone.defaults.partials.udtAndPlateDesign()
 </div>

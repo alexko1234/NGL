@@ -197,8 +197,11 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
+		var dtConfig = $scope.atmService.data.getConfig();
+		
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		$scope.checktagPcrBlankSampleCode($scope);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -233,6 +236,32 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	});
 	
 	
+var checktagPcrBlankSampleCode$scope = function($scope){
+	var experiment=$scope.experiment;
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			//var icu = atm.inputContainerUseds[0]; //only one because oneToMany
+			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
+				var ocu = atm.outputContainerUseds[j];
+				var getter = $parse("experimentProperties.tagPcrBlank1SampleCode");
+
+				if(ocu.experimentProperties && ocu.experimentProperties.sampleCode && ocu.experimentProperties.sampleCode == "CEB"){				
+					if (! ocu.experimentProperties.tagPcrBlank1SampleCode){
+						var value = ocu.experimentProperties.sampleCode;
+						$scope.sample.tagPcrBlank1SampleCode = value;
+						getter.assign(atm.outputContainerUseds[j],value);	
+					}
+				}	else{
+					var value = "tot";
+					$scope.sample.tagPcrBlank1SampleCode = value;
+					getter.assign(atm.outputContainerUseds[j],value);	
+					
+				}	
+			}
+		}	
+		
+		
+	};
 	
 	
 	//Init		
@@ -415,5 +444,12 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	}else{
 		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
 	}
+	
+	
+	$scope.sample = {
+			tagPcrBlank1SampleCode:null,
+			tagPcrBlank2SampleCode:null
+	};
+	
 	
 }]);

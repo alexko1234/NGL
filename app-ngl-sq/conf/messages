@@ -546,7 +546,8 @@ button.newexperiment = Créer une expérience
 #property_definition list object
 property_definition.loadingReport = Bilan chargement
 property_definition.qcFlowcell = QC Flowcell
-
+property_definition.tagPcrBlank1SampleCode = Code éch. témoin négatif PCR (1)
+property_definition.tagPcrBlank2SampleCode = Code éch. témoin négatif PCR (2)
 
 #baskets
 baskets = Panier
