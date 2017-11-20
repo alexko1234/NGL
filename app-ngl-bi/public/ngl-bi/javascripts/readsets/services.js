@@ -246,7 +246,7 @@
 				lists.refresh.filterConfigs({pageCodes:["readsets-addfilters"]}, "readsets-addfilters");
 				
 				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
-				lists.refresh.context({categoryCode:"readsets-addcolumns"});
+				lists.refresh.context({categoryCode:"readset"});
 				
 				lists.refresh.users();
 				isInit=true;
