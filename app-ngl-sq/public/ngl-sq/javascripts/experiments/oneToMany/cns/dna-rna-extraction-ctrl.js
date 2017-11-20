@@ -388,8 +388,8 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 	};
 	
 	
-	$scope.lists.refresh.samples({"projectCodes":"CCP"}, 'sampleDNA'); //CDW
-	$scope.lists.refresh.samples({"projectCodes":"CAN"}, 'sampleRNA'); //CDY
+	$scope.lists.refresh.samples({"projectCodes":"CDW"}, 'sampleDNA'); //CDW
+	$scope.lists.refresh.samples({"projectCodes":"CDY"}, 'sampleRNA'); //CDY
 	
 	$scope.sample = {
 			extractionDNABlankSampleCode:null,
