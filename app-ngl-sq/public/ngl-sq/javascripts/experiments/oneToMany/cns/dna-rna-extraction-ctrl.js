@@ -212,10 +212,13 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 		}		
 	};
 	
+	
+	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
+		checkExtractionBlankSampleCode($scope);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -276,6 +279,33 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 		}
 		return column;
 	};
+	
+	var checkExtractionBlankSampleCode = function($scope){
+		var experiment=$scope.experiment;
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+			var atm = experiment.atomicTransfertMethods[i];
+			//var icu = atm.inputContainerUseds[0]; //only one because oneToMany
+			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
+				var ocu = atm.outputContainerUseds[j];
+				var getter = $parse("experimentProperties.extractionBlankSampleCode.value");
+
+				if(ocu.experimentProperties && ocu.experimentProperties.sampleTypeCode.value && ocu.experimentProperties.sampleTypeCode.value == "DNA"){				
+					if ($scope.sample.extractionDNABlankSampleCode){
+						var value = $scope.sample.extractionDNABlankSampleCode;
+						getter.assign(atm.outputContainerUseds[j],value);	
+					}
+				}else if (ocu.experimentProperties && ocu.experimentProperties.sampleTypeCode.value && ocu.experimentProperties.sampleTypeCode.value == "RNA"){
+					if ($scope.sample.extractionRNABlankSampleCode){
+						var value = $scope.sample.extractionRNABlankSampleCode;
+						getter.assign(atm.outputContainerUseds[j],value);	
+					}
+				}			
+			}
+		}				
+	};
+	
+	
+		
 		/*
 	atmService.addNewAtomicTransfertMethodsInData = function(){
 		if(null != mainService.getBasket() && null != mainService.getBasket().get()){
@@ -358,8 +388,15 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 	};
 	
 	
+	$scope.lists.refresh.samples({"projectCodes":"CCP"}, 'sampleDNA'); //CDW
+	$scope.lists.refresh.samples({"projectCodes":"CAN"}, 'sampleRNA'); //CDY
+	
+	$scope.sample = {
+			extractionDNABlankSampleCode:null,
+			extractionRNABlankSampleCode:null
+	};
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);					
     $scope.atmService = atmService;
-	
-
+    
 }]);

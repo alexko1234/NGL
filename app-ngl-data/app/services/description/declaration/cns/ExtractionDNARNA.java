@@ -208,8 +208,8 @@ public class ExtractionDNARNA extends AbstractDeclaration{
 		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
 				null, null, null, null,"single", 25, false, null,null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction", "extractionBlankSampleCode", LevelService.getLevels(Level.CODE.Content), String.class, false, null,
-				null, null, null, null,"single", 26, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Code éch. témoin négatif extraction", "extractionBlankSampleCode", LevelService.getLevels(Level.CODE.ContainerOut, Level.CODE.Content), String.class, true, null,
+				null, null, null, null,"single", 26, false, null,null));
 
 		
 		return propertyDefinitions;

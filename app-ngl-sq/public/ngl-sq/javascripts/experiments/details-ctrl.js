@@ -847,6 +847,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
 		$scope.lists.refresh.experimentCategories();
+		
+		
+		
 	};
 	
 	var creationMode = false;

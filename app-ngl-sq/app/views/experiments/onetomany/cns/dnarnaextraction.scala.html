@@ -1,17 +1,49 @@
 @()
 <div class="col-md-12 col-lg-12">
-<form class="form-horizontal" >
-  	<div class="form-group" class="col-md-4 col-lg-4">
-  		<label  class="col-md-6 col-lg-6 control-label">Test Gaelle temoin: </label>
-		<div bt-select placeholder="@Messages("test Gaelle temoin")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="searchService.changeExperimentType()">
-</div>
-</div>
-</form>
 
 
+	<div class="row" ng-controller="DnaRnaExtractionCtrl">
+		<form class="form-horizontal" name="DnaRnaExtractionCtrl">
 
-<div class="row" ng-controller="DnaRnaExtractionCtrl">
-	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>	
-						
+			<div class="  form-group">
+
+				<label class="col-md-2 col-lg-2 control-label">extractionDnaBlankSampleCode:
+				</label>
+				<div ng-switch on="mainService.isEditMode()" class=col-md-2 col-lg-2form-control">
+					<p class="col-md-2 col-lg-2 form-control-control"
+						ng-switch-when="false"
+						ng-bind="sample.extractionDNABlankSampleCode" />
+					<div ng-switch-when="true">
+						<div  class="col-md-2 col-lg-2 form-control" bt-select
+							ng-model="sample.extractionDNABlankSampleCode"
+							placeholder='@Messages("search.placeholder.samples")'
+							bt-options="sample.code as sample.code for sample in lists.get('sampleDNA')"
+							auto-select></div>
+					</div>
+				</div>
+		
+			<div>
+				<label class="col-md-2 col-lg-2 control-label">extractionRNABlankSampleCode:
+				</label>
+				<div ng-switch on="mainService.isEditMode()" class=col-md-2 col-lg-2form-control">
+					<p class="col-md-2 col-lg-2 form-control-control"
+						ng-switch-when="false"
+						ng-bind="sample.extractionRNABlankSampleCode" />
+					<div ng-switch-when="true">
+						<div class="col-md-2 col-lg-2 form-control" bt-select
+							ng-model="sample.extractionRNABlankSampleCode"
+							name="extractionBlankSampleCode"
+							placeholder='@Messages("search.placeholder.samples")'
+							bt-options="sample.code as sample.code for sample in lists.get('sampleRNA')"
+							auto-select></div>
+					</div>
+				</div>
+			</div>
+	</div>
+		</form>
+		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>
+
+	</div>
 </div>
-</div>
+
+

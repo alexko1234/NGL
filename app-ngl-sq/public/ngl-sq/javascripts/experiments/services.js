@@ -251,7 +251,6 @@
 						}
 						
 					}
-					
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
