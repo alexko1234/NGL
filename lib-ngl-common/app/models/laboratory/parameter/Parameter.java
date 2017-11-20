@@ -20,6 +20,7 @@ import fr.cea.ig.DBObject;
 	@JsonSubTypes.Type(value =  models.laboratory.parameter.index.IlluminaIndex.class, name = "index-illumina-sequencing"),
 	@JsonSubTypes.Type(value =  models.laboratory.parameter.index.NanoporeIndex.class, name = "index-nanopore-sequencing"),
 	@JsonSubTypes.Type(value =  models.laboratory.parameter.printer.BBP11.class, name = "BBP11"),
+	@JsonSubTypes.Type(value =  models.laboratory.parameter.config.ReportingConfig.class, name = "reporting-config"),
 })
 public abstract class Parameter extends DBObject  implements IValidation{
 	

@@ -240,6 +240,12 @@ angular.module('commonsServices', []).
     				readSets : function(params, key){
     					load(jsRoutes.controllers.readsets.api.ReadSets.list().url,params,(key)?key:'readSets');    				
     				},
+    				context : function(params,key){
+    					if(angular.isUndefined(params)){
+    	    				params = {typeCode:'reporting-config'};
+    	    			}
+    					load(jsRoutes.controllers.commons.api.Parameters.list().url,params,(key)?key:'context');
+    				},
     				all : function(params){
     					this.resolutions(params);
     					this.containerCategories(params);
@@ -399,6 +405,13 @@ angular.module('commonsServices', []).
     			},
     			getTags : function(params,key){
     				key = (key)?key:'tags';
+    				if(results[key] === undefined){
+    					refresh.tags(params, key);
+    				}
+    				return results[key];
+    			},
+    			getContext : function(params,key){
+    				key = (key)?key:'context';
     				if(results[key] === undefined){
     					refresh.tags(params, key);
     				}

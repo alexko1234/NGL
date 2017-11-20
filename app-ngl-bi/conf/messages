@@ -108,6 +108,7 @@ search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
 search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
 
 search.placeholder.userLogin = Login utilisateur
+search.placeHolder.config.context = Contexte
 
 button.search = Rechercher
 button.reset = Réinitialiser

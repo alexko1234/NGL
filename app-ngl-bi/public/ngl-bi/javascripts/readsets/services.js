@@ -246,6 +246,7 @@
 				lists.refresh.filterConfigs({pageCodes:["readsets-addfilters"]}, "readsets-addfilters");
 				
 				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
+				lists.refresh.context({categoryCode:"readsets-addcolumns"});
 				
 				lists.refresh.users();
 				isInit=true;
@@ -264,6 +265,7 @@
 				mapAdditionnalColumn : new Map(),
 				additionalFilters:[],
 				selectedAddColumns:[],
+				contextValue:undefined,
 				
 				setRouteParams:function($routeParams){
 					var count = 0;
@@ -388,10 +390,12 @@
 					var allColumnsFiltered = [];
 					for(var i=0; i<allColumns.length; i++){
 						if(this.mapAdditionnalColumn.get(allColumns[i].position)==undefined){
-							allColumnsFiltered.push(allColumns[i]);
-							var tabColumn=[];
-							tabColumn.push(allColumns[i]);
-							this.mapAdditionnalColumn.set(allColumns[i].position,tabColumn);
+							if(this.contextValue==undefined || (this.contextValue!=undefined && allColumns[i].context!=null && allColumns[i].context.includes(this.contextValue))){
+								allColumnsFiltered.push(allColumns[i]);
+								var tabColumn=[];
+								tabColumn.push(allColumns[i]);
+								this.mapAdditionnalColumn.set(allColumns[i].position,tabColumn);
+ 							}
 						}else{
 							this.mapAdditionnalColumn.get(allColumns[i].position).push(allColumns[i]);
 						}
