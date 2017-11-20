@@ -159,11 +159,18 @@ angular.module('home').controller('SearchGraphCtrl', ['$scope', '$http', '$q', '
 	};
 	
 	$scope.changeProcessTypes = function(){
-		$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,{params:{categoryCode:'transformation',processTypeCode:$scope.form.processTypeCode}}).then(function(result){
-			var experimentTypes = result.data.map(function(expType){
-				return expType.code;
-			});
-			var graphElements  = computeGraphElements($scope.graphNodes, experimentTypes);
+		$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get($scope.form.processTypeCode).url).then(function(result){
+			var processExperimentTypes = new Map();
+				
+			result.data.experimentTypes.forEach(function(experimentType){
+				if(this.get(experimentType.experimentTypeCode) === undefined){
+					this.set(experimentType.experimentTypeCode, [experimentType.positionInProcess]);
+				}else{
+					this.get(experimentType.experimentTypeCode).push(experimentType.positionInProcess);
+				}
+				
+			},processExperimentTypes);
+			var graphElements  = computeGraphElements($scope.graphNodes, processExperimentTypes);
 			initCytoscape(graphElements);
 			
 		})
@@ -212,38 +219,51 @@ angular.module('home').controller('SearchGraphCtrl', ['$scope', '$http', '$q', '
 		
 	};
 	
-	var computeGraphElements = function(graphNodes, selectedExperimentTypeCodes){
+	var computeGraphElements = function(graphNodes, processExperimentTypes){
 		//nodes
 		var graphElements = [];
+		
+		var getFaveColor = function(processExperimentTypes, key){
+			if(processExperimentTypes === undefined)return '#6FB1FC';
+			else if(processExperimentTypes.get(key)[0] > -1 )return '#6FB1FC';
+			else return '#F5A45D';
+		}
+		
 		for(var key in graphNodes){
-			if(selectedExperimentTypeCodes === undefined || selectedExperimentTypeCodes.indexOf(key) > -1){
+			if(processExperimentTypes === undefined || processExperimentTypes.get(key) !== undefined){
 				var currentNode = graphNodes[key];
 				var currentExperimentType = graphNodes[key].experimentType;
 				if(currentExperimentType.category.code === 'transformation'){
 					currentExperimentType.id = currentExperimentType.code;
 					currentExperimentType.label = currentExperimentType.name;
-					var faveColor = '#6FB1FC'
-						
-					currentExperimentType.faveColor = '#F5A45D';
+					currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
 					currentExperimentType.faveShape="ellipse";
 					
 					graphElements.push({"data":currentExperimentType,"group":"nodes"});
 				}
 			}
-			
 		}
-		
 		//edges
 		
+		var isDiffPositionIsOne = function(processExperimentTypes, keyParent, keyChild){
+			return processExperimentTypes.get(keyParent).some(function(parentPos){
+				return processExperimentTypes.get(keyChild).some(function(childPos){
+						return (childPos - parentPos === 1);
+				});
+			});
+			//return (processExperimentTypes.get(keyChild) - processExperimentTypes.get(keyParent) === 1);			
+		}
+		
 		for(var key in graphNodes){
-			if(selectedExperimentTypeCodes === undefined || selectedExperimentTypeCodes.indexOf(key) > -1){
+			if(processExperimentTypes === undefined || processExperimentTypes.get(key) !== undefined){
 				var currentNode = graphNodes[key];
 				var currentExperimentType = graphNodes[key].experimentType;
 				if(currentExperimentType.category.code === 'transformation'){
 					angular.forEach(currentNode.childNodes, function(childNode){
 						var childExperimentType = childNode;
 						if(childExperimentType.category.code === 'transformation' 
-							&& (selectedExperimentTypeCodes === undefined || selectedExperimentTypeCodes.indexOf(childExperimentType.code) > -1)){
+							&& (processExperimentTypes === undefined 
+									|| (processExperimentTypes.get(childExperimentType.code) !== undefined && isDiffPositionIsOne(processExperimentTypes, key, childExperimentType.code)))){
 							var currentExperimentType = this;
 							var edge = {
 									"id":currentExperimentType.code+"-"+childExperimentType.code,
@@ -251,9 +271,7 @@ angular.module('home').controller('SearchGraphCtrl', ['$scope', '$http', '$q', '
 									"target":childExperimentType.code
 									
 							}
-							
-							
-							var faveColor ='#F5A45D';
+							var faveColor = getFaveColor(processExperimentTypes, key);
 							edge.faveColor=faveColor;
 							graphElements.push({"data":edge,"group":"edges"})	
 						}

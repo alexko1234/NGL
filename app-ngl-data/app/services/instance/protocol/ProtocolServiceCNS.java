@@ -270,11 +270,11 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("smarter_stranded","Smarter Stranded_ptr_sox155_1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","Smarter Stranded"),newPSV("strandOrientation","forward"),newPSV("cDNAsynthesisType","random"))));
 		
-		lp.add(newProtocol("rna_neb_u2_stranded","RNA NEB_U2 Stranded_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-library","indexing-and-pcr-amplification"), 
-				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+		lp.add(newProtocol("rna_neb_u2_stranded","RNA NEB_U2 Stranded Proc_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-library","indexing-and-pcr-amplification"), 
+				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded Proc"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		
 		lp.add(newProtocol("prod-ill-bqarn-rna-nebuii-stranded-polya-160-v1","Prod_ILL_BqARN_RNA-NEBUII-Stranded-PolyA_160_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-library","indexing-and-pcr-amplification"), 
-				concatMap(newPSV("rnaLibProtocol","RNA NEBU2 Stranded PolyA"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
+				concatMap(newPSV("rnaLibProtocol","RNA NEB_U2 Stranded PolyA"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random"))));
 		
 		lp.add(newProtocol("inda-c_ovation_universal_rna-seq","InDA-C Ovation Universal RNA-Seq","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library","pcr-amplification-and-purification"), 
 				concatMap(newPSV("rnaLibProtocol","InDA-C Ovation Universal RNA-Seq"),newPSV("strandOrientation","reverse"),newPSV("cDNAsynthesisType","random + oligodT"))));
@@ -305,8 +305,8 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("ampure_post_pcr","ampure_post_pcr","path2","1","production",InstanceFactory.setExperimentTypeCodes("post-pcr-ampure"),false));
 		lp.add(newProtocol("ampure","ampure","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure"),false));
-		lp.add(newProtocol("annexe-purifampureinversee-nucleospin-v2","Annexe_PurifAMPureInversée-NucleoSpin_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure"),false));
-		lp.add(newProtocol("annexe-purifampure-au-robot-tagamplicons-v1","Annexe_PurifAMPure au Robot-TagAmplicons_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure"),false));
+		lp.add(newProtocol("annexe-purifampureinversee-nucleospin-v2","Annexe_PurifAMPureInversée-NucleoSpin_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
+		lp.add(newProtocol("annexe-purifampure-au-robot-tagamplicons-v1","Annexe_PurifAMPure au Robot-TagAmplicons_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
 		lp.add(newProtocol("annexe-purif-adn-ampure-v1","Annexe_PurifADN-AMPure_v1","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure"),false));
 		lp.add(newProtocol("annexe-purif-adn-ampure-v2","Annexe_PurifADN-AMPure_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("ampure","post-pcr-ampure")));
 		
