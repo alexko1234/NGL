@@ -408,7 +408,7 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	                  {name:"IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)", tagCategory:"DUAL-INDEX", tags:[] }];
 	
 	// l'indice dans le tableau correspond a l'ordre "colonne d'abord" dans la plaque
-    // c'est le code des index qu'il faut mettre ici ??? exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
+    // c'est le code des index qu'il faut mettre ici exemple:  AglSSXT-01(name)/aglSSXT-01(code) 
 	
 	//-1- DAP TruSeq DNA HT
 	$scope.plates[0].tags.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508"); //colonne 1
@@ -425,32 +425,32 @@ angular.module('home').controller('PrepWgNanoCtrl',['$scope', '$parse',  '$filte
 	$scope.plates[0].tags.push("D712-D501", "D712-D502", "D712-D503", "D712-D504", "D712-D505", "D712-D506", "D712-D507", "D712-D508"); //colonne 12
 	
     //-2- IDT-ILMN TruSeq DNA UD Indexes (96 Indexes)
-    $scope.plates[1].tags.push("UDI0001_I7-UDI0001_I5","UDI0002_I7-UDI0002_I5","UDI0003_I7-UDI0003_I5","UDI0004_I7-UDI0004_I5","UDI0005_I7-UDI0005_I5","UDI0006_I7-UDI0006_I5","UDI0007_I7-UDI0007_I5","UDI0008_I7-UDI0008_I5"); //colonne 1
-    $scope.plates[1].tags.push("UDI0009_I7-UDI0009_I5","UDI0010_I7-UDI0010_I5","UDI0011_I7-UDI0011_I5","UDI0012_I7-UDI0012_I5","UDI0013_I7-UDI0013_I5","UDI0014_I7-UDI0014_I5","UDI0015_I7-UDI0015_I5","UDI0016_I7-UDI0016_I5"); //colonne 2
-    $scope.plates[1].tags.push("UDI0017_I7-UDI0017_I5","UDI0018_I7-UDI0018_I5","UDI0019_I7-UDI0019_I5","UDI0020_I7-UDI0020_I5","UDI0021_I7-UDI0021_I5","UDI0022_I7-UDI0022_I5","UDI0023_I7-UDI0023_I5","UDI0024_I7-UDI0024_I5"); //colonne 3
-    $scope.plates[1].tags.push("UDI0025_I7-UDI0025_I5","UDI0026_I7-UDI0026_I5","UDI0027_I7-UDI0027_I5","UDI0028_I7-UDI0028_I5","UDI0029_I7-UDI0029_I5","UDI0030_I7-UDI0030_I5","UDI0031_I7-UDI0031_I5","UDI0032_I7-UDI0032_I5"); //colonne 4
-    $scope.plates[1].tags.push("UDI0033_I7-UDI0033_I5","UDI0034_I7-UDI0034_I5","UDI0035_I7-UDI0035_I5","UDI0036_I7-UDI0036_I5","UDI0037_I7-UDI0037_I5","UDI0038_I7-UDI0038_I5","UDI0039_I7-UDI0039_I5","UDI0040_I7-UDI0040_I5"); //colonne 5
-    $scope.plates[1].tags.push("UDI0041_I7-UDI0041_I5","UDI0042_I7-UDI0042_I5","UDI0043_I7-UDI0043_I5","UDI0044_I7-UDI0044_I5","UDI0045_I7-UDI0045_I5","UDI0046_I7-UDI0046_I5","UDI0047_I7-UDI0047_I5","UDI0048_I7-UDI0048_I5"); //colonne 6
-    $scope.plates[1].tags.push("UDI0049_I7-UDI0049_I5","UDI0050_I7-UDI0050_I5","UDI0051_I7-UDI0051_I5","UDI0052_I7-UDI0052_I5","UDI0053_I7-UDI0053_I5","UDI0054_I7-UDI0054_I5","UDI0055_I7-UDI0055_I5","UDI0056_I7-UDI0056_I5"); //colonne 7
-    $scope.plates[1].tags.push("UDI0057_I7-UDI0057_I5","UDI0058_I7-UDI0058_I5","UDI0059_I7-UDI0059_I5","UDI0060_I7-UDI0060_I5","UDI0061_I7-UDI0061_I5","UDI0062_I7-UDI0062_I5","UDI0063_I7-UDI0063_I5","UDI0064_I7-UDI0064_I5"); //colonne 8
-    $scope.plates[1].tags.push("UDI0065_I7-UDI0065_I5","UDI0066_I7-UDI0066_I5","UDI0067_I7-UDI0067_I5","UDI0068_I7-UDI0068_I5","UDI0069_I7-UDI0069_I5","UDI0070_I7-UDI0070_I5","UDI0071_I7-UDI0071_I5","UDI0072_I7-UDI0072_I5"); //colonne 9
-    $scope.plates[1].tags.push("UDI0073_I7-UDI0073_I5","UDI0074_I7-UDI0074_I5","UDI0075_I7-UDI0075_I5","UDI0076_I7-UDI0076_I5","UDI0077_I7-UDI0077_I5","UDI0078_I7-UDI0078_I5","UDI0079_I7-UDI0079_I5","UDI0080_I7-UDI0080_I5"); //colonne 10
-    $scope.plates[1].tags.push("UDI0081_I7-UDI0081_I5","UDI0082_I7-UDI0082_I5","UDI0083_I7-UDI0083_I5","UDI0084_I7-UDI0084_I5","UDI0085_I7-UDI0085_I5","UDI0086_I7-UDI0086_I5","UDI0087_I7-UDI0087_I5","UDI0088_I7-UDI0088_I5"); //colonne 11
-    $scope.plates[1].tags.push("UDI0089_I7-UDI0089_I5","UDI0090_I7-UDI0090_I5","UDI0091_I7-UDI0091_I5","UDI0092_I7-UDI0092_I5","UDI0093_I7-UDI0093_I5","UDI0094_I7-UDI0094_I5","UDI0095_I7-UDI0095_I5","UDI0096_I7-UDI0096_I5"); //colonne 12
+    $scope.plates[1].tags.push("udi0001_i7-udi0001_i5","udi0002_i7-udi0002_i5","udi0003_i7-udi0003_i5","udi0004_i7-udi0004_i5","udi0005_i7-udi0005_i5","udi0006_i7-udi0006_i5","udi0007_i7-udi0007_i5","udi0008_i7-udi0008_i5"); //colonne 1
+    $scope.plates[1].tags.push("udi0009_i7-udi0009_i5","udi0010_i7-udi0010_i5","udi0011_i7-udi0011_i5","udi0012_i7-udi0012_i5","udi0013_i7-udi0013_i5","udi0014_i7-udi0014_i5","udi0015_i7-udi0015_i5","udi0016_i7-udi0016_i5"); //colonne 2
+    $scope.plates[1].tags.push("udi0017_i7-udi0017_i5","udi0018_i7-udi0018_i5","udi0019_i7-udi0019_i5","udi0020_i7-udi0020_i5","udi0021_i7-udi0021_i5","udi0022_i7-udi0022_i5","udi0023_i7-udi0023_i5","udi0024_i7-udi0024_i5"); //colonne 3
+    $scope.plates[1].tags.push("udi0025_i7-udi0025_i5","udi0026_i7-udi0026_i5","udi0027_i7-udi0027_i5","udi0028_i7-udi0028_i5","udi0029_i7-udi0029_i5","udi0030_i7-udi0030_i5","udi0031_i7-udi0031_i5","udi0032_i7-udi0032_i5"); //colonne 4
+    $scope.plates[1].tags.push("udi0033_i7-udi0033_i5","udi0034_i7-udi0034_i5","udi0035_i7-udi0035_i5","udi0036_i7-udi0036_i5","udi0037_i7-udi0037_i5","udi0038_i7-udi0038_i5","udi0039_i7-udi0039_i5","udi0040_i7-udi0040_i5"); //colonne 5
+    $scope.plates[1].tags.push("udi0041_i7-udi0041_i5","udi0042_i7-udi0042_i5","udi0043_i7-udi0043_i5","udi0044_i7-udi0044_i5","udi0045_i7-udi0045_i5","udi0046_i7-udi0046_i5","udi0047_i7-udi0047_i5","udi0048_i7-udi0048_i5"); //colonne 6
+    $scope.plates[1].tags.push("udi0049_i7-udi0049_i5","udi0050_i7-udi0050_i5","udi0051_i7-udi0051_i5","udi0052_i7-udi0052_i5","udi0053_i7-udi0053_i5","udi0054_i7-udi0054_i5","udi0055_i7-udi0055_i5","udi0056_i7-udi0056_i5"); //colonne 7
+    $scope.plates[1].tags.push("udi0057_i7-udi0057_i5","udi0058_i7-udi0058_i5","udi0059_i7-udi0059_i5","udi0060_i7-udi0060_i5","udi0061_i7-udi0061_i5","udi0062_i7-udi0062_i5","udi0063_i7-udi0063_i5","udi0064_i7-udi0064_i5"); //colonne 8
+    $scope.plates[1].tags.push("udi0065_i7-udi0065_i5","udi0066_i7-udi0066_i5","udi0067_i7-udi0067_i5","udi0068_i7-udi0068_i5","udi0069_i7-udi0069_i5","udi0070_i7-udi0070_i5","udi0071_i7-udi0071_i5","udi0072_i7-udi0072_i5"); //colonne 9
+    $scope.plates[1].tags.push("udi0073_i7-udi0073_i5","udi0074_i7-udi0074_i5","udi0075_i7-udi0075_i5","udi0076_i7-udi0076_i5","udi0077_i7-udi0077_i5","udi0078_i7-udi0078_i5","udi0079_i7-udi0079_i5","udi0080_i7-udi0080_i5"); //colonne 10
+    $scope.plates[1].tags.push("udi0081_i7-udi0081_i5","udi0082_i7-udi0082_i5","udi0083_i7-udi0083_i5","udi0084_i7-udi0084_i5","udi0085_i7-udi0085_i5","udi0086_i7-udi0086_i5","udi0087_i7-udi0087_i5","udi0088_i7-udi0088_i5"); //colonne 11
+    $scope.plates[1].tags.push("udi0089_i7-udi0089_i5","udi0090_i7-udi0090_i5","udi0091_i7-udi0091_i5","udi0092_i7-udi0092_i5","udi0093_i7-udi0093_i5","udi0094_i7-udi0094_i5","udi0095_i7-udi0095_i5","udi0096_i7-udi0096_i5"); //colonne 12
 
     //-3- IDT-ILMN TruSeq DNA UD Indexes (24 Indexes)
-    $scope.plates[2].tags.push("UDI0001_I7-UDI0001_I5","UDI0002_I7-UDI0002_I5","UDI0003_I7-UDI0003_I5","UDI0004_I7-UDI0004_I5","UDI0005_I7-UDI0005_I5","UDI0006_I7-UDI0006_I5","UDI0007_I7-UDI0007_I5","UDI0008_I7-UDI0008_I5"); //colonne 1
-    $scope.plates[2].tags.push("UDI0009_I7-UDI0009_I5","UDI0010_I7-UDI0010_I5","UDI0011_I7-UDI0011_I5","UDI0012_I7-UDI0012_I5","UDI0013_I7-UDI0013_I5","UDI0014_I7-UDI0014_I5","UDI0015_I7-UDI0015_I5","UDI0016_I7-UDI0016_I5"); //colonne 2
-    $scope.plates[2].tags.push("UDI0017_I7-UDI0017_I5","UDI0018_I7-UDI0018_I5","UDI0019_I7-UDI0019_I5","UDI0020_I7-UDI0020_I5","UDI0021_I7-UDI0021_I5","UDI0022_I7-UDI0022_I5","UDI0023_I7-UDI0023_I5","UDI0024_I7-UDI0024_I5"); //colonne 3
-    $scope.plates[2].tags.push("UDI0001_I7-UDI0001_I5","UDI0002_I7-UDI0002_I5","UDI0003_I7-UDI0003_I5","UDI0004_I7-UDI0004_I5","UDI0005_I7-UDI0005_I5","UDI0006_I7-UDI0006_I5","UDI0007_I7-UDI0007_I5","UDI0008_I7-UDI0008_I5"); //colonne 4
-    $scope.plates[2].tags.push("UDI0009_I7-UDI0009_I5","UDI0010_I7-UDI0010_I5","UDI0011_I7-UDI0011_I5","UDI0012_I7-UDI0012_I5","UDI0013_I7-UDI0013_I5","UDI0014_I7-UDI0014_I5","UDI0015_I7-UDI0015_I5","UDI0016_I7-UDI0016_I5"); //colonne 5
-    $scope.plates[2].tags.push("UDI0017_I7-UDI0017_I5","UDI0018_I7-UDI0018_I5","UDI0019_I7-UDI0019_I5","UDI0020_I7-UDI0020_I5","UDI0021_I7-UDI0021_I5","UDI0022_I7-UDI0022_I5","UDI0023_I7-UDI0023_I5","UDI0024_I7-UDI0024_I5"); //colonne 6
-    $scope.plates[2].tags.push("UDI0001_I7-UDI0001_I5","UDI0002_I7-UDI0002_I5","UDI0003_I7-UDI0003_I5","UDI0004_I7-UDI0004_I5","UDI0005_I7-UDI0005_I5","UDI0006_I7-UDI0006_I5","UDI0007_I7-UDI0007_I5","UDI0008_I7-UDI0008_I5"); //colonne 7
-    $scope.plates[2].tags.push("UDI0009_I7-UDI0009_I5","UDI0010_I7-UDI0010_I5","UDI0011_I7-UDI0011_I5","UDI0012_I7-UDI0012_I5","UDI0013_I7-UDI0013_I5","UDI0014_I7-UDI0014_I5","UDI0015_I7-UDI0015_I5","UDI0016_I7-UDI0016_I5"); //colonne 8
-    $scope.plates[2].tags.push("UDI0017_I7-UDI0017_I5","UDI0018_I7-UDI0018_I5","UDI0019_I7-UDI0019_I5","UDI0020_I7-UDI0020_I5","UDI0021_I7-UDI0021_I5","UDI0022_I7-UDI0022_I5","UDI0023_I7-UDI0023_I5","UDI0024_I7-UDI0024_I5"); //colonne 9
-    $scope.plates[2].tags.push("UDI0001_I7-UDI0001_I5","UDI0002_I7-UDI0002_I5","UDI0003_I7-UDI0003_I5","UDI0004_I7-UDI0004_I5","UDI0005_I7-UDI0005_I5","UDI0006_I7-UDI0006_I5","UDI0007_I7-UDI0007_I5","UDI0008_I7-UDI0008_I5"); //colonne 10
-    $scope.plates[2].tags.push("UDI0009_I7-UDI0009_I5","UDI0010_I7-UDI0010_I5","UDI0011_I7-UDI0011_I5","UDI0012_I7-UDI0012_I5","UDI0013_I7-UDI0013_I5","UDI0014_I7-UDI0014_I5","UDI0015_I7-UDI0015_I5","UDI0016_I7-UDI0016_I5"); //colonne 11
-    $scope.plates[2].tags.push("UDI0017_I7-UDI0017_I5","UDI0018_I7-UDI0018_I5","UDI0019_I7-UDI0019_I5","UDI0020_I7-UDI0020_I5","UDI0021_I7-UDI0021_I5","UDI0022_I7-UDI0022_I5","UDI0023_I7-UDI0023_I5","UDI0024_I7-UDI0024_I5"); //colonne 12
+    $scope.plates[2].tags.push("udi0001_i7-udi0001_i5","udi0002_i7-udi0002_i5","udi0003_i7-udi0003_i5","udi0004_i7-udi0004_i5","udi0005_i7-udi0005_i5","udi0006_i7-udi0006_i5","udi0007_i7-udi0007_i5","udi0008_i7-udi0008_i5"); //colonne 1
+    $scope.plates[2].tags.push("udi0009_i7-udi0009_i5","udi0010_i7-udi0010_i5","udi0011_i7-udi0011_i5","udi0012_i7-udi0012_i5","udi0013_i7-udi0013_i5","udi0014_i7-udi0014_i5","udi0015_i7-udi0015_i5","udi0016_i7-udi0016_i5"); //colonne 2
+    $scope.plates[2].tags.push("udi0017_i7-udi0017_i5","udi0018_i7-udi0018_i5","udi0019_i7-udi0019_i5","udi0020_i7-udi0020_i5","udi0021_i7-udi0021_i5","udi0022_i7-udi0022_i5","udi0023_i7-udi0023_i5","udi0024_i7-udi0024_i5"); //colonne 3
+    $scope.plates[2].tags.push("udi0001_i7-udi0001_i5","udi0002_i7-udi0002_i5","udi0003_i7-udi0003_i5","udi0004_i7-udi0004_i5","udi0005_i7-udi0005_i5","udi0006_i7-udi0006_i5","udi0007_i7-udi0007_i5","udi0008_i7-udi0008_i5"); //colonne 4
+    $scope.plates[2].tags.push("udi0009_i7-udi0009_i5","udi0010_i7-udi0010_i5","udi0011_i7-udi0011_i5","udi0012_i7-udi0012_i5","udi0013_i7-udi0013_i5","udi0014_i7-udi0014_i5","udi0015_i7-udi0015_i5","udi0016_i7-udi0016_i5"); //colonne 5
+    $scope.plates[2].tags.push("udi0017_i7-udi0017_i5","udi0018_i7-udi0018_i5","udi0019_i7-udi0019_i5","udi0020_i7-udi0020_i5","udi0021_i7-udi0021_i5","udi0022_i7-udi0022_i5","udi0023_i7-udi0023_i5","udi0024_i7-udi0024_i5"); //colonne 6
+    $scope.plates[2].tags.push("udi0001_i7-udi0001_i5","udi0002_i7-udi0002_i5","udi0003_i7-udi0003_i5","udi0004_i7-udi0004_i5","udi0005_i7-udi0005_i5","udi0006_i7-udi0006_i5","udi0007_i7-udi0007_i5","udi0008_i7-udi0008_i5"); //colonne 7
+    $scope.plates[2].tags.push("udi0009_i7-udi0009_i5","udi0010_i7-udi0010_i5","udi0011_i7-udi0011_i5","udi0012_i7-udi0012_i5","udi0013_i7-udi0013_i5","udi0014_i7-udi0014_i5","udi0015_i7-udi0015_i5","udi0016_i7-udi0016_i5"); //colonne 8
+    $scope.plates[2].tags.push("udi0017_i7-udi0017_i5","udi0018_i7-udi0018_i5","udi0019_i7-udi0019_i5","udi0020_i7-udi0020_i5","udi0021_i7-udi0021_i5","udi0022_i7-udi0022_i5","udi0023_i7-udi0023_i5","udi0024_i7-udi0024_i5"); //colonne 9
+    $scope.plates[2].tags.push("udi0001_i7-udi0001_i5","udi0002_i7-udi0002_i5","udi0003_i7-udi0003_i5","udi0004_i7-udi0004_i5","udi0005_i7-udi0005_i5","udi0006_i7-udi0006_i5","udi0007_i7-udi0007_i5","udi0008_i7-udi0008_i5"); //colonne 10
+    $scope.plates[2].tags.push("udi0009_i7-udi0009_i5","udi0010_i7-udi0010_i5","udi0011_i7-udi0011_i5","udi0012_i7-udi0012_i5","udi0013_i7-udi0013_i5","udi0014_i7-udi0014_i5","udi0015_i7-udi0015_i5","udi0016_i7-udi0016_i5"); //colonne 11
+    $scope.plates[2].tags.push("udi0017_i7-udi0017_i5","udi0018_i7-udi0018_i5","udi0019_i7-udi0019_i5","udi0020_i7-udi0020_i5","udi0021_i7-udi0021_i5","udi0022_i7-udi0022_i5","udi0023_i7-udi0023_i5","udi0024_i7-udi0024_i5"); //colonne 12
 
 	$scope.tagPlate = $scope.plates[0]; // defaut du select
 	
