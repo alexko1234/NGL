@@ -3,9 +3,11 @@ package controllers.stats.tpl;
 import play.Routes;
 import play.mvc.Result;
 import views.html.stats.choice;
-import views.html.stats.config;
+import views.html.stats.configReadSets;
+import views.html.stats.configLanes;
 import views.html.stats.home;
-import views.html.stats.show;
+import views.html.stats.showReadSets;
+import views.html.stats.showLanes;
 import controllers.CommonController;
 
 /**
@@ -20,11 +22,23 @@ public class Stats extends CommonController {
 	}
 	
 	public static Result config(String type) {
-		return ok(config.render());
+		if(type.equals("readsets"))
+			return ok(configReadSets.render());
+		else if(type.equals("lanes"))
+			return ok(configLanes.render());
+		else
+			return ok(configReadSets.render());
+		
 	}
 	
+	
 	public static Result show(String type) {
-		return ok(show.render());
+		if(type.equals("readsets"))
+			return ok(showReadSets.render());
+		else if(type.equals("lanes"))
+			return ok(showLanes.render());
+		else
+			return ok(showReadSets.render());
 	}
 	
 	public static Result choice(String type) {
@@ -57,8 +71,10 @@ public class Stats extends CommonController {
   	    		controllers.runs.api.routes.javascript.Lanes.get(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.runs.api.routes.javascript.Runs.list(),
+  	    		controllers.runs.api.routes.javascript.RunCategories.list(),
   	    		controllers.runs.api.routes.javascript.RunTreatments.get(),
   	    		controllers.runs.tpl.routes.javascript.Runs.get(),
+  	    		controllers.runs.tpl.routes.javascript.Runs.search(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.commons.api.routes.javascript.StatesHierarchy.list(),

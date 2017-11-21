@@ -1,6 +1,6 @@
  "use strict";
  
- angular.module('ngl-bi.StatsServices', []).
+ angular.module('ngl-bi.ReadSetsStatsServices', []).
 	factory('statsConfigReadSetsService', ['$http', '$filter', 'lists', 'datatable', function($http, $filter, lists, datatable){
 		var datatableConfig = {
 				search : {
@@ -413,6 +413,7 @@
 				}
 			}
 		}
+		console.log(charts);
 	};
 
 	var getProperty = function(column) {
@@ -659,7 +660,7 @@
 				sourceWidth : 1200
 			},
 			series : allSeries,
-			plotOptions : {column:{grouping:false}}
+			plotOptions : {column:{grouping:true}}
 		};
 		return chart;
 	}

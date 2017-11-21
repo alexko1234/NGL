@@ -103,6 +103,7 @@ search.placeholder.isSentCollaborator = Envoyé Collaborateur ?
 search.placeholder.sequencingProgramTypes = Type de lectures
 search.placeholder.analyseValuationUser = Analyse évaluée par : 
 search.placeholder.stats.configuration = Configuration
+search.placeholder.treatment = Traitement
 
 search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
 search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
@@ -1041,13 +1042,18 @@ balanceSheets.december = Decembre
 stats.page.title=Statistiques
 stats.menu = Statistiques
 stats.menu.readsets = Readsets
+stats.menu.lanes = Lanes
 stats.page.tab.readsets.select = Selectionner des Readsets
 stats.page.tab.readsets.config = Configuration Statistiques
 stats.page.tab.show = Visualiser les Graphiques
 
+stats.page.tab.lanes.select = Selectionner des Runs
+stats.page.tab.lanes.config = Configuration Statistiques
+
 stats.tabs.charts = Graphiques
 stats.tabs.exclude = Valeurs exclues
 stats.tabs.query = Requête
+stats.property = Propriété
 
 stats.removedReadsEcoli = % Removed Reads (E. coli)
 stats.bacteria = % Bacteria
