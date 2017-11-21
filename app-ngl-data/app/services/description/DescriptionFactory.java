@@ -814,7 +814,7 @@ public class DescriptionFactory {
 		etn.possiblePurificationTypes = purifTypes;
 		etn.possibleQualityControlTypes = qcTypes;
 		etn.possibleTransferts=transfertTypes;
-		etn.previousExperimentType = previousExp;
+		etn.previousExperimentTypeNodes = previousExp;
 		
 		if(ExperimentCategory.CODE.voidprocess.name().equals(experimentType.category.code)){
 			etn.doPurification = true;

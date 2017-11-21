@@ -48,6 +48,7 @@ public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentT
 			
 			node.experimentType = expTypeDAO.findById(rs.getLong("fk_experiment_type"));
 			
+			node.previousExperimentTypes = expTypeDAO.findPreviousExperimentTypeForAnExperimentTypeCode(node.experimentType.code);
 			List<ExperimentType> experimentTypes = expTypeDAO.findSatelliteExperimentByNodeId(node.id);
 			
 			for(ExperimentType et: experimentTypes){

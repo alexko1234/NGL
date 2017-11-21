@@ -188,18 +188,16 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		label:Messages("experiments.sampleSheet")
 	}]);
 	
-	/* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2 */
-	var importData = function(){
+	
+
+	/* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2; 25/10/2017 renommage en importDataCbot */
+	var importDataCbot = function(){
+		console.log('Import cBot file');
 		
 		$scope.messages.clear();
 		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
-		.success(function(data, status, headers, config) {
-			
-			// a remplacer par message.setSuccess(txt); ???
-			$scope.messages.clazz="alert alert-success";
-			$scope.messages.text=Messages('experiments.msg.import.success');
-			$scope.messages.showDetails = false;
-			$scope.messages.open();	
+		.success(function(data, status, headers, config) {		
+			$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
 			
 			// data est l'experience retournée par input.java
 			// 16/01/2017 recuperer instrumentProperties 
@@ -210,37 +208,87 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 			// reinit select File...
 			$scope.file = undefined;
-			angular.element('#importFile')[0].value = null;
+			angular.element('#importFilecBot')[0].value = null;
 			
 			// NGL-1256 refresh special pour les reagents !!!
 			$scope.$emit('askRefreshReagents');
 			
 		})
 		.error(function(data, status, headers, config) {
-			// a remplacer par message.setError(txt); ???
+			$scope.messages.setError(Messages('experiments.msg.import.error'));	
+			
+			// reinit select File..
+			$scope.file = undefined;
+			// il faut aussi réinitaliser le bouton d'import
+			angular.element('#importFileCbot')[0].value = null;
+		});		
+	};
+	
+	// 08/11/2017 renommage button=>buttonCbot
+	$scope.buttonCbot = {
+			isShow:function(){
+				// 31/01/2017  activer le bouton d'import si l'experience est a InProgress
+				return ($scope.isInProgressState());
+				},
+			isFileSet:function(){
+				return ($scope.file === undefined)?"disabled":"";
+			},
+			click:importDataCbot		
+		};
+	
+	
+	/* 25/10/2017 FDS ajout pour l'import du fichier Mettler */
+	var importDataMettler = function(){
+		console.log('Import Mettler file');
+		
+		$scope.messages.clear();
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url+"?extraInstrument=labxmettlertoledo", $scope.file)
+		.success(function(data, status, headers, config) {
+			$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
+
+			// data est l'experience retournée par input.java
+			$scope.experiment.instrumentProperties= data.instrumentProperties;
+			
+			// et reagents ....
+			$scope.experiment.reagents=data.reagents;
+			
+			// reinit select File...
+			$scope.file = undefined;
+			angular.element('#importFileMettler')[0].value = null;
+			
+			//refresh  reagents !!!
+			$scope.$emit('askRefreshReagents');
+			
+		})
+		.error(function(data, status, headers, config) {
+			///$scope.messages.setError(Messages('experiments.msg.import.error')); // Ne fonctionne que pour une seule erreur !!!!!!!
+			
 			$scope.messages.clazz = "alert alert-danger";
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
 			$scope.messages.showDetails = true;
 			$scope.messages.open();	
-			
+	
 			// reinit select File..
 			$scope.file = undefined;
 			// il faut aussi réinitaliser le bouton d'import
-			angular.element('#importFile')[0].value = null;
+			angular.element('#importFileMettler')[0].value = null;
 		});		
 	};
 	
-	$scope.button = {
-		isShow:function(){
-			// 31/01/2017  activer le bouton d'import si l'experience est a InProgress
-			return ($scope.isInProgressState());
+	// 25/10/2017 FDS ajout pour l'import du fichier Mettler; 08/11/2017 renommage button2=>buttonMettler
+	$scope.buttonMettler = {
+			isShow:function(){
+				// visible meme si terminé, mais seulement en mode edition
+				//return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); MARCHE PAS !!!!
+				return ( $scope.isInProgressState()||$scope.isFinishState() );
+				},
+			isFileSet:function(){
+				return ($scope.file === undefined)?"disabled":"";
 			},
-		isFileSet:function(){
-			return ($scope.file === undefined)?"disabled":"";
-		},
-		click:importData,		
-	};
+			click:importDataMettler	
+		};
+	
 	
 	// 07/02/2017 si l'utilisateur modifie le codeStrip OU le code Flowcell OU l'instrument  il doit recharger le fichier pour qu'on puisse garantir la coherence !!
     //-1- stripCode.value

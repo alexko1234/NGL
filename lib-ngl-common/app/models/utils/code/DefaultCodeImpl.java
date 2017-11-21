@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -135,13 +136,12 @@ public class DefaultCodeImpl implements Code {
 		String beginCode=null;
 		char lastLetter='Z';
 
-		if(currentCode==null){
+		if(StringUtils.isBlank(currentCode)){
 			newCode="A";
 			while(newCode.length() < project.nbCharactersInSampleCode){
 				newCode=newCode+"A";
 			}			
-		}else {
-			
+		}else {			
 			int nbCharacter=currentCode.length();
 			int lastCharacter=nbCharacter;
 

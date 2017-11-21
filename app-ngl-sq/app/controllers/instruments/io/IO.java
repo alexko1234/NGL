@@ -52,12 +52,22 @@ public class IO extends TPLCommonController {
 		return null;				
 	}
 	
-	private AbstractInput getInputInstance(Experiment experiment, ContextValidation contextValidation){
+	// FDS 25/10/2017 ajout parametre optionnel extraInstrument
+	private AbstractInput getInputInstance(Experiment experiment, ContextValidation contextValidation, String extraInstrument){
 		
 		if(ValidationHelper.required(contextValidation, experiment.instrument, "instrument") 
 				&& ValidationHelper.required(contextValidation, experiment.instrument.typeCode, "instrument.code")){
-			String className = getClassName(experiment, "Input");
+			String className; 
 			
+			if (null == extraInstrument || extraInstrument.equals("")){
+				// ancien comportement
+				className = getClassName(experiment, "Input");
+			} else {
+				// Class Input de extraInstrument
+				String institute = DescriptionHelper.getInstitute().get(0).toLowerCase();
+				className ="controllers.instruments.io."+institute+"."+extraInstrument+".Input";
+			}
+
 			try{
 				Class<? extends AbstractInput> clazz = (Class<? extends AbstractInput>) Class.forName(className);
 				Constructor<?> constructor = clazz.getConstructor();
@@ -65,11 +75,11 @@ public class IO extends TPLCommonController {
 				return instance;
 			}catch(Exception e){
 				contextValidation.addErrors("outputClass", "io.error.instance.notexist",className);
-			}			
+			}	
+			
 		}
 		return null;				
 	}
-
 
 	private String getClassName(Experiment experiment, String type) {
 		String institute = DescriptionHelper.getInstitute().get(0).toLowerCase();
@@ -106,7 +116,7 @@ public class IO extends TPLCommonController {
 	
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@Permission(value={"writing"})
-	public Result importFile(String experimentCode){
+	public Result importFile(String experimentCode, String extraInstrument){ // FDS 25/10 ajout param optionnel pour instrument additionnel  (voir apinglsq.routes??)
 		Experiment experiment = getExperiment(experimentCode);
 		if(null == experiment)return badRequest("experiment not exist");
 		
@@ -118,7 +128,7 @@ public class IO extends TPLCommonController {
         contextValidation.getContextObjects().putAll(dynamicfilledForm.data());
 		
 		if(null != pfv){
-			AbstractInput input = getInputInstance(experiment, contextValidation);
+			AbstractInput input = getInputInstance(experiment, contextValidation, extraInstrument ); // FDS 25/10 ajout param optionnel pour instrument additionnel
 			
 			if(!contextValidation.hasErrors()){
 				try{

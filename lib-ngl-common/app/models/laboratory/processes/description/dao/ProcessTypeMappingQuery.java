@@ -65,6 +65,8 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 				processType.firstExperimentType=expTypeDAO.findById(idFirstExpType);
 				//Get voidExperimentType
 				processType.lastExperimentType=expTypeDAO.findById(idLastExpType);
+				
+				processType.experimentTypes = Spring.getBeanOfType(ProcessTypeDAO.class).getProcessExperimentType(processType.id);
 			}
 			return processType;
 		} catch (DAOException e) {

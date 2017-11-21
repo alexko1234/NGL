@@ -1,27 +1,29 @@
 @()
-
-<!-- FDS 06/01/2017 ajout bouton pour input file 
+<!-- FDS 06/01/2017 ajout bouton pour input file cBot
      ne pas utiliser ng-if qui a un comportement special: creation d'un scope fils => pose des problemes
      remplacer par ng-show 
-     FDS 23/01/2017  janus-and-cBotV2 || cBotV2;   24/01/2107 funiquement pour prepa-fc-ordered
+     FDS 23/01/2017  janus-and-cBotV2 || cBotV2;  uniquement pour prepa-fc-ordered
+ 
 -->
 <div class="col-md-12 col-lg-offset-7" ng-show="('prepa-fc-ordered'=== experiment.typeCode) && (('janus-and-cBotV2' === experiment.instrument.typeCode)||('cBotV2' === experiment.instrument.typeCode))"> 
   <form class="form-horizontal" role="form">
    <div class="row margin-bottom-7">
-        <div class="form-group col-lg-6"  ng-show="button.isShow()">
-             <label for="importFile" class="control-label">Fichier CBot</label>
-             <div class="input-group" style="width:50%">
+        <div class="form-group col-lg-6"  ng-show="buttonCbot.isShow()">
+             <div class="col-lg-6">
+             <label for="importFileCbot" class="control-label">Fichier cBot</label>
+             <div class="input-group" style="width:100%">
                 <input class="form-control input-sm" type="file" 
                                                      base64-file="file" 
-                                                     id="importFile" />
+                                                     id="importFileCbot" />
                 <span class="input-group-btn">									 
-                     <button class="btn btn-primary" ng-click="button.click()" 
-                                                     ng-disabled="button.isFileSet()" 
+                     <button class="btn btn-primary" ng-click="buttonCbot.click()" 
+                                                     ng-disabled="buttonCbot.isFileSet()" 
                                                      title="@Messages("button.import.file")"><i class="fa fa-upload"></i> 
                      </button>     
                 </span> 
-            </div>                         				  
-         </div>
+            </div> 
+            </div>    				  
+         </div>              			
        </div>  
   </form>
 </div>
@@ -268,4 +270,29 @@
 	</div>
 	</div>
 </div>
+</div>
+
+<!-- FDS 25/10/2017 NGL-1326 ajout bouton import fichier Mettler/LabX
+         08/11/2017 renommage button =>buttonCbot; button2=>buttonMettler; deplacement ici-->
+<div class="col-md-12 col-lg"> 
+  <form class="form-horizontal" role="form">
+   <div class="row margin-bottom-7">
+        <div class="form-group col-lg-6"  ng-show="buttonMettler.isShow()">         
+            <div class="col-lg-6">
+             <label for="importFileMettler" class="control-label">Fichier Mettler (CSV)</label>
+             <div class="input-group" style="width:100%">
+                <input class="form-control input-sm" type="file" 
+                                                     base64-file="file" 
+                                                     id="importFileMettler" />
+                <span class="input-group-btn">									 
+                     <button class="btn btn-primary" ng-click="buttonMettler.click()" 
+                                                     ng-disabled="buttonMettler.isFileSet()" 
+                                                     title="@Messages("button.import.file")"><i class="fa fa-upload"></i> 
+                     </button>     
+                </span> 
+            </div> 
+            </div>                				  
+         </div>              			
+       </div>  
+  </form>
 </div>

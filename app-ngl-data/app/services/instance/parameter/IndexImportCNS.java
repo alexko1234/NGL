@@ -124,7 +124,42 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 		indexes.add(getNEBNextIndex("NEBNext10", "TAGCTT", "IND10"));
 		indexes.add(getNEBNextIndex("NEBNext11", "GGCTAC", "IND11"));
 		indexes.add(getNEBNextIndex("NEBNext12", "CTTGTA", "IND12"));
-		
+		indexes.add(getNEBNextIndex("NEBNext13", "AGTCAA", "IND13"));
+		indexes.add(getNEBNextIndex("NEBNext14", "AGTTCC", "IND14"));
+		indexes.add(getNEBNextIndex("NEBNext15", "ATGTCA", "IND15"));
+		indexes.add(getNEBNextIndex("NEBNext16", "CCGTCC", "IND16"));
+		indexes.add(getNEBNextIndex("NEBNext17", "GTAGAG", "IND17"));
+		indexes.add(getNEBNextIndex("NEBNext18", "GTCCGC", "IND18"));
+		indexes.add(getNEBNextIndex("NEBNext19", "GTGAAA", "IND19"));
+		indexes.add(getNEBNextIndex("NEBNext20", "GTGGCC", "IND20"));
+		indexes.add(getNEBNextIndex("NEBNext21", "GTTTCG", "IND21"));
+		indexes.add(getNEBNextIndex("NEBNext22", "CGTACG", "IND22"));
+		indexes.add(getNEBNextIndex("NEBNext23", "GAGTGG", "IND23"));
+		indexes.add(getNEBNextIndex("NEBNext24", "GGTAGC", "IND24"));
+		indexes.add(getNEBNextIndex("NEBNext25", "ACTGAT", "IND25"));
+		indexes.add(getNEBNextIndex("NEBNext26", "ATGAGC", "IND26"));
+		indexes.add(getNEBNextIndex("NEBNext27", "ATTCCT", "IND27"));
+		indexes.add(getNEBNextIndex("NEBNext28", "CAAAAG", "IND28"));
+		indexes.add(getNEBNextIndex("NEBNext29", "CAACTA", "IND29"));
+		indexes.add(getNEBNextIndex("NEBNext30", "CACCGG", "IND30"));
+		indexes.add(getNEBNextIndex("NEBNext31", "CACGAT", "IND31"));
+		indexes.add(getNEBNextIndex("NEBNext32", "CACTCA", "IND32"));
+		indexes.add(getNEBNextIndex("NEBNext33", "CAGGCG", "IND33"));
+		indexes.add(getNEBNextIndex("NEBNext34", "CATGGC", "IND34"));
+		indexes.add(getNEBNextIndex("NEBNext35", "CATTTT", "IND35"));
+		indexes.add(getNEBNextIndex("NEBNext36", "CCAACA", "IND36"));
+		indexes.add(getNEBNextIndex("NEBNext37", "CGGAAT", "IND37"));
+		indexes.add(getNEBNextIndex("NEBNext38", "CTAGCT", "IND38"));
+		indexes.add(getNEBNextIndex("NEBNext39", "CTATAC", "IND39"));
+		indexes.add(getNEBNextIndex("NEBNext40b", "CTCAGA", "IND40b"));
+		indexes.add(getNEBNextIndex("NEBNext42", "TAATCG", "IND42"));
+		indexes.add(getNEBNextIndex("NEBNext43", "TACAGC", "IND43"));
+		indexes.add(getNEBNextIndex("NEBNext44", "TATAAT", "IND44"));
+		indexes.add(getNEBNextIndex("NEBNext45", "TCATTC", "IND45"));
+		indexes.add(getNEBNextIndex("NEBNext46", "TCCCGA", "IND46"));
+		indexes.add(getNEBNextIndex("NEBNext47", "TCGAAG", "IND47"));
+		indexes.add(getNEBNextIndex("NEBNext48", "TCGGCA", "IND48"));
+
 		indexes.forEach(index-> {
 			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
 				//Logger.info("creation index : "+ index.code +" / "+ index.categoryCode);

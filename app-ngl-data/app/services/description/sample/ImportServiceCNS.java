@@ -289,7 +289,28 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("CDIV", "CDIV"));
 		values.add(DescriptionFactory.newValue("CCA", "Crustose Coralline algae"));
 		values.add(DescriptionFactory.newValue("E2000", "SEQ-IMG-ethanol>2000"));
+		//new 17/11/2017
+		values.add(DescriptionFactory.newValue("TMETAL", "TMETAL"));
+		values.add(DescriptionFactory.newValue("S03>", "S03>"));
+		values.add(DescriptionFactory.newValue("SCB", "SCB"));
+		values.add(DescriptionFactory.newValue("SCB20-(FSW)", "SCB20-(FSW)"));
+		values.add(DescriptionFactory.newValue("SCB20-(FSW+GB)", "SCB20-(FSW+GB)"));
+		values.add(DescriptionFactory.newValue("SCB20-(TC)", "SCB20-(TC)"));
+		values.add(DescriptionFactory.newValue("SCB200-(FSW)", "SCB200-(FSW)"));
+		values.add(DescriptionFactory.newValue("SCB200-(TC)", "SCB200-(TC)"));
+		values.add(DescriptionFactory.newValue("E300", "E300"));
+		
 		values.add(DescriptionFactory.newValue("Undefined", "Undefined"));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return values;	
 	}
 	
@@ -339,7 +360,7 @@ public class ImportServiceCNS extends AbstractImportService {
 			values.add(DescriptionFactory.newValue("OA-999", "OA-999"));
 
 		// Tous les I
-		for (int i = 0; i <= 20; i++) {
+		for (int i = 0; i <= 21; i++) {
 			String ile = (i < 10) ? "0" + i : "" + i;
 			values.add(DescriptionFactory.newValue("I" + ile, "I" + ile));
 		}
@@ -350,7 +371,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<Value> getTaraPacificColonyValues() {
 		List<Value> values = new ArrayList<Value>();
 
-		for (int k = 0; k <= 40; k++) {
+		for (int k = 0; k <= 120; k++) {
 			String colonie = (k < 10) ? "0" + k : "" + k;
 			values.add(DescriptionFactory.newValue("C" + colonie, "C" + colonie));
 		}
@@ -405,12 +426,12 @@ public class ImportServiceCNS extends AbstractImportService {
 		//version 6 et version 9 I01S01 et I01S01C01 à I01S01C40
 		
 		values.add(DescriptionFactory.newValue("100000000", "I00S00C00"));	
-		for(int i = 1; i <= 20; i++){
+		for(int i = 1; i <= 21; i++){
 			String ile = (i < 10)?"0"+i:""+i;
 			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;
 				values.add(DescriptionFactory.newValue("1"+ile+"0"+site, "I"+ile+"S"+site));
-				for(int k = 1; k <= 40; k++){
+				for(int k = 1; k <= 120; k++){
 					String colonnie = (k < 10)?"0"+k:""+k;
 					values.add(DescriptionFactory.newValue("1"+ile+"0"+site+"0"+colonnie, "I"+ile+"S"+site+"C"+colonnie));					
 				}
@@ -425,7 +446,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("110000", "I10S00"));		
 		values.add(DescriptionFactory.newValue("111000", "I11S00"));
 		values.add(DescriptionFactory.newValue("100000100", "I00S00F00"));	
-		for(int i = 1; i <= 20; i++){
+		for(int i = 1; i <= 21; i++){
 			String ile = (i < 10)?"0"+i:""+i;
 			for(int j = 1; j <= 4; j++){
 				String site = "0"+j;

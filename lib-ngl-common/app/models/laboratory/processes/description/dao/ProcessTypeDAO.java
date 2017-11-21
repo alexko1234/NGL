@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.administration.authorisation.User;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -148,7 +149,14 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		jdbcTemplate.update(sql, id);
 
 	}
-
+	
+	public List<ProcessExperimentType> getProcessExperimentType(Long processId){
+		String sql = "SELECT pet.position_in_process, et.code as experimentTypeCode "+
+				"FROM process_experiment_type as pet inner join common_info_type as et on et.id = pet.fk_experiment_type WHERE pet.fk_process_type = ? ";
+		BeanPropertyRowMapper<ProcessExperimentType> mapper = new BeanPropertyRowMapper<ProcessExperimentType>(ProcessExperimentType.class);
+		return this.jdbcTemplate.query(sql, mapper, processId);		
+	}
+	
 	@Override
 	public void remove(ProcessType processType) throws DAOException {
 		//Remove process_experiment_type

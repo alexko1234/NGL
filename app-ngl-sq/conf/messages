@@ -352,10 +352,12 @@ experiments.title.reagents = Réactifs
 experiments.tabs.search = Recherche Expérience
 experiments.tabs.create = Création Expérience
 experiments.tabs.reagents = Recherche Réactif
+experiments.tabs.graph = Chemin des Expériences
 experiments.table.reagents = Réactifs Utilisés
 experiments.menu.reagents = Reporting Réactifs
 experiments.menu.creation = Création
 experiments.menu.search = Rechercher
+experiments.menu.graph = Chemin des Expériences
 experiments.menu.purification = Créer une Purification
 experiments.menu.qualitycontrol = Créer un Contrôle qualité
 experiments.menu.transfert = Créer un Transfert
@@ -566,6 +568,17 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
 
+# schema-processus CNG
+docs.schema-processus.chromiumWG=Schéma processus Chromium WG
+docs.schema-processus.ExpSatellites=Schéma processus Exp satellites uniquement
+docs.schema-processus.RNAseq=Schéma processus RNAseq
+docs.schema-processus.WGNANO=Schéma processus WG NANO
+docs.schema-processus.WGPCRfree=Schéma processus WG PCR free
+docs.schema-processus.Capture=Schémas processus CAPTURE
+docs.schema-processus.LibSeqIllumina=Schémas processus Librairies pour séquençage Illumina
+docs.schema-processus.repriseNorm=Schémas processus reprise débutant par Normalisation
+docs.schema-processus.sequencing=Schémas processus Séquençage
+
 docs.illumina=Séquençage Illumina
 docs.nanopore=Séquençage Nanopore
 docs.opticalmapping.opgen=Optical mapping Opgen
@@ -574,7 +587,7 @@ docs.sample_prep=Prep. Ech > Extraction ADN-ARN
 docs.bank.metabarcoding=Banque > MetaBarcoding
 docs.bank.metatranscriptomique=Banque > MetaTranscriptomique
 docs.bank.metabargenomique=Banque > MetaGenomique
-				
+docs.processes.schema = Schémas processus (nov 2017)				
 
 #button
 button.search = Rechercher
