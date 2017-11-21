@@ -59,10 +59,6 @@ rule "Set good project code for RNA"
 		
 		if(mapping.map.containsKey($inputProjectCode)){
 			outputProjectCode.value = mapping.map.get($inputProjectCode);
-		}else if("CDQ".equals($inputProjectCode)){
-			outputProjectCode.value = "CDT";
-		}else if("CDU".equals($inputProjectCode)){
-			outputProjectCode.value = "CDY";
 		}else{
 			Logger.error("RNA extraction mapping not defined for project "+$inputProjectCode);
 			outputProjectCode.value = null;
