@@ -586,7 +586,7 @@ docs.sample_prep=Prep. Ech > Extraction ADN-ARN
 docs.bank.metabarcoding=Banque > MetaBarcoding
 docs.bank.metatranscriptomique=Banque > MetaTranscriptomique
 docs.bank.metabargenomique=Banque > MetaGenomique
-				
+docs.processes.schema = Schémas processus (nov 2017)				
 
 #button
 button.search = Rechercher
