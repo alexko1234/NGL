@@ -34,10 +34,12 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
-public class KitCatalogs extends DocumentController<KitCatalog>{
-	public KitCatalogs() {
-		super(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
+public class KitCatalogs extends DocumentController<KitCatalog> {
+	
+	public KitCatalogs(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
 	}
 	
 	final static Form<KitCatalogSearchForm> kitCatalogSearchForm = form(KitCatalogSearchForm.class);

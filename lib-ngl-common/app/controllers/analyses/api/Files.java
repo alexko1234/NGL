@@ -23,15 +23,16 @@ import validation.run.instance.FileValidationHelper;
 import controllers.QueryFieldsForm;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 
-@Controller
+// @Controller
 public class Files extends SubDocumentController<Analysis, File> {
 
 	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	
-	public Files() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
+	public Files(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
 	}
 	@Override
 	protected Object getSubObject(Analysis objectInDB, String fullname) {

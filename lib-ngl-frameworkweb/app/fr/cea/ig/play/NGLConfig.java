@@ -34,6 +34,8 @@ public class NGLConfig {
 	 */
 	public static final String NGL_INSTITUTE_PATH = "institute"; 
 	
+	public static final String NGL_RULES_KEY = "rules.key";
+	
 	/**
 	 * Configuration to use.
 	 */
@@ -63,6 +65,10 @@ public class NGLConfig {
 	
 	public String getInstitute() {
 		return config.getString(NGL_INSTITUTE_PATH);
+	}
+	
+	public String getRulesKey() {
+		return config.getString(NGL_RULES_KEY);
 	}
 	
 }

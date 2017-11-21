@@ -33,12 +33,13 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-
+import fr.cea.ig.play.NGLContext;
 import views.components.datatable.DatatableResponse;
 
-public class Reagents extends DocumentController<Reagent>{
-	public Reagents() {
-		super(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
+public class Reagents extends DocumentController<Reagent> {
+	
+	public Reagents(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
 	}
 
 	final static Form<ReagentSearchForm> reagentSearchForm = form(ReagentSearchForm.class);

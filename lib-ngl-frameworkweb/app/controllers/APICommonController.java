@@ -19,11 +19,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import play.data.DynamicForm;
 import play.data.Form;
+import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.With;
 import controllers.history.UserHistory;
+import fr.cea.ig.play.NGLContext;
 
 
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
@@ -39,12 +41,17 @@ public abstract class APICommonController<T> extends Controller {
 	// protected final Form<T> mainForm = form(type);
 	protected final Form<T> mainForm; //  = fr.cea.ig.play.IGGlobals.form(type);
 	
-	public APICommonController(Class<T> type) {
+	protected NGLContext ctx;
+	
+	public APICommonController(NGLContext ctx, Class<T> type) {
 		super();
 		this.type = type;
+		this.ctx = ctx;
 		// logger.debug("initializing forms");
-		listForm = fr.cea.ig.play.IGGlobals.form();
-		mainForm = fr.cea.ig.play.IGGlobals.form(type);
+		// listForm = fr.cea.ig.play.IGGlobals.form();
+		listForm = ctx.form();
+		// mainForm = fr.cea.ig.play.IGGlobals.form(type);
+		mainForm = ctx.form(type);
 		// logger.debug("intialization done");
 	}
 
@@ -166,7 +173,12 @@ public abstract class APICommonController<T> extends Controller {
 	protected String getCurrentUser(){
 		//return Context.current().request().username();
 		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
-		return fr.cea.ig.authentication.Helper.username(Context.current().session());
+		// return fr.cea.ig.authentication.Helper.username(Context.current().session());
+		return ctx.currentUser();
+	}
+	
+	public JsonNode errorsAsJson(Map<String, List<ValidationError>> errors) {
+		return ctx.errorsAsJson(errors);
 	}
 	
 }

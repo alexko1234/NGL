@@ -40,6 +40,7 @@ import controllers.admin.supports.api.objects.ProcessUpdate;
 import controllers.admin.supports.api.objects.ReadSetUpdate;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class NGLObjects extends APICommonController<NGLObject>{
 
@@ -47,8 +48,8 @@ public class NGLObjects extends APICommonController<NGLObject>{
 	private Map<String, AbstractUpdate> mappingCollectionUpdates;
 	
 	
-	public NGLObjects() {
-		super(NGLObject.class);
+	public NGLObjects(NGLContext ctx) {
+		super(ctx,NGLObject.class);
 		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
 		mappingCollectionUpdates.put("ngl_sq.Container", new ContainerUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Process", new ProcessUpdate());

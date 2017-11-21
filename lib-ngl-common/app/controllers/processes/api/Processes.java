@@ -20,6 +20,7 @@ import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -59,8 +60,8 @@ public class Processes extends DocumentController<Process> {
 	
 	
 	
-	public Processes() {
-		super(InstanceConstants.PROCESS_COLL_NAME, Process.class);		
+	public Processes(NGLContext ctx) {
+		super(ctx,InstanceConstants.PROCESS_COLL_NAME, Process.class);		
 		defaultKeys =  Arrays.asList("*");
 	}
 

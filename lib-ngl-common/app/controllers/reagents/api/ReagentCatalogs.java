@@ -32,13 +32,14 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
-public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
+public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 	
 	final static Form<ReagentCatalogSearchForm> ReagentCatalogSearchForm = form(ReagentCatalogSearchForm.class);
 	
-	public ReagentCatalogs() {
-		super(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class);
+	public ReagentCatalogs(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class);
 	}
 	
 	public Result save(){

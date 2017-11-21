@@ -26,7 +26,6 @@ public class TraceInformation implements IValidation {
 	
 	public TraceInformation() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	public TraceInformation(String createUser) {
@@ -36,8 +35,6 @@ public class TraceInformation implements IValidation {
 			this.creationDate = new Date();
 		}
 	}
-
-	
 
 	@JsonIgnore
 	public void setTraceInformation(String user) {

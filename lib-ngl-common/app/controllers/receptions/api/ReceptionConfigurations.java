@@ -31,12 +31,14 @@ import controllers.DocumentController;
 import controllers.ListForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ReceptionConfigurations extends DocumentController<ReceptionConfiguration> {
+	
 	final Form<ReceptionConfiguration> reportConfigForm = form(ReceptionConfiguration.class);
 	
-	public ReceptionConfigurations() {
-		super(InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
+	public ReceptionConfigurations(NGLContext ctx) {
+		super(ctx,InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
 	}
 	
 	@Permission(value={"reading"})

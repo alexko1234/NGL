@@ -25,22 +25,7 @@ public class OutToInStreams {
 	 * Size of the circular buffer.
 	 */
 	public static final int DEFAULT_BUFFER_SIZE = 4096;
-	
-	/*
-	
-
-    private Status status = Status.Waiting;
-
-    private byte value;
-
-    static enum Status {
-    	Waiting,
-    	Ready,
-    	Closed
-    }
-
-	*/
-	
+		
 	/**
 	 * Byte buffer for the cilruclar buffer implementation. The valid
 	 * offsets are modulo buffer length and greater or equal to start
@@ -51,12 +36,12 @@ public class OutToInStreams {
 	/**
 	 * Index of start data.
 	 */
-	private int start;
+	private long start;
 	
 	/**
 	 * Index after last data.
 	 */
-	private int end;
+	private long end;
 	
     /**
      * Output stream. 
@@ -107,7 +92,7 @@ public class OutToInStreams {
      * @return available bytes to read from the buffer 
      */
     public int available() {
-    	return end - start;
+    	return (int)(end - start);
     }
         
     /**
@@ -121,7 +106,7 @@ public class OutToInStreams {
     	try {
     		while (true) {
     			if (end-start < buffer.length) {
-    				buffer[end++ % buffer.length] = b;
+    				buffer[(int)(end++ % buffer.length)] = b;
     				notify();
     				return;
     			} else {
@@ -149,11 +134,11 @@ public class OutToInStreams {
 				if (len == 0) 
 					return;
     			// check if the buffer has some available space
-				int available = buffer.length - end + start; 
+				int available = (int)(buffer.length - end + start); 
     			if (available > 0) {
     				// How much can we write til the buffer end ? We start the
     				// write at (end % buffer.length).
-    			    int wStart = end % buffer.length;
+    			    int wStart = (int)(end % buffer.length);
     			    int toEnd = Math.min(available,buffer.length - wStart);
     			    int wLen  = Math.min(toEnd, len);
     			    logger.debug("writing " + off + "/" + len + " to " + end + ":" + wStart + "/" + wLen);
@@ -162,7 +147,7 @@ public class OutToInStreams {
     			    end += wLen;
     			    len -= wLen;
     			    off += wLen;
-    			    available = buffer.length - end + start; 
+    			    available = (int)(buffer.length - end + start); 
     			} else {
     				wait();
     			}
@@ -186,7 +171,7 @@ public class OutToInStreams {
     	try {
     		while (true) {
     			if (end > start) {
-    				byte b = buffer[start++ % buffer.length];
+    				byte b = buffer[(int)(start++ % buffer.length)];
     				notify();
     				return b;
     			} else if (output.closed) {
@@ -215,11 +200,11 @@ public class OutToInStreams {
     		while (true) {
     			// Something to read
     			if (end > start) {
-    				int available = end - start;
+    				int available = (int)(end - start);
     				// read no more than len
     				int rLen = Math.min(available,len);
     				// Copy block using the buffer limits
-    				int rStart = start % buffer.length;
+    				int rStart = (int)(start % buffer.length);
     				int rEnd   = rStart + rLen;
     				logger.debug("read " + start + "/" + rLen + " to " + off + "/" + len);
     				if (rEnd >= buffer.length) {
@@ -388,7 +373,7 @@ public class OutToInStreams {
          */
         @Override
         public void close() throws IOException {
-        	logger.info("input/close");
+        	logger.debug("input/close");
         	closed = true;
         }
         

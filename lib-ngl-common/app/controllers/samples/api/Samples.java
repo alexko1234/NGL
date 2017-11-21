@@ -65,30 +65,30 @@ public class Samples extends DocumentController<Sample> {
 	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
 	
 	private final Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
-	private final Form<Sample> sampleForm; // = form(Sample.class);
-	private final Form<SamplesSearchForm> sampleSearchForm; // = form(SamplesSearchForm.class);
-	private final Form<SampleBatchElement> batchElementForm; // = form(SampleBatchElement.class);
+	//private final Form<Sample> sampleForm; // = form(Sample.class);
+	// private final Form<SamplesSearchForm> sampleSearchForm; // = form(SamplesSearchForm.class);
+	//private final Form<SampleBatchElement> batchElementForm; // = form(SampleBatchElement.class);
 
 	private static final  List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
 	private static final List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
 	
 	@Inject
 	public Samples(NGLContext ctx) {
-		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);
+		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);
 		updateForm       = ctx.form(QueryFieldsForm.class);
-		sampleForm       = ctx.form(Sample.class);
-		sampleSearchForm = ctx.form(SamplesSearchForm.class);
-		batchElementForm = ctx.form(SampleBatchElement.class);
+		//sampleForm       = ctx.form(Sample.class);
+		// sampleSearchForm = ctx.form(SamplesSearchForm.class);
+		//batchElementForm = ctx.form(SampleBatchElement.class);
 	}
 	
 	
 	
 	@Permission(value={"reading"})
-	public Result list(){
+	public Result list() {
 		SamplesSearchForm samplesSearch = filledFormQueryString(SamplesSearchForm.class);
-		if(samplesSearch.reporting){
+		if (samplesSearch.reporting) {
 			return nativeMongoDBQuery(samplesSearch);
-		}else{
+		} else {
 			DBQuery.Query query = getQuery(samplesSearch);
 			return mongoJackQuery(samplesSearch, query);			
 		}		
@@ -247,19 +247,17 @@ public class Samples extends DocumentController<Sample> {
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
-	public  Result update(String code) throws DAOException{
-
-
+	public Result update(String code) throws DAOException {
 		Sample sampleInDB = findSample(code);
 		Logger.debug("Sample with code "+code);
-		if(sampleInDB == null){
-			return badRequest("Sample with code "+code+" not exist");
-		}
+		if (sampleInDB == null)
+			return badRequest("Sample with code " + code + " does not exist");
 
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		// Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		Form<Sample> filledForm = getMainFilledForm();
 		Sample sampleInForm = filledForm.get();
 
 		if(queryFieldsForm.fields == null){
@@ -318,11 +316,12 @@ public class Samples extends DocumentController<Sample> {
 		}	
 	}
 
-	private static DatatableForm updateForm(SamplesSearchForm form) {
+	/*private static DatatableForm updateForm(SamplesSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
 		}
 		return form;
-	}
+	}*/
+	
 }

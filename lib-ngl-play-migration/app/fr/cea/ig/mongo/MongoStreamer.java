@@ -26,7 +26,6 @@ import play.libs.Json;
  */
 public class MongoStreamer {
 
-	// TODO: The original method should be used
 	/**
 	 * Streamer as an input stream. 
 	 * @param streamer streamer to use

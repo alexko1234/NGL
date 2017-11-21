@@ -41,8 +41,8 @@ public class WSHelper {
 	 */
 	public static WSResponse get(WSClient ws, String url, int status) {
 		WSResponse r = get(ws,url);
-		assertEquals(url, status, r.getStatus());
-		return r;
+		assertEquals("GET " + url + " " + r.getBody(), status, r.getStatus());
+		return r; 
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class WSHelper {
 	 */
 	public static WSResponse put(WSClient ws, String url, String payload, int status) {
 		WSResponse r = put(ws,url,payload);
-		assertEquals(url, status, r.getStatus());
+		assertEquals("PUT " + url + " " + r.getBody(), status, r.getStatus());
 		return r;
 	}
 
@@ -103,7 +103,7 @@ public class WSHelper {
 	 */
 	public static WSResponse post(WSClient ws, String url, String payload, int status) {
 		WSResponse r = post(ws,url,payload);
-		assertEquals(url, status, r.getStatus());
+		assertEquals("POST " + url + " " + r.getBody(), status, r.getStatus());
 		return r;
 	}
 

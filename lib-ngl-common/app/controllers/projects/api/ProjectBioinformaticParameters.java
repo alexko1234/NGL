@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import controllers.SubDocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
@@ -19,12 +20,12 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 
-@Controller
-public class ProjectBioinformaticParameters extends SubDocumentController<Project, BioinformaticParameters>{
+// @Controller
+public class ProjectBioinformaticParameters extends SubDocumentController<Project, BioinformaticParameters> {
 
 
-	public ProjectBioinformaticParameters() {
-		super(InstanceConstants.PROJECT_COLL_NAME, Project.class, BioinformaticParameters.class);
+	public ProjectBioinformaticParameters(NGLContext ctx) {
+		super(ctx,InstanceConstants.PROJECT_COLL_NAME, Project.class, BioinformaticParameters.class);
 	}
 
 	@Override
