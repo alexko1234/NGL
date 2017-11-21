@@ -703,9 +703,9 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
 						null, "single" ,104, true, null, null));
 		
-		// ngsRunWorkLabel: optionnel,niveau process uniquement
+		// robotRunWorkLabel: optionnel,niveau process uniquement; 21/11/2017 (chgt nom)
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Nom de travail run NGS","ngsRunWorkLabel",
+				DescriptionFactory.newPropertiesDefinition("Nom de travail run (robot)","robotRunWorkLabel",
 						LevelService.getLevels(Level.CODE.Process), String.class, false, "F",
 						null, "single" ,105, true, null, null));
 		
