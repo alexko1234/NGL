@@ -5,10 +5,11 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import static fr.cea.ig.play.test.DevAppTesting.code;
+import static fr.cea.ig.play.test.DevAppTesting.newCode;
 import static fr.cea.ig.play.test.DevAppTesting.cr;
 import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
 import static fr.cea.ig.play.test.DevAppTesting.testInServer;
+import static fr.cea.ig.play.test.DevAppTesting.savage;
 import static fr.cea.ig.play.test.RoutesTest.checkRoutes;
 import static fr.cea.ig.play.test.WSHelper.get;
 
@@ -17,10 +18,14 @@ import static ngl.sq.Global.devapp;
 import static play.test.Helpers.OK;
 import static play.test.Helpers.NOT_FOUND;
 
+import models.laboratory.container.instance.Container;
+
 public class Heavy {
+	
 	@Test
 	public void test01() throws Exception {
-		JsonNode sample_0 = ngl.sq.SamplesTest.create_00(code("TEST"));
+		JsonNode sample_0 = ngl.sq.TestSample.create_00(newCode());
+		JsonNode container_0 = ngl.sq.TestContainer.create_00(newCode(),sample_0);
 		// if (true) throw new RuntimeException("" + sample_0.path("code"));
 		
 	    testInServer(devapp(),
@@ -28,6 +33,15 @@ public class Heavy {
 	    			get(ws,"/",OK);
 	    			get(ws,"/404",NOT_FOUND);
 	    	    	cr(ws,"/api/samples",sample_0);
+	    	    	rurNeqTraceInfo(ws,"/api/samples/",sample_0);
+	    	    	// cr(ws,"/api/containers",container_0);
+	    	    	// We need to use the internal api, using directly the application.
+	    	    	// This accesses pretty directly to the mongo layer as this is all
+	    	    	// we've got in this lib. ngl-common test should provide a more controlled
+	    	    	// access.
+	    	    	savage(container_0,Container.class,models.utils.InstanceConstants.CONTAINER_COLL_NAME);
+	    	    	rurNeqTraceInfo(ws,"/api/containers/",container_0);
+	    	    	
 	    	    	if (true) throw new RuntimeException("ok");
 
 	    			
@@ -44,25 +58,25 @@ public class Heavy {
 	    	// We use the object names to trigger the view template and the rur.
 	  
 	    	// Echantillons - samples
-	    	rurNeqTraceInfo("/api/samples/AAAA-A120_ST147_T0_A",ws);
+	    	rurNeqTraceInfo(ws,"/api/samples/AAAA-A120_ST147_T0_A");
 	    	get(ws,"/samples/AAAA-A120_ST147_T0_A",OK);
 	    	
 	    	// Supports - supports
-	    	rurNeqTraceInfo("/api/supports/2A4F4FL2H",ws);
+	    	rurNeqTraceInfo(ws,"/api/supports/2A4F4FL2H");
 	    	get(ws,"/supports/2A4F4FL2H",OK);
 	    	
 	    	// Containers - containers
 	    	//rurNeqTraceInfo("/api/containers/HLMF5BBXX_8",ws);
-		    rurNeqTraceInfo("/api/containers/29J81XXL4",ws);
+		    rurNeqTraceInfo(ws,"/api/containers/29J81XXL4");
 		    get(ws,"/containers/29J81XXL4",OK);
 		    
 		    // Processus - processes 
-		    rurNeqTraceInfo("/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",ws);
+		    rurNeqTraceInfo(ws,"/api/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK");
 		    // This is a 404
 		    // get(ws,"/processes/BUK_AAAA_METAGENOMIC-PROCESS-WITH-SPRI-SELECT_2A4E2L2AK",OK);
 		    
 		    // Experiences - experiments
-		    rurNeqTraceInfo("/api/experiments/CHIP-MIGRATION-20170915_144939CDA",ws);
+		    rurNeqTraceInfo(ws,"/api/experiments/CHIP-MIGRATION-20170915_144939CDA");
 	    	get(ws,"/experiments/CHIP-MIGRATION-20170915_144939CDA",OK);
 	    	
 	    	// Create container  - create and get code/id

@@ -32,6 +32,7 @@ import com.mongodb.DBObject;
 
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * 
@@ -48,8 +49,8 @@ public class ExperimentReagents extends Experiments{
 	
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	
-	public ExperimentReagents() {
-		super();	
+	public ExperimentReagents(NGLContext ctx) {
+		super(ctx);	
 	}
 	
 	@Permission(value={"reading"})

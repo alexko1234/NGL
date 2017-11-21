@@ -32,24 +32,38 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.MongoStreamer;
+import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.util.Streamer;
 import fr.cea.ig.MongoDBResult.Sort;
 
 // TODO: cleanup
 
+/**
+ * Mongo utility methods on top of the api common controller.
+ * 
+ * @author vrd
+ *
+ * @param <T> controller object type
+ */
 public abstract class MongoCommonController<T extends DBObject> extends APICommonController<T> {
 
+	/**
+	 * Mongo collection name.
+	 */
 	protected String collectionName;
 	
 	protected List<String> defaultKeys;
 	
-	protected MongoCommonController(String collectionName, Class<T> type) {
-		super(type);
+	// This is an abstract class so protected or public constructors should not
+	// make a difference.
+	
+	protected MongoCommonController(NGLContext ctx, String collectionName, Class<T> type) {
+		super(ctx,type);
 		this.collectionName = collectionName;
 	}
 	
-	protected MongoCommonController(String collectionName, Class<T> type, List<String> defaultKeys) {
-		super(type);
+	protected MongoCommonController(NGLContext ctx, String collectionName, Class<T> type, List<String> defaultKeys) {
+		super(ctx,type);
 		this.collectionName = collectionName;
 		this.defaultKeys = defaultKeys;
 	}
@@ -164,6 +178,11 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return values;
     }
 	
+
+	protected Builder getBuilder(Object value, List<String> fields) {
+		return getBuilder(value, fields, value.getClass(), null);
+	}
+
 	/**
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
@@ -172,8 +191,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected Builder getBuilder(Object value, List<String> fields) {
-		return getBuilder(value, fields, type, null);
+	protected Builder getBuilder(Object value, List<String> fields, Class clazz) {
+		return getBuilder(value, fields, clazz, null);
 	}
 	
 	/**
@@ -184,12 +203,12 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	 * @param clazz
 	 * @return
 	 */
-	protected <P> Builder getBuilder(Object value, List<String> fields, Class<P> clazz, String prefix) {
+	protected Builder getBuilder(Object value, List<String> fields, Class clazz, String prefix) {
 		Builder builder = new Builder();
 		try {
 			for (String field: fields) {
 				String fieldName = (null != prefix)?prefix+"."+field:field;
-				builder.set(fieldName, clazz.getField(field).get(value));
+				builder.set(fieldName, type.getField(field).get(value));
 			}
 		} catch(Exception e) {
 			throw new RuntimeException(e);
@@ -278,10 +297,10 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			return badRequest();
 		}
 	}
-	private InputStream getChunk(MongoCursor<T> all) {
+	public InputStream getChunk(MongoCursor<T> all) {
 		return MongoStreamer.stream(all);
 	}
-	private InputStream getUDTChunk(MongoCursor<T> all) {
+	public InputStream getUDTChunk(MongoCursor<T> all) {
 		return MongoStreamer.streamUDT(all);
 	}
 	/*
@@ -358,14 +377,14 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return form;
 	}
 	
-	private InputStream getUDTChunk(MongoDBResult<T> all) {
+	public InputStream getUDTChunk(MongoDBResult<T> all) {
 		return MongoStreamer.streamUDT(all);
 	}
 	
-	private InputStream getChunk(MongoDBResult<T> all) {
+	public InputStream getChunk(MongoDBResult<T> all) {
 		return MongoStreamer.stream(all);
 	}
-	
+		
 	/*
 	private StringChunks getUDTChunk(MongoDBResult<T> all) {
 		return new StringChunks() {
@@ -438,4 +457,26 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		};
 	}
 	*/
+	
+	// protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type){
+	protected Result nativeMongoDBQQuery(ListForm form) {
+		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
+		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
+		if (form.datatable) {
+			// return ok(getUDTChunk(all)).as("application/json");
+			return ok(MongoStreamer.streamUDT(all)).as("application/json");
+		} else if(form.list) {
+			//return ok(getChunk(all)).as("application/json");
+			return ok(MongoStreamer.stream(all)).as("application/json");
+		} else if(form.count) {
+			int count = all.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else {
+			return badRequest();
+		}
+	}
+	
+
 }

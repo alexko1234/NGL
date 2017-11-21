@@ -2,7 +2,7 @@ package controllers.analyses.api;
 
 import java.util.Collection;
 
-import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.Analysis;
@@ -18,14 +18,15 @@ import validation.ContextValidation;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
-@Controller
-public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment>{
+//@Controller
+public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment> {
 
-	public AnalysisTreatments() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, Treatment.class);
+	public AnalysisTreatments(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, Treatment.class);
 	}
 	
 	protected Query getSubObjectQuery(String parentCode, String code){

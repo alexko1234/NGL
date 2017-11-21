@@ -141,7 +141,8 @@ object ApplicationBuild extends Build {
     
     val nglTestingDependencies = Seq(
       javaCore,
-      javaWs
+      javaWs,
+      ceaMongo
     )
     
 	  val nglcommonDependencies = Seq(

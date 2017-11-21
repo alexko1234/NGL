@@ -24,6 +24,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around ResolutionConfigurations object
@@ -35,8 +36,8 @@ public class Resolutions extends DocumentController<ResolutionConfiguration> {
 	final static Form<ResolutionConfigurationsSearchForm> searchForm = form(ResolutionConfigurationsSearchForm.class); 
 	final static Form<ResolutionConfiguration> resolutionConfigurationsForm = form(ResolutionConfiguration.class);
 
-	public Resolutions() {
-		super(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);		
+	public Resolutions(NGLContext ctx) {
+		super(ctx,InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);		
 	}
 
 

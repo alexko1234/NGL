@@ -35,11 +35,12 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class Kits extends DocumentController<Kit>{
 
-	public Kits() {
-		super(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
+	public Kits(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
 	}
 
 	final static Form<KitSearchForm> kitSearchForm = form(KitSearchForm.class);

@@ -29,6 +29,7 @@ public abstract class AbstractTests {
 	@BeforeClass
 	public static void startTestApplication() {
 		app = getFakeApplication();
+		// TODO: remove static reset
 		DescriptionHelper.initInstitute();
 	}
 
@@ -38,6 +39,7 @@ public abstract class AbstractTests {
 	@AfterClass
 	public static void shutdownTestApplication() {
 		app.asScala().stop();
+		// TODO: remove static reset
 		DescriptionHelper.initInstitute();
 	}
 

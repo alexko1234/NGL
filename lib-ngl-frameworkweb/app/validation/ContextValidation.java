@@ -231,4 +231,8 @@ public class ContextValidation {
 		}
 	}
 
+	public Map<String,List<ValidationError>> getErrors() {
+		return errors;
+	}
+	
 }

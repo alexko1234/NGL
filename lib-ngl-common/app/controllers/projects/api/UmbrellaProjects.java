@@ -29,12 +29,13 @@ import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around Project object
  *
  */
-@Controller
+// @Controller
 public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 
 	
@@ -43,8 +44,8 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
-	public UmbrellaProjects() {
-		super(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
+	public UmbrellaProjects(NGLContext ctx) {
+		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
 	}
 
 

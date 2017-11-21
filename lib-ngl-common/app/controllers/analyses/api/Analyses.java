@@ -28,6 +28,7 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -51,8 +52,10 @@ import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.analyses.AnalysisWorkflows;
-@Controller
-public class Analyses extends DocumentController<Analysis>{
+
+
+//@Controller
+public class Analyses extends DocumentController<Analysis> {
 
 	//final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
@@ -65,8 +68,8 @@ public class Analyses extends DocumentController<Analysis>{
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
-	public Analyses() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
+	public Analyses(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
 	}
 	
 	@Permission(value={"reading"})

@@ -35,10 +35,12 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
-public class Boxes extends DocumentController<Box>{
-	public Boxes() {
-		super(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class);
+public class Boxes extends DocumentController<Box> {
+	
+	public Boxes(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class);
 	}
 
 	final static Form<BoxSearchForm> boxSearchForm = form(BoxSearchForm.class);

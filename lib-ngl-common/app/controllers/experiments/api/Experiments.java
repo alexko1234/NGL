@@ -60,6 +60,7 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 import javax.inject.Inject;
 
@@ -82,8 +83,8 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	public static final String calculationsRules ="calculations";
 	
-	public Experiments() {
-		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);	
+	public Experiments(NGLContext ctx) {
+		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);	
 	}
 	
 	

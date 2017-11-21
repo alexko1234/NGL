@@ -53,16 +53,17 @@ import javax.inject.Inject;
 
 import com.google.common.io.Resources;
 
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.DBObject;
+//import models.laboratory.common.instance.TraceInformation;
+//import models.utils.instance.SampleHelper;
+//import models.utils.InstanceConstants;
+//import validation.ContextValidation;
+
 /**
  * Test support for NGL on DEV server.
- * The application is a singleton as the shutdown is not properly managed. All the
- * tests then share the same application instance and this could go wrong.
- * 
- * Configuration files are located using the class loader. The "ngl.test.dir" environment
- * variable content is added to the classpath in the build file.
- * 
- * The configuration files are loaded from the classpath and this does not differ from loading
- * the directory taht is added to the classpath.
+ * The application life cycle is managed properly and only one application is active at
+ * any given time when the {@link #devapp} method is used. 
  * 
  * @author vrd
  *
@@ -74,26 +75,54 @@ public class DevAppTesting {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(DevAppTesting.class);
 	
-	
+	/**
+	 * Somewhat unique identifier per test set execution that can be used to create unique identifiers.
+	 */
 	private static String testTimeKey = null;
 	
+	/**
+	 * Map hexadecimal chars to letters.
+	 * @param s string to apply substitution to
+	 * @return  string with applied substitution
+	 */
+	private static String hexToLetters(String s) {
+		return org.apache.commons.lang3.StringUtils.replaceChars(s,"0123456789abcdef","ABCDEFGHIJKLMONP");	
+	}
+	
+	/**
+	 * Somewhat unique identifier that can be used to create unique identifiers.
+	 * @return 
+	 */
 	public static String testTimeKey() {
 		if (testTimeKey == null) {
 			testTimeKey = Long.toHexString(System.currentTimeMillis());
 			testTimeKey = testTimeKey.substring(testTimeKey.length() - 6);
-			// Could map 0-F -> A-. for non numeric stuff
-			testTimeKey = org.apache.commons.lang3.StringUtils.replaceChars(testTimeKey,"0123456789ABCDEF","ABCDEFGHIJKLMONP").toUpperCase();			                                                                                
+			testTimeKey = hexToLetters(testTimeKey); 			                                                                                
 		}
 		return testTimeKey;
 	}
 
-	// Generate a key from some components
-	public static String code(String head) {
-		String testRunner = System.getProperty("user.name");
+	private static int codeId = 0;
+	
+	/**
+	 * Generate a code with the given prefix.
+	 * @param head prefix to prepend
+	 * @return     generated code
+	 */
+	public static String newCode(String head) {
+		String testRunner = System.getProperty("user.name").toUpperCase();
 		String datePart   = testTimeKey();
-		return head + testRunner + datePart;
+		String iid        = hexToLetters(String.format("%04d", codeId ++)); 
+		return head + testRunner + datePart + iid;
 	}
 	
+	/**
+	 * Generate a new code with "TEST" as prefix.
+	 * @return generated code
+	 */
+	public static String newCode() {
+		return newCode("TEST");
+	}
 
 	/*
 	 * Get the full name of the file that mathces the given resource. 
@@ -271,11 +300,19 @@ public class DevAppTesting {
 	 * @param url url to check
 	 * @param ws  web client to use
 	 */
-	public static void rurNeqTraceInfo(String url, WSClient ws) {
+	public static void rurNeqTraceInfo(WSClient ws, String url) {
 		new ReadUpdateReadTest(url)
 			.assertion(notEqualsPath("traceInformation"))
 			.run(ws);
 	}
+	
+	public static void rurNeqTraceInfo(WSClient ws, String url, JsonNode n) {
+		String code = new JsonFacade(n).getString("code");
+		new ReadUpdateReadTest(url + code)
+			.assertion(notEqualsPath("traceInformation"))
+			.run(ws);
+	}
+	
 	
 	public static void cr(WSClient ws, String url, JsonNode data) {
 		// This must post data to fill a form server side (Form<Sample>)
@@ -360,6 +397,29 @@ public class DevAppTesting {
 	
 	public static void checkRoutes(WSClient ws) {
 		RoutesTest.checkRoutes(ws);
+	}
+	
+	// Run through DAO stuff.
+	public static <T extends DBObject> void savage(JsonNode n, Class<T> t, String collectionName) {
+		T o = Json.fromJson(n, t);
+		
+		//if (null == input._id) {
+		//	input.traceInformation = new TraceInformation();
+		//	input.traceInformation.setTraceInformation(getCurrentUser());				
+		//} else {
+		//	return badRequest("use PUT method to update the sample");
+		//}
+		//ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		//ctxVal.setCreationMode();
+		//SampleHelper.executeRules(input, "sampleCreation");
+		//input.validate(ctxVal);	
+		//if (!ctxVal.hasErrors()) {
+		//	input = saveObject(input);			
+		//	return ok(Json.toJson(input));
+		//} else {
+		//	return badRequest(filledForm.errorsAsJson());
+		//}				
+		MongoDBDAO.save(collectionName, o);
 	}
 	
 }

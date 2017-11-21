@@ -32,19 +32,20 @@ import validation.ContextValidation;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around ResolutionConfigurations object
  *
  */
-@Controller
+// @Controller
 public class FilteringConfigurations extends DocumentController<FilteringConfiguration> {
 	
 	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class); 
 	final static Form<FilteringConfiguration> filteringConfigurationsForm = form(FilteringConfiguration.class);
 	
-	public FilteringConfigurations() {
-		super(InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);		
+	public FilteringConfigurations(NGLContext ctx) {
+		super(ctx,InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);		
 	}
 
 

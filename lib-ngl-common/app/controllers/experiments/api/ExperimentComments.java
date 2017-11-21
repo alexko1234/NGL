@@ -23,11 +23,13 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
-@Controller
+import fr.cea.ig.play.NGLContext;
+
+// @Controller
 public class ExperimentComments extends SubDocumentController<Experiment, Comment>{
 
-	public ExperimentComments() {
-		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
+	public ExperimentComments(NGLContext ctx) {
+		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
 	}
 	
 	protected Query getSubObjectQuery(String parentCode, String code){

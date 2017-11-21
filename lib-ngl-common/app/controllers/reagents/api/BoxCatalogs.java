@@ -34,13 +34,14 @@ import models.utils.ListObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class BoxCatalogs extends DocumentController<BoxCatalog>{
 	
 	final static Form<BoxCatalogSearchForm> boxCatalogSearchForm = form(BoxCatalogSearchForm.class);
 	
-	public BoxCatalogs() {
-		super(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
+	public BoxCatalogs(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
 	}
 	
 	public Result save(){

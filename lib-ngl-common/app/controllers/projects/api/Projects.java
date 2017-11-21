@@ -3,6 +3,7 @@ package controllers.projects.api;
 // import static play.data.Form.form;
 import static fr.cea.ig.play.IGGlobals.form;
 import fr.cea.ig.mongo.MongoStreamer;
+import fr.cea.ig.play.NGLContext;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,14 +37,14 @@ import fr.cea.ig.MongoDBResult;
  * Controller around Project object
  *
  */
-@Controller
+// @Controller
 public class Projects extends DocumentController<Project> {
 	
 	final static Form<ProjectsSearchForm> searchForm = form(ProjectsSearchForm.class); 
 	final static Form<Project> projectForm = form(Project.class);
 	
-	public Projects() {
-		super(InstanceConstants.PROJECT_COLL_NAME, Project.class);		
+	public Projects(NGLContext ctx) {
+		super(ctx,InstanceConstants.PROJECT_COLL_NAME, Project.class);		
 	}
 
 
