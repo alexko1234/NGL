@@ -220,6 +220,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 		$scope.atmService.viewToExperimentOneToMany($scope.experiment);
 		checkExtractionBlankSampleCode($scope);
 		$scope.$emit('childSaved', callbackFunction);
+		$scope.refreshExtractionBlankSampleCodeLists();
 	});
 	
 	
@@ -233,6 +234,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
+		$scope.refreshExtractionBlankSampleCodeLists();
 	});
 	
 	$scope.$on('cancel', function(e) {
@@ -386,16 +388,18 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', '$
 			});
 		}					
 	};
-	
-	
-	$scope.lists.refresh.samples({"projectCodes":"CDW"}, 'sampleDNA'); //CDW
-	$scope.lists.refresh.samples({"projectCodes":"CDY"}, 'sampleRNA'); //CDY
+
+	$scope.refreshExtractionBlankSampleCodeLists=function(){
+		$scope.lists.refresh.samples({"projectCodes":"CDW"}, 'sampleDNA'); //CDW
+		$scope.lists.refresh.samples({"projectCodes":"CDY"}, 'sampleRNA'); //CDY
+	};
+
 	
 	$scope.sample = {
 			extractionDNABlankSampleCode:null,
 			extractionRNABlankSampleCode:null
 	};
-	
+	$scope.refreshExtractionBlankSampleCodeLists();
 	atmService.experimentToView($scope.experiment, $scope.experimentType);					
     $scope.atmService = atmService;
     
