@@ -17,7 +17,7 @@
 						<div  class="col-md-2 col-lg-2 form-control" bt-select
 							ng-model="sample.extractionDNABlankSampleCode"
 							placeholder='@Messages("search.placeholder.samples")'
-							bt-options="sample.code as sample.code for sample in lists.get('sampleDNA')"
+							bt-options="sample.code as sample.code for sample in lists.get('sampleDNA')" filter="true"
 							auto-select></div>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 							ng-model="sample.extractionRNABlankSampleCode"
 							name="extractionBlankSampleCode"
 							placeholder='@Messages("search.placeholder.samples")'
-							bt-options="sample.code as sample.code for sample in lists.get('sampleRNA')"
+							bt-options="sample.code as sample.code for sample in lists.get('sampleRNA')" filter="true"
 							auto-select></div>
 					</div>
 				</div>
