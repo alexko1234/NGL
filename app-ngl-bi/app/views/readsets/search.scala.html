@@ -178,7 +178,7 @@
 				}
 				@formGroup{
 				<input type="text" class="form-control" ng-model="regexColumn" placeholder='@Messages("search.placeholder.readset.regexColumn")'>
-				<div class="form-control" bt-select ng-model="searchService.contextValue" placeholder="@Messages("search.placeHolder.config.context")" bt-options="context.code as context.name for context in searchService.lists.getContext()" ng-change="searchService.initAdditionalColumns()"></div>			
+				<div ng-if="searchService.lists.getContext().length>0" class="form-control" bt-select ng-model="searchService.contextValue" placeholder="@Messages("search.placeHolder.config.context")" bt-options="context.code as context.name for context in searchService.lists.getContext()" ng-change="searchService.updateAdditionnalColumnContext()"></div>			
 				}					
 			}
 			</div>			

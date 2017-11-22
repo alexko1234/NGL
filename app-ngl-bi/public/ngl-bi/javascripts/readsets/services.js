@@ -262,6 +262,7 @@
 				reportingConfigurationCode:undefined,
 				reportingConfiguration:undefined,
 				additionalColumns:[],
+				additionalColumnsContext:[],
 				mapAdditionnalColumn : new Map(),
 				additionalFilters:[],
 				selectedAddColumns:[],
@@ -367,6 +368,8 @@
 				initAdditionalColumns:function(){
 					this.additionalColumns=[];
 					this.selectedAddColumns=[];
+					this.additionalColumnsContext=[];
+					this.contextValue=undefined;
 					this.mapAdditionnalColumn=new Map();
 					
 					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
@@ -390,12 +393,12 @@
 					var allColumnsFiltered = [];
 					for(var i=0; i<allColumns.length; i++){
 						if(this.mapAdditionnalColumn.get(allColumns[i].position)==undefined){
-							if(this.contextValue==undefined || (this.contextValue!=undefined && allColumns[i].context!=null && allColumns[i].context.includes(this.contextValue))){
+							//if(this.contextValue==undefined || (this.contextValue!=undefined && allColumns[i].context!=null && allColumns[i].context.includes(this.contextValue))){
 								allColumnsFiltered.push(allColumns[i]);
 								var tabColumn=[];
 								tabColumn.push(allColumns[i]);
 								this.mapAdditionnalColumn.set(allColumns[i].position,tabColumn);
- 							}
+ 							//}
 						}else{
 							this.mapAdditionnalColumn.get(allColumns[i].position).push(allColumns[i]);
 						}
@@ -403,22 +406,48 @@
 					return allColumnsFiltered;
 				},
 				
-				getAddColumnsToForm : function(){
-					if(this.additionalColumns.length === 0){
-						this.initAdditionalColumns();
+				updateAdditionnalColumnContext: function(){
+					if(this.contextValue!=undefined){
+						var filteredColumn = [];
+						for(var i = 0 ; i < this.additionalColumns.length ; i++){
+							for(var j = 0; j < this.additionalColumns[i].length; j++){
+								if(this.additionalColumns[i][j].context!=null && this.additionalColumns[i][j].context.includes(this.contextValue)){
+									filteredColumn.push(this.additionalColumns[i][j]);
+								}
+							}
+						}
+						var formColumns = [];
+						var nbElementByColumn = Math.ceil(filteredColumn.length / 5); //5 columns
+						for(var i = 0; i  < 5 && filteredColumn.length > 0 ; i++){
+							formColumns.push(filteredColumn.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formColumns.length < 5){
+							formColumns.push([]);
+						}
+						this.additionalColumnsContext=formColumns;
 					}
-					return this.additionalColumns;									
+				},
+				
+				getAddColumnsToForm : function(){
+					if(this.contextValue!=undefined && this.additionalColumnsContext.length>0){
+						return this.additionalColumnsContext;
+					}else{
+						if(this.additionalColumns.length === 0){
+							this.initAdditionalColumns();
+						}
+						return this.additionalColumns;
+					}
+					
 				},
 				
 				addColumnsToDatatable:function(){
-					//this.reportingConfiguration = undefined;
-					//this.reportingConfigurationCode = undefined;
 					
 					this.selectedAddColumns = [];
+					
 					for(var i = 0 ; i < this.additionalColumns.length ; i++){
 						for(var j = 0; j < this.additionalColumns[i].length; j++){
 							if(this.additionalColumns[i][j].select){
-								//this.selectedAddColumns.push(this.additionalColumns[i][j]);
 								for(var c=0; c<this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position).length; c++){
 									this.selectedAddColumns.push(this.mapAdditionnalColumn.get(this.additionalColumns[i][j].position)[c]);
 								}
