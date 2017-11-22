@@ -162,7 +162,8 @@ object ApplicationBuild extends Build {
 		  "javax.mail"           % "mail"                      % "1.4.2",
 		  "org.codehaus.janino"  % "janino"                    % "2.5.15",
 		  "de.flapdoodle.embed"  % "de.flapdoodle.embed.mongo" % "1.50.0",
-		  "org.javassist"        % "javassist"                 % "3.20.0-GA"
+		  "org.javassist"        % "javassist"                 % "3.20.0-GA",
+		  "com.sybase"		     % "jdbc4"                 	   % "7.0"
 		)	
 			   
 	  val ngldatatableDependencies = Seq(
