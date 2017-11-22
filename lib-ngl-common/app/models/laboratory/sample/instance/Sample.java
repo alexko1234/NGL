@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.ITraceable;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -35,7 +36,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Sample")
-public class Sample extends DBObject implements IValidation{
+public class Sample extends DBObject implements IValidation, ITraceable {
 
 
 	@JsonIgnore
@@ -89,6 +90,14 @@ public class Sample extends DBObject implements IValidation{
 		SampleValidationHelper.validateRules(this, contextValidation);
 		//TODO validation taxon
 		
+	}
+
+
+	@Override
+	public TraceInformation getTraceInformation() {
+		if (traceInformation == null)
+			traceInformation = new TraceInformation();
+		return traceInformation;
 	}
 
 }

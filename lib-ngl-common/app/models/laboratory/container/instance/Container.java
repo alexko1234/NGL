@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.ITraceable;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -48,7 +49,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Container")
-public class Container extends DBObject implements IValidation {
+public class Container extends DBObject implements IValidation, ITraceable {
 
 	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
 	//duplication for output in exp :code, categoryCode, contents, mesured*, //contents just for tag and tagCategory
@@ -144,6 +145,13 @@ public class Container extends DBObject implements IValidation {
 		validateVolume(volume, contextValidation);
 		validateSize(size, contextValidation);
 		validateRules(this, contextValidation);
+	}
+
+	@Override
+	public TraceInformation getTraceInformation() {
+		if (traceInformation == null)
+			traceInformation = new TraceInformation();
+		return traceInformation;
 	}
 
 	

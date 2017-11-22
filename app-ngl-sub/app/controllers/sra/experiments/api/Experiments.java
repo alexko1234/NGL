@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -16,6 +18,7 @@ import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 import play.Logger;
@@ -32,8 +35,9 @@ public class Experiments extends DocumentController<Experiment> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 
-	public Experiments() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public Experiments(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
 	public Result get(String code)

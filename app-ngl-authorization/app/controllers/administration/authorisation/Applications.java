@@ -49,10 +49,10 @@ public class Applications extends Controller{
 	  public static Result createOrUpdate(String format) {
 			Form<Application> filledForm = form(Application.class).bindFromRequest();
 
-			if(filledForm.hasErrors()) {
-				if("json".equals(format)){
-					return badRequest(filledForm.errorsAsJson());
-				}else{
+			if (filledForm.hasErrors()) {
+				if ("json".equals(format)) {
+					return badRequest(filledForm.errorsAsJson()); // legit
+				} else {
 					return badRequest(addApplication.render(filledForm,true));
 				}
 				

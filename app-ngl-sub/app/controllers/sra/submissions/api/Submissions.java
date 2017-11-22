@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -25,6 +27,7 @@ import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
@@ -59,8 +62,9 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
 
-	public Submissions() {
-		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
+	@Inject
+	public Submissions(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
 	}
 
 	final static Form<Submission> submissionForm = form(Submission.class);

@@ -6,3 +6,7 @@ Netty deprecated.
 
 Datatable should request result ranges instead of full result.
 
+Controller badRequest("") -> json
+
+Traceinformation 
+

@@ -65,10 +65,10 @@ public class Users extends Controller {
 	  
 	  public static Result createOrUpdate(String format) {
 			Form<User> filledForm = form(User.class).bindFromRequest();
-			if(filledForm.hasErrors()) {
-				if("json".equals(format)){
-					return badRequest(filledForm.errorsAsJson());
-				}else{
+			if (filledForm.hasErrors()) {
+				if ("json".equals(format)) {
+					return badRequest(filledForm.errorsAsJson()); // legit
+				} else {
 					return badRequest(addUser.render(filledForm,true));
 				}
 				

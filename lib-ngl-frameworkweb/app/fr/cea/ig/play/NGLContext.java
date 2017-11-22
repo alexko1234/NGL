@@ -36,10 +36,24 @@ import fr.cea.ig.play.NGLConfig;
 @Singleton
 public class NGLContext {
 
+	/**
+	 * Logger.
+	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(NGLContext.class);
 	
+	/**
+	 * NGL play configuration wrapper.
+	 */
 	private final NGLConfig config;
+	
+	/**
+	 * I18N.
+	 */
 	private final MessagesApi messagesApi;
+	
+	/**
+	 * Form factory.
+	 */
 	private final FormFactory formFactory;
 	
 	@Inject
@@ -70,7 +84,12 @@ public class NGLContext {
 	public String currentUser() {
 		return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
 	}
+
+	public Lang currentLang() {
+		return play.mvc.Http.Context.current() != null ? play.mvc.Http.Context.current().lang() : null;
+	}
 	
+	// Should use the currentLang method.
 	public Messages messages() {
 		// logger.debug("messages");
 		return messagesApi.preferred(new ArrayList<Lang>());

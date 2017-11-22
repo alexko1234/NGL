@@ -6,12 +6,15 @@ import static fr.cea.ig.play.IGGlobals.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
 
@@ -29,8 +32,9 @@ public class Samples extends DocumentController<AbstractSample>{
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
 	final static Form<AbstractSample> sampleForm = form(AbstractSample.class);
 
-	public Samples() {
-		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
+	@Inject
+	public Samples(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
 	}
 
 	public Result get(String code)
