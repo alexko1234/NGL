@@ -878,7 +878,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			creationMode = true;
 			$scope.startEditMode();
 			
-			if(!defaultExperiment){
+			if(!defaultExperiment || defaultExperiment.typeCode != $routeParams.typeCode){
 				defaultExperiment = {
 					state : {
 						resolutionCodes : [],
