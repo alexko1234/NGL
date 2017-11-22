@@ -1,5 +1,6 @@
 package fr.cea.ig.play;
 
+import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,15 @@ public class NGLContext {
 	 */
 	private final FormFactory formFactory;
 	
+	private static NGLContext nglContext;
+	
+	
+	public static NGLContext getNglContext() {
+		//	if(nglContext==null)
+			//nglContext=IGGlobals.injector().instanceOf(NGLContext.class);
+		return nglContext;
+	}
+
 	@Inject
 	public NGLContext(NGLConfig   config,
 					  MessagesApi messagesApi,
