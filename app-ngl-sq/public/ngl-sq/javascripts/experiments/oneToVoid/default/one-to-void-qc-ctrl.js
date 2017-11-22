@@ -176,9 +176,9 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 		// !! en mode creation $scope.experiment.atomicTransfertMethod n'est pas encore chargé=> passer par Basket ( ajouter mainService dans le controller )
 		var tmp = [];
 		if(!$scope.isCreationMode()){
-			var tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
+			tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
 		}else{
-			var tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+			tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
 		}
 		var supportCategoryCode = undefined;
 		if(tmp.length === 1){

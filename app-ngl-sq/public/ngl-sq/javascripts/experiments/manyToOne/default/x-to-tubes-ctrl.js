@@ -227,8 +227,23 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			}
 	};	
 	
+	var tmp = [];
+	if(!$scope.isCreationMode()){
+		tmp = $scope.$eval("atomicTransfertMethods|flatArray:'inputContainerUseds'|getArray:'locationOnContainerSupport.categoryCode'|unique",$scope.experiment);			
+	}else{
+		tmp = $scope.$eval("getBasket().get()|getArray:'support.categoryCode'|unique",mainService);
+	}
+	var supportCategoryCode = undefined;
+	if(tmp.length === 1){
+		supportCategoryCode=tmp[0];
+	}else{
+		supportCategoryCode="mixte";
+	}
+			
+	console.log("supportCategoryCode : "+supportCategoryCode);
 	
-	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+	
+	if(supportCategoryCode === "96-well-plate"){
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.supportCode"),
 			"property" : "inputContainer.support.code",
@@ -269,7 +284,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	} else {
 		datatableConfig.columns.push({
 			"header" : Messages("containers.table.code"),
-			"property" : "inputContainer.support.code",
+			"property" : "inputContainer.code",
 			"order" : true,
 			"edit" : false,
 			"hide" : true,
