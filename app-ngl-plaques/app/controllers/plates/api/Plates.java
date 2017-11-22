@@ -14,7 +14,7 @@ import java.util.Map;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
 import models.utils.CodeHelper;
-import play.Logger;
+// import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.data.validation.ValidationError;
@@ -24,50 +24,59 @@ import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.MaterielManipSearch;
 
+// TODO: use DI, extends DocumemntController to start with
 public class Plates extends CommonController {
+	
+	/**
+	 * Logger.
+	 */
+	private static final play.Logger.ALogger logger = play.Logger.of(Plates.class);
+	
+	
 	final static Form<Plate> wellsForm = form(Plate.class);
+	
 	final static Form<MaterielManipSearch> manipForm = form(MaterielManipSearch.class);
 	
-	public static Result save(){
-        	Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
-        
-        	Plate plate = filledForm.get();
-        	boolean isUpdate = true;
-        	Logger.info("SAVE Plate : " + plate);
-        	if (plate.code == null) {
-        	    plate.code = newCode(plate.wells[0].typeCode);
-        	    if (plate.wells.length > 0) {
-        		plate.typeName = plate.wells[0].typeName;
-        		plate.typeCode = plate.wells[0].typeCode;
-        	    }
-        	    isUpdate = false;
-        	}
-        	validatePlate(plate, filledForm.errors(), isUpdate);
-        	if (!filledForm.hasErrors()) {
-        	    Logger.debug(plate.toString());
-        	    if (!isUpdate) {
-        	    	Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
-        	    } else {
-        	    	Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
-        	    }
-        	    plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
-        	    return ok(Json.toJson(plate));
-        	} else {
-        	    return badRequest(filledForm.errorsAsJson());
-        	}
+	public static Result save() {
+		Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
+
+		Plate plate = filledForm.get();
+		boolean isUpdate = true;
+		logger.info("SAVE Plate : " + plate);
+		if (plate.code == null) {
+			plate.code = newCode(plate.wells[0].typeCode);
+			if (plate.wells.length > 0) {
+				plate.typeName = plate.wells[0].typeName;
+				plate.typeCode = plate.wells[0].typeCode;
+			}
+			isUpdate = false;
+		}
+		validatePlate(plate, filledForm.errors(), isUpdate);
+		if (!filledForm.hasErrors()) {
+			logger.debug(plate.toString());
+			if (!isUpdate) {
+				Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
+			} else {
+				Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
+			}
+			plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
+			return ok(Json.toJson(plate));
+		} else {
+			return badRequest(filledForm.errorsAsJson()); // not legit, use ContextValidation
+		}
 	}
 	
 	public static Result list(){
 		Form<MaterielManipSearch> filledForm =  manipForm.bindFromRequest();
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-		Logger.info("Manip Form :"+filledForm.toString());		
+		logger.info("Manip Form :"+filledForm.toString());		
 		List<Plate> plates = limsManipDAO.findPlates(filledForm.get().etmanip,filledForm.get().project, filledForm.get().plaqueId, 
 				filledForm.get().matmanom, filledForm.get().percodc, filledForm.get().fromDate, filledForm.get().toDate);		
 		return ok(Json.toJson(new DatatableResponse(plates, plates.size())));
 	}
 	
 	public static Result get(String code){
-		Logger.info("GET Plate : "+code);
+		logger.info("GET Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		Plate plate = limsManipDAO.getPlate(code);
 		if(plate != null){			
@@ -78,7 +87,7 @@ public class Plates extends CommonController {
 	}
 	
 	public static Result remove(String code){
-		Logger.info("DELETE Plate : "+code);
+		logger.info("DELETE Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		limsManipDAO.deletePlate(code);
 		return ok();

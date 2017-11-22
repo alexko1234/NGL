@@ -42,7 +42,7 @@ public class Heavy {
 	    	    	savage(container_0,Container.class,models.utils.InstanceConstants.CONTAINER_COLL_NAME);
 	    	    	rurNeqTraceInfo(ws,"/api/containers/",container_0);
 	    	    	
-	    	    	if (true) throw new RuntimeException("ok");
+	    	    	if (true) return; // throw new RuntimeException("ok");
 
 	    			
 	    	// Assuming that we have a json response from server that that the get/put

@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -20,6 +22,7 @@ import controllers.QueryFieldsForm;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.AbstractStudy;
@@ -44,8 +47,10 @@ public class StudiesInternal extends DocumentController<Study>{
 	final static Form<Study> studyForm = form(Study.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId","firstSubmissionDate","releaseDate");
-	public StudiesInternal() {
-		super(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class);
+	
+	@Inject
+	public StudiesInternal(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, Study.class);
 	}
 
 	public Result update(String code) {

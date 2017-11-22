@@ -48,9 +48,9 @@ public class Permissions extends Controller {
 			Form<Permission> filledForm = form(Permission.class).bindFromRequest();
 
 			if(filledForm.hasErrors()) {
-				if("json".equals(format)){
-					return badRequest(filledForm.errorsAsJson());
-				}else{
+				if ("json".equals(format)) {
+					return badRequest(filledForm.errorsAsJson()); // legit
+				} else {
 					return badRequest(addPermission.render(filledForm,true));
 				}
 				

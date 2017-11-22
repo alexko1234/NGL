@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -18,6 +20,7 @@ import controllers.DocumentController;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.AbstractStudy;
@@ -44,8 +47,9 @@ public class Studies extends DocumentController<AbstractStudy>{
 	final StudyWorkflows studyWorkflows = Spring.getBeanOfType(StudyWorkflows.class);
 	final static Form<State> stateForm = form(State.class);
 
-	public Studies() {
-		super(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
+	@Inject
+	public Studies(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
 	}
 
 

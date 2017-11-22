@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -22,6 +24,7 @@ import controllers.DocumentController;
 import controllers.sra.submissions.api.SubmissionsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import validation.ContextValidation;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.State;
@@ -35,7 +38,7 @@ import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.ConfigurationWorkflows;
 
 
-public class Configurations extends DocumentController<Configuration>{
+public class Configurations extends DocumentController<Configuration> {
 	
 	final static Form<Configuration> configurationForm = form(Configuration.class);
 	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
@@ -44,9 +47,9 @@ public class Configurations extends DocumentController<Configuration>{
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
 	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 
-
-	public Configurations() {
-		super(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class);
+	@Inject
+	public Configurations(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class);
 	}
 
 	

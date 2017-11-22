@@ -149,47 +149,38 @@ public class Containers extends DocumentController<Container> { // extends Commo
 	
 	@Permission(value={"reading"})
 	public Result list() throws DAOException{
-		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 		DBQuery.Query query = getQuery(containersSearch);
 		BasicDBObject keys = getKeys(updateForm(containersSearch));
 		
-		if(containersSearch.reporting){
-			//return nativeMongoDBQQuery(InstanceConstants.CONTAINER_COLL_NAME,containersSearch, Container.class);
+		if (containersSearch.reporting) {
 			return nativeMongoDBQQuery(containersSearch);
-		}else{
-			if(containersSearch.datatable){
-				// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-				// return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
-				return ok(MongoStreamer.streamUDT(results)).as("application/json");
-			}else if(containersSearch.count){
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("code", 1);
-				// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-				int count = results.count();
-				Map<String, Integer> m = new HashMap<String, Integer>(1);
-				m.put("result", count);
-				return ok(Json.toJson(m));
-			}else if(containersSearch.list){
-				// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-				List<Container> containers = results.toList();
-
-				List<ListObject> los = new ArrayList<ListObject>();
-				for(Container p: containers){
-					los.add(new ListObject(p.code, p.code));
-				}
-
-				return ok(Json.toJson(los));
-			}else{
-				MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
-
-				// return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");
-				return ok(MongoStreamer.stream(results)).as("application/json");	
+		} else if (containersSearch.datatable) {
+			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
+			return ok(MongoStreamer.streamUDT(results)).as("application/json");
+		} else if (containersSearch.count) {
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
+			int count = results.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else if (containersSearch.list) {
+			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
+			List<Container> containers = results.toList();
+			List<ListObject> los = new ArrayList<ListObject>();
+			for(Container p: containers){
+				los.add(new ListObject(p.code, p.code));
 			}
-		}			
+			return ok(Json.toJson(los));
+		} else {
+			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
+			// return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
+		}
 	}
 
 	
@@ -199,6 +190,7 @@ public class Containers extends DocumentController<Container> { // extends Commo
 	public Result update(String code) {
 		logger.debug("udpate " + code);
 		Container container = findContainer(code);
+		// 
 		if (container == null)
 			return badRequest("container with code " + code + " does not exist");
 		
@@ -228,6 +220,8 @@ public class Containers extends DocumentController<Container> { // extends Commo
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
 				return ok(Json.toJson(input));				
 			} else {
+				// This uses a non json overload and this makes the result unreadable
+				// in the UI.
 				return badRequest("url container code and json container code are not the same");
 			}	
 		} else {

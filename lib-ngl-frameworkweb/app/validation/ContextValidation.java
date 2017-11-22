@@ -10,45 +10,68 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import play.Logger;
 import play.Logger.ALogger;
 import play.data.validation.ValidationError;
-import play.i18n.Messages;
 
-// TODO: cleanup
+/**
+ * Validation context for objects that support validation (implementing IValidate).
+ * Misnamed, should be ValidationContext.
+ *  
+ * @author vrd
+ *
+ */
+
+// The context mode should probably be required at the constructor level to avoid
+// the NOT_DEFINED mode. The mode should probably not be modified for a given context.
 
 public class ContextValidation {
 
-	// private enum Mode {
 	public enum Mode {
 		CREATION, UPDATE, DELETE, NOT_DEFINED;
 	}
 
+	/**
+	 * User running the validation.
+	 */
 	private String user = null;
 
+	/**
+	 * Validation context mode.
+	 */
 	private Mode mode = Mode.NOT_DEFINED;
 		
+	//
 	private String rootKeyName = "";
-	
+	//
 	public Map<String,List<ValidationError>> errors;
-	
+	//
 	private Map<String,Object> contextObjects;
 
+	/**
+	 * Constructs a validation context using the provided user name.
+	 * @param user user name
+	 */
 	public ContextValidation(String user) {
 		errors         = new TreeMap<String, List<ValidationError>>();
 		contextObjects = new TreeMap<String, Object>();
 		this.user      = user;
 	}
 
+	/**
+	 * Constructs a validation context using the provided user name and initial errors.
+	 * @param user
+	 * @param errors
+	 */
 	public ContextValidation(String user, Map<String,List<ValidationError>> errors) {
-		// this.errors    = errors;
-		// Provide a modifiable collection from the provided errors.
 		this.errors    = new TreeMap<String, List<ValidationError>>(errors);
-		// this.errors.putAll(errors);
 		contextObjects = new TreeMap<String, Object>();
 		this.user      = user;
 	}
-	
+
+	/**
+	 * User running the validation.
+	 * @return user running the validation. 
+	 */
 	public String getUser() {
 		return user;
 	}
@@ -95,12 +118,13 @@ public class ContextValidation {
 
 
 	/**
-	 * add an error message
+	 * Add an error message. 
+	 * Misnamed, should be addError, @see {@link #addError(String, String, Object...)}.
 	 * @param key : property key
 	 * @param message : message key
 	 * @param arguments : message args
 	 */
-	public void addErrors(String property, String message, Object...arguments) {
+	public void addErrors(String property, String message, Object... arguments) {
 		String key = getKey(property);
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
@@ -108,8 +132,17 @@ public class ContextValidation {
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));			
 	}
 	
+	/**
+	 * Add an error message.
+	 * @param property  property key
+	 * @param message   message
+	 * @param arguments message parameters
+	 */
+	public void addError(String property, String message, Object... arguments) {
+		addErrors(property,message,arguments);
+	}
 	
-	public void addErrors(Map<String,List<ValidationError>> errors){
+	public void addErrors(Map<String,List<ValidationError>> errors) {
 		this.errors.putAll(errors);
 	}
 	
@@ -157,9 +190,9 @@ public class ContextValidation {
 	 * @param key
 	 */
 	public void removeKeyFromRootKeyName(String key) {
-		if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.equals(key)){
+		if (StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.equals(key)) {
 			this.rootKeyName = null;
-		}else if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.endsWith(key)){
+		} else if(StringUtils.isNotBlank(this.rootKeyName) && this.rootKeyName.endsWith(key)) {
 			this.rootKeyName = this.rootKeyName.substring(0, this.rootKeyName.length()-key.length()-1);
 		}
 	}
@@ -211,11 +244,11 @@ public class ContextValidation {
 	/***
 	 *
 	 */
-	public void clear(){
+	public void clear() {
 		errors.clear();
-		rootKeyName=null;
+		rootKeyName = null;
 		contextObjects.clear();
-		mode=Mode.NOT_DEFINED;
+		mode = Mode.NOT_DEFINED;
 	}
 
 	public void displayErrors(ALogger logger) {

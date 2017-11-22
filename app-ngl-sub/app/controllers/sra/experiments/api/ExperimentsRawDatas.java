@@ -6,6 +6,8 @@ import static fr.cea.ig.play.IGGlobals.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.run.instance.Treatment;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
@@ -23,14 +25,16 @@ import play.mvc.Result;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ExperimentsRawDatas extends DocumentController<Experiment> {
 
 	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
 	final static Form<RawData> rawDataForm = form(RawData.class);
 	
-	public ExperimentsRawDatas() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public ExperimentsRawDatas(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
 	public Result list()

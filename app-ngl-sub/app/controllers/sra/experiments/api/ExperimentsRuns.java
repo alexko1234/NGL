@@ -6,11 +6,14 @@ import static fr.cea.ig.play.IGGlobals.form;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 import play.Logger;
@@ -25,8 +28,9 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 	
-	public ExperimentsRuns() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public ExperimentsRuns(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
 	public Result get(String code)
