@@ -50,10 +50,12 @@ import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ContainerSupports extends CommonController {
 
@@ -72,6 +74,8 @@ public class ContainerSupports extends CommonController {
 	final static Form<State> stateForm = form(State.class);
 	
 	final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);
+	
+	// public ContainerSupports(NGLContext ctx) {}
 	
 	@Permission(value={"reading"})
 	public static Result get(String code){
@@ -146,8 +150,9 @@ public class ContainerSupports extends CommonController {
 		workflows.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getSupport(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -237,10 +242,11 @@ public class ContainerSupports extends CommonController {
 				// verifier si les champs de la query string font partie des champs modifiables
 				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); 
 				
-				if(!filledForm.hasErrors()){
-					if(null != dbSupport.traceInformation){
+				// if (!filledForm.hasErrors()) {
+				if (!ctxVal.hasErrors()) {
+					if (null != dbSupport.traceInformation) {
 						dbSupport.traceInformation.setTraceInformation(getCurrentUser());
-					}else{
+					} else {
 						Logger.error("traceInformation is null for Container support "+code);	
 					}
 					
@@ -259,8 +265,9 @@ public class ContainerSupports extends CommonController {
 					}
 					
 					return ok(Json.toJson(getSupport(code)));
-				}else{
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}		
 			}else{
 				return badRequest("container code are not the same");

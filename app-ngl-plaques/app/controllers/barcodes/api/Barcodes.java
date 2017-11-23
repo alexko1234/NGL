@@ -44,7 +44,7 @@ public class Barcodes extends CommonController {
     	    }
     	    return ok(Json.toJson(set));
     	} else {
-    	    return badRequest(filledForm.errorsAsJson()); // not legit, fix requires a change (use ContextValidation)
+    	    return badRequest(filledForm.errorsAsJson()); // possibly legit, above could run into immutable error map
     	}
 	}
 	

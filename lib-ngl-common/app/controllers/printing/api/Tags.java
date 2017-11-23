@@ -56,7 +56,8 @@ public class Tags extends APICommonController<Tag> {
 		if (!ctxVal.hasErrors()) {
 			return ok();
 		} else {
-			return badRequest(form.errorsAsJson());
+			// return badRequest(form.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	

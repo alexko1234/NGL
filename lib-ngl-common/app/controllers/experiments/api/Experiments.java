@@ -309,7 +309,8 @@ public class Experiments extends DocumentController<Experiment> {
 			return ok(Json.toJson(input));
 		} else {
 			workflows.applyErrorPostStateRules(ctxVal, input, input.state);
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}				
 	}
 	
@@ -520,39 +521,43 @@ public class Experiments extends DocumentController<Experiment> {
 					//Logger.debug((t2-t1)+" - "+(t3-t2)+" - "+(t4-t3)+" - "+(t5-t4));
 					
 					return ok(Json.toJson(input));
-				}else {
-					return badRequest(filledForm.errorsAsJson());			
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				return badRequest("Experiment code are not the same");
 			}
-		}else{
+		} else {
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			contextValidation.setUpdateMode();
 			validateAuthorizedUpdateFields(contextValidation, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(contextValidation, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!contextValidation.hasErrors()) {
 				TraceInformation ti = objectInDB.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
 				contextValidation.putObject(FIELD_STATE_CODE , objectInDB.state.code);
 				
-				if(queryFieldsForm.fields.contains("status")){
+				if (queryFieldsForm.fields.contains("status")) {
 					validateStatus(objectInDB.typeCode, input.status, contextValidation);				
 				}
 				
-				if(queryFieldsForm.fields.contains("reagents")){
+				if (queryFieldsForm.fields.contains("reagents")) {
 					validateReagents(objectInDB.reagents, contextValidation);				
 				}
 				
-				if(!contextValidation.hasErrors()){
+				if (!contextValidation.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 							DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields).set("traceInformation", ti));
 					return ok(Json.toJson(getObject(code)));
-				}else{
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(contextValidation.getErrors()));
 				}				
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 		}							
 	}
@@ -572,7 +577,8 @@ public class Experiments extends DocumentController<Experiment> {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -588,7 +594,8 @@ public class Experiments extends DocumentController<Experiment> {
 		if (!contextValidation.hasErrors()) {
 			return ok();
 		} else {
-			return badRequest(deleteForm.errorsAsJson());
+			// return badRequest(deleteForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		
 		

@@ -27,6 +27,8 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 
+// TODO: remove System.out.print
+
 public class Experiments extends DocumentController<Experiment> {
 
 	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
@@ -74,7 +76,8 @@ public class Experiments extends DocumentController<Experiment> {
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("experiments ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!updateExperiment: " +userExperiment.code );
 
@@ -97,12 +100,15 @@ public class Experiments extends DocumentController<Experiment> {
 				}else {
 					System.out.println("contextValidation.errors pour experiment :"  +userExperiment.code);
 					ctxVal.displayErrors(Logger.of("SRA"));
-					System.out.println(filledForm.errorsAsJson());
-					return badRequest(filledForm.errorsAsJson());
+					// System.out.println(filledForm.errors-AsJson());
+					// return badRequest(filledForm.errors-AsJson());
+					System.out.println(errorsAsJson(ctxVal.getErrors()));
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				filledForm.reject("experiment code " + code + " and userExperiment.code " + userExperiment.code , " are not the same");
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
 		}else{
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -117,7 +123,8 @@ public class Experiments extends DocumentController<Experiment> {
 
 				return ok(Json.toJson(getObject(code)));
 			}else{
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}
 	}

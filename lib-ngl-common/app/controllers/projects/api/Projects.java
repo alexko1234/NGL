@@ -163,7 +163,8 @@ public class Projects extends DocumentController<Project> {
 			saveObject(projectInput);
 			return ok(Json.toJson(projectInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -189,11 +190,12 @@ public class Projects extends DocumentController<Project> {
 			if (!ctxVal.hasErrors()) {
 				updateObject(projectInput);
 				return ok(Json.toJson(projectInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
 			
-		}else{
+		} else {
 			return badRequest("Project codes are not the same");
 		}
 	}

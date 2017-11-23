@@ -230,7 +230,8 @@ public class Containers extends DocumentController<Container> { // extends Commo
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			if(ctxVal.hasErrors())
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			
 			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
 
@@ -291,8 +292,9 @@ public class Containers extends DocumentController<Container> { // extends Commo
 		workflows.setState(ctxVal, container, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(findContainer(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 

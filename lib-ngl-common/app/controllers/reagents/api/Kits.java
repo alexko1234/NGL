@@ -79,7 +79,7 @@ public class Kits extends DocumentController<Kit>{
 				return ok(Json.toJson(kit));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
 	}
 
 	public Result update(String code){
@@ -98,7 +98,7 @@ public class Kits extends DocumentController<Kit>{
 				return ok(Json.toJson(kit));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
 	}
 
 	public Result list(){

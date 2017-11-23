@@ -60,7 +60,7 @@ public class Samples extends DocumentController<AbstractSample>{
 
 		if (sample == null) {
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		System.out.println(" ok je suis dans Samples.update\n");
 		AbstractSample sampleInput = filledForm.get();
@@ -81,11 +81,12 @@ public class Samples extends DocumentController<AbstractSample>{
 			}else {
 				System.out.println(" ok je suis dans Samples.update et erreurs \n");
 				Logger.debug(Json.toJson(sampleInput).toString());
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}else{
 			filledForm.reject("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 	}
 

@@ -180,4 +180,18 @@ public class NGLContext {
 		}
 	}
 
+	// ----------------------------------------------------------------------
+	// Transitional code before fully DI compliant code
+	
+	private static NGLContext instance;
+	@Deprecated
+	public static NGLContext instance() {
+		if (instance == null)
+			instance = IGGlobals.injector().instanceOf(NGLContext.class);
+		return instance;
+	}
+	@Deprecated
+	public static JsonNode _errorsAsJson(Map<String, List<ValidationError>> errors) {
+		return instance().errorsAsJson(errors);
+	}
 }

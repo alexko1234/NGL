@@ -16,6 +16,7 @@ import controllers.TPLCommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 
 // TODO: cleanup
@@ -42,16 +43,17 @@ public class Receptions extends TPLCommonController {
 		if(null != pfv){
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-			try{
+			try {
 				FileService fileService = ReceptionFileService.getFileService(configuration, pfv, contextValidation);
 				fileService.analyse();
-			}catch(Throwable e){
+			} catch(Throwable e) {
 				e.printStackTrace();
-				contextValidation.addErrors("Error", e.getMessage()+"");
+				contextValidation.addErrors("Error", e.getMessage());
 			}
-			if(contextValidation.hasErrors()){
-				return badRequest(filledForm.errorsAsJson());
-			}else{
+			if (contextValidation.hasErrors()) {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
+			} else {
 				return ok();
 			}
 			

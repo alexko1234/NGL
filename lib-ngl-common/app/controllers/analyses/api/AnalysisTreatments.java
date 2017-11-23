@@ -63,13 +63,14 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		ctxVal.putObject("level", Level.CODE.Analysis);
 		ctxVal.putObject("analysis", objectInDB);
 		inputTreatment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		if (!ctxVal.hasErrors()) {
 			updateObject(DBQuery.is("code", parentCode), 
 					DBUpdate.set("treatments."+inputTreatment.code, inputTreatment)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputTreatment.code);
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
@@ -91,15 +92,16 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 			ctxVal.putObject("level", Level.CODE.Analysis);
 			ctxVal.putObject("analysis", objectInDB);
 			inputTreatment.validate(ctxVal);
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) { 
 				updateObject(DBQuery.is("code", parentCode), 
 						DBUpdate.set("treatments."+inputTreatment.code, inputTreatment)
 						.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return get(parentCode, code);
 			} else {
-				return badRequest(filledForm.errorsAsJson());			
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else{
 			return badRequest("treatment code are not the same");
 		}
 	}

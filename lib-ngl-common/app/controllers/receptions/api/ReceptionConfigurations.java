@@ -91,7 +91,8 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			input = saveObject(input);			
 			return ok(Json.toJson(input));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}	
 	}
 	
@@ -117,8 +118,9 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			if (!ctxVal.hasErrors()) {
 				updateObject(input);
 				return ok(Json.toJson(input));
-			}else {
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 			
 		}else{

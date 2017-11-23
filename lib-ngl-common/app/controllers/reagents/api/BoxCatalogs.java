@@ -44,7 +44,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
 	}
 	
-	public Result save(){
+	public Result save() {
 		Form<BoxCatalog> boxCatalogFilledForm = getMainFilledForm();
 		if(!mainForm.hasErrors()){
 			BoxCatalog boxCatalog = boxCatalogFilledForm.get();
@@ -62,7 +62,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 				return ok(Json.toJson(boxCatalog));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti from use
 	}
 	
 	public Result update(String code){
@@ -78,7 +78,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 				return ok(Json.toJson(boxCatalog));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti form use
 	}
 	
 	public Result delete(String code){

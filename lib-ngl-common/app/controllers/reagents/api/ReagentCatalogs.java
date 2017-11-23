@@ -56,7 +56,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 				return ok(Json.toJson(reagentCatalog));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
 	}
 	
 	public Result update(String code){
@@ -72,7 +72,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 				return ok(Json.toJson(reagentCatalog));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
 	}
 	
 	public Result delete(String code){

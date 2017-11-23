@@ -234,7 +234,8 @@ public class Samples extends DocumentController<Sample> {
 			input = saveObject(input);			
 			return ok(Json.toJson(input));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}				
 	}
 
@@ -276,11 +277,12 @@ public class Samples extends DocumentController<Sample> {
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sampleInForm);
 					return ok(Json.toJson(sampleInForm));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 
-			}else{
+			} else {
 				return badRequest("sample code are not the same");
 			}	
 		}else{
@@ -288,7 +290,8 @@ public class Samples extends DocumentController<Sample> {
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
 
 				TraceInformation ti = sampleInDB.traceInformation;
@@ -299,19 +302,20 @@ public class Samples extends DocumentController<Sample> {
 					sampleInForm.valuation.date = new Date();
 				}
 
-				if(!ctxVal.hasErrors()){
+				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.and(DBQuery.is("code", code)), 
 							getBuilder(sampleInForm, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(sampleInDB.traceInformation)));
 					if(queryFieldsForm.fields.contains("code") && null != sampleInForm.code){
 						code = sampleInForm.code;
 					}
 					return ok(Json.toJson(findSample(code)));
-
-				}else{
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}				
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		}	
 	}
