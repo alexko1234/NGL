@@ -51,7 +51,6 @@ public class Barcodes extends CommonController {
     	}
 	}
 	
-	
 	public static Result list(){
 		return ok(Json.toJson(Spring.getBeanOfType(LimsManipDAO.class).findUnusedBarCodes()));
 	}
