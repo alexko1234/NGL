@@ -1622,9 +1622,9 @@ public class ExpWorkflowsHelper {
 	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes, Map<String, PropertyValue> updatedProperties) {
 		Set<String> tags = null;
 		
-		if(!updatedProperties.containsKey(InstanceHelpers.TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(InstanceHelpers.TAG_PROPERTY_NAME)){
+		if(!updatedProperties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
 			tags = new TreeSet<String>();
-			tags.add(ocuContent.properties.get(InstanceHelpers.TAG_PROPERTY_NAME).value.toString());
+			tags.add(ocuContent.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());
 		}else{
 		
 			DBQuery.Query query = DBQuery.in("code", containerCodes)
@@ -1637,7 +1637,7 @@ public class ExpWorkflowsHelper {
 			if(containersWithTag.size() > 0){
 				final Set<String> tmpTags = new TreeSet<String>(); 
 				containersWithTag.cursor.forEach(container -> {
-					tmpTags.add(container.contents.get(0).properties.get(InstanceHelpers.TAG_PROPERTY_NAME).value.toString());
+					tmpTags.add(container.contents.get(0).properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());
 				});
 				tags = tmpTags;
 			}else{
