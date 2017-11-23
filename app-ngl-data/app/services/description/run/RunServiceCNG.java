@@ -116,7 +116,6 @@ public class RunServiceCNG  extends AbstractRunService{
          // codes for Captures
          // 05/09/2017 mise en coherence avec ProcessServiceCNG getCaptureLibProcessTypeCodeValues(): si meme code => meme label 
          // ajout (DefCapxxx) tant que NGL-1569 pas resolu (stocker le path des fichier definition capture)
-   
          values.add(DescriptionFactory.newValue("CA","CA - DefCap008_Rg"));
          values.add(DescriptionFactory.newValue("CB","CB - DefCap005_Ex"));
          values.add(DescriptionFactory.newValue("CC","CC - DefCap006_Ex"));
@@ -148,12 +147,14 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("CAD","CAD - Nimblegen : MedExome (DefCap026)"));
          values.add(DescriptionFactory.newValue("CAE","CAE - Nimblegen : MedExome+Mitome (DefCap027)"));
          values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028)"));  // NGL-1584 ajout
+         
          // codes for DNA sequencing
          values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
          values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
          values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));

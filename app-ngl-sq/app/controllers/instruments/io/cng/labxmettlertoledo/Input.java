@@ -33,6 +33,13 @@ public class Input extends AbstractInput {
    /* 25/10/2017 NGL-1326
     * Description du fichier a importer: fichier CSV ";"  delimité generé par le Logiciel LabX de Mettler Toledo 
     * LabX fait lui meme des controles, donc certains cas ne doivent pas etre gérés ici: codes barres manquants ou mal formés...
+    * 
+    * 22/11/2017 modifications... 
+    * 1) le fichier V2 n'est pas pret. Repartir du fichier V1 ( 2 lignes LOT et RGT pour les boites et certains reagents (non peses) )
+    * => on ne peut plus creer les RU apres le traitement d'une ligne, il faut stocker dans un hash en attente et les creer tous a la fin
+    * 2) on peut recupere les infos Catalogue pour les 2 experiences connue: prepa-fc-ordonnee et depot-sequenceur
+    * => generer une ereeur si un reagent/boite trouve dans aucun des 2....
+    *  TODO.......
     */
 
 	@Override
