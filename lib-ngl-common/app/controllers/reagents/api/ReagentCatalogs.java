@@ -44,35 +44,33 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 	
 	public Result save(){
 		Form<ReagentCatalog> ReagentCatalogFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			ReagentCatalog reagentCatalog = ReagentCatalogFilledForm.get();
-			reagentCatalog.code = ReagentCodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setCreationMode();
-			
-			reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(reagentCatalog));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
+		
+		ReagentCatalog reagentCatalog = ReagentCatalogFilledForm.get();
+		reagentCatalog.code = ReagentCodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), ReagentCatalogFilledForm.errors());
+		contextValidation.setCreationMode();
+		
+		reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(reagentCatalog));
+		// legit, spaghetti above
 	}
 	
 	public Result update(String code){
 		Form<ReagentCatalog> reagentCatalogFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			ReagentCatalog reagentCatalog = reagentCatalogFilledForm.get();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
-			
-			reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(reagentCatalog));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
+		ReagentCatalog reagentCatalog = reagentCatalogFilledForm.get();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentCatalogFilledForm.errors());
+		contextValidation.setUpdateMode();
+		
+		reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(reagentCatalog));
+		
+		// legit, spaghetti above
 	}
 	
 	public Result delete(String code){

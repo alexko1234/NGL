@@ -60,45 +60,41 @@ public class Reagents extends DocumentController<Reagent> {
 
 	public Result save(){
 		Form<Reagent> reagentFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			Reagent reagent = reagentFilledForm.get();
-			reagent.code = ReagentCodeHelper.getInstance().generateReagentCode();
-			
-			reagent.traceInformation = new TraceInformation();
-			reagent.traceInformation.createUser =  getCurrentUser();
-			reagent.traceInformation.creationDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setCreationMode();
-			/*if(ValidationHelper.required(contextValidation, reagent.name, "name")){
-				reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
-			}*/
+		Reagent reagent = reagentFilledForm.get();
+		reagent.code = ReagentCodeHelper.getInstance().generateReagentCode();
+		
+		reagent.traceInformation = new TraceInformation();
+		reagent.traceInformation.createUser =  getCurrentUser();
+		reagent.traceInformation.creationDate = new Date();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+		contextValidation.setCreationMode();
+		/*if(ValidationHelper.required(contextValidation, reagent.name, "name")){
+			reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
+		}*/
 
-			reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(reagent));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
+		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(reagent));
+		 // legit, spaghetti above
 	}
 
 	public Result update(String code){
 		Form<Reagent> reagentFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			Reagent reagent = reagentFilledForm.get();
+		Reagent reagent = reagentFilledForm.get();
 
-			reagent.traceInformation.modifyUser =  getCurrentUser();
-			reagent.traceInformation.modifyDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
+		reagent.traceInformation.modifyUser =  getCurrentUser();
+		reagent.traceInformation.modifyDate = new Date();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+		contextValidation.setUpdateMode();
 
-			reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(reagent));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
+		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(reagent));
+		 // legit, spaghetti above
 	}
 
 	public Result list(){
