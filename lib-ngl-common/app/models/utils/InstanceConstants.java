@@ -43,4 +43,6 @@ public interface InstanceConstants {
 	public static final String PROTOCOL_COLL_NAME = "ngl_sq.Protocol";
 
 	public static final String RECEPTION_CONFIG_COLL_NAME = "ngl_common.ReceptionConfiguration";
+	
+	public static final String TAG_PROPERTY_NAME = "tag";
 }

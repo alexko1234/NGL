@@ -38,7 +38,6 @@ import workflows.container.ContentHelper;
 public class ProcWorkflowHelper {
 
 	
-	public static final String TAG_PROPERTY_NAME = "tag";
 	@Autowired
 	ContWorkflows contWorkflows;
 	
@@ -107,9 +106,9 @@ public class ProcWorkflowHelper {
 			.cursor.forEach(container -> {
 				container.traceInformation.setTraceInformation(validation.getUser());
 				container.contents.stream()
-					.filter(content -> ((process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(TAG_PROPERTY_NAME))
-							|| (null != tags && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
-									&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value))))
+					.filter(content -> ((process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME))
+							|| (null != tags && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+									&&  tags.contains(content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.processProperties = process.properties;
 						content.processComments = process.comments;	
@@ -129,9 +128,9 @@ public class ProcWorkflowHelper {
 	 */
 	public Set<String> getTagAssignFromProcessContainers(Process process) {
 		Set<String> tags = null;
-		if(process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)){
+		if(process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
 			tags = new TreeSet<String>();
-			tags.add(process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString());			
+			tags.add(process.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());			
 		}else if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 			
 			DBQuery.Query query = DBQuery.in("code",process.outputContainerCodes)
@@ -143,7 +142,7 @@ public class ProcWorkflowHelper {
 			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query).sort("traceInformation.creationDate",Sort.ASC);
 			if(containersWithTag.size() > 0){
 				tags = new TreeSet<String>();
-				tags.add(containersWithTag.cursor.next().contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString());
+				tags.add(containersWithTag.cursor.next().contents.get(0).properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString());
 			}
 		}
 		return tags;
@@ -181,9 +180,9 @@ public class ProcWorkflowHelper {
 					container.traceInformation.setTraceInformation(validation.getUser());
 					container.contents.stream()
 						.filter(content -> {
-							return ((!content.properties.containsKey(TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode))
-									|| (null != tags && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
-											&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value)));
+							return ((!content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode))
+									|| (null != tags && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) && content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+											&&  tags.contains(content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value)));
 						})
 						.forEach(content -> {
 							content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);
@@ -196,9 +195,9 @@ public class ProcWorkflowHelper {
 					DBQuery.in("sampleOnContainer.containerCode", outputContainerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
 				.cursor
 				.forEach(readset -> {
-					if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
-							|| (null != tags && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-							&&  tags.contains(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
+					if(!readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
+							|| (null != tags && readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+							&&  tags.contains(readset.sampleOnContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
 						readset.traceInformation.setTraceInformation(validation.getUser());
 						readset.sampleOnContainer.lastUpdateDate = new Date();
 						
@@ -213,9 +212,9 @@ public class ProcWorkflowHelper {
 					DBQuery.in("sampleOnInputContainer.containerCode", outputContainerCodes).in("sampleOnInputContainer.sampleCode", sampleCodes).in("sampleOnInputContainer.projectCode", projectCodes))
 				.cursor
 				.forEach(otherProcess -> {
-					if(!otherProcess.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)
-							|| (null != tags && otherProcess.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-							&&  tags.contains(otherProcess.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value))){
+					if(!otherProcess.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
+							|| (null != tags && otherProcess.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+							&&  tags.contains(otherProcess.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
 						otherProcess.traceInformation.setTraceInformation(validation.getUser());
 						otherProcess.sampleOnInputContainer.lastUpdateDate = new Date();
 						
@@ -244,10 +243,10 @@ public class ProcWorkflowHelper {
 	 */
 	private DBQuery.Query getInputContainerQuery(Process process) {
 		DBQuery.Query query = DBQuery.is("code",process.inputContainerCode);
-		if(process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)){
+		if(process.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
 			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode)
 												.is("projectCode",  process.sampleOnInputContainer.projectCode)
-												.is("properties.tag.value", process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value));
+												.is("properties.tag.value", process.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value));
 			
 		}else{
 			query.elemMatch("contents", DBQuery.is("sampleCode", process.sampleOnInputContainer.sampleCode).is("projectCode",  process.sampleOnInputContainer.projectCode));

@@ -20,6 +20,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.parameter.index.Index;
+import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
@@ -153,7 +154,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					PropertySingleValue tagPsv = new PropertySingleValue();
 					// !!! ce n'est pas le nom de l'index qui est dans results mais le code.
 					tagPsv.value = results.get(icupos).code;
-					ocu.experimentProperties.put("tag", tagPsv);
+					ocu.experimentProperties.put(InstanceConstants.TAG_PROPERTY_NAME, tagPsv);
 					//Logger.info ("icupos="+ icupos +" => " +tagPsv.value);
 					
 					PropertySingleValue tagCategoryPsv = new PropertySingleValue();

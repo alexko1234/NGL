@@ -1581,8 +1581,7 @@ public class ExpWorkflowsHelper {
 		Logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
 		
 	}
-	public static final String TAG_PROPERTY_NAME = "tag";
-
+	
 	private void updateContainerContentPropertiesInCascading(ContextValidation validation, AbstractContainerUsed ocu, Set<String> contentPropertyCodes) {
 		List<Container> containerMustBeUpdated = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  
 				DBQuery.or(DBQuery.is("code", ocu.code), DBQuery.regex("treeOfLife.paths", Pattern.compile(","+ocu.code+"$|,"+ocu.code+","))))
@@ -1610,60 +1609,22 @@ public class ExpWorkflowsHelper {
 			Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
 			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes, updatedProperties);
 			
-			containerMustBeUpdated.forEach(container -> {
-				container.traceInformation.setTraceInformation(validation.getUser());
-				container.contents.stream()
-					.filter(content -> ((!content.properties.containsKey(TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode))
-							|| (null != tags  && content.properties.containsKey(TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) 
-									&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value))))
-					.forEach(content -> {
-						content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);		
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
-					});
-				//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", container.code), DBUpdate.set("contents", container.contents));
-			});
-			
-			
-			//update readsets with new exp property values
-			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
-					DBQuery.in("sampleOnContainer.containerCode", containerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
-				.cursor
-				.forEach(readset -> {
-					if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
-							|| (null != tags && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-							&&  tags.contains(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
-						readset.traceInformation.setTraceInformation(validation.getUser());
-						readset.sampleOnContainer.lastUpdateDate = new Date();
-						readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);	
-						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
-					}
-			});		
-			
-			//update processes with new exp property values
-			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, 
-					DBQuery.in("sampleOnInputContainer.containerCode", containerCodes).in("sampleOnInputContainer.sampleCode", sampleCodes).in("sampleOnInputContainer.projectCode", projectCodes))
-			.cursor
-			.forEach(process -> {
-				if(!process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)
-						|| (null != tags && process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-						&&  tags.contains(process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value))){
-					process.traceInformation.setTraceInformation(validation.getUser());
-					process.sampleOnInputContainer.lastUpdateDate = new Date();
-					process.sampleOnInputContainer.properties = InstanceHelpers.updateProperties(process.sampleOnInputContainer.properties, updatedProperties, deletedPropertyCodes);	
-					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
-				}
-			});
+			InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, containerCodes, tags, updatedProperties,
+					deletedPropertyCodes, validation);
 			
 		});			
 	}
 
 
+	
+
+
 	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes, Map<String, PropertyValue> updatedProperties) {
 		Set<String> tags = null;
 		
-		if(!updatedProperties.containsKey(TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(TAG_PROPERTY_NAME)){
+		if(!updatedProperties.containsKey(InstanceHelpers.TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(InstanceHelpers.TAG_PROPERTY_NAME)){
 			tags = new TreeSet<String>();
-			tags.add(ocuContent.properties.get(TAG_PROPERTY_NAME).value.toString());
+			tags.add(ocuContent.properties.get(InstanceHelpers.TAG_PROPERTY_NAME).value.toString());
 		}else{
 		
 			DBQuery.Query query = DBQuery.in("code", containerCodes)
@@ -1676,7 +1637,7 @@ public class ExpWorkflowsHelper {
 			if(containersWithTag.size() > 0){
 				final Set<String> tmpTags = new TreeSet<String>(); 
 				containersWithTag.cursor.forEach(container -> {
-					tmpTags.add(container.contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString());
+					tmpTags.add(container.contents.get(0).properties.get(InstanceHelpers.TAG_PROPERTY_NAME).value.toString());
 				});
 				tags = tmpTags;
 			}else{

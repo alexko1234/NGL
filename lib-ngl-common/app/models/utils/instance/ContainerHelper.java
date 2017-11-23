@@ -197,8 +197,8 @@ public class ContainerHelper {
 	}
 
 	private static String getContentKey(Content content) {
-		if(content.properties.containsKey("tag")){
-			return content.projectCode+"_"+content.sampleCode+"_"+content.properties.get("tag").value;
+		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+			return content.projectCode+"_"+content.sampleCode+"_"+content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value;
 		}else{
 			return content.projectCode+"_"+content.sampleCode;
 		}		

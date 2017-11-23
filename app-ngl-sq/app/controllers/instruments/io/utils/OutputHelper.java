@@ -247,9 +247,9 @@ public class OutputHelper {
 	public static TagModel getTagModel(List<Container> containers) {
 		List<PropertyValue> tags = containers.stream().map((Container container) -> container.contents)
 			.flatMap(List::stream)
-			.filter(c -> c.properties.containsKey("tag"))
+			.filter(c -> c.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME))
 			.filter(c -> !c.properties.get("tagCategory").equals("MID"))
-			.map((Content c) -> c.properties.get("tag"))
+			.map((Content c) -> c.properties.get(InstanceConstants.TAG_PROPERTY_NAME))
 			.collect(Collectors.toList())
 			;
 		TagModel tagModel = new TagModel();
@@ -315,7 +315,7 @@ public class OutputHelper {
 	}
 	
 	public static String getTag(InputContainerUsed container) {
-		return container.contents.stream().map((Content c) -> (String) c.properties.get("tag").value)
+		return container.contents.stream().map((Content c) -> (String) c.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value)
 				.collect(Collectors.toList()).get(0);
 	}
 

@@ -316,7 +316,7 @@ public class InstanceTest extends AbstractTests{
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		assertThat(sdf.format(d)).isEqualTo(sdf.format(sampleOnInputContainer.lastUpdateDate));
 		assertThat(sampleOnInputContainer.properties).isNotEmpty().isNotNull();			
-		assertThat(sampleOnInputContainer.properties.get("tag")).isNotNull();;
+		assertThat(sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME)).isNotNull();;
 		
 	}
 	
