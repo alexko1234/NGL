@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -22,13 +24,16 @@ import models.utils.dao.DAOException;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
+import workflows.container.ContentHelper;
 
 import com.mongodb.MongoException;
 
@@ -36,9 +41,20 @@ import fr.cea.ig.MongoDBDAO;
 
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
+	ContentHelper contentHelper;
+	
 	public UpdateSamplePropertiesCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
 		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration);
+		contentHelper = Spring.getBeanOfType(ContentHelper.class);
+		
+	}
+
+	public UpdateSamplePropertiesCNS(String string, FiniteDuration durationFromStart,
+			FiniteDuration durationFromNextIteration) {
+		super(string, durationFromStart, durationFromNextIteration);
+		contentHelper = Spring.getBeanOfType(ContentHelper.class);
+		
 	}
 
 	@Override
@@ -47,13 +63,14 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 		updateSampleModifySince(-1,contextError);
 	}
 
-	private static void updateSampleModifySince(int nbDays,ContextValidation contextError){
+	private void updateSampleModifySince(int nbDays,ContextValidation contextError){
 
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.DAY_OF_YEAR, nbDays);
 				Date date =  calendar.getTime();
 
-				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life")).toList();
+				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.greaterThanEquals("traceInformation.modifyDate", date).notExists("life"))
+						.sort("code").toList();
 				Logger.info("Nb samples to update :"+samples.size());
 				samples.stream().forEach(sample -> {
 					//Logger.debug("Sample "+sample.code);
@@ -61,96 +78,99 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 				});
 	}
 
-	public static void updateOneSample(Sample sample,ContextValidation contextError) {
+	public void updateOneSample(Sample sample,ContextValidation contextError) {
 
-		Logger.debug("Update sample "+sample.code);
+		logger.debug("Update sample "+sample.code);
 
-		Map<String, PropertyValue> properties=new HashMap<String, PropertyValue>();
-
+		Map<String, PropertyValue> updatedProperties=new HashMap<String, PropertyValue>();
+		Set<String> deletedPropertyCodes = new TreeSet<String>();
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
 		if(importType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,updatedProperties);
+			deletedPropertyCodes.addAll(InstanceHelpers.getDeletedPropertyDefinitionCode(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties));
 		}
 		if(sampleType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,updatedProperties);
+			deletedPropertyCodes.addAll(InstanceHelpers.getDeletedPropertyDefinitionCode(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties));
 		}
-
-		Map<String,DBUpdate.Builder> updates=new HashMap<String, DBUpdate.Builder>();
-		DBUpdate.Builder updateSample = new DBUpdate.Builder();
-		//DBUpdate.Builder updateContainer = new DBUpdate.Builder();
-		DBUpdate.Builder updateReadSet = new DBUpdate.Builder();
-		DBUpdate.Builder updateProcess = new DBUpdate.Builder();
 		
-		properties.forEach((k,v) -> {
-			Logger.debug("properties "+k+" value "+v);
-			updateSample.set("properties."+k,v);
-			//updateContainer.set("contents.$.properties."+k,v);
-			updateReadSet.set("sampleOnContainer.properties."+k,v);
-			updateProcess.set("sampleOnInputContainer.properties."+k,v);
-		});		
+		logger.warn("property will be deleted "+deletedPropertyCodes);
 		
-		updates.put("sample",updateSample);
-		//updates.put("container",updateContainer);
-		updates.put("readset",updateReadSet);
-		updates.put("process",updateProcess);
 		
-		updateCollectionsFromSample(sample, properties, updates,contextError);
+		updateCollectionsFromSample(sample, updatedProperties, deletedPropertyCodes,contextError);
 
 	} 
 
-	static private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Map<String,DBUpdate.Builder> updates, ContextValidation contextError){
+	private void updateCollectionsFromSample(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes, ContextValidation contextError){
 
-		Logger.info("Update son samples, containers, readSets, process from sample :"+sample.code);
+		logger.info("Update son samples, containers, readSets, process from sample :"+sample.code);
 		
-		//Son Samples update properties
-		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
-				DBQuery.is("life.from.sampleCode",sample.code),
-				updates.get("sample")
-				.set("referenceCollab", sample.referenceCollab)
-				.set("taxonCode",sample.taxonCode)
-				.set("ncbiScientificName",sample.ncbiScientificName)
-				.set("ncbiLineage",sample.ncbiLineage)
-				);
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
+				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
+			.cursor.forEach(updatedSample -> {
+				updatedSample.traceInformation.setTraceInformation(contextError.getUser());
+				updatedSample.referenceCollab = sample.referenceCollab;
+				updatedSample.taxonCode = sample.taxonCode;
+				updatedSample.ncbiScientificName = sample.ncbiScientificName;
+				updatedSample.ncbiLineage = sample.ncbiLineage;
+				updatedSample.properties = InstanceHelpers.updateProperties(updatedSample.properties, updatedProperties, deletedPropertyCodes);
+				MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,updatedSample);
+		});
 		
 		//Containers content update contents.$.properties
-		//TODO Verifier si fonctionne pool meme sample et tag diff => GA le 17/10/2016 confirme marche pas !!!
-		/*
-		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-				 DBQuery.is("contents.sampleCode", sample.code),
-				updates.get("container")
-						.set("contents.$.referenceCollab", sample.referenceCollab)
-						.set("contents.$.taxonCode",sample.taxonCode)
-						.set("contents.$.ncbiScientificName",sample.ncbiScientificName)
-						.set("traceInformation.modifyUser",contextError.getUser())
-						.set("traceInformation.modifyDate",new Date() ),true);
-		*/
-		
-		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("contents.sampleCode", sample.code))
+		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+				DBQuery.is("contents.sampleCode", sample.code).in("contents.projectCode", sample.projectCodes))
 			.cursor.forEach(container -> {
 				container.traceInformation.setTraceInformation(contextError.getUser());
 				container.contents.stream()
-					.filter(content -> content.sampleCode.equals(sample.code))
+					.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
 					.forEach(content -> {
 						content.ncbiScientificName = sample.ncbiScientificName;
 						content.taxonCode = sample.taxonCode;
 						content.referenceCollab = sample.referenceCollab;
-						content.properties.putAll(updatedProperties);
+						
+						content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));
 					});;
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);	
 			});
 		
-		// ReadSet update sampleOnContainer.properties
-		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
-				DBQuery.is("sampleOnContainer.sampleCode", sample.code),
-				updates.get("readset")
-					.set("sampleOnContainer.referenceCollab",sample.referenceCollab)
-					.set("sampleOnContainer.taxonCode",sample.taxonCode)
-					.set("sampleOnContainer.ncbiScientificName", sample.ncbiScientificName)
-					.set("sampleOnContainer.lastUpdateDate", new Date()),true);
+		// ReadSet update sampleOnContainer.properties		
+		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
+				DBQuery.is("sampleOnContainer.sampleCode", sample.code).in("sampleOnContainer.projectCode", sample.projectCodes))
+		.cursor
+		.forEach(readset -> {
+			readset.traceInformation.setTraceInformation(contextError.getUser());
+			readset.sampleOnContainer.lastUpdateDate = new Date();
+			
+			readset.sampleOnContainer.referenceCollab = sample.referenceCollab;
+			readset.sampleOnContainer.taxonCode = sample.taxonCode;
+			readset.sampleOnContainer.ncbiScientificName = sample.ncbiScientificName;
+			
+			readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);			
+		});	
 		
-		// Processes update sampleOnInputContainer.properties
+		// Processes update sampleOnInputContainer.properties		
+		MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, 
+				DBQuery.is("sampleOnInputContainer.sampleCode", sample.code).in("sampleOnInputContainer.projectCode", sample.projectCodes))
+		.cursor
+		.forEach(process -> {
+			process.traceInformation.setTraceInformation(contextError.getUser());
+			process.sampleOnInputContainer.lastUpdateDate = new Date();
+			
+			process.sampleOnInputContainer.referenceCollab = sample.referenceCollab;
+			process.sampleOnInputContainer.taxonCode = sample.taxonCode;
+			process.sampleOnInputContainer.ncbiScientificName = sample.ncbiScientificName;
+			
+			process.sampleOnInputContainer.properties = InstanceHelpers.updateProperties(process.sampleOnInputContainer.properties, updatedProperties, deletedPropertyCodes);
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);		
+		});
+		
+		
+		/*
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 				DBQuery.is("sampleOnInputContainer.sampleCode", sample.code),
 				updates.get("process")
@@ -158,13 +178,15 @@ public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 					.set("sampleOnInputContainer.taxonCode",sample.taxonCode)
 					.set("sampleOnInputContainer.ncbiScientificName", sample.ncbiScientificName)
 					,true);
-		
+		*/
 
 		//Update son samples
-		List<Sample> sonSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("life.from.sampleCode",sample.code)).toList();
-		sonSamples.stream().forEach(sonSample ->{
-			updateCollectionsFromSample(sonSample, updatedProperties, updates, contextError);
-		});
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
+				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
+				.cursor
+				.forEach(sonSample ->{
+					updateCollectionsFromSample(sonSample, updatedProperties, deletedPropertyCodes, contextError);
+				});
 	}
 
 }

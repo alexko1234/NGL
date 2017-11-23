@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
@@ -114,13 +115,13 @@ public class InstanceHelpers {
 		}
 
 	}
-
+	@Deprecated
 	public static TraceInformation updateTraceInformation(TraceInformation traceInformation, State nextState) {
 		traceInformation.modifyDate = nextState.date;
 		traceInformation.modifyUser = nextState.user;
 		return traceInformation;
 	}
-
+	@Deprecated
 	public static TraceInformation getUpdateTraceInformation(TraceInformation traceInformation, String user) {
 		TraceInformation ti = null;
 		if (traceInformation == null) {
@@ -146,6 +147,14 @@ public class InstanceHelpers {
 			}
 		}
 
+	}
+	
+	public static Set<String> getDeletedPropertyDefinitionCode(List<PropertyDefinition> propertyDefinitions,
+			Map<String, PropertyValue> propertiesInput) {
+		return propertyDefinitions.stream()
+			.filter(pd -> !propertiesInput.containsKey(pd.code))
+			.map(pd -> pd.code)
+			.collect(Collectors.toSet());			
 	}
 	
 	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,
@@ -357,6 +366,18 @@ public class InstanceHelpers {
 				.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSet.runCode), keys);
 		return r.containerSupportCode;
 	}
-	
+	/**
+	 * Used to update content properties 
+	 * @param properties
+	 * @param newProperties
+	 * @param deletedPropertyCodes
+	 * @return
+	 */
+	public static Map<String, PropertyValue> updateProperties(Map<String, PropertyValue> properties, Map<String, PropertyValue> newProperties, Set<String> deletedPropertyCodes){
+		properties.replaceAll((k,v) -> (newProperties.containsKey(k))?newProperties.get(k):v);							
+		newProperties.forEach((k,v)-> properties.putIfAbsent(k, v));
+		deletedPropertyCodes.forEach(code -> properties.remove(code));
+		return properties;
+	}
 	
 }

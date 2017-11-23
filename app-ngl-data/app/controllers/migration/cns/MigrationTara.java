@@ -102,7 +102,7 @@ public class MigrationTara extends AbstractMigration {
 		
 		if(sampleCodesToUpdate.size()>0){
 			try {
-				UpdateSampleCNS.updateSampleFromTara(contextValidation, sampleCodesToUpdate);
+				//UpdateSampleCNS.updateSampleFromTara(contextValidation, sampleCodesToUpdate);
 			} catch (Exception e) {
 				e.getMessage();
 				return badRequest("Error Delete Sample Not in Lims");

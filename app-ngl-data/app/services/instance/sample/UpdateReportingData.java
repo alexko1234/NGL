@@ -329,7 +329,7 @@ public class UpdateReportingData extends AbstractImportData {
 
 	private List<SampleReadSet> getSampleReadSets(Sample sample, Process process) {
 		List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
-		String tag = procWorkflowHelper.getTagAssignFromProcessContainers(process);
+		Set<String> tags = procWorkflowHelper.getTagAssignFromProcessContainers(process);
 		
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
@@ -340,8 +340,8 @@ public class UpdateReportingData extends AbstractImportData {
 		.cursor
 		.forEach(readset -> {
 			if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
-					|| (null != tag && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-					&&  tag.equals(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
+					|| (null != tags && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
+					&&  tags.contains(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
 				sampleReadSets.add(convertToSampleReadSet(readset));				
 			}
 		});

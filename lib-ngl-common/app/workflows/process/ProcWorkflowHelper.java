@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.mongojack.DBQuery;
@@ -25,6 +27,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -85,7 +88,7 @@ public class ProcWorkflowHelper {
 		if(process.properties != null && process.properties.size() > 0){
 			
 			//1 find tag inside inputContainer and all outputContainer if input does not have a tag
-			String tag = getTagAssignFromProcessContainers(process);
+			Set<String> tags = getTagAssignFromProcessContainers(process);
 			//2 find container with processProperties and tag if needed
 			//DBQuery.Query query = getChildContainerQueryForProcessProperties(process, tag);			
 			//3 update processProperties
@@ -105,8 +108,8 @@ public class ProcWorkflowHelper {
 				container.traceInformation.setTraceInformation(validation.getUser());
 				container.contents.stream()
 					.filter(content -> ((process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(TAG_PROPERTY_NAME))
-							|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
-									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
+							|| (null != tags && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
+									&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
 						content.processProperties = process.properties;
 						content.processComments = process.comments;	
@@ -124,10 +127,11 @@ public class ProcWorkflowHelper {
 	 * @param process
 	 * @return
 	 */
-	public String getTagAssignFromProcessContainers(Process process) {
-		
+	public Set<String> getTagAssignFromProcessContainers(Process process) {
+		Set<String> tags = null;
 		if(process.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)){
-			return process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString();
+			tags = new TreeSet<String>();
+			tags.add(process.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value.toString());			
 		}else if(process.outputContainerCodes != null && process.outputContainerCodes.size() > 0){
 			
 			DBQuery.Query query = DBQuery.in("code",process.outputContainerCodes)
@@ -138,13 +142,11 @@ public class ProcWorkflowHelper {
 			
 			MongoDBResult<Container> containersWithTag = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,query).sort("traceInformation.creationDate",Sort.ASC);
 			if(containersWithTag.size() > 0){
-				return containersWithTag.cursor.next().contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString();
-			}else{
-				return null;
+				tags = new TreeSet<String>();
+				tags.add(containersWithTag.cursor.next().contents.get(0).properties.get(TAG_PROPERTY_NAME).value.toString());
 			}
-		}else{
-			return null;
 		}
+		return tags;
 	}
 
 
@@ -152,63 +154,74 @@ public class ProcWorkflowHelper {
 			//update output container with new process property values
 		List<String> propertyCodes = getProcessesPropertyDefinitionCodes(process, Level.CODE.Content);
 		
-		if(null != process.outputContainerCodes && process.outputContainerCodes.size() > 0 
+		Set<String> outputContainerCodes = process.outputContainerCodes;
+		if(null != outputContainerCodes && outputContainerCodes.size() > 0 
 				&& process.properties != null && process.properties.size() > 0 && propertyCodes.size() > 0){
 			Map<String,PropertyValue> updatedProperties = process.properties.entrySet()
 														.stream()
 														.filter(e -> propertyCodes.contains(e.getKey()))
 														.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));		
 		
-			//1 find tag inside inputContainer and all outputContainer if input does not have a tag
-			String tag = getTagAssignFromProcessContainers(process);
+			Set<String> deletedPropertyCodes = propertyCodes
+												.stream()
+												.filter(code -> !updatedProperties.containsKey(code))
+												.collect(Collectors.toSet());
 			
-			Logger.debug("UpdateProperties for tag "+tag);
+			//1 find tag inside inputContainer and all outputContainer if input does not have a tag
+			Set<String> sampleCodes = process.sampleCodes;
+			Set<String> projectCodes = process.projectCodes;
+			Set<String> tags = getTagAssignFromProcessContainers(process);
+			
+			Logger.debug("UpdateProperties for tag "+tags);
 			
 			//2 update content properties
-			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", process.outputContainerCodes))
-			.cursor.forEach(container -> {
-				container.traceInformation.setTraceInformation(validation.getUser());
-				container.contents.stream()
-					.filter(content -> ((process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && !content.properties.containsKey(TAG_PROPERTY_NAME))
-							|| (null != tag && process.sampleCodes.contains(content.sampleCode) && process.projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
-									&&  tag.equals(content.properties.get(TAG_PROPERTY_NAME).value))))
-					.forEach(content -> {
-						content.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);							
-						updatedProperties.forEach((k,v)-> content.properties.putIfAbsent(k, v));
-						
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));						
-					});								
+			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", outputContainerCodes))
+				.cursor
+				.forEach(container -> {
+					container.traceInformation.setTraceInformation(validation.getUser());
+					container.contents.stream()
+						.filter(content -> {
+							return ((!content.properties.containsKey(TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode))
+									|| (null != tags && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) && content.properties.containsKey(TAG_PROPERTY_NAME) 
+											&&  tags.contains(content.properties.get(TAG_PROPERTY_NAME).value)));
+						})
+						.forEach(content -> {
+							content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);
+							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));						
+						});								
 			});
 		
 			//update readsets with new process property values
-			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	DBQuery.in("sampleOnContainer.containerCode", process.outputContainerCodes).in("sampleCode", process.sampleCodes).in("projectCode", process.projectCodes))
+			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
+					DBQuery.in("sampleOnContainer.containerCode", outputContainerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
 				.cursor
 				.forEach(readset -> {
 					if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
-							|| (null != tag && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-							&&  tag.equals(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
+							|| (null != tags && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
+							&&  tags.contains(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
 						readset.traceInformation.setTraceInformation(validation.getUser());
-						readset.sampleOnContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
-						updatedProperties.forEach((k,v)-> readset.sampleOnContainer.properties.putIfAbsent(k, v));
 						readset.sampleOnContainer.lastUpdateDate = new Date();
+						
+						readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);
 						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
 					}
 			});			
 			
 			
 			//update processes with new exp property values
-			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, DBQuery.in("sampleOnInputContainer.containerCode", process.outputContainerCodes).in("sampleOnInputContainer.sampleCode", process.sampleCodes).in("sampleOnInputContainer.projectCode", process.projectCodes))
-			.cursor
-			.forEach(otherProcess -> {
-				if(!otherProcess.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)
-						|| (null != tag && otherProcess.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-						&&  tag.equals(otherProcess.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value))){
-					otherProcess.traceInformation.setTraceInformation(validation.getUser());
-					otherProcess.sampleOnInputContainer.properties.replaceAll((k,v) -> (updatedProperties.containsKey(k))?updatedProperties.get(k):v);
-					updatedProperties.forEach((k,v)-> otherProcess.sampleOnInputContainer.properties.putIfAbsent(k, v));
-					otherProcess.sampleOnInputContainer.lastUpdateDate = new Date();
-					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, otherProcess);
-				}
+			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, 
+					DBQuery.in("sampleOnInputContainer.containerCode", outputContainerCodes).in("sampleOnInputContainer.sampleCode", sampleCodes).in("sampleOnInputContainer.projectCode", projectCodes))
+				.cursor
+				.forEach(otherProcess -> {
+					if(!otherProcess.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME)
+							|| (null != tags && otherProcess.sampleOnInputContainer.properties.containsKey(TAG_PROPERTY_NAME) 
+							&&  tags.contains(otherProcess.sampleOnInputContainer.properties.get(TAG_PROPERTY_NAME).value))){
+						otherProcess.traceInformation.setTraceInformation(validation.getUser());
+						otherProcess.sampleOnInputContainer.lastUpdateDate = new Date();
+						
+						otherProcess.sampleOnInputContainer.properties = InstanceHelpers.updateProperties(otherProcess.sampleOnInputContainer.properties, updatedProperties, deletedPropertyCodes);
+						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, otherProcess);
+					}
 			});
 		}
 	}
