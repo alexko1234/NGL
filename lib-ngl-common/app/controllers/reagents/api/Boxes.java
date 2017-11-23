@@ -61,54 +61,51 @@ public class Boxes extends DocumentController<Box> {
 
 	public Result save(){
 		Form<Box> boxFilledForm = getMainFilledForm();
-		if (!mainForm.hasErrors()) {
-			Box box = boxFilledForm.get();
-			box.code = ReagentCodeHelper.getInstance().generateBoxCode(box.kitCode);
-			box.code = ReagentCodeHelper.getInstance().generateBoxCode();
-			
-			
-			box.traceInformation = new TraceInformation();
-			box.traceInformation.createUser =  getCurrentUser();
-			box.traceInformation.creationDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setCreationMode();
+		
+		Box box = boxFilledForm.get();
+		box.code = ReagentCodeHelper.getInstance().generateBoxCode(box.kitCode);
+		box.code = ReagentCodeHelper.getInstance().generateBoxCode();
+		
+		
+		box.traceInformation = new TraceInformation();
+		box.traceInformation.createUser =  getCurrentUser();
+		box.traceInformation.creationDate = new Date();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm.errors());
+		contextValidation.setCreationMode();
 
-			//When the user want to declare the box only, the kitCode = the boxCode
-			//in order to search it in the interface
-			if(box.declarationType.equals("box")){
-				box.kitCode = box.code;
-			}
-			
-			box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-			if (!contextValidation.hasErrors()) {
-				return ok(Json.toJson(box));
-			} else {
-				return badRequest(errorsAsJson(contextValidation.getErrors()));
-			}
+		//When the user want to declare the box only, the kitCode = the boxCode
+		//in order to search it in the interface
+		if(box.declarationType.equals("box")){
+			box.kitCode = box.code;
 		}
-		return badRequest(mainForm.errorsAsJson()); // legit, should modify source to use contextvlidation
+		
+		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		if (!contextValidation.hasErrors()) {
+			return ok(Json.toJson(box));
+		} else {
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		}
+			// legit, should modify source to use contextvlidation
 	}
 
 	public Result update(String code){
 		Form<Box> boxFilledForm = getMainFilledForm();
-		if (!mainForm.hasErrors()) {
-			Box box = boxFilledForm.get();
-			
-			box.traceInformation.modifyUser =  getCurrentUser();
-			box.traceInformation.modifyDate = new Date();
+		Box box = boxFilledForm.get();
+		
+		box.traceInformation.modifyUser =  getCurrentUser();
+		box.traceInformation.modifyDate = new Date();
 
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxFilledForm.errors());
+		contextValidation.setUpdateMode();
 
-			box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-			if (!contextValidation.hasErrors()) { 
-				return ok(Json.toJson(box));
-			} else {
-				return badRequest(errorsAsJson(contextValidation.getErrors()));
-			}
+		box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
+		if (!contextValidation.hasErrors()) { 
+			return ok(Json.toJson(box));
+		} else {
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
-		return badRequest(mainForm.errorsAsJson()); // legit, should modify source to use contextvalidation
+		// legit, should modify source to use contextvalidation
 	}
 
 	public Result list(){

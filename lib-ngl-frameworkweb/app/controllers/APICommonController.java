@@ -39,7 +39,7 @@ public abstract class APICommonController<T> extends Controller {
 	protected final Class<T> type;
 	
 	// protected final Form<T> mainForm = form(type);
-	protected final Form<T> mainForm; //  = fr.cea.ig.play.IGGlobals.form(type);
+	private final Form<T> mainForm; //  = fr.cea.ig.play.IGGlobals.form(type);
 	
 	protected NGLContext ctx;
 	
