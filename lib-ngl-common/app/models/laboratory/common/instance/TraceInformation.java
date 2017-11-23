@@ -91,7 +91,6 @@ public class TraceInformation implements IValidation {
 	 * Set the update information using the the provided user and the current date.
 	 * @param user user name for the update
 	 */
-	@JsonIgnore
 	public void modificationStamp(ContextValidation ctx, String user) {
 		Date date = new Date();
 		if (date.compareTo(modifyDate) >= 0) {

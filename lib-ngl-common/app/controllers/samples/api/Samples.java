@@ -69,7 +69,7 @@ public class Samples extends DocumentController<Sample> {
 	// private final Form<SamplesSearchForm> sampleSearchForm; // = form(SamplesSearchForm.class);
 	//private final Form<SampleBatchElement> batchElementForm; // = form(SampleBatchElement.class);
 
-	private static final  List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
+	private static final List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
 	private static final List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
 	
 	@Inject
@@ -80,8 +80,6 @@ public class Samples extends DocumentController<Sample> {
 		// sampleSearchForm = ctx.form(SamplesSearchForm.class);
 		//batchElementForm = ctx.form(SampleBatchElement.class);
 	}
-	
-	
 	
 	@Permission(value={"reading"})
 	public Result list() {
@@ -100,6 +98,7 @@ public class Samples extends DocumentController<Sample> {
 	 * @return
 	 */
 	private static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
+		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();
 		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
@@ -132,7 +131,7 @@ public class Samples extends DocumentController<Sample> {
 			queryElts.add(DBQuery.regex("life.path", Pattern.compile(samplesSearch.treeOfLifePathRegex)));
 		}
 		
-		
+		// TODO: redundant code, done at method end 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}

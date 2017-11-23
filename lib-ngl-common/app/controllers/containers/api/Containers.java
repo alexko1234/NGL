@@ -172,7 +172,7 @@ public class Containers extends DocumentController<Container> { // extends Commo
 			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
 			List<Container> containers = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
-			for(Container p: containers){
+			for (Container p: containers) {
 				los.add(new ListObject(p.code, p.code));
 			}
 			return ok(Json.toJson(los));
