@@ -27,7 +27,7 @@ import controllers.CommonController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 
-
+import fr.cea.ig.play.NGLContext;
 
 public class Files extends ReadSetsController {
 
@@ -89,7 +89,8 @@ public class Files extends ReadSetsController {
 					DBUpdate.push("files", file).set("traceInformation", getUpdateTraceInformation(readSet))); 
 			return ok(Json.toJson(file));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			//return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -119,9 +120,10 @@ public class Files extends ReadSetsController {
 					
 					return get(readSetCode, fullname);
 				} else {
-					return badRequest(filledForm.errorsAsJson());
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("fullname are not the same");
 			}
 		}else{ //update only some authorized properties
@@ -136,7 +138,7 @@ public class Files extends ReadSetsController {
 				ctxVal.setCreationMode();
 				FileValidationHelper.validateFileFullName(fileInput.fullname, ctxVal);
 			}
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.is("files.fullname", fullname)),
 						getBuilder(fileInput, queryFieldsForm.fields, File.class,"files.$").set("traceInformation", getUpdateTraceInformation(readSet))); 
@@ -145,8 +147,9 @@ public class Files extends ReadSetsController {
 					fullname = fileInput.fullname;
 				}
 				return get(readSetCode, fullname);
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}

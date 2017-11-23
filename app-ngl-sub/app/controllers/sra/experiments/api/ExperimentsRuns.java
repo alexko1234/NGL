@@ -56,7 +56,8 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("experiments ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			//return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 
 		if(queryFieldsForm.fields != null){
@@ -72,7 +73,8 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 
 				return ok(Json.toJson(getExperiment(code)));
 			}else{
-				return badRequest(filledForm.errorsAsJson());
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}
 		return ok();

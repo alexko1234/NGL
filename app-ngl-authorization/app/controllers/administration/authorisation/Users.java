@@ -67,7 +67,7 @@ public class Users extends Controller {
 			Form<User> filledForm = form(User.class).bindFromRequest();
 			if (filledForm.hasErrors()) {
 				if ("json".equals(format)) {
-					return badRequest(filledForm.errorsAsJson()); // legit
+					return badRequest(filledForm.errorsAsJson( )); // legit
 				} else {
 					return badRequest(addUser.render(filledForm,true));
 				}

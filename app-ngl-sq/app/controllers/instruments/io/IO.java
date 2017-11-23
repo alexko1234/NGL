@@ -26,6 +26,7 @@ import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 public class IO extends TPLCommonController {
 	
@@ -100,20 +101,21 @@ public class IO extends TPLCommonController {
 
 		AbstractOutput output = getOutputInstance(experiment, contextValidation);
 		
-		if(!contextValidation.hasErrors()){
-			try{
+		if (!contextValidation.hasErrors()) {
+			try {
 				File file = output.generateFile(experiment, contextValidation);
 				if (!contextValidation.hasErrors() && null != file) {									
 					response().setContentType("application/x-download");  
 					response().setHeader("Content-disposition","attachment; filename="+file.filename);
 					return ok(file.content);
 				}
-			}catch(Throwable e){
+			} catch(Throwable e) {
 				Logger.error("IO Error :", e);
 				contextValidation.addErrors("Error :", e.getMessage());
 			}
 		}		
-		return badRequest(filledForm.errorsAsJson());
+		// return badRequest(filledForm.errors-AsJson());
+		return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
 	}
 	
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
@@ -133,19 +135,20 @@ public class IO extends TPLCommonController {
 		if(null != pfv){
 			AbstractInput input = getInputInstance(experiment, contextValidation, extraInstrument ); // FDS 25/10 ajout param optionnel pour instrument additionnel
 			
-			if(!contextValidation.hasErrors()){
-				try{
+			if (!contextValidation.hasErrors()) {
+				try {
 					experiment = input.importFile(experiment, pfv,contextValidation);
 					if (!contextValidation.hasErrors()) {	
 						return ok(Json.toJson(experiment));
 					}
-				}catch(Throwable e){
+				} catch(Throwable e) {
 					Logger.error(e.getMessage(),e);
 					contextValidation.addErrors("Error :", e.getMessage()+"");
 				}
 			}
-			return badRequest(filledForm.errorsAsJson());
-		}else{
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
+		} else {
 			return badRequest("missing file");
 		}		
 	}

@@ -74,7 +74,7 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 				return ok(Json.toJson(kitCatalog));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
 	}
 	
 	public Result update(String code){
@@ -90,7 +90,7 @@ public class KitCatalogs extends DocumentController<KitCatalog> {
 				return ok(Json.toJson(kitCatalog));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, spaghetti above
 	}
 	
 	public Result list(){

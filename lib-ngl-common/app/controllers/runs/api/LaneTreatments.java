@@ -22,6 +22,7 @@ import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
@@ -98,7 +99,8 @@ public class LaneTreatments extends RunsController{
 			
 			return ok(Json.toJson(treatment));
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 			
 	}
@@ -126,15 +128,16 @@ public class LaneTreatments extends RunsController{
 			ctxVal.putObject("run", run);
 			ctxVal.putObject("lane", getLane(run, laneNumber));
 			treatment.validate(ctxVal);
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 						DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)),
 						DBUpdate.set("lanes.$.treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));
 				return ok(Json.toJson(treatment));
 			} else {
-				return badRequest(filledForm.errorsAsJson());			
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("treatment code are not the same");
 		}		
 	}

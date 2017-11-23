@@ -51,6 +51,9 @@ import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
 import workflows.run.RunWorkflows;
+import fr.cea.ig.play.NGLContext;
+
+
 /**
  * Controller around Run object
  *
@@ -302,7 +305,8 @@ public class Runs extends RunsController {
 			runInput = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 			return ok(Json.toJson(runInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -335,8 +339,9 @@ public class Runs extends RunsController {
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 					return ok(Json.toJson(runInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					//return badRequest(filledForm.errors-AsJson());
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 				
 			}else{
@@ -348,7 +353,8 @@ public class Runs extends RunsController {
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				TraceInformation ti = run.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
@@ -361,8 +367,9 @@ public class Runs extends RunsController {
 				}
 				*/
 				return ok(Json.toJson(getRun(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
@@ -403,10 +410,11 @@ public class Runs extends RunsController {
 			workflows.nextState(ctxVal, run);
 			
 		} 
-		if(!ctxVal.hasErrors()) {
+		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(run));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 

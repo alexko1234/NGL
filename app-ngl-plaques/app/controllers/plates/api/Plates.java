@@ -62,7 +62,7 @@ public class Plates extends CommonController {
 			plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
 			return ok(Json.toJson(plate));
 		} else {
-			return badRequest(filledForm.errorsAsJson()); // not legit, use ContextValidation
+			return badRequest(filledForm.errorsAsJson()); // probably not legit, use ContextValidation to have a mutable error map.
 		}
 	}
 	

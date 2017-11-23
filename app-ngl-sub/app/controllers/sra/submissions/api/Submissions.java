@@ -55,6 +55,7 @@ import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.SubmissionWorkflows;
 
 public class Submissions extends DocumentController<Submission>{
+	
 	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
 	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
 	private Map<String, UserSampleType> mapUserSamples = new HashMap<String, UserSampleType>();
@@ -155,7 +156,8 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			//return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		Submission submissionInput = filledForm.get();
 
@@ -170,12 +172,14 @@ public class Submissions extends DocumentController<Submission>{
 					MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
 					return ok(Json.toJson(submissionInput));
 				}else {
-					return badRequest(filledForm.errorsAsJson());
+					//return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				//return badRequest("submission code are not the same");
 				ctxVal.addErrors("submission "+code, "submission code  " +code + " and submissionInput.code "+ submissionInput.code + "are not the same");
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
 		}else{ //update only some authorized properties
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -184,13 +188,14 @@ public class Submissions extends DocumentController<Submission>{
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(submissionInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(submission.traceInformation)));
 			
 				return ok(Json.toJson(getObject(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
@@ -209,14 +214,16 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 
 		subWorkflows.setState(ctxVal, submission, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -236,18 +243,18 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		try {
 			submission = XmlServices.writeAllXml(code);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
 			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		} catch (SraException e) {
 			//return badRequest(e.getMessage());
 			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		return ok(Json.toJson(submission));
 	}
@@ -406,14 +413,16 @@ public class Submissions extends DocumentController<Submission>{
 
 			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
-			if (contextValidation.hasErrors()){
+			if (contextValidation.hasErrors()) {
 				contextValidation.displayErrors(Logger.of("SRA"));
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}	
 
 		} catch (SraException e) {
 			contextValidation.addErrors("save submission ", e.getMessage()); // si solution avec ctxVal
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		return ok(Json.toJson(submissionCode));
 	}
@@ -436,10 +445,12 @@ public class Submissions extends DocumentController<Submission>{
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
 			//return badRequest(Json.toJson(e.getMessage()));
-			filledForm.reject("Submission "+submissionCode, e.getMessage());  // si solution filledForm.reject
-			//ctxVal.addErrors("Submission "+submissionCode, e.getMessage()); // si solution avec ctxVal
-			Logger.debug("filled form "+filledForm.errorsAsJson());
-			return badRequest(filledForm.errorsAsJson());
+			// filledForm.reject("Submission "+submissionCode, e.getMessage());  // si solution filledForm.reject
+			contextValidation.addErrors("Submission "+submissionCode, e.getMessage()); // si solution avec ctxVal
+			// Logger.debug("filled form "+filledForm.errors-AsJson());
+			Logger.debug("filled form " + errorsAsJson(contextValidation.getErrors()));
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		return ok(Json.toJson(submission));
 	}

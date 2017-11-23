@@ -61,7 +61,7 @@ public class Boxes extends DocumentController<Box> {
 
 	public Result save(){
 		Form<Box> boxFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
+		if (!mainForm.hasErrors()) {
 			Box box = boxFilledForm.get();
 			box.code = ReagentCodeHelper.getInstance().generateBoxCode(box.kitCode);
 			box.code = ReagentCodeHelper.getInstance().generateBoxCode();
@@ -81,16 +81,18 @@ public class Boxes extends DocumentController<Box> {
 			}
 			
 			box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-			if(!contextValidation.hasErrors()){
+			if (!contextValidation.hasErrors()) {
 				return ok(Json.toJson(box));
+			} else {
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, should modify source to use contextvlidation
 	}
 
 	public Result update(String code){
 		Form<Box> boxFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
+		if (!mainForm.hasErrors()) {
 			Box box = boxFilledForm.get();
 			
 			box.traceInformation.modifyUser =  getCurrentUser();
@@ -100,11 +102,13 @@ public class Boxes extends DocumentController<Box> {
 			contextValidation.setUpdateMode();
 
 			box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
-			if(!contextValidation.hasErrors()){
+			if (!contextValidation.hasErrors()) { 
 				return ok(Json.toJson(box));
+			} else {
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 		}
-		return badRequest(mainForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson()); // legit, should modify source to use contextvalidation
 	}
 
 	public Result list(){

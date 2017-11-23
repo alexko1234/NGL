@@ -72,13 +72,14 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 		ctxVal.setCreationMode();
 		ctxVal.putObject("experiment", objectInDB);		
 		inputComment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		if (!ctxVal.hasErrors()) {
 			updateObject(DBQuery.is("code", parentCode), 
 					DBUpdate.push("comments", inputComment)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputComment.code);
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
@@ -98,18 +99,19 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 				ctxVal.setUpdateMode();
 				ctxVal.putObject("experiment", objectInDB);
 				inputComment.validate(ctxVal);
-				if(!ctxVal.hasErrors()){
+				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.is("code", parentCode).is("comments.code", inputComment.code), 
 							DBUpdate.set("comments.$", inputComment)
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 					return get(parentCode, code);
 				} else {
-					return badRequest(filledForm.errorsAsJson());			
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("treatment code are not the same");
 			}
-		}else{
+		} else {
 			return forbidden();
 		}
 	}

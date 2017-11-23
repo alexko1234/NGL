@@ -123,7 +123,8 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			projectInput = saveObject(projectInput);
 			return ok(Json.toJson(projectInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -153,11 +154,12 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 				if (!ctxVal.hasErrors()) {
 					updateObject(projectInput);
 					return ok(Json.toJson(projectInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 				
-			}else{
+			} else {
 				return badRequest("Project codes are not the same");
 			}	
 		}else{
@@ -166,12 +168,14 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(projectInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return ok(Json.toJson(getObject(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}

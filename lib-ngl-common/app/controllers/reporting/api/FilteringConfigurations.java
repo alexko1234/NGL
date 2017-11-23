@@ -92,7 +92,8 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 			configuration = saveObject(configuration);
 			return ok(Json.toJson(configuration));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -117,10 +118,11 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 			if (!ctxVal.hasErrors()) {
 				updateObject(configurationInput);
 				return ok(Json.toJson(configurationInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("FilteringConfiguration code are not the same");
 		}				
 	}

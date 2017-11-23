@@ -241,10 +241,10 @@ public class Processes extends DocumentController<Process> {
 		
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 		List<Process> processes = saveOneElement(contextValidation, input);
-		if (!contextValidation.hasErrors()) {
+		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(processes));
-		}
-		return badRequest(filledForm.errorsAsJson());		
+		// return badRequest(filledForm.errors-AsJson());
+		return badRequest(errorsAsJson(contextValidation.getErrors()));
 	}
 
 	private List<Process> saveOneElement(ContextValidation contextValidation, Process input) {
@@ -351,7 +351,8 @@ public class Processes extends DocumentController<Process> {
 				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
 				return ok(Json.toJson(input));
 			} else {
-				return badRequest(filledForm.errorsAsJson());			
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		} else {
 			return badRequest("process code are not the same");
@@ -373,7 +374,8 @@ public class Processes extends DocumentController<Process> {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -396,7 +398,8 @@ public class Processes extends DocumentController<Process> {
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
 				} else {
-					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+					//return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(lang), element.index);
+					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index);
 				}
 			} else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
@@ -433,7 +436,8 @@ public class Processes extends DocumentController<Process> {
 		if (!contextValidation.hasErrors()) {
 			return super.delete(code);
 		} else {
-			return badRequest(deleteForm.errorsAsJson());
+			//return badRequest(deleteForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		
 	}

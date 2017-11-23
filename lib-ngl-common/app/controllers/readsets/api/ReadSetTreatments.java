@@ -19,7 +19,7 @@ import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
-
+import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
@@ -80,7 +80,7 @@ public class ReadSetTreatments extends ReadSetsController {
 		ctxVal.putObject("level", Level.CODE.ReadSet);
 		ctxVal.putObject("readSet", readSet);
 		treatment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		/*if(!ctxVal.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code", readSetCode),
 					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));	
@@ -89,8 +89,17 @@ public class ReadSetTreatments extends ReadSetsController {
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(treatment));			
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
-		}		
+			return badRequest(filledForm.errors-AsJson());			
+		}*/
+		if(!ctxVal.hasErrors()){
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.is("code", readSetCode),
+					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));	
+			return ok(Json.toJson(treatment));			
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+		}
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
@@ -112,7 +121,7 @@ public class ReadSetTreatments extends ReadSetsController {
 			ctxVal.putObject("level", Level.CODE.ReadSet);
 			ctxVal.putObject("readSet", readSet);
 			treatment.validate(ctxVal);
-			if(!ctxVal.hasErrors()){
+			/*if(!ctxVal.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.is("code", readSetCode),
 						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));				
@@ -120,7 +129,16 @@ public class ReadSetTreatments extends ReadSetsController {
 			if (!filledForm.hasErrors()) {
 				return ok(Json.toJson(treatment));			
 			} else {
-				return badRequest(filledForm.errorsAsJson());			
+				return badRequest(filledForm.errors-AsJson());			
+			}*/
+			if (!ctxVal.hasErrors()) {
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.is("code", readSetCode),
+						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(readSet)));				
+				return ok(Json.toJson(treatment));			
+			} else {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
 		} else {
 			return badRequest("treatment code are not the same");

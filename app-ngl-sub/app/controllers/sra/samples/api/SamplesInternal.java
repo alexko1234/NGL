@@ -52,7 +52,7 @@ public class SamplesInternal extends DocumentController<Sample>{
 
 		if (sample == null) {
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		System.out.println(" ok je suis dans Samples.update\n");
 		Sample sampleInput = filledForm.get();
@@ -70,7 +70,8 @@ public class SamplesInternal extends DocumentController<Sample>{
 
 				return ok(Json.toJson(getObject(code)));
 			}else{
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}
 		return ok(Json.toJson(getObject(code)));

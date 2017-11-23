@@ -32,6 +32,7 @@ import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ValuationCriterias extends CommonController {
 	final static Form<ValuationCriteria> valuationCriteriaForm = form(ValuationCriteria.class);
@@ -113,7 +114,8 @@ public class ValuationCriterias extends CommonController {
 			objectInput = MongoDBDAO.save(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, objectInput);
 			return ok(Json.toJson(objectInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -138,10 +140,11 @@ public class ValuationCriterias extends CommonController {
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, objectInput);
 				return ok(Json.toJson(objectInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("readset code are not the same");
 		}				
 	}

@@ -49,7 +49,7 @@ public class Permissions extends Controller {
 
 			if(filledForm.hasErrors()) {
 				if ("json".equals(format)) {
-					return badRequest(filledForm.errorsAsJson()); // legit
+					return badRequest(filledForm.errorsAsJson( )); // legit
 				} else {
 					return badRequest(addPermission.render(filledForm,true));
 				}

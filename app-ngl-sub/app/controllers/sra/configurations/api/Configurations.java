@@ -69,18 +69,21 @@ public class Configurations extends DocumentController<Configuration> {
 			try {
 				userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCodes);
 			} catch (SraException e) {
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 			System.out.println (" !!!!!!!!!!! userConf.code = " + userConfiguration.code);
 			userConfiguration.validate(contextValidation);
-			if(contextValidation.errors.size()==0) {
+			// if(contextValidation.errors.size()==0) {
+			if (!contextValidation.hasErrors()) {
 				MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);
 			} else {
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}
 		} else {
 			filledForm.reject("configuration with id "+userConfiguration._id ," already exist");
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit, at least does seem
 		}
 		return ok(Json.toJson(userConfiguration.code));
 	}
@@ -161,7 +164,8 @@ public class Configurations extends DocumentController<Configuration> {
 		if (configuration == null) {
 			//return badRequest("Configuration with code "+code+" not exist");
 			ctxVal.addErrors("configuration ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson( ));
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		Configuration configurationInput = filledForm.get();
 		if (code.equals(configurationInput.code)) {	
@@ -174,12 +178,14 @@ public class Configurations extends DocumentController<Configuration> {
 				MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, configurationInput);
 				return ok(Json.toJson(configurationInput));
 			}else {
-				return badRequest(filledForm.errorsAsJson());
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		}else{
 			//return badRequest("configuration code are not the same");
 			ctxVal.addErrors("configuration " + code, "configuration code  " + code + " and configurationInput.code "+ configurationInput.code + "are not the same");
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}	
 	}
 
