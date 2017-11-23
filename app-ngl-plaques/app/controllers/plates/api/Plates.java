@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
@@ -23,6 +24,7 @@ import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.MaterielManipSearch;
+import fr.cea.ig.play.NGLContext;
 
 // TODO: use DI, extends DocumemntController to start with
 public class Plates extends CommonController {
@@ -51,8 +53,10 @@ public class Plates extends CommonController {
 			}
 			isUpdate = false;
 		}
-		validatePlate(plate, filledForm.errors(), isUpdate);
-		if (!filledForm.hasErrors()) {
+		Map<String, List<ValidationError>> errors    = new TreeMap<String, List<ValidationError>>();
+		
+		validatePlate(plate, errors, isUpdate);
+		if (errors.isEmpty()) {
 			logger.debug(plate.toString());
 			if (!isUpdate) {
 				Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
@@ -62,7 +66,7 @@ public class Plates extends CommonController {
 			plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
 			return ok(Json.toJson(plate));
 		} else {
-			return badRequest(filledForm.errorsAsJson()); // probably not legit, use ContextValidation to have a mutable error map.
+			return badRequest(NGLContext._errorsAsJson(errors)); 
 		}
 	}
 	
