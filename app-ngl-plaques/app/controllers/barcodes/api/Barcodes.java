@@ -11,9 +11,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import controllers.CommonController;
+import fr.cea.ig.play.NGLContext;
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
 import models.utils.CodeHelper;
@@ -32,8 +34,9 @@ public class Barcodes extends CommonController {
 	public static Result save() {
 		Form<BarcodesForm> filledForm = getFilledForm(form, BarcodesForm.class);
 		BarcodesForm form = filledForm.get();
-		validate(form, filledForm.errors());
-		if (!filledForm.hasErrors()) {
+		Map<String, List<ValidationError>> errors    = new TreeMap<String, List<ValidationError>>();
+		validate(form, errors);
+		if (errors.isEmpty()) {
     	    Set<String> set = new TreeSet<String>();
     	    Logger.debug("number = " + form.number);
     	    for(int i = 0 ; i < form.number; i++){
@@ -44,7 +47,7 @@ public class Barcodes extends CommonController {
     	    }
     	    return ok(Json.toJson(set));
     	} else {
-    	    return badRequest(filledForm.errorsAsJson()); // possibly legit, above could run into immutable error map
+    	    return badRequest(NGLContext._errorsAsJson(errors));
     	}
 	}
 	
