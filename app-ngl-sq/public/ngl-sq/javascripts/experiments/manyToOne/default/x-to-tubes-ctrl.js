@@ -1,5 +1,5 @@
-angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2',
-                                                               function($scope, $parse, $filter, atmToDragNDrop) {
+angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2','mainService',
+                                                               function($scope, $parse, $filter, atmToDragNDrop,mainService) {
 	
 	// NGL-1055: name explicite pour fichier CSV exporté
 	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
@@ -236,10 +236,12 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	var supportCategoryCode = undefined;
 	if(tmp.length === 1){
 		supportCategoryCode=tmp[0];
+		$scope.supportCategoryCode = supportCategoryCode;
 	}else{
 		supportCategoryCode="mixte";
+		$scope.supportCategoryCode = "tube";
 	}
-			
+		
 	console.log("supportCategoryCode : "+supportCategoryCode);
 	
 	

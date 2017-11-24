@@ -1,7 +1,7 @@
 @()
 <!--- FDS 05/10/2016 cree pour gerer le cas des sorties tubes ou plaques et le pooling automatique--->
 
-<div class="col-md-12 col-lg-12" ng-switch="atmService.inputContainerSupportCategoryCode">
+<div class="col-md-12 col-lg-12" ng-switch="supportCategoryCode">
 <div ng-switch-when="tube">
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist">
 	  <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.pools.design")</a></li>

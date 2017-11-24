@@ -1,4 +1,4 @@
-angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse',
+angular.module('home').controller('CNSXToTubesCtrl',['$scope', '$http','$parse',
                                                                function($scope, $http,$parse) {
 	$scope.atmService.updateOutputConcentration = function(atm){
 		

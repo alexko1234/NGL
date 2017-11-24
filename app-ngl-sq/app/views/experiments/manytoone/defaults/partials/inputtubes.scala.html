@@ -28,6 +28,9 @@
 						@Messages("containers.table.sampleCodes")
 					</th>
 					<th>
+						@Messages("containers.table.libProcessTypeCodes")
+					</th>
+					<th>
 						@Messages("containers.table.tags")
 					</th>
 					<th>
@@ -63,7 +66,9 @@
 						<div list-resize='container.sampleCodes' list-resize-min-size='3'>
 						
 					</td>
-																
+					<td>
+						<div list-resize='container.contents | getArray:"properties.libProcessTypeCode.value"| unique' list-resize-min-size='5' below vertical>					
+					</td>									
 					<td>
 						<div list-resize='container.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>																
 					</td>					
