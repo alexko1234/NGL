@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import controllers.APICommonController;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
@@ -19,6 +21,7 @@ import views.components.datatable.DatatableResponse;
 
 public class PropertyDefinitions extends APICommonController<PropertyDefinition> {
 
+	@Inject
 	public PropertyDefinitions(NGLContext ctx) {
 		super(ctx,PropertyDefinition.class);		
 	}
