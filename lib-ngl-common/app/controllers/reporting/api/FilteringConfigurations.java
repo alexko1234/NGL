@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reporting.instance.FilteringConfiguration;
 import models.laboratory.reporting.instance.ReportingConfiguration;
@@ -44,6 +46,7 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class); 
 	final static Form<FilteringConfiguration> filteringConfigurationsForm = form(FilteringConfiguration.class);
 	
+	@Inject
 	public FilteringConfigurations(NGLContext ctx) {
 		super(ctx,InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);		
 	}

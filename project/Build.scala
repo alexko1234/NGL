@@ -154,6 +154,7 @@ object ApplicationBuild extends Build {
 		  commonsLang,
 			fest,
 		  jtds,
+		   guice,
 		  "mysql"                % "mysql-connector-java"      % "5.1.18",
 		  "net.sf.opencsv"       % "opencsv"                   % "2.0",
 		  "commons-collections"  % "commons-collections"       % "3.2.1",
@@ -197,7 +198,6 @@ object ApplicationBuild extends Build {
 		  javaCore, 
 		  javaJdbc,
 		  postgresql,
-		  guice,
 		  "org.assertj" % "assertj-core" % "1.7.1"
 	  )
 	  
