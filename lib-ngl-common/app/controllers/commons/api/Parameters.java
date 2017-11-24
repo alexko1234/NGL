@@ -84,7 +84,9 @@ public class Parameters extends CommonController {
 		if (StringUtils.isNotBlank(form.sequence)) { 
 			queries.add(DBQuery.is("sequence", form.sequence));
 		}
-		if(CollectionUtils.isNotEmpty(form.categoryCodes)){
+		if(StringUtils.isNotBlank(form.categoryCode)){
+			queries.add(DBQuery.is("categoryCode", form.categoryCode));
+		}else if(CollectionUtils.isNotEmpty(form.categoryCodes)){
 			queries.add(DBQuery.in("categoryCode", form.categoryCodes));
 		}
 		if(queries.size() > 0){
