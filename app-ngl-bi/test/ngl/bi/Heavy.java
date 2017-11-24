@@ -16,7 +16,7 @@ public class Heavy {
 	    		ws -> {	    	
 	    			new RoutesTest()
 	    			.autoRoutes()
-	    			// .ignore("/api/manip")
+	    			//.ignore("/permissions.js")
 	    			.run(ws);
 	    		});
 	}	
