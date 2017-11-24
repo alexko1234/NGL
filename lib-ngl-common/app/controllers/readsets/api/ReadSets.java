@@ -96,7 +96,7 @@ public class ReadSets extends ReadSetsController{
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");
-			return ok(MongoStreamer.stream(results)).as("application/json");
+			return ok(MongoStreamer.streamUDT(results)).as("application/json");
 		}else if(form.count){
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();

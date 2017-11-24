@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -68,6 +70,7 @@ public class Analyses extends DocumentController<Analysis> {
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
+	@Inject
 	public Analyses(NGLContext ctx) {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
 	}

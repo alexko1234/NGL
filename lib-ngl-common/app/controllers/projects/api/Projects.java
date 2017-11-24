@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -43,6 +45,7 @@ public class Projects extends DocumentController<Project> {
 	final static Form<ProjectsSearchForm> searchForm = form(ProjectsSearchForm.class); 
 	final static Form<Project> projectForm = form(Project.class);
 	
+	@Inject
 	public Projects(NGLContext ctx) {
 		super(ctx,InstanceConstants.PROJECT_COLL_NAME, Project.class);		
 	}
