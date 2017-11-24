@@ -309,6 +309,8 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
 				var ocu = atm.outputContainerUseds[j];
 				if(icu.fromTransformationTypeCodes.indexOf('nanopore-library') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('nanopore-final-ligation') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-run') > -1 
 						&& ocu.concentration && ocu.concentration.value){
 					var concentration = ocu.concentration;
 					console.log("conc",concentration);	
@@ -328,7 +330,14 @@ angular.module('home').controller('NanoporeSizingCtrl',['$scope', '$parse', 'atm
 				//si from transfo type=frg ou ext-to-nanopore-rep-lib-depot
 				if((icu.fromTransformationTypeCodes.indexOf('nanopore-frg') > -1 
 						||  icu.fromTransformationTypeCodes.indexOf('nanopore-fragmentation') > -1 
-						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1 )
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-rep-lib-depot') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-process-dev') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-process-dev-2') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-frg-rep-lib-depot') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-frg-lib-depot') > -1 
+						||  icu.fromTransformationTypeCodes.indexOf('ext-to-nanopore-process-library-no-frg') > -1 
+				
+				)
 						&& ocu.size && ocu.size.value){
 					var size = ocu.size.value;	
 					$parse('experimentProperties.measuredSizePostSizing').assign(ocu, {value:size, unit:"pb"});
