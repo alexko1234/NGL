@@ -294,7 +294,7 @@ public class ProtocolServiceCNS {
 				newPSV("depletionMethod","plante")));
 		
 		lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", 
-				InstanceFactory.setExperimentTypeCodes("pulsed-field-electrophoresis","small-and-large-rna-isolation", "control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate", "dilution")));
+				InstanceFactory.setExperimentTypeCodes("pulsed-field-electrophoresis","small-and-large-rna-isolation", "chip-migration","control-pcr-and-gel","normalisation","tubes-to-plate","plate-to-tubes","plates-to-plate","x-to-plate", "dilution")));
 
 		lp.add(newProtocol("annexe-puce-adn-hs-v1","Annexe_PuceADN-HS_v1","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration","chip-migration-rna-evaluation")));
 		lp.add(newProtocol("annexe-labchip-v1","Annexe_LabChip_v1","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration")));
