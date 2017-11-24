@@ -174,56 +174,13 @@ public class ProcWorkflowHelper {
 			Logger.debug("UpdateProperties for tag "+tags);
 			
 			//2 update content properties
-			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  DBQuery.in("code", outputContainerCodes))
-				.cursor
-				.forEach(container -> {
-					container.traceInformation.setTraceInformation(validation.getUser());
-					container.contents.stream()
-						.filter(content -> {
-							return ((!content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode))
-									|| (null != tags && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) && content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
-											&&  tags.contains(content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value)));
-						})
-						.forEach(content -> {
-							content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);
-							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, contentHelper.getContentQuery(container, content), DBUpdate.set("contents.$", content));						
-						});								
-			});
-		
-			//update readsets with new process property values
-			MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
-					DBQuery.in("sampleOnContainer.containerCode", outputContainerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
-				.cursor
-				.forEach(readset -> {
-					if(!readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
-							|| (null != tags && readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
-							&&  tags.contains(readset.sampleOnContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
-						readset.traceInformation.setTraceInformation(validation.getUser());
-						readset.sampleOnContainer.lastUpdateDate = new Date();
-						
-						readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);
-						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
-					}
-			});			
-			
-			
-			//update processes with new exp property values
-			MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, 
-					DBQuery.in("sampleOnInputContainer.containerCode", outputContainerCodes).in("sampleOnInputContainer.sampleCode", sampleCodes).in("sampleOnInputContainer.projectCode", projectCodes))
-				.cursor
-				.forEach(otherProcess -> {
-					if(!otherProcess.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
-							|| (null != tags && otherProcess.sampleOnInputContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
-							&&  tags.contains(otherProcess.sampleOnInputContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
-						otherProcess.traceInformation.setTraceInformation(validation.getUser());
-						otherProcess.sampleOnInputContainer.lastUpdateDate = new Date();
-						
-						otherProcess.sampleOnInputContainer.properties = InstanceHelpers.updateProperties(otherProcess.sampleOnInputContainer.properties, updatedProperties, deletedPropertyCodes);
-						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, otherProcess);
-					}
-			});
+			InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, outputContainerCodes, tags, updatedProperties,
+					deletedPropertyCodes, validation);
 		}
 	}
+
+
+	
 	
 	
 	private List<String> getProcessesPropertyDefinitionCodes(Process process, Level.CODE level) {		

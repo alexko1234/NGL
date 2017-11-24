@@ -402,7 +402,6 @@ public class InstanceHelpers {
 			//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", container.code), DBUpdate.set("contents", container.contents));
 		});
 		
-		
 		//update readsets with new exp property values
 		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
 				DBQuery.in("sampleOnContainer.containerCode", containerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
@@ -432,6 +431,8 @@ public class InstanceHelpers {
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, process);
 			}
 		});
+		
+		
 	}
-	
+		
 }

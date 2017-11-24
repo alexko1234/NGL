@@ -26,35 +26,27 @@ import controllers.migration.OneToVoidContainer;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
-
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
-import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
+import models.laboratory.processes.instance.Process;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.reporting.SampleExperiment;
 import models.laboratory.sample.instance.reporting.SampleProcess;
 import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 import models.laboratory.sample.instance.reporting.SampleReadSet;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
-
 import services.instance.AbstractImportData;
 import workflows.process.ProcWorkflowHelper;
-import static workflows.process.ProcWorkflowHelper.TAG_PROPERTY_NAME;
 
 public class UpdateReportingData extends AbstractImportData {
 	private ProcWorkflowHelper procWorkflowHelper;
@@ -339,9 +331,9 @@ public class UpdateReportingData extends AbstractImportData {
 				keys)
 		.cursor
 		.forEach(readset -> {
-			if(!readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME)
-					|| (null != tags && readset.sampleOnContainer.properties.containsKey(TAG_PROPERTY_NAME) 
-					&&  tags.contains(readset.sampleOnContainer.properties.get(TAG_PROPERTY_NAME).value))){
+			if(!readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
+					|| (null != tags && readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+					&&  tags.contains(readset.sampleOnContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
 				sampleReadSets.add(convertToSampleReadSet(readset));				
 			}
 		});
