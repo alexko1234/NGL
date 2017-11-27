@@ -49,19 +49,23 @@ public class ImportDataUtil {
 	
 	/**
 	 * Get the duration for next time with specific minute.
-	 * @param minutes
+	 * @param hour
 	 * @return
 	 */
-	public static FiniteDuration getDurationForNextHour(int minutes) {
+	public static FiniteDuration getDurationForNextHour(int hour) {
 		Calendar c = Calendar.getInstance();
-		if(c.get(Calendar.MINUTE) > minutes){
-			int hour = c.get(Calendar.HOUR_OF_DAY) + 1;
+		if(c.get(Calendar.MINUTE) > hour){
+			hour = c.get(Calendar.HOUR_OF_DAY) + 1;
 			c.set(Calendar.HOUR_OF_DAY, hour);
-			c.set(Calendar.MINUTE, minutes);			
+			c.set(Calendar.MINUTE, hour);			
 		}else{
-			c.set(Calendar.MINUTE, minutes);			
+			c.set(Calendar.MINUTE, hour);			
 		}
 		return Duration.create(c.getTimeInMillis() - System.currentTimeMillis(),TimeUnit.MILLISECONDS);
+	}
+
+	public static FiniteDuration getDurationForNextSeconds(Integer nbSeconds) {
+		return Duration.create(nbSeconds,TimeUnit.SECONDS);
 	}
 
 }

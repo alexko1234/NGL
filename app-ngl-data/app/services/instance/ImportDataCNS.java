@@ -26,7 +26,7 @@ public class ImportDataCNS{
 
 	public ImportDataCNS(){
 		
-		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(11),Duration.create(6,TimeUnit.HOURS));
+		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextSeconds(1),Duration.create(120,TimeUnit.HOURS));
 		
 	}
 

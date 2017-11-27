@@ -18,6 +18,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.index.Index;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.processes.instance.SampleOnInputContainer;
@@ -25,6 +26,7 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
+import models.sra.submit.common.instance.Readset;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.Transformer;
@@ -398,24 +400,38 @@ public class InstanceHelpers {
 					.forEach(content -> {
 						content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);		
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content), DBUpdate.set("contents.$", content));
-					});
-			//MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", container.code), DBUpdate.set("contents", container.contents));
+					});			
 		});
 		
-		//update readsets with new exp property values
-		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
-				DBQuery.in("sampleOnContainer.containerCode", containerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
-			.cursor
-			.forEach(readset -> {
-				if(!readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
-						|| (null != tags && readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
-						&&  tags.contains(readset.sampleOnContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
-					readset.traceInformation.setTraceInformation(validation.getUser());
-					readset.sampleOnContainer.lastUpdateDate = new Date();
-					readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);	
-					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
-				}
-		});		
+		MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
+				DBQuery.or(DBQuery.in("inputContainerCodes", containerCodes), DBQuery.in("outputContainerCodes", containerCodes)))
+			.cursor.forEach(experiment -> {
+				experiment.traceInformation.setTraceInformation(validation.getUser());
+				experiment.atomicTransfertMethods.forEach(atm ->{
+					atm.inputContainerUseds
+						.stream()
+						.filter(icu -> containerCodes.contains(icu.code))
+						.map(icu -> icu.contents)
+						.flatMap(List::stream)
+						.filter(content -> sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) )
+						.forEach(content -> {
+							content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);							
+						});
+					if(null != atm.outputContainerUseds){
+						atm.outputContainerUseds
+							.stream()
+							.filter(ocu -> containerCodes.contains(ocu.code))							
+							.map(ocu -> ocu.contents)
+							.flatMap(List::stream)
+							.filter(content -> sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) )
+							.forEach(content -> {
+								content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);							
+							});
+					}
+				});				
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experiment.code), 
+						DBUpdate.set("atomicTransfertMethods", experiment.atomicTransfertMethods).set("traceInformation", experiment.traceInformation));	
+		});	
 		
 		//update processes with new exp property values
 		MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, 
@@ -432,6 +448,122 @@ public class InstanceHelpers {
 			}
 		});
 		
+		//update readsets with new exp property values
+		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
+				DBQuery.in("sampleOnContainer.containerCode", containerCodes).in("sampleCode", sampleCodes).in("projectCode", projectCodes))
+			.cursor
+			.forEach(readset -> {
+				if(!readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)
+						|| (null != tags && readset.sampleOnContainer.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) 
+						&&  tags.contains(readset.sampleOnContainer.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))){
+					readset.traceInformation.setTraceInformation(validation.getUser());
+					readset.sampleOnContainer.lastUpdateDate = new Date();
+					readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);	
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readset);
+				}
+		});	
+	}
+	
+	public static void updateContentProperties(Sample sample, Map<String, PropertyValue> updatedProperties, Set<String> deletedPropertyCodes,
+			ContextValidation validation) {
+		
+		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
+				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
+			.cursor.forEach(updatedSample -> {
+				updatedSample.traceInformation.setTraceInformation(validation.getUser());
+				updatedSample.referenceCollab = sample.referenceCollab;
+				updatedSample.taxonCode = sample.taxonCode;
+				updatedSample.ncbiScientificName = sample.ncbiScientificName;
+				updatedSample.ncbiLineage = sample.ncbiLineage;
+				updatedSample.properties = InstanceHelpers.updateProperties(updatedSample.properties, updatedProperties, deletedPropertyCodes);
+				MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,updatedSample);
+		});
+		
+		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+				DBQuery.is("contents.sampleCode", sample.code).in("contents.projectCode", sample.projectCodes))
+			.cursor.forEach(container -> {
+				container.traceInformation.setTraceInformation(validation.getUser());
+				container.contents.stream()
+					.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
+					.forEach(content -> {
+						content.ncbiScientificName = sample.ncbiScientificName;
+						content.taxonCode = sample.taxonCode;
+						content.referenceCollab = sample.referenceCollab;
+						
+						content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content), DBUpdate.set("contents.$", content));
+					});				
+		});
+		
+		MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
+				DBQuery.in("sampleCodes", sample.code).in("projectCodes", sample.projectCodes))
+			.cursor.forEach(experiment -> {
+				experiment.traceInformation.setTraceInformation(validation.getUser());
+				experiment.atomicTransfertMethods.forEach(atm ->{
+					atm.inputContainerUseds
+						.stream()
+						.map(icu -> icu.contents)
+						.flatMap(List::stream)
+						.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
+						.forEach(content -> {
+							content.ncbiScientificName = sample.ncbiScientificName;
+							content.taxonCode = sample.taxonCode;
+							content.referenceCollab = sample.referenceCollab;
+							
+							content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);							
+						});
+					if(null != atm.outputContainerUseds){
+						atm.outputContainerUseds
+							.stream()
+							.map(ocu -> ocu.contents)
+							.flatMap(List::stream)
+							.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
+							.forEach(content -> {
+								content.ncbiScientificName = sample.ncbiScientificName;
+								content.taxonCode = sample.taxonCode;
+								content.referenceCollab = sample.referenceCollab;
+								
+								content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);							
+							});
+					}
+				});				
+				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", experiment.code), 
+						DBUpdate.set("atomicTransfertMethods", experiment.atomicTransfertMethods).set("traceInformation", experiment.traceInformation));	
+		});
+		
+		// Processes update sampleOnInputContainer.properties		
+		MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class, 
+				DBQuery.is("sampleOnInputContainer.sampleCode", sample.code).in("sampleOnInputContainer.projectCode", sample.projectCodes))
+		.cursor
+		.forEach(process -> {
+			process.traceInformation.setTraceInformation(validation.getUser());
+			process.sampleOnInputContainer.lastUpdateDate = new Date();
+			
+			process.sampleOnInputContainer.referenceCollab = sample.referenceCollab;
+			process.sampleOnInputContainer.taxonCode = sample.taxonCode;
+			process.sampleOnInputContainer.ncbiScientificName = sample.ncbiScientificName;
+			
+			process.sampleOnInputContainer.properties = InstanceHelpers.updateProperties(process.sampleOnInputContainer.properties, updatedProperties, deletedPropertyCodes);
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", process.code), 
+					DBUpdate.set("sampleOnInputContainer", process.sampleOnInputContainer).set("traceInformation", process.traceInformation));		
+		});
+		
+		// ReadSet update sampleOnContainer.properties		
+		MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,	
+				DBQuery.is("sampleCode", sample.code).in("projectCode", sample.projectCodes)) 
+		.cursor
+		.forEach(readset -> {
+			readset.traceInformation.setTraceInformation(validation.getUser());
+			readset.sampleOnContainer.lastUpdateDate = new Date();
+			
+			readset.sampleOnContainer.referenceCollab = sample.referenceCollab;
+			readset.sampleOnContainer.taxonCode = sample.taxonCode;
+			readset.sampleOnContainer.ncbiScientificName = sample.ncbiScientificName;
+			
+			readset.sampleOnContainer.properties = InstanceHelpers.updateProperties(readset.sampleOnContainer.properties, updatedProperties, deletedPropertyCodes);
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, Readset.class, DBQuery.is("code", readset.code), 
+					DBUpdate.set("sampleOnContainer", readset.sampleOnContainer).set("traceInformation", readset.traceInformation));			
+		});	
 		
 	}
 		
