@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.ITraceable;
+import models.laboratory.common.instance.ITracingAccess;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -24,6 +24,7 @@ import validation.sample.instance.SampleValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.ICommentable;
 import fr.cea.ig.DBObject;
 
 /**
@@ -36,7 +37,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Sample")
-public class Sample extends DBObject implements IValidation, ITraceable {
+public class Sample extends DBObject implements IValidation, ITracingAccess, ICommentable {
 
 
 	@JsonIgnore
@@ -93,6 +94,8 @@ public class Sample extends DBObject implements IValidation, ITraceable {
 	}
 
 
+	// Interfaces implementations
+	
 	@Override
 	public TraceInformation getTraceInformation() {
 		if (traceInformation == null)
@@ -100,4 +103,15 @@ public class Sample extends DBObject implements IValidation, ITraceable {
 		return traceInformation;
 	}
 
+	@Override
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+
+	@Override
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	
 }

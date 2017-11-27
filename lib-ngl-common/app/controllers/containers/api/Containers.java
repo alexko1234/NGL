@@ -81,8 +81,39 @@ import fr.cea.ig.play.NGLContext;
 
 
 // TODO: use DI
+// Indirection so we can swap implementations.
+public class Containers extends Containers2 {
+	public Containers(NGLContext ctx) {
+		super(ctx);
+	}
+	@Permission(value={"reading"})
+	public Result get(String code) {
+		return super.get(code);
+	}
+	@Permission(value={"reading"})
+	public Result head(String code) {
+		return super.head(code);
+	}
+	@Permission(value={"reading"})
+	public Result list() throws DAOException {
+		return super.list();
+	}
+	@Permission(value={"writing"})
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	public Result update(String code) {
+		return super.update(code);
+	}
+	@Permission(value={"writing"})
+	public Result updateState(String code) {
+		return super.updateState(code);
+	}
+	@Permission(value={"writing"})
+	public Result updateStateBatch() {
+		return super.updateStateBatch();
+	}
+}
 
-public class Containers extends DocumentController<Container> { // extends CommonController {
+class Containers2 extends DocumentController<Container> { // extends CommonController {
 	
 	/**
 	 * Logger.
@@ -111,7 +142,7 @@ public class Containers extends DocumentController<Container> { // extends Commo
 	final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
 		
 	@Inject
-	public Containers(NGLContext ctx) {
+	public Containers2(NGLContext ctx) {
 		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
 	}
 	

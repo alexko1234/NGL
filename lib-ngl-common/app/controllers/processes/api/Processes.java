@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +61,7 @@ public class Processes extends DocumentController<Process> {
 	final static ProcWorkflowHelper workflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
 	
 	
-	
+	@Inject
 	public Processes(NGLContext ctx) {
 		super(ctx,InstanceConstants.PROCESS_COLL_NAME, Process.class);		
 		defaultKeys =  Arrays.asList("*");

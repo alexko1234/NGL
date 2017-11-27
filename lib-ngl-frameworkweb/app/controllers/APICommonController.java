@@ -92,19 +92,19 @@ public abstract class APICommonController<T> extends Controller {
 	}
 
 	/**
-	 * Fill a form in json mode
-	 * @param form
-	 * @param clazz
-	 * @return
+	 * Returns a form built from the query string.
+	 * @param form  form to fill
+	 * @param clazz type of the form
+	 * @return      filled form
 	 */
-	protected <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
+	protected <A> Form<A> filledFormQueryString(Form<A> form, Class<A> clazz) {		
 		Map<String, String[]> queryString =request().queryString();
 		Map<String, Object> transformMap = new HashMap<String, Object>();
 		for (String key :queryString.keySet()) {			
 			try {
 				if (isNotEmpty(queryString.get(key))) {				
 					Field field = clazz.getField(key);
-					Class type = field.getType();
+					Class<?> type = field.getType();
 					if (type.isArray() || Collection.class.isAssignableFrom(type)) {
 						transformMap.put(key, queryString.get(key));						
 					} else {
@@ -115,11 +115,19 @@ public abstract class APICommonController<T> extends Controller {
 				throw new RuntimeException(e);
 			} 
 		}
-
 		JsonNode json = Json.toJson(transformMap);
-		T input = Json.fromJson(json, clazz);
-		Form<T> filledForm = form.fill(input); 
+		A input = Json.fromJson(json, clazz);
+		Form<A> filledForm = form.fill(input); 
 		return filledForm;
+	}
+	
+	/**
+	 * Returns a form built from the query string.
+	 * @param clazz type of the form to build
+	 * @return      built form
+	 */
+	protected <A> Form<A> getQueryStringForm(Class<A> clazz) {
+		return filledFormQueryString(ctx.form(clazz),clazz);
 	}
 
 	/**
@@ -130,7 +138,7 @@ public abstract class APICommonController<T> extends Controller {
 	 * @throws InstantiationException 
 	 */
 	protected <T> T filledFormQueryString(Class<T> clazz) {		
-		try{
+		try {
 			Map<String, String[]> queryString = request().queryString();
 			
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());

@@ -8,7 +8,8 @@ import fr.cea.ig.play.NGLContext;
 
 
 /**
- * Root class for DBObject subclasses controllers. 
+ * Root class for DBObject subclasses api controllers. The name does not
+ * match any NGL concept at the moment.  
  *  
  * @author vrd
  *

@@ -9,7 +9,7 @@ import validation.ContextValidation;
  * @author vrd
  *
  */
-public interface ITraceable {
+public interface ITracingAccess {
 		
 	/**
 	 * Trace information, must be created if needed.

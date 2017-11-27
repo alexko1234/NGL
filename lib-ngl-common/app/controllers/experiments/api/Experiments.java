@@ -83,6 +83,7 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	public static final String calculationsRules ="calculations";
 	
+	@Inject
 	public Experiments(NGLContext ctx) {
 		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);	
 	}

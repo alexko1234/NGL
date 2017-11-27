@@ -233,7 +233,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	}
 	
 	/**
-	 * Validate ig the field is present in the form
+	 * Validate if the field is present in the form
 	 * @param ctxVal
 	 * @param fields
 	 * @param filledForm
@@ -478,5 +478,5 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		}
 	}
 	
-
+	public String getCollectionName() { return collectionName; }
 }
