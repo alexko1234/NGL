@@ -83,6 +83,7 @@ import fr.cea.ig.play.NGLContext;
 // TODO: use DI
 // Indirection so we can swap implementations.
 public class Containers extends Containers2 {
+	@Inject
 	public Containers(NGLContext ctx) {
 		super(ctx);
 	}
