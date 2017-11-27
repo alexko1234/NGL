@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 
+// TODO: change name to ValidationContext
 /**
  * Validation context for objects that support validation (implementing IValidate).
  * Misnamed, should be ValidationContext.

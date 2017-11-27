@@ -3,10 +3,11 @@ package controllers.samples.api;
 // import static play.data.Form.form;
 //import static fr.cea.ig.play.IGGlobals.form;
 
-import static validation.sample.instance.SampleValidationHelper.*;
+// import static validation.sample.instance.SampleValidationHelper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,18 +15,18 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.State;
+// import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.run.instance.Analysis;
+// import models.laboratory.container.instance.Container;
+// import models.laboratory.experiment.instance.Experiment;
+// import models.laboratory.run.instance.Analysis;
 import models.laboratory.sample.instance.Sample;
-import models.utils.CodeHelper;
+// import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import models.utils.ListObject;
+// import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import models.utils.instance.ExperimentHelper;
+// import models.utils.instance.ExperimentHelper;
 import models.utils.instance.SampleHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -39,28 +40,53 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
-import play.mvc.Results;
+// import play.mvc.Results;
 import validation.ContextValidation;
-import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
+// import views.components.datatable.DatatableForm;
+// import views.components.datatable.DatatableResponse;
+import controllers.AbstractCRUDAPIController;
 
-import com.mongodb.BasicDBObject;
+// import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-import controllers.containers.api.ContainerBatchElement;
-import controllers.containers.api.ContainersSearchForm;
+// import controllers.containers.api.ContainerBatchElement;
+// import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
 //import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResult;
+// import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
+// indirection so that it's clear what to implement and who does.
 
-public class Samples extends DocumentController<Sample> {
+public class Samples extends Samples2 {
+	@Inject
+	public Samples(NGLContext ctx) {
+		super(ctx);
+	}
+	@Permission(value={"reading"})
+	public Result list() {
+		return super.list();
+	}
+	@Permission(value={"writing"})
+	public Result save() throws DAOException {
+		return super.save();
+	}
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	@Permission(value={"writing"})
+	public Result update(String code) throws DAOException {
+		return super.update(code);
+	}
+	// Defined in mongo controller
+	// public Result get(String code) { return super.get(code); }
+}
+
+// Standard NGL implementation
+class Samples2 extends DocumentController<Sample> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
 	
@@ -69,12 +95,29 @@ public class Samples extends DocumentController<Sample> {
 	// private final Form<SamplesSearchForm> sampleSearchForm; // = form(SamplesSearchForm.class);
 	//private final Form<SampleBatchElement> batchElementForm; // = form(SampleBatchElement.class);
 
-	private static final List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
-	private static final List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
+	public static final List<String> defaultKeys =  
+			Arrays.asList("code",
+					      "typeCode",
+					      "categoryCode",
+					      "projectCodes",
+					      "referenceCollab",
+					      "properties",
+					      "valuation",
+					      "taxonCode",
+					      "ncbiScientificName",
+					      "comments",
+					      "traceInformation");
+	
+	private static final List<String> authorizedUpdateFields = 
+			Arrays.asList("comments",
+					      "volume",
+					      "quantity",
+					      "size",
+					      "concentration");
 	
 	@Inject
-	public Samples(NGLContext ctx) {
-		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);
+	public Samples2(NGLContext ctx) {
+		super(ctx, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);
 		updateForm       = ctx.form(QueryFieldsForm.class);
 		//sampleForm       = ctx.form(Sample.class);
 		// sampleSearchForm = ctx.form(SamplesSearchForm.class);
@@ -212,10 +255,27 @@ public class Samples extends DocumentController<Sample> {
 		
 		return query;
 	}
+	/*
+	// generic arguments
+	protected <T> Result save_wrapper(BiConsumer<ContextValidation,T> f) {
+		Form<T> filledForm = getMainFilledForm();
+		Sample input = filledForm.get();
+
+	}
 	
+	// Getting the instance to save goes through the getMainFilledForm
+	// function that is used for the instance construction and the errors
+	// from the form.
+	@Permission(value={"writing"})
+	public Result save_small() throws DAOException {
+		return save_wrapper((ctx,val) -> {
+			
+		});
+	}
+	*/
 	
 	@Permission(value={"writing"})
-	public Result save() throws DAOException{
+	public Result save() throws DAOException {
 		Form<Sample> filledForm = getMainFilledForm();
 		Sample input = filledForm.get();
 		
@@ -228,7 +288,8 @@ public class Samples extends DocumentController<Sample> {
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		SampleHelper.executeRules(input, "sampleCreation");
-		input.validate(ctxVal);	
+		input.validate(ctxVal);
+		
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);			
 			return ok(Json.toJson(input));
@@ -328,3 +389,74 @@ public class Samples extends DocumentController<Sample> {
 	}*/
 	
 }
+
+
+class Samples3 extends AbstractCRUDAPIController<Sample> {
+	
+	public Samples3(NGLContext ctx) {
+		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Samples2.defaultKeys);
+		// Probably an early initialization and validation of the meta would be good. 
+	}
+	
+	/* Definition does not match class definition
+	 * Arrays.asList("comments",
+		      "volume",
+		      "quantity",
+		      "size",
+		      "concentration");
+
+	// Can store the definition as static but not in the generic parent.
+	public Collection<Meta<Sample>> buildMeta() {
+		List<Meta<Sample>> l = new ArrayList<Meta<Sample>>();
+		// l.add(metareflect("volume"));
+		// Hand copy does not work, it's pretty sure that the
+		// partial update does not work on Samples.
+		// l.add(meta("volume"  ,pass,(from,to) -> { to.volume   = from.volume; }));
+		// l.add(meta("quantity",pass,(from,to) -> { to.quantity = from.quantity; }));
+		
+		return l;
+	} */
+	
+	// -------- creation -------------
+	/*public Sample beforeCreationValidation(ContextValidation ctx, Sample s) {
+		s.comments = InstanceHelpers.updateComments(s.comments, ctx);
+		return s;
+	}*/ // ICommentable
+	
+	@Permission(value={"writing"})
+	public Result save() throws DAOException {
+		return create();
+	}
+	
+	// --------- read -----------------
+	// This may fail badly as the expected get method is not the standard read method.
+	@Permission(value={"reading"})
+	public Result get(String code) throws DAOException {
+		return read(code); 
+	}
+	
+	// --------- update -----------------
+	/*public Sample beforeUpdateValidation(ContextValidation ctx, Sample s) {
+		s.comments = InstanceHelpers.updateComments(s.comments, ctx);
+		return s;
+	}*/ // ICommentable
+	
+	@Permission(value={"writing"})
+	public Result update() throws DAOException {
+		// return super.update();
+		throw new RuntimeException("not implemented");
+	}
+	
+	// ------------ delete ---------------
+	@Permission(value={"writing"})
+	public Result delete(String code) throws DAOException {
+		throw new RuntimeException("not implemented");
+	}
+	
+}
+
+
+
+
+
+

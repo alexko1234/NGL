@@ -3,10 +3,12 @@ package fr.cea.ig.mongo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -85,6 +87,16 @@ public class QueryBuilder {
 	public static Optional<QueryBuilder> elemMatch(String key, Optional<QueryBuilder> q) {
 		return q.map(r -> new QueryBuilder(DBQuery.elemMatch("comments",r.query())));
 	}
+	public static Optional<QueryBuilder> exists(String key) {
+		if (key != null)
+			return Optional.of(new QueryBuilder(DBQuery.exists(key)));
+		return Optional.empty();
+	}
+	public static Optional<QueryBuilder> notExists(String key) {
+		if (key != null)
+			return Optional.of(new QueryBuilder(DBQuery.notExists(key)));
+		return Optional.empty();
+	}
 	public static QueryBuilder and(QueryBuilder a, QueryBuilder b) {
 		return new QueryBuilder(DBQuery.and(a.query(),b.query()));
 	}
@@ -115,6 +127,18 @@ public class QueryBuilder {
 		return b.map(x -> x.query()).orElse(DBQuery.empty());
 	}
 	
+	// Pointless functional fun, plain iteration on the entry set
+	// would be simpler and faster.
+	public static Optional<QueryBuilder> generateQueriesForExistingProperties(Optional<QueryBuilder> b, Map<String, Boolean> existingFields) {
+		return existingFields.entrySet().stream()
+		.map(e -> {
+			if (e.getValue().booleanValue()) 
+				return exists(e.getKey());
+			else 
+				return notExists(e.getKey());
+		}).reduce(b,(q0,q1) -> and(q0,q1));
+	}
+	
 	public static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();
@@ -124,9 +148,9 @@ public class QueryBuilder {
 		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		
-		qb = and(qb,firstOf(in("code", samplesSearch.codes),
-							is("code", samplesSearch.code),
-							regex("code",samplesSearch.codeRegex)));
+		qb = and(qb,firstOf(in   ("code", samplesSearch.codes),
+							is   ("code", samplesSearch.code),
+							regex("code", samplesSearch.codeRegex)));
 		//if(CollectionUtils.isNotEmpty(samplesSearch.codes)){
 		//	queryElts.add(DBQuery.in("code", samplesSearch.codes));
 		//}else if(StringUtils.isNotBlank(samplesSearch.code)){
@@ -134,6 +158,10 @@ public class QueryBuilder {
 		//}else if(StringUtils.isNotBlank(samplesSearch.codeRegex)){
 		//	queryElts.add(DBQuery.regex("code", Pattern.compile(samplesSearch.codeRegex)));
 		//}
+		
+		// return and(in   ("typeCode",       samplesSearch.typeCodes),
+		//		   regex("referenceCollab",samplesSearch.referenceCollabRegex),
+		//		   in   ("projectCodes",   samplesSearch.projectCode)).query();
 		
 		qb = and(qb,in("typeCode", samplesSearch.typeCodes));
 		//if(CollectionUtils.isNotEmpty(samplesSearch.typeCodes)){
@@ -254,7 +282,8 @@ public class QueryBuilder {
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.experimentProperties,Level.CODE.Experiment, "processes.experiments.properties"));
 
-		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
+		qb = generateQueriesForExistingProperties(qb,samplesSearch.existingFields);
+		// queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
 		
 		
 		if(queryElts.size() > 0){

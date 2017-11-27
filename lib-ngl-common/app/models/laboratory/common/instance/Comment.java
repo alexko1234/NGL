@@ -28,8 +28,7 @@ public class Comment implements IValidation {
 		this.code = CodeHelper.getInstance().generateExperimentCommentCode(this);		
 	}
 	
-	public Comment(){
-		
+	public Comment() {
 	}
 	
 

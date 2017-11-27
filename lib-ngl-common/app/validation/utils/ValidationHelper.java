@@ -671,11 +671,11 @@ public class ValidationHelper {
         }
         
         if(isValid && object instanceof Collection) {
-        	isValid =  CollectionUtils.isNotEmpty((Collection)object);        	
+        	isValid =  CollectionUtils.isNotEmpty((Collection<?>)object);        	
         }
         
         if(isValid && object instanceof Map) {
-        	isValid =  MapUtils.isNotEmpty((Map)object);        	
+        	isValid =  MapUtils.isNotEmpty((Map<?,?>)object);        	
         }
         
         if(isValid && object instanceof byte[]) {
@@ -689,7 +689,23 @@ public class ValidationHelper {
         return isValid;		
 	}
 	
-	
+	// Assertion style, cases are mutually exclusive
+	public static boolean required_(ContextValidation contextValidation, Object object, String property) {
+		if (object == null) {
+			contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);
+			return false;
+		}
+        if ((object instanceof String) && StringUtils.isNotBlank((String)object))
+        	return true;
+        if ((object instanceof Collection) && CollectionUtils.isNotEmpty((Collection<?>)object))        	
+        	return true;
+        if ((object instanceof Map) && MapUtils.isNotEmpty((Map<?,?>)object))        	
+        	return true;
+        if ((object instanceof byte[]) && (((byte[])object).length > 0))
+        	return true;        
+        contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);        
+        return false;		
+	}
 	
 	/**
 	 * Check if the value is in the list
