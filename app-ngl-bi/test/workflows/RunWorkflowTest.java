@@ -99,7 +99,7 @@ public class RunWorkflowTest extends AbstractTests{
 
 	}
 
-	//@AfterClass
+	@AfterClass
 	public static void deleteData()
 	{
 		//get run to test
@@ -110,19 +110,9 @@ public class RunWorkflowTest extends AbstractTests{
 		cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, cs.code);
 		MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, cs);
 		for(Container c : containers){
-			c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
-			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, c);
+			//List<Container> containerToDelete = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", c.code)).toList();
+			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
 		}
-	}
-
-	@Test
-	public void checkData()
-	{
-		Logger.debug("CheckData");
-		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-		Logger.debug("state run "+run.state.code);
-		assertThat(run).isNotNull();
-		assertThat(run.state.code).isEqualTo("N");
 	}
 
 	@Test
@@ -141,7 +131,7 @@ public class RunWorkflowTest extends AbstractTests{
 				});
 	}
 
-	//@Test
+	@Test
 	public void setStateFS()
 	{
 		testInServer(devapp(),
@@ -156,7 +146,7 @@ public class RunWorkflowTest extends AbstractTests{
 				});
 	}
 
-	//@Test
+	@Test
 	public void setStateFRG()
 	{
 		testInServer(devapp(),
@@ -182,7 +172,7 @@ public class RunWorkflowTest extends AbstractTests{
 
 	}
 
-	//@Test
+	@Test
 	public void setStateFRGLaneValid()
 	{
 		testInServer(devapp(),
@@ -206,7 +196,7 @@ public class RunWorkflowTest extends AbstractTests{
 				});
 	}
 
-	//@Test
+	@Test
 	public void setStateFVLaneValid()
 	{
 		testInServer(devapp(),
