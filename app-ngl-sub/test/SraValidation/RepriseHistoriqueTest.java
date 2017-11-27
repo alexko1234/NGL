@@ -45,7 +45,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	
 	//@Test
 	public void repriseHistoSamplesTest() throws IOException, SraException {
-		File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_1.xml");
+		/*File xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_1.xml");
 		_repriseHistoriqueSamplesTest(xmlSample);
 		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_2.xml");
 		_repriseHistoriqueSamplesTest(xmlSample);
@@ -53,6 +53,7 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		_repriseHistoriqueSamplesTest(xmlSample);
 		xmlSample = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_extract_samples_4.xml");
 		_repriseHistoriqueSamplesTest(xmlSample);
+		*/
 	}
 	
 	private void _repriseHistoriqueSamplesTest(File xmlSample) throws IOException, SraException {
@@ -180,7 +181,9 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	
 	//@Test
 	public void repriseHistoriqueStudiesTest() throws IOException, SraException {
-		File xmlStudy = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_studies.xml");
+		//File xmlStudy = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_studies.xml");
+		File xmlStudy = new File("/env/cns/home/sgas/update_database/ebi_studies.xml");
+
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
@@ -290,7 +293,8 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 	//@Test
 	public void repriseHistoriqueExperimentsTest() throws IOException, SraException {
 
-		File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_experiments.xml");
+		//File xmlExperiment = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_experiments.xml");
+		File xmlExperiment = new File("/env/cns/home/sgas/update_database/ebi_experiments.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {
@@ -752,7 +756,8 @@ public class RepriseHistoriqueTest extends AbstractTestsSRA {
 		
 	//@Test
 	public void _repriseHistoriqueRunsTest() throws IOException, SraException {
-		File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_runs.xml");
+		//File xmlRun = new File("/env/cns/submit_traces/SRA/REPRISE_HISTORIQUE_ebi/database/EBI_21_03_2017/ebi_runs.xml");
+		File xmlRun = new File("/env/cns/home/sgas/update_database/ebi_runs.xml");
 		String user = "william";
 		RepriseHistorique repriseHistorique = new RepriseHistorique();
 		try {

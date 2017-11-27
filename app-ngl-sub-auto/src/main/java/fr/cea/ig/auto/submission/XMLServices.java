@@ -183,8 +183,7 @@ public class XMLServices implements IXMLServices{
 				// Les champs title et libraryName sont considerés comme obligatoires
 				chaine = chaine + "    <TITLE>" + rpsExp.get("title") + "</TITLE>\n";
 				chaine = chaine + "    <STUDY_REF ";
-				//if (StringUtils.isNotBlank(experiment.studyCode) && (experiment.studyCode.startsWith("external"))) { 
-				if (studyCode!=null && !studyCode.equals("")) { 
+				if (studyCode!=null && !studyCode.equals("") && !studyCode.startsWith("external")) { 
 					chaine = chaine + " refname=\"" + studyCode +"\"";
 				}
 				if (studyAccession!=null && !studyAccession.equals("")){
@@ -195,8 +194,8 @@ public class XMLServices implements IXMLServices{
 				chaine = chaine + "      <DESIGN>\n";
 				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
 				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
-				//if (StringUtils.isNotBlank(experiment.sampleCode) && (experiment.sampleCode.startsWith("external"))) {
-				if (sampleCode!=null && !sampleCode.equals("")){
+
+				if (sampleCode!=null && !sampleCode.equals("") && !sampleCode.startsWith("external")){
 					chaine = chaine+  "refname=\"" + sampleCode + "\"";
 				}
 				if (sampleAccession!=null && !sampleAccession.equals("")){
