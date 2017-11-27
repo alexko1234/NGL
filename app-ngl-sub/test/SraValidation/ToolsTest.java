@@ -536,6 +536,73 @@ public class ToolsTest extends AbstractTestsSRA {
 		}
 		
 	}
+	
+	//@Test
+	public void  updateAC() throws IOException, SraException {
+		List<String> submissionCodes = new ArrayList<String>();
+		submissionCodes.add("CNS_ART_254F1QHOV");
+		submissionCodes.add("CNS_BCU_25U9550HF");
+		submissionCodes.add("CNS_BCU_BLK_266H23OI3");
+		submissionCodes.add("CNS_BDQ_BGX_BGU_27BB18OFB");
+		submissionCodes.add("CNS_BHC_25CB4YW76");
+		submissionCodes.add("CNS_BIL_274F26OJP");
+		submissionCodes.add("CNS_BTR_26JA4HWSC");
+		submissionCodes.add("CNS_BYQ_AWF_24RF4HJFI");
+		submissionCodes.add("CNS_BZZ_CAN_28HD4ZIGG");
+		submissionCodes.add("CNS_BZZ_CAN_28HD59RR8");
+		submissionCodes.add("CNS_BZZ_CAN_28HD5FO6C");
+		submissionCodes.add("CNS_BZZ_CAN_28HD5LO4V");
+		submissionCodes.add("CNS_CAA_28HF4VOO4");
+		for (String code : submissionCodes) {
+			System.out.println("submissionCode = "+code);
+			
+			File fileEbi = new File("/env/cns/home/sgas/debug_extId/list_AC_"+ code +".txt");
+			String user = "william";
+			ContextValidation ctxVal = new ContextValidation(user);
+			/*try {
+				Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+			} catch (MailServiceException e) {
+				// TODO Auto-generated catch block
+				ctxVal.displayErrors(Logger.of("SRA"));	
+				e.printStackTrace();
+			} */
+			ctxVal.displayErrors(Logger.of("SRA"));	
+			
+		}
+		
+	}
+	//@Test
+	public void testfileAc_2()throws IOException, SraException, MailServiceException {
+		File fileEbi = new File("/env/cns/home/sgas/test/listAC_CNS_ANU_29LH3R4QK_201709251245.txt");
+		String user = "william";
+		ContextValidation ctxVal = new ContextValidation(user);
+		String submissionCode = "CNS_ANU_29LH3R4QK";
+		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
+		ctxVal.displayErrors(Logger.of("SRA"));
 
+	}
+	//@Test
+		public void testfileAc_3()throws IOException, SraException, MailServiceException {
+		List<String> submissionCodes = new ArrayList<String>();
+		//submissionCodes.add("CNS_CAA_2BF9169DR");
+		submissionCodes.add("CNS_BZZ_CAN_2BF93SR6M");
+	
+		for (String code : submissionCodes) {
+			File fileEbi = new File("/env/cns/home/sgas/EMOSE/listAC_"+code+".txt");
+			System.out.println("FileEbi:" + fileEbi);
+			String user = "william";
+			ContextValidation ctxVal = new ContextValidation(user);
+			System.out.println("submissionCode = "+code);
+			try {
+				Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
+			} catch (MailServiceException e) {
+				// TODO Auto-generated catch block
+				ctxVal.displayErrors(Logger.of("SRA"));	
+				ctxVal.displayErrors(Logger.of("SRA"));
 
+				e.printStackTrace();
+			}
+		}
+   }
+	
 }
