@@ -1,6 +1,6 @@
 package workflows.process;
 
-import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.*;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -31,8 +31,9 @@ public class ProcWorkflows extends Workflows<Process> {
 	}
 
 	@Override
-	public void applyPreValidateCurrentStateRules(ContextValidation validation, Process object) {
-		// TODO Auto-generated method stub		
+	public void applyPreValidateCurrentStateRules(ContextValidation validation, Process process) {
+		Process dbProcess = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, process.code);
+		validation.putObject(OBJECT_IN_DB, dbProcess);
 	}
 	
 	@Override

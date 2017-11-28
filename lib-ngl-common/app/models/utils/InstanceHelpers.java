@@ -36,6 +36,7 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
+
 import play.mvc.Http;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -565,6 +566,36 @@ public class InstanceHelpers {
 					DBUpdate.set("sampleOnContainer", readset.sampleOnContainer).set("traceInformation", readset.traceInformation));			
 		});	
 		
+	}
+
+	/**
+	 * WARNING : NEED TO CALL AFTER VALIDATION BECAUSE SOME CONVERTION ARE EXECUTE DURING VALIDATION
+	 * @param availablePropertyCodes
+	 * @param dbProperties
+	 * @param newProperties
+	 * @return
+	 */
+	public static Map<String, PropertyValue> getUpdatedPropertiesForSomePropertyCodesBetween(List<String> propertyCodes, Map<String, PropertyValue> dbProperties,
+			Map<String, PropertyValue> newProperties) {
+		return propertyCodes.stream()
+					 .filter(code -> newProperties.containsKey(code))
+					 .filter(code -> !newProperties.get(code).equals(dbProperties.get(code)))
+					 .collect(Collectors.toMap(code -> code, code -> newProperties.get(code)));		
+	}
+	
+	/**
+	 * WARNING : NEED TO CALL AFTER VALIDATION BECAUSE SOME CONVERTION ARE EXECUTE DURING VALIDATION
+	 * @param availablePropertyCodes
+	 * @param dbProperties
+	 * @param newProperties
+	 * @return
+	 */
+	public static Set<String> getDeletedPropertiesForSomePropertyCodesBetween(List<String> propertyCodes, Map<String, PropertyValue> dbProperties,
+			Map<String, PropertyValue> newProperties) {
+		
+		return propertyCodes.stream()
+					 .filter(code -> dbProperties.containsKey(code) && !newProperties.containsKey(code))
+					 .collect(Collectors.toSet());		
 	}
 		
 }

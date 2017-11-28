@@ -156,6 +156,11 @@ public class ProcWorkflowHelper {
 		Set<String> outputContainerCodes = process.outputContainerCodes;
 		if(null != outputContainerCodes && outputContainerCodes.size() > 0 
 				&& process.properties != null && process.properties.size() > 0 && propertyCodes.size() > 0){
+			
+			
+			
+			
+			
 			Map<String,PropertyValue> updatedProperties = process.properties.entrySet()
 														.stream()
 														.filter(e -> propertyCodes.contains(e.getKey()))
@@ -212,5 +217,8 @@ public class ProcWorkflowHelper {
 		
 		return query;
 	}
+
+
+	
 
 }
