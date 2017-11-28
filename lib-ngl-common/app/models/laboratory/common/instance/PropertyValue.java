@@ -69,4 +69,36 @@ public abstract class PropertyValue<T> implements IValidation {
 		Collection<PropertyDefinition> propertyDefinitions = (Collection<PropertyDefinition>) contextValidation.getObject("propertyDefinitions");
 		ValidationHelper.checkType(contextValidation, this, propertyDefinitions);
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((_type == null) ? 0 : _type.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PropertyValue other = (PropertyValue) obj;
+		if (_type == null) {
+			if (other._type != null)
+				return false;
+		} else if (!_type.equals(other._type))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+	
+	
+	
 }

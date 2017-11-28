@@ -45,6 +45,37 @@ public class PropertyFileValue extends PropertyByteValue{
 		ValidationHelper.required(contextValidation, this.fullname, propertyDefinition.code + ".fullname");
 		ValidationHelper.required(contextValidation, this.extension, propertyDefinition.code + ".extension");
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((extension == null) ? 0 : extension.hashCode());
+		result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PropertyFileValue other = (PropertyFileValue) obj;
+		if (extension == null) {
+			if (other.extension != null)
+				return false;
+		} else if (!extension.equals(other.extension))
+			return false;
+		if (fullname == null) {
+			if (other.fullname != null)
+				return false;
+		} else if (!fullname.equals(other.fullname))
+			return false;
+		return true;
+	}
 	
 
 }
