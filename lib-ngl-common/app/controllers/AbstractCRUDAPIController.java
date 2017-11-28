@@ -1,22 +1,20 @@
 package controllers;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
+import org.mongojack.DBQuery;
+
+// import controllers.samples.api.SamplesSearchForm;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.ITracingAccess;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.sample.instance.Sample;
-import models.utils.InstanceConstants;
+// import models.laboratory.common.instance.TraceInformation;
+// import models.laboratory.sample.instance.Sample;
+// import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import models.utils.instance.SampleHelper;
+// import models.utils.instance.SampleHelper;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -25,6 +23,8 @@ import validation.ContextValidation;
 import validation.ICRUDValidatable;
 import validation.IValidation;
 import views.components.datatable.DatatableForm;
+
+import org.mongojack.DBUpdate.Builder;
 
 /**
  * CRUD API controller base for DBObject subclasses.
@@ -52,12 +52,28 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 
 	// --------------------- CREATE -----------------------------------------
 	// Overridable hooks for the creation, null return aborts early
+	/**
+	 * Ran before object validation.
+	 * The default implementation returns the input object.
+	 * @param ctx validation context
+	 * @param t   object to modify and/or validate
+	 * @return    null if the creation must be aborted, the modified instance otherwise
+	 */
 	public T beforeCreationValidation(ContextValidation ctx, T t) {
 		return t;
 	}
+	
+	/**
+	 * Ran after object validation.
+	 * The default implementation returns the input object.
+	 * @param ctx validation context
+	 * @param t   object to modify and/or validate
+	 * @return    null if the creation must be aborted, the modified instance otherwise
+	 */
 	public T afterCreationValidation(ContextValidation ctx, T t) {
 		return t;
 	}
+	
 	/**
 	 * Application level create operation.
 	 * @param ctx validation context 
@@ -93,7 +109,11 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		return saveObject(t);
 	}
 	
-	// Controller level access to the application level api
+	/**
+	 * Route level object creation. The data needed for the creation is
+	 * retrieved from the http request.
+	 * @return either the created object as json or errors as json 
+	 */
 	public Result create() {
 		// Fetch instance to create from request
 		Form<T> filledForm = getMainFilledForm();
@@ -109,6 +129,7 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 	// --------------------------------- READ -----------------------------------
 	// -- expected method : return MongoDBDAO.findByCode(collectionName, type, code, keys);
 	// see get(code) implementation in MongoCommonController
+	
 	public Result read(String code) {
 		ContextValidation ctx = new ContextValidation(getCurrentUser());
 		T t = null;
@@ -118,31 +139,70 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		} else { 
 			t =  getObject(code);
 		}
-		if(t == null)
+		if (t == null)
 			ctx.addError("object","no object found for code %s",code);
 		return checkedResult(ctx,t);
 	}
 
 	// -------------------------------- UPDATE ----------------------------------
+	
+	/**
+	 * Applies known updates for the common interfaces. 
+	 * @param ctx validation context
+	 * @param t   object to apply updates to
+	 */
+	private void applyKnownUpdateInterfaces(ContextValidation ctx, T t) {
+		if (t instanceof ITracingAccess)
+			((ITracingAccess)t).setTraceUpdateStamp(ctx, getCurrentUser());
+		if (t instanceof ICommentable)
+			((ICommentable) t).setComments(InstanceHelpers.updateComments(((ICommentable) t).getComments(), ctx));		
+	}
+
+	/**
+	 * List of names of field that allow updates.
+	 * @return List of name of field that allow updates.
+	 */
+	public abstract List<String> getAuthorizedUpdateFields();
+	
 	// Update hooks
+
+	/**
+	 * Ran before the object validation.
+	 * Default implementation return the input object.
+	 * @param ctx validation context
+	 * @param t   object to modify and/or validate
+	 * @return    null if the update must be aborted otherwise the modified object
+	 */
 	public T beforeUpdateValidation(ContextValidation ctx, T t) {
 		return t;
 	}
+	
+	/**
+	 * Ran after object validation.
+	 * @param ctx validation context
+	 * @param t   object to validate and/or modify
+	 * @return    null if the creation should be aborted otherwise the modified object
+	 */
 	public T afterUpdateValidation(ContextValidation ctx, T t) {
 		return t;
 	}
-	
-	
-	// Update the instance as provided. Still some trickery with the comments
-	// but this is roughly ok.
+
+	/**
+	 * Api level update. This triggers the full validation.
+	 * For partial validation @see #partialUpdate(ContextValidation, List, DBObject) 
+	 * @param ctx validation context
+	 * @param t   new object values
+	 * @return    updated object
+	 */
 	public T update(ContextValidation ctx, T t) {
 		if (t._id == null)
 			ctx.addError("_id", "must be present when updating an object, maybe you wanted to create the objet");
 		// If t is ITraceable, stamp the creation
-		if (t instanceof ITracingAccess)
+		/*if (t instanceof ITracingAccess)
 			((ITracingAccess)t).setTraceUpdateStamp(ctx, getCurrentUser());
 		if (t instanceof ICommentable)
-			((ICommentable) t).setComments(InstanceHelpers.updateComments(((ICommentable) t).getComments(), ctx));
+			((ICommentable) t).setComments(InstanceHelpers.updateComments(((ICommentable) t).getComments(), ctx));*/
+		applyKnownUpdateInterfaces(ctx,t);
 		// Call before update hook
 		if ((t = beforeUpdateValidation(ctx,t)) == null)
 			return null;
@@ -164,7 +224,100 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		MongoDBDAO.update(getCollectionName(), t);
 		return t;
 	}
+
+	/**
+	 * Check that a list of fields is included in the authorized field updates.
+	 * @param ctx    validation context
+	 * @param fields list of field names to validate
+	 */
+	protected void validateAuthorizedUpdateFields(ContextValidation ctx, List<String> fields) {
+		List<String> authorizedUpdateFields = getAuthorizedUpdateFields();
+		for (String field: fields)
+			if (!authorizedUpdateFields.contains(field))
+				ctx.addError("fields", "error.valuenotauthorized", field);
+	}
+
+	/**
+	 * Check that the list of fields are backed by actual fields in the object.
+	 * @param ctx    validation context
+	 * @param fields list of field names to validate
+	 * @param t      object that has the fields
+	 */
+	protected void validateIfFieldsArePresentInObject(ContextValidation ctx, List<String> fields, T t) {
+		Class<?> clazz = t.getClass();
+		for (String field: fields) {
+			try {
+				Field f = clazz.getField(field);
+				if (f == null)
+					ctx.addErrors(field, "error.notdefined");
+				else if (f.get(t) == null) {
+					ctx.addErrors(field, "error.notdefined");
+				}
+			} catch(Exception e) {
+				Logger.error(e.getMessage());
+				ctx.addError(field, "exception", e);
+			}
+		}	
+	}
 	
+	/**
+	 * Ran before the partial update. This is where the partial validation
+	 * is supposed to occur.
+	 * DEfault implementation returns the input object.
+	 * @param ctx    validation context
+	 * @param fields fields that are updated
+	 * @param t      object to validate and/modify
+	 * @return       null if the update must be aborted or the modified instance
+	 */
+	public T beforePartialUpdate(ContextValidation ctx, List<String > fields, T t) {
+		return t;
+	}
+
+	// Missing builder hook before partial update
+
+	// Need to abstract what a partial update is, currently a list of fields
+	// Is the instance partially filled ?
+	
+	/**
+	 * Partial update. The object must have a valid code field. 
+	 * @param ctx    validation context
+	 * @param fields fields to update
+	 * @param t      object to update
+	 */
+	public T partialUpdate(ContextValidation ctx, List<String > fields, T t) {
+		if (t.getCode() == null) {
+			ctx.addError("code", "instance code must be provided for partial updates");
+			return null;
+		}
+		ctx.setUpdateMode();
+		// Are the provided update fields in the white list ?
+		validateAuthorizedUpdateFields    (ctx, fields);
+		// The provided fields have filled the object so this seems quite
+		// pointless (extra fields are ignored at best). 
+		validateIfFieldsArePresentInObject(ctx, fields, t);
+
+		if (!ctx.hasErrors()) {
+			/*if (t instanceof ITracingAccess)
+				 ((ITracingAccess)t).setTraceUpdateStamp(ctx, getCurrentUser());
+			 if (t instanceof ICommentable)
+				 ((ICommentable) t).setComments(InstanceHelpers.updateComments(((ICommentable) t).getComments(), ctx));*/
+			applyKnownUpdateInterfaces(ctx,t);
+			// Call before update hook
+			if ((t = beforePartialUpdate(ctx,fields,t)) == null)
+				return null;
+			// Check for validation errors and abort creation if errors are present 
+			if (ctx.hasErrors())
+				return null;
+			// Should call hook for builder
+			Builder b = getBuilder(t, fields);
+			if (t instanceof ITracingAccess)
+				b.set("traceInformation",((ITracingAccess) t).getTraceInformation());
+			updateObject(DBQuery.is("code", t.getCode()), b);
+		}		
+		return t;
+	}
+
+
 	public Result update(String code) {
 		// Test query string, could just test if it exists in the first place
 		Form<QueryFieldsForm> filledQueryFieldsForm = getQueryStringForm(QueryFieldsForm.class);
@@ -176,11 +329,23 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		T dbo = getObject(code);
 		if (dbo == null) {
 			ctx.addError("object", "object with code %s not found", code);
-		} else if (queryFieldsForm.fields == null) {
-			// Partial update is not implemented at this moment
-			ctx.addError("internal", "partial update is not supported");
+		} else if (queryFieldsForm.fields != null) {
+			if (t.getCode() == null) {
+				t.setCode(code);
+				partialUpdate(ctx,queryFieldsForm.fields,t);
+			} else if (!t.getCode().equals(code)) {
+				ctx.addError("object", "route and instance code do not match");
+			} else {
+				partialUpdate(ctx,queryFieldsForm.fields,t);
+			}
 		} else {
-			t = update(ctx,t);
+			if (t.getCode() == null) {
+				ctx.addError("object", "instance code is not set");
+			} else if (!t.getCode().equals(code)) {
+				ctx.addError("object", "route and instance code do not match");
+			} else {
+				t = update(ctx,t);
+			}
 		}
 		return checkedResult(ctx,t);
 	}
@@ -223,17 +388,34 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 			delete(ctx,t);
 		return checkedResult(ctx,t);		
 	}
-
+	
+	public abstract DBQuery.Query getQuery(ContextValidation ctx, ListForm f);
+	
+	public <F extends ListForm> Result list(Class<F> clazz) {
+		F searchForm = filledFormQueryString(clazz);
+		if (searchForm.reporting) {
+			return nativeMongoDBQuery(searchForm);
+		} else {
+			ContextValidation ctx = new ContextValidation(getCurrentUser());
+			DBQuery.Query query = getQuery(ctx,searchForm);
+			if (ctx.hasErrors())
+				return badRequest(errorsAsJson(ctx.getErrors()));			
+			return mongoJackQuery(searchForm, query);			
+		}		
+	}
 	
 	
-	
-	// Missing null 'a' test
+	// TODO: log error
 	public <A> Result checkedResult(ContextValidation ctx, A a) {
+		if (a == null && !ctx.hasErrors())
+			ctx.addError("internal", "null object reference and no error in context");
 		if (ctx.hasErrors())
 			return badRequest(errorsAsJson(ctx.getErrors()));
 		return ok(Json.toJson(a));
 	}
 
+
+	
 	// Uses partial update mode
 	
 	/*Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);

@@ -93,11 +93,7 @@ public class TraceInformation implements IValidation {
 	 */
 	public void modificationStamp(ContextValidation ctx, String user) {
 		Date date = new Date();
-		if (date.compareTo(modifyDate) >= 0) {
-			ctx.addError("TraceInformation.setModificationStamp","existing modification date is later than now");
-		} else {
-			forceModificationStamp(user,date);
-		}
+		forceModificationStamp(user,date);
 	}
 	
 	/**
@@ -124,8 +120,8 @@ public class TraceInformation implements IValidation {
 	 * @param date modification date
 	 */
 	public void forceModificationStamp(String user, Date date) {
-		createUser   = user;
-		creationDate = date;			
+		modifyUser = user;
+		modifyDate = date;			
 	}
 	
 	/**

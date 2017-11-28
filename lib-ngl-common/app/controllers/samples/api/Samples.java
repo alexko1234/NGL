@@ -49,6 +49,7 @@ import controllers.AbstractCRUDAPIController;
 // import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
+import controllers.ListForm;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
@@ -60,10 +61,13 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 
+import static fr.cea.ig.mongo.DBQueryBuilder.*;
+
 // TODO: cleanup
 // indirection so that it's clear what to implement and who does.
 
-public class Samples extends Samples2 {
+// public class Samples extends Samples2 {
+public class Samples extends SamplesCRUD {
 	@Inject
 	public Samples(NGLContext ctx) {
 		super(ctx);
@@ -81,8 +85,6 @@ public class Samples extends Samples2 {
 	public Result update(String code) throws DAOException {
 		return super.update(code);
 	}
-	// Defined in mongo controller
-	// public Result get(String code) { return super.get(code); }
 }
 
 // Standard NGL implementation
@@ -391,9 +393,16 @@ class Samples2 extends DocumentController<Sample> {
 }
 
 
-class Samples3 extends AbstractCRUDAPIController<Sample> {
-	
-	public Samples3(NGLContext ctx) {
+class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
+		
+	private static final List<String> authorizedUpdateFields = 
+			Arrays.asList("comments",
+					      "volume",
+					      "quantity",
+					      "size",
+					      "concentration");
+
+	public SamplesCRUD(NGLContext ctx) {
 		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Samples2.defaultKeys);
 		// Probably an early initialization and validation of the meta would be good. 
 	}
@@ -451,6 +460,64 @@ class Samples3 extends AbstractCRUDAPIController<Sample> {
 	@Permission(value={"writing"})
 	public Result delete(String code) throws DAOException {
 		throw new RuntimeException("not implemented");
+	}
+	
+	// ------------ query-----------------
+	// TODO: log errors
+	public DBQuery.Query getQuery(ContextValidation ctx, ListForm form) {
+		if (form == null) {
+			ctx.addError("internal", "provided search form in %s is null", getClass().getName());
+			return null;			
+		}
+		if (!(form instanceof SamplesSearchForm)) {
+			ctx.addError("internal", "search in %s does not support form %s", getClass().getName(), form.getClass().getName());
+			return null;
+		}
+		SamplesSearchForm samplesSearch = (SamplesSearchForm)form;
+		
+		return query(
+			and(first(in   ("code", samplesSearch.codes),
+				      is   ("code", samplesSearch.code),
+				      regex("code", samplesSearch.codeRegex)),
+				in   ("typeCode",       samplesSearch.typeCodes),
+				regex("referenceCollab",samplesSearch.referenceCollabRegex),
+				is   ("projectCodes",   samplesSearch.projectCode),
+				in   ("projectCodes",   samplesSearch.projectCodes),
+				regex("life.path",      samplesSearch.treeOfLifePathRegex),
+				greaterThanEquals("traceInformation.creationDate", samplesSearch.fromDate),
+				lessThan("traceInformation.creationDate", addDays(samplesSearch.toDate, 1)),
+				first(in("traceInformation.createUser", samplesSearch.createUsers),
+				      is("traceInformation.createUser", samplesSearch.createUser)),
+				elemMatch("comments", regex("comment", samplesSearch.commentRegex)),
+				is("taxonCode", samplesSearch.taxonCode),
+				regex("ncbiScientificName", samplesSearch.ncbiScientificNameRegex),
+				first(
+					and(elemMatch("processes", is("typeCode",samplesSearch.existingProcessTypeCode)),
+						is       ("experiments.typeCode", samplesSearch.existingTransformationTypeCode),
+						notEquals("experiments.typeCode", samplesSearch.notExistingTransformationTypeCode)),
+					and(is       ("processes.experiments.typeCode", samplesSearch.existingTransformationTypeCode),
+						notEquals("processes.experiments.typeCode", samplesSearch.notExistingTransformationTypeCode)),
+					elemMatch("processes", and(is("typeCode",            samplesSearch.existingProcessTypeCode),
+										       is("experiments.typeCode",samplesSearch.existingTransformationTypeCode))),
+					elemMatch("processes", and(is       ("typeCode",           samplesSearch.existingProcessTypeCode),
+										       notEquals("experiments.typeCode",samplesSearch.notExistingTransformationTypeCode))),		
+					is       ("processes.typeCode",            samplesSearch.existingProcessTypeCode),
+					notEquals("processes.typeCode",            samplesSearch.notExistingProcessTypeCode),
+					is       ("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCode),
+					notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode)),
+				in("processes.experiments.protocolCode",samplesSearch.experimentProtocolCodes),
+				generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"),
+				generateQueriesForProperties(samplesSearch.experimentProperties,Level.CODE.Experiment, "processes.experiments.properties"),
+				generateQueriesForExistingProperties(samplesSearch.existingFields)));
+	}
+
+	@Override
+	public List<String> getAuthorizedUpdateFields() {
+		return authorizedUpdateFields;
+	}
+
+	public Result list() {
+		return list(SamplesSearchForm.class);
 	}
 	
 }
