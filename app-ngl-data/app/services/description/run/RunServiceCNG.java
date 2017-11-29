@@ -154,6 +154,7 @@ public class RunServiceCNG  extends AbstractRunService{
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
          values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));

@@ -159,6 +159,7 @@ public class ImportServiceCNG extends AbstractImportService {
          values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq")); // !! aussi dans ProcessServiceCNG / getX5WgNanoLibProcessTypeCodeValues()
          values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));     // !! aussi dans ProcessServiceCNG / getWgChromiumLibProcessTypeCodeValues()
+         values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
          
          // codes for various sequencing
          values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
@@ -208,6 +209,7 @@ public class ImportServiceCNG extends AbstractImportService {
         values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO DNASeq"));
         values.add(DescriptionFactory.newValue("DE","DE - Chromium WG"));      
+        values.add(DescriptionFactory.newValue("DF","DF - Ancient DNASeq"));  // ajout 22/11/2017 NGL-1712
         
         // 04/10/2017 ajout des codes pour import Capture
         values.add(DescriptionFactory.newValue("CAF","CAF - Chromium Whole Exome (DefCap028")); // NGL-1584 ajout
