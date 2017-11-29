@@ -24,12 +24,13 @@ public class Heavy {
 	
 	@Test
 	public void test01() throws Exception {
-		JsonNode sample_0 = ngl.sq.TestSample.create_00(newCode());
-		JsonNode container_0 = ngl.sq.TestContainer.create_00(newCode(),sample_0);
-		// if (true) throw new RuntimeException("" + sample_0.path("code"));
 		
 	    testInServer(devapp(),
 	    		ws -> {	    	
+	    			JsonNode sample_0 = ngl.sq.SampleFactory.create_00(newCode());
+	    			JsonNode container_0 = ngl.sq.ContainerFactory.create_00(newCode(),sample_0);
+	    			// if (true) throw new RuntimeException("" + sample_0.path("code"));
+	    			
 	    			get(ws,"/",OK);
 	    			get(ws,"/404",NOT_FOUND);
 	    	    	cr(ws,"/api/samples",sample_0);
@@ -39,10 +40,10 @@ public class Heavy {
 	    	    	// This accesses pretty directly to the mongo layer as this is all
 	    	    	// we've got in this lib. ngl-common test should provide a more controlled
 	    	    	// access.
+	    	    	if (true) return; // throw new RuntimeException("ok");
 	    	    	savage(container_0,Container.class,models.utils.InstanceConstants.CONTAINER_COLL_NAME);
 	    	    	rurNeqTraceInfo(ws,"/api/containers/",container_0);
 	    	    	
-	    	    	if (true) return; // throw new RuntimeException("ok");
 
 	    			
 	    	// Assuming that we have a json response from server that that the get/put

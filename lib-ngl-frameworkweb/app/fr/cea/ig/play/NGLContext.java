@@ -2,6 +2,7 @@ package fr.cea.ig.play;
 
 import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import play.i18n.Lang;
 import play.i18n.MessagesApi;
+import play.libs.Json;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
 import play.Logger;
@@ -22,6 +24,7 @@ import play.data.validation.ValidationError;
 import play.data.Form;
 
 import fr.cea.ig.play.NGLConfig;
+import io.jsonwebtoken.lang.Collections;
 
 
 // TODO: clean, comment
@@ -137,7 +140,8 @@ public class NGLContext {
 	 * Returns form errors serialized as JSON.
 	 */
 	public JsonNode errorsAsJson(Map<String, List<ValidationError>> errors) {
-		return errorsAsJson(play.mvc.Http.Context.current() != null ? play.mvc.Http.Context.current().lang() : null, errors);
+		// return errorsAsJson(play.mvc.Http.Context.current() != null ? play.mvc.Http.Context.current().lang() : null, errors);
+		return errorsAsJson(currentLang(), errors);
 	}
 
 	/**
@@ -146,7 +150,7 @@ public class NGLContext {
 	 * @param  errors errors
 	 * @return JSON node built from the given errors
 	 */
-	public com.fasterxml.jackson.databind.JsonNode errorsAsJson(play.i18n.Lang lang, Map<String, List<ValidationError>> errors) {
+	public JsonNode errorsAsJson(play.i18n.Lang lang, Map<String, List<ValidationError>> errors) {
 		Map<String, List<String>> allMessages = new java.util.HashMap<>();
 		errors.forEach((key, errs) -> {
 			if (errs != null && !errs.isEmpty()) {
@@ -161,7 +165,7 @@ public class NGLContext {
 				allMessages.put(key, messages);
 			}
 		});
-		return play.libs.Json.toJson(allMessages);
+		return Json.toJson(allMessages);
 	}
 
 	private Object translateMsgArg(List<Object> arguments, MessagesApi messagesApi, play.i18n.Lang lang) {
@@ -180,6 +184,22 @@ public class NGLContext {
 		}
 	}
 
+	// -- single error translation
+	public JsonNode errorAsJson(String message, Object... args) {
+		return errorAsJson(currentLang(),"error",message,Arrays.asList(args));
+	}
+	
+	public com.fasterxml.jackson.databind.JsonNode errorAsJson(play.i18n.Lang lang, String key, String message, Object... args) {
+		return errorAsJson(lang,key,message,Arrays.asList(args));
+	}
+	
+	public com.fasterxml.jackson.databind.JsonNode errorAsJson(play.i18n.Lang lang, String key, String message, List<Object> args) {
+		String tMessage = messagesApi.get(lang, message, translateMsgArg(args, messagesApi, lang));
+		Map<String, String> jMessage = new java.util.HashMap<>();
+		jMessage.put(key,tMessage);
+		return play.libs.Json.toJson(tMessage);
+	}
+	
 	// ----------------------------------------------------------------------
 	// Transitional code before fully DI compliant code
 	

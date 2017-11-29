@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.cea.ig.play.test.JsonFacade;
 
 // More like helpers atm
-public class TestSample {
+public class SampleFactory {
 
 	/**
 	 * Generate a fresh JSON sample data from template 00.

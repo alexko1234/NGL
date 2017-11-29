@@ -37,8 +37,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Sample")
-public class Sample extends DBObject implements IValidation, ITracingAccess, ICommentable {
-
+public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess {
 
 	@JsonIgnore
 	public final static String HEADER="Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
@@ -95,7 +94,12 @@ public class Sample extends DBObject implements IValidation, ITracingAccess, ICo
 
 
 	// Interfaces implementations
+	// We cannot @JsonIgnore setters or getters otherwise the corresponding
+	// field serialization is disabled.
 	
+	// IAccessTracking
+	
+	//@JsonIgnore
 	@Override
 	public TraceInformation getTraceInformation() {
 		if (traceInformation == null)
@@ -103,12 +107,15 @@ public class Sample extends DBObject implements IValidation, ITracingAccess, ICo
 		return traceInformation;
 	}
 
+	// ICommentable
+	
+	//@JsonIgnore
 	@Override
 	public List<Comment> getComments() {
 		return comments;
 	}
 
-
+	//@JsonIgnore
 	@Override
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
