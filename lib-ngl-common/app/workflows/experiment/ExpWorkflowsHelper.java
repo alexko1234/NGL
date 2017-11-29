@@ -1,5 +1,7 @@
 package workflows.experiment;
 
+import static validation.common.instance.CommonValidationHelper.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -59,6 +62,7 @@ import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
@@ -67,6 +71,7 @@ import org.springframework.stereotype.Service;
 
 import play.Logger;
 import play.Play;
+import play.Logger.ALogger;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -75,6 +80,7 @@ import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
+import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -84,7 +90,8 @@ import fr.cea.ig.MongoDBResult.Sort;
 
 @Service
 public class ExpWorkflowsHelper {
-
+	private ALogger logger = Logger.of(ExpWorkflowsHelper.class);
+	
 	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
 	private final String NEW_SAMPLE_CODES = "NEW_SAMPLE_CODES";
 	@Autowired
@@ -1564,15 +1571,19 @@ public class ExpWorkflowsHelper {
 		}
 		//2 update only if content property exist
 		if(contentPropertyCodes.size() > 0){
+			
+			Experiment oldExp = (Experiment) validation.getObject(OBJECT_IN_DB);
+			Map<String, Content> oldExpContents = flatMapContentsToMap(oldExp, exp.categoryCode);
+			
 			exp.atomicTransfertMethods.forEach(atm -> {
 				if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
 					atm.inputContainerUseds
 							.stream()
-							.forEach(icu -> updateContainerContentPropertiesInCascading(validation, icu, contentPropertyCodes));
-				}else{
+							.forEach(icu -> updateContainerContentPropertiesInCascading(validation, icu, contentPropertyCodes, oldExpContents));
+				}else if(atm.outputContainerUseds != null){
 					atm.outputContainerUseds
 							.stream()
-							.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes));					
+							.forEach(ocu -> updateContainerContentPropertiesInCascading(validation, ocu, contentPropertyCodes, oldExpContents));					
 				}
 				
 			});			
@@ -1582,24 +1593,54 @@ public class ExpWorkflowsHelper {
 		
 	}
 	
-	private void updateContainerContentPropertiesInCascading(ContextValidation validation, AbstractContainerUsed ocu, Set<String> contentPropertyCodes) {
+	private Map<String, Content> flatMapContentsToMap(Experiment oldExp, String expCategoryCode) {
+		Map<String, Content> m = oldExp.atomicTransfertMethods
+			.stream()
+			.map(atm -> {
+				Map<String, Content> acuMapping = new HashMap<String,Content>(0);
+				if (ExperimentCategory.CODE.qualitycontrol.toString().equals(expCategoryCode)){
+					acuMapping = atm.inputContainerUseds
+						.stream()
+						.map(icu -> icu.contents.stream().map(content -> Pair.of(getKey(icu, content), content)).collect(Collectors.toList()))
+						.flatMap(List::stream)
+						.collect(Collectors.toMap(pair -> pair.getLeft(), pair -> pair.getRight()));
+				}else if (atm.outputContainerUseds != null){
+					acuMapping = atm.outputContainerUseds
+							.stream()
+							.map(icu -> icu.contents.stream().map(content -> Pair.of(getKey(icu, content), content)).collect(Collectors.toList()))
+							.flatMap(List::stream)
+							.collect(Collectors.toMap(pair -> pair.getLeft(), pair -> pair.getRight()));					
+				}
+				return acuMapping.entrySet();				
+			})
+			.flatMap(Set::stream)
+			.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));					
+		return m;
+	}
+
+
+	private String getKey(AbstractContainerUsed acu,Content content) {
+		// TODO Auto-generated method stub
+		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+			return acu.code+"_"+content.projectCode+"_"+content.sampleCode+"_"+content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString();
+		}else{
+			return acu.code+"_"+content.projectCode+"_"+content.sampleCode;
+		}
+		
+	}
+
+
+	private void updateContainerContentPropertiesInCascading(ContextValidation validation, AbstractContainerUsed acu, Set<String> contentPropertyCodes, Map<String, Content> oldExpContents) {
 		List<Container> containerMustBeUpdated = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,  
-				DBQuery.or(DBQuery.is("code", ocu.code), DBQuery.regex("treeOfLife.paths", Pattern.compile(","+ocu.code+"$|,"+ocu.code+","))))
+				DBQuery.or(DBQuery.is("code", acu.code), DBQuery.regex("treeOfLife.paths", Pattern.compile(","+acu.code+"$|,"+acu.code+","))))
 		.toList();
 		
 		Set<String> containerCodes = containerMustBeUpdated.stream().map(c -> c.code).collect(Collectors.toSet());
 		
-		ocu.contents.forEach(ocuContent -> {
-			Map<String, PropertyValue> updatedProperties = ocuContent.properties
-																		.entrySet()
-																		.stream()
-																		.filter(entry ->contentPropertyCodes.contains(entry.getKey()))
-																		.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
-			
-			Set<String> deletedPropertyCodes = contentPropertyCodes
-													.stream()
-													.filter(code -> !updatedProperties.containsKey(code))
-													.collect(Collectors.toSet());
+		acu.contents.forEach(ocuContent -> {
+			Content oldContent = oldExpContents.get(getKey(acu, ocuContent));
+			Map<String, Pair<PropertyValue, PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
+			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			
 			List<Sample> allSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  
 					DBQuery.or(DBQuery.is("code", ocuContent.sampleCode), DBQuery.regex("life.path", Pattern.compile(","+ocuContent.sampleCode+"$|,"+ocuContent.sampleCode+","))))
@@ -1608,6 +1649,8 @@ public class ExpWorkflowsHelper {
 			Set<String> projectCodes = allSamples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 			Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
 			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes, updatedProperties);
+			logger.debug(getKey(acu, ocuContent)+" updatedProperties "+updatedProperties);
+			logger.debug(getKey(acu, ocuContent)+" deletedPropertyCodes "+deletedPropertyCodes);
 			
 			InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, containerCodes, tags, updatedProperties,
 					deletedPropertyCodes, validation);
@@ -1619,7 +1662,7 @@ public class ExpWorkflowsHelper {
 	
 
 
-	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes, Map<String, PropertyValue> updatedProperties) {
+	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes, Map<String, Pair<PropertyValue, PropertyValue>> updatedProperties) {
 		Set<String> tags = null;
 		
 		if(!updatedProperties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && ocuContent.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){

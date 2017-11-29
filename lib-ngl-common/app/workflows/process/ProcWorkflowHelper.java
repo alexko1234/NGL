@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
@@ -29,14 +30,16 @@ import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import play.Logger;
+import play.Logger.ALogger;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
+
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
+import static validation.common.instance.CommonValidationHelper.*;
 
 @Service
 public class ProcWorkflowHelper {
-
+	private ALogger logger = Logger.of(ProcWorkflowHelper.class);
 	
 	@Autowired
 	ContWorkflows contWorkflows;
@@ -76,8 +79,8 @@ public class ProcWorkflowHelper {
 		nextState.code=contWorkflows.getContainerStateFromExperimentCategory(processType.firstExperimentType.category.code);
 		nextState.user = contextValidation.getUser();
 		
-		contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
-		contextValidation.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
+		contextValidation.putObject(FIELD_STATE_CONTAINER_CONTEXT, "workflow");
+		contextValidation.putObject(FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
 		contWorkflows.setState(contextValidation, container, nextState);
 		
 	}
@@ -151,36 +154,31 @@ public class ProcWorkflowHelper {
 
 	public void updateContentPropertiesWithContentProcessProperties(ContextValidation validation, Process process) {
 			//update output container with new process property values
-		List<String> propertyCodes = getProcessesPropertyDefinitionCodes(process, Level.CODE.Content);
+		Set<String> propertyCodes = getProcessesPropertyDefinitionCodes(process, Level.CODE.Content);
 		
 		Set<String> outputContainerCodes = process.outputContainerCodes;
 		if(null != outputContainerCodes && outputContainerCodes.size() > 0 
 				&& process.properties != null && process.properties.size() > 0 && propertyCodes.size() > 0){
+			Process oldProcess = (Process) validation.getObject(OBJECT_IN_DB);
+			Map<String, Pair<PropertyValue,PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
+			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(propertyCodes, oldProcess.properties, process.properties);
+			logger.debug("updatedProperties "+updatedProperties);
+			logger.debug("deletedPropertyCodes "+deletedPropertyCodes);
 			
-			
-			
-			
-			
-			Map<String,PropertyValue> updatedProperties = process.properties.entrySet()
-														.stream()
-														.filter(e -> propertyCodes.contains(e.getKey()))
-														.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));		
-		
-			Set<String> deletedPropertyCodes = propertyCodes
-												.stream()
-												.filter(code -> !updatedProperties.containsKey(code))
-												.collect(Collectors.toSet());
-			
-			//1 find tag inside inputContainer and all outputContainer if input does not have a tag
-			Set<String> sampleCodes = process.sampleCodes;
-			Set<String> projectCodes = process.projectCodes;
-			Set<String> tags = getTagAssignFromProcessContainers(process);
-			
-			Logger.debug("UpdateProperties for tag "+tags);
-			
-			//2 update content properties
-			InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, outputContainerCodes, tags, updatedProperties,
-					deletedPropertyCodes, validation);
+			if(updatedProperties.size() > 0 || deletedPropertyCodes.size() > 0){
+				//1 find tag inside inputContainer and all outputContainer if input does not have a tag
+				Set<String> sampleCodes = process.sampleCodes;
+				Set<String> projectCodes = process.projectCodes;
+				Set<String> tags = getTagAssignFromProcessContainers(process);
+				
+				logger.debug("UpdateProperties for tag "+tags);
+				
+				//2 update content properties
+				
+				InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, outputContainerCodes, tags, updatedProperties,
+						deletedPropertyCodes, validation);
+						
+			}
 		}
 	}
 
@@ -188,12 +186,12 @@ public class ProcWorkflowHelper {
 	
 	
 	
-	private List<String> getProcessesPropertyDefinitionCodes(Process process, Level.CODE level) {		
+	private Set<String> getProcessesPropertyDefinitionCodes(Process process, Level.CODE level) {		
 		ProcessType processType = ProcessType.find.findByCode(process.typeCode);
 		return processType.getPropertyDefinitionByLevel(level)
 				.stream()
 				.map(pd -> pd.code)
-				.collect(Collectors.toList());		
+				.collect(Collectors.toSet());		
 	}
 	
 	
