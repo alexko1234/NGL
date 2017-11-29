@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import fr.cea.ig.play.test.JsonFacade;
 import validation.utils.ValidationHelper;
 
-public class TestContainer {
+public class ContainerFactory {
 	
 	// Modify a prototype to be linked with the sample. 
 	public static JsonNode create_00(String code, JsonNode sample) {

@@ -21,7 +21,7 @@ import play.libs.ws.WSResponse;
 
 /**
  * Fluent java definition of a read,update and read test for a given url.
- * 
+ *
  * @author vrd
  *
  */
@@ -60,21 +60,24 @@ public class ReadUpdateReadTest {
 		logger.debug("GET - " + url);
 		WSResponse r0 = WSHelper.get(ws,url,Status.OK);
 		JsonNode js0 = Json.parse(r0.getBody());
+		logger.debug("GET - read instance : trace info '" + js0.path("traceInformation") + "'");
 		// Apply modification to read json
 		beforeUpdate.accept(js0);
 		// Update
 		logger.debug("PUT - " + url);		
 		WSResponse r1 = WSHelper.put(ws,url,js0.toString(),Status.OK);
+		JsonNode js1 = Json.parse(r1.getBody());
+		logger.debug("PUT - read instance " + js1.path("traceInformation"));
 		// Read updated data
 		logger.debug("GET - " + url);
 		WSResponse r2 = WSHelper.get(ws,url,Status.OK);
-		JsonNode js1 = Json.parse(r2.getBody());
+		JsonNode js2 = Json.parse(r2.getBody());
 		// apply precheck to js0 and js1
 		beforeAssertion.accept(js0);
-		beforeAssertion.accept(js1);
+		beforeAssertion.accept(js2);
 		// assertEquals(js0,js1);
 		// cmp("",js0,js1);
-		assertion.accept(js0, js1);
+		assertion.accept(js0, js2);
 	}
 	
 	/**

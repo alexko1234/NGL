@@ -7,7 +7,7 @@ package controllers.samples.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+//import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -44,12 +44,12 @@ import play.mvc.Result;
 import validation.ContextValidation;
 // import views.components.datatable.DatatableForm;
 // import views.components.datatable.DatatableResponse;
-import controllers.AbstractCRUDAPIController;
+//import controllers.AbstractCRUDAPIController;
 
 // import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
-import controllers.ListForm;
+//import controllers.ListForm;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
@@ -61,13 +61,13 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 
-import static fr.cea.ig.mongo.DBQueryBuilder.*;
+//import static fr.cea.ig.mongo.DBQueryBuilder.*;
 
 // TODO: cleanup
 // indirection so that it's clear what to implement and who does.
 
-// public class Samples extends Samples2 {
-public class Samples extends SamplesCRUD {
+public class Samples extends Samples2 {
+// public class Samples extends SamplesCRUD {
 	@Inject
 	public Samples(NGLContext ctx) {
 		super(ctx);
@@ -142,7 +142,7 @@ class Samples2 extends DocumentController<Sample> {
 	 * @param samplesSearch
 	 * @return
 	 */
-	private static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
+	public static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();
 		
@@ -391,137 +391,6 @@ class Samples2 extends DocumentController<Sample> {
 	}*/
 	
 }
-
-
-class SamplesCRUD extends AbstractCRUDAPIController<Sample> {
-		
-	private static final List<String> authorizedUpdateFields = 
-			Arrays.asList("comments",
-					      "volume",
-					      "quantity",
-					      "size",
-					      "concentration");
-
-	public SamplesCRUD(NGLContext ctx) {
-		super(ctx,InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Samples2.defaultKeys);
-		// Probably an early initialization and validation of the meta would be good. 
-	}
-	
-	/* Definition does not match class definition
-	 * Arrays.asList("comments",
-		      "volume",
-		      "quantity",
-		      "size",
-		      "concentration");
-
-	// Can store the definition as static but not in the generic parent.
-	public Collection<Meta<Sample>> buildMeta() {
-		List<Meta<Sample>> l = new ArrayList<Meta<Sample>>();
-		// l.add(metareflect("volume"));
-		// Hand copy does not work, it's pretty sure that the
-		// partial update does not work on Samples.
-		// l.add(meta("volume"  ,pass,(from,to) -> { to.volume   = from.volume; }));
-		// l.add(meta("quantity",pass,(from,to) -> { to.quantity = from.quantity; }));
-		
-		return l;
-	} */
-	
-	// -------- creation -------------
-	/*public Sample beforeCreationValidation(ContextValidation ctx, Sample s) {
-		s.comments = InstanceHelpers.updateComments(s.comments, ctx);
-		return s;
-	}*/ // ICommentable
-	
-	@Permission(value={"writing"})
-	public Result save() throws DAOException {
-		return create();
-	}
-	
-	// --------- read -----------------
-	// This may fail badly as the expected get method is not the standard read method.
-	@Permission(value={"reading"})
-	public Result get(String code) throws DAOException {
-		return read(code); 
-	}
-	
-	// --------- update -----------------
-	/*public Sample beforeUpdateValidation(ContextValidation ctx, Sample s) {
-		s.comments = InstanceHelpers.updateComments(s.comments, ctx);
-		return s;
-	}*/ // ICommentable
-	
-	@Permission(value={"writing"})
-	public Result update() throws DAOException {
-		// return super.update();
-		throw new RuntimeException("not implemented");
-	}
-	
-	// ------------ delete ---------------
-	@Permission(value={"writing"})
-	public Result delete(String code) throws DAOException {
-		throw new RuntimeException("not implemented");
-	}
-	
-	// ------------ query-----------------
-	// TODO: log errors
-	public DBQuery.Query getQuery(ContextValidation ctx, ListForm form) {
-		if (form == null) {
-			ctx.addError("internal", "provided search form in %s is null", getClass().getName());
-			return null;			
-		}
-		if (!(form instanceof SamplesSearchForm)) {
-			ctx.addError("internal", "search in %s does not support form %s", getClass().getName(), form.getClass().getName());
-			return null;
-		}
-		SamplesSearchForm samplesSearch = (SamplesSearchForm)form;
-		
-		return query(
-			and(first(in   ("code", samplesSearch.codes),
-				      is   ("code", samplesSearch.code),
-				      regex("code", samplesSearch.codeRegex)),
-				in   ("typeCode",       samplesSearch.typeCodes),
-				regex("referenceCollab",samplesSearch.referenceCollabRegex),
-				is   ("projectCodes",   samplesSearch.projectCode),
-				in   ("projectCodes",   samplesSearch.projectCodes),
-				regex("life.path",      samplesSearch.treeOfLifePathRegex),
-				greaterThanEquals("traceInformation.creationDate", samplesSearch.fromDate),
-				lessThan("traceInformation.creationDate", addDays(samplesSearch.toDate, 1)),
-				first(in("traceInformation.createUser", samplesSearch.createUsers),
-				      is("traceInformation.createUser", samplesSearch.createUser)),
-				elemMatch("comments", regex("comment", samplesSearch.commentRegex)),
-				is("taxonCode", samplesSearch.taxonCode),
-				regex("ncbiScientificName", samplesSearch.ncbiScientificNameRegex),
-				first(
-					and(elemMatch("processes", is("typeCode",samplesSearch.existingProcessTypeCode)),
-						is       ("experiments.typeCode", samplesSearch.existingTransformationTypeCode),
-						notEquals("experiments.typeCode", samplesSearch.notExistingTransformationTypeCode)),
-					and(is       ("processes.experiments.typeCode", samplesSearch.existingTransformationTypeCode),
-						notEquals("processes.experiments.typeCode", samplesSearch.notExistingTransformationTypeCode)),
-					elemMatch("processes", and(is("typeCode",            samplesSearch.existingProcessTypeCode),
-										       is("experiments.typeCode",samplesSearch.existingTransformationTypeCode))),
-					elemMatch("processes", and(is       ("typeCode",           samplesSearch.existingProcessTypeCode),
-										       notEquals("experiments.typeCode",samplesSearch.notExistingTransformationTypeCode))),		
-					is       ("processes.typeCode",            samplesSearch.existingProcessTypeCode),
-					notEquals("processes.typeCode",            samplesSearch.notExistingProcessTypeCode),
-					is       ("processes.experiments.typeCode",samplesSearch.existingTransformationTypeCode),
-					notEquals("processes.experiments.typeCode",samplesSearch.notExistingTransformationTypeCode)),
-				in("processes.experiments.protocolCode",samplesSearch.experimentProtocolCodes),
-				generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"),
-				generateQueriesForProperties(samplesSearch.experimentProperties,Level.CODE.Experiment, "processes.experiments.properties"),
-				generateQueriesForExistingProperties(samplesSearch.existingFields)));
-	}
-
-	@Override
-	public List<String> getAuthorizedUpdateFields() {
-		return authorizedUpdateFields;
-	}
-
-	public Result list() {
-		return list(SamplesSearchForm.class);
-	}
-	
-}
-
 
 
 

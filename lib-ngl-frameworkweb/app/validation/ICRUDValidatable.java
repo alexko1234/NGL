@@ -21,7 +21,7 @@ package validation;
  * @author vrd
  *
  */
-public interface ICRUDValidatable {
+public interface ICRUDValidatable<T> {
 	
 	/**
 	 * Invariants, must always hold.
@@ -39,7 +39,7 @@ public interface ICRUDValidatable {
 	 * Validate the object state for the update operation. 
 	 * @param ctx
 	 */
-	void validateUpdate(ContextValidation ctx /*, T past*/);
+	void validateUpdate(ContextValidation ctx, T past);
 	
 	/**
 	 * Validate the object state for the delete operation.

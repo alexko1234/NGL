@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 public class JsonFacade {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(JsonFacade.class);
+	
 	private JsonNode data;
 	
 	public JsonFacade(JsonNode data) {

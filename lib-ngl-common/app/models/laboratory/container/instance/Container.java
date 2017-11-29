@@ -34,6 +34,7 @@ import validation.experiment.instance.ContainerUsedValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.ICommentable;
 import fr.cea.ig.DBObject;
 
 
@@ -49,7 +50,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Container")
-public class Container extends DBObject implements IValidation, ITracingAccess {
+public class Container extends DBObject implements IValidation, ITracingAccess, ICommentable {
 
 	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
 	//duplication for output in exp :code, categoryCode, contents, mesured*, //contents just for tag and tagCategory
@@ -147,6 +148,9 @@ public class Container extends DBObject implements IValidation, ITracingAccess {
 		validateRules(this, contextValidation);
 	}
 
+	// IAccessTracking
+	
+	@JsonIgnore
 	@Override
 	public TraceInformation getTraceInformation() {
 		if (traceInformation == null)
@@ -154,5 +158,18 @@ public class Container extends DBObject implements IValidation, ITracingAccess {
 		return traceInformation;
 	}
 
+	// ICommentable
 	
+	@JsonIgnore
+	@Override
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	@JsonIgnore
+	@Override
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 }
