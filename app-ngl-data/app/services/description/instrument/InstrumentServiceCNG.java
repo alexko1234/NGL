@@ -651,8 +651,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("HS", "BR"), "single"));		
+		// suppression de "Kit" demandée 29/11/2017 	
+		
 		return l;
 	}
 
