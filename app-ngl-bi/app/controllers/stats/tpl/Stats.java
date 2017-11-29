@@ -91,7 +91,8 @@ public class Stats extends CommonController {
   	      		controllers.commons.api.routes.javascript.Users.list(),
   	      		controllers.resolutions.api.routes.javascript.Resolutions.list(),
   	      		controllers.projects.api.routes.javascript.Projects.get(),
-  	      		controllers.commons.api.routes.javascript.Values.list()
+  	      		controllers.commons.api.routes.javascript.Values.list(),
+  	      		controllers.commons.api.routes.javascript.Parameters.list()
   	      )	  	      
   	    );
   	  }
