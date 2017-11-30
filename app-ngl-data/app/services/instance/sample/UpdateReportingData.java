@@ -14,10 +14,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.Bytes;
 import com.mongodb.MongoException;
 
 import controllers.migration.OneToVoidContainer;
@@ -73,9 +75,11 @@ public class UpdateReportingData extends AbstractImportData {
 				try{
 					
 					long t1 = System.currentTimeMillis();
-					MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+					DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
 						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(5000)
-						.cursor.forEach(sample -> {
+						.cursor;
+					
+					cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
 							try{
 								updateProcesses(sample);
 								Logger.debug("update sample "+sample.code);
@@ -94,6 +98,7 @@ public class UpdateReportingData extends AbstractImportData {
 									contextError.addErrors(sample.code, "null");
 							}
 						});
+					cursor.close();
 					skip = skip+5000;
 					long t2 = System.currentTimeMillis();
 					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
