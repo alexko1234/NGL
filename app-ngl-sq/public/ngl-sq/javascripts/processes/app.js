@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices','basketServices','ui.bootstrap','ngl-sq.processesServices','ngl-sq.samplesServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices','basketServices','ui.bootstrap','ngl-sq.processesServices','ngl-sq.samplesServices','ngl-sq.containersServices'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/processes/new-from-containers/home', {
 		templateUrl : jsRoutes.controllers.processes.tpl.Processes.searchContainers().url,
 		controller : 'SearchContainersCtrl'

@@ -1030,6 +1030,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			this.sampleViewData = {};
 			var samples = mainService.getBasket().get();
 			samples.forEach(function(sample){
+				sample.properties = null;
+				sample.comments = [];
 				this.sampleViewData[sample.code]=sample;
 			},this);
 			return samples;
@@ -1067,7 +1069,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			var queries = [];
 	        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
 	        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
-	        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch().url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+	        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch("from-sample").url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
 	        }
 			var $that = this;
 			$q.all(queries).then(function(results) {
@@ -1351,7 +1353,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				var queries = [];
 		        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
 		        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
-		        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch().url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+		        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch("from-container").url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
 		        }
 				var $that = this;
 				$q.all(queries).then(function(results) {
