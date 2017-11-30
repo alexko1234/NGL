@@ -3,15 +3,21 @@
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import play.api.Application;
+import play.api.Configuration;
+import play.api.Environment;
+import play.api.inject.Binding;
+import scala.collection.Seq;
+
 public class NGLSQStarterModule extends play.api.inject.Module {
 	
-	private static final Logger.ALogger logger; //  = Logger.of(Module.class);
+	private static final play.Logger.ALogger logger; //  = Logger.of(Module.class);
 	
 	static {
-		logger = Logger.of(NGLSQStarterModule.class);
+		logger = play.Logger.of(NGLSQStarterModule.class);
 		logger.debug("class " + NGLSQStarterModule.class + " has been loaded, expecting instance creation");
 	}
-	
+
 	public NGLSQStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
