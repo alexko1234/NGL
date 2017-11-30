@@ -248,8 +248,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsPcrAndPurification(),
 					getInstrumentUsedTypes("mastercycler-epg-and-zephyr",
-							               "mastercycler-epg-and-bravows"
-							), //// NGL-1201 liste a faire evoluer
+							               "mastercycler-epg-and-bravows",
+							               "mastercycler-ep-gradient" ),      // 29/11/2017 NGL-1717 mastercycler-ep-gradient
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -258,7 +258,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("Prep. Librairie (sans frg)","library-prep",null,600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsLibraryPrep(),
-					getInstrumentUsedTypes("sciclone-ngsx"),
+					getInstrumentUsedTypes("sciclone-ngsx","hand"), // 29/11/2017 NGL-1717 ajout main
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -426,10 +426,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				    DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	    
 			//FDS 27/07/2017 ajout NGL-1201: qc pour process Capture
-			l.add(newExperimentType("Dosage Fluo (Quant-iT)","fluo-quantification", null, 50,
+			l.add(newExperimentType("Dosage Fluo","fluo-quantification", null, 50,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsQuantIt(), 
-					getInstrumentUsedTypes("spectramax"), 
+					getInstrumentUsedTypes("spectramax",
+							               "qubit"),  // NGL-1720: ajout qubit
 					"OneToVoid",
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 			

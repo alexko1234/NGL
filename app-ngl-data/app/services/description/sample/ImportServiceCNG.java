@@ -85,7 +85,7 @@ public class ImportServiceCNG extends AbstractImportService {
 			propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, null, 
 					getTagCategories(), null,null,null,"single", 4, false, null,null));	
 		
-			/* inutile si pas d'autres proprietes que "% au sein du pool" (deja géré de base par NGL)
+		    /* inutile si pas d'autres proprietes que "% au sein du pool" (deja géré de base par NGL)
 			if (isPooled) {
 	           // propiété "% au sein du pool" 
 			}

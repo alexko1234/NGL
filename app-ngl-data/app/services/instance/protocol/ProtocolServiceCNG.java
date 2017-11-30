@@ -79,14 +79,18 @@ public class ProtocolServiceCNG {
 
 		// 12/12/2016 protocoles pour RNA
 		lp.add(newProtocol("2a-ill-ssmrna-010616","2A_ILL_ssmRNA_010616","?","1","production", 
-				InstanceFactory.setExperimentTypeCodes( "library-prep",
-							                            "pcr-and-purification")));
-			
+				InstanceFactory.setExperimentTypeCodes("library-prep",
+													   "pcr-and-purification")));
 		// 05/12/2016 library-prep
 		lp.add(newProtocol("2a-ill-sstotalrna-170816","2A_ILL_ssTotalRNA_170816","?","1","production", 
+				InstanceFactory.setExperimentTypeCodes("library-prep",
+													   "pcr-and-purification")));
+		
+		// 29/11/2017 NGL-1717 ajout "Truseq RNA v2"
+		lp.add(newProtocol("truseq-rna-v2","Truseq RNA v2","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes( "library-prep",
-													    "pcr-and-purification")));						
-
+							                            "pcr-and-purification")));	
+						
 		// 26/09/2016 ajout protocole "normalisation" dédié a l'experience lib-normalization"; 19/07/2017 ajout additional-normalization
 		lp.add(newProtocol("normalization","normalisation","?","1","production", 
 				InstanceFactory.setExperimentTypeCodes("lib-normalization",

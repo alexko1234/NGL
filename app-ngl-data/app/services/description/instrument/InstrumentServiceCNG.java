@@ -255,10 +255,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null,                                                               // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS 04/09/2017 pas de propriétés pour le QuBit...
+		// FDS 04/09/2017 pas de propriétés pour le QuBit; 29/11/2017 ajout qubit2
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"),getQuBitProperties(), 
 				getInstruments(
-						createInstrument("quBit1", "QuBit 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("quBit1", "QuBit 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("quBit2", "QuBit 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -268,7 +269,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("spectramax-bank1", "SpectraMax Banque 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("spectramax-bank2", "SpectraMax Banque 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("spectramax-prod1", "SpectraMax Prod",     null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), // pas encore livré...
+						createInstrument("spectramax-prod1", "SpectraMax Prod",     null, false, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), // pas encore livré (active=false)
 				getContainerSupportCategories(new String[]{"96-well-plate"}),
 				null,                                                                // pas de sortie pour les instruments * quality *
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -625,7 +626,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 						null, "single",null,true, null,null));
-
+		
+		// FDS 29/11/2017 .manquait "Ratio billes","AdnBeadVolumeRatio"
+		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
+				null, null, null , null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -635,6 +639,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				
 		l.add(newPropertiesDefinition("Nbre Cycles PCR", "pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
                 						null, "single",null,true, null,null));
+		
+		// FDS 29/11/2017 ajout NGL-1717 mais etait manquant de toutes facons !!!
+		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
+				null, null, null , null, "single", null, true ,null, null));
 
 		return l;
 	}
@@ -643,8 +651,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("HS", "BR"), "single"));		
+		// suppression de "Kit" demandée 29/11/2017 	
+		
 		return l;
 	}
 
@@ -833,13 +841,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
     //  09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerEPGAndZephyrProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		//Mastercycler
+		//Mastercycler EPG
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
 
-		//Zephyr
+		
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
+		//Zephyr
+		
 		return l;
 	}
 	
@@ -847,13 +857,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	//     09/11/2017 NGL-1691  suppression valeurs par defaut ( pcrCycleNumber et AdnBeadVolumeRatio )
 	private static List<PropertyDefinition> getMastercyclerEPGAndBravoWsProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		//Mastercycler
+		//Mastercycler EPG
 		l.add(newPropertiesDefinition("Nbre Cycles PCR","pcrCycleNumber", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
 
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
-		 
+		// Bravo 
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
@@ -872,6 +882,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Ratio billes","AdnBeadVolumeRatio", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, null,
 										null, null, null , null, "single", null, true ,null, null));
 		
+		// Bravo
 		// FDS 09/11/2017 NGL-1691: ajout propriété "Programme Bravo WS" en saisie libre non obligatoire
 		l.add(newPropertiesDefinition("Programme Bravo WS","programBravoWs", LevelService.getLevels(Level.CODE.Instrument),String.class, false, null,
 										null, null, null , null, "single", null, true ,null, null));
