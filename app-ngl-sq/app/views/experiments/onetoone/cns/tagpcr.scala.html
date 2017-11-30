@@ -1,9 +1,9 @@
 @()
 
 <div class="col-md-12 col-lg-12" ng-controller="TagPCRCtrl">
-	<form class="form-horizontal" name="TagPCRCtrl">
+	<!-- <form class="form-horizontal" name="TagPCRCtrl">
 
-		<div class="form-group">
+	 	<div class="form-group">
 		
 				<label class="col-md-2 col-lg-2 control-label">@Messages("property_definition.tagPcrBlank1SampleCode")
 				</label>
@@ -35,6 +35,14 @@
 			</div>
 
 		</div>
-	</form>
+			</form>-->
+		<div class="row">
+	<div class="col-md-12 col-lg-12">
+	<ul class="list-unstyled">
+	<li><u>Attention</u>,  <strong>passer par étape démarrer</strong>, <span class="label label-danger">ne pas terminer avant étape démarrer</span> pour permettre la génération des codes ech témoin</li>
+	</ul>	
+	</div>
+	</div>
+
 	@views.html.experiments.onetoone.defaults.partials.udtAndPlateDesign()
 </div>
