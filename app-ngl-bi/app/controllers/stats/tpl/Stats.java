@@ -21,22 +21,31 @@ import controllers.CommonController;
  */
 public class Stats extends CommonController {
 	private final home home;
-	private final config config;
-	private final show show;
+	// private final config config;
+	//private final show show;
 	private final choice choice;
+	private final configReadSets configReadSets;
+	private final configLanes configLanes;
+	private final showReadSets showReadSets;
+	private final showLanes showLanes;
+	
 	@Inject
-	public Stats(home home, config config, show show, choice choice) {
+	public Stats(home home, configReadSets configReadSets, configLanes configLanes, showReadSets showReadSets, showLanes showLanes, choice choice) {
 		this.home = home;
-		this.config= config;
-		this.show= show;
+		// this.config= config;
+		//this.show= show;
 		this.choice = choice;
+		this.configReadSets = configReadSets;
+		this.configLanes = configLanes;
+		this.showReadSets = showReadSets;
+		this.showLanes = showLanes;
 	}
 	
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	public static Result config(String type) {
+	public Result config(String type) {
 		if(type.equals("readsets"))
 			return ok(configReadSets.render());
 		else if(type.equals("lanes"))
@@ -47,7 +56,7 @@ public class Stats extends CommonController {
 	}
 	
 	
-	public static Result show(String type) {
+	public Result show(String type) {
 		if(type.equals("readsets"))
 			return ok(showReadSets.render());
 		else if(type.equals("lanes"))
