@@ -274,7 +274,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 			}
 		}	
 
-		if (! blank2 ){
+		if (! blank2 && sampleCodeAvailable){
 			$scope.messages.setError(Messages('Attention vous devez renseigner les 2 témoins négatifs pour cette expérience'));	
 			return false;
 		}else if (blank2 && sampleCodeAvailable){
