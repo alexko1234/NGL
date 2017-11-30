@@ -198,34 +198,17 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		var dtConfig = $scope.atmService.data.getConfig();
-		
+
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		
-		
-		
-		var tutu=checktagPcrBlankSampleCode($scope);
-		
+
 		if (! checktagPcrBlankSampleCode($scope)){
-			console.log("ko");
 			$scope.$emit('childSavedError', callbackFunction);
 		}else{
-			console.log("ok");
-			 $scope.$emit('childSaved', callbackFunction);
+			$scope.$emit('childSaved', callbackFunction);
 		}
-		
-		/*if (! checktagPcrBlankSampleCode($scope)){
-			console.log("ok");
-			$scope.$emit('childSavedError', callbackFunction);
-		}else{
-			console.log("ko");
-		 $scope.$emit('childSaved', callbackFunction);
-		}*/
-		
-		//Suppression du bouton de selection d echantillon témoin
-		//$scope.refreshExtractionBlankSampleTagCodeLists();
-		
-		//$scope.$emit('childSaved', callbackFunction);
+
+
 	});
 	
 	$scope.$on('refresh', function(e) {
@@ -265,7 +248,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 		var blank1;
 		var blank2;
 		var sampleCodeAvailable;
-		
+
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
 			var atm = experiment.atomicTransfertMethods[i];
 			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
@@ -279,9 +262,9 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 						var value = ocu.experimentProperties.sampleCode.value;
 
 						if (! blank1){
-								blank1= value;					
+							blank1= value;					
 						}else if (! blank2){
-						blank2= value;			
+							blank2= value;			
 						}else {
 							$scope.messages.setError(Messages('Attention vous avez renseigné plus de 2 témoins négatifs pour cette expérience'));	
 							return false;
@@ -314,7 +297,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 				}
 			}
 		}
-		
+
 		return true;
 	};
 
