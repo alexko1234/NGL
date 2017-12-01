@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.CompletionStage;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
 
@@ -40,9 +43,7 @@ public class WSHelper {
 	 * @return       request response
 	 */
 	public static WSResponse get(WSClient ws, String url, int status) {
-		WSResponse r = get(ws,url);
-		assertEquals("GET " + url + " " + r.getBody(), status, r.getStatus());
-		return r; 
+		return assertResponseStatus("GET " + url, get(ws,url), status);
 	}
 
 	/**
@@ -71,9 +72,7 @@ public class WSHelper {
 	 * @return        web response
 	 */
 	public static WSResponse put(WSClient ws, String url, String payload, int status) {
-		WSResponse r = put(ws,url,payload);
-		assertEquals("PUT " + url + " " + r.getBody(), status, r.getStatus());
-		return r;
+		return assertResponseStatus("PUT " + url, put(ws,url,payload), status);
 	}
 
 	/**
@@ -102,9 +101,27 @@ public class WSHelper {
 	 * @return        web response
 	 */
 	public static WSResponse post(WSClient ws, String url, String payload, int status) {
-		WSResponse r = post(ws,url,payload);
-		assertEquals("POST " + url + " " + r.getBody(), status, r.getStatus());
-		return r;
+		return assertResponseStatus("POST " + url, post(ws,url,payload), status);
 	}
 
+	public static WSResponse post(WSClient ws, String url, JsonNode payload) {
+		return post(ws,url,payload.toString());
+	}
+
+	public static WSResponse post(WSClient ws, String url, JsonNode payload, int status) {
+		return assertResponseStatus("POST " + url, post(ws,url,payload), status);
+	}
+	
+	public static WSResponse postObject(WSClient ws, String url, Object object) {
+		return post(ws,url,Json.toJson(object));
+	}
+	
+	public static WSResponse postObject(WSClient ws, String url, Object object, int status) {
+		return assertResponseStatus("POST " + url, postObject(ws,url,object), status);
+	}
+	public static WSResponse assertResponseStatus(String message, WSResponse response, int status) {
+		assertEquals(message + " " + response.getBody(), status, response.getStatus());
+		return response;
+	}
+	
 }

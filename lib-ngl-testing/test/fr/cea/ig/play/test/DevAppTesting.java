@@ -306,13 +306,17 @@ public class DevAppTesting {
 			.run(ws);
 	}
 	
+	// This requires that the input object has a code field (DBObject most certainly).
 	public static void rurNeqTraceInfo(WSClient ws, String url, JsonNode n) {
 		String code = new JsonFacade(n).getString("code");
-		new ReadUpdateReadTest(url + code)
+		new ReadUpdateReadTest(url + "/" + code)
 			.assertion(notEqualsPath("traceInformation"))
 			.run(ws);
 	}
 	
+	public static void rurNeqTraceInfo(WSClient ws, String url, Object o) {
+		rurNeqTraceInfo(ws,url,Json.toJson(o));
+	}
 	
 	public static void cr(WSClient ws, String url, JsonNode data) {
 		// This must post data to fill a form server side (Form<Sample>)
@@ -328,6 +332,11 @@ public class DevAppTesting {
 		JsonNode js1 = Json.parse(r1.getBody());
 		cmp(js0,js1);
 	}
+	
+	public static void cr(WSClient ws, String url, Object data) {
+		cr(ws,url,Json.toJson(data));
+	}
+	
 	
 	public static final void cmp(JsonNode n0, JsonNode n1) {
 		cmp("",n0,n1);
