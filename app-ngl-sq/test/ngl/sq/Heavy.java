@@ -22,7 +22,7 @@ import models.laboratory.container.instance.Container;
 
 public class Heavy {
 	
-	@Test
+	// @Test
 	public void test01() throws Exception {
 		
 	    testInServer(devapp(),
@@ -40,9 +40,9 @@ public class Heavy {
 	    	    	// This accesses pretty directly to the mongo layer as this is all
 	    	    	// we've got in this lib. ngl-common test should provide a more controlled
 	    	    	// access.
-	    	    	if (true) return; // throw new RuntimeException("ok");
 	    	    	savage(container_0,Container.class,models.utils.InstanceConstants.CONTAINER_COLL_NAME);
 	    	    	rurNeqTraceInfo(ws,"/api/containers/",container_0);
+	    	    	if (true) return; // throw new RuntimeException("ok");
 	    	    	
 
 	    			

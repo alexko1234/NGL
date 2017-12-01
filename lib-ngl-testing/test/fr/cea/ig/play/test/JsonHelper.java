@@ -78,11 +78,17 @@ public class JsonHelper {
 		return n;
 	}*/
 
+	/**
+	 * Load a JSON resource (the name will be appended a ".json" suffix) and return 
+	 * the parsed resource content.
+	 * @param name name of the resource to load
+	 * @return     parsed JSON resource content 
+	 */
+	// TODO: allow optional .json suffix in resource
 	public static JsonNode getJson(String name) {
 		String rname = name + ".json";
 		logger.debug("loading json from " + DevAppTesting.class.getClassLoader().getResource(rname));
 		return Json.parse(DevAppTesting.class.getClassLoader().getResourceAsStream(rname));
 	}
-
 	
 }
