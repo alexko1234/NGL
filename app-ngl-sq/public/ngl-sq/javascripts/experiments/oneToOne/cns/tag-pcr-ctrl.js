@@ -198,12 +198,17 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		var dtConfig = $scope.atmService.data.getConfig();
-		
+
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		checktagPcrBlankSampleCode($scope);
-		$scope.refreshExtractionBlankSampleTagCodeLists();
-		$scope.$emit('childSaved', callbackFunction);
+
+		if (! checktagPcrBlankSampleCode($scope)){
+			$scope.$emit('childSavedError', callbackFunction);
+		}else{
+			$scope.$emit('childSaved', callbackFunction);
+		}
+
+
 	});
 	
 	$scope.$on('refresh', function(e) {
@@ -215,7 +220,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
-		$scope.refreshExtractionBlankSampleTagCodeLists();
+	//	$scope.refreshExtractionBlankSampleTagCodeLists();
 		$scope.$emit('viewRefeshed');
 	});
 	
@@ -242,58 +247,58 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 		var experiment=$scope.experiment;
 		var blank1;
 		var blank2;
-
-
-		if ($scope.sample.tagPcrBlank1SampleCode){
-			blank1=$scope.sample.tagPcrBlank1SampleCode;
-		}
-		if ($scope.sample.tagPcrBlank2SampleCode){
-			blank2=$scope.sample.tagPcrBlank2SampleCode;
-		}
-
-		if (!blank1 || !blank2){
-			for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
-				var atm = experiment.atomicTransfertMethods[i];
-
-				for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
-					var ocu = atm.outputContainerUseds[j];
-					var getter = $parse("experimentProperties.tagPcrBlank1SampleCode.value");
-					var getter2 = $parse("experimentProperties.tagPcrBlank2SampleCode.value");
-
-					if(ocu.experimentProperties && ocu.experimentProperties.projectCode   && ocu.experimentProperties.projectCode.value==="CEB"){				
-						if(ocu.experimentProperties.sampleCode){
-							var value = ocu.experimentProperties.sampleCode.value;
-
-							if (! blank1){
-								blank1= value;					
-							} else if (! blank2){
-								blank2= value;			
-							}else {
-								console.log("plus de 2 blank sur la plaque!!!");
-							}
-						}
-					}
-				}
-			}	
-		}
+		var sampleCodeAvailable;
 
 		for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
-			var atm2 = experiment.atomicTransfertMethods[i];
-
-			for(var j=0 ; j < atm2.outputContainerUseds.length ; j++){		
-				var ocu = atm2.outputContainerUseds[j];
+			var atm = experiment.atomicTransfertMethods[i];
+			for(var j=0 ; j < atm.outputContainerUseds.length ; j++){		
+				var ocu = atm.outputContainerUseds[j];
 				var getter = $parse("experimentProperties.tagPcrBlank1SampleCode.value");
 				var getter2 = $parse("experimentProperties.tagPcrBlank2SampleCode.value");
 
-				if (blank1){
-					getter.assign(atm2.outputContainerUseds[j],blank1);	
-				}
+				if(ocu.experimentProperties && ocu.experimentProperties.projectCode   && ocu.experimentProperties.projectCode.value==="CEB"){				
+					if(ocu.experimentProperties.sampleCode){
+						sampleCodeAvailable=true;
+						var value = ocu.experimentProperties.sampleCode.value;
 
-				if(blank2){
-					getter2.assign(atm2.outputContainerUseds[j],blank2);	
-				}	
+						if (! blank1){
+							blank1= value;					
+						}else if (! blank2){
+							blank2= value;			
+						}else {
+							$scope.messages.setError(Messages('Attention vous avez renseigné plus de 2 témoins négatifs pour cette expérience'));	
+							return false;
+						}
+					}
+				}
+			}
+		}	
+
+		if (! blank2 && sampleCodeAvailable){
+			$scope.messages.setError(Messages('Attention vous devez renseigner les 2 témoins négatifs pour cette expérience'));	
+			return false;
+		}else if (blank2 && sampleCodeAvailable){
+
+			for(var i=0 ; i < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; i++){
+				var atm2 = experiment.atomicTransfertMethods[i];
+
+				for(var j=0 ; j < atm2.outputContainerUseds.length ; j++){		
+					var ocu = atm2.outputContainerUseds[j];
+					var getter = $parse("experimentProperties.tagPcrBlank1SampleCode.value");
+					var getter2 = $parse("experimentProperties.tagPcrBlank2SampleCode.value");
+
+					if (blank1){
+						getter.assign(atm2.outputContainerUseds[j],blank1);	
+					}
+
+					if(blank2){
+						getter2.assign(atm2.outputContainerUseds[j],blank2);	
+					}	
+				}
 			}
 		}
+
+		return true;
 	};
 
 	
@@ -478,16 +483,19 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
 		$scope.messages.setError(Messages('experiments.input.error.must-be-same-out'));					
 	}
 	
-	$scope.refreshExtractionBlankSampleTagCodeLists=function(){
+	/*
+	 * Supprime la poss de remplir le champs manuellement
+	 * $scope.refreshExtractionBlankSampleTagCodeLists=function(){
 		$scope.lists.clear('sampleTag');
 		$scope.lists.refresh.samples({"projectCodes":"CEB"}, 'sampleTag'); 
 			};
 	
-	$scope.sample = {
+	
+	 * $scope.sample = {
 			tagPcrBlank1SampleCode:null,
 			tagPcrBlank2SampleCode:null
 	};
 	
-	$scope.refreshExtractionBlankSampleTagCodeLists();
+	$scope.refreshExtractionBlankSampleTagCodeLists();*/
 	
 }]);
