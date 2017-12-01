@@ -39,7 +39,7 @@ public class DBObjectFactory {
 		return apply(JsonHelper.getJson(resourceName),clazz,modification);
 	}
 	
-	public static <T> T create(String resourceName, Class<T> clazz) {
+	public static <T> T from(String resourceName, Class<T> clazz) {
 		return Json.fromJson(JsonHelper.getJson(resourceName),clazz);
 	}
 	

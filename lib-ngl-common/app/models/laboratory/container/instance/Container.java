@@ -150,7 +150,6 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 
 	// IAccessTracking
 	
-	@JsonIgnore
 	@Override
 	public TraceInformation getTraceInformation() {
 		if (traceInformation == null)
@@ -160,13 +159,11 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 
 	// ICommentable
 	
-	@JsonIgnore
 	@Override
 	public List<Comment> getComments() {
 		return comments;
 	}
 
-	@JsonIgnore
 	@Override
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;

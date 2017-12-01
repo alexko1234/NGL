@@ -238,7 +238,7 @@ class Containers2 extends DocumentController<Container> {
 					Logger.error("traceInformation is null !!");
 				}
 				
-				if (!input.state.code.equals(input.state.code)) {
+				if (!container.state.code.equals(input.state.code)) {
 					return badRequest("You cannot change the state code. Please used the state url ! ");
 				}
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	

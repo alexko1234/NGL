@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import play.libs.Json;
 import play.libs.ws.WSClient;
 import play.libs.ws.WSResponse;
+import play.mvc.Http.Status;
 
 /**
  * WSClient shortcuts.
@@ -46,6 +47,11 @@ public class WSHelper {
 		return assertResponseStatus("GET " + url, get(ws,url), status);
 	}
 
+	// assumes HTTP OK 
+	public static <T> T getObject(WSClient ws, String url, Class<T> clazz) {
+		return Json.fromJson(Json.parse(get(ws,url,Status.OK).getBody()),clazz);
+	}
+	
 	/**
 	 * Short for http put with some payload.
 	 * @param ws      web client to use
@@ -63,6 +69,14 @@ public class WSHelper {
 		}
 	}
 	
+	public static WSResponse put(WSClient ws, String url, JsonNode payload) {
+		return put(ws,url,payload.toString());
+	}
+	public static WSResponse putObject(WSClient ws, String url, Object payload) {
+		return put(ws,url,Json.toJson(payload));
+	}
+	
+	
 	/**
 	 * Short for http put with some payload.
 	 * @param ws      web client to use
@@ -75,6 +89,13 @@ public class WSHelper {
 		return assertResponseStatus("PUT " + url, put(ws,url,payload), status);
 	}
 
+	public static WSResponse put(WSClient ws, String url, JsonNode payload, int status) {
+		return put(ws,url,payload.toString(),status);
+	}
+	public static WSResponse putObject(WSClient ws, String url, Object payload, int status) {
+		return put(ws,url,Json.toJson(payload),status);
+	}
+	
 	/**
 	 * Short for http post with some payload.
 	 * @param ws      web client to use
