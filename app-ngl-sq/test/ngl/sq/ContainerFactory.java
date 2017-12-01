@@ -1,27 +1,40 @@
 package ngl.sq;
 
+import static fr.cea.ig.play.test.DevAppTesting.savage;
 import static fr.cea.ig.play.test.JsonHelper.getJson;
 import static fr.cea.ig.play.test.JsonHelper.remove;
 import static fr.cea.ig.play.test.JsonHelper.set;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import fr.cea.ig.play.test.DBObjectFactory;
+import fr.cea.ig.play.test.DevAppTesting;
 import fr.cea.ig.play.test.JsonFacade;
+import models.laboratory.container.instance.Container;
+import models.laboratory.sample.instance.Sample;
+import play.libs.Json;
+import play.libs.ws.WSClient;
 import validation.utils.ValidationHelper;
 
-public class ContainerFactory {
+public class ContainerFactory extends DBObjectFactory {
+	
+	public static String res_00 = "data/Container_1AIF37ID7_UAT";
 	
 	// Modify a prototype to be linked with the sample. 
 	public static JsonNode create_00(String code, JsonNode sample) {
 		JsonFacade s = new JsonFacade(sample);
 		JsonFacade n = JsonFacade
-				.getJsonFacade("data/Container_1AIF37ID7_UAT")
+				.getJsonFacade(res_00)
 				.delete("_id")
 				// .delete("traceInformation") -> keep creation date and user
 				//.delete("traceInformation/createUser")
 				//.delete("traceInformation/creationDate")
-				.delete("traceInformation/modifyUser")
-				.delete("traceInformation/modifyDate")
+				//.delete("traceInformation/modifyUser")
+				//.delete("traceInformation/modifyDate")
 				.set("code",code)
 				.copy(s,"code","contents[0]/sampleCode")
 				.copy(s,"projectCodes[0]","contents[0]/projectCode")
@@ -39,4 +52,29 @@ public class ContainerFactory {
 		return n.jsonNode();
 	}
 
+	public static Container from(String resourceName) {
+		return from(resourceName,Container.class);
+	}
+
+	// Sample must have been persisted
+	public static Container freshInstance(WSClient c, String resourceName, Sample sample) {
+		Container container = from(resourceName);
+		container._id = null;
+		// Keep creation date as this does not go through trace stamping
+		assertNotNull(container.traceInformation);
+		container.traceInformation.creationDate = new Date();
+		container.traceInformation.createUser = "joke";
+		/*container.traceInformation.modifyDate = null;
+		container.traceInformation.modifyUser = null;*/
+		// Should clear the contents and a new one.
+		container.code = DevAppTesting.newCode();
+		container.contents.get(0).sampleCode = sample.code; 
+		container.contents.get(0).projectCode = new ArrayList<String>(sample.projectCodes).get(0);
+		container.contents.get(0).taxonCode = sample.taxonCode;
+		container.contents.get(0).ncbiScientificName = sample.ncbiScientificName;
+		container.contents.get(0).properties.get("sampleAliquoteCode").value = sample.code;
+    	DevAppTesting.savage(container,Container.class,models.utils.InstanceConstants.CONTAINER_COLL_NAME);
+    	return container;
+	}
+	
 }

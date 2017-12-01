@@ -411,23 +411,10 @@ public class DevAppTesting {
 	// Run through DAO stuff.
 	public static <T extends DBObject> void savage(JsonNode n, Class<T> t, String collectionName) {
 		T o = Json.fromJson(n, t);
-		
-		//if (null == input._id) {
-		//	input.traceInformation = new TraceInformation();
-		//	input.traceInformation.setTraceInformation(getCurrentUser());				
-		//} else {
-		//	return badRequest("use PUT method to update the sample");
-		//}
-		//ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		//ctxVal.setCreationMode();
-		//SampleHelper.executeRules(input, "sampleCreation");
-		//input.validate(ctxVal);	
-		//if (!ctxVal.hasErrors()) {
-		//	input = saveObject(input);			
-		//	return ok(Json.toJson(input));
-		//} else {
-		//	return badRequest(filledForm.errors-AsJson());
-		//}				
+		MongoDBDAO.save(collectionName, o);
+	}
+	
+	public static <T extends DBObject> void savage(T o, Class<T> t, String collectionName) {
 		MongoDBDAO.save(collectionName, o);
 	}
 	

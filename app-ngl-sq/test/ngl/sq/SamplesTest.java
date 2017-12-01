@@ -9,6 +9,8 @@ import static play.mvc.Http.Status.BAD_REQUEST;
 import static ngl.sq.SampleFactory.from;
 import static ngl.sq.SampleFactory.fresh;
 import static ngl.sq.SampleFactory.create_00;
+import static ngl.sq.SampleFactory.samplesUrl;
+import static ngl.sq.SampleFactory.res_00;
 
 import org.junit.Test;
 
@@ -19,7 +21,6 @@ import models.laboratory.sample.instance.Sample;
 
 public class SamplesTest extends AbstractSQServerTest {
 
-	private static final String samplesUrl = "/api/samples";
 	
 	@Test
 	public void testCreation_00() {
@@ -32,7 +33,7 @@ public class SamplesTest extends AbstractSQServerTest {
 	public void testTemplateFail() {
 		// Template data has the id and the creation date that will
 		// make the creation fail. We leave the id that fails.
-		Sample sample = from("data/sample_00");
+		Sample sample = from(res_00);
 		WSHelper.postObject(ws,samplesUrl,sample,BAD_REQUEST);
 	}
 	
@@ -40,14 +41,14 @@ public class SamplesTest extends AbstractSQServerTest {
 	public void testTraceInfoFail() {
 		// Template data has the id and the creation date that will
 		// make the creation fail.
-		Sample sample = from("data/sample_00");
+		Sample sample = from(res_00);
 		sample._id = null;
 		WSHelper.postObject(ws,samplesUrl,sample,BAD_REQUEST);
 	}
 	
 	@Test
 	public void testFresh() {
-		Sample sample = fresh(from("data/sample_00"));
+		Sample sample = fresh(from(res_00));
 		WSHelper.postObject(ws,samplesUrl,sample,OK);
 	}
 	
@@ -55,7 +56,7 @@ public class SamplesTest extends AbstractSQServerTest {
 	// Could be correct though.
 	// @Test
 	public void testNoTaxon() {
-		Sample sample = fresh(from("data/sample_00"));
+		Sample sample = fresh(from(res_00));
 		sample.taxonCode = null;
 		WSHelper.postObject(ws,samplesUrl,sample,BAD_REQUEST);
 	}
