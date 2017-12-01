@@ -31,7 +31,7 @@ public class Input extends AbstractInput {
 		
 		if(plateCodeInExp.equals(plateCodeInFile)){
 
-			String codePropertiesConcDil = 	null  ;
+		String codePropertiesConcDil = 	null  ;
 			String codePropertiesConcFinal = null ;
 			String codePropertiesDilFactor = null ;
 
