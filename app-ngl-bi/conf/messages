@@ -1052,6 +1052,8 @@ stats.page.tab.lanes.select = Selectionner des Runs
 stats.page.tab.lanes.config = Configuration Statistiques
 
 stats.tabs.charts = Graphiques
+stats.tabs.mean.charts = Graphique moy. par Lane
+stats.tabs.lanes.charts = Graphiques par lanes
 stats.tabs.exclude = Valeurs exclues
 stats.tabs.query = Requête
 stats.property = Propriété
@@ -1091,6 +1093,7 @@ query.form = Paramètres
 query.nbResults = Nombre de Résultats
 
 error.query.empty = Attention! Pas de requête ou de statistiques dans le panier
+error.run.empty = Attention! Pas de runs ou de propriété sélectionnés 
 
 info.query.config = Vous pouvez définir une configuration par défaut
 

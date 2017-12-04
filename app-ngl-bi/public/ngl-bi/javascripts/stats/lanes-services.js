@@ -1,91 +1,8 @@
 "use strict";
 
 angular.module('ngl-bi.LanesStatsServices', []).
-factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', function($http, $filter, lists, datatable){
-	var datatableConfig = {
-			search : {
-				active:false
-			},
-			pagination:{
-				active:false
-			},
-			remove:{
-				active:true,
-				mode:'local'
-			},
-			columns : [
-				{
-					"property":"column.header",
-					"header": Messages("stats.property"),
-					"type" :"text",
-					"order":true
-				}
-				]
-	};
-
-	var isInit = false;
-
-
-	var statsService = {
-			lists : lists,
-			treatmentType:undefined,
-			properties:[],
-			property:undefined,
-			//statColumns:[{header:'SAV Q30', code:'sav.q30',name:'Q30',property:'lanes.treatments.sav', value:'greaterQ30Perc',treatment:'sav'}],
-			select : {
-				properties:[]
-			},
-			
-			
-			reset : function(){
-				this.select =  {
-						properties:[]
-				};
-			},
-			
-			getTreatmentType : function(){
-				return this.treatmentType;
-			},
-			getProperty : function(){
-				return this.property;
-			},
-			isData : function(){
-				if(this.treatmentType!=undefined && this.property!=undefined){
-					return true;
-				}else{
-					return false;
-				}
-			},
-			getData : function(){
-				var statConfig = {header:this.treatmentType+' '+this.property, code:this.treatmentType+'.'+this.property,property:'lanes.treatments.'+this.treatmentType,value:this.property,treatment:this.treatmentType};
-				return statConfig;
-			},
-			refreshProperty:function()
-			{
-				if(this.treatmentType!=undefined){
-					$http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(this.treatmentType).url,{params:{levels:"Lane"}}).success(function(data) {
-						statsService.properties=data.propertiesDefinitions;
-					});
-				};
-			},
-			initListService : function(){
-				if(!isInit){
-					lists.refresh.treatmentTypes({levels:'Lane'});
-					isInit=true;
-				};
-			},
-			init : function(){
-				this.datatable= datatable(datatableConfig);
-				this.datatable.setData([], 0);
-				this.initListService();
-			}
-	};
-	if(!isInit){
-		statsService.init();
-	}
-	return statsService;				
-}]).factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'datatable', 'statsConfigLanesService','queriesConfigReadSetsService', 'lists', 'mainService',
-	function($http, $q, $parse, $window, $filter, datatable, statsConfigLanesService, queriesConfigReadSetsService, lists, mainService){
+factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'datatable', 'lists', 'mainService','runSearchService',
+	function($http, $q, $parse, $window, $filter, datatable, lists, mainService,runSearchService){
 
 	var datatableConfig = {
 			group : {
@@ -172,10 +89,10 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				display+="<table class=\"table table-condensed table-hover table-bordered\">";
 				display+="<thead>";
 				display+="<tr>";
-				display+="<th>Property</th>";
+				display+="<th>Lane</th>";
 				for(var l=0; l<value.lanes.length; l++){
 					var nbLane = value.lanes[l].number;
-					display+="<th>Lane "+nbLane+"</th>";
+					display+="<th>"+nbLane+"</th>";
 				}
 				display+="</tr></thead><tbody>";
 				var mapData = getDataLane(value.lanes,treatment,valueColumn);
@@ -193,7 +110,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				
 				
 		},
-    	"header": Messages("stats.property"),
+    	"header": function(){return statsConfigs.label},
     	"type":"text",
     	"order":false
 		}
@@ -234,11 +151,15 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	var queriesConfigs = [];
 	var readsetDatatable;
 	var charts = [];
+	var chartMean;
+	var mapSeriesLane = new Map();
+	var mapSeries = new Map();
 	var statsConfigs;
 	var propertyGroupGetter;
 
-	var generateCharts = function() {
+	var generateCharts = function(property) {
 		readsetDatatable = datatable(datatableConfig);
+		readsetDatatable.setColumnsConfig(defaultDatatableColumns);
 		readsetDatatable.config.spinner.start = true;
 
 		var properties = ["default"];
@@ -246,55 +167,48 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		properties.push(statsConfigs.property);	
 		propExistingFiels.push(statsConfigs.property);	
 		properties.push("lanes.number");
-
-		var promises = [];
-		for(var i = 0; i < queriesConfigs.length ; i++){
-			var form = angular.copy(queriesConfigs[i].form);
-			form.includes = properties;
-			form.existingFields = propExistingFiels;
-			promises.push($http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:form}));			
-		}
-
-		$q.all(promises).then(function(results){
-			var values = {r:[]};
-			angular.forEach(results, function(value, key){
-				this.r = this.r.concat(value.data);
-
-			}, values);	
-			var data = values.r;
-			readsetDatatable = datatable(datatableConfig);
-			readsetDatatable.setColumnsConfig(defaultDatatableColumns);
-
+		var form = angular.copy(runSearchService.convertForm());
+		form.excludes = undefined;
+		form.includes = properties;
+		form.existingFields = propExistingFiels;
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:form}).success(function(data) {
 			readsetDatatable.setData(data, data.length);
 			readsetDatatable.config.spinner.start = false;
 			computeChart();
-
 		});
+		
 	};	
 
 	var computeChart = function() {	
 		var data = readsetDatatable.getData();
 		//compute data
 		charts = [];
+		chartMean=undefined;
 		propertyGroupGetter = undefined;
 		if(readsetDatatable.config.group.by != undefined){
 			propertyGroupGetter = readsetDatatable.config.group.by.property;
 		}
 		
-		var mapSeriesLane = undefined;
+		mapSeriesLane = new Map();
 		if(propertyGroupGetter!=undefined){
-			mapSeriesLane = computeDataGroup(data, propertyGroupGetter);
+			computeDataGroup(data, propertyGroupGetter);
 		}else{
-			mapSeriesLane = computeData(data);
+			computeData(data);
 		}
 		
 		for(var key of mapSeriesLane.keys()){
 			if(propertyGroupGetter!=undefined){
-				charts.push(getChartGroup(mapSeriesLane.get(key),propertyGroupGetter));
+				charts.push(getChartGroup(key, mapSeriesLane.get(key),propertyGroupGetter));
 			}else{
 				charts.push(getChart(mapSeriesLane.get(key)));
 			}
 		}
+		if(propertyGroupGetter!=undefined){
+			chartMean=getChartMeanGroup(mapSeries,propertyGroupGetter);
+		}else{
+			chartMean=getChartMean(mapSeries.get("noGroup"));
+		}
+		
 		console.log(charts);
 	};
 	
@@ -303,11 +217,23 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	{
 		var treatment = statsConfigs.treatment;
 		var value = statsConfigs.value;
-		var dataSeries = new Map();
+		mapSeriesLane = new Map();
+		mapSeries = new Map();
 		var newData = [];
+		var data ={
+				dataRead1:[],
+				dataRead2:[],
+				dataDefault:[]
+		};
 		for(var i=0; i<dataRun.length; i++){
 			//get run code
 			var runCode = dataRun[i].code;
+			var sumRead1=0;
+			var sumRead2=0;
+			var sumDefault=0;
+			var nbRead1=0;
+			var nbRead2=0;
+			var nbDefault=0;
 			if(dataRun[i].lanes !=null){
 				for(var l=0; l<dataRun[i].lanes.length; l++){
 					var nbLane = dataRun[i].lanes[l].number;
@@ -318,41 +244,102 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 						dataDefault:[],
 					};
 					
-					var mapGroup = new Map();
-					
-					if(dataSeries.get(nbLane)!=null){
-						dataLane=dataSeries.get(nbLane);
+					if(mapSeriesLane.get(nbLane)!=null){
+						dataLane=mapSeriesLane.get(nbLane);
 					}
 					if(dataRun[i].lanes[l].treatments[treatment] !=null){
 						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
-							dataLane.dataRead1.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'}});
+							dataLane.dataRead1.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'},events : {
+								// Redirects to valuation page of the clicked readset
+								click : function() {
+									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+								}
+							}});
+							sumRead1=sumRead1+dataRun[i].lanes[l].treatments[treatment].read1[value].value;
+							nbRead1=nbRead1+1;
 						}
 						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
-							dataLane.dataRead2.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'}});
+							dataLane.dataRead2.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'},events : {
+								// Redirects to valuation page of the clicked readset
+								click : function() {
+									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+								}
+							}});
+							sumRead2=sumRead2+dataRun[i].lanes[l].treatments[treatment].read2[value].value;
+							nbRead2=nbRead2+1;
 						}
 						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
-							dataLane.dataDefault.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'}});
+							dataLane.dataDefault.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'},events : {
+								// Redirects to valuation page of the clicked readset
+								click : function() {
+									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+								}
+							}});
+							sumDefault=sumDefault+dataRun[i].lanes[l].treatments[treatment].default[value].value;
+							nbDefault=nbDefault+1;
 						}
 						
 					}
-					dataSeries.set(nbLane,dataLane);
+					mapSeriesLane.set(nbLane,dataLane);
+				}
+				if(nbRead1>0){
+					var meanRead1 = sumRead1/nbRead1;
+					data.dataRead1.push({'name':runCode,'x':i,'y':meanRead1,'marker':{'symbol':'triangle'},events : {
+						// Redirects to valuation page of the clicked readset
+						click : function() {
+							$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+						}
+					}});
+				}
+				if(nbRead2>0){
+					var meanRead2 = sumRead2/nbRead2;
+					data.dataRead2.push({'name':runCode,'x':i,'y':meanRead2,'marker':{'symbol':'square'},events : {
+						// Redirects to valuation page of the clicked readset
+						click : function() {
+							$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+						}
+					}});
+				}
+				if(nbDefault>0){
+					var meanDefault = sumDefault/nbDefault;
+					data.dataRead2.push({'name':runCode,'x':i,'y':meanDefault,'marker':{'symbol':'diamond'},events : {
+						// Redirects to valuation page of the clicked readset
+						click : function() {
+							$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+						}
+					}});
 				}
 			}
 		}
-		return dataSeries;
+		mapSeries.set("noGroup",data);
 	};
 	
 	var computeDataGroup = function(dataRun, propertyGroup)
 	{
 		var treatment = statsConfigs.treatment;
 		var value = statsConfigs.value;
-		var dataSeries = new Map();
+		mapSeriesLane = new Map();
 		var newData = [];
+		mapSeries = new Map();
+		
 		for(var i=0; i<dataRun.length; i++){
 			//get run code
 			var runCode = dataRun[i].code;
 			var group = dataRun[i][propertyGroup];
-			
+			var data ={
+					dataRead1:[],
+					dataRead2:[],
+					dataDefault:[]
+			};
+			if(mapSeries.get(group)!=null){
+				data=mapSeries.get(group);
+			}
+			var sumRead1=0;
+			var sumRead2=0;
+			var sumDefault=0;
+			var nbRead1=0;
+			var nbRead2=0;
+			var nbDefault=0;
 			if(dataRun[i].lanes !=null){
 				for(var l=0; l<dataRun[i].lanes.length; l++){
 					var nbLane = dataRun[i].lanes[l].number;
@@ -363,8 +350,8 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 					};
 					
 					var mapGroup = new Map();
-					if(dataSeries.get(nbLane)!=null){
-						mapGroup = dataSeries.get(nbLane);
+					if(mapSeriesLane.get(nbLane)!=null){
+						mapGroup = mapSeriesLane.get(nbLane);
 						if(mapGroup.get(group)!=null){
 							dataLane=mapGroup.get(group);
 						}
@@ -372,22 +359,70 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 					
 					if(dataRun[i].lanes[l].treatments[treatment] !=null){
 						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
-							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'},'_group':'read1'});
+							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'},'_group':'read1',events : {
+								// Redirects to valuation page of the clicked readset
+								click : function() {
+									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+								}
+							}});
+							sumRead1=sumRead1+dataRun[i].lanes[l].treatments[treatment].read1[value].value;
+							nbRead1=nbRead1+1;
 						}
 						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
-							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'},'_group':'read2'});
+							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'},'_group':'read2',events : {
+								// Redirects to valuation page of the clicked readset
+								click : function() {
+									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+								}
+							}});
+							sumRead2=sumRead2+dataRun[i].lanes[l].treatments[treatment].read2[value].value;
+							nbRead2=nbRead2+1;
 						}
 						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
-							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'},'_group':'default'});
+							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'},'_group':'default',events : {
+								// Redirects to valuation page of the clicked readset
+								click : function() {
+									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+								}
+							}});
+							sumDefault=sumDefault+dataRun[i].lanes[l].treatments[treatment].default[value].value;
+							nbDefault=nbDefault+1;
 						}
 						
 					}
 						mapGroup.set(group,dataLane);
-						dataSeries.set(nbLane,mapGroup);
+						mapSeriesLane.set(nbLane,mapGroup);
 				}
 			}
+			if(nbRead1>0){
+				var meanRead1 = sumRead1/nbRead1;
+				data.dataRead1.push({'name':runCode,'x':i,'y':meanRead1,'marker':{'symbol':'triangle'},'_group':'read1',events : {
+					// Redirects to valuation page of the clicked readset
+					click : function() {
+						$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+					}
+				}});
+			}
+			if(nbRead2>0){
+				var meanRead2 = sumRead2/nbRead2;
+				data.dataRead2.push({'name':runCode,'x':i,'y':meanRead2,'marker':{'symbol':'square'},'_group':'read2', events : {
+					// Redirects to valuation page of the clicked readset
+					click : function() {
+						$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+					}
+				}});
+			}
+			if(nbDefault>0){
+				var meanDefault = sumDefault/nbDefault;
+				data.dataRead2.push({'name':runCode,'x':i,'y':meanDefault,'marker':{'symbol':'diamond'},'_group':'default',events : {
+					// Redirects to valuation page of the clicked readset
+					click : function() {
+						$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+					}
+				}});
+			}
+			mapSeries.set(group,data);
 		}
-		return dataSeries;
 	};
 	
 	var getChart = function(dataLane) {
@@ -458,7 +493,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 	};
 
 
-	var getChartGroup = function(dataLane,propertyGroup) {
+	var getChartGroup = function(laneNumber, dataLane,propertyGroup) {
 		
 		var allSeries = [];
 		
@@ -475,7 +510,7 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 				height : 770
 			},
 			title : {
-				text : statsConfigs.header+' Lane '+dataLane.laneNumber,
+				text : statsConfigs.header+' Lane '+laneNumber,
 			},
 			xAxis : {
 				title : {
@@ -521,31 +556,202 @@ factory('statsConfigLanesService', ['$http', '$filter', 'lists', 'datatable', fu
 		return chart;
 	};
 	
-	var loadData = function() {
-		if(statsConfigLanesService.isData() && queriesConfigReadSetsService.queries.length > 0){
-			statsConfigs = statsConfigLanesService.getData();
-			queriesConfigs = queriesConfigReadSetsService.queries;
-			generateCharts();
-		}else{
-			statsConfigs=undefined;
-			queriesConfigs=[];
-			charts=[];
-			readsetDatatable=undefined;
+	var getChartMean = function(dataMean) {
+		
+		var allSeries = [];
+		
+		if(dataMean.dataRead1.length>0){
+			allSeries.push({name:'read1',data:dataMean.dataRead1});
 		}
+		if(dataMean.dataRead2.length>0){
+			allSeries.push({name:'read2',data:dataMean.dataRead2});
+		}
+		if(dataMean.dataDefault.length>0){
+			allSeries.push({name:'default',data:dataMean.dataDefault});
+		}
+		
+		var chart = {
+
+			chart : {
+				type: 'scatter',
+				zoomType : 'x',
+				height : 770
+			},
+			title : {
+				text : statsConfigs.header,
+			},
+			xAxis : {
+				title : {
+					text : 'RunCode',
+				},
+				type : "category",
+				tickPixelInterval : 1
+			},
+
+			yAxis : {
+				title : {
+					text :  statsConfigs.name
+				},
+				tickInterval : 2,
+			},
+			plotOptions: {
+		        scatter: {
+		            marker: {
+		                radius: 3,
+		                states: {
+		                    hover: {
+		                        enabled: true,
+		                        lineColor: 'rgb(100,100,100)'
+		                    }
+		                }
+		            },
+		            states: {
+		                hover: {
+		                    marker: {
+		                        enabled: false
+		                    }
+		                }
+		            },
+		            tooltip: {
+		                headerFormat: '<b>{series.name} </b><br>',
+		                pointFormat: '{point.y}'
+		            }
+		        }
+		    },
+			series : allSeries,
+		}
+		return chart;
 	};
 
+	var getChartMeanGroup = function(dataMean,propertyGroup) {
+		
+		var allSeries = [];
+		
+		for(var key of dataMean.keys()){
+			var data = dataMean.get(key);
+			allSeries.push({name:key,data:data.dataGroup});
+		}
+		
+		var chart = {
+
+			chart : {
+				type: 'scatter',
+				zoomType : 'x',
+				height : 770
+			},
+			title : {
+				text : statsConfigs.header,
+			},
+			xAxis : {
+				title : {
+					text : 'Run Code',
+				},
+				type : "category",
+				tickPixelInterval : 1
+			},
+
+			yAxis : {
+				title : {
+					text :  statsConfigs.name,
+				},
+				tickInterval : 2,
+				min : 0,
+			},
+		    plotOptions: {
+		        scatter: {
+		            marker: {
+		                radius: 3,
+		                states: {
+		                    hover: {
+		                        enabled: true,
+		                        lineColor: 'rgb(100,100,100)'
+		                    }
+		                }
+		            },
+		            states: {
+		                hover: {
+		                    marker: {
+		                        enabled: false
+		                    }
+		                }
+		            },
+		            tooltip: {
+		                headerFormat: '<b>{series.name} </b><br>',
+		                pointFormat: '{point.y} ({point._group})'
+		            }
+		        }
+		    },
+			series :allSeries
+		}
+		return chart;
+	};
+	
+	var initListService = function(){
+			lists.refresh.treatmentTypes({levels:'Lane'});
+	};
+	
+	var getLabelProperty = function()
+	{
+		for(var l=0; l<chartService.properties.length; l++){
+			if(chartService.properties[l].code==chartService.property){
+				return chartService.properties[l].name;
+			}
+		}
+		return null;
+	}
+	
 	var chartService = {
+			lists : lists,
+			treatmentType:undefined,
+			properties:[],
+			property:undefined,
+			
 			datatable : function() {return readsetDatatable;},
 
 			init : function() {
-				loadData();
+				initListService();
+				//loadData();
 			},
-			queries:function() {
-				return queriesConfigs;
-			},
+			
 			charts : function() {
 				return charts;
-			}
+			},
+			
+			chartMean : function() {
+				return chartMean;
+			},
+			refreshProperty:function()
+			{
+				if(this.treatmentType!=undefined){
+					$http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(this.treatmentType).url,{params:{levels:"Lane"}}).success(function(data) {
+						chartService.properties=data.propertiesDefinitions;
+						
+					});
+				};
+			},
+			selectProperty:function()
+			{
+				if(this.property!=undefined){
+					this.loadData();
+				}
+			},
+			isData:function()
+			{
+				if(runSearchService.datatable!=undefined && runSearchService.datatable.getData()!=undefined && runSearchService.datatable.getData().length>0 && this.property!=undefined){
+					return true;
+				}else{
+					return false;
+				}
+			},
+			loadData:function() {
+				if(this.isData()){
+					statsConfigs = {header:this.treatmentType+' '+this.property, code:this.treatmentType+'.'+this.property,property:'lanes.treatments.'+this.treatmentType,value:this.property,treatment:this.treatmentType,label:getLabelProperty()};
+					generateCharts(this.property);
+				}else{
+					charts=[];
+					readsetDatatable=undefined;
+				}
+			},
 	};
 	return chartService;
 }]);
