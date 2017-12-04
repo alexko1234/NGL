@@ -64,7 +64,9 @@ import fr.cea.ig.play.NGLContext;
 //import static fr.cea.ig.mongo.DBQueryBuilder.*;
 
 // TODO: cleanup
-// indirection so that it's clear what to implement and who does.
+// indirection so that it's clear what to implement and who does,
+// real method export would not use a subclass so all the methods
+// are re-exported and their export status explicit. 
 
 public class Samples extends Samples2 {
 // public class Samples extends SamplesCRUD {

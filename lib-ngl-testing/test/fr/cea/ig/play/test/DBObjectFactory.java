@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import play.libs.Json;
 
 /**
- * Provide basic support for DBObject modification.
+ * Provide basic support for DBObject modification. This is not a factory
+ * but defines static factory helper methods.
  *  
  * @author vrd
  *
@@ -39,6 +40,7 @@ public class DBObjectFactory {
 		return apply(JsonHelper.getJson(resourceName),clazz,modification);
 	}
 	
+	// TODO: comment
 	public static <T> T from(String resourceName, Class<T> clazz) {
 		return Json.fromJson(JsonHelper.getJson(resourceName),clazz);
 	}

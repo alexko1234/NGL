@@ -82,11 +82,11 @@ object ApplicationBuild extends Build {
     val tev0 = if (System.getProperty("ngl.test.conf.dir") != null)
 	        Seq(unmanagedResourceDirectories in Compile += file(System.getProperty("ngl.test.conf.dir")),
 	            dependencyClasspath in Compile += file(System.getProperty("ngl.test.conf.dir")),
-	            dependencyClasspath in Test += file(System.getProperty("ngl.test.conf.dir")))
+	            dependencyClasspath in Test    += file(System.getProperty("ngl.test.conf.dir")))
 	      else
 	        Seq()
 	  val tev1 = if (System.getProperty("NGL_CONF_TEST_DIR") != null)
-	        Seq(dependencyClasspath in Test += file(System.getProperty("NGL_CONF_TEST_DIR")),
+	        Seq(dependencyClasspath in Test    += file(System.getProperty("NGL_CONF_TEST_DIR")),
 	            dependencyClasspath in Compile += file(System.getProperty("NGL_CONF_TEST_DIR")))
 	      else
 	        Seq()
@@ -111,6 +111,9 @@ object ApplicationBuild extends Build {
 			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-annotations"     % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
+			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource", "-quiet"),
+			// Remove scala files from the doc process so javadoc is used. 
+			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
 			scalaVersion        := scala
 		) ++ tev0 ++ tev1
 
@@ -247,18 +250,17 @@ object ApplicationBuild extends Build {
 	val nglTesting = Project("ngl-testing",file("lib-ngl-testing"),settings = buildSettings)
       .enablePlugins(play.sbt.PlayJava)
       .settings(
-    libraryDependencies ++= nglTestingDependencies, 
-    version              := "0.1-SNAPHSHOT",
-    resolvers            := nexus
+    libraryDependencies       ++= nglTestingDependencies, 
+    version                    := "0.1-SNAPHSHOT",
+    resolvers                  := nexus
   )	    
 
   val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
-    // Add your own project settings here
-    version := libDatatableVersion,
-    libraryDependencies ++= ngldatatableDependencies,
-    resolvers := nexus,
-    sbt.Keys.fork in Test := false,
-    publishTo := Some(nexusigpublish),
+    version                    := libDatatableVersion,
+    libraryDependencies       ++= ngldatatableDependencies,
+    resolvers                  := nexus,
+    sbt.Keys.fork in Test      := false,
+    publishTo                  := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
@@ -272,11 +274,10 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglPlayMigration)
 
   val nglframeworkweb = Project("lib-frameworkweb", file("lib-ngl-frameworkweb"), settings = buildSettingsLib).enablePlugins(play.sbt.Play).settings(
-    // Add your own project settings here     
-    version := libFrameworkWebVersion,
-    libraryDependencies ++= nglframeworkwebDependencies,
-    resolvers := nexus,
-    sbt.Keys.fork in Test := false,
+    version                    := libFrameworkWebVersion,
+    libraryDependencies       ++= nglframeworkwebDependencies,
+    resolvers                  := nexus,
+    sbt.Keys.fork in Test      := false,
     publishTo := Some(nexusigpublish),
     packagedArtifacts in publishLocal := {
       val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
@@ -291,14 +292,13 @@ object ApplicationBuild extends Build {
   ).dependsOn(ngldatatable)
 
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    // Add your own project settings here   
-    version := appVersion,
-    libraryDependencies ++= nglcommonDependencies,
-
-    resolvers := nexus,
-    resolvers += "julienrf.github.com" at "http://julienrf.github.com/repo/",
-    sbt.Keys.fork in Test := false,
-    publishTo := Some(nexusigpublish),
+    version                    := appVersion,
+    libraryDependencies       ++= nglcommonDependencies,
+    resolvers                  := nexus,
+    resolvers                  += "julienrf.github.com" at "http://julienrf.github.com/repo/",
+    sbt.Keys.fork in Test      := false,
+    publishTo                  := Some(nexusigpublish),
+    
     // resourceDirectory in Test <<= baseDirectory / "conftest" 
     // baseDirectory : RichFileSetting
     //   /(c: String): Def.Initialize[File]
@@ -307,7 +307,8 @@ object ApplicationBuild extends Build {
     // (resourceDirectory.in(Test)).<<=(baseDirectory.value./("conftest"))
     // resourceDirectory.in(Test).:=(baseDirectory.value./("conftest"))
     resourceDirectory in Test := baseDirectory.value / "conftest"
-  ).dependsOn(nglframeworkweb,nglPlayMigration, nglTesting % "test->test")
+  // ).dependsOn(nglframeworkweb % "compile->compile;test->test;doc->doc", nglPlayMigration, nglTesting % "test->test")
+  ).dependsOn(nglframeworkweb, nglPlayMigration, nglTesting % "test->test")
 
   val nglbi = Project(appName + "-bi", file("app-ngl-bi"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := biVersion,
@@ -335,7 +336,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
 	  //publishArtifact in (Compile, packageDoc) := false,
     //publishArtifact in packageDoc := false,
-    sources in (Compile,doc)   := Seq.empty,
+    // sources in (Compile,doc)   := Seq.empty,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")

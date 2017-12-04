@@ -58,7 +58,7 @@ public class TraceInformation implements IValidation {
 	}
 
 	/**
-	 * @Deprecated bogus behavior when the creation user has not been properly set, replaced by {@link #modificationStamp(ContextValidation, String)} 
+	 * @deprecated bogus behavior when the creation user has not been properly set, replaced by {@link #creationStamp(ContextValidation,String)} {@link #modificationStamp(ContextValidation,String)}
 	 * @param user
 	 */
 	@Deprecated 
@@ -132,17 +132,16 @@ public class TraceInformation implements IValidation {
 		forceModificationStamp(user, new Date());
 	}
 	
-	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		//backward compatibility
 		if (contextValidation.isUpdateMode() || (contextValidation.isNotDefined() && contextValidation.getObject("_id") != null)) {
-			ValidationHelper.required(contextValidation, createUser, "createUser");
+			ValidationHelper.required(contextValidation, createUser,   "createUser");
 			ValidationHelper.required(contextValidation, creationDate, "creationDate");
-			ValidationHelper.required(contextValidation, modifyUser, "modifyUser");
-			ValidationHelper.required(contextValidation, modifyDate, "modifyDate");
+			ValidationHelper.required(contextValidation, modifyUser,   "modifyUser");
+			ValidationHelper.required(contextValidation, modifyDate,   "modifyDate");
 		} else {
-			ValidationHelper.required(contextValidation, createUser, "createUser");
+			ValidationHelper.required(contextValidation, createUser,   "createUser");
 			ValidationHelper.required(contextValidation, creationDate, "createDate");
 		}
 	}

@@ -63,9 +63,10 @@ import fr.cea.ig.MongoDBDAO;
 
 @Repository
 public class LimsAbandonDAO {
-        private JdbcTemplate jdbcTemplate;
-        
-        public static final String LIMS_CODE="limsCode";
+	
+	private JdbcTemplate jdbcTemplate;
+
+	public static final String LIMS_CODE="limsCode";
         
     @Autowired
     @Qualifier("lims")
@@ -73,15 +74,14 @@ public class LimsAbandonDAO {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
-    public List<TacheHD> listTacheHD(String readSetCode){
+    public List<TacheHD> listTacheHD(String readSetCode) {
     	Logger.info("pl_TachehdUnLotseq @lseqnom='"+readSetCode);
         List<TacheHD> results = this.jdbcTemplate.query("pl_TachehdUnLotseq @lseqnom=?",
         		new Object[]{readSetCode},new BeanPropertyRowMapper<TacheHD>(TacheHD.class));
         return results;
     }
     
-    public List<EtatTacheHD> listEtatTacheHD(){
+    public List<EtatTacheHD> listEtatTacheHD() {
     	Logger.info("pl_Etachehd");
         List<EtatTacheHD> results = this.jdbcTemplate.query("pl_Etachehd",new BeanPropertyRowMapper<EtatTacheHD>(EtatTacheHD.class));
         return results;
@@ -209,40 +209,40 @@ public class LimsAbandonDAO {
 		return this.jdbcTemplate.query("pl_BanquesolexaUneFlowcellNGL @matmanom=?", mapper, containerSupportCode);
 	}
 	
-    /**
-    * pc_Runsolexa
-	*
-    * @placo	 int,			//Planning 
-    * @num		 smallint,		// Numero ligne 
-    * @runslnom varchar(255),       // Nom du un 
-	* @runsldc varchar(10), // Date de creation 
-	* @runslddt varchar(10), // Date de debut de transfert  
-	* @runsldft varchar(10),  // Date de fin de transfert 
-	* @runsldispatch bit ,// Run dispatch o/n 
-    * @runslnbcluster       numeric(12,0), // nb cluster 
-    * @runslnbseq           int,// nb sequences 
-    * @rnslnbbasetot        numeric(12,0), // nb bases total 
-    * @runslposition varchar(10) =null, // Position 
-    * @runslvrta varchar(50), // Version RTA 
-    * @runslvflowcell varchar(50)=null, // Version Flowcell 
-    * @runslctrlane smallint=null, // Controle lane 0 si toutes les lanes ont été utilisées 
-	* @mismatch int =null //donne la possibilité de modifier la valeur de mismatch par défaut
-	*
-    **/
-    public void insertRun(Run run, DepotSolexa ds){
-    	RunSolexa rs = convertRunToRunSolexa(run, ds); 		
-    	
-    	Logger.info("insertRun : "+rs);
-    	
-    	this.jdbcTemplate.update("pc_Runsolexa @placo=?, @num=?, @runslnom=?, @runsldc=?, @runslddt=?, @runsldft=?, @runsldispatch=?, @runslnbcluster=?, "
-    			+ "@runslnbseq=?, @rnslnbbasetot=?, @runslposition=?, @runslctrlane=?, @runslvrta=?, @runslvflowcell=?, @mismatch=?,@matmaco=?", 
-    			rs.placo, rs.num, rs.runslnom, rs.runsldc, rs.runslddt, rs.runsldft, rs.runsldispatch, rs.runslnbcluster,
-    			rs.runslnbseq, rs.rnslnbbasetot, rs.runslposition, rs.runslctrlane, rs.runslvrta, rs.runslvflowcell, rs.mismatch,ds.matmaco);
-    	
-    }
+	/*
+	 * pc_Runsolexa
+	 *
+	 * @placo	 int,			//Planning 
+	 * @num		 smallint,		// Numero ligne 
+	 * @runslnom varchar(255),       // Nom du un 
+	 * @runsldc varchar(10), // Date de creation 
+	 * @runslddt varchar(10), // Date de debut de transfert  
+	 * @runsldft varchar(10),  // Date de fin de transfert 
+	 * @runsldispatch bit ,// Run dispatch o/n 
+	 * @runslnbcluster       numeric(12,0), // nb cluster 
+	 * @runslnbseq           int,// nb sequences 
+	 * @rnslnbbasetot        numeric(12,0), // nb bases total 
+	 * @runslposition varchar(10) =null, // Position 
+	 * @runslvrta varchar(50), // Version RTA 
+	 * @runslvflowcell varchar(50)=null, // Version Flowcell 
+	 * @runslctrlane smallint=null, // Controle lane 0 si toutes les lanes ont été utilisées 
+	 * @mismatch int =null //donne la possibilité de modifier la valeur de mismatch par défaut
+	 *
+	 */
+	public void insertRun(Run run, DepotSolexa ds) {
+		RunSolexa rs = convertRunToRunSolexa(run, ds); 		
 
-    public void insertLanes(List<Lane> lanes, DepotSolexa ds){
-    	for(Lane lane : lanes){
+		Logger.info("insertRun : " + rs);
+
+		this.jdbcTemplate.update("pc_Runsolexa @placo=?, @num=?, @runslnom=?, @runsldc=?, @runslddt=?, @runsldft=?, @runsldispatch=?, @runslnbcluster=?, "
+				+ "@runslnbseq=?, @rnslnbbasetot=?, @runslposition=?, @runslctrlane=?, @runslvrta=?, @runslvflowcell=?, @mismatch=?,@matmaco=?", 
+				rs.placo, rs.num, rs.runslnom, rs.runsldc, rs.runslddt, rs.runsldft, rs.runsldispatch, rs.runslnbcluster,
+				rs.runslnbseq, rs.rnslnbbasetot, rs.runslposition, rs.runslctrlane, rs.runslvrta, rs.runslvflowcell, rs.mismatch,ds.matmaco);
+
+	}
+
+	public void insertLanes(List<Lane> lanes, DepotSolexa ds){
+		for(Lane lane : lanes){
     		try{
     		LaneSolexa ls = convertLaneToLaneSolexa(lane, ds);
     		if(isLaneco(ls)){

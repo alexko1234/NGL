@@ -4,8 +4,10 @@ import java.util.List;
 
 import models.laboratory.run.description.dao.TreatmentTypeContextDAO;
 import models.utils.dao.DAOException;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 
-public class TreatmentTypeContext extends TreatmentContext{
+public class TreatmentTypeContext extends TreatmentContext {
 	
 	public TreatmentTypeContext() {
 		super();		
@@ -16,10 +18,9 @@ public class TreatmentTypeContext extends TreatmentContext{
 		this.required = required;
 	}
 
-	public Boolean required = Boolean.FALSE;
+	public Boolean required = false; // Boolean.FALSE;
 	
 	public static TreatmentTypeContextFinder find = new TreatmentTypeContextFinder();
-	
 	
 	public static class TreatmentTypeContextFinder extends Finder<TreatmentTypeContext> {
 
@@ -37,7 +38,7 @@ public class TreatmentTypeContext extends TreatmentContext{
 
 	}
 
-
+	// TODO: provide some helper method to compute hash(this.hashCode,super.hashCode);
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -63,6 +64,5 @@ public class TreatmentTypeContext extends TreatmentContext{
 			return false;
 		return true;
 	}
-	
-	
+		
 }

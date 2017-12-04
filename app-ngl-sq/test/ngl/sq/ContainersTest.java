@@ -1,21 +1,15 @@
 package ngl.sq;
 
-import static fr.cea.ig.play.test.DevAppTesting.cr;
-import static fr.cea.ig.play.test.DevAppTesting.newCode;
-import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
-import static fr.cea.ig.play.test.DevAppTesting.savage;
-import static ngl.sq.SampleFactory.samplesUrl;
-import static play.mvc.Http.Status.BAD_REQUEST;
-import static play.mvc.Http.Status.OK;
-
 import org.junit.Test;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.NOT_FOUND;
 
 import fr.cea.ig.play.test.DevAppTesting;
 import fr.cea.ig.play.test.WSHelper;
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
+
+// TODO: comment
 
 public class ContainersTest extends AbstractSQServerTest {
 
@@ -39,4 +33,9 @@ public class ContainersTest extends AbstractSQServerTest {
 		WSHelper.putObject(ws,containersUrl + "/" + container.getCode(),container,BAD_REQUEST);
 	}
 	
+	@Test
+	public void testNotFound() {
+		WSHelper.get(ws,containersUrl + "/NOT_FOUND",NOT_FOUND);
+	}
+
 }

@@ -15,7 +15,7 @@ import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.ITracingAccess;
-import models.laboratory.container.instance.Container;
+//import models.laboratory.container.instance.Container;
 // import models.laboratory.common.instance.TraceInformation;
 // import models.laboratory.sample.instance.Sample;
 // import models.utils.InstanceConstants;

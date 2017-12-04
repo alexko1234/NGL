@@ -6,6 +6,7 @@ import static fr.cea.ig.play.test.DevAppTesting.newCode;
 import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
 import static play.mvc.Http.Status.OK;
 import static play.mvc.Http.Status.BAD_REQUEST;
+import static play.mvc.Http.Status.NOT_FOUND;
 import static ngl.sq.SampleFactory.from;
 import static ngl.sq.SampleFactory.fresh;
 import static ngl.sq.SampleFactory.create_00;
@@ -59,6 +60,13 @@ public class SamplesTest extends AbstractSQServerTest {
 		Sample sample = fresh(from(res_00));
 		sample.taxonCode = null;
 		WSHelper.postObject(ws,samplesUrl,sample,BAD_REQUEST);
+	}
+	
+	// the get method in the base controller returns NOT_FOUND, all the
+	// other methods return BAD_REQUEST
+	@Test
+	public void testNotFound() {
+		WSHelper.get(ws,samplesUrl + "/NOT_FOUND",NOT_FOUND);
 	}
 	
 }

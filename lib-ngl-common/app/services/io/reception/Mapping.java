@@ -18,13 +18,18 @@ import fr.cea.ig.MongoDBDAO;
 
 /**
  * Classe to map a line of Excel or CVS file to an DBObject : sample, support, container, etc.
+ * 
  * @author galbini
  *
  * @param <T>
  */
 public abstract class Mapping<T extends DBObject> {
 
-	public enum Keys {sample,support,container};
+	public enum Keys {
+		sample,
+		support,
+		container
+	};
 	
 	protected Map<String, Map<String, DBObject>> objects;
 	protected Map<String, ? extends AbstractFieldConfiguration> configuration;
@@ -35,8 +40,9 @@ public abstract class Mapping<T extends DBObject> {
 	
 	private Keys key;
 	
+	// TODO: fix doc generation error for unqualified parameter type (Keys -> Mapping.Keys)
 	protected Mapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action,
-			String collectionName, Class<T> type, Keys key, ContextValidation contextValidation) {
+			String collectionName, Class<T> type, Mapping.Keys key, ContextValidation contextValidation) {
 		super();
 		this.objects = objects;
 		this.configuration = configuration;
@@ -52,29 +58,29 @@ public abstract class Mapping<T extends DBObject> {
 	 * @param rowMap
 	 * @return
 	 */
-	public T convertToDBObject(Map<Integer, String> rowMap) throws Exception{
+	public T convertToDBObject(Map<Integer, String> rowMap) throws Exception {
 		T object = type.newInstance();
 		if(Action.update.equals(action)){
 			object = get(object, rowMap, true);
 		}else if(Action.save.equals(action)){
 			T objectInDB = get(object, rowMap, false);
-			if(null != objectInDB){
+			if (null != objectInDB) {
 				contextValidation.addErrors("Error", "error.objectexist", type.getSimpleName(), objectInDB.code);
-			}else if(object.code != null){
+			} else if(object.code != null) {
+				// Nothing is done with the type T, could use Objectc and no cast probably
 				T objectInObjects = (T)objects.get(key.toString()).get(object.code);
-				if(null != objectInObjects){
+				if (null != objectInObjects) {
 					object = objectInObjects;
 				}
 			}
 		}
 		
-		if(null != object){
+		if (null != object) {
 			Field[] fields = type.getFields();
-			for(Field field : fields){
+			for (Field field : fields) {
 				populateField(field, object, rowMap);			
 			}
 			update(object);
-			
 		}
 		
 		return object;

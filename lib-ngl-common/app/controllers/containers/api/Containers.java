@@ -310,9 +310,8 @@ class Containers2 extends DocumentController<Container> {
 	@Permission(value={"writing"})
 	public Result updateState(String code) {
 		Container container = findContainer(code);
-		if(container == null){
-			return badRequest("Container with code "+code+" not exist");
-		}
+		if (container == null)
+			return badRequest("Container with code " + code + " not exist");
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();

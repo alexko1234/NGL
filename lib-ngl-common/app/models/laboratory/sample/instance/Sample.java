@@ -16,7 +16,7 @@ import models.utils.InstanceConstants;
 import models.laboratory.sample.instance.reporting.SampleProcess;
 import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 
-import org.mongojack.MongoCollection;
+// import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -30,17 +30,18 @@ import fr.cea.ig.DBObject;
 /**
  * 
  * Instances Sample are stored in MongoDB collection named Sample
- *  
+ * Samples collection name is defined as @see InstanceConstants.SAMPLE_COLL_NAME.
+ * 
  * Sample is referenced in Content
  *  
  * @author mhaquell
  *
  */
-@MongoCollection(name="Sample")
+// @MongoCollection(name="Sample")
 public class Sample extends DBObject implements IValidation, ICommentable, ITracingAccess {
 
-	@JsonIgnore
-	public final static String HEADER="Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
+	// @JsonIgnore
+	public final static String HEADER = "Sample.code;Sample.projectCodes;Sample.name;Sample.referenceCollab;Sample.taxonCode;Sample.comments";
 
 	// SampleType Ref
 	public String typeCode;
@@ -94,6 +95,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 
 
 	// Interfaces implementations
+	
 	// We cannot @JsonIgnore setters or getters otherwise the corresponding
 	// field serialization is disabled.
 	
