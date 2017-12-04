@@ -76,7 +76,7 @@ public class UpdateReportingData extends AbstractImportData {
 					
 					long t1 = System.currentTimeMillis();
 					DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(5000)
+						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(2000)
 						.cursor;
 					
 					cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
@@ -99,7 +99,7 @@ public class UpdateReportingData extends AbstractImportData {
 							}
 						});
 					cursor.close();
-					skip = skip+5000;
+					skip = skip+2000;
 					long t2 = System.currentTimeMillis();
 					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
 				}catch(Throwable e){
