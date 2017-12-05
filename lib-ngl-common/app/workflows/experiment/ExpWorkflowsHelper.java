@@ -57,6 +57,7 @@ import models.utils.instance.ContainerHelper;
 import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
@@ -121,11 +122,13 @@ public class ExpWorkflowsHelper {
 			.flatMap(List::stream)
 			.forEach(ocu -> {
 				Map<String,PropertyValue> experimentProperties = ocu.experimentProperties;
-				if(experimentProperties.containsKey("projectCode")){
+				if(experimentProperties.containsKey("projectCode") 
+						&& StringUtils.isNotBlank((String)experimentProperties.get("projectCode").value)){
 					projectCodes.add(experimentProperties.get("projectCode").value.toString());
 				}
 				
-				if(experimentProperties.containsKey("sampleCode")){
+				if(experimentProperties.containsKey("sampleCode")
+						&& StringUtils.isNotBlank((String)experimentProperties.get("sampleCode").value)){
 					sampleCodes.add(experimentProperties.get("sampleCode").value.toString());
 				}						
 			});
@@ -1395,67 +1398,76 @@ public class ExpWorkflowsHelper {
 	}
 
 	private void updateContents(OutputContainerUsed ocu) {
-		String sampleTypeCode=ocu.experimentProperties.get("sampleTypeCode").value.toString();
-		String projectCode=ocu.experimentProperties.get("projectCode").value.toString();
-		String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();
-		String sampleCategoryCode = SampleType.find.findByCode(sampleTypeCode).category.code;
+		if(ocu.experimentProperties.containsKey("sampleTypeCode") 
+				&& ocu.experimentProperties.containsKey("projectCode")
+				&& ocu.experimentProperties.containsKey("sampleCode")){
+			
+			String sampleTypeCode=ocu.experimentProperties.get("sampleTypeCode").value.toString();
+			String projectCode=ocu.experimentProperties.get("projectCode").value.toString();
+			String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();			
+			String sampleCategoryCode = SampleType.find.findByCode(sampleTypeCode).category.code;
+			
+			ocu.contents
+				.forEach(c -> {
+					//Add the fromSampleTypeCode in properties to keep the link with parent type
+					PropertySingleValue fromSampleTypeCode = new PropertySingleValue(c.sampleTypeCode);
+					c.properties.put("fromSampleTypeCode", fromSampleTypeCode);
+					PropertySingleValue fromSampleCode = new PropertySingleValue(c.sampleCode);
+					c.properties.put("fromSampleCode", fromSampleCode);
+					PropertySingleValue fromProjectCode = new PropertySingleValue(c.projectCode);
+					c.properties.put("fromProjectCode", fromProjectCode);
+					
+					c.projectCode = projectCode;
+					c.sampleCode = sampleCode;
+					c.sampleTypeCode = sampleTypeCode;
+					c.sampleCategoryCode = sampleCategoryCode;
+					
+				});
+		}
 		
-		ocu.contents
-			.forEach(c -> {
-				//Add the fromSampleTypeCode in properties to keep the link with parent type
-				PropertySingleValue fromSampleTypeCode = new PropertySingleValue(c.sampleTypeCode);
-				c.properties.put("fromSampleTypeCode", fromSampleTypeCode);
-				PropertySingleValue fromSampleCode = new PropertySingleValue(c.sampleCode);
-				c.properties.put("fromSampleCode", fromSampleCode);
-				PropertySingleValue fromProjectCode = new PropertySingleValue(c.projectCode);
-				c.properties.put("fromProjectCode", fromProjectCode);
-				
-				c.projectCode = projectCode;
-				c.sampleCode = sampleCode;
-				c.sampleTypeCode = sampleTypeCode;
-				c.sampleCategoryCode = sampleCategoryCode;
-				
-			});
 	}
 
 
-	private OutputContainerUsed createNewSamplesFromSampleIn(Experiment exp, OutputContainerUsed ocu,
+	private void createNewSamplesFromSampleIn(Experiment exp, OutputContainerUsed ocu,
 			InputContainerUsed icu, Sample sampleIn, String inputContentProjectCode, ContextValidation validation) {
+		if(ocu.experimentProperties.containsKey("sampleTypeCode") 
+				&& ocu.experimentProperties.containsKey("projectCode")
+				&& ocu.experimentProperties.containsKey("sampleCode")){
 		
-		String sampleTypeCode=ocu.experimentProperties.get("sampleTypeCode").value.toString();
-		String projectCode=ocu.experimentProperties.get("projectCode").value.toString();
-		String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();
+			String sampleTypeCode=ocu.experimentProperties.get("sampleTypeCode").value.toString();
+			String projectCode=ocu.experimentProperties.get("projectCode").value.toString();
+			String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();
 		
-		if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sampleCode)){
+			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sampleCode)){
+					
+				Sample newSample = new Sample();
+				newSample.code=sampleCode;
+				newSample.typeCode=sampleTypeCode;
+				newSample.categoryCode=SampleType.find.findByCode(sampleTypeCode).category.code;			
+				newSample.projectCodes=new HashSet<String>();
+				newSample.projectCodes.add(projectCode);
+		
+				newSample.taxonCode=sampleIn.taxonCode;
+				newSample.properties=sampleIn.properties;
+				newSample.importTypeCode=sampleIn.importTypeCode;
+				newSample.ncbiLineage=sampleIn.ncbiLineage;
+				newSample.ncbiScientificName=sampleIn.ncbiScientificName;
+				newSample.referenceCollab=sampleIn.referenceCollab;
+				newSample.life = getSampleLife(exp, sampleIn, icu, inputContentProjectCode);
 				
-			Sample newSample = new Sample();
-			newSample.code=sampleCode;
-			newSample.typeCode=sampleTypeCode;
-			newSample.categoryCode=SampleType.find.findByCode(sampleTypeCode).category.code;			
-			newSample.projectCodes=new HashSet<String>();
-			newSample.projectCodes.add(projectCode);
-	
-			newSample.taxonCode=sampleIn.taxonCode;
-			newSample.properties=sampleIn.properties;
-			newSample.importTypeCode=sampleIn.importTypeCode;
-			newSample.ncbiLineage=sampleIn.ncbiLineage;
-			newSample.ncbiScientificName=sampleIn.ncbiScientificName;
-			newSample.referenceCollab=sampleIn.referenceCollab;
-			newSample.life = getSampleLife(exp, sampleIn, icu, inputContentProjectCode);
-			
-			newSample.traceInformation=new TraceInformation(validation.getUser());
-			
-			ContextValidation sampleValidation = new ContextValidation(validation.getUser());
-			sampleValidation.setCreationMode();
-			newSample.validate(sampleValidation);
-			if(!sampleValidation.hasErrors()){
-				((Set<String>)validation.getObject(NEW_SAMPLE_CODES)).add(newSample.code);
-				MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,newSample);
-			}else{
-				validation.addErrors(sampleValidation.errors);
-			}
-		}
-		return ocu;
+				newSample.traceInformation=new TraceInformation(validation.getUser());
+				
+				ContextValidation sampleValidation = new ContextValidation(validation.getUser());
+				sampleValidation.setCreationMode();
+				newSample.validate(sampleValidation);
+				if(!sampleValidation.hasErrors()){
+					((Set<String>)validation.getObject(NEW_SAMPLE_CODES)).add(newSample.code);
+					MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,newSample);
+				}else{
+					validation.addErrors(sampleValidation.errors);
+				}
+			}		
+		}		
 	}
 
 	
