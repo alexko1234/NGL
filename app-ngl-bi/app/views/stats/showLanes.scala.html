@@ -19,24 +19,23 @@
 </div>
 
 <div class="row">
-<div class="col-md-12 col-lg-12">
 <div ng-switch on="chartsLanesService.isData()">	
 		<div ng-switch-when="true">
 			<div class="row">
 				<div class="col-md-12 col-lg-12" ultimate-datatable="chartsLanesService.datatable()"></div>
 			</div>
-			<div class="row ">
+			<div class="row">
 				<ul class="nav nav-tabs margin-bottom-5">
 				<li class="active"><a href="#" data-target="#chart" data-toggle="tab">@Messages("stats.tabs.mean.charts")</a></li>
 				<li><a href="#" data-target="#chartLane" data-toggle="tab">@Messages("stats.tabs.lanes.charts")</a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="chart">
-						<chart class="col-md-12 col-lg-12" value="chartsLanesService.chartMean()"></chart>
+						<chart class="col-ld-10 col-md-10" value="chartsLanesService.chartMean()"></chart>
 					</div>
 					<div class="tab-pane" id="chartLane">
 						<div ng-repeat="chart in chartsLanesService.charts()">
-							<chart class="col-md-10 col-lg-10" value="chart"></chart>
+							<chart class="col-ld-10 col-md-10" value="chart"></chart>
 		   				</div>
 					</div>
 				</div>
@@ -51,7 +50,6 @@
 			</div>
 		</div>
 		</div>
-</div>
 </div>
 </div>
 

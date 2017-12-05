@@ -154,8 +154,14 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 	var chartMean;
 	var mapSeriesLane = new Map();
 	var mapSeries = new Map();
+	var allData;
+	var allDataGroup;
 	var statsConfigs;
 	var propertyGroupGetter;
+	var symbols = {read1:{'symbol':'triangle'},
+				   read2:{'symbol':'square'},
+				   default:{'symbol':'diamond'}};
+	
 
 	var generateCharts = function(property) {
 		readsetDatatable = datatable(datatableConfig);
@@ -191,239 +197,283 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 		
 		mapSeriesLane = new Map();
 		if(propertyGroupGetter!=undefined){
-			computeDataGroup(data, propertyGroupGetter);
+			computeAllDataGroup(data, propertyGroupGetter);
 		}else{
-			computeData(data);
+			computeAllData(data);
 		}
 		
-		for(var key of mapSeriesLane.keys()){
+		for(var key of allData.laneData.keys()){
 			if(propertyGroupGetter!=undefined){
-				charts.push(getChartGroup(key, mapSeriesLane.get(key),propertyGroupGetter));
+				charts.push(getChartGroup(key, allDataGroup.laneDataGroup.get(key),propertyGroupGetter));
 			}else{
-				charts.push(getChart(mapSeriesLane.get(key)));
+				charts.push(getChart(allData.laneData.get(key)));
 			}
 		}
 		if(propertyGroupGetter!=undefined){
-			chartMean=getChartMeanGroup(mapSeries,propertyGroupGetter);
+			chartMean=getChartMeanGroup(allDataGroup.dataGroup,propertyGroupGetter);
 		}else{
-			chartMean=getChartMean(mapSeries.get("noGroup"));
+			chartMean=getChartMean(allData.data);
 		}
 		
 		console.log(charts);
 	};
 	
 	
-	var computeData = function(dataRun)
+	var computeAllData = function(dataRun)
 	{
 		var treatment = statsConfigs.treatment;
 		var value = statsConfigs.value;
-		mapSeriesLane = new Map();
-		mapSeries = new Map();
-		var newData = [];
-		var data ={
-				dataRead1:[],
-				dataRead2:[],
-				dataDefault:[]
-		};
-		for(var i=0; i<dataRun.length; i++){
-			//get run code
-			var runCode = dataRun[i].code;
-			var sumRead1=0;
-			var sumRead2=0;
-			var sumDefault=0;
-			var nbRead1=0;
-			var nbRead2=0;
-			var nbDefault=0;
-			if(dataRun[i].lanes !=null){
-				for(var l=0; l<dataRun[i].lanes.length; l++){
-					var nbLane = dataRun[i].lanes[l].number;
-					var dataLane ={
-						laneNumber:nbLane,
-						dataRead1:[],
+		
+		allData = {laneData:new Map(),
+				   data:{dataRead1:[],
 						dataRead2:[],
 						dataDefault:[],
-					};
-					
-					if(mapSeriesLane.get(nbLane)!=null){
-						dataLane=mapSeriesLane.get(nbLane);
-					}
-					if(dataRun[i].lanes[l].treatments[treatment] !=null){
-						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
-							dataLane.dataRead1.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'},events : {
-								// Redirects to valuation page of the clicked readset
-								click : function() {
-									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-								}
-							}});
-							sumRead1=sumRead1+dataRun[i].lanes[l].treatments[treatment].read1[value].value;
-							nbRead1=nbRead1+1;
-						}
-						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
-							dataLane.dataRead2.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'},events : {
-								// Redirects to valuation page of the clicked readset
-								click : function() {
-									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-								}
-							}});
-							sumRead2=sumRead2+dataRun[i].lanes[l].treatments[treatment].read2[value].value;
-							nbRead2=nbRead2+1;
-						}
-						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
-							dataLane.dataDefault.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'},events : {
-								// Redirects to valuation page of the clicked readset
-								click : function() {
-									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-								}
-							}});
-							sumDefault=sumDefault+dataRun[i].lanes[l].treatments[treatment].default[value].value;
-							nbDefault=nbDefault+1;
-						}
-						
-					}
-					mapSeriesLane.set(nbLane,dataLane);
-				}
-				if(nbRead1>0){
-					var meanRead1 = sumRead1/nbRead1;
-					data.dataRead1.push({'name':runCode,'x':i,'y':meanRead1,'marker':{'symbol':'triangle'},events : {
-						// Redirects to valuation page of the clicked readset
-						click : function() {
-							$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-						}
-					}});
-				}
-				if(nbRead2>0){
-					var meanRead2 = sumRead2/nbRead2;
-					data.dataRead2.push({'name':runCode,'x':i,'y':meanRead2,'marker':{'symbol':'square'},events : {
-						// Redirects to valuation page of the clicked readset
-						click : function() {
-							$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-						}
-					}});
-				}
-				if(nbDefault>0){
-					var meanDefault = sumDefault/nbDefault;
-					data.dataRead2.push({'name':runCode,'x':i,'y':meanDefault,'marker':{'symbol':'diamond'},events : {
-						// Redirects to valuation page of the clicked readset
-						click : function() {
-							$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-						}
-					}});
-				}
-			}
-		}
-		mapSeries.set("noGroup",data);
-	};
-	
-	var computeDataGroup = function(dataRun, propertyGroup)
-	{
-		var treatment = statsConfigs.treatment;
-		var value = statsConfigs.value;
-		mapSeriesLane = new Map();
-		var newData = [];
-		mapSeries = new Map();
+				   		},
+				   };
 		
 		for(var i=0; i<dataRun.length; i++){
-			//get run code
 			var runCode = dataRun[i].code;
-			var group = dataRun[i][propertyGroup];
-			var data ={
-					dataRead1:[],
-					dataRead2:[],
-					dataDefault:[]
-			};
-			if(mapSeries.get(group)!=null){
-				data=mapSeries.get(group);
+			var dataToCompute = {
+					sumRead1:0,
+					sumRead2:0,
+					sumDefault:0,
+					nbRead1:0,
+					nbRead2:0,
+					nbDefault:0,
+					dataLane:{},
+					dataLaneMean:allData.data,
 			}
-			var sumRead1=0;
-			var sumRead2=0;
-			var sumDefault=0;
-			var nbRead1=0;
-			var nbRead2=0;
-			var nbDefault=0;
+			
 			if(dataRun[i].lanes !=null){
 				for(var l=0; l<dataRun[i].lanes.length; l++){
 					var nbLane = dataRun[i].lanes[l].number;
 					var dataLane ={
-						laneNumber:nbLane,
-						groupValue:group,
-						dataGroup:[],
-					};
-					
-					var mapGroup = new Map();
-					if(mapSeriesLane.get(nbLane)!=null){
-						mapGroup = mapSeriesLane.get(nbLane);
-						if(mapGroup.get(group)!=null){
-							dataLane=mapGroup.get(group);
-						}
+							laneNumber:nbLane,
+							dataRead1:[],
+							dataRead2:[],
+							dataDefault:[],
+						};
+						
+					if(allData.laneData.get(nbLane)!=null){
+						dataLane=allData.laneData.get(nbLane);
 					}
+					
+					dataToCompute.dataLane=dataLane;
 					
 					if(dataRun[i].lanes[l].treatments[treatment] !=null){
-						if(dataRun[i].lanes[l].treatments[treatment].read1!=null && dataRun[i].lanes[l].treatments[treatment].read1[value]!=null){
-							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read1[value].value,'marker':{'symbol':'triangle'},'_group':'read1',events : {
-								// Redirects to valuation page of the clicked readset
-								click : function() {
-									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-								}
-							}});
-							sumRead1=sumRead1+dataRun[i].lanes[l].treatments[treatment].read1[value].value;
-							nbRead1=nbRead1+1;
-						}
-						if(dataRun[i].lanes[l].treatments[treatment].read2!=null && dataRun[i].lanes[l].treatments[treatment].read2[value]!=null){
-							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].read2[value].value,'marker':{'symbol':'square'},'_group':'read2',events : {
-								// Redirects to valuation page of the clicked readset
-								click : function() {
-									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-								}
-							}});
-							sumRead2=sumRead2+dataRun[i].lanes[l].treatments[treatment].read2[value].value;
-							nbRead2=nbRead2+1;
-						}
-						if(dataRun[i].lanes[l].treatments[treatment].default!=null && dataRun[i].lanes[l].treatments[treatment].default[value]!=null){
-							dataLane.dataGroup.push({'name':runCode,'x':i,'y':dataRun[i].lanes[l].treatments[treatment].default[value].value,'marker':{'symbol':'diamond'},'_group':'default',events : {
-								// Redirects to valuation page of the clicked readset
-								click : function() {
-									$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-								}
-							}});
-							sumDefault=sumDefault+dataRun[i].lanes[l].treatments[treatment].default[value].value;
-							nbDefault=nbDefault+1;
-						}
-						
+						dataToCompute=computePropertyLane(dataRun, i, l, runCode, dataToCompute, undefined);
 					}
-						mapGroup.set(group,dataLane);
-						mapSeriesLane.set(nbLane,mapGroup);
+					allData.laneData.set(nbLane,dataToCompute.dataLane);
 				}
+				
+				dataToCompute=computeProperty(i, runCode, dataToCompute, undefined);
+				allData.data=dataToCompute.dataLaneMean;
 			}
-			if(nbRead1>0){
-				var meanRead1 = sumRead1/nbRead1;
-				data.dataRead1.push({'name':runCode,'x':i,'y':meanRead1,'marker':{'symbol':'triangle'},'_group':'read1',events : {
-					// Redirects to valuation page of the clicked readset
-					click : function() {
-						$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-					}
-				}});
-			}
-			if(nbRead2>0){
-				var meanRead2 = sumRead2/nbRead2;
-				data.dataRead2.push({'name':runCode,'x':i,'y':meanRead2,'marker':{'symbol':'square'},'_group':'read2', events : {
-					// Redirects to valuation page of the clicked readset
-					click : function() {
-						$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-					}
-				}});
-			}
-			if(nbDefault>0){
-				var meanDefault = sumDefault/nbDefault;
-				data.dataRead2.push({'name':runCode,'x':i,'y':meanDefault,'marker':{'symbol':'diamond'},'_group':'default',events : {
-					// Redirects to valuation page of the clicked readset
-					click : function() {
-						$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
-					}
-				}});
-			}
-			mapSeries.set(group,data);
 		}
 	};
+	
+	var computeAllDataGroup = function(dataRun, groupProperty)
+	{
+		var treatment = statsConfigs.treatment;
+		var value = statsConfigs.value;
+		allDataGroup = {laneDataGroup:new Map(),
+				   		dataGroup:new Map(),
+				   		};
+		for(var i=0; i<dataRun.length; i++){
+			var runCode = dataRun[i].code;
+			var group = dataRun[i][groupProperty];
+			var dataGroup ={dataGroup:[]};
+			var dataLaneGroup =new Map();
+			if(allDataGroup.dataGroup.get(group)!=null){
+				dataGroup=allDataGroup.dataGroup.get(group);
+			}
+			if(allDataGroup.laneDataGroup.get(group)!=null){
+				dataLaneGroup=allDataGroup.laneDataGroup.get(group);
+			}
+			
+			var dataToCompute = {
+					sumRead1:0,
+					sumRead2:0,
+					sumDefault:0,
+					nbRead1:0,
+					nbRead2:0,
+					nbDefault:0,
+					dataGroup:[],
+					dataGroupMean:dataGroup,
+			}
+			if(dataRun[i].lanes !=null){
+				for(var l=0; l<dataRun[i].lanes.length; l++){
+					var nbLane = dataRun[i].lanes[l].number;
+					var dataLaneGroup = new Map();
+					var dataLane = {laneNumber:nbLane,
+										groupValue:group,
+										dataGroup:[]
+										};
+					if(allDataGroup.laneDataGroup.get(nbLane)!=null){
+						dataLaneGroup=allDataGroup.laneDataGroup.get(nbLane);
+						if(dataLaneGroup.get(group)!=null){
+							dataLane=dataLaneGroup.get(group);
+						}
+					}
+					dataToCompute.dataGroup=dataLane.dataGroup;
+					if(dataRun[i].lanes[l].treatments[treatment] !=null){
+						dataToCompute = computePropertyLane(dataRun, i, l, runCode, dataToCompute, group);
+						dataLane.dataGroup=dataToCompute.dataGroup;
+						dataLaneGroup.set(group,dataLane);
+						allDataGroup.laneDataGroup.set(nbLane,dataLaneGroup);
+					}
+				}
+				
+			}
+			
+			dataToCompute.dataGroupMean=dataGroup;
+			dataToCompute=computeProperty(i, runCode, dataToCompute, group);
+			allDataGroup.dataGroup.set(group,dataToCompute.dataGroupMean);
+		}
+	};
+		
+	var computePropertyLane = function(dataRun, posRun, nbLane, runCode, data, propertyGroup){
+		
+		var valuePropertyR1 = getValueProperty(dataRun,posRun,nbLane,"read1");
+		if(valuePropertyR1!=null){
+			if(propertyGroup!=undefined){
+				data.dataGroup.push(getPointPropertyGroup(runCode,posRun,valuePropertyR1,symbols.read1,'read1'));
+			}else{
+				data.dataLane.dataRead1.push(getPointProperty(runCode,posRun,valuePropertyR1,symbols.read1));
+			}
+			data.sumRead1=data.sumRead1+valuePropertyR1;
+			data.nbRead1=data.nbRead1+1;
+		}
+		var valuePropertyR2 = getValueProperty(dataRun,posRun,nbLane,"read2");
+		if(valuePropertyR2!=null){
+			if(propertyGroup!=undefined){
+				data.dataGroup.push(getPointPropertyGroup(runCode,posRun,valuePropertyR2,symbols.read2,'read2'));
+			}else{
+				data.dataLane.dataRead2.push(getPointProperty(runCode,posRun,valuePropertyR2,symbols.read2));
+			}
+			data.sumRead2=data.sumRead2+valuePropertyR2;
+			data.nbRead2=data.nbRead2+1;
+		}
+		var valuePropertyDef = getValueProperty(dataRun,posRun,nbLane,"default");
+		if(valuePropertyDef!=null){
+			if(propertyGroup!=undefined){
+				data.dataGroup.push(getPointPropertyGroup(runCode,posRun,valuePropertyDef,symbols.default,'default'));
+			}else{
+				data.dataLane.dataDefault.push(getPointProperty(runCode,posRun,valuePropertyDef,symbols.default));
+			}
+			data.sumDefault=data.sumDefault+valuePropertyDef;
+			data.nbDefault=data.nbDefault+1;
+		}
+		
+		return data;
+	};
+	
+	var computeProperty = function(posRun, runCode, data, propertyGroup){
+		if(data.nbRead1>0){
+			var meanRead1 = data.sumRead1/data.nbRead1;
+			if(propertyGroup!=undefined){
+				data.dataGroupMean.dataGroup.push(getPointPropertyGroup(runCode,posRun,meanRead1,symbols.read1,'read1'));
+			}else{
+				data.dataLaneMean.dataRead1.push(getPointProperty(runCode,posRun,meanRead1,symbols.read1));
+			}
+		}
+		if(data.nbRead2>0){
+			var meanRead2 = data.sumRead2/data.nbRead2;
+			if(propertyGroup!=undefined){
+				data.dataGroupMean.dataGroup.push(getPointPropertyGroup(runCode,posRun,meanRead2,symbols.read2,'read2'));
+			}else{
+				data.dataLaneMean.dataRead2.push(getPointProperty(runCode,posRun,meanRead2,symbols.read2));
+			}
+			
+		}
+		if(data.nbDefault>0){
+			var meanDefault = data.sumDefault/data.nbDefault;
+			if(propertyGroup!=undefined){
+				data.dataGroupMean.dataGroup.push(getPointPropertyGroup(runCode,posRun,meanDefault,symbols.default,'default'));
+			}else{
+				data.dataLaneMean.dataDefault.push(getPointProperty(runCode,posRun,meanDefault,symbols.default));
+			}
+		}
+		return data;
+	};
+	
+	var getValueProperty = function(dataRun, positionRun, laneNumber, keyValue)
+	{
+		var treatment = statsConfigs.treatment;
+		var value = statsConfigs.value;
+		var valueProperty=undefined;
+		if(dataRun[positionRun].lanes[laneNumber].treatments[treatment][keyValue]!=null && dataRun[positionRun].lanes[laneNumber].treatments[treatment][keyValue][value]!=null){
+			valueProperty=dataRun[positionRun].lanes[laneNumber].treatments[treatment][keyValue][value].value;
+		}
+		return valueProperty;
+	};
+	
+	var getPointProperty = function(runCode,positionRun,valueProperty,symbol)
+	{
+		return {'name':runCode,'x':positionRun,'y':valueProperty,'marker':symbol,events : {
+			// Redirects to valuation page of the clicked readset
+			click : function() {
+				$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+			}
+		}}
+	};
+	
+	var getPointPropertyGroup = function(runCode,positionRun,valueProperty,symbol,group)
+	{
+		return {'name':runCode,'x':positionRun,'y':valueProperty,'marker':symbol,'_group':group,events : {
+			// Redirects to valuation page of the clicked readset
+			click : function() {
+				$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
+			}
+		}}
+	};
+	
+	
+	var getCommonChart = function()
+	{
+		var chart = {
+				chart : {
+					type: 'scatter',
+					zoomType : 'x',
+					height : 770
+				},	
+				xAxis : {
+					title : {
+						text : 'RunCode',
+					},
+					type : "category",
+					tickPixelInterval : 1
+				},
+
+				yAxis : {
+					title : {
+						text :  statsConfigs.name
+					},
+					tickInterval : 2,
+				},
+				plotOptions: {
+			        scatter: {
+			            marker: {
+			                radius: 3,
+			                states: {
+			                    hover: {
+			                        enabled: true,
+			                        lineColor: 'rgb(100,100,100)'
+			                    }
+			                }
+			            },
+			            states: {
+			                hover: {
+			                    marker: {
+			                        enabled: false
+			                    }
+			                }
+			            }
+			        }
+			    },
+		}
+		return chart;
+	}
 	
 	var getChart = function(dataLane) {
 		
@@ -439,56 +489,13 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			allSeries.push({name:'default',data:dataLane.dataDefault});
 		}
 		
-		var chart = {
-
-			chart : {
-				type: 'scatter',
-				zoomType : 'x',
-				height : 770
-			},
-			title : {
-				text : statsConfigs.header+' Lane '+dataLane.laneNumber,
-			},
-			xAxis : {
-				title : {
-					text : 'RunCode',
-				},
-				type : "category",
-				tickPixelInterval : 1
-			},
-
-			yAxis : {
-				title : {
-					text :  statsConfigs.name
-				},
-				tickInterval : 2,
-			},
-			plotOptions: {
-		        scatter: {
-		            marker: {
-		                radius: 3,
-		                states: {
-		                    hover: {
-		                        enabled: true,
-		                        lineColor: 'rgb(100,100,100)'
-		                    }
-		                }
-		            },
-		            states: {
-		                hover: {
-		                    marker: {
-		                        enabled: false
-		                    }
-		                }
-		            },
-		            tooltip: {
-		                headerFormat: '<b>{series.name} </b><br>',
-		                pointFormat: '{point.y}'
-		            }
-		        }
-		    },
-			series : allSeries,
-		}
+		var chart = getCommonChart();
+		chart.title = {text : statsConfigs.header+' Lane '+dataLane.laneNumber,};
+		chart.plotOptions.scatter.tooltip={
+                headerFormat: '<b>{series.name} </b><br>',
+                pointFormat: '{point.y}'
+            };
+		chart.series=allSeries;
 		return chart;
 	};
 
@@ -501,58 +508,13 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			var data = dataLane.get(key);
 			allSeries.push({name:key,data:data.dataGroup});
 		}
-		
-		var chart = {
-
-			chart : {
-				type: 'scatter',
-				zoomType : 'x',
-				height : 770
-			},
-			title : {
-				text : statsConfigs.header+' Lane '+laneNumber,
-			},
-			xAxis : {
-				title : {
-					text : 'Run Code',
-				},
-				type : "category",
-				tickPixelInterval : 1
-			},
-
-			yAxis : {
-				title : {
-					text :  statsConfigs.name
-				},
-				tickInterval : 2,
-				min : 0,
-			},
-		    plotOptions: {
-		        scatter: {
-		            marker: {
-		                radius: 3,
-		                states: {
-		                    hover: {
-		                        enabled: true,
-		                        lineColor: 'rgb(100,100,100)'
-		                    }
-		                }
-		            },
-		            states: {
-		                hover: {
-		                    marker: {
-		                        enabled: false
-		                    }
-		                }
-		            },
-		            tooltip: {
-		                headerFormat: '<b>{series.name} </b><br>',
-		                pointFormat: '{point.y} ({point._group})'
-		            }
-		        }
-		    },
-			series :allSeries
-		}
+		var chart = getCommonChart();
+		chart.title = {text : statsConfigs.header+' Lane '+laneNumber,};
+		chart.plotOptions.scatter.tooltip={
+				headerFormat: '<b>{series.name} </b><br>',
+                pointFormat: '{point.y} ({point._group})'
+            };
+		chart.series=allSeries;
 		return chart;
 	};
 	
@@ -570,56 +532,13 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			allSeries.push({name:'default',data:dataMean.dataDefault});
 		}
 		
-		var chart = {
-
-			chart : {
-				type: 'scatter',
-				zoomType : 'x',
-				height : 770
-			},
-			title : {
-				text : statsConfigs.header,
-			},
-			xAxis : {
-				title : {
-					text : 'RunCode',
-				},
-				type : "category",
-				tickPixelInterval : 1
-			},
-
-			yAxis : {
-				title : {
-					text :  statsConfigs.name
-				},
-				tickInterval : 2,
-			},
-			plotOptions: {
-		        scatter: {
-		            marker: {
-		                radius: 3,
-		                states: {
-		                    hover: {
-		                        enabled: true,
-		                        lineColor: 'rgb(100,100,100)'
-		                    }
-		                }
-		            },
-		            states: {
-		                hover: {
-		                    marker: {
-		                        enabled: false
-		                    }
-		                }
-		            },
-		            tooltip: {
-		                headerFormat: '<b>{series.name} </b><br>',
-		                pointFormat: '{point.y}'
-		            }
-		        }
-		    },
-			series : allSeries,
-		}
+		var chart = getCommonChart();
+		chart.title = {text :  statsConfigs.header,};
+		chart.plotOptions.scatter.tooltip={
+				headerFormat: '<b>{series.name} </b><br>',
+                pointFormat: '{point.y}'
+            };
+		chart.series=allSeries;
 		return chart;
 	};
 
@@ -632,57 +551,14 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			allSeries.push({name:key,data:data.dataGroup});
 		}
 		
-		var chart = {
-
-			chart : {
-				type: 'scatter',
-				zoomType : 'x',
-				height : 770
-			},
-			title : {
-				text : statsConfigs.header,
-			},
-			xAxis : {
-				title : {
-					text : 'Run Code',
-				},
-				type : "category",
-				tickPixelInterval : 1
-			},
-
-			yAxis : {
-				title : {
-					text :  statsConfigs.name,
-				},
-				tickInterval : 2,
-				min : 0,
-			},
-		    plotOptions: {
-		        scatter: {
-		            marker: {
-		                radius: 3,
-		                states: {
-		                    hover: {
-		                        enabled: true,
-		                        lineColor: 'rgb(100,100,100)'
-		                    }
-		                }
-		            },
-		            states: {
-		                hover: {
-		                    marker: {
-		                        enabled: false
-		                    }
-		                }
-		            },
-		            tooltip: {
-		                headerFormat: '<b>{series.name} </b><br>',
-		                pointFormat: '{point.y} ({point._group})'
-		            }
-		        }
-		    },
-			series :allSeries
-		}
+		var chart = getCommonChart();
+		chart.title = {text :  statsConfigs.header,};
+		chart.plotOptions.scatter.tooltip={
+				headerFormat: '<b>{series.name} </b><br>',
+                pointFormat: '{point.y} ({point._group})'
+            };
+		chart.series=allSeries;
+		
 		return chart;
 	};
 	
