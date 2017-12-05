@@ -11,7 +11,7 @@ import models.laboratory.sample.instance.Sample;
 
 // TODO: comment
 
-public class ContainersTest extends AbstractSQServerTest {
+public class TestContainers extends AbstractSQServerTest {
 
 	private static final String containersUrl = "/api/containers";
 	

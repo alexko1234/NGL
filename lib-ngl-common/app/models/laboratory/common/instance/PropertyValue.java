@@ -23,11 +23,11 @@ import validation.utils.ValidationHelper;
  */
 @JsonTypeInfo(use=Id.NAME, include=As.EXTERNAL_PROPERTY, property="_type", defaultImpl=models.laboratory.common.instance.property.PropertySingleValue.class, visible=true)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = PropertyValue.singleType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = PropertyValue.listType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = PropertyValue.fileType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class, name = PropertyValue.imgType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = PropertyValue.objectType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class,     name = PropertyValue.singleType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class,       name = PropertyValue.listType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class,       name = PropertyValue.fileType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class,        name = PropertyValue.imgType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class,     name = PropertyValue.objectType),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = PropertyValue.objectListType)
 })
 public abstract class PropertyValue<T> implements IValidation {
@@ -44,17 +44,18 @@ public abstract class PropertyValue<T> implements IValidation {
 	
 	// TODO: remove super() calls that are implicit
 	public PropertyValue(String _type) {
-		super();
+		// super();
 		this._type = _type;
 	}
+	
 	public PropertyValue(String _type, T value) {
-		super();
+		// super();
 		this._type = _type;
 		this.value = value;
 	}
 	
 	public PropertyValue(String _type, T value, String unit) {
-		super();
+		// super();
 		this._type = _type;
 		this.value = value;		
 	}
