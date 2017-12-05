@@ -1,7 +1,9 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
@@ -116,10 +120,24 @@ public class ProcessHelper {
 					process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
 					//need sampleOnInputContainer to generate code
 					process.code = CodeHelper.getInstance().generateProcessCode(process);
+					
+					process.state = new State();
+					process.state.code = "N";
+					process.state.user = contextValidation.getUser();
+					process.state.date = new Date();
+					
 					return process;
 				}).collect(Collectors.toList());
 		}else if ("from-sample".equals(from)){
-			return null;
+			Process process = input.cloneCommon();
+			process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
+			process.state = new State();
+			process.state.code = "IW-C";
+			process.state.user = contextValidation.getUser();
+			process.state.date = new Date();
+			//need sampleOnInputContainer to generate code
+			process.code = CodeHelper.getInstance().generateProcessCode(process);
+			return Arrays.asList(process);
 		}else{
 			throw new RuntimeException("from :"+from+" not managed for the processes creation");
 		}

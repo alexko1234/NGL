@@ -249,12 +249,6 @@ public class Processes extends DocumentController<Process> {
 		//the trace
 		input.traceInformation = new TraceInformation();
 		input.traceInformation.setTraceInformation(contextValidation.getUser());
-		if(null == input.state){
-			input.state = new State();
-		}
-		input.state.code = "N";
-		input.state.user = contextValidation.getUser();
-		input.state.date = new Date();
 		
 		contextValidation.setCreationMode();
 		contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON);

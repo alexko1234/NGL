@@ -1026,12 +1026,13 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	var newService = {
 		getDefaultColumns : getDefaultColumns,
 		sampleViewData : undefined,
-		computeData : function(){
+		computeData : function(samples, isFirst){
 			this.sampleViewData = {};
-			var samples = mainService.getBasket().get();
 			samples.forEach(function(sample){
-				sample.properties = null;
-				sample.comments = [];
+				if(isFirst){
+					sample.properties = null;
+					sample.comments = [];
+				}
 				this.sampleViewData[sample.code]=sample;
 			},this);
 			return samples;
@@ -1051,9 +1052,21 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
 			this.datatable.setData(samples);
 		},
+		swithToGlobalErrorView : function(){
+			var samples = [];
+			this.messages.setError("save");
+			for(var key in this.sampleViewData){
+				samples.push(this.sampleViewData[key]);				
+			}
+			samples = $filter('orderBy')(samples, ['sampleCodes']);
+			
+			this.datatable = datatable(this.getEditDatatableConfig(newService));
+			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
+			this.datatable.setData(samples);
+		},
 		udtSaveCallback : function(datatable){
 			this.messages.clear();
-			var data = datatable.getData();
+			var data = this.computeData(datatable.getData());
 			var allProcesses = [];
 			data.forEach(function(value, index){
 				var process = {};
@@ -1102,6 +1115,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	    			$that.setDatatableProcessOk();		    					    		
 	    		}
 				
+			},function(result){
+				$that.swithToGlobalErrorView();						
 			});
 		},
 		udtRemoveCallback : function(datatable){
@@ -1109,7 +1124,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			datatable.getData().forEach(function(elt){
 				mainService.getBasket().add(elt);
 			});				 
-			this.computeData();	 
+			this.computeData(mainService.getBasket().get());	 
 		},
 		udtTrClass : function(data, line){
     		if(this.sampleViewData[data.code]){
@@ -1125,7 +1140,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		init : function(processTypeCode) {
 			this.initProcessType(processTypeCode).then(function(newService){
 				if(newService.processType){
-					var data = newService.computeData();
+					var data = newService.computeData(mainService.getBasket().get(),true);
 					newService.datatable = datatable(newService.getEditDatatableConfig(newService));
 					newService.datatable.setColumnsConfig(newService.getDefaultColumns().concat(newService.processPropertyColumns))
 					newService.datatable.setData(data);
@@ -1311,6 +1326,17 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				this.datatable.setData(containers);
 				this.containerErroView = true;
 			},
+			swithToGlobalErrorView : function(){
+				var containers = [];
+				this.messages.setError("save");
+				for(var key in this.containerViewData){
+					containers.push(this.containerViewData[key]);					
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);
+				this.containerErroView = true;
+			},
 			swithToContainerView : function(){
 				var containers = [];
 				for(var key in this.containerViewData){
@@ -1333,6 +1359,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				this.supportView = true;
 			},
 			udtSaveCallback : function(datatable){
+				this.messages.clear();
 				var data = datatable.getData();
 				var allProcesses = [];
 				data.forEach(function(value, index){
@@ -1391,6 +1418,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		    			$that.setDatatableProcessOk();		    					    		
 		    		}
 					
+				},function(result){
+					$that.swithToGlobalErrorView();						
 				});
 			},
 			udtRemoveCallback : function(datatable){

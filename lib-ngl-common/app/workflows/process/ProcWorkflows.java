@@ -38,8 +38,10 @@ public class ProcWorkflows extends Workflows<Process> {
 	
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Process process) {
-		procWorkflowsHelper.updateContentProcessPropertiesAttribute(validation, process);
-		procWorkflowsHelper.updateContentPropertiesWithContentProcessProperties(validation, process);
+		if(!"IW-C".equals(process.state.code)){
+			procWorkflowsHelper.updateContentProcessPropertiesAttribute(validation, process);
+			procWorkflowsHelper.updateContentPropertiesWithContentProcessProperties(validation, process);
+		}
 	}
 	
 	@Override
