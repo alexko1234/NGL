@@ -5,6 +5,12 @@ import static fr.cea.ig.play.test.DevAppTesting.cr;
 import static fr.cea.ig.play.test.DevAppTesting.newCode;
 import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
 import static play.mvc.Http.Status.OK;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.NOT_FOUND;
 import static ngl.sq.SampleFactory.from;
@@ -17,10 +23,13 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import fr.cea.ig.play.test.DevAppTesting;
 import fr.cea.ig.play.test.WSHelper;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.sample.instance.Sample;
 
-public class SamplesTest extends AbstractSQServerTest {
+public class TestSamples extends AbstractSQServerTest {
 
 	
 	@Test
@@ -69,4 +78,18 @@ public class SamplesTest extends AbstractSQServerTest {
 		WSHelper.get(ws,samplesUrl + "/NOT_FOUND",NOT_FOUND);
 	}
 	
+	@Test
+	public void testMinimalCreation() {
+		Sample sample = new Sample();
+		sample.code           = DevAppTesting.newCode();
+		sample.typeCode       = "DNA";
+		sample.importTypeCode = "dna-reception"; 
+		sample.categoryCode   = "DNA";
+		sample.projectCodes   = new HashSet<String>(Arrays.asList("BXL"));
+		sample.properties     = new HashMap<String,PropertyValue>();
+		sample.properties.put("meta", new PropertySingleValue(false));
+		WSHelper.postObject(ws,samplesUrl,sample,OK);
+		DevAppTesting.rurNeqTraceInfo(ws, samplesUrl, sample);
+	}
+
 }

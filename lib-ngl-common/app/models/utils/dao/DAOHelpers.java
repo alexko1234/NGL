@@ -29,7 +29,7 @@ public class DAOHelpers {
 	 */
 	public static <T extends Model> Map<String,List<ValidationError>>  saveModels(Class<T> type,Map<String, T > models) throws DAOException {
 
-		Map<String,List<ValidationError>>errors=new HashMap<String, List<ValidationError>>();
+		Map<String,List<ValidationError>>errors = new HashMap<String, List<ValidationError>>();
 
 		for(Entry<String,T> model : models.entrySet()){
 			T samp = new HelperObjects<T>().getObject(type, model.getKey());
