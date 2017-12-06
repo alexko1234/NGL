@@ -8,6 +8,8 @@ import models.utils.dao.DAOException;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
 
+// This link : {@link models.laboratory.container.description ContainerSupportCategory}
+
 public class ContainerSupportCategory extends AbstractCategory<ContainerSupportCategory> {
 	
 	public Integer nbUsableContainer;

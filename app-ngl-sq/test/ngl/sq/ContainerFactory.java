@@ -20,6 +20,13 @@ import play.libs.Json;
 import play.libs.ws.WSClient;
 import validation.utils.ValidationHelper;
 
+/**
+ * Factory methods for Container.
+ * 
+ * @author vrd
+ *
+ */
+// TODO: provide constructor like method(s). 
 public class ContainerFactory extends DBObjectFactory {
 	
 	public static String res_00 = "data/Container_1AIF37ID7_UAT";

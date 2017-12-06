@@ -25,12 +25,31 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.DBObject;
 
-public class ContainerSupport extends DBObject implements IValidation{
+// This link : {@link models.laboratory.container.instance.ContainerSupport}
+
+/**
+ * Name of the collection is {@link models.utils.InstanceConstants#CONTAINER_SUPPORT_COLL_NAME}.
+ * 
+ * @author vrd
+ *
+ */
+public class ContainerSupport extends DBObject implements IValidation {
+	
+	/**
+	 * Category code (type of container support) ({@link models.laboratory.container.description ContainerSupportCategory}).
+	 */
 	public String categoryCode;
+	
 	public State state;
+	
 	public String storageCode;
 	public Valuation valuation; //TODO GA Must be disappear ???
+	
+	/**
+	 * Access trace.
+	 */
 	public TraceInformation traceInformation;
+	
 	public Set<String> projectCodes;
 	public Set<String> sampleCodes;
 	public Set<String> fromTransformationTypeCodes; //TODO GA useful ???
@@ -39,6 +58,9 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public Integer nbContainers;
 	public Integer nbContents;
 	
+	/**
+	 * Comments.
+	 */
 	public List<Comment> comments;
 	
 	public List<StorageHistory> storages;

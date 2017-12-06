@@ -365,14 +365,13 @@ public class CommonValidationHelper {
 		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 			validateStateCode(typeCode, stateCode, contextValidation);
-		} else if(contextValidation.getContextObjects().containsKey(FIELD_OBJECT_TYPE_CODE)){
+		} else if (contextValidation.getContextObjects().containsKey(FIELD_OBJECT_TYPE_CODE)) {
 			ObjectType.CODE objectTypeCode = getObjectFromContext(FIELD_OBJECT_TYPE_CODE, ObjectType.CODE.class, contextValidation);
 			validateStateCode(objectTypeCode, stateCode, contextValidation);
 		} else {
 			validateRequiredDescriptionCode(contextValidation, stateCode,"state.code", models.laboratory.common.description.State.find);
 		}
 	}
-	
 	
 	public static void validateState(String typeCode, State state, ContextValidation contextValidation) {
 		if (ValidationHelper.required(contextValidation, state, "state")) {
@@ -394,7 +393,7 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
+	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation) {
 		try {
 			if (required(contextValidation, stateCode, "code")) {
 				if (!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)) {
@@ -404,7 +403,6 @@ public class CommonValidationHelper {
 		} catch(DAOException e) {
 			throw new RuntimeException(e);
 		}
-		
 	}
 	
 	

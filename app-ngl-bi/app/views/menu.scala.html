@@ -13,6 +13,8 @@
 @import controllers.stats.tpl.routes.Stats
 @import controllers.balancesheets.tpl.routes.BalanceSheets
 
+@import views.html.ddmenu._
+
 @user            = @{ ctx.currentUser() }
 @writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 @adminPermission = @{ PermissionHelper.checkPermission(user, "admin") }

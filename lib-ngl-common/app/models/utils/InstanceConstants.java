@@ -1,5 +1,7 @@
 package models.utils;
 
+// Link to this : {@link models.utils.InstanceConstants}
+
 /**
  * MongoDB collection names.
  * TODO: possibly use a name that represents this set of constants such as CollectionNames, possibly in an enclosing class named Constants.
@@ -11,9 +13,19 @@ public interface InstanceConstants {
 	
 	public static final String PROJECT_COLL_NAME            = "ngl_project.Project";
 	public static final String UMBRELLA_PROJECT_COLL_NAME   = "ngl_project.UmbrellaProject";
+	
+	/**
+	 * Name of the collection of {@link models.laboratory.container.instance.ContainerSupport}.
+	 */
 	public static final String CONTAINER_SUPPORT_COLL_NAME  = "ngl_sq.ContainerSupport";
+	
 	public static final String REAGENT_CATALOG_COLL_NAME    = "ngl_sq.ReagentCatalog";
+	
+	/**
+	 * Name of the collection of {@link models.laboratory.container.instance.Container}
+	 */
 	public static final String CONTAINER_COLL_NAME          = "ngl_sq.Container";
+	
 	public static final String PROCESS_COLL_NAME            = "ngl_sq.Process";
 	public static final String EXPERIMENT_COLL_NAME         = "ngl_sq.Experiment";
 	

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.State;
+// import models.laboratory.common.description.State;
 import models.utils.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +18,20 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import play.Logger;
+// import play.Logger;
 // import play.cache.Cache;
 import static fr.cea.ig.play.IGGlobals.cache;
 
 /**
  * Common operations between Simple DAO et DAO Using mappingQuery
  * Must not implement an interface for transactional context because
- * If implements interface Spring creates an instance for the application and get not that class but a Java Dynamic Proxy that implements that classes interface
+ * If implements interface Spring creates an instance for the application 
+ * and get not that class but a Java Dynamic Proxy that implements that classes interface.
  * Because of this, you cannot cast that object to the original type.
- * If there aren't interfaces to implement, it will give a CGLib proxy of the class, which is basically just a runtime modified version of the class and so is assignable to the class itself
+ * If there aren't interfaces to implement, it will give a CGLib proxy of the class, 
+ * which is basically just a runtime modified version of the class and so is 
+ * assignable to the class itself.
+ * 
  * @author ejacoby
  *
  * @param <T>
@@ -46,9 +50,9 @@ public abstract class AbstractDAO<T> {
 	protected boolean useGeneratedKey;
 
 	protected AbstractDAO(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
-		this.tableName = tableName;
-		this.entityClass = entityClass;
-		this.useGeneratedKey=useGeneratedKey;
+		this.tableName       = tableName;
+		this.entityClass     = entityClass;
+		this.useGeneratedKey = useGeneratedKey;
 	}
 
 	@Autowired
@@ -62,9 +66,8 @@ public abstract class AbstractDAO<T> {
 			jdbcInsert = new SimpleJdbcInsert(dataSource).withTableName(tableName);
 	}
 
-	public void remove(T value) throws DAOException
-	{
-		String sql = "DELETE FROM "+tableName+" WHERE id=:id";
+	public void remove(T value) throws DAOException	{
+		String sql = "DELETE FROM " + tableName + " WHERE id=:id";
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(sql, ps);
 	}
@@ -81,50 +84,51 @@ public abstract class AbstractDAO<T> {
 
 	public abstract void update(T value) throws DAOException;
 
-	public Boolean isCodeExist(String code) throws DAOException
-	{
-		if(null == code){
+	public Boolean isCodeExist(String code) throws DAOException	{
+		if (code == null) {
 			throw new DAOException("code is mandatory");
 		}
 		try {
-			try{
-				String sql = "select id from "+tableName+" WHERE code=?";
+			try {
+				String sql = "select id from " + tableName + " WHERE code=?";
 				long id =  this.jdbcTemplate.queryForLong(sql, code);
-				if(id > 0){
+				/*if (id > 0) {
 					return Boolean.TRUE;
-				}else{
+				} else {
 					return Boolean.FALSE;
-				}
-			}catch (EmptyResultDataAccessException e ) {
-				return Boolean.FALSE;
+				}*/
+				return id > 0;
+			} catch (EmptyResultDataAccessException e ) {
+				// return Boolean.FALSE;
+				return false;
 			}
 		} catch (DataAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	protected String listToParameters(List<?> parameters){
+	protected String listToParameters(List<?> parameters) {
 		String args = "";
-		for(int i = 0; i<parameters.size();i++){
+		for (int i = 0; i<parameters.size();i++) {
 			args += "?";
-			if(i != (parameters.size() - 1)){
+			if (i != (parameters.size() - 1)) {
 				args += ",";
 			}
 		}
 		return args;
 	}
 
-	protected SqlParameter[] listToSqlParameters(List<?> parameters, String paramName, int type){
+	protected SqlParameter[] listToSqlParameters(List<?> parameters, String paramName, int type) {
 		SqlParameter[] params = new SqlParameter[parameters.size()];
-		for(int i = 0; i<parameters.size();i++){
+		for (int i = 0; i<parameters.size();i++) {
 			params[i] =  new SqlParameter(paramName, type);
 		}
 		return params;
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected T getObjectInCache(String code){
-		if (null != code) {
+	protected T getObjectInCache(String code) {
+		if (code != null) {
 			try {
 				String key = entityClass.toString()+"."+code;
 				// return (T) Cache.get(key);
@@ -137,18 +141,18 @@ public abstract class AbstractDAO<T> {
 		}		
 	}
 	
-	protected void setObjectInCache(T o, String code){
-		if(null != o && null != code){
+	protected void setObjectInCache(T o, String code) {
+		if (o != null && code != null) {
 			// Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
-			cache().set(entityClass.toString()+"."+code, o, 60 * 60);
+			cache().set(entityClass.toString() + "." + code, o, 60 * 60);
 		}		
 	}
 	
-	public void cleanCache(){
+	public void cleanCache() {
 		List<T> l = this.findAll();
 		l.forEach(o -> {
 			// Cache.remove(entityClass.toString()+"."+((Model)o).code);
-			cache().remove(entityClass.toString()+"."+((Model)o).code);
+			cache().remove(entityClass.toString() + "." + ((Model)o).code);
 		});
 	}
 	

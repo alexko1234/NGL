@@ -1,16 +1,18 @@
 package models.laboratory.container.description;
 
-import java.util.List;
+// import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.container.description.dao.ContainerCategoryDAO;
-import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
-import models.utils.ListObject;
-import models.utils.Model.Finder;
-import models.utils.dao.DAOException;
-import play.api.modules.spring.Spring;
+// import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
+// import models.utils.ListObject;
+// import models.utils.Model.Finder;
+// import models.utils.dao.DAOException;
+// import play.api.modules.spring.Spring;
 
-public class ContainerCategory extends AbstractCategory<ContainerCategory>{
+// This link : {@link models.laboratory.container.description.ContainerCategory}
+
+public class ContainerCategory extends AbstractCategory<ContainerCategory> {
 
 	public static ContainerCategoryFinder find = new ContainerCategoryFinder(); 
 	
@@ -18,7 +20,6 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory>{
 		super(ContainerCategoryDAO.class.getName());
 	}
 
-	
 	public static class ContainerCategoryFinder extends Finder<ContainerCategory> {
 		
 		public ContainerCategoryFinder() {
@@ -30,5 +31,6 @@ public class ContainerCategory extends AbstractCategory<ContainerCategory>{
 			return ((ContainerCategoryDAO) getInstance()).findByContainerSupportCategoryCode(containerSupportCategoryCode);
 		}
 		
-	}	
+	}
+	
 }

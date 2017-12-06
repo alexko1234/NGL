@@ -12,6 +12,8 @@
 
 @import views.html.helper.formGroup
 
+@import views.html.ddmenu._
+
 @user = @{ ctx.currentUser() }
 @writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 @adminPermission = @{ PermissionHelper.checkPermission(user, "admin") }
