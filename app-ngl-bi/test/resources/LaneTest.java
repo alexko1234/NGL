@@ -1,7 +1,5 @@
 package resources;
 
-import static fr.cea.ig.play.test.DevAppTesting.testInServer;
-import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
@@ -23,13 +21,13 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+import ngl.bi.AbstractBIServerTest;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
-import utils.AbstractTests;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LaneTest extends AbstractTests{
+public class LaneTest extends AbstractBIServerTest{
 
 	static Run run;
 	static List<ReadSet> readSets;
@@ -84,103 +82,79 @@ public class LaneTest extends AbstractTests{
 	@Test
 	public void test1list()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("list Lane");
-					WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes", 200);
-					assertThat(response.asJson()).isNotNull();
-				});
+		Logger.debug("list Lane");
+		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes", 200);
+		assertThat(response.asJson()).isNotNull();
 	}
 
 	@Test
 	public void test2get()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("get Lane");
-					WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes/1", 200);
-					assertThat(response.asJson()).isNotNull();
-				});
+		Logger.debug("get Lane");
+		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/lanes/1", 200);
+		assertThat(response.asJson()).isNotNull();
 	}
 
 	@Test
 	public void test3head()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("head Lane");
-					WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code+"/lanes/1", 200);
-					assertThat(response).isNotNull();
-				});
+		Logger.debug("head Lane");
+		WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code+"/lanes/1", 200);
+		assertThat(response).isNotNull();
 	}
 
 	@Test
 	public void test4deleteNumber()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("delete Lane number");
-					WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes/7",200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.lanes.size()).isEqualTo(6);
-				});
+		Logger.debug("delete Lane number");
+		WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes/7",200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.lanes.size()).isEqualTo(6);
 	}
 
 	@Test
 	public void test5save()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("save Lane with json "+laneJson);
-					WSHelper.post(ws, "/api/runs/"+run.code+"/lanes", laneJson, 200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.lanes.size()).isEqualTo(7);
-				});
+		Logger.debug("save Lane with json "+laneJson);
+		WSHelper.post(ws, "/api/runs/"+run.code+"/lanes", laneJson, 200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.lanes.size()).isEqualTo(7);
 	}
 
 	@Test
 	public void test6update()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("update Lane");
-					//Get Run
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					Date date = new Date();
-					Lane lane = run.lanes.get(0);
-					lane.valuation.date=date;
-					WSHelper.put(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number, Json.toJson(lane).toString(), 200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.lanes.get(0).valuation.date).isEqualTo(date);
-				});
+		Logger.debug("update Lane");
+		//Get Run
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		Date date = new Date();
+		Lane lane = run.lanes.get(0);
+		lane.valuation.date=date;
+		WSHelper.putObject(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number, lane, 200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.lanes.get(0).valuation.date).isEqualTo(date);
 	}
 
 	@Test
 	public void test7valuation()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("valuation Lane");
-					Valuation valuation = new Valuation();
-					valuation.comment="test valuation";
-					valuation.date=new Date();
-					valuation.valid=TBoolean.FALSE;
-					WSHelper.put(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number+"/valuation", Json.toJson(valuation).toString(), 200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.lanes.get(0).valuation.comment).isEqualTo("test valuation");
-					assertThat(run.lanes.get(0).valuation.valid).isEqualTo(TBoolean.FALSE);
-				});
+		Logger.debug("valuation Lane");
+		Valuation valuation = new Valuation();
+		valuation.comment="test valuation";
+		valuation.date=new Date();
+		valuation.valid=TBoolean.FALSE;
+		WSHelper.putObject(ws, "/api/runs/"+run.code+"/lanes/"+run.lanes.get(0).number+"/valuation", valuation, 200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.lanes.get(0).valuation.comment).isEqualTo("test valuation");
+		assertThat(run.lanes.get(0).valuation.valid).isEqualTo(TBoolean.FALSE);
 	}
 
 	@Test
 	public void test8delete()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("delete Lane number");
-					WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes",200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.lanes).isNull();
-				});
+		Logger.debug("delete Lane number");
+		WSHelper.delete(ws,"/api/runs/"+run.code+"/lanes",200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.lanes).isNull();
 	}
 }

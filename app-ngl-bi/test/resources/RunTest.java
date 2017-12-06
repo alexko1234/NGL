@@ -1,7 +1,5 @@
 package resources;
 
-import static fr.cea.ig.play.test.DevAppTesting.testInServer;
-import static ngl.bi.Global.devapp;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Date;
@@ -16,7 +14,6 @@ import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.test.WSHelper;
-import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
@@ -26,14 +23,13 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+import ngl.bi.AbstractBIServerTest;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
-import utils.AbstractTests;
-import utils.RunMockHelper;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class RunTest extends AbstractTests{
+public class RunTest extends AbstractBIServerTest{
 
 	static Run run;
 	static ContainerSupport containerSupport;
@@ -70,7 +66,7 @@ public class RunTest extends AbstractTests{
 			Sample sample = MongoDBDAO.findByCode("ngl_bq.Sample_dataWF", Sample.class, codeSample);
 			MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,sample);
 		}
-		
+
 		//insert containers
 		containers = MongoDBDAO.find("ngl_sq.Container_dataWF", Container.class, DBQuery.is("support.code", containerSupport.code)).toList();
 		for(Container container: containers){
@@ -103,112 +99,88 @@ public class RunTest extends AbstractTests{
 		for(String sampleCode:run.sampleCodes){
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleCode);
 		}
-		
+
 	}
 
 	@Test
 	public void test1saveRun() throws InterruptedException
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("save Run");
-					WSHelper.post(ws, "/api/runs", jsonRun, 200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					Logger.debug("Run "+run.code);
-					assertThat(run).isNotNull();
-				});
+		Logger.debug("save Run");
+		WSHelper.post(ws, "/api/runs", jsonRun, 200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		Logger.debug("Run "+run.code);
+		assertThat(run).isNotNull();
 	}
 
 	@Test
 	public void test2updateRun()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("save Run");
-					Date date = new Date();
-					run.sequencingStartDate=date;
-					run.properties.remove("libProcessTypeCodes");
-					WSHelper.put(ws, "/api/runs/"+run.code, Json.toJson(run).toString(), 200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.sequencingStartDate).isEqualTo(date);
-					assertThat(run.properties.get("libProcessTypeCodes")).isNull();
-				});
+		Logger.debug("save Run");
+		Date date = new Date();
+		run.sequencingStartDate=date;
+		//run.properties.remove("libProcessTypeCodes");
+		WSHelper.putObject(ws, "/api/runs/"+run.code,run, 200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.sequencingStartDate).isEqualTo(date);
+		//assertThat(run.properties.get("libProcessTypeCodes")).isNull();
 	}
 
 	@Test
 	public void test3listRun()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("save Run");
-					WSResponse response = WSHelper.get(ws, "/api/runs", 200);
-					assertThat(response.asJson()).isNotNull();
-				});
+		Logger.debug("save Run");
+		WSResponse response = WSHelper.get(ws, "/api/runs", 200);
+		assertThat(response.asJson()).isNotNull();
 	}
 
 	@Test
 	public void test4getRun()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("get Run");
-					WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code, 200);
-					assertThat(response.asJson()).isNotNull();
-				});
+		Logger.debug("get Run");
+		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code, 200);
+		assertThat(response.asJson()).isNotNull();
 	}
 
 	@Test
 	public void test5headRun()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("head Run");
-					WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code, 200);
-					assertThat(response).isNotNull();
-				});
+		Logger.debug("head Run");
+		WSResponse response = WSHelper.head(ws, "/api/runs/"+run.code, 200);
+		assertThat(response).isNotNull();
 	}
 
 	@Test
 	public void test6GetState()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("get State");
-					WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/state", 200);
-					assertThat(response.asJson()).isNotNull();
-				});
+		Logger.debug("get State");
+		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/state", 200);
+		assertThat(response.asJson()).isNotNull();
 	}
-	
+
 	@Test
 	public void test7GetStateHistorical()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("get State historical");
-					WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/state/historical", 200);
-					assertThat(response.asJson()).isNotNull();
-				});
+		Logger.debug("get State historical");
+		WSResponse response = WSHelper.get(ws, "/api/runs/"+run.code+"/state/historical", 200);
+		assertThat(response.asJson()).isNotNull();
 	}
-	
+
 	@Test
 	public void test8Valuation()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("valuation");
-					//Create valuation
-					Valuation valuation = new Valuation();
-					valuation.comment="test valuation";
-					valuation.date=new Date();
-					valuation.valid=TBoolean.FALSE;
-					
-					WSHelper.put(ws, "/api/runs/"+run.code+"/valuation",Json.toJson(valuation).toString(), 200);
-					run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(run.valuation.valid).isEqualTo(TBoolean.FALSE);
-					assertThat(run.valuation.comment).isEqualTo("test valuation");
-				});
+		Logger.debug("valuation");
+		//Create valuation
+		Valuation valuation = new Valuation();
+		valuation.comment="test valuation";
+		valuation.date=new Date();
+		valuation.valid=TBoolean.FALSE;
+
+		WSHelper.putObject(ws, "/api/runs/"+run.code+"/valuation",valuation, 200);
+		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(run.valuation.valid).isEqualTo(TBoolean.FALSE);
+		assertThat(run.valuation.comment).isEqualTo("test valuation");
 	}
-	
+
 	/**
 	 * TODO Ne peut etre testé
 	 */
@@ -227,20 +199,17 @@ public class RunTest extends AbstractTests{
 					//assertThat(run.properties.get("libProcessTypeCodes")).isNotNull();
 				});
 	}*/
-	
+
 	@Test
 	public void test9DeleteRun()
 	{
-		testInServer(devapp(),
-				ws -> {	
-					Logger.debug("delete Run");
-					WSHelper.delete(ws,"/api/runs/"+run.code,200);
-					Run runDB = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
-					assertThat(runDB).isNull();
-				});
+		Logger.debug("delete Run");
+		WSHelper.delete(ws,"/api/runs/"+run.code,200);
+		Run runDB = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
+		assertThat(runDB).isNull();
 	}
-	
-	
+
+
 
 
 }
