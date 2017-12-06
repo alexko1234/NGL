@@ -10,6 +10,8 @@ import models.utils.Model;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
+// This link : {@link models.laboratory.common.description.State}
+
 /**
  * Value of the possible state of type
  * 

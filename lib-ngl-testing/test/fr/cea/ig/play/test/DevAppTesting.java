@@ -318,6 +318,7 @@ public class DevAppTesting {
 		rurNeqTraceInfo(ws,url,Json.toJson(o));
 	}
 	
+	
 	public static void cr(WSClient ws, String url, JsonNode data) {
 		// This must post data to fill a form server side (Form<Sample>)
 		// The provided json data has to be converted to form data.

@@ -10,3 +10,4 @@ Controller badRequest("") -> json
 
 Traceinformation 
 
+Check messages in test for missing args ("Le code tube du type {1} n'existe pas")

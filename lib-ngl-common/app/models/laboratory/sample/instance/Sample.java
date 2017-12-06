@@ -27,11 +27,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import controllers.ICommentable;
 import fr.cea.ig.DBObject;
 
+//Link to this : {@link models.laboratory.sample.instance.Sample}
+
 // TODO: cleanup, comment
+// TODO: create a base class DBOject,ITracingAccess,ICommentable,IValidation
 
 /**
- * Sample information as required by the laboratory (the L in LIMS). 
- * Samples collection name is defined as {@link models.utils.InstanceConstants#SAMPLE_COLL_NAME}.
+ * Sample information as required by the laboratory (the L in LIMS).
+ * 
+ * Sample collection name is defined as {@link models.utils.InstanceConstants#SAMPLE_COLL_NAME}.
  * 
  * @author mhaquell
  * @author vrd
@@ -111,6 +115,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	
 	/**
 	 * List of projections of process that use this sample.
+	 * Sample creation requires that we provide at least one project code. 
 	 */
 	public List<SampleProcess> processes;
 	

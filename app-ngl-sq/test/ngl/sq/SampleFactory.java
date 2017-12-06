@@ -2,8 +2,12 @@ package ngl.sq;
 
 import static ngl.sq.SampleFactory.fresh;
 import static ngl.sq.SampleFactory.from;
+import static ngl.sq.SampleFactory.samplesUrl;
 import static play.mvc.Http.Status.OK;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Consumer;
 
 import fr.cea.ig.play.test.DBObjectFactory;
@@ -13,6 +17,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import fr.cea.ig.play.test.JsonHelper;
 import fr.cea.ig.play.test.WSHelper;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.sample.instance.Sample;
 import play.libs.Json;
 import play.libs.ws.WSClient;
@@ -58,6 +64,25 @@ public class SampleFactory extends DBObjectFactory {
 		Sample sample = fresh(from(resourceName));
 		WSResponse r = WSHelper.postObject(ws,samplesUrl,sample,OK);
 		return Json.fromJson(Json.parse(r.getBody()), Sample.class);
+	}
+	
+	public static Sample createSample(WSClient ws) {
+		return createSample(ws, s -> { });
+	}
+	
+	public static Sample createSample(WSClient ws, Consumer<Sample> init) {
+		Sample sample = new Sample();
+		sample.code           = DevAppTesting.newCode();
+		sample.typeCode       = "DNA";
+		sample.importTypeCode = "dna-reception"; 
+		sample.categoryCode   = "DNA";
+		sample.projectCodes   = new HashSet<String>(Arrays.asList("BXL"));
+		sample.properties     = new HashMap<String,PropertyValue>();
+		sample.properties.put("meta", new PropertySingleValue(false));
+		init.accept(sample);
+		WSHelper.postObject(ws,samplesUrl,sample,OK);
+		DevAppTesting.rurNeqTraceInfo(ws, samplesUrl, sample);
+		return sample;
 	}
 	
 }
