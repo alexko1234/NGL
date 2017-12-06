@@ -147,5 +147,64 @@ public class WSHelper {
 		assertEquals(message + " " + response.getBody(), status, response.getStatus());
 		return response;
 	}
+	/**
+	 * Short for http delete with some payload.
+	 * @param ws      web client to use
+	 * @param url     url to put to
+	 * @return        web response
+	 */
+	public static WSResponse delete(WSClient ws, String url) { 
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).delete();
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 	
+	/**
+	 * Short for http delete 
+	 * @param ws      web client to use
+	 * @param url     url to put to
+	 * @param status  expected http status
+	 * @return        web response
+	 */
+	public static WSResponse delete(WSClient ws, String url, int status) {
+		WSResponse r = delete(ws,url);
+		assertEquals("DELETE " + url + " " + r.getBody(), status, r.getStatus());
+		return r;
+	}
+	
+
+	/**
+	 * Execute a head request and assert the response status. 
+	 * @param ws     web client
+	 * @param url    url to get
+	 * @param status status to assert
+	 * @return       request response
+	 */
+	public static WSResponse head(WSClient ws, String url, int status) {
+		WSResponse r = head(ws,url);
+		assertEquals("GET " + url + " " + r.getBody(), status, r.getStatus());
+		return r; 
+	}
+	
+	/**
+	 * Shorcut for http head. Exceptions are converted to runtime
+	 * exceptions.
+	 * @param ws  web client to use
+	 * @param url url to get 
+	 * @return    web response for the given url
+	 */
+	public static WSResponse head(WSClient ws, String url) { // throws InterruptedException,ExecutionException {
+		try {
+			CompletionStage<WSResponse> completionStage = ws.url(url).head();
+			WSResponse response = completionStage.toCompletableFuture().get();	
+			return response;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }
