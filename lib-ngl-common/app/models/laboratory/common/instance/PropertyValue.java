@@ -23,38 +23,39 @@ import validation.utils.ValidationHelper;
  */
 @JsonTypeInfo(use=Id.NAME, include=As.EXTERNAL_PROPERTY, property="_type", defaultImpl=models.laboratory.common.instance.property.PropertySingleValue.class, visible=true)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = PropertyValue.singleType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = PropertyValue.listType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = PropertyValue.fileType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class, name = PropertyValue.imgType),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = PropertyValue.objectType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class,     name = PropertyValue.singleType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class,       name = PropertyValue.listType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class,       name = PropertyValue.fileType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class,        name = PropertyValue.imgType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class,     name = PropertyValue.objectType),
 	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = PropertyValue.objectListType)
 })
 public abstract class PropertyValue<T> implements IValidation {
 	
-	public static final String singleType = "single";
-	public static final String listType = "list";
-	public static final String fileType = "file";
-	public static final String imgType = "img";
-	public static final String objectType = "object";
+	public static final String singleType     = "single";
+	public static final String listType       = "list";
+	public static final String fileType       = "file";
+	public static final String imgType        = "img";
+	public static final String objectType     = "object";
 	public static final String objectListType = "object_list";
 	
 	public String _type;
 	public T value;
 	
+	// TODO: remove super() calls that are implicit
 	public PropertyValue(String _type) {
-		super();
-		this._type=_type;
+		// super();
+		this._type = _type;
 	}
+	
 	public PropertyValue(String _type, T value) {
-		super();
-		this._type=_type;
+		// super();
+		this._type = _type;
 		this.value = value;
 	}
 	
-	
 	public PropertyValue(String _type, T value, String unit) {
-		super();
+		// super();
 		this._type = _type;
 		this.value = value;		
 	}
@@ -69,4 +70,5 @@ public abstract class PropertyValue<T> implements IValidation {
 		Collection<PropertyDefinition> propertyDefinitions = (Collection<PropertyDefinition>) contextValidation.getObject("propertyDefinitions");
 		ValidationHelper.checkType(contextValidation, this, propertyDefinitions);
 	}
+	
 }

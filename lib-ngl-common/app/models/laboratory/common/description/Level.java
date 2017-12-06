@@ -3,23 +3,43 @@ package models.laboratory.common.description;
 import models.laboratory.common.description.dao.LevelDAO;
 import models.utils.Model;
 
-public class Level extends Model<Level>{
+public class Level extends Model<Level> {
+	
 	//not used ContentIn, ContentOut, ContainerSupportIn, ContainerSupportOut
-	public enum CODE {Container, ContainerIn, ContainerOut, Content, ContainerSupport, Experiment, Instrument, 
-		Project, Process, Run, Sample, Lane, ReadSet, File,
-		Read1, Read2, Single, Pairs, Default, Analysis};
+	public enum CODE {
+		Container, 
+		ContainerIn, 
+		ContainerOut, 
+		Content, 
+		ContainerSupport, 
+		Experiment, 
+		Instrument, 
+		Project, 
+		Process, 
+		Run, 
+		Sample, 
+		Lane, 
+		ReadSet, 
+		File,
+		Read1, 
+		Read2, 
+		Single, 
+		Pairs, 
+		Default, 
+		Analysis
+	};
 		
-	public static Finder<Level> find = new Finder<Level>(LevelDAO.class.getName()); 
+	public static Model.Finder<Level> find = new Model.Finder<Level>(LevelDAO.class.getName()); 
 	
 	public Level() {
 		super(LevelDAO.class.getName());
 	}
 	
-	public Level(CODE code) {
+	// TODO: fix doc generation error (CODE -> Level.CODE) 
+	public Level(Level.CODE code) {
 		super(LevelDAO.class.getName());
 		this.code = code.name();
-		this.name = code.name();
-		
+		this.name = code.name();	
 	}
 
 	public String name;

@@ -1,14 +1,27 @@
 package controllers.reagents.tpl;
 
+import javax.inject.Inject;
+
 import controllers.CommonController;
-import play.Routes;
+// import play.Routes;
 import play.mvc.Result;
 import views.html.declarations.home;
 import views.html.declarations.kitsCreation;
 import views.html.declarations.ordersCreation;
 import views.html.declarations.kitsSearch;
+import play.routing.JavaScriptReverseRouter;
 
 public class Kits extends CommonController {
+	private final home home;
+	private final kitsSearch kitsSearch;
+	private final kitsCreation kitsCreation;
+	@Inject
+	public Kits(home home, kitsSearch kitsSearch, kitsCreation kitsCreation) {
+		this.home= home;
+		this.kitsSearch= kitsSearch;
+		this.kitsCreation= kitsCreation;
+	}
+	
 	public Result home(String code){
 		return ok(home.render(code+".kits"));
 	}
@@ -30,7 +43,8 @@ public class Kits extends CommonController {
 	public Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
-				Routes.javascriptRouter("jsRoutes",  	       
+				// Routes.javascriptRouter("jsRoutes",
+				 JavaScriptReverseRouter.create("jsRoutes",
 						// Routes	
 						controllers.reagents.tpl.routes.javascript.Orders.createOrEdit(),
 						controllers.reagents.tpl.routes.javascript.Kits.createOrEdit(),

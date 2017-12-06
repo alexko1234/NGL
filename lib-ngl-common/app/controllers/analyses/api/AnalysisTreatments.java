@@ -2,7 +2,7 @@ package controllers.analyses.api;
 
 import java.util.Collection;
 
-import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.Analysis;
@@ -17,11 +17,16 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
-@Controller
-public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment>{
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
-	public AnalysisTreatments() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, Treatment.class);
+// TODO: cleanup
+
+//@Controller
+public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment> {
+
+	public AnalysisTreatments(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, Treatment.class);
 	}
 	
 	protected Query getSubObjectQuery(String parentCode, String code){
@@ -38,14 +43,17 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	
 	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
 			return notFound();
-		}else if(request().body().isMaxSizeExceeded()){
-			return badRequest("Max size exceeded");
 		}
+		// Supposed to be an exception in 2.5
+		/*else if(request().body().isMaxSizeExceeded()){
+			return badRequest("Max size exceeded");
+		}*/
 		
 		Form<Treatment> filledForm = getSubFilledForm();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
@@ -55,18 +63,20 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		ctxVal.putObject("level", Level.CODE.Analysis);
 		ctxVal.putObject("analysis", objectInDB);
 		inputTreatment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		if (!ctxVal.hasErrors()) {
 			updateObject(DBQuery.is("code", parentCode), 
 					DBUpdate.set("treatments."+inputTreatment.code, inputTreatment)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputTreatment.code);
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {
@@ -82,15 +92,16 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 			ctxVal.putObject("level", Level.CODE.Analysis);
 			ctxVal.putObject("analysis", objectInDB);
 			inputTreatment.validate(ctxVal);
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) { 
 				updateObject(DBQuery.is("code", parentCode), 
 						DBUpdate.set("treatments."+inputTreatment.code, inputTreatment)
 						.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return get(parentCode, code);
 			} else {
-				return badRequest(filledForm.errorsAsJson());			
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else{
 			return badRequest("treatment code are not the same");
 		}
 	}

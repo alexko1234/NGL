@@ -14,15 +14,18 @@ import play.Logger;
 
 
 /**
- *Generic operation DAO with MappingSQL object 
- * @author ejacoby
+ * Generic operation DAO with MappingSQL object 
  *
  * @param <T>
+ * 
+ * @author ejacoby
+ * 
  */
 public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 
 	//table of class <T> must be named as "t" and "code" field must be unique
 	protected String sqlCommon;
+	
 	protected Class<? extends MappingSqlQuery<T>> classMapping;
 
 	protected AbstractDAOMapping(String tableName, Class<T> entityClass, Class<? extends MappingSqlQuery<T>> classMapping, String sqlCommon, boolean useGeneratedKey) {
@@ -48,14 +51,13 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 	
 	
 	public T findByCode(String code) throws DAOException {
-		
-		if(null == code){
+		// TODO: change exception to IllegalArgument exception ?
+		if (null == code)
 			throw new DAOException("code is mandatory");
-		}
 		T o = getObjectInCache(code);
-		if(null != o){
+		if (null != o) {
 			return o;
-		}else{
+		} else {
 			String sql= sqlCommon+" where t.code = ?";
 			o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 			setObjectInCache(o, code);

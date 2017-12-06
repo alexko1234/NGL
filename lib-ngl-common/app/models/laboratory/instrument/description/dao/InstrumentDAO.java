@@ -18,10 +18,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import play.Logger;
+// import play.Logger;
 
 @Repository
-public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
+public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 
 	protected InstrumentDAO() {
 		super("instrument", Instrument.class, InstrumentMappingQuery.class,
@@ -51,11 +51,12 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		String sql = "UPDATE instrument SET code=?, short_name=?, name=?, active=?, path=? WHERE id=?";
 		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);
 	}
+	
 	/**
 	 * Update all fields but not active and code
 	 * @param instrument
-	 * @throws DAOException
 	 */
+	// * @throws DAOException
 	public void updateByCode(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET short_name=?, name=?, path=? WHERE code=?";
 		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);

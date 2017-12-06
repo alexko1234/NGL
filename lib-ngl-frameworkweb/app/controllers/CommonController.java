@@ -2,6 +2,13 @@ package controllers;
 
 
 import java.beans.PropertyDescriptor;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +41,11 @@ import play.libs.Json;
 import play.modules.jongo.MongoDBPlugin;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
-import play.mvc.Results.StringChunks;
-import play.mvc.Results.Chunks.Out;
+//import play.mvc.Results.StringChunks;
+//import play.mvc.Results.Chunks.Out;
 import play.mvc.Result;
 import play.mvc.With;
+// import scala.io.Source;
 import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
@@ -50,12 +58,15 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
+import fr.cea.ig.mongo.MongoStreamer;
+
 @Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public abstract class CommonController extends Controller{
+public abstract class CommonController extends Controller {
 
-	protected final static DynamicForm listForm = new DynamicForm();
-
+	// TODO: fix initialization
+	protected final static DynamicForm listForm = // new DynamicForm(null,null,null); // new DynamicForm()
+			fr.cea.ig.play.IGGlobals.form();
 
 	/**
 	 * Fill a form in json mode
@@ -169,7 +180,9 @@ public abstract class CommonController extends Controller{
 	}
 
 	protected static String getCurrentUser(){
-		return Context.current().request().username();
+		//return Context.current().request().username();
+		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
+		return fr.cea.ig.authentication.Helper.username(Context.current().session());
 	}
 	
 	/**
@@ -335,20 +348,42 @@ public abstract class CommonController extends Controller{
 	protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type){
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
-		if(form.datatable){
+		if (form.datatable) {
 			return ok(getUDTChunk(all)).as("application/json");
-		}else if(form.list){
+		} else if(form.list) {
 			return ok(getChunk(all)).as("application/json");									
-		}else if(form.count){
+		} else if(form.count) {
 			int count = all.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
-		}else{
+		} else {
 			return badRequest();
 		}
 	}
 
+	/*
+	public Result index() {
+	    java.io.File file = new java.io.File("/tmp/fileToServe.pdf");
+	    java.nio.file.Path path = file.toPath();
+	    Source<ByteString, ?> source = FileIO.fromPath(path);
+
+	    Optional<Long> contentLength = Optional.of(file.length());
+
+	    return new Result(
+	        new ResponseHeader(200, Collections.emptyMap()),
+	        new HttpEntity.Streamed(source, contentLength, Optional.of("text/plain"))
+	    );
+	}
+	*/
+	
+	private static <T extends DBObject> InputStream getChunk(MongoCursor<T> all) {
+		return MongoStreamer.stream(all);
+	}
+	private static <T extends DBObject> InputStream getUDTChunk(MongoCursor<T> all) {
+		return MongoStreamer.streamUDT(all);
+	}
+/*	
 	private static <T extends DBObject> StringChunks getChunk(MongoCursor<T> all) {
 		return new StringChunks() {
 			@Override
@@ -357,7 +392,7 @@ public abstract class CommonController extends Controller{
 		    	out.write("[");
 			    while (iter.hasNext()) {
 			    	out.write(Json.toJson(iter.next()).toString());
-		            if(iter.hasNext())out.write(",");
+		            if (iter.hasNext()) out.write(",");
 		        }					
 		        out.write("]");
 			    out.close();					
@@ -374,13 +409,12 @@ public abstract class CommonController extends Controller{
 			    Iterator<T> iter = all.iterator();
 			    while(iter.hasNext()){
 			    	out.write(Json.toJson(iter.next()).toString());
-		            if(iter.hasNext())out.write(",");    	
+		            if (iter.hasNext()) out.write(",");    	
 			    }
 			    out.write("]}");
 			    out.close();				
 			}
 		};
 	}
-	
-	
+	*/
 }

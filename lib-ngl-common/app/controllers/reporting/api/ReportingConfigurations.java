@@ -1,7 +1,8 @@
 package controllers.reporting.api;
 
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ReportingConfigurations extends CommonController {
 	final static Form<ReportingConfiguration> reportConfigForm = form(ReportingConfiguration.class);
@@ -94,7 +96,8 @@ public class ReportingConfigurations extends CommonController {
 			reportingConfiguration = MongoDBDAO.save(InstanceConstants.REPORTING_CONFIG_COLL_NAME, reportingConfiguration);
 			return ok(Json.toJson(reportingConfiguration));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -119,8 +122,9 @@ public class ReportingConfigurations extends CommonController {
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.REPORTING_CONFIG_COLL_NAME, reportingConfigurationInput);
 				return ok(Json.toJson(reportingConfigurationInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
 		}else{
 			return badRequest("ReportingConfiguration code are not the same");

@@ -6,14 +6,17 @@ import models.utils.Model;
 
 /**
  * Value of institute (only 2 possible values : CNG & CNS)
+ * 
  * @author dnoisett
  *
  */
-public class Institute extends Model<Institute>{
+public class Institute extends Model<Institute> {
 
 	public String name;
 	
-	public static Finder<Institute> find = new Finder<Institute>(InstituteDAO.class.getName()); 
+	// Doc generation produces an error with the unqualified name.
+	// public static Finder<Institute> find = new Finder<Institute>(InstituteDAO.class.getName()); 
+	public static Model.Finder<Institute> find = new Model.Finder<Institute>(InstituteDAO.class.getName()); 
 	
 	public Institute() {
 		super(InstituteDAO.class.getName());

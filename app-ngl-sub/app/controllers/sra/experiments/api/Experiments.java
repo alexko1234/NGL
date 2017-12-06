@@ -1,10 +1,13 @@
 package controllers.sra.experiments.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +18,7 @@ import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 import play.Logger;
@@ -22,6 +26,8 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+
+// TODO: remove System.out.print
 
 public class Experiments extends DocumentController<Experiment> {
 
@@ -31,8 +37,9 @@ public class Experiments extends DocumentController<Experiment> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 
-	public Experiments() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public Experiments(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
 	public Result get(String code)
@@ -69,7 +76,8 @@ public class Experiments extends DocumentController<Experiment> {
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("experiments ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!updateExperiment: " +userExperiment.code );
 
@@ -92,12 +100,15 @@ public class Experiments extends DocumentController<Experiment> {
 				}else {
 					System.out.println("contextValidation.errors pour experiment :"  +userExperiment.code);
 					ctxVal.displayErrors(Logger.of("SRA"));
-					System.out.println(filledForm.errorsAsJson());
-					return badRequest(filledForm.errorsAsJson());
+					// System.out.println(filledForm.errors-AsJson());
+					// return badRequest(filledForm.errors-AsJson());
+					System.out.println(errorsAsJson(ctxVal.getErrors()));
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				filledForm.reject("experiment code " + code + " and userExperiment.code " + userExperiment.code , " are not the same");
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
 		}else{
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -112,7 +123,8 @@ public class Experiments extends DocumentController<Experiment> {
 
 				return ok(Json.toJson(getObject(code)));
 			}else{
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}
 	}

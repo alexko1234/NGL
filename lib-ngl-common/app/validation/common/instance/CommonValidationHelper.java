@@ -27,6 +27,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+// import play.Logger;
 import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
@@ -37,6 +38,9 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 public class CommonValidationHelper {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(CommonValidationHelper.class);
+	
 	private static final String nameRules="validations";
 
 	public static final String FIELD_CODE = "code";
@@ -361,14 +365,13 @@ public class CommonValidationHelper {
 		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 			validateStateCode(typeCode, stateCode, contextValidation);
-		} else if(contextValidation.getContextObjects().containsKey(FIELD_OBJECT_TYPE_CODE)){
+		} else if (contextValidation.getContextObjects().containsKey(FIELD_OBJECT_TYPE_CODE)) {
 			ObjectType.CODE objectTypeCode = getObjectFromContext(FIELD_OBJECT_TYPE_CODE, ObjectType.CODE.class, contextValidation);
 			validateStateCode(objectTypeCode, stateCode, contextValidation);
 		} else {
 			validateRequiredDescriptionCode(contextValidation, stateCode,"state.code", models.laboratory.common.description.State.find);
 		}
 	}
-	
 	
 	public static void validateState(String typeCode, State state, ContextValidation contextValidation) {
 		if (ValidationHelper.required(contextValidation, state, "state")) {
@@ -390,7 +393,7 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
+	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation) {
 		try {
 			if (required(contextValidation, stateCode, "code")) {
 				if (!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)) {
@@ -400,7 +403,6 @@ public class CommonValidationHelper {
 		} catch(DAOException e) {
 			throw new RuntimeException(e);
 		}
-		
 	}
 	
 	
@@ -546,22 +548,20 @@ public class CommonValidationHelper {
 	}
 	
 	
-	public static void validateRules(List<Object> objects,ContextValidation contextValidation){
-		
+	public static void validateRules(List<Object> objects,ContextValidation contextValidation) {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.addAll(objects);
-		ContextValidation validationRules=new ContextValidation(contextValidation.getUser());
+		ContextValidation validationRules = new ContextValidation(contextValidation.getUser());
 		facts.add(validationRules);
-	
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
-				
-		for(Object obj:factsAfterRules){
-			if(ContextValidation.class.isInstance(obj)){
+		for (Object obj : factsAfterRules) {
+			if (ContextValidation.class.isInstance(obj)) {
+				// logger.debug("validateRules/errors " + (((ContextValidation) obj).errors.size()));
 				contextValidation.errors.putAll(((ContextValidation) obj).errors);
 			}
 		}
-
 	}
+	
 	/*
 	public static void validateRules(Object object,ContextValidation contextValidation){
 		List<Object> list=new ArrayList<Object>();

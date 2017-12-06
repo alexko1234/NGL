@@ -1,42 +1,62 @@
 package controllers.containers.tpl;
 
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
+
 import play.mvc.Result;
 import views.html.containerSupports.details;
 import views.html.containerSupports.home;
 import views.html.containerSupports.homeScanner;
 import views.html.containerSupports.search;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
+
+// TODO: cleanup and comment
 
 public class ContainerSupports extends CommonController{
 	
-	public static Result home(String code){		
+	private final home home;
+	private final details details;
+	private final homeScanner homeScanner;
+	
+	@Inject
+	public ContainerSupports(home home, details details, homeScanner homeScanner) {
+		this.home = home;
+		this.details = details;
+		this.homeScanner = homeScanner;
+	}
+	
+	public /*static*/ Result home(String code){		
 		return ok(home.render(code));		
 	}
 	
-	public static Result homeScanner(){		
+	public /*static*/ Result homeScanner(){		
 		return ok(homeScanner.render());		
 	}
 	
-	public static Result search(){
+	public /*static*/ Result search(){
 		return ok(search.render());
 	}
 	
 	
 	
-	public static Result get(String code){
+	public /*static*/ Result get(String code){
 		return ok(home.render("search"));
 	}
 	
-	public static Result details() {
+	public /*static*/ Result details() {
 		return ok(details.render());
 	}
 	
 	
-	public static Result javascriptRoutes() {
+	public /*static*/ Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",	  
   	        // Routes
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),

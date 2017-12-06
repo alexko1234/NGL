@@ -1,7 +1,8 @@
 package controllers.containers.api;
 
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +38,7 @@ import play.i18n.Lang;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import scala.collection.generic.BitOperations.Int;
+// import scala.collection.generic.BitOperations.Int;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
@@ -49,24 +50,32 @@ import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
+	
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 
 	final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
+	
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
+	
 	final static List<String> authorizedUpdateFields = Arrays.asList("storageCode"); //liste des champs qui peuvent etre mis a jour
 	
 	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
+	
 	final static Form<State> stateForm = form(State.class);
 	
 	final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);
+	
+	// public ContainerSupports(NGLContext ctx) {}
 	
 	@Permission(value={"reading"})
 	public static Result get(String code){
@@ -141,8 +150,9 @@ public class ContainerSupports extends CommonController {
 		workflows.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getSupport(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -232,10 +242,11 @@ public class ContainerSupports extends CommonController {
 				// verifier si les champs de la query string font partie des champs modifiables
 				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); 
 				
-				if(!filledForm.hasErrors()){
-					if(null != dbSupport.traceInformation){
+				// if (!filledForm.hasErrors()) {
+				if (!ctxVal.hasErrors()) {
+					if (null != dbSupport.traceInformation) {
 						dbSupport.traceInformation.setTraceInformation(getCurrentUser());
-					}else{
+					} else {
 						Logger.error("traceInformation is null for Container support "+code);	
 					}
 					
@@ -254,8 +265,9 @@ public class ContainerSupports extends CommonController {
 					}
 					
 					return ok(Json.toJson(getSupport(code)));
-				}else{
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}		
 			}else{
 				return badRequest("container code are not the same");

@@ -1,6 +1,9 @@
 package controllers.runs.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import models.laboratory.common.description.Level;
@@ -16,6 +19,10 @@ import validation.ContextValidation;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
+
+// TODO: cleanup
 
 public class RunTreatments extends RunsController{
 
@@ -53,7 +60,8 @@ public class RunTreatments extends RunsController{
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result save(String runCode){
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
@@ -68,7 +76,7 @@ public class RunTreatments extends RunsController{
 		ctxVal.putObject("level", Level.CODE.Run);
 		ctxVal.putObject("run", run);
 		treatment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		/*if(!ctxVal.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.is("code", runCode),
 					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));						
@@ -76,17 +84,27 @@ public class RunTreatments extends RunsController{
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(treatment));			
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
-		}		
+			return badRequest(filledForm.errors-AsJson());			
+		}*/
+		if(!ctxVal.hasErrors()){
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+					DBQuery.is("code", runCode),
+					DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));						
+			return ok(Json.toJson(treatment));			
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+		}
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result update(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (run==null) {
-			return badRequest();
+			return badRequest(); // TODO: add message
 		}	
 		
 		
@@ -100,7 +118,7 @@ public class RunTreatments extends RunsController{
 			ctxVal.putObject("run", run);
 			
 			treatment.validate(ctxVal);
-			if(!ctxVal.hasErrors()){
+			/*if(!ctxVal.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 						DBQuery.is("code", runCode),
 						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));			
@@ -108,9 +126,18 @@ public class RunTreatments extends RunsController{
 			if (!filledForm.hasErrors()) {
 				return ok(Json.toJson(treatment));			
 			} else {
-				return badRequest(filledForm.errorsAsJson());			
+				return badRequest(filledForm.errors-AsJson());			
+			}*/
+			if (!ctxVal.hasErrors()) {
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.is("code", runCode),
+						DBUpdate.set("treatments."+treatment.code, treatment).set("traceInformation", getUpdateTraceInformation(run)));			
+				return ok(Json.toJson(treatment));			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("treatment code are not the same");
 		}
 	}

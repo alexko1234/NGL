@@ -1,5 +1,7 @@
 package workflows.analyses;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.util.Date;
 
 import org.mongojack.DBQuery;
@@ -16,7 +18,7 @@ import models.laboratory.run.instance.Analysis;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.Play;
-import play.libs.Akka;
+// import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -30,7 +32,9 @@ public class AnalysisWorkflows extends Workflows<Analysis>{
 	@Autowired
 	AnalysisWorkflowsHelper analysisWorkflowsHelper;
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	
 	private static final String ruleFBA="F_BA_1";
 
 	@Override

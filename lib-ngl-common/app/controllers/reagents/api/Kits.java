@@ -1,6 +1,7 @@
 package controllers.reagents.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,11 +35,12 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class Kits extends DocumentController<Kit>{
 
-	public Kits() {
-		super(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
+	public Kits(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
 	}
 
 	final static Form<KitSearchForm> kitSearchForm = form(KitSearchForm.class);
@@ -59,44 +61,42 @@ public class Kits extends DocumentController<Kit>{
 
 	public Result save(){
 		Form<Kit> kitFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
+		
 			Kit kit = kitFilledForm.get();
 			kit.code = ReagentCodeHelper.getInstance().generateKitCode();
 			kit.traceInformation = new TraceInformation();
 			kit.traceInformation.createUser =  getCurrentUser();
 			kit.traceInformation.creationDate = new Date();
 			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm.errors());
 			contextValidation.setCreationMode();
 			/*if(ValidationHelper.required(contextValidation, kit.name, "name")){
 				kitCatalog.code = CodeHelper.getInstance().generateKitCatalogCode(kitCatalog.name);
 			}*/
 
 			kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(kit));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson());
+			if (contextValidation.hasErrors())
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
+			return ok(Json.toJson(kit));
+		 // legit, spaghetti above
 	}
 
 	public Result update(String code){
 		Form<Kit> kitFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			Kit kit = kitFilledForm.get();
+		
+		Kit kit = kitFilledForm.get();
 
-			kit.traceInformation.modifyUser =  getCurrentUser();
-			kit.traceInformation.modifyDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
+		kit.traceInformation.modifyUser =  getCurrentUser();
+		kit.traceInformation.modifyDate = new Date();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitFilledForm.errors());
+		contextValidation.setUpdateMode();
 
-			kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(kit));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson());
+		kit = (Kit)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, kit, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(kit));
+		// legit, spaghetti above
 	}
 
 	public Result list(){

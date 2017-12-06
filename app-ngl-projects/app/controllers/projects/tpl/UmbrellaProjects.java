@@ -1,8 +1,11 @@
 package controllers.projects.tpl;
 
+import javax.inject.Inject;
+
 import controllers.CommonController;
 import controllers.projects.tpl.routes.javascript;
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.umbrellaprojects.*;
 
@@ -13,15 +16,21 @@ import views.html.umbrellaprojects.*;
  */
 public class UmbrellaProjects extends CommonController {
 	
-	public static Result home(String homecode) {
+	private home home;
+	@Inject
+	public UmbrellaProjects(home home) {
+		this.home = home;
+	}
+	
+	public  Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	public static Result get(String code) {
+	public  Result get(String code) {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result search(String type) {
+	public  Result search(String type) {
 		if(!"add".equals(type)){
 			return ok(search.render(Boolean.TRUE));
 		}else{
@@ -30,15 +39,16 @@ public class UmbrellaProjects extends CommonController {
 	}
 
 	
-	public static Result details(String typeForm) {
+	public Result details(String typeForm) {
 		return ok(details.render(typeForm));
 	}
 	
 	
-	public static Result javascriptRoutes() {
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.projects.tpl.routes.javascript.UmbrellaProjects.home(),  
   	    		controllers.projects.tpl.routes.javascript.UmbrellaProjects.get(), 

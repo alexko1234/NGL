@@ -11,7 +11,7 @@ import play.mvc.With;
 
 /**
  * Exemple:
- *	 @Permission(value={"54ki2"},teams={"THETEAM"})
+ *	 {@literal @}Permission(value={"54ki2"},teams={"THETEAM"})
  * 	
  * 
  * 	@author ydeshayes
@@ -27,3 +27,4 @@ public @interface Authenticate {
 	String[] teams() default "";//the teams
 	String  allPermissions() default "false";//need to have all the permission(true) or just one(false) 
 }
+

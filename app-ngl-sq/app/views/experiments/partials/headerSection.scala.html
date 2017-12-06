@@ -4,7 +4,7 @@
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
-			@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+			@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
 			<div class="btn-toolbar pull-right">
 			
 					<div class="btn-group " id="experiment_action" ng-if="getNbAvailableAdditionnalButtons() > 1">
@@ -49,8 +49,8 @@
 			 	
 			 		<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
 			 		
-			 		<button class="btn btn-default" ng-if="isExperimentDeleteAvailable('@Context.current().request().username()')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
-				 	@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
+			 		<button class="btn btn-default" ng-if="isExperimentDeleteAvailable('@fr.cea.ig.authentication.Helper.username(Context.current().session())')" ng-click="askDeleteExperiment()" data-toggle="tooltip" title="@Messages("button.delete")" ><i class="fa fa-trash"></i></button>
+				 	@if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "admin")){
 				 		<button class="btn btn-danger" ng-if="isFinishState() && isEditModeAvailable()" ng-disabled="isSaveInProgress()" ng-click="askSaveAdmin()" data-toggle="tooltip" title="@Messages("button.validate.warning.content")" ><i class="fa fa-save"></i></button>				 	
 			 		}
 			 	}

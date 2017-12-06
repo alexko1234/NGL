@@ -15,24 +15,28 @@ import models.laboratory.common.instance.PropertyValue;
  * @author mhaquell
  *
  */
-public class PropertySingleValue extends PropertyValue<Object>{
+public class PropertySingleValue extends PropertyValue<Object> {
 	
 	public PropertySingleValue() {
 		super(PropertyValue.singleType);
 	}
+	
 	public PropertySingleValue(Object value) {
 		super(PropertyValue.singleType, value);	
 	}
+	
 	public PropertySingleValue(Object value, String unit) {
 		super(PropertyValue.singleType, value);
 		this.unit = unit;
 	}
 	
 	public String unit;
+	
 	@Override
 	public String toString() {
 		return "PropertySingleValue[value=" + value + ", unit=" + unit +  ", class="+value.getClass().getName()+"]";
 	}
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		super.validate(contextValidation);
@@ -47,5 +51,4 @@ public class PropertySingleValue extends PropertyValue<Object>{
 		}
 	}
 	
-
 }

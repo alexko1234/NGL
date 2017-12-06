@@ -1,6 +1,7 @@
 package controllers.reagents.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +34,12 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
-public class KitCatalogs extends DocumentController<KitCatalog>{
-	public KitCatalogs() {
-		super(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
+public class KitCatalogs extends DocumentController<KitCatalog> {
+	
+	public KitCatalogs(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
 	}
 	
 	final static Form<KitCatalogSearchForm> kitCatalogSearchForm = form(KitCatalogSearchForm.class);
@@ -57,37 +60,33 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 	
 	public Result save(){
 		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			KitCatalog kitCatalog = kitCatalogFilledForm.get();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setCreationMode();
-			if(ValidationHelper.required(contextValidation, kitCatalog.name, "name")){
-				kitCatalog.code = ReagentCodeHelper.getInstance().generateKitCatalogCode();
-			
-				kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
-			}
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(kitCatalog));
-			}
+		KitCatalog kitCatalog = kitCatalogFilledForm.get();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm.errors());
+		contextValidation.setCreationMode();
+		if(ValidationHelper.required(contextValidation, kitCatalog.name, "name")){
+			kitCatalog.code = ReagentCodeHelper.getInstance().generateKitCatalogCode();
+		
+			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 		}
-		return badRequest(mainForm.errorsAsJson());
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(kitCatalog));	
+		 // legit, spaghetti above
 	}
 	
 	public Result update(String code){
 		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			KitCatalog kitCatalog = kitCatalogFilledForm.get();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
-			
-			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(kitCatalog));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson());
+		KitCatalog kitCatalog = kitCatalogFilledForm.get();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogFilledForm.errors());
+		contextValidation.setUpdateMode();
+		
+		kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(kitCatalog));
+		 // legit, spaghetti above
 	}
 	
 	public Result list(){

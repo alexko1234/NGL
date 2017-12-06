@@ -8,8 +8,10 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.dao.ProcessTypeDAO;
 import models.utils.dao.DAOException;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 
-public class ProcessType extends CommonInfoType{
+public class ProcessType extends CommonInfoType {
 
 	public ProcessCategory category;
 	
@@ -21,25 +23,23 @@ public class ProcessType extends CommonInfoType{
 	
 	public ExperimentType lastExperimentType;
 	
-
 	public static ProcessTypeFinder find = new ProcessTypeFinder(); 
 	
 	public ProcessType() {
 		super(ProcessTypeDAO.class.getName());
 	}
 	
-	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
+	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel() {
 		return getPropertyDefinitionByLevel(Level.CODE.Process);
 	}
 	
-
-	public static class ProcessTypeFinder extends Finder<ProcessType>{
+	public static class ProcessTypeFinder extends Finder<ProcessType> {
 
 		public ProcessTypeFinder() {
 			super(ProcessTypeDAO.class.getName());			
 		}
 		
-		public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCode) throws DAOException{
+		public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCode) throws DAOException {
 			return ((ProcessTypeDAO)getInstance()).findByProcessCategoryCodes(processCategoryCode);
 		}
 
@@ -50,6 +50,7 @@ public class ProcessType extends CommonInfoType{
 		public List<ProcessType> findAllLight() throws DAOException {
 			return ((ProcessTypeDAO)getInstance()).findAllLight();
 		}
+		
 	}
 	
 }

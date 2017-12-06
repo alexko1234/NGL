@@ -1,6 +1,7 @@
+@this(menu_ : menu)
 @()
 <!-- utilise le main de common -->
-@views.html.main("documentation.page.title",views.html.menu("documentation")) {
+@views.html.main("documentation.page.title",menu_("documentation")) {
 <div class="jumbotron">
 	<h1>@Messages("documentation.page.title")</h1>
 </div>

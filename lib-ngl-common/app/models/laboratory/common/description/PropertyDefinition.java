@@ -6,25 +6,28 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.utils.Model;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
 /**
- * Type property definition 
+ * Type property definition
+ *  
  * @author ejacoby
  *
  */
 
-public class PropertyDefinition extends Model<PropertyDefinition>{
+public class PropertyDefinition extends Model<PropertyDefinition> {
 
 	public String name;
 
 	public String description;
 
-	public Boolean required = Boolean.FALSE;
+	public Boolean required     = false; // Boolean.FALSE;
 	public String requiredState = null;
-	public Boolean editable=Boolean.TRUE;
-	public Boolean active = Boolean.TRUE;
-	public Boolean choiceInList = Boolean.FALSE;
+	public Boolean editable     = true;  // Boolean.TRUE;
+	public Boolean active       = false; //Boolean.TRUE;
+	public Boolean choiceInList = false; // Boolean.FALSE;
 
 	public String propertyValueType ;
 	public String valueType;  //String, Integer, Boolean, TBoolean, etc.
@@ -52,8 +55,7 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 		super(PropertyDefinitionDAO.class.getName());
 	}
 
-	
-	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition>{
+	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition> {
 
 		public PropertyDefinitionFinder() {
 			super(PropertyDefinitionDAO.class.getName());			
@@ -72,4 +74,5 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 		}
 		
 	}
+	
 }

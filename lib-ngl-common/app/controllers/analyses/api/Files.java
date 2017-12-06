@@ -1,6 +1,7 @@
  package controllers.analyses.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -22,15 +23,16 @@ import validation.run.instance.FileValidationHelper;
 import controllers.QueryFieldsForm;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 
-@Controller
+// @Controller
 public class Files extends SubDocumentController<Analysis, File> {
 
 	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	
-	public Files() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
+	public Files(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
 	}
 	@Override
 	protected Object getSubObject(Analysis objectInDB, String fullname) {
@@ -74,7 +76,8 @@ public class Files extends SubDocumentController<Analysis, File> {
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputFile.fullname);
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -90,7 +93,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		
 		Form<File> filledForm = getSubFilledForm();
 		File fileInput = filledForm.get();
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (fullname.equals(fileInput.fullname)) {			
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 				ctxVal.putObject("analysis", objectInDB);
@@ -104,12 +107,13 @@ public class Files extends SubDocumentController<Analysis, File> {
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 					return get(parentCode, fullname);
 				} else {
-					return badRequest(filledForm.errorsAsJson());
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("fullname are not the same");
 			}
-		}else{ //update only some authorized properties
+		} else { //update only some authorized properties
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.putObject("analysis", objectInDB);
 			ctxVal.putObject("objectClass", objectInDB.getClass());
@@ -121,7 +125,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 				ctxVal.setCreationMode();
 				FileValidationHelper.validateFileFullName(fileInput.fullname, ctxVal);
 			}
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(getSubObjectQuery(parentCode, fullname), 
 						getBuilder(fileInput, queryFieldsForm.fields, File.class,"files.$")
 						.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
@@ -129,8 +133,9 @@ public class Files extends SubDocumentController<Analysis, File> {
 					fullname = fileInput.fullname;
 				}
 				return get(parentCode, fullname);
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}

@@ -1,15 +1,19 @@
 package controllers.sra.samples.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.common.instance.Sample;
 import models.utils.InstanceConstants;
 import play.data.Form;
@@ -25,8 +29,9 @@ public class SamplesInternal extends DocumentController<Sample>{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId");
 
-	public SamplesInternal() {
-		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class);
+	@Inject
+	public SamplesInternal(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class);
 	}
 
 	public Result get(String code)
@@ -47,7 +52,7 @@ public class SamplesInternal extends DocumentController<Sample>{
 
 		if (sample == null) {
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		System.out.println(" ok je suis dans Samples.update\n");
 		Sample sampleInput = filledForm.get();
@@ -65,7 +70,8 @@ public class SamplesInternal extends DocumentController<Sample>{
 
 				return ok(Json.toJson(getObject(code)));
 			}else{
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}
 		return ok(Json.toJson(getObject(code)));

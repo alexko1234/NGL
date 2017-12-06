@@ -18,15 +18,18 @@ import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.Play;
-import play.libs.Akka;
+// import play.libs.Akka;
 import play.mvc.Result;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 public class MigrationReadSetNanopore extends CommonController{
 
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = // Akka.system().actorOf(Props.create(RulesActor6.class));
+			akkaSystem().actorOf(Props.create(RulesActor6.class));
 
 	public static Result migration(String collectionName){
 

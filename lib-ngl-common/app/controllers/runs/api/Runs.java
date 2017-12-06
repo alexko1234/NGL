@@ -1,6 +1,9 @@
 package controllers.runs.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +24,8 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -48,6 +51,9 @@ import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
 import workflows.run.RunWorkflows;
+import fr.cea.ig.play.NGLContext;
+
+
 /**
  * Controller around Run object
  *
@@ -62,8 +68,9 @@ public class Runs extends RunsController {
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "sequencingStartDate", "state", "valuation");
 
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	@Permission(value={"reading"})
 	public static Result list(){
@@ -75,7 +82,8 @@ public class Runs extends RunsController {
 		
 		if(form.datatable){			
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
-			return ok(new MongoDBDatatableResponseChunks<Run>(results)).as("application/json");	
+			// return ok(new MongoDBDatatableResponseChunks<Run>(results)).as("application/json");
+			return ok(MongoStreamer.streamUDT(results)).as("application/json");
 		}else if(form.list){
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -89,7 +97,8 @@ public class Runs extends RunsController {
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);	
-			return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
+			// return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}
 	}
 
@@ -296,7 +305,8 @@ public class Runs extends RunsController {
 			runInput = MongoDBDAO.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 			return ok(Json.toJson(runInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -329,8 +339,9 @@ public class Runs extends RunsController {
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, runInput);
 					return ok(Json.toJson(runInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					//return badRequest(filledForm.errors-AsJson());
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 				
 			}else{
@@ -342,7 +353,8 @@ public class Runs extends RunsController {
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				TraceInformation ti = run.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
 				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
@@ -355,8 +367,9 @@ public class Runs extends RunsController {
 				}
 				*/
 				return ok(Json.toJson(getRun(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
@@ -397,10 +410,11 @@ public class Runs extends RunsController {
 			workflows.nextState(ctxVal, run);
 			
 		} 
-		if(!ctxVal.hasErrors()) {
+		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(run));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 

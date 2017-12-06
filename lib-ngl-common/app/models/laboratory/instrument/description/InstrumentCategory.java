@@ -4,11 +4,12 @@ import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.instrument.description.dao.InstrumentCategoryDAO;
-import models.laboratory.instrument.description.dao.InstrumentDAO;
+// import models.laboratory.instrument.description.dao.InstrumentDAO;
 import models.utils.dao.DAOException;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 
-
-public class InstrumentCategory extends AbstractCategory<InstrumentCategory>{
+public class InstrumentCategory extends AbstractCategory<InstrumentCategory> {
 	
 	public static InstrumentCategoryFinder find = new InstrumentCategoryFinder(); 
 	
@@ -16,16 +17,16 @@ public class InstrumentCategory extends AbstractCategory<InstrumentCategory>{
 		super(InstrumentCategoryDAO.class.getName());
 	}
 	
-	public static class InstrumentCategoryFinder extends Finder<InstrumentCategory>{
+	public static class InstrumentCategoryFinder extends Finder<InstrumentCategory> {
 
 		public InstrumentCategoryFinder() {
 			super(InstrumentCategoryDAO.class.getName());			
 		}
 		
-		public List<InstrumentCategory> findByInstrumentUsedTypeCode(String instrumentTypeCode) throws DAOException{
+		public List<InstrumentCategory> findByInstrumentUsedTypeCode(String instrumentTypeCode) throws DAOException {
 			return ((InstrumentCategoryDAO)getInstance()).findByInstrumentUsedTypeCode(instrumentTypeCode);
 		}
+		
 	}
-	
 	
 }

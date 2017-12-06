@@ -1,6 +1,7 @@
 package controllers.ngsrg.lims;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.List;
 
@@ -45,17 +46,17 @@ public class LimsInformations  extends CommonController {
 		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
 		Form<Experiment> inputExpForm = experimentForm.bindFromRequest();
 		if(inputExpForm.hasErrors()) {			
-				return badRequest(inputExpForm.errorsAsJson());					
+			return badRequest(inputExpForm.errorsAsJson( )); // legit					
 		} else {
-				Experiment exp = limsRunServices.getExperiments(inputExpForm.get());
-				if(null == exp){
-					return notFound();
-				}
-				//System.out.println("SIZE = "+type+" "+supportCode);
-				return ok(Json.toJson(exp));
+			Experiment exp = limsRunServices.getExperiments(inputExpForm.get());
+			if(null == exp){
+				return notFound();
+			}
+			//System.out.println("SIZE = "+type+" "+supportCode);
+			return ok(Json.toJson(exp));
 		}
-	  }
-	
+	}
+
 	/**
 	 * Return the container support information used in the experiment
 	 * @param supportCode
@@ -65,9 +66,9 @@ public class LimsInformations  extends CommonController {
 	public static Result containerSupport(String supportCode) {
 		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);  		
 		ContainerSupport containerSupport = limsRunServices.getContainerSupport(supportCode);
-		if(null != containerSupport){
+		if (null != containerSupport) {
 			return ok(Json.toJson(containerSupport));
-		}else{
+		} else {
 			return notFound();
 		}
 	  }

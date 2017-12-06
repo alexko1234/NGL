@@ -15,15 +15,15 @@ PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupp
 POST	/api/supports/code												controllers.containers.api.ContainerSupports.saveCode(nbCodes:java.lang.Integer ?= 0)
 
 #containers api
-GET		/api/containers													controllers.containers.api.Containers.list()
-PUT		/api/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
+GET		/api/containers													@controllers.containers.api.Containers.list()
+PUT		/api/containers/:code											@controllers.containers.api.Containers.update(code:java.lang.String)
 
 #TODO a revoir plutot /api/containers/supports/categories
 GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
-GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
+GET		/api/containers/:code											@controllers.containers.api.Containers.get(code:java.lang.String)
 
-PUT		/api/containers/batch/state										controllers.containers.api.Containers.updateStateBatch()
-PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateState(code:java.lang.String)
+PUT		/api/containers/batch/state										@controllers.containers.api.Containers.updateStateBatch()
+PUT		/api/containers/:code/state										@controllers.containers.api.Containers.updateState(code:java.lang.String)
 
 GET		/api/container-categories										controllers.containers.api.ContainerCategories.list()
 

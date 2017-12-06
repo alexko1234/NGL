@@ -1,8 +1,8 @@
 package controllers.processes.api;
 
-import static play.data.Form.form;
-
-
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form; 
+import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,11 +70,14 @@ import controllers.authorisation.Permission;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
-public class ProcessesOld extends CommonController{
+// TODO: cleanup
+
+public class ProcessesOld extends CommonController {
 
 	final static Form<ProcessesSaveQueryForm> processSaveQueryForm = form(ProcessesSaveQueryForm.class);
 	final static Form<Process> processForm = form(Process.class);
@@ -86,11 +89,12 @@ public class ProcessesOld extends CommonController{
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
 	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
+	
 	@Permission(value={"reading"})
 	public static Result head(String processCode) {
-		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
+		if (MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)) {			
 			return ok();					
-		}else{
+		} else {
 			return notFound();
 		}	
 	}
@@ -98,7 +102,7 @@ public class ProcessesOld extends CommonController{
 	@Permission(value={"reading"})
 	public static Result get(String code){
 		Process process = getProcess(code);
-		if(process == null){
+		if (process == null) {
 			return notFound();
 		}
 		return ok(Json.toJson(process));
@@ -118,7 +122,7 @@ public class ProcessesOld extends CommonController{
 			process.traceInformation.setTraceInformation(getCurrentUser());
 			//the default status
 			process.state = new State("N", getCurrentUser());
-		}else {
+		} else {
 			return badRequest("use PUT method to update the process");
 		}
 
@@ -127,11 +131,11 @@ public class ProcessesOld extends CommonController{
 		if (!filledForm.hasErrors()) {
 			contextValidation.setCreationMode();
 			contextValidation.putObject("workflow", true);
-			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
+			if (StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)) {			
 				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm.get(), contextValidation);
-			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
+			} else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
 
-				if(!contextValidation.hasErrors()){
+				if (!contextValidation.hasErrors()) {
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, queryFieldsForm.fromContainerInputCode);
 					Process p = filledForm.get();
 					p.inputContainerCode = container.code;
@@ -139,20 +143,20 @@ public class ProcessesOld extends CommonController{
 					valdateCommonProcessAttribut(p, contextValidation);
 					processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 				}				
-			}else{
+			} else {
 				return badRequest("Params 'from object' required!");
 			}
 		}
 
-		if(contextValidation.hasErrors())
-		{
-			return badRequest(filledForm.errorsAsJson());
-		}else {
+		if (contextValidation.hasErrors()) {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
+		} else {
 			return ok(Json.toJson(processes));
 		}
 	}
 
-	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation){			
+	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation) {			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode).is("state.code","IW-P")).toList();
 		
@@ -179,15 +183,20 @@ public class ProcessesOld extends CommonController{
 		ProcessValidationHelper.validateTraceInformation(process.traceInformation, contextValidation);			
 	}
 
+	// TODO: fix the bad mix between forms and contextvalidations.
 	@Permission(value={"writing"})
-	public static Result saveBatch(){
+	public static Result saveBatch() {
+		if (true) throw new RuntimeException("fix the code");
 		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		ProcessesSaveQueryForm processesSaveQueryForm=filledQueryFieldsForm.get();
 
-		Form<Process> batchForm = new Form<Process>(Process.class);
+		// Form<Process> batchForm = new Form<Process>(Process.class);
+		// Form<Process> batchForm = new Form<Process>(Process.class,null,null,null);
+		Form<Process> batchForm = fr.cea.ig.play.IGGlobals.form(Process.class);
+		
 		List<Process> processes = new ArrayList<Process>();
 		ContextValidation contextValidation =new ContextValidation(getCurrentUser(), batchForm.errors());
 
@@ -215,12 +224,12 @@ public class ProcessesOld extends CommonController{
 					Process p = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 					processes.add(p);
 					response.add(new DatatableBatchResponseElement(OK,  p, element.index));
-				}else{
+				} else {
 					contextValidation.errors.putAll(ctxVal.errors);
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, batchForm.errorsAsJson(), element.index));
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, batchForm.errorsAsJson( ), element.index)); // check source 
 				}
-			}else {
-				response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
+			} else {
+				response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson( ), element.index)); // check source
 			}
 		}
 
@@ -305,18 +314,17 @@ public class ProcessesOld extends CommonController{
 		Process processInput = filledForm.get();
 		if (processInput.code.equals(code)) {
 			processInput.traceInformation.setTraceInformation(getCurrentUser());
-
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
 			processInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, processInput);
-
 				return ok(Json.toJson(processInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("process code are not the same");
 		}
 	}
@@ -327,7 +335,7 @@ public class ProcessesOld extends CommonController{
 		Form<ProcessesUpdateForm> processesUpdateFilledForm = getFilledForm(processesUpdateForm,ProcessesUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), processesUpdateFilledForm.errors());
 		contextValidation.setUpdateMode();
-		if(!processesUpdateFilledForm.hasErrors()){
+		if (!processesUpdateFilledForm.hasErrors()) {
 			ProcessesUpdateForm processesUpdateForm = processesUpdateFilledForm.get();
 			State state = new State();
 			state.code = processesUpdateForm.stateCode;
@@ -337,7 +345,8 @@ public class ProcessesOld extends CommonController{
 				return ok();
 			}
 		}
-		return badRequest(processesUpdateFilledForm.errorsAsJson());
+		// return badRequest(processesUpdateFilledForm.errors-AsJson());
+		return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
 	}
 
 	@Permission(value={"writing"})
@@ -354,8 +363,9 @@ public class ProcessesOld extends CommonController{
 		workflows.setState(ctxVal, process, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getProcess(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -380,10 +390,10 @@ public class ProcessesOld extends CommonController{
 				workflows.setState(ctxVal, process, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getProcess(process.code), element.index);
-				}else {
+				} else {
 					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 				}
-			}else {
+			} else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
 			}
 		}).collect(Collectors.toList());
@@ -394,35 +404,38 @@ public class ProcessesOld extends CommonController{
 	@Permission(value={"writing"})
 	public static Result delete(String code) throws DAOException{
 		Process process = getProcess(code);
-		Form deleteForm = new Form(Process.class);
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
-		if(process == null){
+		// Form deleteForm = new Form(Process.class);
+		// Form deleteForm = new Form(Process.class,null,null,null);
+		Form deleteForm = fr.cea.ig.play.IGGlobals.form(Process.class);
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),deleteForm.errors());
+		if (process == null) {
 			return notFound("Process with code "+code+" does not exist");
 		}
 
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
-		if(container==null){
+		if (container == null) {
 			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
 		}
-		if(!process.state.code.equals("N")){
+		if (!process.state.code.equals("N")) {
 			contextValidation.addErrors("process", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
-		}else if(CollectionUtils.isNotEmpty(process.experimentCodes)){
+		} else if (CollectionUtils.isNotEmpty(process.experimentCodes)) {
 			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		}else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)){
+		} else if (!"IS".equals(container.state.code) && !"UA".equals(container.state.code)) {
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}
 
-		if(!contextValidation.hasErrors()){
+		if (!contextValidation.hasErrors()) {
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
-		}else {
+		} else {
 			contextValidation.displayErrors(logger);
-			return badRequest(deleteForm.errorsAsJson());
+			// return badRequest(deleteForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
 		}
 	}
 
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public static Result list() throws DAOException {
 		//Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);
 
@@ -431,7 +444,8 @@ public class ProcessesOld extends CommonController{
 		
 		if(processesSearch.datatable){
 			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
-			return ok(new MongoDBDatatableResponseChunks<Process>(results)).as("application/json");
+			//return ok(new MongoDBDatatableResponseChunks<Process>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}else if(processesSearch.list){
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -447,7 +461,8 @@ public class ProcessesOld extends CommonController{
 			return ok(Json.toJson(los));
 		}else{
 			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
-			return ok(new MongoDBResponseChunks<Process>(results)).as("application/json");		
+			// return ok(new MongoDBResponseChunks<Process>(results)).as("application/json");
+			return ok(MongoStreamer.stream(results)).as("application/json");
 		}
 	}
 

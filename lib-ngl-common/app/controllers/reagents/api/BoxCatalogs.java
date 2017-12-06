@@ -1,6 +1,7 @@
 package controllers.reagents.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,50 +34,47 @@ import models.utils.ListObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class BoxCatalogs extends DocumentController<BoxCatalog>{
 	
 	final static Form<BoxCatalogSearchForm> boxCatalogSearchForm = form(BoxCatalogSearchForm.class);
 	
-	public BoxCatalogs() {
-		super(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
+	public BoxCatalogs(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
 	}
 	
-	public Result save(){
+	public Result save() {
 		Form<BoxCatalog> boxCatalogFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			BoxCatalog boxCatalog = boxCatalogFilledForm.get();
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			if(ValidationHelper.required(contextValidation, boxCatalog.name, "name")){
-				if(boxCatalog._id == null){
-					boxCatalog.code = ReagentCodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode);
-					contextValidation.setCreationMode();
-				}else{
-					contextValidation.setUpdateMode();
-				}
-				boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
+		BoxCatalog boxCatalog = boxCatalogFilledForm.get();
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm.errors());
+		//TODO change not update autorized here !!!!
+		if (ValidationHelper.required(contextValidation, boxCatalog.name, "name")){
+			if (boxCatalog._id == null){
+				boxCatalog.code = ReagentCodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode);
+				contextValidation.setCreationMode();
+			}else{
+				contextValidation.setUpdateMode();
 			}
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(boxCatalog));
-			}
+			boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
 		}
-		return badRequest(mainForm.errorsAsJson());
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(boxCatalog));		
 	}
 	
 	public Result update(String code){
 		Form<BoxCatalog> boxCatalogFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			BoxCatalog boxCatalog = boxCatalogFilledForm.get();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
-			
-			boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(boxCatalog));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson());
+		BoxCatalog boxCatalog = boxCatalogFilledForm.get();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), boxCatalogFilledForm.errors());
+		contextValidation.setUpdateMode();
+		
+		boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(boxCatalog));
+		
 	}
 	
 	public Result delete(String code){

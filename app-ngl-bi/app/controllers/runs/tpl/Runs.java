@@ -1,12 +1,17 @@
 package controllers.runs.tpl;
 
-import play.Routes;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.mvc.Result;
 import views.html.runs.treatments;
 import views.html.runs.details;
 import views.html.runs.home;
 import views.html.runs.laneTreatments;
 import views.html.runs.search;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 
 /**
@@ -15,45 +20,57 @@ import controllers.CommonController;
  *
  */
 public class Runs extends CommonController {
+	private final home home;
+	private final search search;
+	private final details details;
+	private final treatments treatments;
+	private final laneTreatments laneTreatments;
+	@Inject
+	public Runs(home home, search search, details details, treatments treatments, laneTreatments laneTreatments) {
+		this.home = home;
+		this.search = search;
+		this.details = details;
+		this.treatments = treatments;
+		this.laneTreatments = laneTreatments;
+	}
 	
-	public static Result home(String homecode) {
+	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	public static Result get(String code) {
+	public Result get(String code) {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result valuation(String code) {
+	public Result valuation(String code) {
 		return ok(home.render("valuation")); 
 	}
 	
-	public static Result search(String type) {
-		
-		if(!"valuation".equals(type)){
+	public Result search(String type) {
+		if (!"valuation".equals(type)) {
 			return ok(search.render(Boolean.TRUE));
-		}else{
+		} else {
 			return ok(search.render(Boolean.FALSE));
 		}
-		
 	}
 	
-	public static Result details() {
+	public Result details() {
 		return ok(details.render());
 	}
 	
-	public static Result treatments(String code) {
+	public Result treatments(String code) {
 		return ok(treatments.render(code));
 	}
 	
-	public static Result laneTreatments(String code) {
+	public Result laneTreatments(String code) {
 		return ok(laneTreatments.render(code));
 	}
 	
-	public static Result javascriptRoutes() {
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.runs.tpl.routes.javascript.Runs.home(),  
   	    		controllers.runs.tpl.routes.javascript.Runs.get(), 
