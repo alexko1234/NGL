@@ -10,12 +10,13 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Study;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
 @Service
 public class StudyWorkflows extends Workflows<Study>{
+	private static final play.Logger.ALogger logger = play.Logger.of(StudyWorkflows.class);
 
 	@Autowired
 	StudyWorkflowsHelper studyWorkflowsHelper;
@@ -23,7 +24,7 @@ public class StudyWorkflows extends Workflows<Study>{
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
 			Study study, State nextState) {
-		Logger.debug("apply pre state rules");
+		logger.debug("apply pre state rules");
 		updateTraceInformation(study.traceInformation, nextState); 
 		if(nextState.code.equals("IW-SUB-R")){
 			studyWorkflowsHelper.createSubmissionEntityforRelease(study, validation);
@@ -61,11 +62,11 @@ public class StudyWorkflows extends Workflows<Study>{
 		// verification qui ne passe pas par VariableSRA [SraValidationHelper.requiredAndConstraint(contextValidation, nextState.code , VariableSRA.mapStatus, "state.code")]		
 		// mais par CommonValidationHelper.validateState(ObjectType.CODE.SRASubmission, nextState, contextValidation); 
 		// pour uniformiser avec reste du code ngl
-		Logger.debug("dans setState");
-		Logger.debug("contextValidation.error avant validateState " + contextValidation.errors);
+		logger.debug("dans setState");
+		logger.debug("contextValidation.error avant validateState " + contextValidation.errors);
 
 		CommonValidationHelper.validateState(ObjectType.CODE.SRAStudy, nextState, contextValidation); 	
-		Logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
+		logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(study.state.code)){
 			applyPreStateRules(contextValidation, study, nextState);
@@ -83,7 +84,7 @@ public class StudyWorkflows extends Workflows<Study>{
 				applyErrorPostStateRules(contextValidation, study, nextState);	
 			}
 		} else {
-			Logger.debug("ATTENTION ERROR :"+contextValidation.errors);
+			logger.debug("ATTENTION ERROR :"+contextValidation.errors);
 		}
 	}
 

@@ -47,6 +47,7 @@ import workflows.sra.study.StudyWorkflows;
 
 @Service
 public class SubmissionWorkflowsHelper {
+	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionWorkflowsHelper.class);
 
 	@Autowired
 	StudyWorkflows studyWorkflows;

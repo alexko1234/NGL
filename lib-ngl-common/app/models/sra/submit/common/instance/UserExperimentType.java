@@ -1,7 +1,5 @@
 package models.sra.submit.common.instance;
 
-import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
 
 public class UserExperimentType {
 	private String alias = null;
@@ -33,7 +31,7 @@ public class UserExperimentType {
 		return libraryStrategy;
 	}
 
-	public void setLibraryStrategy(String libraryStrategy) throws SraException {
+	public void setLibraryStrategy(String libraryStrategy) {
 		//verifier que libraryStrategy est bien autorise => Controle deporté dans validation
 		/*String lcLibraryStrategy = libraryStrategy.toLowerCase();
 		if (! VariableSRA.mapLibraryStrategy.containsKey(lcLibraryStrategy)) {
@@ -48,7 +46,7 @@ public class UserExperimentType {
 		return librarySource;
 	}
 
-	public void setLibrarySource(String librarySource) throws SraException {
+	public void setLibrarySource(String librarySource) {
 		//verifier que librarySource est  autorisee => Controle deporté dans validation
 		/*String lcLibrarySource = librarySource.toLowerCase();
 		if (! VariableSRA.mapLibrarySource.containsKey(lcLibrarySource)) {
@@ -63,7 +61,7 @@ public class UserExperimentType {
 		return librarySelection;
 	}
 
-	public void setLibrarySelection(String librarySelection) throws SraException {
+	public void setLibrarySelection(String librarySelection) {
 		//verifier que librarySelection est  autorisee => Controle deporté dans validation
 /*		String lcLibrarySelection = librarySelection.toLowerCase();
 		if (! VariableSRA.mapLibrarySelection.containsKey(lcLibrarySelection)) {
@@ -77,7 +75,7 @@ public class UserExperimentType {
 		return libraryProtocol;
 	}
 
-	public void setLibraryProtocol(String libraryProtocol) throws SraException {
+	public void setLibraryProtocol(String libraryProtocol){
 		//verifier que librarySelection est  autorisee => Controle deporté dans validation
 		this.libraryProtocol = libraryProtocol;
 	}

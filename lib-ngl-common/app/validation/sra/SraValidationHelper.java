@@ -62,7 +62,7 @@ public class SraValidationHelper extends CommonValidationHelper{
 		}
 		ContextValidation _contextValidation = new ContextValidation(contextValidation.getUser());
 		
-		if(!SraValidationHelper.requiredAndConstraint(_contextValidation, experiment.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout")){
+		if(!SraValidationHelper.requiredAndConstraint(_contextValidation, experiment.libraryLayout, VariableSRA.mapLibraryLayout(), "libraryLayout")){
 			contextValidation.addErrors("",  "impossibles à evaluer sans libraryLayout valide");
 			contextValidation.removeKeyFromRootKeyName("readSpecsIllumina::");
 			return;
@@ -95,7 +95,7 @@ public class SraValidationHelper extends CommonValidationHelper{
 			if(experiment.readSpecs.size() != 2){
 				contextValidation.addErrors("",  " nbre de readSpec " + experiment.readSpecs.size() + "' incompatible avec libraryLayout = PAIRED ");
 			}
-			if(!SraValidationHelper.requiredAndConstraint(_contextValidation, experiment.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation")){
+			if(!SraValidationHelper.requiredAndConstraint(_contextValidation, experiment.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation(), "libraryLayoutOrientation")){
 				contextValidation.addErrors("",  "impossible à evaluer sans libraryLayoutOrientation valide");
 				contextValidation.removeKeyFromRootKeyName("readSpecsIllumina::");
 				return;
@@ -207,7 +207,7 @@ public static void validateReadSpecsLS454(ContextValidation contextValidation, E
 	}
 	ContextValidation _contextValidation = new ContextValidation(contextValidation.getUser());
 	
-	if(!SraValidationHelper.requiredAndConstraint(_contextValidation, experiment.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout")){
+	if(!SraValidationHelper.requiredAndConstraint(_contextValidation, experiment.libraryLayout, VariableSRA.mapLibraryLayout(), "libraryLayout")){
 		contextValidation.addErrors("",  "impossibles à evaluer sans libraryLayout valide");
 		contextValidation.removeKeyFromRootKeyName("readSpecsLS454::");
 		return;

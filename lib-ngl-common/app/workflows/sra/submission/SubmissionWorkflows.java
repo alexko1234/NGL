@@ -15,8 +15,10 @@ import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
+
 @Service
 public class SubmissionWorkflows extends Workflows<Submission>{
+	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionWorkflows.class);
 
 	@Autowired
 	SubmissionWorkflowsHelper submissionWorkflowsHelper;

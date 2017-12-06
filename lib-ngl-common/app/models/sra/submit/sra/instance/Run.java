@@ -33,7 +33,7 @@ public class Run implements IValidation {
 		ValidationHelper.required(contextValidation, this.runDate , "runDate");
 		System.out.println("this.runCenter: " + this.runCenter);
 
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName, "runCenter");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName(), "runCenter");
 		
 		// verifier que code est bien renseigné
 		if(StringUtils.isBlank(this.code)) {

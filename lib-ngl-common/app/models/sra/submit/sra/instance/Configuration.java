@@ -15,7 +15,7 @@ import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
-import play.Logger;
+//import play.Logger;
 
 //Declaration d'une collection Configuration (herite de DBObject)
 public class Configuration  extends DBObject implements IValidation {
@@ -68,9 +68,9 @@ public class Configuration  extends DBObject implements IValidation {
 			}
 			
 			// verifier que champs contraints presents avec valeurs autorisees:
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection(), "librarySelection");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy(), "libraryStrategy");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource(), "librarySource");
 			SraValidationHelper.validateState(ObjectType.CODE.SRAConfiguration, this.state, contextValidation);
 
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
