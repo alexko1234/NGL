@@ -73,15 +73,15 @@ public class Experiment extends DBObject implements IValidation {
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.title , "title");
         // Verifer que librarySelection libraryStrategy librarySource et libraryLayout sont bien renseignés avec bonne valeur :		
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout"); // single ou paired
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection(), "librarySelection");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy(), "libraryStrategy");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource(), "librarySource");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout(), "libraryLayout"); // single ou paired
 
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		//ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform, "typePlatform");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform(), "typePlatform");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel(), "instrumentModel");
 		if (this.sampleAccession == null) {
 			ValidationHelper.required(contextValidation, this.sampleCode , "sampleCode");
 		}
@@ -100,7 +100,7 @@ public class Experiment extends DBObject implements IValidation {
 				// Verifer que lastBaseCoord est bien renseigné ssi Illumina et paired:
 				ValidationHelper.required(contextValidation, this.lastBaseCoord , "lastBaseCoord");	
 				ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
-				SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
+				SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation(), "libraryLayoutOrientation");
 			}
 		}
 		// Si nanopore pas de readspec et pas spotLength, lastBasecoord, et libraryLayoutNominalLength

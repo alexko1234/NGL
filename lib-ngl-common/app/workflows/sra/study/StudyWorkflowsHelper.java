@@ -15,12 +15,13 @@ import models.sra.submit.common.instance.Submission;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
 @Service
 public class StudyWorkflowsHelper {
+	private static final play.Logger.ALogger logger = play.Logger.of(StudyWorkflowsHelper.class);
 
 	@Autowired
 	SubmissionWorkflows submissionWorkflows;
@@ -33,13 +34,13 @@ public class StudyWorkflowsHelper {
 			submission = new Submission(validation.getUser(), study.projectCodes);
 			submission.code = SraCodeHelper.getInstance().generateSubmissionCode(study.projectCodes);
 			submission.creationDate = courantDate;
-			Logger.debug("submissionCode="+ submission.code);
+			logger.debug("submissionCode="+ submission.code);
 			submission.release = true;
 
 			// mettre à jour l'objet submission pour le study  :
 			if (! submission.refStudyCodes.contains("study.code")){
 				submission.refStudyCodes.add(study.code);
-				Logger.debug("ajout de studyCode dans submission.refStudyCode");
+				logger.debug("ajout de studyCode dans submission.refStudyCode");
 
 			}
 			submission.studyCode = study.code;
@@ -59,14 +60,14 @@ public class StudyWorkflowsHelper {
 			validation.setCreationMode();
 			validation.getContextObjects().put("type", "sra");
 
-			Logger.debug("AVANT submission.validate="+validation.errors);
+			logger.debug("AVANT submission.validate="+validation.errors);
 
 			submission.validate(validation);
-			Logger.debug("APRES submission.validate="+validation.errors);
+			logger.debug("APRES submission.validate="+validation.errors);
 
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
 				MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
-				Logger.debug("sauvegarde dans la base du submission " + submission.code);
+				logger.debug("sauvegarde dans la base du submission " + submission.code);
 			}
 			validation.setUpdateMode();
 			validation.getContextObjects().remove("type");

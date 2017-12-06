@@ -6,10 +6,11 @@ import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
-import play.Logger;
+//import play.Logger;
 
 public class ExternalSample extends AbstractSample {
-
+	public static final play.Logger.ALogger logger = play.Logger.of(ExternalSample.class);
+	
 	public ExternalSample() {
 		super(AbstractSample.externalSampleType);	
 		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"
@@ -19,7 +20,7 @@ public class ExternalSample extends AbstractSample {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		System.out.println("ok dans ExternalSample.validate\n");
-		Logger.info("ok dans ExternalSample.validate\n");
+		logger.info("ok dans ExternalSample.validate\n");
 		contextValidation.addKeyToRootKeyName("externalSample");
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);

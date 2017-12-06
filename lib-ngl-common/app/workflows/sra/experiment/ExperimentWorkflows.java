@@ -9,13 +9,14 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
 
 @Service
 public class ExperimentWorkflows extends Workflows<Experiment>{
+	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentWorkflows.class);
 
 	@Override
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
@@ -52,7 +53,7 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 		contextValidation.setUpdateMode();
 
 		CommonValidationHelper.validateState(ObjectType.CODE.SRAExperiment, nextState, contextValidation); 	
-		Logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
+		logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(experiment.state.code)){
 			applyPreStateRules(contextValidation, experiment, nextState);
@@ -70,7 +71,7 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 				applyErrorPostStateRules(contextValidation, experiment, nextState);	
 			}
 		} else {
-			Logger.debug("ATTENTION ERROR :"+contextValidation.errors);
+			logger.debug("ATTENTION ERROR :"+contextValidation.errors);
 		}
 	}
 

@@ -8,14 +8,16 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Sample;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
 
 @Service
 public class SampleWorkflows extends Workflows<Sample>{
+	private static final play.Logger.ALogger logger = play.Logger.of(SampleWorkflows.class);
 
 	@Override
 	public void applyPreStateRules(ContextValidation validation, Sample sample, State nextState) {
@@ -52,7 +54,7 @@ public class SampleWorkflows extends Workflows<Sample>{
 		contextValidation.setUpdateMode();
 
 		CommonValidationHelper.validateState(ObjectType.CODE.SRASample, nextState, contextValidation); 	
-		Logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
+		logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
 
 		if(!contextValidation.hasErrors() && !nextState.code.equals(sample.state.code)){
 			applyPreStateRules(contextValidation, sample, nextState);
@@ -70,7 +72,7 @@ public class SampleWorkflows extends Workflows<Sample>{
 				applyErrorPostStateRules(contextValidation, sample, nextState);	
 			}
 		} else {
-			Logger.error("ATTENTION ERROR :"+contextValidation.errors);
+			logger.error("ATTENTION ERROR :"+contextValidation.errors);
 		}
 	}
 

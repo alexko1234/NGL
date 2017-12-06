@@ -1,8 +1,5 @@
 package models.sra.submit.common.instance;
 
-import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
-
 public class UserSampleType {
 	private String alias = null;
 	private String title = null;

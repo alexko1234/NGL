@@ -46,7 +46,7 @@ public class Study extends AbstractStudy {
 		SraValidationHelper.validateProjectCodes(this.projectCodes, contextValidation);
 		// Attention on peut vouloir regrouper dans un project_code virtuel ?? 
 		ValidationHelper.required(contextValidation, this.centerProjectName , "centerProjectName");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.centerName, VariableSRA.mapCenterName, "centerName");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.centerName, VariableSRA.mapCenterName(), "centerName");
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
@@ -64,7 +64,7 @@ public class Study extends AbstractStudy {
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
 			System.out.println("contextValidationType  = sra");
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.existingStudyType, VariableSRA.mapExistingStudyType, "existingStudyType");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.existingStudyType, VariableSRA.mapExistingStudyType(), "existingStudyType");
 		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
 			System.out.println("contextValidationType  = wgs");
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_WGS_COLL_NAME, contextValidation);

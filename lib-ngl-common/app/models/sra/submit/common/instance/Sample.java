@@ -6,12 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import models.laboratory.common.description.ObjectType;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
 
 public class Sample extends AbstractSample {
-
+	private static final play.Logger.ALogger logger = play.Logger.of(Sample.class);
+	
 	// SampleType
 	//public String alias;         // required mais remplacé par code herité de DBObject
 	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL  
@@ -36,7 +37,7 @@ public class Sample extends AbstractSample {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		Logger.info("Validate sample");
+		logger.info("Validate sample");
 		//Logger.info("ok dans Sample.validate\n");
 		contextValidation.addKeyToRootKeyName("sample");
 		SraValidationHelper.validateId(this, contextValidation);
@@ -61,7 +62,7 @@ public class Sample extends AbstractSample {
 			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("sample");
-		//System.out.println("sortie de sample.validate pour " + this.code);
+		logger.error("sortie de sample.validate pour {0}", this.code);
 	}
 
 
