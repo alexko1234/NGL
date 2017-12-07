@@ -164,7 +164,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// NGL-1730: ajout Novaseq6000
+		// 07/12/2017 NGL-1730: ajout Novaseq6000
 		l.add(newInstrumentUsedType("NOVASEQ6000", "NOVASEQ6000", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaseq6000Properties(), 
 				getInstrumentNovaseq6000(),
 				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
@@ -1067,12 +1067,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	// FDS ajout 06/12/2017 NGL-1730 (Novaseq6000)
+	// FDS ajout 06/12/2017 NGL-1730 (Novaseq6000) + SUPSQCNG-506 (EXTNOVASEQ6000 ?)
 	private static List<Instrument> getInstrumentNovaseq6000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-	    /// prevoir un EXTNOVASEQ????
 		instruments.add( createInstrument("MARIECURIX", "MARIECURIX", "V1", true, "/env/ig/atelier/illumina/cng/MARIECURIX/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add( createInstrument("EXTNOVASEQ", "EXTNOVASEQ", null, true, "/env/ig/atelier/illumina/cng/EXTNOVASEQ/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
 }
