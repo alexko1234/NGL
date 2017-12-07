@@ -23,6 +23,7 @@ import fr.cea.ig.MongoDBDAO;
  * 
  */
 public class BusinessValidationHelper {
+	
 	public static final String FIELD_CODE = "code";
 	
 	/**
@@ -35,7 +36,6 @@ public class BusinessValidationHelper {
 	 */
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
-	
 		if (null != code) {
 			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
 				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
@@ -45,9 +45,7 @@ public class BusinessValidationHelper {
 			}
 		} else {
 			throw new IllegalArgumentException("code is null");
-		}
-		
-		
+		}	
 	}
 	
 	
