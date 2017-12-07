@@ -358,7 +358,7 @@ class Containers2 extends DocumentController<Container> {
 		return ok(Json.toJson(response));
 	}
 
-	/**
+	/*
 	 * Construct the container query
 	 * @param containersSearch
 	 * @return

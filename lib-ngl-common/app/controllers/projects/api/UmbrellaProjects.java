@@ -44,6 +44,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
+	@Inject
 	public UmbrellaProjects(NGLContext ctx) {
 		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
 	}

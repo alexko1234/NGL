@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
@@ -38,6 +40,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 	
 	final static Form<ReagentCatalogSearchForm> ReagentCatalogSearchForm = form(ReagentCatalogSearchForm.class);
 	
+	@Inject
 	public ReagentCatalogs(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class);
 	}

@@ -38,6 +38,7 @@ import views.components.datatable.DatatableResponse;
 
 public class Reagents extends DocumentController<Reagent> {
 	
+	@Inject
 	public Reagents(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
 	}

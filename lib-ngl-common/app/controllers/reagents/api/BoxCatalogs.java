@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -40,6 +42,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 	
 	final static Form<BoxCatalogSearchForm> boxCatalogSearchForm = form(BoxCatalogSearchForm.class);
 	
+	@Inject
 	public BoxCatalogs(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
 	}

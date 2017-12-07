@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
@@ -38,6 +40,7 @@ import fr.cea.ig.play.NGLContext;
 
 public class KitCatalogs extends DocumentController<KitCatalog> {
 	
+	@Inject
 	public KitCatalogs(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
 	}
