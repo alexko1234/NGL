@@ -48,7 +48,7 @@ public class SampleProcess {
 	
 	public SampleOnInputContainer sampleOnInputContainer;
 	
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 	
 	public String currentExperimentTypeCode;
 	

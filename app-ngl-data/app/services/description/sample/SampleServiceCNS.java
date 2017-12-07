@@ -51,7 +51,7 @@ public class SampleServiceCNS extends AbstractSampleService {
 	}
 	
 	private SampleType makeSampleType(String name, String code, String category, List<Institute> institutes) {
-		return makeSampleType(name,code,category,institutes,null);
+		return makeSampleType(name,code,category,null, institutes);
 	}
 	private SampleType makeSampleType(String name, String code, String category, List<PropertyDefinition> properties, List<Institute> institutes) {
 		return newSampleType(name,code,SampleCategory.find.findByCode(category),properties,institutes);
