@@ -284,8 +284,7 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 		
 		// FDS ajout 03/03/2017 NGL-1225: processus Nanopore DEV
 		l.addAll(new Nanopore().getProcessType());
-
-	    // 10/07/2017  NOUVEAU CHANGEMENT: 8 process !!!!	
+	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
 		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000 / X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
@@ -446,7 +445,6 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 	
 	
 	// FDS 09/11/2015  -- JIRA 838 : ajout parametre String pour construire 2 listes differentes
-	//                               la liste des sequenceurs est differente pour le processType "4000/X5"
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNG(String expType) throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -468,6 +466,8 @@ if (ConfigFactory.load().getString("ngl.env").equals("TODO-LATER??") ){
 			listSequencers.addAll(DescriptionFactory.newValues("ASTERIX","DIAGNOSTIX","IDEFIX","OBELIX","PANORAMIX"));		
 			// HISEQ4000
 			listSequencers.addAll(DescriptionFactory.newValues("FALBALA"));
+			// NOVASEQ6000
+			listSequencers.addAll(DescriptionFactory.newValues("MARIECURIX"));
 		}
 	
 

@@ -302,10 +302,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS modif 23/01/2017 modif janus-and-cBot=>  janus-and-cBotV2, il n'y a plus de Cbot non V2...
+			//FDS 07/12/2017  NGL-1730 ajout "cBot-onboard" pour Novaseq6000
 			l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellOrderedCNG(),
-					getInstrumentUsedTypes("cBotV2","janus-and-cBotV2"),
+					getInstrumentUsedTypes("cBotV2","janus-and-cBotV2","cBot-onboard"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	
