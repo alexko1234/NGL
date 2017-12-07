@@ -30,7 +30,7 @@ object ApplicationBuild extends Build {
 	// parallelExecution in Global := false
 	
  	val appName    = "ngl"
-	val appVersion = "1.0-SNAPSHOT"
+	
   val scala            = "2.12.3"
 
   // Dist suffix should be "-SNAPSHOT" for the master and "xxx-SNAPSHOT" for specific branches
@@ -38,7 +38,8 @@ object ApplicationBuild extends Build {
   // in some configuration instead of being hardcoded.
   // val distSuffix             = "-SNAPSHOT"
   val distSuffix             = ".2.4-SNAPSHOT"
-  
+  val appVersion             = "1.0"  + distSuffix
+	
 	val sqVersion              = "1.36.0" + distSuffix
 	val biVersion              = "1.38.0" + distSuffix
 
@@ -46,6 +47,7 @@ object ApplicationBuild extends Build {
 	val reagentsVersion        = "1.3.0"  + distSuffix
 
 	val subVersion             = "1.3.0"  + distSuffix
+	
 	
 	val libDatatableVersion    = "1.2"    + distSuffix
 	val libFrameworkWebVersion = "1.1"    + distSuffix
