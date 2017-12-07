@@ -110,9 +110,10 @@ public class RunTest extends AbstractBIServerTest{
 		run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, run.code);
 		Logger.debug("Run "+run.code);
 		assertThat(run).isNotNull();
+		
 	}
 
-	//@Test
+	@Test
 	public void test2updateRun()
 	{
 		Logger.debug("save Run");
@@ -125,7 +126,7 @@ public class RunTest extends AbstractBIServerTest{
 		//assertThat(run.properties.get("libProcessTypeCodes")).isNull();
 	}
 
-	//@Test
+	@Test
 	public void test3listRun()
 	{
 		Logger.debug("save Run");
@@ -133,7 +134,7 @@ public class RunTest extends AbstractBIServerTest{
 		assertThat(response.asJson()).isNotNull();
 	}
 
-	//@Test
+	@Test
 	public void test4getRun()
 	{
 		Logger.debug("get Run");
@@ -141,7 +142,7 @@ public class RunTest extends AbstractBIServerTest{
 		assertThat(response.asJson()).isNotNull();
 	}
 
-	//@Test
+	@Test
 	public void test5headRun()
 	{
 		Logger.debug("head Run");
@@ -149,7 +150,7 @@ public class RunTest extends AbstractBIServerTest{
 		assertThat(response).isNotNull();
 	}
 
-	//@Test
+	@Test
 	public void test6GetState()
 	{
 		Logger.debug("get State");
@@ -157,7 +158,7 @@ public class RunTest extends AbstractBIServerTest{
 		assertThat(response.asJson()).isNotNull();
 	}
 
-	//@Test
+	@Test
 	public void test7GetStateHistorical()
 	{
 		Logger.debug("get State historical");
@@ -165,7 +166,7 @@ public class RunTest extends AbstractBIServerTest{
 		assertThat(response.asJson()).isNotNull();
 	}
 
-	//@Test
+	@Test
 	public void test8Valuation()
 	{
 		Logger.debug("valuation");
@@ -200,7 +201,7 @@ public class RunTest extends AbstractBIServerTest{
 				});
 	}*/
 
-	//@Test
+	@Test
 	public void test9DeleteRun()
 	{
 		Logger.debug("delete Run");
