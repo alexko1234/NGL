@@ -353,7 +353,8 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := appVersion,				
+		version                    := appVersion,		
+		libraryDependencies        += guice,
 		resolvers                  := nexus,
 		publishArtifact in makePom := false,
 		publishTo                  := Some(nexusigpublish)
