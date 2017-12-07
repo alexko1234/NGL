@@ -309,11 +309,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	
-			//FDS modif 28/10/2015 : ajout "HISEQ4000","HISEQX"
+			//FDS 28/10/2015 : ajout "HISEQ4000","HISEQX"
+			//FDS 07/12/2017 NGL-1730: ajout NOVASEQ6000
 			l.add(newExperimentType("Dépôt sur séquenceur","illumina-depot",null, 1400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsIlluminaDepot(),
-					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX","NOVASEQ6000"), 
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 			

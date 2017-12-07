@@ -259,6 +259,7 @@ public class ResolutionService {
 		r.code = "runReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
+		
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("RHS2000");
 		al.add("RHS2500");
@@ -267,6 +268,7 @@ public class ResolutionService {
 		al.add("RHSX");
 		al.add("RMISEQ");
 		al.add("RNEXTSEQ500");
+		al.add("RNOVASEQ6000");  // ajout 07/12/2017 ( 1 ou 2 ??)
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
