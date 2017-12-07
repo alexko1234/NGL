@@ -3,9 +3,12 @@ package controllers.projects.api;
 // import static play.data.Form.form;
 import static fr.cea.ig.play.IGGlobals.form;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.UmbrellaProject;
