@@ -37,7 +37,7 @@ object ApplicationBuild extends Build {
   // so the deployed application do not land in the same directories. This could be defined 
   // in some configuration instead of being hardcoded.
   // val distSuffix             = "-SNAPSHOT"
-  val distSuffix             = ".2.4-SNAPSHOT"
+  val distSuffix             = ".2.6-SNAPSHOT"
   val appVersion             = "1.0"  + distSuffix
 	
 	val sqVersion              = "1.36.0" + distSuffix
