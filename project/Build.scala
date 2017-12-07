@@ -113,7 +113,8 @@ object ApplicationBuild extends Build {
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
 			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource", "-quiet"),
 			// Remove scala files from the doc process so javadoc is used. 
-			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			//sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			sources in doc in Compile := List(),
 			scalaVersion        := scala
 		) ++ tev0 ++ tev1
 
@@ -336,7 +337,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
 	  //publishArtifact in (Compile, packageDoc) := false,
     //publishArtifact in packageDoc := false,
-    // sources in (Compile,doc)   := Seq.empty,
+    //sources in (Compile,doc)   := Seq.empty,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
