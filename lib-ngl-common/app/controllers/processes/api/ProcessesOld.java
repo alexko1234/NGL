@@ -445,7 +445,7 @@ public class ProcessesOld extends CommonController {
 		if(processesSearch.datatable){
 			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
 			//return ok(new MongoDBDatatableResponseChunks<Process>(results)).as("application/json");
-			return ok(MongoStreamer.stream(results)).as("application/json");
+			return ok(MongoStreamer.streamUDT(results)).as("application/json");
 		}else if(processesSearch.list){
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
