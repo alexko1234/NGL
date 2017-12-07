@@ -30,15 +30,16 @@ object ApplicationBuild extends Build {
 	// parallelExecution in Global := false
 	
  	val appName    = "ngl"
-	val appVersion = "1.0-SNAPSHOT"
+	
   val scala            = "2.12.3"
 
   // Dist suffix should be "-SNAPSHOT" for the master and "xxx-SNAPSHOT" for specific branches
   // so the deployed application do not land in the same directories. This could be defined 
   // in some configuration instead of being hardcoded.
   // val distSuffix             = "-SNAPSHOT"
-  val distSuffix             = ".2.4-SNAPSHOT"
-  
+  val distSuffix             = ".2.6-SNAPSHOT"
+  val appVersion             = "1.0"  + distSuffix
+	
 	val sqVersion              = "1.36.0" + distSuffix
 	val biVersion              = "1.38.0" + distSuffix
 
@@ -46,6 +47,7 @@ object ApplicationBuild extends Build {
 	val reagentsVersion        = "1.3.0"  + distSuffix
 
 	val subVersion             = "1.3.0"  + distSuffix
+	
 	
 	val libDatatableVersion    = "1.2"    + distSuffix
 	val libFrameworkWebVersion = "1.1"    + distSuffix
@@ -113,7 +115,8 @@ object ApplicationBuild extends Build {
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
 			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource", "-quiet"),
 			// Remove scala files from the doc process so javadoc is used. 
-			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			//sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			sources in doc in Compile := List(),
 			scalaVersion        := scala
 		) ++ tev0 ++ tev1
 
@@ -336,7 +339,7 @@ object ApplicationBuild extends Build {
     resolvers                  := nexus,
 	  //publishArtifact in (Compile, packageDoc) := false,
     //publishArtifact in packageDoc := false,
-    // sources in (Compile,doc)   := Seq.empty,
+    //sources in (Compile,doc)   := Seq.empty,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
@@ -350,7 +353,8 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := appVersion,				
+		version                    := appVersion,		
+		libraryDependencies        += guice,
 		resolvers                  := nexus,
 		publishArtifact in makePom := false,
 		publishTo                  := Some(nexusigpublish)
