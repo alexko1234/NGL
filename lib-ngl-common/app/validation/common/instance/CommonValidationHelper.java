@@ -59,7 +59,7 @@ public class CommonValidationHelper {
 	public static final String VALUE_PROCESS_CREATION_CONTEXT_COMMON ="COMMON";
 	public static final String VALUE_PROCESS_CREATION_CONTEXT_SPECIFIC ="SPECIFIC";
 	
-	/**
+	/*
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
 	 * @param contextValidatin
@@ -67,7 +67,6 @@ public class CommonValidationHelper {
 	 * @param type
 	 * @return collctionName
 	 */
-
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
 	
@@ -86,7 +85,7 @@ public class CommonValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Validate if field value is unique in MongoDB collection
 	 * @param errors
 	 * @param key : field name
@@ -118,7 +117,7 @@ public class CommonValidationHelper {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
-	/**
+	/*
 	 * Validate i a description code is not null and exist in description DB
 	 * @param errors
 	 * @param code
@@ -137,7 +136,7 @@ public class CommonValidationHelper {
 	}
 
 
-	/***
+	/*
 	 * Validate if a code in a description table exist
 	 * @param errors
 	 * @param code
@@ -152,7 +151,7 @@ public class CommonValidationHelper {
 		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
-	/***
+	/*
 	 * Validate if a code in a description table exist
 	 * @param errors
 	 * @param code
@@ -189,7 +188,7 @@ public class CommonValidationHelper {
 		}
 	}
 
-	/**
+	/*
 	 * Validate if code is not null and exist
 	 * @param errors
 	 * @param code
@@ -209,7 +208,7 @@ public class CommonValidationHelper {
 	}
 
 
-	/**
+	/*
 	 * Validate if list is not null and code exist
 	 * @param errors
 	 * @param sampleCode
@@ -233,7 +232,7 @@ public class CommonValidationHelper {
 	
 	
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param sampleCode
@@ -266,7 +265,7 @@ public class CommonValidationHelper {
 		validateExistInstanceCode(contextValidation, code, key, type, collectionName, false);
 	}
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param code
@@ -296,7 +295,7 @@ public class CommonValidationHelper {
 	}	
 	
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param code
@@ -309,7 +308,7 @@ public class CommonValidationHelper {
 		validateExistInstanceCode(contextValidation, code, type, collectionName, false);
 	}
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param code
@@ -324,7 +323,7 @@ public class CommonValidationHelper {
 		
 	}
 	
-	/**
+	/*
 	 * Validate the id of dbObject
 	 * @param dbObject
 	 * @param contextValidation
@@ -336,7 +335,7 @@ public class CommonValidationHelper {
     		contextValidation.addErrors("_id", ValidationConstants.ERROR_ID_NOTNULL_MSG);
     	}
 	}
-	/**
+	/*
 	 * Validate the code of an dbObject. the code is the NGL identifier
 	 * @param dbObject
 	 * @param collectionName

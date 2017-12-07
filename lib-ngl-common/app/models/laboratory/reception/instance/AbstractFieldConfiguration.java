@@ -52,7 +52,7 @@ public abstract class AbstractFieldConfiguration {
 		this._type = _type;
 	}
 
-	/**
+	/*
 	 * Extract value and then set value in object
 	 * @param field
 	 * @param dbObject
@@ -64,7 +64,7 @@ public abstract class AbstractFieldConfiguration {
 	public abstract void populateField(Field field, Object dbObject,
 			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception;
 
-	/**
+	/*
 	 * Set value directly in object
 	 * @param field
 	 * @param dbObject

@@ -20,7 +20,7 @@ public class DAOHelpers {
 	
 	private static String SQLInstitute = null;
 
-	/**
+	/*
 	 * Save an object Model in the description DB
 	 * @param type
 	 * @param models
@@ -66,7 +66,7 @@ public class DAOHelpers {
 		}
 		return l;
 	}
-	/**
+	/*
 	 * Save an object Model in the description DB if not exist also nothing
 	 * Used the code to find the object
 	 * @param type
@@ -84,7 +84,7 @@ public class DAOHelpers {
 		}
 	}
 
-	/**
+	/*
 	 * Save a list of models
 	 * @param type
 	 * @param models
@@ -97,7 +97,7 @@ public class DAOHelpers {
 		}		
 	}
 
-	/**
+	/*
 	 * 
 	 * @param type
 	 * @param model
@@ -119,7 +119,7 @@ public class DAOHelpers {
 		}		
 	}
 
-	/**
+	/*
 	 * Create the sql to join with institute
 	 * The rule is simple the join table name equals <main_table_name>_institute
 	 * @param mainTable
@@ -165,4 +165,5 @@ public class DAOHelpers {
 		}
 		return SQLInstitute;
 	}
+	
 }

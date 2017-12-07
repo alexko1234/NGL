@@ -1,6 +1,5 @@
 package models.laboratory.experiment.instance;
 
-
 import static validation.common.instance.CommonValidationHelper.FIELD_EXPERIMENT;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.validateCode;
@@ -40,7 +39,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.DBObject;
 
-
 /**
  * 
  * Experiment instance are stored one collection for the moment
@@ -50,7 +48,6 @@ import fr.cea.ig.DBObject;
  * @author mhaquell
  *
  */
-
 @MongoCollection(name="Experiment")
 public class Experiment extends DBObject implements IValidation {
 	

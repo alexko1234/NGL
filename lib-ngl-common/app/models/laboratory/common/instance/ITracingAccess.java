@@ -13,12 +13,14 @@ public interface ITracingAccess {
 		
 	/**
 	 * Trace information, must be created if needed.
-	 * @return
+	 * @return trace information
 	 */
 	TraceInformation getTraceInformation();
 	
 	/**
 	 * Set the creation stamp using the current user and the current time.
+	 * @param ctx      validation context
+	 * @param userName user name to stamp trace with
 	 */
 	default void setTraceCreationStamp(ContextValidation ctx, String userName) {
 		getTraceInformation().creationStamp(ctx,userName);
@@ -26,6 +28,8 @@ public interface ITracingAccess {
 	
 	/**
 	 * Set the update stamp using the current user and the current time.
+	 * @param ctx      validation context
+	 * @param userName user name to stamp trace with
 	 */
 	default void setTraceUpdateStamp(ContextValidation ctx, String userName) {
 		getTraceInformation().modificationStamp(ctx,userName);

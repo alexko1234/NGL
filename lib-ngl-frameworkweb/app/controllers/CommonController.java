@@ -65,10 +65,18 @@ import fr.cea.ig.mongo.MongoStreamer;
 public abstract class CommonController extends Controller {
 
 	// TODO: fix initialization
-	protected final static DynamicForm listForm = // new DynamicForm(null,null,null); // new DynamicForm()
-			fr.cea.ig.play.IGGlobals.form();
+	//protected final static DynamicForm listForm = // new DynamicForm(null,null,null); // new DynamicForm()
+		//	fr.cea.ig.play.IGGlobals.form();
 
-	/**
+	private static DynamicForm _listForm;
+	
+	protected final static DynamicForm listForm() {
+		if (_listForm == null)
+			_listForm = fr.cea.ig.play.IGGlobals.form();
+		return _listForm;
+	}
+	
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -96,7 +104,7 @@ public abstract class CommonController extends Controller {
 		return results;
 	}
 
-	/**
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -128,7 +136,7 @@ public abstract class CommonController extends Controller {
 		return filledForm;
 	}
 
-	/**
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -185,7 +193,7 @@ public abstract class CommonController extends Controller {
 		return fr.cea.ig.authentication.Helper.username(Context.current().session());
 	}
 	
-	/**
+	/*
 	 * A finder for mongoDB
 	 * @param collection
 	 * @param form
@@ -261,7 +269,7 @@ public abstract class CommonController extends Controller {
 		return values;
     }
 	
-	/**
+	/*
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
 	 * @param value
@@ -273,7 +281,7 @@ public abstract class CommonController extends Controller {
 		return getBuilder(value, fields, clazz, null);
 	}
 	
-	/**
+	/*
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
 	 * @param value
@@ -294,7 +302,8 @@ public abstract class CommonController extends Controller {
 		
 		return builder;
 	}
-	/**
+	
+	/*
 	 * Validate authorized field for specific update field
 	 * @param ctxVal
 	 * @param fields
@@ -309,7 +318,7 @@ public abstract class CommonController extends Controller {
 		}				
 	}
 	
-	/**
+	/*
 	 * Validate ig the field is present in the form
 	 * @param ctxVal
 	 * @param fields
@@ -333,8 +342,6 @@ public abstract class CommonController extends Controller {
 		cal.set(Calendar.SECOND, 59);
 		return cal;
 	}
-
-
 
 	protected static Calendar getFromDate(Date date) {
 		Calendar cal = Calendar.getInstance();
@@ -380,9 +387,11 @@ public abstract class CommonController extends Controller {
 	private static <T extends DBObject> InputStream getChunk(MongoCursor<T> all) {
 		return MongoStreamer.stream(all);
 	}
+	
 	private static <T extends DBObject> InputStream getUDTChunk(MongoCursor<T> all) {
 		return MongoStreamer.streamUDT(all);
 	}
+	
 /*	
 	private static <T extends DBObject> StringChunks getChunk(MongoCursor<T> all) {
 		return new StringChunks() {
@@ -417,4 +426,5 @@ public abstract class CommonController extends Controller {
 		};
 	}
 	*/
+	
 }

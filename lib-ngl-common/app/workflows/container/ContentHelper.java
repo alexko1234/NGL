@@ -12,7 +12,7 @@ public class ContentHelper {
 	
 	public static final String TAG_PROPERTY_NAME = "tag";
 	
-	/**
+	/*
 	 * Give MongoDB query to find a specific content inside containers
 	 * @param container
 	 * @param content

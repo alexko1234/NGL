@@ -36,7 +36,7 @@ import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.util.Streamer;
 import fr.cea.ig.MongoDBResult.Sort;
 
-// TODO: cleanup
+// TODO: cleanup, comment
 
 /**
  * Mongo utility methods on top of the api common controller.
@@ -104,7 +104,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		MongoDBDAO.deleteByCode(collectionName,  type, code);
 	}
 	
-	/**
+	/*
 	 * A finder for mongoDB
 	 * @param collection
 	 * @param form
@@ -183,7 +183,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return getBuilder(value, fields, value.getClass(), null);
 	}
 
-	/**
+	/*
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
 	 * @param value
@@ -195,7 +195,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return getBuilder(value, fields, clazz, null);
 	}
 	
-	/**
+	/*
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
 	 * @param value
@@ -217,7 +217,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return builder;
 	}
 	
-	/**
+	/*
 	 * Validate authorized field for specific update field
 	 * @param ctxVal
 	 * @param fields
@@ -232,7 +232,7 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		}				
 	}
 	
-	/**
+	/*
 	 * Validate if the field is present in the form
 	 * @param ctxVal
 	 * @param fields

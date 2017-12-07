@@ -73,11 +73,24 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 	 */
 	public State state;
 	
+	/**
+	 * Valuation information.
+	 */
 	public Valuation valuation;
 
-	// Container informations
+	/**
+	 * Access information.
+	 */
 	public TraceInformation traceInformation;
+	
+	/**
+	 * Properties.
+	 */
 	public Map<String, PropertyValue> properties;
+	
+	/**
+	 * Comments.
+	 */
 	public List<Comment> comments = new ArrayList<Comment>(0);
 
 	/**
@@ -91,7 +104,9 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 	 */
 	public List<Content> contents;
 	
-	// Embedded QC result, this data are copying from collection QC
+	/**
+	 * QC Experiment results (projection). 
+	 */
 	public List<QualityControlResult> qualityControlResults; 
 
 	public PropertySingleValue volume;        
@@ -114,7 +129,9 @@ public class Container extends DBObject implements IValidation, ITracingAccess, 
 	public String fromTransfertCode;
 	public String fromTransfertTypeCode;
 	
-	//tree of life
+	/**
+	 * Container history tree.
+	 */
 	public TreeOfLifeNode treeOfLife;
 	
 	

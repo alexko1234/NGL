@@ -14,6 +14,7 @@ import play.Logger.ALogger;
 import play.data.validation.ValidationError;
 
 // TODO: change name to ValidationContext
+
 /**
  * Validation context for objects that support validation (implementing IValidate).
  * Misnamed, should be ValidationContext.
@@ -28,7 +29,10 @@ import play.data.validation.ValidationError;
 public class ContextValidation {
 
 	public enum Mode {
-		CREATION, UPDATE, DELETE, NOT_DEFINED;
+		CREATION, 
+		UPDATE, 
+		DELETE, 
+		NOT_DEFINED
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class ContextValidation {
 		this.user      = user;
 	}
 
-	/**
+	/*
 	 * Constructs a validation context using the provided user name and initial errors.
 	 * @param user
 	 * @param errors
@@ -77,7 +81,7 @@ public class ContextValidation {
 		return user;
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 * @return
@@ -99,7 +103,7 @@ public class ContextValidation {
 		this.contextObjects = new TreeMap<String,Object>(contextObjects);
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 * @param value
@@ -108,7 +112,7 @@ public class ContextValidation {
 		contextObjects.put(key, value);
 	}
 	
-	/**
+	/*
 	 *
 	 * @param key
 	 * @param value
@@ -121,9 +125,9 @@ public class ContextValidation {
 	/**
 	 * Add an error message. 
 	 * Misnamed, should be addError, @see {@link #addError(String, String, Object...)}.
-	 * @param key : property key
-	 * @param message : message key
-	 * @param arguments : message args
+	 * @param property  property key
+	 * @param message   message key
+	 * @param arguments message args
 	 */
 	public void addErrors(String property, String message, Object... arguments) {
 		String key = getKey(property);
@@ -147,7 +151,7 @@ public class ContextValidation {
 		this.errors.putAll(errors);
 	}
 	
-	/**
+	/*
 	 *
 	 * @param rootKeyName
 	 * @param property
@@ -157,7 +161,7 @@ public class ContextValidation {
 		return (StringUtils.isBlank(rootKeyName))?property: rootKeyName+"."+property;
 	}
 
-	/**
+	/*
 	 *
 	 * @return
 	 */
@@ -165,7 +169,7 @@ public class ContextValidation {
 		return this.rootKeyName;
 	}
 
-	/**
+	/*
 	 *
 	 * @param rootKeyName
 	 */
@@ -173,7 +177,7 @@ public class ContextValidation {
 		this.rootKeyName = rootKeyName;
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 */
@@ -186,7 +190,7 @@ public class ContextValidation {
 		}
 	}
 
-	/**
+	/*
 	 *
 	 * @param key
 	 */
@@ -242,7 +246,7 @@ public class ContextValidation {
 		return this.mode;
 	}
 		
-	/***
+	/*
 	 *
 	 */
 	public void clear() {

@@ -183,21 +183,21 @@ public class ContWorkflows extends Workflows<Container> {
 		
 	}
 
-	/**
+	/*
 	 * Return the available container state for a experiment category code
 	 * @param categoryCode
 	 * @return
 	 */
 	public String getContainerStateFromExperimentCategory(String categoryCode) {
 		String nextContainerState=null;
-		if(categoryCode.equals(ExperimentCategory.CODE.transformation.name())){
-			nextContainerState="A-TM";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.transfert.name())){
-			nextContainerState="A-TF";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())){
-			nextContainerState="A-QC";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.purification.name())){
-			nextContainerState="A-PF";
+		if (categoryCode.equals(ExperimentCategory.CODE.transformation.name())) {
+			nextContainerState = "A-TM";
+		} else if (categoryCode.equals(ExperimentCategory.CODE.transfert.name())) {
+			nextContainerState = "A-TF";
+		} else if (categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())) {
+			nextContainerState = "A-QC";
+		} else if (categoryCode.equals(ExperimentCategory.CODE.purification.name())) {
+			nextContainerState = "A-PF";
 		}
 		return nextContainerState;
 	}

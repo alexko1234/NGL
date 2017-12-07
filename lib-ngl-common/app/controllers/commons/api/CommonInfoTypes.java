@@ -18,7 +18,7 @@ import views.components.datatable.DatatableResponse;
 public class CommonInfoTypes extends CommonController {
 	
 	public static Result list() throws DAOException {
-		DynamicForm filledForm =  listForm.bindFromRequest();
+		DynamicForm filledForm =  listForm().bindFromRequest();
 		List<CommonInfoType> values = new ArrayList<CommonInfoType>(0);
 		if(null != filledForm.get("objectTypeCode")){
 			values = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.valueOf(filledForm.get("objectTypeCode")));

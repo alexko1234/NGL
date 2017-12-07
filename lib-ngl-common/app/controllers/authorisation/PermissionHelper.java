@@ -17,7 +17,7 @@ import models.utils.dao.DAOException;
  */
 public class PermissionHelper {
 	
-	/**
+	/*
 	 * 
 	 * @param ses the user session
 	 * @param codePermission the code of the permission that you want to verify
@@ -48,7 +48,7 @@ public class PermissionHelper {
 		return false;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param ses the user session
 	 * @param codePermission the code of the permissions that you want to verify
@@ -96,7 +96,8 @@ public class PermissionHelper {
 	public static boolean isTechnical(int id) throws DAOException {
 		return getUser(id).technicaluser == 1;
 	}
-	/**
+	
+	/*
 	 * 
 	 * @param ses the user session
 	 * @param varteam the name of the team you want to verify
@@ -113,7 +114,8 @@ public class PermissionHelper {
 		}
 		return false;
 	}
-	/**
+	
+	/*
 	 * 
 	 * @param ses the user session
 	 * @param teams the name of the teams you want to verify
