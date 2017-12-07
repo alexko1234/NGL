@@ -4,6 +4,8 @@ package controllers.projects.api;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
@@ -20,10 +22,11 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 
+
 // @Controller
 public class ProjectBioinformaticParameters extends SubDocumentController<Project, BioinformaticParameters> {
 
-
+	@Inject
 	public ProjectBioinformaticParameters(NGLContext ctx) {
 		super(ctx,InstanceConstants.PROJECT_COLL_NAME, Project.class, BioinformaticParameters.class);
 	}

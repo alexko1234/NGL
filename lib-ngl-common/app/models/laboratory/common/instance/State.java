@@ -29,12 +29,24 @@ public class State implements IValidation {
 	 */
 	public String code;
 	
-	// access or creation date
+	/**
+	 * Creation date.
+	 */
 	public Date date;
+	
+	/**
+	 * Creation user name.
+	 */
 	public String user;
 	
+	/**
+	 * State extraneous info (from some mongo definition ~Resolution).
+	 */
 	public Set<String> resolutionCodes;
 
+	/**
+	 * History of previous states.
+	 */
 	public Set<TransientState> historical;
 
 	public State(String code, String user) {

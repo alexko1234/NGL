@@ -41,8 +41,13 @@ import com.mongodb.BasicDBObject;
  * old object from the data base so update validation can use the
  * past and the future values. 
  * 
- * @see Commentable
- * @see ICRUDValidatable
+ * Implementation relies on
+ * <ul>
+ *   <li>{@link validation.IValidation}</li>
+ *   <li>{@link validation.ICRUDValidatable}</li>
+ *   <li>{@link models.laboratory.common.instance.ITracingAccess}</li>
+ *   <li>{@link controllers.ICommentable}</li>
+ * </ul>
  * 
  * @author vrd
  *

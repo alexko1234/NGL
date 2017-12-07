@@ -1,9 +1,12 @@
 package controllers.reagents.api;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 // import static play.data.Form.form;
 import static fr.cea.ig.play.IGGlobals.form;
@@ -38,6 +41,7 @@ import views.components.datatable.DatatableResponse;
 
 public class Reagents extends DocumentController<Reagent> {
 	
+	@Inject
 	public Reagents(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
 	}

@@ -35,7 +35,7 @@ public class LimsInformations  extends CommonController {
 		return ok(Json.toJson(intruments));
 	}
 	
-	/**
+	/*
 	 * Return the experiment information about the run that will be transfer
 	 * @param type
 	 * @param code

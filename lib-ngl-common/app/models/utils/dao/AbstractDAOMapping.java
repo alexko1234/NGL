@@ -13,7 +13,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 import play.Logger;
 
 
-/**
+/*
  * Generic operation DAO with MappingSQL object 
  *
  * @param <T>

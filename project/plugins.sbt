@@ -17,7 +17,8 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.6")
 
 // bytecode enhancement has been pulled out of core play 
-addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.1.0")
+// addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.1.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.2.2")
 
 // https://github.com/sbt/sbt-jshint
 // jslint
@@ -39,9 +40,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
 // addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.2")
 
 
-// libraryDependencies += "org.javassist" % "javassist" % "3.20.0-GA"
-// bytecode enhancement has been pulled out of core play 
-addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.1.0")
+libraryDependencies += "org.javassist" % "javassist" % "3.20.0-GA"
 
 
 scalacOptions += "-deprecation"

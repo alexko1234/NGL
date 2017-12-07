@@ -3,9 +3,12 @@ package controllers.projects.api;
 // import static play.data.Form.form;
 import static fr.cea.ig.play.IGGlobals.form;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.UmbrellaProject;
@@ -44,6 +47,7 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
+	@Inject
 	public UmbrellaProjects(NGLContext ctx) {
 		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
 	}

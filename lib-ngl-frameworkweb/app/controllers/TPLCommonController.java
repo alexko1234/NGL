@@ -12,7 +12,7 @@ import play.mvc.Http.Context;
 @With({fr.cea.ig.authentication.Authenticate.class})
 public abstract class TPLCommonController extends Controller {
 	
-	/**
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz

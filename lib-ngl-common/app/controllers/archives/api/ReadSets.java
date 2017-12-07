@@ -31,8 +31,8 @@ import fr.cea.ig.mongo.MongoStreamer;
  */
 public class ReadSets extends CommonController {
 	
-	/**
-	 * @param archive : default 2
+	/*
+	 * @param archive default 2
 	 * @return
 	 */
 	 

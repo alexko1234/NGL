@@ -25,25 +25,26 @@ public interface ICRUDValidatable<T> {
 	
 	/**
 	 * Invariants, must always hold.
-	 * @param ctx
+	 * @param ctx validation context
 	 */
 	void validateInvariants(ContextValidation ctx);
 	
 	/**
 	 * Validate the object state for the create operation.
-	 * @param ctx
+	 * @param ctx validation context
 	 */
 	void validateCreation(ContextValidation ctx);
 	
 	/**
 	 * Validate the object state for the update operation. 
-	 * @param ctx
+	 * @param ctx  validation context
+	 * @param past past value to allow transition tests
 	 */
 	void validateUpdate(ContextValidation ctx, T past);
 	
 	/**
 	 * Validate the object state for the delete operation.
-	 * @param ctx
+	 * @param ctx validation context
 	 */
 	void validateDelete(ContextValidation ctx);
 	

@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.instance.Kit;
@@ -39,6 +41,7 @@ import fr.cea.ig.play.NGLContext;
 
 public class Kits extends DocumentController<Kit>{
 
+	@Inject
 	public Kits(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
 	}

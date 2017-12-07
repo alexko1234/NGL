@@ -55,7 +55,7 @@ public abstract class APICommonController<T> extends Controller {
 		// logger.debug("intialization done");
 	}
 
-	/**
+	/*
 	 * Filled the main form
 	 * @return
 	 */
@@ -63,7 +63,7 @@ public abstract class APICommonController<T> extends Controller {
 		return getFilledForm(mainForm, type); 
 	}
 	
-	/**
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -91,7 +91,7 @@ public abstract class APICommonController<T> extends Controller {
 		return results;
 	}
 
-	/**
+	/*
 	 * Returns a form built from the query string.
 	 * @param form  form to fill
 	 * @param clazz type of the form
@@ -130,7 +130,7 @@ public abstract class APICommonController<T> extends Controller {
 		return filledFormQueryString(ctx.form(clazz),clazz);
 	}
 
-	/**
+	/*
 	 * Fill a form from the request query string
 	 * @param clazz
 	 * @return

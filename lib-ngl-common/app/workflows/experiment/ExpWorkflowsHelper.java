@@ -325,7 +325,7 @@ public class ExpWorkflowsHelper {
 		});					
 	}
 	
-	/**
+	/*
 	 * Update OutputContainerUsed :
 	 * 		- generate ContainerSupportCode and ContainerCode if needed
 	 * 		- populate content, projectCodes, sampleCodes, fromTransformationTypeCodes, processTypeCodes, inputProcessCodes
@@ -434,7 +434,7 @@ public class ExpWorkflowsHelper {
 		return contents;
 	}
 
-	/**
+	/*
 	 * Generate Support and container and save it in MongoDB
 	 * Add the support code inside processes
 	 * Il only one error during validation process all object are delete from MongoDB
@@ -959,7 +959,7 @@ public class ExpWorkflowsHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
 	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
 	 * @param exp
@@ -1028,7 +1028,7 @@ public class ExpWorkflowsHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Get all property for a level in experimentProperties, instrumentProperties and inpoutContainerProperties
 	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
 	 * @param exp
@@ -1201,7 +1201,7 @@ public class ExpWorkflowsHelper {
 		rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 	}
 
-	/**
+	/*
 	 * Update only the qc result and not the container attribut
 	 * used in admin case
 	 * @param exp
@@ -1226,7 +1226,7 @@ public class ExpWorkflowsHelper {
 				});
 
 	}
-	/**
+	/*
 	 * update volume, concentration, quantity and size only if present
 	 * @param exp
 	 * @param validation
@@ -1316,7 +1316,7 @@ public class ExpWorkflowsHelper {
 		}
 	};
 	
-	/**
+	/*
 	 * Create new sample code for the output containers in case we want to create another sample
 	 * @param exp
 	 * @param validation
@@ -1509,7 +1509,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	/**
+	/*
 	 * Delete created sample and reset the last sampleCode on project
 	 * @param contextValidation
 	 * @param exp
@@ -1670,7 +1670,6 @@ public class ExpWorkflowsHelper {
 		});			
 	}
 
-
 	private Set<String> getTagAssignFromContainerLife(Set<String> containerCodes, Content ocuContent, Set<String> projectCodes,  Set<String> sampleCodes, Map<String, PropertyValue> updatedProperties) {
 		Set<String> tags = null;
 		
@@ -1698,9 +1697,6 @@ public class ExpWorkflowsHelper {
 		}
 		return tags;
 	}
-
-	
-	
 
 }
 

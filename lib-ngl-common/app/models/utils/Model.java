@@ -70,10 +70,17 @@ public class Model<T> {
 		}
 	}
 
+	// TODO: 
+	// - make Finder<T> an interface
+	// - modify finders to inherit from the SQL version
+	// - implement a mongo version, requires a mongo based abstract DAO implementation
+	// - swap implementations
+	
 	public static class Finder<T> {
 
 		private String className;
 
+		// Could take a class instance.
 		@JsonIgnore
 		public Finder(String className) {
 			this.className = className;

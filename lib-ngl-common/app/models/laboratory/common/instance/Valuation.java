@@ -10,11 +10,34 @@ import validation.utils.ValidationHelper;
 
 public class Valuation implements IValidation {
 	
+	/**
+	 * Validity.
+	 */
 	public TBoolean valid = TBoolean.UNSET;
+	
+	/**
+	 * Creation date.
+	 */
     public Date date;
+    
+    /**
+     * Creation user. 
+     */
     public String user;
+    
+    /**
+     * Extra info.
+     */
     public Set<String> resolutionCodes;
+    
+    /**
+     * Name of the rules to validate containing instance.
+     */
     public String criteriaCode;
+    
+    /**
+     * Comment.
+     */
     public String comment;
     
 	@Override

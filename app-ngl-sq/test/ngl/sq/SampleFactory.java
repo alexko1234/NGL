@@ -70,6 +70,9 @@ public class SampleFactory extends DBObjectFactory {
 		return createSample(ws, s -> { });
 	}
 	
+	
+	// typeCode importTypeCode 
+	
 	public static Sample createSample(WSClient ws, Consumer<Sample> init) {
 		Sample sample = new Sample();
 		sample.code           = DevAppTesting.newCode();

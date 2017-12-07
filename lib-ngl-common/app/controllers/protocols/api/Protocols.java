@@ -73,7 +73,7 @@ public class Protocols extends CommonController{
 	}
 	
 
-	/**
+	/*
 	 * Construct the protocol query
 	 * @param protocolsSearch
 	 * @return

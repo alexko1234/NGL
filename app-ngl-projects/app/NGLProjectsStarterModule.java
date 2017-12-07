@@ -18,7 +18,7 @@ public class NGLProjectsStarterModule extends play.api.inject.Module {
 
 	public NGLProjectsStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
-		logger.info("starting NGL-BI");
+		logger.info("starting NGL-Projects");
 	}
 
 	// 0:fr.cea.ig.authentication.AuthenticatePlugin
@@ -34,8 +34,7 @@ public class NGLProjectsStarterModule extends play.api.inject.Module {
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				// Force JsMessages init
 				bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
-				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
-
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()				
 				);
 	}
 	

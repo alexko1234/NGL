@@ -5,7 +5,7 @@ import models.utils.Model;
 
 
 /**
- * Value of institute (only 2 possible values : CNG & CNS)
+ * Value of institute (only 2 possible values : CNG {@literal &} CNS)
  * 
  * @author dnoisett
  *

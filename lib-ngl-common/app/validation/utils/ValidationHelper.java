@@ -42,7 +42,7 @@ public class ValidationHelper {
 		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param properties
@@ -52,7 +52,7 @@ public class ValidationHelper {
 		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param properties
@@ -157,7 +157,7 @@ public class ValidationHelper {
 		}						
 	}
 
-	/**
+	/*
 	 * transform the list of multimap where the key is the prefix of the code.
 	 * 
 	 * ex : code = prop.toto the key is prop.
@@ -194,7 +194,7 @@ public class ValidationHelper {
 		return clazz;
 	}	
 	
-	/**
+	/*
 	 * 
 	 * @param type : final type
 	 * @param value : the value
@@ -236,7 +236,7 @@ public class ValidationHelper {
 		return o;
 	}
 
-	/**
+	/*
 	 * Convert a String to the good object
 	 * @param type
 	 * @param value
@@ -275,7 +275,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param type : final type
 	 * @param value : the value
@@ -303,7 +303,7 @@ public class ValidationHelper {
 		return o;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param type : final type
 	 * @param value : the value
@@ -344,7 +344,7 @@ public class ValidationHelper {
 		return o;
 	}
 	
-	/**
+	/*
 	 * Check if the property is not empty (null, "", " "; size = 0, etc.)
 	 * @param errors
 	 * @param object
@@ -377,10 +377,10 @@ public class ValidationHelper {
 	
 	/**
 	 * add an error message
-	 * @param errors : list of errors
-	 * @param key : property key
-	 * @param message : message key
-	 * @param arguments : message args
+	 * @param errors    list of errors
+	 * @param key       property key
+	 * @param message   message key
+	 * @param arguments message args
 	 * @deprecated used ContextValidation.addErrors
 	 */
 	public static void addErrors(Map<String, List<ValidationError>> errors,
@@ -655,7 +655,7 @@ public class ValidationHelper {
 		return propertyDefinition.code.split("\\.", 2);
 	}
 	
-	/**
+	/*
 	 * Check if the property is not empty (null, "", " "; size = 0, etc.)
 	 * @param object
 	 * @param key
@@ -770,7 +770,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param propertyValue
@@ -796,7 +796,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param propertyDefinition
 	 * @param value
@@ -813,7 +813,7 @@ public class ValidationHelper {
 		return false;
 	}
 	
-	/**
+	/*
 	 * Check if the propertyDefinition is active
 	 * @param contextValidation
 	 * @param propertyDefinition
@@ -834,7 +834,7 @@ public class ValidationHelper {
 	}
 
 	
-	/**
+	/*
 	 * Check if property value type is the same as property definition type 
 	 * @param contextValidation
 	 * @param propertyValue

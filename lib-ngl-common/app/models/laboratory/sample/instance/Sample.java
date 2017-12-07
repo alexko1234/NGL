@@ -51,7 +51,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 
 	// ngl-data/services.description.sample.SampleServiceCNS
 	
-	/**
+	/*
 	 * Type code, defined in ngl-data project {@link services.description.sample.SampleServiceCNS}.
 	 */
 	public String typeCode;
@@ -61,7 +61,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	 */
 	public String importTypeCode;
 
-	/**
+	/*
 	 * Sample type category code, implied by the type definition and defined 
 	 * in ngl-data project {@link services.description.sample.SampleServiceCNS}.
 	 */
@@ -73,12 +73,25 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	public Set<String> projectCodes;
 
 	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
+	/**
+	 * Name = localized code (default:null)
+	 */
 	public String name;
+	
+	/**
+	 * Name of the sample in the collab referential
+	 */
 	public String referenceCollab;
 	
 	// TODO: use Map<String,PropertyValue<?>>
+	/**
+	 * Mandatory : meta : false (meta:metagneomnic,metatrucs)
+	 */
 	public Map<String,PropertyValue> properties;
 	
+	/**
+	 * Unused (not yet ?).
+	 */
 	public Valuation valuation;
 	//public List<CollaboratorInvolve> collaborators;
 	
@@ -93,11 +106,13 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	
 	/**
 	 * Scientific name (@see <a href="https://www.ncbi.nlm.nih.gov/taxonomy">taxonomy</a>).
+	 * Auto filled (at least on prod).
 	 */
 	public String ncbiScientificName;
 	
 	/**
 	 * Lineage (@see <a href="https://www.ncbi.nlm.nih.gov/taxonomy">taxonomy</a>).
+	 * Auto filled (at least on prod).
 	 */
 	public String ncbiLineage;
 	
@@ -111,16 +126,46 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	 */
 	public TraceInformation traceInformation;
 
+	/**
+	 * Sample parent if any.
+	 * 
+	 * life: {
+from: {
+projectCode: "BUP",
+sampleCode: "BUP_AAAA",
+sampleTypeCode: "DNA",
+experimentCode: "TAG-PCR-20160819_130125AHH",
+experimentTypeCode: "tag-pcr",
+containerCode: "18ID3I6DL",
+supportCode: "18ID3I6DL",
+fromTransformationTypeCodes: null,
+fromTransformationCodes: null,
+processTypeCodes: [
+"tag-pcr-and-dna-library"
+],
+processCodes: [
+"BUP_AAAA_TAG-PCR-AND-DNA-LIBRARY_18IF26TQZ"
+],
+},
+path: ",CO-0000140,BUP_AAAA",
+},
+	 */
 	public SampleLife life;
 	
 	/**
 	 * List of projections of process that use this sample.
-	 * Sample creation requires that we provide at least one project code. 
+	 * Populated when experiments/processes are done.
 	 */
 	public List<SampleProcess> processes;
 	
+	/**
+	 * Summary (count redeasets & stuff).
+	 */
 	public SampleProcessesStatistics processesStatistics;
 	
+	/**
+	 * Time of the last automated update.
+	 */
 	public Date processesUpdatedDate;
 	
 	/**

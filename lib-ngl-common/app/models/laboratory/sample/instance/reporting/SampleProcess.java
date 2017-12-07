@@ -11,7 +11,8 @@ import models.laboratory.processes.instance.SampleOnInputContainer;
 /**
  * TODO: validate the description
  * 
- * Projection of a {@link models.laboratory.processes.instance.Process} that is 
+ * Projection of a {@link models.laboratory.processes.instance.Process} 
+ * and of a Experiment that is 
  * stored in a {@link models.laboratory.sample.instance.Sample}.
  * 
  * The trace information means that this object is user editable, this is not 
@@ -48,7 +49,7 @@ public class SampleProcess {
 	
 	public SampleOnInputContainer sampleOnInputContainer;
 	
-	public Map<String,PropertyValue<?>> properties;
+	public Map<String,PropertyValue> properties;
 	
 	public String currentExperimentTypeCode;
 	
