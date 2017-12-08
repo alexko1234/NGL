@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 /**
  * Config facade defining accessors with defaults.
+ * 
  * @author vrd
  *
  */
@@ -51,7 +52,8 @@ public class IGConfig {
 	
 	public String getCheckedString(String path, String[] values) {
 		if (!config.hasPath(path))
-			throw new RuntimeException(path + " has no value in configuraiton");
+			throw new RuntimeException(path + " has no value in configuration");
+		// TODO: use some common contains method
 		String value = config.getString(path);
 		for (String s : values)
 			if (s.equals(value))
@@ -61,7 +63,14 @@ public class IGConfig {
 	
 	public String getString(String path) {
 		if (!config.hasPath(path))
-			throw new RuntimeException(path + " has no value in configuraiton");
+			throw new RuntimeException(path + " has no value in configuration");
 		return config.getString(path);
 	}
+	
+	public String getString(String path, String defaultValue) {
+		if (!config.hasPath(path))
+			return defaultValue;
+		return config.getString(path);
+	}
+	
 }

@@ -36,6 +36,8 @@ public class NGLConfig {
 	
 	public static final String NGL_RULES_KEY = "rules.key";
 	
+	public static final String NGL_BARCODE_PRINTING_KEY = "ngl.printing.cb";
+	
 	/**
 	 * Configuration to use.
 	 */
@@ -69,6 +71,20 @@ public class NGLConfig {
 	
 	public String getRulesKey() {
 		return config.getString(NGL_RULES_KEY);
+	}
+	
+	/**
+	 * Is the NGL bar code printing enabled ?
+	 * The configuration path is {@link #NGL_BARCODE_PRINTING_KEY}. 
+	 * @return false if not configured, configured value otherwise
+	 */
+	public boolean isBarCodePrintingEnabled() {
+		return config.getBoolean(NGL_BARCODE_PRINTING_KEY, false);
+	}
+	
+	public String getString(String path) {
+		// return config.getString(path, path + ":notDefinedInConf");
+		return config.getString(path);
 	}
 	
 }
