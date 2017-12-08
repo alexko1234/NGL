@@ -50,7 +50,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	}
 	
 	// FDS 06/04/2017 NGL-1225: ajout "nanopore"
-	// FDS 07/12/2017 NGL-1730: ajout "Novaseq6000" ( 1 ou 2 runtypes pour les 2 types de flowcell ???)
+	// FDS 07/12/2017 NGL-1730: ajout "Novaseq6000" ( 1 ou 2 runtypes pour les 2 types de flowcell ??? attente specs )
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
 		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000",           8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG) ));
@@ -61,7 +61,6 @@ public class RunServiceCNG  extends AbstractRunService{
 		l.add(DescriptionFactory.newRunType("RHS4000","RHS4000",           1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RHSX","RHSX",                 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RNOVASEQ6000","RNOVASEQ6000", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		//l.add(DescriptionFactory.newRunType("RNOVASEQ6000","RNOVASEQ6000", 4, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		l.add(DescriptionFactory.newRunType("MinIon","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("MKI","RMKI",       1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
