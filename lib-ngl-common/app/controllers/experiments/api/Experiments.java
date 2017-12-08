@@ -100,7 +100,7 @@ public class Experiments extends DocumentController<Experiment> {
 		}
 	}
 	
-	/**
+	/*
 	 * Construct the experiment query
 	 * @param experimentSearch
 	 * @return the query

@@ -22,7 +22,7 @@ import play.Logger;
  * 
  * @author ejacoby
  *
- * @param <T>
+ * @param <T> DAO
  */
 public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 

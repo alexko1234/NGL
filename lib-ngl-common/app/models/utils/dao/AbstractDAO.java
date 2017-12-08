@@ -34,7 +34,7 @@ import static fr.cea.ig.play.IGGlobals.cache;
  * 
  * @author ejacoby
  *
- * @param <T>
+ * @param <T> DAO 
  */
 @Transactional(readOnly=false, rollbackFor=DAOException.class)
 public abstract class AbstractDAO<T> {

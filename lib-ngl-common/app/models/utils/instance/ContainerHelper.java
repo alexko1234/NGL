@@ -83,7 +83,8 @@ public class ContainerHelper {
 		container.sampleCodes.add(sample.code);
 
 	}
-	/**
+	
+	/*
 	 * fusion content if same projectCode, sampleCode and tag if exist.
 	 * 
 	 * the fusion : 
@@ -204,7 +205,7 @@ public class ContainerHelper {
 		}		
 	}
 
-	/**
+	/*
 	 * clone and compute percentage
 	 * @param contents
 	 * @param percentage
@@ -223,7 +224,6 @@ public class ContainerHelper {
 		}
 		return newContents;
 	}
-
 
 	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 

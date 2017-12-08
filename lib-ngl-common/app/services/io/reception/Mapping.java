@@ -21,7 +21,7 @@ import fr.cea.ig.MongoDBDAO;
  * 
  * @author galbini
  *
- * @param <T>
+ * @param <T> DBOject subclass to map 
  */
 public abstract class Mapping<T extends DBObject> {
 
@@ -86,13 +86,13 @@ public abstract class Mapping<T extends DBObject> {
 		return object;
 	}
 	
-	/**
+	/*
 	 * Update the current object alone without any information from other object
 	 * @param object
 	 */
 	protected abstract void update(T object) ;
 
-	/**
+	/*
 	 * Add missing property from otehr objectType
 	 * @param c
 	 */

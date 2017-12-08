@@ -81,7 +81,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.active=commonInfoType.active;
 	}
 
-	/**
+	/*
 	 * Return the PropertyDefinition that's contain all levels
 	 * @param levels
 	 * @return

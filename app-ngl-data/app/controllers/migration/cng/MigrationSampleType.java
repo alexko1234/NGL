@@ -31,7 +31,7 @@ import validation.ContextValidation;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
-/**
+/* TODO: reformat with proper html tags
  * 1) samples importés avant 15/09/2015 avec typeCode='default-sample-cng' alors qu'il est connu dansla base source Solexa...
  *    => mettre les sampleTypeCode et sampleCategoryCode corrects
  * 2) depuis l'ajout de l'import des fichiers banque CNG, le sampleTypeCode des samples "IP" a changé

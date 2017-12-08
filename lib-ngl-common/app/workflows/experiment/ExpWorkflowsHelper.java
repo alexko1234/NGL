@@ -300,7 +300,7 @@ public class ExpWorkflowsHelper {
 
 		return removeContainersCodes;
 	}
-	/**
+	/*
 	 * Update ouput container code but not generate if null
 	 * Used when user change plate line or column
 	 * @param exp
@@ -310,7 +310,7 @@ public class ExpWorkflowsHelper {
 		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> atm.updateOutputCodeIfNeeded(outputCsc, null));
 	}
 	
-	/**
+	/*
 	 * Update only content
 	 * @param exp
 	 */

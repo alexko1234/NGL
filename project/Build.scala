@@ -38,7 +38,7 @@ object ApplicationBuild extends Build {
   // in some configuration instead of being hardcoded.
   // val distSuffix             = "-SNAPSHOT"
   val distSuffix             = ".2.6-SNAPSHOT"
-  val appVersion             = "1.0"  + distSuffix
+  val appVersion             = "1.0"    + distSuffix
 	
 	val sqVersion              = "1.36.0" + distSuffix
 	val biVersion              = "1.38.0" + distSuffix
@@ -115,8 +115,8 @@ object ApplicationBuild extends Build {
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
 			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource", "-quiet"),
 			// Remove scala files from the doc process so javadoc is used. 
-			//sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
-			sources in doc in Compile := List(),
+			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			// sources in doc in Compile := Seq(),
 			scalaVersion        := scala
 		) ++ tev0 ++ tev1
 

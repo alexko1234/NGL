@@ -38,7 +38,7 @@ import fr.cea.ig.MongoDBDAO;
 
 /**
  * Corrective migration : 
- * Update contents on Containers & sampleOnContainer on ReadSets (for those who don't have these properties)
+ * Update contents on Containers {@literal & } sampleOnContainer on ReadSets (for those who don't have these properties)
  * This migration replaces MigrationContent and MigrationUpdateSampleOnContainer
  * 
  * @author dnoisett

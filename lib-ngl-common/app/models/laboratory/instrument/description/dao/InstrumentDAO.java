@@ -52,7 +52,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);
 	}
 	
-	/**
+	/*
 	 * Update all fields but not active and code
 	 * @param instrument
 	 */

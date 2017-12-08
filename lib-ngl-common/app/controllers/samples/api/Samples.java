@@ -139,7 +139,7 @@ class Samples2 extends DocumentController<Sample> {
 		}		
 	}
 
-	/**
+	/*
 	 * Construct the sample query
 	 * @param samplesSearch
 	 * @return

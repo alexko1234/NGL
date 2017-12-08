@@ -40,9 +40,9 @@ public class ColumnParser {
 
 	//private String [] nameFieldsInFile;
 	
-	/**
+	/*
 	 * 
-	 * @param keyField
+	 * @param keyField 
 	 * @param separator
 	 * Constructeur.
 	 */
@@ -55,7 +55,7 @@ public class ColumnParser {
 		this.separator = separator;
 	}
 	
-	/**
+	/*
 	 * @param allowedFields
 	 * @return boolean 
 	 * Retourne vrai si la liste des noms de champs autorises contient le nom du champ clé.
@@ -75,11 +75,11 @@ public class ColumnParser {
 		return(isKeyAllowed);
 	}
 	
-	/**
-	 * @param first line of userFile de la forme nomChamps_1 separator nomChamps_2 separator ....
-	 * @return tableau des noms de champs dans le fichier d'entree.
+	/*
 	 * Declenche SNTS exception si cle d'indexation n'est pas un nom de champs, ou si nom de champs
 	 * n'est pas autorisé.
+	 * @param first line of userFile de la forme nomChamps_1 separator nomChamps_2 separator ....
+	 * @return tableau des noms de champs dans le fichier d'entree.
 	 */	
 	protected String[] validateHeaders(String line) throws SraException {
 		String legende = line;

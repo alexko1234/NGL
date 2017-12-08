@@ -16,7 +16,7 @@ public class MigrationExperimentFlowcellChemistry extends MigrationExperimentPro
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 
-	/**
+	/*
 	 * Propagation d'une propriété d'experiment au niveau content (containers et readSets)
 	 * @param experimentTypeCode
 	 * @param keyProperty

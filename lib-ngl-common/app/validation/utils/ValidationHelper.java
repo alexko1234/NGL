@@ -178,7 +178,7 @@ public class ValidationHelper {
 	
 
 	
-	/**
+	/*
 	 * 
 	 * @param className
 	 * @return
@@ -391,7 +391,7 @@ public class ValidationHelper {
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
 	}
 
-	/**
+	/*
 	 * 
 	 * @param rootKeyName
 	 * @param property
@@ -404,7 +404,7 @@ public class ValidationHelper {
 	
 	
 
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -446,7 +446,7 @@ public class ValidationHelper {
         }
 	}
 	
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -476,7 +476,7 @@ public class ValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -503,7 +503,7 @@ public class ValidationHelper {
 		return true;
 	}
 	
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -532,7 +532,7 @@ public class ValidationHelper {
 		return true;
 	}
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -549,7 +549,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -579,7 +579,7 @@ public class ValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -601,7 +601,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -628,7 +628,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param propertyValue
@@ -645,7 +645,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Split the propertyDefinition code with "." if exist
 	 * @param propertyDefinition
 	 * @return
@@ -707,7 +707,7 @@ public class ValidationHelper {
         return false;		
 	}
 	
-	/**
+	/*
 	 * Check if the value is in the list
 	 * @param contextValidation
 	 * @param propertyValue
@@ -723,7 +723,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Check if the value is in the list
 	 * @param contextValidation
 	 * @param propertyValue
@@ -748,7 +748,7 @@ public class ValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param propertyValue

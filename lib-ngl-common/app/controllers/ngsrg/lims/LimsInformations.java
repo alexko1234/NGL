@@ -24,7 +24,7 @@ public class LimsInformations  extends CommonController {
 	
 	final static Form<Experiment> experimentForm = form(Experiment.class);
 	
-	/**
+	/*
 	 * Return the list of sequencers
 	 * @return
 	 */
@@ -57,7 +57,7 @@ public class LimsInformations  extends CommonController {
 		}
 	}
 
-	/**
+	/*
 	 * Return the container support information used in the experiment
 	 * @param supportCode
 	 * @return
@@ -73,7 +73,7 @@ public class LimsInformations  extends CommonController {
 		}
 	  }
 
-	/**
+	/*
 	 * Return the container support information used in the experiment
 	 * @param supportCode
 	 * @return

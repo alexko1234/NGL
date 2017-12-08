@@ -183,7 +183,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType> {
 	}
 */	
 	
-	/**
+	/*
 	 * Particular sql with two code must be implemented
 	 */
 	/*

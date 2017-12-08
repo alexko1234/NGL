@@ -97,6 +97,7 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 	 * Application level create operation.
 	 * @param ctx validation context 
 	 * @param t   instance to persist in the database 
+	 * @return    persisted instance
 	 */
 	public T create(ContextValidation ctx, T t) {
 		logger.debug("api - create " + t);
@@ -321,6 +322,7 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 	 * @param ctx    validation context
 	 * @param fields fields to update
 	 * @param t      object to update
+	 * @return       persisted instance
 	 */
 	public T partialUpdate(ContextValidation ctx, List<String > fields, T t) {
 		if (t.getCode() == null) {

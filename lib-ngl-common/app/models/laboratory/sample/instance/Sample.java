@@ -126,7 +126,7 @@ public class Sample extends DBObject implements IValidation, ICommentable, ITrac
 	 */
 	public TraceInformation traceInformation;
 
-	/**
+	/*
 	 * Sample parent if any.
 	 * 
 	 * life: {
@@ -159,7 +159,7 @@ path: ",CO-0000140,BUP_AAAA",
 	public List<SampleProcess> processes;
 	
 	/**
-	 * Summary (count redeasets & stuff).
+	 * Summary (count read sets and other stuff).
 	 */
 	public SampleProcessesStatistics processesStatistics;
 	

@@ -26,7 +26,7 @@ public class InstanceFactory {
 	}
 	
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param name
@@ -105,7 +105,7 @@ public class InstanceFactory {
 	}
 	
 
-	/**
+	/*
 	 * define a resolution in MongoDB (with specific level) 
 	 * @param name
 	 * @param code
@@ -126,7 +126,7 @@ public class InstanceFactory {
 			return ir;
 		}
 
-	/**
+	/*
 	 * define a resolution in MongoDB
 	 * @param name
 	 * @param code
