@@ -19,6 +19,7 @@ public class NGLPlatesStarterModule extends play.api.inject.Module {
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
 				bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
+				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),				
 				/*bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
