@@ -38,6 +38,8 @@ public class NGLConfig {
 	
 	public static final String NGL_BARCODE_PRINTING_KEY = "ngl.printing.cb";
 	
+	public static final String NGL_APPLICATION_VERSION_KEY = "application.version";
+	
 	/**
 	 * Configuration to use.
 	 */
@@ -85,6 +87,14 @@ public class NGLConfig {
 	public String getString(String path) {
 		// return config.getString(path, path + ":notDefinedInConf");
 		return config.getString(path);
+	}
+	
+	/**
+	 * Application version string if defined in the configuration file at {@link #NGL_APPLICATION_VERSION_KEY}. 
+	 * @return empty string if not defined in the configuration, the configured value otherwise
+	 */
+	public String getApplicationVersion() {
+		return config.getString("application.version","");
 	}
 	
 }
