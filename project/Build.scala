@@ -57,7 +57,7 @@ object ApplicationBuild extends Build {
 	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions
-	val postgresql  = "postgresql"           % "postgresql"         % "9.1-901-1.jdbc4"  
+	val postgresql  = "org.postgresql"           % "postgresql"         % "9.4-1206-jdbc41"  
   val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
   val jsMessages  = "org.julienrf"        %% "play-jsmessages"    % "3.0.0" 
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
