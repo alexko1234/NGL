@@ -44,8 +44,6 @@ import play.test.WSTestClient;
 
 import static play.test.Helpers.running;
 import static play.test.Helpers.testServer;
-import static play.mvc.Http.Status;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
