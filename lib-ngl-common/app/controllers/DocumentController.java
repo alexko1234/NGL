@@ -17,12 +17,10 @@ import fr.cea.ig.play.NGLContext;
  */
 public abstract class DocumentController<T extends DBObject> extends MongoCommonController<T> {
 
-	
 	protected DocumentController(NGLContext ctx, String collectionName, Class<T> type) {
 		super(ctx,collectionName, type);
 	}
-	
-	
+		
 	protected DocumentController(NGLContext ctx, String collectionName, Class<T> type, List<String> defaultKeys) {
 		super(ctx,collectionName, type, defaultKeys);
 		
@@ -35,7 +33,5 @@ public abstract class DocumentController<T extends DBObject> extends MongoCommon
 		ti.setTraceInformation(getCurrentUser());
 		return ti;
 	}
-	
-	
-	
+
 }

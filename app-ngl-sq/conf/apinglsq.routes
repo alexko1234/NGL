@@ -6,13 +6,13 @@ PUT		/api/samples/:code												@controllers.samples.api.Samples.update(code:
 
 
 #supports api	
-GET		/api/supports													controllers.containers.api.ContainerSupports.list()
-GET		/api/supports/:code												controllers.containers.api.ContainerSupports.get(code:java.lang.String)
-PUT     /api/supports/:code                                             controllers.containers.api.ContainerSupports.update(code:java.lang.String)
-HEAD	/api/supports/:code												controllers.containers.api.ContainerSupports.head(code:java.lang.String)
-PUT		/api/supports/batch/state										controllers.containers.api.ContainerSupports.updateStateBatch()
-PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateState(code:java.lang.String)
-POST	/api/supports/code												controllers.containers.api.ContainerSupports.saveCode(nbCodes:java.lang.Integer ?= 0)
+GET		/api/supports													@controllers.containers.api.ContainerSupports.list()
+GET		/api/supports/:code												@controllers.containers.api.ContainerSupports.get(code:java.lang.String)
+PUT     /api/supports/:code                                             @controllers.containers.api.ContainerSupports.update(code:java.lang.String)
+HEAD	/api/supports/:code												@controllers.containers.api.ContainerSupports.head(code:java.lang.String)
+PUT		/api/supports/batch/state										@controllers.containers.api.ContainerSupports.updateStateBatch()
+PUT		/api/supports/:code/state										@controllers.containers.api.ContainerSupports.updateState(code:java.lang.String)
+POST	/api/supports/code												@controllers.containers.api.ContainerSupports.saveCode(nbCodes:java.lang.Integer ?= 0)
 
 #containers api
 GET		/api/containers													@controllers.containers.api.Containers.list()
