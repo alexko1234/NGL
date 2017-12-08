@@ -14,12 +14,12 @@
 
 @import views.html.ddmenu._
 
-@user = @{ ctx.currentUser() }
+@user            = @{ ctx.currentUser() }
 @writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 @adminPermission = @{ PermissionHelper.checkPermission(user, "admin") }
-@isCNSInstitute = @{ "CNS" == ctx.getInstitute() }
-@isCNGInstitute = @{ "CNG" == ctx.getInstitute() }
-@always = @{ true }
+@isCNSInstitute  = @{ "CNS" == ctx.getInstitute() }
+@isCNGInstitute  = @{ "CNG" == ctx.getInstitute() }
+@always          = @{ true }
 
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

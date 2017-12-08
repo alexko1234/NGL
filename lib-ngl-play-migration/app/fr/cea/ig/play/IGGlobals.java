@@ -49,7 +49,7 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class IGGlobals {
-	
+// class UNUSED_IGGlobals {
 	private static final play.Logger.ALogger logger = play.Logger.of(IGGlobals.class);
 	
 	// This is started as a component and before any other that requires 

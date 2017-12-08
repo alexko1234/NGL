@@ -4,10 +4,10 @@ import static views.components.datatable.DatatableConfig.DEFAULT_NB_ELEMENT;
 import static views.components.datatable.DatatableConfig.DEFAULT_ORDER_SENSE;
 import static views.components.datatable.DatatableConfig.DEFAULT_PAGE_NUMBER;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.Date;
+// import java.util.HashMap;
+// import java.util.List;
 import java.util.Map;
 
 import play.data.Form;
@@ -27,7 +27,7 @@ public class DatatableHelpers {
 	// through the application injector hoping that the application has been created.
 	private static Messages messages() {
 		// return play.Play.application().injector().instanceOf(play.i18n.MessagesApi.class).preferred(new java.util.ArrayList<play.i18n.Lang>());
-		return fr.cea.ig.play.IGGlobals.messages();
+		return fr.cea.ig.play.IGGlobals.messages(); // TODO: static helper, should be DI component 
 	}
 	
 	public static DatatableColumn getColumn(String property, String header) {
@@ -177,22 +177,26 @@ public class DatatableHelpers {
 		String value = field.valueOr(DEFAULT_NB_ELEMENT.toString());
 		return Integer.valueOf(value);
 	}
+	
 	@Deprecated()
 	public static Integer getPageNumber(Form form){
 		Field field = form.field("pageNumber");
 		String value = field.valueOr(DEFAULT_PAGE_NUMBER.toString());
 		return Integer.valueOf(value);
 	}
+	
 	@Deprecated()
 	public static String getOrderBy(Form form){
 		Field field = form.field("orderBy");
 		String value = field.valueOr("");
 		return value;
 	}
+	
 	@Deprecated()
 	public static Integer getOrderSense(Form form){
 		Field field = form.field("orderSense");
 		String value = field.valueOr(DEFAULT_ORDER_SENSE.toString());
 		return Integer.valueOf(value);
 	}
+	
 }

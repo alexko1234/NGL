@@ -117,6 +117,8 @@ object ApplicationBuild extends Build {
 			// Remove scala files from the doc process so javadoc is used. 
 			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
 			// sources in doc in Compile := Seq(),
+			// Remove javadoc jar creation when packaging (building dist)
+			mappings in (Compile, packageDoc) := Seq(),
 			scalaVersion        := scala
 		) ++ tev0 ++ tev1
 

@@ -34,12 +34,9 @@ public abstract class APICommonController<T> extends Controller {
 	private static final play.Logger.ALogger logger = play.Logger.of(APICommonController.class);
 	
 	// TODO: fix initialization
-	protected final DynamicForm listForm; //  = // new DynamicForm(null,null,null); // = new DynamicForm();
-	    //fr.cea.ig.play.IGGlobals.form();
+	protected final DynamicForm listForm;
 	protected final Class<T> type;
-	
-	// protected final Form<T> mainForm = form(type);
-	private final Form<T> mainForm; //  = fr.cea.ig.play.IGGlobals.form(type);
+	private final Form<T> mainForm; 
 	
 	protected NGLContext ctx;
 	
@@ -47,12 +44,8 @@ public abstract class APICommonController<T> extends Controller {
 		super();
 		this.type = type;
 		this.ctx = ctx;
-		// logger.debug("initializing forms");
-		// listForm = fr.cea.ig.play.IGGlobals.form();
 		listForm = ctx.form();
-		// mainForm = fr.cea.ig.play.IGGlobals.form(type);
 		mainForm = ctx.form(type);
-		// logger.debug("intialization done");
 	}
 
 	/*

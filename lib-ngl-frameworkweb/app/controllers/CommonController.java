@@ -63,6 +63,7 @@ import fr.cea.ig.mongo.MongoStreamer;
 @Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class CommonController extends Controller {
+// abstract class UNUSED_CommonController extends Controller {
 
 	// TODO: fix initialization
 	//protected final static DynamicForm listForm = // new DynamicForm(null,null,null); // new DynamicForm()
