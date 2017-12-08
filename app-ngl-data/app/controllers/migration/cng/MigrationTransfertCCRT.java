@@ -68,7 +68,7 @@ public class MigrationTransfertCCRT extends CommonController{
 						
 						//Get ReadSet to update isSentCCRT=true et codeProject=
 						List<ReadSet> readSetsToUpdate = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-								DBQuery.is("properties.isSentCCRT.value", true).is("projectCode", project.code).notExists("location"),keys).toList();
+								DBQuery.is("properties.isSentCCRT.value", true).is("projectCode", project.code),keys).toList();
 						for(ReadSet readSet : readSetsToUpdate){
 							Logger.debug("ReadSet updated "+readSet.code);
 							//Calculate path CCRT
