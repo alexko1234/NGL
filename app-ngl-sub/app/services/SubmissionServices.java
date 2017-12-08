@@ -1150,7 +1150,7 @@ public class SubmissionServices {
 
 		Experiment experiment = new Experiment(); 
 		//SraParameter sraParam = new SraParameter();
-		Map<String, String> mapLibProcessTypeCodeVal_orientation = VariableSRA.mapLibProcessTypeCodeVal_orientation;
+		Map<String, String> mapLibProcessTypeCodeVal_orientation = VariableSRA.mapLibProcessTypeCodeVal_orientation();
 
 		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);
 		experiment.readSetCode = readSet.code;
@@ -1209,7 +1209,7 @@ public class SubmissionServices {
 		//System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
 		//System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = '" + instrumentUsed.typeCode+"'");
 		//System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
-		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(instrumentUsed.typeCode.toLowerCase());
+		experiment.instrumentModel = VariableSRA.mapInstrumentModel().get(instrumentUsed.typeCode.toLowerCase());
 		if (StringUtils.isBlank(experiment.instrumentModel)) {
 			System.err.println("Pas de correspondance existante pour instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");	
 		}
@@ -1306,7 +1306,7 @@ public class SubmissionServices {
 		if ("rsnanopore".equalsIgnoreCase(readSet.typeCode)){
 			// Pas de spot_descriptor
 			experiment.libraryLayout = "SINGLE";
-			experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation.get("forward");
+			experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation().get("forward");
 		} else {
 			
 			// Ajouter les read_spec (dans SPOT_DESCRIPTOR ) en fonction de l'information SINGLE ou PAIRED et forward-reverse et last_base_coord :
@@ -1320,7 +1320,7 @@ public class SubmissionServices {
 				if (StringUtils.isNotBlank(libraryLayout)) { 
 					if (libraryLayout.equalsIgnoreCase("SR")){
 						experiment.libraryLayout = "SINGLE";
-						experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation.get("forward");
+						experiment.libraryLayoutOrientation = VariableSRA.mapLibraryLayoutOrientation().get("forward");
 					} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
 						experiment.libraryLayout = "PAIRED";
 						//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
