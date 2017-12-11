@@ -29,11 +29,9 @@ import fr.cea.ig.MongoDBDAO;
  */
 public class ResolutionService {
 	
-
 	private static final ALogger logger = Logger.of("ResolutionService");
 	private static HashMap<String, ResolutionCategory> resolutionCategories; 
 	
-	// FDS 15/01 reecriture...
 	public static void main(ContextValidation ctx) {	
 		
 		String inst=play.Play.application().configuration().getString("institute");
@@ -88,10 +86,9 @@ public class ResolutionService {
 			resolutionCategories = createResolutionCategoriesCNS();
 			
 			createExperimentResolution(ctx); 
-			createProcessResolutionCNS(ctx); // on met CNG ou CNS???
+			createProcessResolutionCNS(ctx); // CNS???
 		}
 	}
-
 
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
@@ -124,7 +121,6 @@ public class ResolutionService {
 		
 		return resoCategories;
 	}
-	
 
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNS(){	
 		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
@@ -161,8 +157,6 @@ public class ResolutionService {
 		return resoCategories;
 	}
 
-
-	
 	/* sub-methods */
 	
 	public static void createRunResolutionCNG(ContextValidation ctx) {
@@ -268,14 +262,12 @@ public class ResolutionService {
 		al.add("RHSX");
 		al.add("RMISEQ");
 		al.add("RNEXTSEQ500");
-		al.add("RNOVASEQ6000");  // ajout 07/12/2017 ( 1 ou 2 ??)
+		al.add("RNOVASEQ6000");  // NGL-1730 ajout 07/12/2017
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
-	
-	
 	
 	public static void createReadSetResolutionCNG(ContextValidation ctx) {	
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -329,8 +321,7 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
-	}
-	
+	}	
 	
 	public static void createRunResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -421,8 +412,7 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
-	}
-	
+	}	
 	
 	public static void createReadSetResolutionCNS(ContextValidation ctx) {	
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -500,8 +490,7 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
-	}
-	
+	}	
 	
 	public static void createAnalysisResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -583,8 +572,7 @@ public class ResolutionService {
 		r.typeCodes = al;
 		ctx.setCreationMode();
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
-	}
-	
+	}	
 
 	public static void createOpgenDepotResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -684,8 +672,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Problème passage des molécules région pillar", "echec-pillarRegion", resolutionCategories.get("Default"), (short) 5));
 		l.add(InstanceFactory.newResolution("Labelling incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 6));
 		l.add(InstanceFactory.newResolution("Utilisation du NanoAnalyzer", "nanoAnalyzer", resolutionCategories.get("Default"), (short) 7));
-		
-		
+			
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expDepotBionanoReso";
 		r.resolutions = l;
@@ -697,7 +684,6 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
-	
 	
 	private static void createSamplePrepResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
@@ -717,7 +703,6 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
-		
 		
 		l = new ArrayList<Resolution>();
 
@@ -757,9 +742,8 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
-
 	
-	// FDS 05/02/2016 -- JIRA NGL-894 experience ey processus X5
+	// FDS 05/02/2016 -- JIRA NGL-894 experience processus X5
 	private static void createPrepPcrFreeResolutionCNG(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
@@ -784,7 +768,6 @@ public class ResolutionService {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
 		l.addAll(getDefaultResolutionCNS());
-		
 
 		l.add(InstanceFactory.newResolution("Run Miseq invalide : résultats non importés", "invalid-miseq-run", resolutionCategories.get("Default"), (short) 4));
 		
@@ -824,20 +807,7 @@ public class ResolutionService {
 		
 		l.add(InstanceFactory.newResolution("Processus partiel (MUST BE REPLACE)","processus-partiel", resolutionCategories.get("Default"), (short) 18));
 		l.add(InstanceFactory.newResolution("Arrêt - erreur déclaration","stop-pb-declaration", resolutionCategories.get("Default"), (short) 19));
-		l.add(InstanceFactory.newResolution("Arrêt - Rendement trop faible","stop-pb-yield-too-low", resolutionCategories.get("Default"), (short) 20));
-		
-		
-			/* OLD*/
-			/*
-			l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
-			l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
-			l.add(InstanceFactory.newResolution("Arrêt - abandon","stop-abandon", resolutionCategories.get("Default"), (short) 3));
-			l.add(InstanceFactory.newResolution("Arrêt - à ré-extraire","stop-reextraire", resolutionCategories.get("Default"), (short) 4));
-			l.add(InstanceFactory.newResolution("Arrêt - à ré-amplifier","stop-reamplifier", resolutionCategories.get("Default"), (short) 5));
-			l.add(InstanceFactory.newResolution("Arrêt - à re-synthétiser","stop-resynthétiser", resolutionCategories.get("Default"), (short) 6));
-			l.add(InstanceFactory.newResolution("Arrêt - à re-fragmenter","stop-refragmenter", resolutionCategories.get("Default"), (short) 7));
-			*/
-		
+		l.add(InstanceFactory.newResolution("Arrêt - Rendement trop faible","stop-pb-yield-too-low", resolutionCategories.get("Default"), (short) 20));	
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";
@@ -925,7 +895,6 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
-	
 	
 	public static void createContainerResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();

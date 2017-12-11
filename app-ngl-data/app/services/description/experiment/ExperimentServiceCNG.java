@@ -1030,8 +1030,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single",28,false, "50",null));
 		
 		// NGL-1325 ajout propriété sequencingType de niveau Experiment, optionnelle
+		// NGL-1730 ajout Novaseq 6000
 		propertyDefinitions.add(newPropertiesDefinition("Type de séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
-				DescriptionFactory.newValues("Hiseq 4000","Hiseq X"),null,null,null, 
+				DescriptionFactory.newValues("Hiseq 4000","Hiseq X","Novaseq 6000"),null,null,null, 
 				"single",10, true, null,null));	
 		
 		return propertyDefinitions;
