@@ -61,7 +61,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
-@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 // public class ContainerSupports extends CommonController {
 public class ContainerSupports extends DocumentController<ContainerSupport> {
 
