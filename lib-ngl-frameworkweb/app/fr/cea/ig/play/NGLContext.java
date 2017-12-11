@@ -99,13 +99,20 @@ public class NGLContext {
 	}
 
 	public Lang currentLang() {
-		return play.mvc.Http.Context.current() != null ? play.mvc.Http.Context.current().lang() : null;
+		if (play.mvc.Http.Context.current() != null)
+			return play.mvc.Http.Context.current().lang();
+		return null;
+		// return play.mvc.Http.Context.current() != null ? play.mvc.Http.Context.current().lang() : null;
 	}
 	
 	// Should use the currentLang method.
 	public Messages messages() {
 		// logger.debug("messages");
-		return messagesApi.preferred(new ArrayList<Lang>());
+		List<Lang> langs = new ArrayList<>();
+		Lang lang = currentLang();
+		if (lang != null)
+			langs.add(lang);
+		return messagesApi.preferred(langs);
 		// return Messages;
 	}
 	
@@ -150,7 +157,7 @@ public class NGLContext {
 	 * @param  errors errors
 	 * @return JSON node built from the given errors
 	 */
-	public JsonNode errorsAsJson(play.i18n.Lang lang, Map<String, List<ValidationError>> errors) {
+	public JsonNode errorsAsJson(Lang lang, Map<String, List<ValidationError>> errors) {
 		Map<String, List<String>> allMessages = new java.util.HashMap<>();
 		errors.forEach((key, errs) -> {
 			if (errs != null && !errs.isEmpty()) {
@@ -168,7 +175,7 @@ public class NGLContext {
 		return Json.toJson(allMessages);
 	}
 
-	private Object translateMsgArg(List<Object> arguments, MessagesApi messagesApi, play.i18n.Lang lang) {
+	private Object translateMsgArg(List<Object> arguments, MessagesApi messagesApi, Lang lang) {
 		if (arguments != null) {
 			return arguments.stream().map(arg -> {
 				if (arg instanceof String) {
@@ -189,11 +196,11 @@ public class NGLContext {
 		return errorAsJson(currentLang(),"error",message,Arrays.asList(args));
 	}
 	
-	public com.fasterxml.jackson.databind.JsonNode errorAsJson(play.i18n.Lang lang, String key, String message, Object... args) {
+	public JsonNode errorAsJson(Lang lang, String key, String message, Object... args) {
 		return errorAsJson(lang,key,message,Arrays.asList(args));
 	}
 	
-	public com.fasterxml.jackson.databind.JsonNode errorAsJson(play.i18n.Lang lang, String key, String message, List<Object> args) {
+	public JsonNode errorAsJson(Lang lang, String key, String message, List<Object> args) {
 		String tMessage = messagesApi.get(lang, message, translateMsgArg(args, messagesApi, lang));
 		Map<String, String> jMessage = new java.util.HashMap<>();
 		jMessage.put(key,tMessage);

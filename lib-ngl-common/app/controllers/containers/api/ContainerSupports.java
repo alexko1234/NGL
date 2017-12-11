@@ -40,6 +40,7 @@ import play.i18n.Lang;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.With;
 // import scala.collection.generic.BitOperations.Int;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -55,10 +56,12 @@ import controllers.CommonController;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
+@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 // public class ContainerSupports extends CommonController {
 public class ContainerSupports extends DocumentController<ContainerSupport> {
 

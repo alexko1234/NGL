@@ -4,15 +4,18 @@ package controllers.admin.supports.tpl;
 import play.routing.JavaScriptReverseRouter;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import views.html.admin.supports.*;
 import controllers.APICommonController;
 import controllers.CommonController;
+import controllers.history.UserHistory;
 
 import javax.inject.Inject;
 
 // TODO: cleanup and comment
 
 // public class Supports extends CommonController {
+@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public class Supports extends Controller {
 
 	private final home home;

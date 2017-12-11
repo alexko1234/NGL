@@ -26,9 +26,11 @@ import play.libs.Scala;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
+import play.mvc.With;
 import views.html.home;
 import controllers.APICommonController;
 import controllers.CommonController;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 
@@ -38,6 +40,7 @@ import javax.inject.Inject;
 
 // public class Main extends CommonController {
 // public class Main extends APICommonController {
+@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public class Main extends Controller {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
