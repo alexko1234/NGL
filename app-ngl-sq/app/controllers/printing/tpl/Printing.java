@@ -5,13 +5,15 @@ import play.routing.JavaScriptReverseRouter;
 
 import javax.inject.Inject;
 
+import controllers.history.UserHistory;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import views.html.printing.home;
 
 
 // TODO: clean, comment
-
+@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public class Printing extends Controller {
 
 	private final home home;
