@@ -2,6 +2,8 @@ package controllers.analyses.api;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 //import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.description.Level;
@@ -25,6 +27,7 @@ import fr.cea.ig.play.NGLContext;
 //@Controller
 public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment> {
 
+	@Inject
 	public AnalysisTreatments(NGLContext ctx) {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, Treatment.class);
 	}

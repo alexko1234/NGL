@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.instance.State;
@@ -31,6 +33,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	
+	@Inject
 	public Files(NGLContext ctx) {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
 	}

@@ -26,7 +26,7 @@ import play.libs.Json;
 import play.libs.ws.WSResponse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class FileTest extends AbstractBIServerTest{
+public class FileReadSetTest extends AbstractBIServerTest{
 
 	static ReadSet readSet;
 	static File file;
