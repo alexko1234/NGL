@@ -1,12 +1,12 @@
 package fr.cea.ig.play;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+// import java.util.HashMap;
+// import java.util.Map;
 
-import java.util.concurrent.Callable;
+// import java.util.concurrent.Callable;
 
-import play.Application;
+// import play.Application;
 // TODO: use play.api.Configuration
 import play.Configuration;
 import play.Environment;
@@ -17,7 +17,7 @@ import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.data.Form;
 
-import play.libs.Akka;
+// import play.libs.Akka;
 import play.libs.ws.WSClient;
 
 import play.i18n.Messages;
@@ -33,7 +33,7 @@ import javax.inject.Singleton;
 
 /**
  * Allows access to some globals that are hard to removed due to the
- * play application lifecycle and mostly static initializers. 
+ * play application life cycle and mostly static initializers. 
  * 
  * This should allow smooth migration as removing access to this
  * will trigger compilation errors of access to globals to remove. 

@@ -19,10 +19,11 @@ import static play.test.Helpers.OK;
 import static play.test.Helpers.NOT_FOUND;
 
 import models.laboratory.container.instance.Container;
+import models.laboratory.sample.instance.Sample;
 
 public class Heavy {
 	
-	// @Test
+	@Test
 	public void test01() throws Exception {
 		
 	    testInServer(devapp(),
@@ -33,7 +34,9 @@ public class Heavy {
 	    			// compared to the get after the put. The other way around is to assert that modified values
 	    			// in the input are stored and thus access the values by path and not do a full comparison.
 	    			checkRoutes(ws);
-
+	    			// Check UI for samples
+	    			Sample sample = SampleFactory.createSample(ws);
+	    			rurNeqTraceInfo(ws,"/api/samples/" + sample.getCode());
 
 	    			// RUR tests are currently not modifying anything as we use the
 	    			// RUR method with the default values so those are barely tests. 
@@ -70,4 +73,19 @@ public class Heavy {
 
 	    		});
 	}
+	/*
+	// Should behave properly, use 
+	@Test
+	public void runInBrowser() throws IOException {
+		CompleteSQTestServer ts = new CompleteSQTestServer();
+		ts.start();
+	    running(ts.getServer(), HTMLUNIT, browser -> {
+	        browser.goTo("/");
+	        assertEquals("Welcome to Play!", browser.$("#title").text());
+	        browser.$("a").click();
+	        assertEquals("login", browser.url());
+	    });
+	    ts.stop();
+	}
+	*/
 }

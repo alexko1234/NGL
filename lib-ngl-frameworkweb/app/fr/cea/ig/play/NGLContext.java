@@ -60,15 +60,17 @@ public class NGLContext {
 	 */
 	private final FormFactory formFactory;
 	
+	/*
+	// TODO: remove static NGL context access 
 	private static NGLContext nglContext;
-	
-	
+	// Seems that it's not used anymore as it's not initialized.
 	public static NGLContext getNglContext() {
-		//	if(nglContext==null)
-			//nglContext=IGGlobals.injector().instanceOf(NGLContext.class);
+		// if (nglContext == null)
+		//   nglContext = IGGlobals.injector().instanceOf(NGLContext.class);
 		return nglContext;
 	}
-
+    */
+	
 	@Inject
 	public NGLContext(NGLConfig   config,
 					  MessagesApi messagesApi,
@@ -88,6 +90,13 @@ public class NGLContext {
 		// return "Messages(" + key + ")";
 	}
 	
+	/**
+	 * Pretty poor shortcut that is used in application name displays in the
+	 * menu bar. This appends the application configuration if the applicaiton is not
+	 * in production mode. 
+	 * @param key configuration path
+	 * @return    requested path value with the NGL environment name if not in production mode
+	 */
 	public String messageEnv(String key) {
 		if (config.isNGLEnvProd()) 
 			return message(key);
@@ -193,11 +202,11 @@ public class NGLContext {
 
 	// -- single error translation
 	public JsonNode errorAsJson(String message, Object... args) {
-		return errorAsJson(currentLang(),"error",message,Arrays.asList(args));
+		return errorAsJson(currentLang(), "error", message, Arrays.asList(args));
 	}
 	
 	public JsonNode errorAsJson(Lang lang, String key, String message, Object... args) {
-		return errorAsJson(lang,key,message,Arrays.asList(args));
+		return errorAsJson(lang, key, message, Arrays.asList(args));
 	}
 	
 	public JsonNode errorAsJson(Lang lang, String key, String message, List<Object> args) {
@@ -210,15 +219,20 @@ public class NGLContext {
 	// ----------------------------------------------------------------------
 	// Transitional code before fully DI compliant code
 	
+	// TODO: remove static NGL context access 
+	
 	private static NGLContext instance;
+	
 	@Deprecated
 	public static NGLContext instance() {
 		if (instance == null)
 			instance = IGGlobals.injector().instanceOf(NGLContext.class);
 		return instance;
 	}
+	
 	@Deprecated
 	public static JsonNode _errorsAsJson(Map<String, List<ValidationError>> errors) {
 		return instance().errorsAsJson(errors);
 	}
+	
 }
