@@ -105,6 +105,7 @@ public class RunIllumina extends AbstractDeclaration {
 				ProcessCategory.find.findByCode("sequencing"), 63,
 				getIlluminaDepotProperties(), 
 				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),
+						getPET("dna-illumina-indexed-library",-1),
 						getPET("sizing",-1),
 						getPET("spri-select",-1),
 						getPET("pcr-amplification-and-purification",-1),
