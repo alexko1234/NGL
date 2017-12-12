@@ -19,7 +19,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import play.Logger;
+
+//import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTestController;
@@ -29,10 +30,12 @@ import builder.data.ReadSpecBuilder;
 import builder.data.RunBuilder;
 import builder.data.StateBuilder;
 import builder.data.TraceInformationBuilder;
+import controllers.sra.configurations.api.Configurations;
 import controllers.sra.experiments.api.ExperimentsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentsTest extends AbstractTestController{
+	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentsTest.class);
 
 	private static final String experimentCode = "exp_1";
 	private static final String projectCode="project_1";
@@ -87,7 +90,7 @@ public class ExperimentsTest extends AbstractTestController{
 		ExperimentsSearchForm experimentSearchForm = new ExperimentsSearchForm();
 		experimentSearchForm.listExperimentCodes =  Arrays.asList(experimentCode);
 		Result result = callAction(controllers.sra.experiments.api.routes.ref.Experiments.list(),fakeRequest().withJsonBody(Json.toJson(experimentSearchForm)));
-		Logger.info(contentAsString(result));
+		logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentType(result)).isEqualTo("application/json");
 	}
@@ -100,11 +103,11 @@ public class ExperimentsTest extends AbstractTestController{
 		Experiment experimentToUpdate = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 		experimentToUpdate.state.code="inWaiting";
 		Result result = callAction(controllers.sra.experiments.api.routes.ref.Experiments.update(experimentCode),fakeRequest().withJsonBody(Json.toJson(experimentToUpdate)));
-		Logger.info(contentAsString(result));
+		logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		//Check in db submission status
 		Experiment experimentUpdated = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-		Logger.info("experiment updated "+experimentUpdated.state.code);
+		logger.info("experiment updated "+experimentUpdated.state.code);
 		assertThat(experimentUpdated.state.code).isEqualTo("inWaiting");
 	}
 }

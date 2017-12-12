@@ -17,13 +17,14 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 
 public class Experiments extends DocumentController<Experiment> {
+	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 
 	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
 	final static Form<Experiment> experimentForm = form(Experiment.class);
@@ -91,7 +92,7 @@ public class Experiments extends DocumentController<Experiment> {
 					return ok(Json.toJson(userExperiment));
 				}else {
 					System.out.println("contextValidation.errors pour experiment :"  +userExperiment.code);
-					ctxVal.displayErrors(Logger.of("SRA"));
+					ctxVal.displayErrors(logger);
 					System.out.println(filledForm.errorsAsJson());
 					return badRequest(filledForm.errorsAsJson());
 				}

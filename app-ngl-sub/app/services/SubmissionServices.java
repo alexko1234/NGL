@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import workflows.sra.submission.ConfigurationWorkflows;
 import workflows.sra.submission.SubmissionWorkflows;
@@ -77,9 +77,9 @@ import play.libs.ws.WSResponse;
 
 
 
-
-
 public class SubmissionServices {
+	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionServices.class);
+
 	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
@@ -163,7 +163,7 @@ public class SubmissionServices {
 			System.out.println("submission.validate produit des erreurs");
 			// destruction de la submission et rallback pour etat du study: 
 			submissionWorkflowsHelper.rollbackSubmission(submission, contextValidation);	
-			contextValidation.displayErrors(Logger.of("SRA"));
+			contextValidation.displayErrors(logger);
 			throw new SraException("SubmissionServices::initReleaseSubmission::probleme validation  voir log: ");
 		} else {	
 			// updater la soumission dans la base pour le repertoire de soumission (la date de soumission sera mise à la reception des AC)
@@ -757,7 +757,7 @@ public class SubmissionServices {
 			System.out.println("submission.validate produit des erreurs");
 			// rallBack avec clean sur exp et sample et mise à jour study
 			System.out.println("\ndisplayErrors dans SubmissionServices::createNewSubmission :");
-			contextValidation.displayErrors(Logger.of("SRA"));
+			contextValidation.displayErrors(logger);
 			System.out.println("\n end displayErrors dans SubmissionServices::createNewSubmission :");
 			
 			// enlever les samples, experiments et submission qui ont ete crées par le service et remettre
@@ -766,7 +766,7 @@ public class SubmissionServices {
 			//cleanDataBase(submission.code, contextValidation);		
 			//throw new SraException("SubmissionServices::initPrimarySubmission::probleme validation  voir log: ");
 			submissionWorkflowsHelper.rollbackSubmission(submission, contextValidation);	
-			contextValidation.displayErrors(Logger.of("SRA"));
+			contextValidation.displayErrors(logger);
 			throw new SraException("SubmissionServices::initReleaseSubmission::probleme validation  voir log: ");
 			
 			
@@ -831,7 +831,7 @@ public class SubmissionServices {
 		}
 		File dataRep = new File(submission.submissionDirectory);
 		System.out.println("Creation du repertoire de soumission : " + submission.submissionDirectory);
-		Logger.of("SRA").info("Creation du repertoire de soumission" + submission.submissionDirectory);
+		logger.info("Creation du repertoire de soumission" + submission.submissionDirectory);
 		if (dataRep.exists()){
 			throw new SraException("Le repertoire " + dataRep + " existe deja !!! (soumission concurrente ?)");
 		} else {
@@ -952,7 +952,7 @@ public class SubmissionServices {
 				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
 		} else {
 			System.out.println("Probleme pour passer la soumission avec le state IW-SUB");
-			contextValidation.displayErrors(Logger.of("SRA"));
+			contextValidation.displayErrors(logger);
 			throw new SraException(" Dans activatePrimarySubmission Erreurs : " + contextValidation.errors.toString());		
 		}
 		

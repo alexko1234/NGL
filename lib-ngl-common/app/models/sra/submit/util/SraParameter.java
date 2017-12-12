@@ -20,7 +20,7 @@ public class SraParameter extends DBObject {
 		Map<String, String> map = new HashMap<String, String>();
 		List<SraParameter> sraParam = MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.in("type", type)).toList();
 		if (sraParam.isEmpty()) {
-			logger.error("Absence de données de type ${0} dans la table SraParmeters", type);
+			logger.error("Absence de données de type '" + type + "' dans la table SraParmeters");
 		}
 		for (SraParameter param: sraParam){
 			map.put(param.code, param.value);

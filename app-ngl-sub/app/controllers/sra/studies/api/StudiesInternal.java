@@ -27,7 +27,7 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -39,6 +39,7 @@ import workflows.sra.study.StudyWorkflows;
 
 
 public class StudiesInternal extends DocumentController<Study>{
+	private static final play.Logger.ALogger logger = play.Logger.of(StudiesInternal.class);
 
 	final static Form<Study> studyForm = form(Study.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);

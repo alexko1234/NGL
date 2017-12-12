@@ -10,19 +10,21 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
+import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
 
 //import com.gargoylesoftware.htmlunit.javascript.host.Console;
 
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 
 public class Samples extends DocumentController<AbstractSample>{
+	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
 
 
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
@@ -67,15 +69,15 @@ public class Samples extends DocumentController<AbstractSample>{
 			sampleInput.traceInformation.setTraceInformation(getCurrentUser());
 			sampleInput.validate(ctxVal);	
 			if (!ctxVal.hasErrors()) {
-				Logger.debug(" ok je suis dans Samples.update et pas d'erreur\n");
-				Logger.info("Update sample "+sample.code);
+				logger.debug(" ok je suis dans Samples.update et pas d'erreur\n");
+				logger.info("Update sample "+sample.code);
 				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleInput);
-				Logger.debug(Json.toJson(sampleInput).toString());
+				logger.debug(Json.toJson(sampleInput).toString());
 
 				return ok(Json.toJson(sampleInput));
 			}else {
 				System.out.println(" ok je suis dans Samples.update et erreurs \n");
-				Logger.debug(Json.toJson(sampleInput).toString());
+				logger.debug(Json.toJson(sampleInput).toString());
 				return badRequest(filledForm.errorsAsJson());
 			}		
 		}else{

@@ -81,10 +81,11 @@ public abstract class VariableSRA {
 			put("strategy_internal_study", "strategy_internal_study"); 
 		}
 	};	
+	
 	private static String getString(Configuration conf, String key) {
 		String result = conf.getString(key);
-		if (StringUtils.isNotBlank(result)){
-			logger.error("Absence dans la config play de la cle {0}", key);
+		if (StringUtils.isBlank(result)){
+			logger.error("Absence dans la config play de la cle '" + key + "'");
 		}
 		return result;
 	}

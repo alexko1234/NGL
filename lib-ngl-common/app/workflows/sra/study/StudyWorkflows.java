@@ -67,8 +67,12 @@ public class StudyWorkflows extends Workflows<Study>{
 
 		CommonValidationHelper.validateState(ObjectType.CODE.SRAStudy, nextState, contextValidation); 	
 		logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
-
-		if(!contextValidation.hasErrors() && !nextState.code.equals(study.state.code)){
+		if (contextValidation.hasErrors()) { 
+			logger.error("ATTENTION ERROR :" + contextValidation.errors);
+		} else if (nextState.code.equals(study.state.code)) {
+			logger.error("ATTENTION ERROR :studyStateCode == {} et nextStateCode == {}", 
+					 	  study.state.code, nextState.code);			
+		} else {
 			applyPreStateRules(contextValidation, study, nextState);
 			//submission.validate(contextValidation);
 			if(!contextValidation.hasErrors()){
@@ -83,8 +87,6 @@ public class StudyWorkflows extends Workflows<Study>{
 			}else{
 				applyErrorPostStateRules(contextValidation, study, nextState);	
 			}
-		} else {
-			logger.debug("ATTENTION ERROR :"+contextValidation.errors);
 		}
 	}
 
