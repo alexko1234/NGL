@@ -66,18 +66,30 @@
 							<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Schéma_Processus_MetaGenomique.pdf")" target="doc">@Messages("docs.bank.metabargenomique")</a></li>
 							<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Nanopore.pdf")" target="doc">@Messages("docs.nanopore")</a></li>
 							<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Opgen.pdf")" target="doc">@Messages("docs.opticalmapping.opgen")</a></li>
-							<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Bionano.pdf")" target="doc">@Messages("docs.opticalmapping.bionano")</a></li>																		
+							<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Bionano.pdf")" target="doc">@Messages("docs.opticalmapping.bionano")</a></li>
+							<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/Schemas_Processus_existants_nov17.pdf")" target="doc">@Messages("docs.processes.schema")</a></li>																		
 						</ul>
 					</li>
 				}
 				@if(isCNGInstitute){
-	  				<li class="dropdown @("active".when(nav.startsWith("help")))">
-	  					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
-						<ul class="dropdown-menu" role="menu" aria-labelledby="help">
-						 <!-- Guide d'utilisation NGL-SQ-Séquençage.pdf Modifié par Julie Guy le Mar 27 Oct 2015 12:29:19 -->
-							<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/NGL_SQ_Illumina-CNG.pdf")" target="doc">@Messages("docs.illumina")</a></li>
-						</ul>
-					</li>
+	  						<li class="dropdown @("active".when(nav.startsWith("help")))">
+	  							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="help">
+								 	<!-- Guide d'utilisation NGL-SQ-Séquençage.pdf Modifié par Julie Guy le Mar 27 Oct 2015 12:29:19 -->
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/NGL_SQ_Illumina-CNG.pdf")" target="doc">@Messages("docs.illumina")</a></li>
+									
+								 	<!-- Schemas Processus 16/11/2017  -->
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schéma processus Chromium WG.pdf")" target="doc">@Messages("docs.schema-processus.chromiumWG")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schéma processus Exp satellites uniquement.pdf")" target="doc">@Messages("docs.schema-processus.ExpSatellites")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schéma processus RNAseq.pdf")" target="doc">@Messages("docs.schema-processus.RNAseq")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schéma processus WG NANO.pdf")" target="doc">@Messages("docs.schema-processus.WGNANO")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schéma processus WG PCR free.pdf")" target="doc">@Messages("docs.schema-processus.WGPCRfree")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schémas processus CAPTURE.pdf")" target="doc">@Messages("docs.schema-processus.Capture")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schémas processus Librairies pour séquençage Illumina.pdf")" target="doc">@Messages("docs.schema-processus.LibSeqIllumina")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schémas processus reprise débutant par Normalisation.pdf")" target="doc">@Messages("docs.schema-processus.repriseNorm")</a></li>
+								 	<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/Schémas processus Séquençage.pdf")" target="doc">@Messages("docs.schema-processus.sequencing")</a></li>
+								</ul>
+							</li>
 				}
 						
 				@if(adminPermission){
