@@ -23,6 +23,7 @@ public abstract class AbstractTestsSRA {
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
 		//System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-sub-testProd-sra.conf"));
 		System.setProperty("config.file", TestHelper.getConfigFilePath("ngl-sub-testDev-sra.conf"));
+		System.setProperty("logger.file", TestHelper.getConfigFilePath("logger.xml"));
 		app = getFakeApplication();
 		Helpers.start(app);
 	}

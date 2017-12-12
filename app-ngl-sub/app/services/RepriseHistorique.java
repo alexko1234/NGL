@@ -45,13 +45,16 @@ import org.apache.commons.lang3.StringUtils;
 
 
 
+
+import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 
 
 public class RepriseHistorique {
-	
+	private static final play.Logger.ALogger logger = play.Logger.of(RepriseHistorique.class);
+
 	public static String adminComment = "Creation dans le cadre d'une reprise d'historique"; 
 	
 	
@@ -1051,7 +1054,7 @@ public class RepriseHistorique {
 			if (contextValidation.errors.size()==0) {
 				System.out.println("Sample "+ sample.code + " valide ");
 			} else {
-				contextValidation.displayErrors(Logger.of("SRA"));
+				contextValidation.displayErrors(logger.of("SRA"));
 				throw new SraException("Sample " + sample.code + " non valide");
 			}
 		}

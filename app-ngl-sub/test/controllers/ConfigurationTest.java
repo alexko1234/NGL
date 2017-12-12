@@ -21,7 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
 
-import play.Logger;
+//import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import controllers.sra.configurations.api.ConfigurationsSearchForm;
@@ -31,6 +31,7 @@ import builder.data.ProjectBuilder;
 import utils.AbstractTestController;
 
 public class ConfigurationTest extends AbstractTestController{
+	private static final play.Logger.ALogger logger = play.Logger.of(ConfigurationTest.class);
 
 	private static final String configCode = "conf_1";
 	private static final String projectCode = "proj_1";
@@ -63,7 +64,7 @@ public class ConfigurationTest extends AbstractTestController{
 		ConfigurationsSearchForm confSearchForm = new ConfigurationsSearchForm();
 		confSearchForm.projCodes.add(projectCode);
 		Result result = callAction(controllers.sra.configurations.api.routes.ref.Configurations.list(),fakeRequest().withJsonBody(Json.toJson(confSearchForm)));
-		Logger.info(contentAsString(result));
+		logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentType(result)).isEqualTo("application/json");
 	}
@@ -79,7 +80,7 @@ public class ConfigurationTest extends AbstractTestController{
 		configuration.librarySource="synthetic";
 		configuration.libraryStrategy="cloneend";
 		Result result = callAction(controllers.sra.configurations.api.routes.ref.Configurations.save(),fakeRequest().withJsonBody(Json.toJson(configuration)));
-		Logger.info(contentAsString(result));
+		logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		//Check Conf in database
 		Configuration newConf = MongoDBDAO.findOne(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, DBQuery.regex("code", Pattern.compile("CONF_"+projectCode.toUpperCase()+"_\\w+")));

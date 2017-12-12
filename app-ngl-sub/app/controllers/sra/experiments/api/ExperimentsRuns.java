@@ -9,16 +9,18 @@ import org.mongojack.DBQuery;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
+import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 
 public class ExperimentsRuns extends DocumentController<Experiment> {
+	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentsRuns.class);
 
 	final static Form<Experiment> experimentForm = form(Experiment.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
@@ -45,7 +47,7 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 		
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		Logger.debug(""+queryFieldsForm.fields);
+		logger.debug("" + queryFieldsForm.fields);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser(), filledForm.errors());
 		Experiment experiment = getExperiment(code);
 		if (experiment == null) {

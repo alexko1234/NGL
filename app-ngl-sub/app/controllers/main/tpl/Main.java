@@ -8,7 +8,7 @@ import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;

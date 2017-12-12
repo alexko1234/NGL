@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
+//import play.Logger;
 import play.Play;
 import play.api.modules.spring.Spring;
 import validation.ContextValidation;
@@ -66,6 +66,8 @@ import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
 public class ReleaseServices  {
+	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
+
 	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
 	public static Submission traitementRetourRelease(ContextValidation ctxVal, String submissionCode, File retourEbiRelease) throws IOException, SraException, MailServiceException {
@@ -104,7 +106,7 @@ public class ReleaseServices  {
 		System.out.println("destinataires = "+ dest);
 		String subjectSuccess = Play.application().configuration().getString("releaseReporting.email.subject.success");
 		
-		//Logger.debug("subjectSuccess = "+Play.application().configuration().getString("releaseReporting.email.subject.success"));
+		//l.debug("subjectSuccess = "+Play.application().configuration().getString("releaseReporting.email.subject.success"));
 		
 		String subjectError = Play.application().configuration().getString("releaseReporting.email.subject.error");
 		Set<String> destinataires = new HashSet<String>();

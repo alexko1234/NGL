@@ -13,10 +13,11 @@ import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import utils.AbstractTestController;
 
 public class InitData extends AbstractTestController{
+	private static final play.Logger.ALogger logger = play.Logger.of(InitData.class);
 
 
 	@Test
@@ -200,7 +201,7 @@ public class InitData extends AbstractTestController{
 
 		//Log data submitted
 		Submission submissionDB = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, codeSub1);
-		Logger.info("Submission "+submissionDB.code+","+submissionDB.submissionDirectory+","+submissionDB.creationDate);
+		logger.info("Submission "+submissionDB.code+","+submissionDB.submissionDirectory+","+submissionDB.creationDate);
 
 	}
 }

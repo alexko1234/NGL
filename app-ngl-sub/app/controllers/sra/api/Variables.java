@@ -55,7 +55,7 @@ public class Variables extends CommonController{
 			return ok(Json.toJson(parameter));
 		} else {
 			SraParameter parameter=MongoDBDAO.findOne(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, DBQuery.and(DBQuery.is("code", code),DBQuery.is("type", type)));
-			logger.debug("parameter "+parameter);
+			logger.debug("parameter " + parameter);
 			if (parameter != null) {
 				return ok(Json.toJson(parameter));
 			} else { 

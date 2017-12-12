@@ -22,6 +22,7 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
+import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import mail.MailServiceException;
@@ -32,7 +33,7 @@ import models.sra.submit.common.instance.UserExperimentType;
 import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -51,6 +52,8 @@ import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.SubmissionWorkflows;
 
 public class Submissions extends DocumentController<Submission>{
+	private static final play.Logger.ALogger logger = play.Logger.of(Submissions.class);
+
 	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
 	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
 	private Map<String, UserSampleType> mapUserSamples = new HashMap<String, UserSampleType>();
@@ -86,7 +89,7 @@ public class Submissions extends DocumentController<Submission>{
 		SubmissionsSearchForm submissionsSearchForm = submissionsSearchFilledForm.get();
 		//modif 		Logger.debug(submissionsSearchForm.state);
 
-		Logger.debug(submissionsSearchForm.stateCode);
+		logger.debug(submissionsSearchForm.stateCode);
 		Query query = getQuery(submissionsSearchForm);
 		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchForm, query);				
 		List<Submission> submissionsList = results.toList();
@@ -161,7 +164,7 @@ public class Submissions extends DocumentController<Submission>{
 				submissionInput.traceInformation.setTraceInformation(getCurrentUser());
 				submissionInput.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
-					Logger.info("Update submission state "+submissionInput.state.code);
+					logger.info("Update submission state "+submissionInput.state.code);
 					MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
 					return ok(Json.toJson(submissionInput));
 				}else {
@@ -324,9 +327,9 @@ public class Submissions extends DocumentController<Submission>{
 		}
 
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
-		Logger.debug("filledForm "+filledForm);
+		logger.debug("filledForm "+filledForm);
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
-		Logger.debug("readsets "+submissionsCreationForm.readSetCodes);
+		logger.debug("readsets "+submissionsCreationForm.readSetCodes);
 
 		String user = getCurrentUser();
 		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
@@ -347,7 +350,7 @@ public class Submissions extends DocumentController<Submission>{
 			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileReadSet)){
 				submissionsCreationForm.base64UserFileReadSet="";
 			}
-			Logger.debug("Read base64UserFileExperiments");
+			logger.debug("Read base64UserFileExperiments");
 			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
 			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
 			mapUserExperiments = userExperimentsParser.loadMap(inputStreamUserFileExperiments);		
@@ -359,7 +362,7 @@ public class Submissions extends DocumentController<Submission>{
 				System.out.println("       lib_name : '" + entry.getValue().getLibraryName()+  "'");
 				System.out.println("       lib_source : '" + entry.getValue().getLibrarySource()+  "'");
 			}*/
-			Logger.debug("Read base64UserFileSamples");
+			logger.debug("Read base64UserFileSamples");
 			InputStream inputStreamUserFileSamples = Tools.decodeBase64(submissionsCreationForm.base64UserFileSamples);
 			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();
 			mapUserSamples = userSamplesParser.loadMap(inputStreamUserFileSamples);		
@@ -367,7 +370,7 @@ public class Submissions extends DocumentController<Submission>{
 				Entry<String, UserSampleType> entry = iterator.next();
 				System.out.println("       title : '" + entry.getValue().getTitle()+  "'");
 			}			
-			Logger.debug("Read base64UserFileClonesToAc");
+			logger.debug("Read base64UserFileClonesToAc");
 			InputStream inputStreamUserFileClonesToAc = Tools.decodeBase64(submissionsCreationForm.base64UserFileClonesToAc);
 			UserCloneTypeParser userClonesParser = new UserCloneTypeParser();
 			mapUserClones = userClonesParser.loadMap(inputStreamUserFileClonesToAc);		
@@ -381,7 +384,7 @@ public class Submissions extends DocumentController<Submission>{
 
 			List<String> readSetCodes;
 			InputStream inputStreamUserFileReadSet = Tools.decodeBase64(submissionsCreationForm.base64UserFileReadSet);
-			Logger.debug("Read base64UserFileReadSet : "+inputStreamUserFileReadSet);
+			logger.debug("Read base64UserFileReadSet : "+inputStreamUserFileReadSet);
 			Tools tools = new Tools();
 			// Recuperer readSetCodes à partir du fichier utilisateur :		
 			readSetCodes = tools.loadReadSet(inputStreamUserFileReadSet);	
@@ -400,7 +403,7 @@ public class Submissions extends DocumentController<Submission>{
 			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			if (contextValidation.hasErrors()){
-				contextValidation.displayErrors(Logger.of("SRA"));
+				contextValidation.displayErrors(logger);
 				return badRequest(filledForm.errorsAsJson());
 			}	
 
@@ -431,7 +434,7 @@ public class Submissions extends DocumentController<Submission>{
 			//return badRequest(Json.toJson(e.getMessage()));
 			filledForm.reject("Submission "+submissionCode, e.getMessage());  // si solution filledForm.reject
 			//ctxVal.addErrors("Submission "+submissionCode, e.getMessage()); // si solution avec ctxVal
-			Logger.debug("filled form "+filledForm.errorsAsJson());
+			logger.debug("filled form "+filledForm.errorsAsJson());
 			return badRequest(filledForm.errorsAsJson());
 		}
 		return ok(Json.toJson(submission));

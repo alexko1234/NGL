@@ -48,6 +48,7 @@ import java.util.Calendar;
 
 import services.FileAcServices;
 import services.ReleaseServices;
+import services.SubmissionServices;
 import services.XmlServices;
 import utils.AbstractTestsSRA;
 
@@ -59,10 +60,11 @@ import org.xml.sax.SAXException;
 import org.apache.commons.lang3.StringUtils;
 
 import validation.ContextValidation;
-import play.Logger;
+//import play.Logger;
 
 public class ToolsTest extends AbstractTestsSRA {
-	
+	private static final play.Logger.ALogger logger = play.Logger.of(ToolsTest.class);
+
 	public  List<Sample> xmlToSample(File xmlFile) {
 		List<Sample> listSamples = new ArrayList<Sample>();
 
@@ -168,7 +170,7 @@ public class ToolsTest extends AbstractTestsSRA {
 		ContextValidation ctxVal = new ContextValidation(user);
 		String submissionCode = "CNS_ANU_29LH3R4QK";
 		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
-		ctxVal.displayErrors(Logger.of("SRA"));
+		ctxVal.displayErrors(logger);
 
 	}
 	
@@ -531,12 +533,37 @@ public class ToolsTest extends AbstractTestsSRA {
 				ctxVal.displayErrors(Logger.of("SRA"));	
 				e.printStackTrace();
 			} */
-			ctxVal.displayErrors(Logger.of("SRA"));	
+			ctxVal.displayErrors(logger);	
 			
 		}
 		
 	}
 	
+	//@Test
+	public void  testXml() throws IOException, SraException {
+		//logger.info("test de argument {} pour les loggers {}", "arg_1", "other_args");
+		String submissionCode = "CNS_BAN_2C5F3W6K6";
+		String resultDirectory = "/env/cns/submit_traces/SRA/SNTS_output_xml/CNS_BAN_2C5F3W6K6";
+		XmlServices.writeAllXml(submissionCode, resultDirectory);
+	}
+	
+	
+	//@Test
+	public void  debugJM_updateAC() throws IOException, SraException {
+			//logger.info("test de argument {} pour les loggers {}", "arg_1", "other_args");
+			String submissionCode = "CNS_BAN_2C5F3W6K6";
+			String resultDirectory = "/env/cns/submit_traces/SRA/SNTS_output_xml/CNS_BAN_2C5F3W6K6";
+			File fileEbi = new File("/env/cns/submit_traces/SRA/SNTS_output_xml/CNS_BAN_2C5F3W6K6/listAC_CNS_BAN_2C5F3W6K6_201712080354.txt");
+			String user = "ngsrg";
+			ContextValidation ctxVal = new ContextValidation(user);
+			try {
+				Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi);
+			} catch (MailServiceException e) {
+				ctxVal.displayErrors(logger);	
+				e.printStackTrace();
+			} 
+		}
+		
 	//@Test
 	public void  updateAC() throws IOException, SraException {
 		List<String> submissionCodes = new ArrayList<String>();
@@ -563,10 +590,10 @@ public class ToolsTest extends AbstractTestsSRA {
 				Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
 			} catch (MailServiceException e) {
 				// TODO Auto-generated catch block
-				ctxVal.displayErrors(Logger.of("SRA"));	
+				ctxVal.displayErrors(logger);	
 				e.printStackTrace();
 			} */
-			ctxVal.displayErrors(Logger.of("SRA"));	
+			ctxVal.displayErrors(logger);	
 			
 		}
 		
@@ -578,7 +605,7 @@ public class ToolsTest extends AbstractTestsSRA {
 		ContextValidation ctxVal = new ContextValidation(user);
 		String submissionCode = "CNS_ANU_29LH3R4QK";
 		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
-		ctxVal.displayErrors(Logger.of("SRA"));
+		ctxVal.displayErrors(logger);
 
 	}
 	//@Test
@@ -597,8 +624,7 @@ public class ToolsTest extends AbstractTestsSRA {
 				Submission submission = FileAcServices.traitementFileAC(ctxVal, code, fileEbi);
 			} catch (MailServiceException e) {
 				// TODO Auto-generated catch block
-				ctxVal.displayErrors(Logger.of("SRA"));	
-				ctxVal.displayErrors(Logger.of("SRA"));
+				ctxVal.displayErrors(logger);	
 
 				e.printStackTrace();
 			}

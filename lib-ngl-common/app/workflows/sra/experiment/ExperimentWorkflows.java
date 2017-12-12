@@ -55,7 +55,12 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 		CommonValidationHelper.validateState(ObjectType.CODE.SRAExperiment, nextState, contextValidation); 	
 		logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
 
-		if(!contextValidation.hasErrors() && !nextState.code.equals(experiment.state.code)){
+		if (contextValidation.hasErrors()) {
+			logger.error("ATTENTION ERROR :" + contextValidation.errors);
+		} else if(nextState.code.equals(experiment.state.code)) {
+			logger.error("ATTENTION ERROR :studyStateCode == {} et nextStateCode == {}", 
+			 	  	 	 experiment.state.code, nextState.code);				
+		} else {
 			applyPreStateRules(contextValidation, experiment, nextState);
 			//submission.validate(contextValidation);
 			if(!contextValidation.hasErrors()){
@@ -70,8 +75,6 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 			}else{
 				applyErrorPostStateRules(contextValidation, experiment, nextState);	
 			}
-		} else {
-			logger.debug("ATTENTION ERROR :"+contextValidation.errors);
 		}
 	}
 

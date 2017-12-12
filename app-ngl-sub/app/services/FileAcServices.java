@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
+//import play.Logger;
 import play.Play;
 import play.api.modules.spring.Spring;
 import validation.ContextValidation;
@@ -65,8 +65,11 @@ import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
 public class FileAcServices  {
+	private static final play.Logger.ALogger logger = play.Logger.of(FileAcServices.class);
+
 	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
+	
 	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
@@ -98,7 +101,7 @@ public class FileAcServices  {
 		System.out.println("destinataires = "+ dest);
 		String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
 		
-		//Logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
+		//logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
 		
 		String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
 		Set<String> destinataires = new HashSet<String>();
@@ -290,9 +293,7 @@ public class FileAcServices  {
 			}
 		}
 
-		if (error){
-			//System.out.println("ERROR" + message);
-			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+		if (error) {
 		    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
 			State errorState = new State(okStatus, user);
 			submissionWorkflows.setState(ctxVal, submission, errorState);
@@ -321,10 +322,12 @@ public class FileAcServices  {
 				DBUpdate.set("accession", submissionAc).set("submissionDate", date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));	
 
 		if (StringUtils.isNotBlank(ebiStudyCode)) {	
-			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
+			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";
+			logger.debug("Mise à jour du study {} avec AC={} et externalId={}", ebiStudyCode, studyAc, studyExtId);
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", ebiStudyCode).notExists("accession"),
 					DBUpdate.set("accession", studyAc).set("externalId", studyExtId).set("firstSubmissionDate", date).set("releaseDate", release_date).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date));
+			
 		}
 		
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
@@ -332,6 +335,8 @@ public class FileAcServices  {
 			String ac = entry.getValue();
 			String ext_id_ac = mapExtIdSamples.get(code);
 			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
+			logger.debug("Mise à jour du sample {} avec AC={} et externalId={}", code, ac, ext_id_ac);
+
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 					DBQuery.is("code", code).notExists("accession"),
 					DBUpdate.set("accession", ac).set("externalId", ext_id_ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 		
@@ -341,7 +346,7 @@ public class FileAcServices  {
 			String code = entry.getKey();
 			String ac = entry.getValue();
 			message += "experimentCode = " + code + ",   AC = "+ ac + "</br>";  
-
+			logger.debug("Mise à jour de l'exp {} avec AC={}", code, ac);
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("code", code).notExists("accession"),
 					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", date)); 	
@@ -350,6 +355,8 @@ public class FileAcServices  {
 			String code = entry.getKey();
 			String ac = entry.getValue();
 			message += "runCode = " + code + ",   AC = "+ ac  + "</br>";  
+			logger.debug("Mise à jour du run {} avec AC={}", code, ac);
+			
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("run.code", code).notExists("run.accession"),
 					DBUpdate.set("run.accession", ac)); 			

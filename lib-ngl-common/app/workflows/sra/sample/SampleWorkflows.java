@@ -55,8 +55,13 @@ public class SampleWorkflows extends Workflows<Sample>{
 
 		CommonValidationHelper.validateState(ObjectType.CODE.SRASample, nextState, contextValidation); 	
 		logger.debug("contextValidation.error apres validateState " + contextValidation.errors);
-
-		if(!contextValidation.hasErrors() && !nextState.code.equals(sample.state.code)){
+		
+		if (contextValidation.hasErrors()) {
+			logger.error("ATTENTION ERROR :" + contextValidation.errors);
+		} else if (nextState.code.equals(sample.state.code)) {
+			logger.error("ATTENTION ERROR :studyStateCode == {} et nextStateCode == {}", 
+				 	  	 sample.state.code, nextState.code);						
+		} else {
 			applyPreStateRules(contextValidation, sample, nextState);
 			//submission.validate(contextValidation);
 			if(!contextValidation.hasErrors()){
@@ -71,8 +76,6 @@ public class SampleWorkflows extends Workflows<Sample>{
 			}else{
 				applyErrorPostStateRules(contextValidation, sample, nextState);	
 			}
-		} else {
-			logger.error("ATTENTION ERROR :"+contextValidation.errors);
 		}
 	}
 

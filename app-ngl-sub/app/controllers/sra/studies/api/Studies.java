@@ -14,6 +14,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
+import controllers.sra.configurations.api.Configurations;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -25,7 +26,7 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -37,6 +38,7 @@ import workflows.sra.study.StudyWorkflows;
 
 
 public class Studies extends DocumentController<AbstractStudy>{
+	private static final play.Logger.ALogger logger = play.Logger.of(Studies.class);
 
 	final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
@@ -63,7 +65,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 		} catch (SraException e) {
 			filledForm.reject("release pour studyCode : "+ studyCode, e.getMessage());
-			Logger.debug("filled form "+filledForm.errorsAsJson());
+			logger.debug("filled form "+filledForm.errorsAsJson());
 			return badRequest(filledForm.errorsAsJson());
 		}
 		return ok(Json.toJson(study));
@@ -216,7 +218,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 			studyInput.traceInformation.setTraceInformation(getCurrentUser());
 			studyInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				Logger.info("Update study state "+studyInput.state.code);
+				logger.info("Update study state "+studyInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
 				return ok(Json.toJson(studyInput));
 			}else {
@@ -243,7 +245,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 			ctxVal.addErrors("study " + code,  " not exist in database");	
 			return badRequest(filledForm.errorsAsJson());
 		}
-		Logger.debug("Controller studies set state for "+study.code);
+		logger.debug("Controller studies set state for "+study.code);
 		studyWorkflows.setState(ctxVal, study, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
@@ -277,7 +279,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 			studyInput.traceInformation.setTraceInformation(getCurrentUser());
 			studyInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				Logger.info("Update study state "+studyInput.state.code);
+				logger.info("Update study state "+studyInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
 				return ok(Json.toJson(studyInput));
 			}else {

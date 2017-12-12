@@ -15,6 +15,7 @@ import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
 import models.sra.submit.util.SraException;
+import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
@@ -25,11 +26,12 @@ import fr.cea.ig.MongoDBDAO;
 
 import org.apache.commons.lang3.StringUtils;
 
-import play.Logger;
+//import play.Logger;
 
 public class XmlServices {
 
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(XmlServices.class);
 
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
@@ -49,6 +51,7 @@ public class XmlServices {
 		System.out.println("resultDirectory = " + resultDirectory);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
+		System.out.println ("Recuperation de la submission" + submission.code);
 		// si on est dans soumission de données :
 		if (!submission.release) {
 			if (StringUtils.isNotBlank(submission.studyCode)) {	
@@ -64,14 +67,14 @@ public class XmlServices {
 				writeExperimentXml(submission, experimentFile); 
 			} else {
 				System.out.println("experimentCodes==0 ??????????");
-				Logger.debug("experimentCodes==0 ??????????");
+				logger.debug("experimentCodes==0 ??????????");
 			}
 			if (submission.runCodes.size() != 0){
 				File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
 				writeRunXml(submission, runFile); 
 			} else {
 				System.out.println("runCodes==0 ??????????");
-				Logger.debug("runCodes==0 ??????????");
+				logger.debug("runCodes==0 ??????????");
 			}
 		
 			File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);

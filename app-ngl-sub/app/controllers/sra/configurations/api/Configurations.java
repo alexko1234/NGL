@@ -12,12 +12,13 @@ import org.mongojack.DBQuery.Query;
 import models.sra.submit.sra.instance.*;
 import models.sra.submit.util.SraCodeHelper;
 import models.utils.InstanceConstants;
-import play.Logger;
+//import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import controllers.DocumentController;
+import controllers.sra.experiments.api.Experiments;
 import controllers.sra.submissions.api.SubmissionsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -35,7 +36,8 @@ import workflows.sra.submission.ConfigurationWorkflows;
 
 
 public class Configurations extends DocumentController<Configuration>{
-	
+	private static final play.Logger.ALogger logger = play.Logger.of(Configurations.class);
+
 	final static Form<Configuration> configurationForm = form(Configuration.class);
 	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
 	final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
@@ -166,7 +168,7 @@ public class Configurations extends DocumentController<Configuration>{
 			configurationInput.traceInformation.setTraceInformation(getCurrentUser());
 			configurationInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
-				Logger.info("Update configuration state "+configurationInput.state.code);
+				logger.info("Update configuration state " + configurationInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, configurationInput);
 				return ok(Json.toJson(configurationInput));
 			}else {

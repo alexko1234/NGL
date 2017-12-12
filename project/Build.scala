@@ -157,6 +157,10 @@ object ApplicationBuild extends Build {
 	)
 
   }
+  val nglSubAuto = Project("ngl-sub-auto", file("ngl-sub-auto"),settings = buildSettingsLib).enablePlugins(play.PlayJava).settings(
+    // Add your own project settings here
+    version := "0.1"
+  )
 
   val ngldatatable = Project("datatable", file("lib-ngl-datatable"), settings = buildSettingsLib).enablePlugins(play.PlayJava).settings(
     // Add your own project settings here
