@@ -272,6 +272,7 @@ public class BanqueIllumina extends AbstractDeclaration {
 				Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),
 						getPET("sizing",-1),
 						getPET("spri-select",-1),
+						getPET("dna-illumina-indexed-library",-1),
 						getPET("pcr-amplification-and-purification",-1),
 						getPET("indexing-and-pcr-amplification",-1),
 						getPET("solution-stock",0),
