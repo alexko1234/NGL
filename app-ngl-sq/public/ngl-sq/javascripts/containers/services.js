@@ -105,7 +105,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.fromTransformationTypeCodes"),
 			"property":"fromTransformationTypeCodes",
-			"order":false,
+			"order":true,
 			"hide":true,
 			"position":5.5,
 			"type":"text",

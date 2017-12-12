@@ -105,7 +105,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"fromTransformationTypeCodes",			        	 
-			        	 "order":false,
+			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
 			        	 "position":5.5,
