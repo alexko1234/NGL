@@ -112,12 +112,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// 07/12/2017 NGL-1730 "cBot-MarieCurix-A et "cBot-MarieCurix-B
-		// 08/12/2017 les Hi9, Hi10 et Hi11 auraient dus etre dédoublés en -A et -B TODO ???
+		// 11/12/2017 les Hi9, Hi10 et Hi11 auraient dus etre dédoublés en -A et -B => fait
 		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
-						createInstrument("cBot-Hi9",     "cBot-interne-Hi9",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-Hi10",    "cBot-interne-Hi10",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-Hi11",    "cBot-interne-Hi11",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi9-A",     "cBot-interne-Hi9-A",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi9-B",     "cBot-interne-Hi9-B",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi10-A",    "cBot-interne-Hi10-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi10-B",    "cBot-interne-Hi10-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi11-A",    "cBot-interne-Hi11-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi11-B",    "cBot-interne-Hi11-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-Miseq1",  "cBot-interne-Miseq1",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-NextSeq1","cBot-interne-Nextseq1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-MarieCurix-A","cBot-interne-MarieCurix-A",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),

@@ -264,7 +264,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.addAll(new Nanopore().getProcessType());
 	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000/X5)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS 11/12/2017 NGL-1730 : ajout NovaSeq 
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000/X5/NovaSeq)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
