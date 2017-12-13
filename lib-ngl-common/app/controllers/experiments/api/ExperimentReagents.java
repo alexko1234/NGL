@@ -117,6 +117,7 @@ public class ExperimentReagents extends Experiments{
 						        return Json.toJson(exp).toString(); })
 					.intersperse("{\"data\":[", ",", "],\"recordsNumber\":"+count+"}")
 					.map(r -> { return ByteString.fromString(r); }));
+			
 		} else {
 			/*return ok(
 					new StringChunks() {
@@ -158,11 +159,12 @@ public class ExperimentReagents extends Experiments{
 			});*/
 			// WARNING: check function
 			Iterable<DBObject> results = ar.getAggregationOutput().results();
-			return Streamer.okStream(Source.from(results)
+			/*return Streamer.okStream(Source.from(results)
 					.map(r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
 						        return Json.toJson(exp).toString(); })
 					.intersperse("[", ",", "]")
-					.map(r -> { return ByteString.fromString(r); }));
+					.map(r -> { return ByteString.fromString(r); }));*/
+			return MongoStreamer.streamOk(Source.from(results), r -> { return collection.convertFromDbObject(r, Experiment.class); });
 		}
 	}
 	
@@ -198,4 +200,5 @@ public class ExperimentReagents extends Experiments{
 		
 		return pipeline;
 	}
+	
 }
