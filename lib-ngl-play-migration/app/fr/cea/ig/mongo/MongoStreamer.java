@@ -16,6 +16,8 @@ import fr.cea.ig.MongoDBResult;
 
 import org.jongo.MongoCursor;
 
+import play.Logger;
+import play.Logger.ALogger;
 import play.libs.Json;
 
 /**
@@ -25,7 +27,7 @@ import play.libs.Json;
  *
  */
 public class MongoStreamer {
-
+	static ALogger logger = Logger.of(MongoStreamer.class);
 	/**
 	 * Streamer as an input stream. 
 	 * @param streamer streamer to use
@@ -69,6 +71,7 @@ public class MongoStreamer {
 		return stream(new IStreamer() {
 			@Override
 			public void streamTo(OutputStream _out) throws IOException {
+				logger.debug("start streamUDT.streamTo");
 				PrintWriter out = new PrintWriter(_out);
 				out.write("{\"recordsNumber\":"+all.count()+",");
 			    out.write("\"data\":[");
@@ -78,7 +81,8 @@ public class MongoStreamer {
 		            if (iter.hasNext()) out.write(",");    	
 			    }
 			    out.write("]}");
-			    out.close();				
+			    out.close();	
+			    logger.debug("end streamUDT.streamTo");
 			}
 		});
 	}
