@@ -1,43 +1,48 @@
 package fr.cea.ig.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-// import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.Optional;
 
-import akka.NotUsed;
-import akka.actor.ActorRef;
-import akka.actor.Status;
-import akka.stream.OverflowStrategy;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
-// import fr.cea.ig.io.OutToInStreams;
+
 import play.mvc.Result;
 import play.http.HttpEntity;
 
-
 /**
- * Source to HTTP result conversion. Only one method left.
+ * Source to HTTP result conversion.
+ * The response type is "application/json" and this is not explicit in the method
+ * names. 
+ * 
+ * This class is more like JSONResults in some http package.
  * 
  * @author vrd
  * 
  */
 public class Streamer {
 
-	/**
+	/*
 	 * Logger.
 	 */
-	private static final play.Logger.ALogger logger = play.Logger.of(Streamer.class);
+	// private static final play.Logger.ALogger logger = play.Logger.of(Streamer.class);
 	
 	/**
-	 * Source to chunked HTTP response.
+	 * Source to HTTP (JSON) chunk response.
+	 * @param source source to send
+	 * @return       OK HTTP result
+	 */
+	public static Result okChunked(Source<ByteString, ?> source) {
+		 return new Result(200, HttpEntity.chunked(source, Optional.of("application/json")));
+	}
+	
+	/**
+	 * Source to HTTP (JSON) chunk response.
+	 * Transitional re-export of okChunked until a proper stream without 
+	 * size is sent. 
 	 * @param source source to send
 	 * @return       OK HTTP result
 	 */
 	public static Result okStream(Source<ByteString, ?> source) {
-		 return new Result(200, HttpEntity.chunked(source, Optional.of("application/json")));
+		 return okChunked(source);
 	}
-
+	
 }

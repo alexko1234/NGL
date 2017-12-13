@@ -1,67 +1,80 @@
 package fr.cea.ig.mongo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.function.Function;
 
-// import static fr.cea.ig.util.Streamer.stream;
-//import fr.cea.ig.util.Streamer.IStreamer;
-//import static fr.cea.ig.util.Streamer.IStreamer.write;
-import fr.cea.ig.util.Streamer;
+import org.jongo.MongoCursor;
+
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.util.Streamer;
 
-import org.jongo.MongoCursor;
-
-import akka.actor.ActorRef;
-import akka.stream.javadsl.Source;
-import akka.util.ByteString;
-import play.Logger;
-import play.Logger.ALogger;
 import play.libs.Json;
 import play.mvc.Result;
 
 /**
- * Mongo streaming utility methods. Methods apply JSON to String 
+ * Mongo HTTP streaming utility methods. Methods apply JSON to String 
  * conversion.
+ * The T extends DBObject is not needed, the real constraint is that T
+ * produces some valid JSON representation.
+ * 
+ * Conversion from sources to bytestring akka sources that represent 
+ * JSON data is probably not much related to Mongo anymore. 
  * 
  * @author vrd
  *
  */
+
+// Direct transform apply does not compile. 
+// return stream(source.map(transform));
+// Despite what eclipse says, explicit source type compiles
+// Source<R,?> rsource = source.map(transform);
+// I blame the weak type inference of javac at the moment.
+
 public class MongoStreamer {
 	
-	/**
+	/*
 	 * Logger.
 	 */
-	static ALogger logger = Logger.of(MongoStreamer.class);
+	// private static final play.Logger.ALogger logger = play.Logger.of(MongoStreamer.class);
 	
 	// 
 	// --------------------- MongoCursor<T> overloads ---------------
 	//
 	
 	/**
-	 * Cursor to full json list.
-	 * @param <T> mongo collection element type
-	 * @param all cursor for the full collection
-	 * @return    input stream that provide a json list of collection objects
+	 * Cursor to full JSON list.
+	 * @param <T>    Mongo collection element type
+	 * @param cursor cursor for the full collection
+	 * @return       JSON array formatted source
 	 */
-	public static <T extends DBObject> Source<ByteString, ?> stream(MongoCursor<T> all) {
-		return stream(Source.from(all));
+	public static <T extends DBObject> Source<ByteString, ?> stream(MongoCursor<T> cursor) {
+		return stream(Source.from(cursor));
 	}
 
+	/**
+	 * Cursor to JSON formatted list, applying the given transformation to each
+	 * collection element.
+	 * @param cursor    Mongo cursor to get elements from
+	 * @param transform transformation to apply to elements
+	 * @return          JSON array formatted source 
+	 */
+	public static <T extends DBObject,R> Source<ByteString, ?> stream(MongoCursor<T> cursor, Function<T,R> transform) {
+		return stream(Source.from(cursor),transform);
+	}
+	
 	
 	/**
-	 * Cursor to UDT json list.
-	 * @param <T> mongo collection element type
-	 * @param all cursor for the full collection
-	 * @return    input stream that provide a json list of collection objects
+	 * Cursor to JSON UDT formatted source.
+	 * @param <T> Mongo collection element type
+	 * @param cursor cursor to fetch elements from
+	 * @return       JSON array formatted source
 	 */
-	public static <T extends DBObject> Source<ByteString, ?> streamUDT(MongoCursor<T> all) {
-		return streamUDT(all.count(),Source.from(all));
+	public static <T extends DBObject> Source<ByteString, ?> streamUDT(MongoCursor<T> cursor) {
+		return streamUDT(cursor.count(),Source.from(cursor));
 	}
 	
 	// 
@@ -69,26 +82,25 @@ public class MongoStreamer {
 	//
 	
 	/**
-	 * MongoDBResult to full json list.
-	 * @param <T> mongo collection element type
-	 * @param all cursor for the full collection
-	 * @return    input stream that provide a json list of collection objects
+	 * MongoDBResult to JSON formatted source.
+	 * @param <T>    mongo collection element type
+	 * @param result result to get elements from
+	 * @return       JSON array formatted source
 	 */
-	public static <T extends DBObject> Source<ByteString, ?> stream(MongoDBResult<T> all) {
-		return stream(Source.from(all.cursor));
+	public static <T extends DBObject> Source<ByteString, ?> stream(MongoDBResult<T> result) {
+		return stream(Source.from(result.cursor));
 	}
 	
 	/**
-	 * MongoDBResult to full json list, the transform is used to convert the 
-	 * dbobjects to something that is Json convertible.
-	 * @param all       collection to transform
+	 * MongoDBResult to full JSON formated source applying a transform
+	 * to the result elements. 
+	 * @param result    result to get elements from
 	 * @param transform element transformation
 	 * @return          JSON formatted array 
 	 */
-	public static <T extends DBObject,R> Source<ByteString, ?> stream(MongoDBResult<T> all, Function<T,R> transform) {
-		return stream(Source.from(all.cursor),transform);
+	public static <T extends DBObject,R> Source<ByteString, ?> stream(MongoDBResult<T> result, Function<T,R> transform) {
+		return stream(Source.from(result.cursor), transform);
 	}
-
 
 	/**
 	 * MongoDBResult to UDT json list.
@@ -97,7 +109,7 @@ public class MongoStreamer {
 	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> Source<ByteString, ?> streamUDT(MongoDBResult<T> all) {
-		return streamUDT(all.count(),Source.from(all.cursor));
+		return streamUDT(all.count(), Source.from(all.cursor));
 	}
 	
 	/**
@@ -108,18 +120,13 @@ public class MongoStreamer {
 	 * @return          input stream that provide a json list of transformed collection objects
 	 */
 	public static <T extends DBObject,R> Source<ByteString, ?> streamUDT(MongoDBResult<T> data, Function<T,R> transform) {
-		/*return Source.from(data.cursor)
-				.map(r -> { return transform.apply(r); }) // why map(transform) doesn't work ?
-				.map(r -> { return Json.toJson(r).toString(); })
-				.intersperse("{\"recordsNumber\":" + data.count() + ",\"data\":[", ",", "]}")
-				.map(r -> { return ByteString.fromString(r); });*/
-		return streamUDT(data.count(),Source.from(data.cursor),transform);
+		return streamUDT(data.count(), Source.from(data.cursor), transform);
 	}
-	
 	
 	//
 	// --------------------- Source<T,?> overloads -------------------------------------
-
+	// Those methods are actual implementations.
+	
 	/**
 	 * Source conversion from a source of JSON ready objects to a stream ready source.
 	 * @param  source source to build output from
@@ -163,53 +170,57 @@ public class MongoStreamer {
 
 	/**
  	 * Already counted source to UDT conversion using a transformed source.
-	 * @param count
-	 * @param source
-	 * @param transform
-	 * @return
+	 * @param count     element count
+	 * @param source    element source
+	 * @param transform element transform
+	 * @return          HTTP UDT formatted source
 	 */
 	public static <T,R> Source<ByteString, ?> streamUDT(int count, Source<T, ?> source, Function<T,R> transform) {
-		return streamUDT(count,source.map(x -> { return transform.apply(x); }));
+		return streamUDT(count, source.map(x -> { return transform.apply(x); }));
 	}
 	
 	
 	// Iterator/iterable overloads
-	public static <T extends DBObject> Source<ByteString, ?> stream(Iterable<T> all) {
+	public static <T> Source<ByteString, ?> stream(Iterable<T> all) {
 		return stream(Source.from(all));
 	}
 	
-	public static <T extends DBObject> Source<ByteString, ?> stream(Iterator<T> all) {
+	public static <T> Source<ByteString, ?> stream(Iterator<T> all) {
 		return stream(Source.from(() -> { return all; }));
 	}
 	
+	// ---------------------- HTTP Result overloads ------------------------
 	// Yay ! More overloads
+	// Those overloads are shortcuts to http ok results with a chunked content.
 	
-	public static <T extends DBObject,R> Result okStream(MongoDBResult<T> all) {
-		return Streamer.okStream((Source<ByteString, ?>)stream(all)); 
+	// TODO: possibly fix names as this is okChunked and not okStream
+	
+	public static <T extends DBObject> Result okStream(MongoDBResult<T> all) {
+		return Streamer.okStream(stream(all)); 
 	}
 	public static <T extends DBObject,R> Result okStream(MongoDBResult<T> all, Function<T,R> transform) {
-		return Streamer.okStream((Source<ByteString, ?>)stream(all,transform)); 
+		return Streamer.okStream(stream(all,transform)); 
 	}
 	public static <T extends DBObject> Result okStreamUDT(MongoDBResult<T> all) {
-		return Streamer.okStream((Source<ByteString, ?>)streamUDT(all)); 
+		return Streamer.okStream(streamUDT(all)); 
 	}
 	public static <T extends DBObject,R> Result okStreamUDT(MongoDBResult<T> all, Function<T,R> transform) {
-		return Streamer.okStream((Source<ByteString, ?>)streamUDT(all,transform)); 
+		return Streamer.okStream(streamUDT(all,transform)); 
 	}
 	public static <T extends DBObject> Result okStreamUDT(MongoCursor<T> all) {
-		return Streamer.okStream((Source<ByteString, ?>)streamUDT(all)); 
+		return Streamer.okStream(streamUDT(all)); 
 	}
-	public static <T extends DBObject,R> Result okStream(MongoCursor<T> all) {
-		return Streamer.okStream((Source<ByteString, ?>)stream(all)); 
+	public static <T extends DBObject> Result okStream(MongoCursor<T> all) {
+		return Streamer.okStream(stream(all)); 
 	}
-	public static <T extends DBObject> Result okStream(Iterator<T> all) {
-		return Streamer.okStream((Source<ByteString, ?>)stream(all)); 
+	public static <T> Result okStream(Iterator<T> all) {
+		return Streamer.okStream(stream(all)); 
 	}
-	public static <T extends DBObject> Result okStream(Iterable<T> all) {
-		return Streamer.okStream((Source<ByteString, ?>)stream(all)); 
+	public static <T> Result okStream(Iterable<T> all) {
+		return Streamer.okStream(stream(all)); 
 	}
-	
-	public static <T,R> Result streamOk(Source<T, ?> source, Function<T,R> transform) {
+	public static <T,R> Result okStream(Source<T, ?> source, Function<T,R> transform) {
 		return Streamer.okStream(stream(source,transform));
 	}
+	
 }

@@ -164,7 +164,8 @@ public class ExperimentReagents extends Experiments{
 						        return Json.toJson(exp).toString(); })
 					.intersperse("[", ",", "]")
 					.map(r -> { return ByteString.fromString(r); }));*/
-			return MongoStreamer.streamOk(Source.from(results), r -> { return collection.convertFromDbObject(r, Experiment.class); });
+			
+			return MongoStreamer.okStream(Source.from(results), r -> { return collection.convertFromDbObject(r, Experiment.class); });
 		}
 	}
 	

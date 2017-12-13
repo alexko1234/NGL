@@ -433,13 +433,19 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 	public abstract DBQuery.Query getQuery(ContextValidation ctx, ListForm f);
 	
 	public <F extends ListForm> Result list(Class<F> clazz) {
+		
+		if (true)
+			throw new RuntimeException();
+		
+		// Voir Experiments
+		
 		F searchForm = filledFormQueryString(clazz);
 		if (searchForm.reporting)
 			return nativeMongoDBQuery(searchForm);
 		
 		ContextValidation ctx = new ContextValidation(getCurrentUser());
 		DBQuery.Query query = getQuery(ctx,searchForm);
-				
+		
 		if (searchForm.datatable) {
 			BasicDBObject keys = getKeys(updateForm(searchForm));
 			MongoDBResult<T> results = mongoDBFinder(searchForm,query, keys);

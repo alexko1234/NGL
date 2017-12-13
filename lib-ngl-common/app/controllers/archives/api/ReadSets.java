@@ -52,9 +52,9 @@ public class ReadSets extends CommonController {
 
 	private static Archive convertToArchive(Integer archive, ReadSet readSet) {
 		if (readSet != null) {
-			if ( (archive.intValue() == 0) ||
-					(archive.intValue() == 1 && readSet.archiveId != null) ||
-					(archive.intValue() == 2 && readSet.archiveId == null) ) {
+			if ( (archive.intValue() == 0) 
+					|| (archive.intValue() == 1 && readSet.archiveId != null) 
+					|| (archive.intValue() == 2 && readSet.archiveId == null) ) {
 				return createArchive(readSet);
 			}
 		}
