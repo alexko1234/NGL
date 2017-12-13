@@ -579,9 +579,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée (origine)", "originTargetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
 						"16S_V5V6","18S_V1V2","16S_V4"), null, null, null,"single", 3, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Tag issu du type d échantillon (origine)", "fromOriginSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon (origine)", "fromOriginSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
 				DescriptionFactory.newValues("DNA","ARN"), null, null, null,"single", 4, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Primers (origine)", "originAmplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Amorces (origine)", "originAmplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV",
 						"ITSD / ITS2REV","CP23S primers","5.8S F1 / R1","18S_V4 primer","COI primer m1COIintF / jgHCO2198","Sneed2015 27F / 519Rmodbio",
 						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote"), null, null, null,"single", 5, true, null,null));
