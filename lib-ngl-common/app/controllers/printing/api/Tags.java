@@ -7,6 +7,8 @@ package controllers.printing.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 //import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
@@ -33,7 +35,7 @@ import fr.cea.ig.play.NGLContext;
 public class Tags extends APICommonController<Tag> {
 	
 	private final Form<TagPrintForm> printForm;
-	
+	@Inject
 	public Tags(NGLContext ctx) {
 		super(ctx,Tag.class);
 		printForm = ctx.form(TagPrintForm.class);

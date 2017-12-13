@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
@@ -47,7 +49,7 @@ public class NGLObjects extends APICommonController<NGLObject> {
 	final static Form<NGLObjectsSearchForm> searchForm = form(NGLObjectsSearchForm.class);
 	private Map<String, AbstractUpdate> mappingCollectionUpdates;
 	
-	
+	@Inject
 	public NGLObjects(NGLContext ctx) {
 		super(ctx,NGLObject.class);
 		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
