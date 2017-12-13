@@ -20,6 +20,8 @@ import org.jongo.MongoCursor;
 import akka.actor.ActorRef;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
+import play.Logger;
+import play.Logger.ALogger;
 import play.libs.Json;
 import play.mvc.Result;
 
@@ -30,7 +32,7 @@ import play.mvc.Result;
  *
  */
 public class MongoStreamer {
-
+	static ALogger logger = Logger.of(MongoStreamer.class);
 	/**
 	 * Streamer as an input stream. 
 	 * @param streamer streamer to use
@@ -50,6 +52,7 @@ public class MongoStreamer {
 		/*return stream(new IStreamer() {
 			@Override
 			public void streamTo(OutputStream _out) throws IOException {
+				logger.debug("start stream.streamTo");
 				PrintWriter out = new PrintWriter(_out);
 				Iterator<T> iter = all.iterator();
 		    	out.write("[");
@@ -58,7 +61,8 @@ public class MongoStreamer {
 		            if (iter.hasNext()) out.write(",");
 		        }					
 		        out.write("]");
-			    out.close();					
+			    out.close();	
+			    logger.debug("end stream.streamTo");
 			}
 			public void streamTo(ActorRef out) {
 				Iterator<T> iter = all.iterator();
@@ -84,19 +88,6 @@ public class MongoStreamer {
 	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> Source<ByteString, ?> streamUDT(MongoCursor<T> all) {
-		/*return stream(new IStreamer() {
-			@Override
-			public void streamTo(ActorRef out)  {
-				write(out,"{\"recordsNumber\":"+all.count()+",");
-			    write(out,"\"data\":[");
-			    Iterator<T> iter = all.iterator();
-			    while(iter.hasNext()){
-			    	write(out,Json.toJson(iter.next()).toString());
-		            if (iter.hasNext()) write(out,",");    	
-			    }
-			    write(out,"]}");
-			}
-		});*/
 		return Source.from(all)
 				.map(r -> { return Json.toJson(r).toString(); })
 				.intersperse("{\"recordsNumber\":" + all.count() + ",\"data\":[", ",", "]}")
@@ -110,22 +101,6 @@ public class MongoStreamer {
 	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> Source<ByteString, ?> stream(MongoDBResult<T> all) {
-		/*return stream(new IStreamer() {
-			@Override
-			public void streamTo(ActorRef out) {
-				Iterator<T> iter = all.cursor;
-		    	write(out,"[");
-			    while (iter.hasNext()) {
-			    	write(out,Json.toJson(iter.next()).toString());
-		            if(iter.hasNext()) write(out,",");
-		        }					
-		        write(out,"]");
-			}
-		});*/
-		/*return Source.from(all.cursor)
-				.map(r -> { return Json.toJson(r).toString(); })
-				.intersperse("[", ",", "]")
-				.map(r -> { return ByteString.fromString(r); });*/
 		return stream((Iterable<T>)all.cursor);
 	}
 	
@@ -159,19 +134,6 @@ public class MongoStreamer {
 	 * @return    input stream that provide a json list of collection objects
 	 */
 	public static <T extends DBObject> Source<ByteString, ?> streamUDT(MongoDBResult<T> all) {
-		/*return stream(new IStreamer() {
-			@Override
-			public void streamTo(ActorRef out) {
-				write(out,"{\"recordsNumber\":"+all.count()+",");
-			    write(out,"\"data\":[");
-			    Iterator<T> iter = all.cursor;
-			    while(iter.hasNext()){
-			    	write(out,Json.toJson(iter.next()).toString());
-		            if(iter.hasNext()) write(out,",");    	
-			    }
-			    write(out,"]}");
-			}
-		});*/
 		return Source.from(all.cursor)
 				.map(r -> { return Json.toJson(r).toString(); })
 				.intersperse("{\"recordsNumber\":" + all.count() + ",\"data\":[", ",", "]}")
@@ -186,21 +148,6 @@ public class MongoStreamer {
 	 * @return          input stream that provide a json list of transformed collection objects
 	 */
 	public static <T extends DBObject,R> Source<ByteString, ?> streamUDT(MongoDBResult<T> data, Function<T,R> transform) {
-		/*return stream(new IStreamer() {
-			public void streamTo(ActorRef out) {
-				write(out,"{\"recordsNumber\":"+data.count()+",");
-				write(out,"\"data\":[");
-				while (data.cursor.hasNext()) {
-					Object r = transform.apply(data.cursor.next());
-					if (null != r) {
-						write(out,Json.toJson(r).toString());
-						if (data.cursor.hasNext()) write(out,",");
-						//Logger.info(Json.toJson(results.cursor.next()).toString()+",");
-					}		    	
-				}
-				write(out,"]}");
-			}
-		});*/
 		return Source.from(data.cursor)
 				.map(r -> { return transform.apply(r); }) // why map(transform) doesn't work ?
 				.map(r -> { return Json.toJson(r).toString(); })

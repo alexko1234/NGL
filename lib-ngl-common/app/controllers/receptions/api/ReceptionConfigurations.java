@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reception.instance.ReceptionConfiguration;
 import models.utils.InstanceConstants;
@@ -36,7 +38,7 @@ import fr.cea.ig.play.NGLContext;
 public class ReceptionConfigurations extends DocumentController<ReceptionConfiguration> {
 	
 	final Form<ReceptionConfiguration> reportConfigForm = form(ReceptionConfiguration.class);
-	
+	@Inject
 	public ReceptionConfigurations(NGLContext ctx) {
 		super(ctx,InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
 	}
