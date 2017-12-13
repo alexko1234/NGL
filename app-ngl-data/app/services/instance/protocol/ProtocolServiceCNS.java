@@ -169,7 +169,10 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("annexe-dosage-qubit-v2","Annexe_DosageQubit_v2","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification","reception-fluo-quantification")));
 		
 		
-		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration")));		
+		lp.add(newProtocol("ptr-ctl-123-4","PTR_CTL123_4","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration"),false));		
+		lp.add(newProtocol("prod-ill-evaladn-en-tubes-123-v5","Prod_ILL_EvalADN_EnTubes_123_v5","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration","reception-fluo-quantification","normalisation")));		
+		lp.add(newProtocol("prod-ill-evaladn-en-plaques-161-v1","Prod_ILL_EvalADN_EnPlaques_161_v1_en attente","path2","1","production",InstanceFactory.setExperimentTypeCodes("gel-migration","reception-fluo-quantification","dilution")));		
+		
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification"), false));
 		
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));

@@ -109,7 +109,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"header":Messages("containers.table.fromTransformationTypeCodes"),
 			"property":"fromTransformationTypeCodes",
 			"hide":true,
-			"order":false,
+			"order":true,
 			"position":5.5,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",

@@ -1507,10 +1507,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//OuputContainer 
 		// Liste; valeur par defaut= celle qui se trouve dans processus dans expectedBaits ?. PAS POSSIBLE!!!
 		// 31/08/2017 erreur de spec, mettre sur ContainerOut 
-		//            il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F) ??????
-		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, getCaptureBaitsValues(),
+		// 07/12/2017 NGL-1735 : "F" place sur default value au lieu de requiredState !!!
+		propertyDefinitions.add(newPropertiesDefinition("Baits (sondes)", "baits", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getCaptureBaitsValues(),
 				null, null, null,
-				"single",12,true,"F",null));
+				"single",12,true,null,null));
 			
 		return propertyDefinitions;
 	}
