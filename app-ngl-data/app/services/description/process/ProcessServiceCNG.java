@@ -264,7 +264,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.addAll(new Nanopore().getProcessType());
 	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
-		// FDS 11/12/2017 NGL-1730 : ajout NovaSeq 
+		// FDS 13/12/2017 NGL-1730 : (arrivée novaseq6000) .......VOIR JULIE pb specs ??....
 		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000/X5/NovaSeq)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
@@ -285,7 +285,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq)
-		// FDS 11/12/2017 renommage label: supprimer "2000" ( ne sont plus en fonction)
+		// FDS 13/12/2017 NGL-1730 : renommage label (2000 ne sont plus en fonction) .......VOIR JULIE pb specs ??....
 		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2500/NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), 
@@ -306,9 +306,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-capture-prep-process-fc").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));  	
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1)  (4000/X5 = FC ordonnée)
-		// FDS 11/12/2017 NGL-1730 : ajout NovaSeq 
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (4000/X5/NovaSeq)", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (4000/X5)
+		// FDS 13/12/2017 NGL-1730 : renommage label (arrivée novaseq6000)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture à partir sple prep svgarde", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				7,
 				null,
 				Arrays.asList(
@@ -327,8 +327,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (2000/2500/NextSeq)
-		// FDS 11/12/2017 renommage label: supprimer "2000" ( ne sont plus en fonction)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (2500/NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		// FDS 13/12/2017 NGL-1730 : renommage label (2000 ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture à partir sple prep svgarde", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				8,
 				null,
 				Arrays.asList(
@@ -347,9 +347,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-pcr-capture-pcr-indexing-fc").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (4000/X5 = FC ordonnée)
-		// FDS 11/12/2017 NGL-1730 : ajout NovaSeq
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (4000/X5/NovaSeq)", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (4000/X5)
+		// FDS 13/12/2017 NGL-1730 : renommage label (arrivée novaseq6000)
+		l.add(DescriptionFactory.newProcessType("Capture à partir sample prep + pcr", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				9,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
@@ -367,8 +367,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/NextSeq)
-		// FDS 11/12/2017 renommage label: supprimer "2000" ( ne sont plus en fonction)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (2500/NextSeq)", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		// FDS 13/12/2017 NGL-1730 : renommage label("2000" ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Capture à partir sample prep + pcr", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				10,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
@@ -387,8 +387,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));					
 
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (4000/X5 = FC ordonnée)
-		// FDS 11/12/2017 NGL-1730 : ajout NovaSeq
-		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (4000/X5/NovaSeq)", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS 11/12/2017 NGL-1730 : renommage label (arrivée novaseq6000)
+		l.add(DescriptionFactory.newProcessType("PCR indexing à partir capture svgarde", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				11,
 				null,
 				Arrays.asList(
@@ -405,8 +405,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (2000/2500/NextSeq)
-		// FDS 11/12/2017 renommage label: supprimer "2000" ( ne sont plus en fonction)
-		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (2500/NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),		
+		// FDS 11/12/2017 NGL-1730 : renommage label (2000 ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("PCR indexing à partir capture svgarde", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),		
 				12,
 				null,
 				Arrays.asList(
