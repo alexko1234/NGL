@@ -52,6 +52,8 @@ import views.components.datatable.DatatableForm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import controllers.history.UserHistory;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
@@ -357,9 +359,11 @@ public abstract class CommonController extends Controller {
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
 		if (form.datatable) {
-			return ok(getUDTChunk(all)).as("application/json");
+			// return ok(getUDTChunk(all)).as("application/json");
+			return MongoStreamer.okStreamUDT(all);
 		} else if(form.list) {
-			return ok(getChunk(all)).as("application/json");									
+			// return ok(getChunk(all)).as("application/json");
+			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
@@ -384,15 +388,15 @@ public abstract class CommonController extends Controller {
 	    );
 	}
 	*/
-	
-	private static <T extends DBObject> InputStream getChunk(MongoCursor<T> all) {
+	/*
+	private static <T extends DBObject> Source<ByteString, ?> getChunk(MongoCursor<T> all) {
 		return MongoStreamer.stream(all);
 	}
 	
-	private static <T extends DBObject> InputStream getUDTChunk(MongoCursor<T> all) {
+	private static <T extends DBObject> Source<ByteString, ?> getUDTChunk(MongoCursor<T> all) {
 		return MongoStreamer.streamUDT(all);
 	}
-	
+	*/
 /*	
 	private static <T extends DBObject> StringChunks getChunk(MongoCursor<T> all) {
 		return new StringChunks() {

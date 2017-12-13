@@ -14,12 +14,16 @@ import static fr.cea.ig.play.test.RoutesTest.checkRoutes;
 import static fr.cea.ig.play.test.WSHelper.get;
 
 import static ngl.sq.Global.devapp;
-
+import static org.junit.Assert.assertEquals;
 import static play.test.Helpers.OK;
+
+import java.io.IOException;
+
 import static play.test.Helpers.NOT_FOUND;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
+import play.test.TestServer;
 
 public class Heavy {
 	
@@ -34,10 +38,15 @@ public class Heavy {
 	    			// compared to the get after the put. The other way around is to assert that modified values
 	    			// in the input are stored and thus access the values by path and not do a full comparison.
 	    			checkRoutes(ws);
-	    			// Check UI for samples
+	    			
+	    			// Check UI for Sample
 	    			Sample sample = SampleFactory.createSample(ws);
 	    			rurNeqTraceInfo(ws,"/api/samples/" + sample.getCode());
-
+	    			get(ws,"/samples/AAAA-A120_ST147_T0_A",OK);
+	    			// Check UI for ContainerSupport
+	    			
+	    			// Check UI for Container 
+	    			
 	    			// RUR tests are currently not modifying anything as we use the
 	    			// RUR method with the default values so those are barely tests. 
 	    			// The confirmation of success could come from the update date that would be different.
@@ -73,19 +82,22 @@ public class Heavy {
 
 	    		});
 	}
-	/*
-	// Should behave properly, use 
+	
+	//
 	@Test
 	public void runInBrowser() throws IOException {
-		CompleteSQTestServer ts = new CompleteSQTestServer();
-		ts.start();
-	    running(ts.getServer(), HTMLUNIT, browser -> {
+		// CompleteSQTestServer ts = new CompleteSQTestServer();
+		// ts.start();
+		TestServer server = new TestServer(3333,devapp());
+		play.test.Helpers.running(server, play.test.Helpers.HTMLUNIT, browser -> {
+		// play.test.Helpers.running(server, play.test.Helpers.FIREFOX, browser -> {
 	        browser.goTo("/");
-	        assertEquals("Welcome to Play!", browser.$("#title").text());
-	        browser.$("a").click();
-	        assertEquals("login", browser.url());
+	        // assertEquals("Welcome to Play!", browser.$("#title").text());
+	        // browser.$("a").click();
+	        // assertEquals("login", browser.url());
+	        // ts.stop();
 	    });
-	    ts.stop();
+	    
 	}
-	*/
+	
 }

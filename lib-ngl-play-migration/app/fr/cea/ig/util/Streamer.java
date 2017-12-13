@@ -5,8 +5,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 // import java.io.PrintWriter;
 import java.util.Iterator;
+import java.util.Optional;
 
+import akka.NotUsed;
+import akka.actor.ActorRef;
+import akka.actor.Status;
+import akka.stream.OverflowStrategy;
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import fr.cea.ig.io.OutToInStreams;
+import play.mvc.Result;
+import play.http.HttpEntity;
+
 
 // Logger aside this has no play dependency.
 
@@ -21,96 +31,64 @@ import fr.cea.ig.io.OutToInStreams;
  */
 public class Streamer {
 
+	
+	/*static void f() {
+		Source<ByteString, ?> source = Source.<ByteString>actorRef(256, OverflowStrategy.dropNew())
+				  .mapMaterializedValue((ActorRef sourceActor) -> {
+				    sourceActor.tell(ByteString.fromString("hello"), null);
+				    sourceActor.tell(ByteString.fromString("world"), null);
+				    sourceActor.tell(new Status.Success(NotUsed.getInstance()), null);
+				    return null;
+				  });
+	}*/
+	
+	
 	/**
 	 * Data streamer.
 	 */
-	public interface IStreamer {
+	//public interface IStreamer {
 		
 		/**
 		 * Stream to a given output stream. 
 		 * @param o output stream to stream to
 		 * @throws IOException output stream exception
 		 */
-		public void streamTo(OutputStream o) throws IOException;
+		/*public void streamTo(ActorRef o);
 		
-	}
+		static void write(ActorRef a, String s) {
+			a.tell(ByteString.fromString(s),null);
+		}
+		
+	}*/
 
 	/**
 	 * Logger.
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(Streamer.class);
 	
-	/**
-	 * Streams.
-	 */
-	private OutToInStreams ois;
+	public static Result okStream(Source<ByteString, ?> source) {
+		 return new Result(200, HttpEntity.chunked(source, Optional.of("application/json")));
+	}
+	//public static Result okStream(Source<String, ?> source) {
+	//	 return new Result(200, HttpEntity.chunked(source.map(r -> { return ByteString; }), Optional.of("application/json")));
+	//}
 	
-	/**
-	 * Thread that runs the IStreamer writes. 
-	 */
-	private Thread thread;
-	
-	/**
-	 * Data streamer that writes to output stream.
-	 */
-	IStreamer streamer;
-	
-	/**
-	 * Default buffer size.
-	 */
-	public static final int DEFAULT_BUFFER_SIZE = 16 * 1024;
-	
-	/**
-	 * Builds a Streamer that uses the provided IStreamer to write data.
-	 * @param streamer data writer
-	 */
-	public Streamer(IStreamer streamer) {
-		this(DEFAULT_BUFFER_SIZE,streamer);
+	/*
+	public static Result okStream(IStreamer s) {
+		return okStream(stream(s));
 	}
 	
-	/**
-	 * Builds a Streamer that uses the provided IStreamer to write data.
-	 * @param bufferSize IO buffer size
-	 * @param streamer   data writer
-	 */
-	public Streamer(int bufferSize, IStreamer streamer) {
-		this.streamer = streamer;
-		ois = new OutToInStreams(bufferSize);
+	public static Source<ByteString, ?> stream(IStreamer streamer) {
+		return stream(256,streamer);
 	}
 	
-	/**
-	 * Starts the write thread and returns the input stream to read from.
-	 * @return input stream to read IStreamer writes from
-	 */
-	public InputStream inputStream() {
-		// Do not start the write process twice
-		if (thread == null) {
-			thread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						streamer.streamTo(ois.getOutputStream());
-						logger.debug("streaming of " + streamer + " done");
-					} catch (IOException e) {
-						logger.error("stream error",e);
-					}
-				}
-			});
-			thread.start();
-		}
-		return ois.getInputStream();
+	public static Source<ByteString, ?> stream(int bufferSize, IStreamer streamer) {
+		return Source.<ByteString>actorRef(bufferSize, OverflowStrategy.dropNew())
+		  .mapMaterializedValue((ActorRef sourceActor) -> {
+		    streamer.streamTo(sourceActor);
+		    sourceActor.tell(new Status.Success(NotUsed.getInstance()), null);
+		    return null;
+		  });
 	}
-
-	/**
-	 * Not so short shortcut
-	 * @param streamer data streamer
-	 * @return stream to read streamed data from
-	 */
-	public static InputStream stream(IStreamer streamer) {
-		return new Streamer(streamer).inputStream();
-	}
-
-	public static InputStream stream(int bufferSize, IStreamer streamer) {
-		return new Streamer(bufferSize,streamer).inputStream();
-	}
-
+	*/
 }

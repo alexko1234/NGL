@@ -188,7 +188,8 @@ class Containers2 extends DocumentController<Container> {
 			return nativeMongoDBQQuery(containersSearch);
 		} else if (containersSearch.datatable) {
 			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
-			return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		} else if (containersSearch.count) {
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -210,7 +211,8 @@ class Containers2 extends DocumentController<Container> {
 		} else {
 			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
 			// return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");
-			return ok(MongoStreamer.stream(results)).as("application/json");
+			// return ok(MongoStreamer.stream(results)).as("application/json");
+			return MongoStreamer.okStream(results);
 		}
 	}
 

@@ -55,7 +55,6 @@ public abstract class CompleteTestServer {
 		server = new TestServer(getPort(),app);
 		server.start();
 		ws = WSTestClient.newClient(getPort());
-
 	}
 
 	/**

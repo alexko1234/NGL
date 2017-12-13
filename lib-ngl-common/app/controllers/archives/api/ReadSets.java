@@ -46,7 +46,8 @@ public class ReadSets extends CommonController {
 		List<Archive> archives = new ArrayList<Archive>();
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
 		// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");
-		return ok(MongoStreamer.streamUDT(results, r -> convertToArchive(archive, r))).as("application/json");
+		// return ok(MongoStreamer.streamUDT(results, r -> convertToArchive(archive, r))).as("application/json");
+		return MongoStreamer.okStreamUDT(results, r -> { return convertToArchive(archive, r); });
 	}
 
 	private static Archive convertToArchive(Integer archive, ReadSet readSet) {

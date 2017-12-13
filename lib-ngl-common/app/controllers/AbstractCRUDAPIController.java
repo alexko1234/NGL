@@ -443,7 +443,8 @@ public abstract class AbstractCRUDAPIController<T extends DBObject> extends Docu
 		if (searchForm.datatable) {
 			BasicDBObject keys = getKeys(updateForm(searchForm));
 			MongoDBResult<T> results = mongoDBFinder(searchForm,query, keys);
-			return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		} else if (searchForm.count) {
 			// This really should be some almost plain mongo access and plain json generation
 			BasicDBObject keys = new BasicDBObject();

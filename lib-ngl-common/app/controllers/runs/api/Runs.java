@@ -83,7 +83,8 @@ public class Runs extends RunsController {
 		if(form.datatable){			
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
 			// return ok(new MongoDBDatatableResponseChunks<Run>(results)).as("application/json");
-			return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		}else if(form.list){
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -98,7 +99,8 @@ public class Runs extends RunsController {
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);	
 			// return ok(new MongoDBResponseChunks<Run>(results)).as("application/json");
-			return ok(MongoStreamer.stream(results)).as("application/json");
+			// return ok(MongoStreamer.stream(results)).as("application/json");
+			return MongoStreamer.okStream(results);
 		}
 	}
 

@@ -60,7 +60,8 @@ public class Projects extends DocumentController<Project> {
 			MongoDBResult<Project> results = mongoDBFinder(form, q, keys);			
 			// return ok(new MongoDBDatatableResponseChunks<Project>(results)).as("application/json");
 			//return ok(MongoStreamer.stream(results)).as("application/json");
-			return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		} else if(form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field

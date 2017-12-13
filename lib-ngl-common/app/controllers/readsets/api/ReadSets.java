@@ -96,7 +96,8 @@ public class ReadSets extends ReadSetsController{
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");
-			return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		}else if(form.count){
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
@@ -114,7 +115,8 @@ public class ReadSets extends ReadSetsController{
 		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
 			// return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");
-			return ok(MongoStreamer.stream(results)).as("application/json");
+			// return ok(MongoStreamer.stream(results)).as("application/json");
+			return MongoStreamer.okStream(results);
 		}
 	}
 

@@ -3,6 +3,7 @@ package controllers.experiments.api;
 // import static play.data.Form.form;
 import static fr.cea.ig.play.IGGlobals.form;
 import fr.cea.ig.util.Streamer;
+//import static fr.cea.ig.util.Streamer.IStreamer.write;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,11 +28,16 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 
+import com.google.common.collect.Iterators;
 import com.mongodb.AggregationOutput;
 import com.mongodb.DBObject;
 
+import akka.actor.ActorRef;
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 
 /**
@@ -85,26 +91,32 @@ public class ExperimentReagents extends Experiments{
 					}
 				}
 				).as("application/json");*/
-			return ok(Streamer.stream(new Streamer.IStreamer() {
+			/*return Streamer.okStream(new Streamer.IStreamer() {
 				@Override
-				public void streamTo(OutputStream _out) throws IOException {
-					PrintWriter out = new PrintWriter(_out);
+				public void streamTo(ActorRef out) {
 					AggregationOutput output = ar.getAggregationOutput();
 					Iterable<DBObject> iterable = output.results();
 					Iterator<DBObject> iter = iterable.iterator();
 					int count = 0;
-					out.write("{\"data\":[");
+					write(out,"{\"data\":[");
 					while (iter.hasNext()) {
 						count++;
 						Experiment exp = collection.convertFromDbObject(iter.next(), Experiment.class);
-						out.write(Json.toJson(exp).toString());
-						if (iter.hasNext()) out.write(",");
+						write(out,Json.toJson(exp).toString());
+						if (iter.hasNext()) write(out,",");
 					}					
-					out.write("],\"recordsNumber\":"+count);
-					out.write("}");
-					out.close();					
+					write(out,"],\"recordsNumber\":"+count);
+					write(out,"}");
 				}
-			})).as("application/json");
+			});*/
+			// WARNING: Check, this iterates twice over the results
+			Iterable<DBObject> results = ar.getAggregationOutput().results();
+			int count = Iterators.size(results.iterator());
+			return Streamer.okStream(Source.from(results)
+					.map(r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
+						        return Json.toJson(exp).toString(); })
+					.intersperse("{\"data\":[", ",", "],\"recordsNumber\":"+count+"}")
+					.map(r -> { return ByteString.fromString(r); }));
 		} else {
 			/*return ok(
 					new StringChunks() {
@@ -127,25 +139,30 @@ public class ExperimentReagents extends Experiments{
 						}
 					}
 					).as("application/json");*/
-			return ok(Streamer.stream(new Streamer.IStreamer() {
+			/*return Streamer.okStream(new Streamer.IStreamer() {
 				@Override
-				public void streamTo(OutputStream _out) throws IOException {
-					PrintWriter out = new PrintWriter(_out);
+				public void streamTo(ActorRef out) {
 					AggregationOutput output = ar.getAggregationOutput();
 					Iterable<DBObject> iterable = output.results();
 					Iterator<DBObject> iter = iterable.iterator();
 					int count = 0;
-					out.write("[");
+					write(out,"[");
 					while (iter.hasNext()) {
 						count++;
 						Experiment exp = collection.convertFromDbObject(iter.next(), Experiment.class);
-						out.write(Json.toJson(exp).toString());
-						if (iter.hasNext()) out.write(",");
+						write(out,Json.toJson(exp).toString());
+						if (iter.hasNext()) write(out,",");
 					}					
-					out.write("]");
-					out.close();					
+					write(out,"]");				
 				}
-			})).as("application/json");
+			});*/
+			// WARNING: check function
+			Iterable<DBObject> results = ar.getAggregationOutput().results();
+			return Streamer.okStream(Source.from(results)
+					.map(r -> { Experiment exp = collection.convertFromDbObject(r, Experiment.class);
+						        return Json.toJson(exp).toString(); })
+					.intersperse("[", ",", "]")
+					.map(r -> { return ByteString.fromString(r); }));
 		}
 	}
 	

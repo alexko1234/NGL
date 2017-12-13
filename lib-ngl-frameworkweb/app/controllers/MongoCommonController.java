@@ -28,13 +28,17 @@ import views.components.datatable.DatatableForm;
 
 import com.mongodb.BasicDBObject;
 
+import akka.actor.ActorRef;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.util.Streamer;
+// import static fr.cea.ig.util.Streamer.IStreamer.write;
 import fr.cea.ig.MongoDBResult.Sort;
+
+import fr.cea.ig.mongo.MongoStreamer;
 
 // TODO: cleanup, comment
 
@@ -285,9 +289,11 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		MongoCursor<T> all = (MongoCursor<T>) collection.find(form.reportingQuery).as(type);
 		if (form.datatable) {
-			return ok(getUDTChunk(all)).as("application/json");
+			// return ok(getUDTChunk(all)).as("application/json");
+			return MongoStreamer.okStreamUDT(all);
 		} else if(form.list) {
-			return ok(getChunk(all)).as("application/json");									
+			// return ok(getChunk(all)).as("application/json");
+			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
@@ -297,12 +303,12 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			return badRequest();
 		}
 	}
-	public InputStream getChunk(MongoCursor<T> all) {
+	/*public InputStream getChunk(MongoCursor<T> all) {
 		return MongoStreamer.stream(all);
 	}
 	public InputStream getUDTChunk(MongoCursor<T> all) {
 		return MongoStreamer.streamUDT(all);
-	}
+	}*/
 	/*
 	private StringChunks getChunk(MongoCursor<T> all) {
 		return new StringChunks() {
@@ -341,7 +347,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		BasicDBObject keys = getKeys(updateForm(searchForm));
 		if (searchForm.datatable) {
 			MongoDBResult<T> results =  mongoDBFinder(searchForm, query,keys);
-			return ok(getUDTChunk(results)).as("application/json");
+			// return ok(getUDTChunk(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		} else if (searchForm.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -350,7 +357,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			if(null == searchForm.orderSense)searchForm.orderSense = 0;				
 
 			MongoDBResult<T> results = mongoDBFinder(searchForm, query, keys);
-			return ok(getLOChunk(results)).as("application/json");
+			// return ok(getLOChunk(results)).as("application/json");
+			return getLOChunk(results);
 		} else if(searchForm.count) {
 			keys = new BasicDBObject();
 			keys.put("_id", 1);//Don't need the _id field
@@ -362,7 +370,8 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 			if (null == searchForm.orderBy) searchForm.orderBy = "code";
 			if (null == searchForm.orderSense) searchForm.orderSense = 0;
 			MongoDBResult<T> results = mongoDBFinder(searchForm, query,keys);
-			return ok(getChunk(results)).as("application/json");	
+			// return ok(getChunk(results)).as("application/json");
+			return MongoStreamer.okStream(results);
 		}
 	}
 	
@@ -377,13 +386,13 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		return form;
 	}
 	
-	public InputStream getUDTChunk(MongoDBResult<T> all) {
+	/*public InputStream getUDTChunk(MongoDBResult<T> all) {
 		return MongoStreamer.streamUDT(all);
 	}
 	
 	public InputStream getChunk(MongoDBResult<T> all) {
 		return MongoStreamer.stream(all);
-	}
+	}*/
 		
 	/*
 	private StringChunks getUDTChunk(MongoDBResult<T> all) {
@@ -421,22 +430,22 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 	*/
 	//TODO Beter implementation to choose which property must be used to populate list_object
 	//the better way is to implement getListObject inside DBObject
-	private InputStream getLOChunk(MongoDBResult<T> all) {
-		return Streamer.stream(new Streamer.IStreamer() {
+	// WARNING : check method
+	private Result getLOChunk(MongoDBResult<T> all) {
+		/*return Streamer.okStream(new Streamer.IStreamer() {
 			@Override
-			public void streamTo(OutputStream _out) throws IOException {
-				PrintWriter out = new PrintWriter(_out);
+			public void streamTo(ActorRef out)  {
 				Iterator<T> iter = all.cursor;
-		    	out.write("[");
+		    	write(out,"[");
 			    while (iter.hasNext()) {
 			    	T o = iter.next();
-			    	out.write(Json.toJson(new ListObject(o.code, o.code)).toString());
-		            if(iter.hasNext())out.write(",");
+			    	write(out,Json.toJson(new ListObject(o.code, o.code)).toString());
+		            if(iter.hasNext()) write(out,",");
 		        }					
-		        out.write("]");
-			    out.close();					
+		        write(out,"]");				
 			}
-		});
+		});*/
+		return MongoStreamer.okStream(all, o -> { return Json.toJson(new ListObject(o.code, o.code)); });
 	}
 	
 	/*
@@ -464,10 +473,12 @@ public abstract class MongoCommonController<T extends DBObject> extends APICommo
 		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
 		if (form.datatable) {
 			// return ok(getUDTChunk(all)).as("application/json");
-			return ok(MongoStreamer.streamUDT(all)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(all)).as("application/json");
+			return MongoStreamer.okStreamUDT(all);
 		} else if(form.list) {
 			//return ok(getChunk(all)).as("application/json");
-			return ok(MongoStreamer.stream(all)).as("application/json");
+			// return ok(MongoStreamer.stream(all)).as("application/json");
+			return MongoStreamer.okStream(all);
 		} else if(form.count) {
 			int count = all.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
