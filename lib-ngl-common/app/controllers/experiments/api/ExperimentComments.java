@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.description.Level;
@@ -27,7 +29,7 @@ import fr.cea.ig.play.NGLContext;
 
 // @Controller
 public class ExperimentComments extends SubDocumentController<Experiment, Comment>{
-
+	@Inject
 	public ExperimentComments(NGLContext ctx) {
 		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
 	}

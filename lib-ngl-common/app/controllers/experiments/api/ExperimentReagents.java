@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 
@@ -54,7 +56,7 @@ public class ExperimentReagents extends Experiments{
 	
 	
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
-	
+	@Inject
 	public ExperimentReagents(NGLContext ctx) {
 		super(ctx);	
 	}
