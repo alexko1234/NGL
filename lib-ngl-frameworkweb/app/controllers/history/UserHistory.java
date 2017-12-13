@@ -88,7 +88,7 @@ public class UserHistory extends Action.Simple {
 				long start = System.currentTimeMillis();
 				res = delegate.call(context);
 				long timeRequest = (System.currentTimeMillis() - start);
-				logger.debug("(" + login + ") - " + action + " -> " + (System.currentTimeMillis() - start) + " ms.");
+				logger.info("(" + login + ") - " + action + " -> " + (System.currentTimeMillis() - start) + " ms.");
 				MongoDBDAO.save("UserHistory", new UserAction(login,params,body,action,timeRequest));
 				logger.debug("saved action, user:" + login + ", action:" + action);
 			} else {
