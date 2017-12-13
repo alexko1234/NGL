@@ -47,6 +47,7 @@ public class MongoStreamer {
 		return stream(new IStreamer() {
 			@Override
 			public void streamTo(OutputStream _out) throws IOException {
+				logger.debug("start stream.streamTo");
 				PrintWriter out = new PrintWriter(_out);
 				Iterator<T> iter = all.iterator();
 		    	out.write("[");
@@ -55,7 +56,8 @@ public class MongoStreamer {
 		            if (iter.hasNext()) out.write(",");
 		        }					
 		        out.write("]");
-			    out.close();					
+			    out.close();	
+			    logger.debug("end stream.streamTo");
 			}
 		});
 	}
@@ -97,6 +99,7 @@ public class MongoStreamer {
 		return stream(new IStreamer() {
 			@Override
 			public void streamTo(OutputStream _out) throws IOException {
+				logger.debug("start stream.streamTo");
 				PrintWriter out = new PrintWriter(_out);
 				Iterator<T> iter = all.cursor;
 		    	out.write("[");
@@ -105,7 +108,8 @@ public class MongoStreamer {
 		            if(iter.hasNext())out.write(",");
 		        }					
 		        out.write("]");
-			    out.close();					
+			    out.close();
+			    logger.debug("end stream.streamTo");
 			}
 		});
 	}
@@ -120,6 +124,7 @@ public class MongoStreamer {
 		return stream(new IStreamer() {
 			@Override
 			public void streamTo(OutputStream _out) throws IOException {
+				logger.debug("start streamUDT.streamTo");
 				PrintWriter out = new PrintWriter(_out); 
 				out.write("{\"recordsNumber\":"+all.count()+",");
 			    out.write("\"data\":[");
@@ -129,7 +134,8 @@ public class MongoStreamer {
 		            if(iter.hasNext())out.write(",");    	
 			    }
 			    out.write("]}");
-			    out.close();				
+			    out.close();
+			    logger.debug("end streamUDT.streamTo");
 			}
 		});
 
@@ -145,6 +151,7 @@ public class MongoStreamer {
 	public static <T extends DBObject,R> InputStream streamUDT(MongoDBResult<T> data, Function<T,R> transform) {
 		return stream(new IStreamer() {
 			public void streamTo(OutputStream _out) {
+				logger.debug("start streamUDT.streamTo");
 				PrintWriter out = new PrintWriter(_out);
 				out.write("{\"recordsNumber\":"+data.count()+",");
 				out.write("\"data\":[");
@@ -158,6 +165,7 @@ public class MongoStreamer {
 				}
 				out.write("]}");
 				out.close();
+				logger.debug("end streamUDT.streamTo");
 			}
 		});
 	}
