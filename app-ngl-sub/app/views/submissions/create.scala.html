@@ -36,21 +36,21 @@
 			<label>@Messages("userFileReadSet")</label> 
 			<input type="file" id="file" base64-file="createService.userFileReadSet"/>
 		</div>
-		<div>
+		<!--div>
 			<label>@Messages("acStudy")</label> 
 			<input type="text" class="form-control" ng-model="createService.form.acStudy" placeholder='@Messages("create.placeholder.acStudy")' >
 		</div>	
 		<div>	
 			<label>@Messages("AcSample")</label> 
 			<input type="text" class="form-control" ng-model="createService.form.acSample" placeholder='@Messages("create.placeholder.acSample")' >
-		</div>					
+		</div-->					
 		@** utilisation d'une directive base-64 (Yann): nom , type et contenu en base 64 du fichier recupere en javascritp**@
 		@**<input type="file" base64-file="createService.file", ng-if="createService.externalStudies"/>**@
 		
 		@formGroup{
 			<div class="html"  placeholder='@Messages("fileCloneToAc-----------")' ></div>			
 		}
-		<div>
+		<!--div>
 			<label>@Messages("userFileExperiments")</label> 
 			<input type="file" id="file" base64-file="createService.userFileExperiments"/>
 			<BR><BR>
@@ -59,7 +59,7 @@
 			<label>@Messages("userFileSamples")</label> 
 			<input type="file" id="file" base64-file="createService.userFileSamples"/>
 			<BR><BR>
-		</div>		
+		</div-->		
 		@**<div ng-if="createService.externalStudies">**@
 			@**<label>@Messages("userFileCloneToAc")</label> **@
 			@**<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>**@

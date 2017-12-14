@@ -103,7 +103,7 @@ submissions.state=Etat
 submissions.creationDate=Date de création
 userFileReadSet=userFileReadSet :
 userFileExperiments=userFileExperiments :
-userFileCloneToAc= * userFileCloneToAc :
+userFileCloneToAc=userFileCloneToAc :
 
 consultation.placeholder.state= Choisir l'état de la soumission
 
