@@ -880,6 +880,12 @@ analyses.treatments.assemblyFilter_ba.assemblySize = Assembly size (bases)
 
 analyses.treatments.assemblyFilter_ba.GCpercent = % GC
 
+analyses.treatments.assignation_ba.assignationBilan.cluster=Cluster
+analyses.treatments.assignation_ba.assignationBilan.otu=OTU
+analyses.treatments.assignation_ba.assignationBilan.abundance=Abundance
+analyses.treatments.assignation_ba.assignationBilan.taxonomy=Taxonomy
+analyses.treatments.assignation_ba.assignationBilan.idPercent=% id
+analyses.treatments.assignation_ba.assignationBilan.matchLength=% match length
 
 analyses.treatments.scaffolding_ba.N50Scaffold = N50 
 analyses.treatments.scaffolding_ba.N80Scaffold = N80 

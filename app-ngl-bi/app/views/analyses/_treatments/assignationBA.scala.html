@@ -1,0 +1,30 @@
+@()
+<div class="row">
+ <div class="col-md-6 col-lg-6">
+ 	<table class="table table-condensed table-hover table-bordered">
+ 		<thead>
+			<tr>
+ 				<th>@Messages("analyses.treatments.assignation_ba.assignationBilan.cluster")</th>
+				<th>@Messages("analyses.treatments.assignation_ba.assignationBilan.otu")</th>
+				<th>@Messages("analyses.treatments.assignation_ba.assignationBilan.abundance")</th>
+				<th>@Messages("analyses.treatments.assignation_ba.assignationBilan.taxonomy")</th>
+				<th>@Messages("analyses.treatments.assignation_ba.assignationBilan.idPercent")</th>
+				<th>@Messages("analyses.treatments.assignation_ba.assignationBilan.matchLength")</th>
+			</tr>
+ 		</thead>
+ 		<tbody>
+ 			<tr ng-repeat="value in analysis.treatments[treatments.getTreatment().code].read1.assignationBilan.value">
+ 				<td>>{{value.cluster}}</td>
+ 				<td>{{value.otu}}</td>
+ 				<td>{{value.abundance | number}}</td>
+ 				<td>{{value.taxonomy}}</td>
+ 				<td>{{value.idPercent | number:2}} %</td>
+ 				<td>{{value.matchLength | number:2}} %</td>
+ 			</tr>
+ 		</tbody>
+	 </table>
+ </div>
+ 
+ 
+</div>
+

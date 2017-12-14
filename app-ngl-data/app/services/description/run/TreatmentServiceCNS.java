@@ -166,6 +166,15 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getGapClosingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "140"));
+		
+		l.add(DescriptionFactory.newTreatmentType("Controls Assignation BA","controlsAssignation-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "controlsAssignationBA", 
+				getAssignationBAPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1"), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "145"));
+		l.add(DescriptionFactory.newTreatmentType("Amplicon Assignation BA","ampliconAssignation-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "ampliconAssignationBA", 
+				getAssignationBAPropertyDefinitions(), 
+				getTreatmentTypeContexts("read1"), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "150"));
 
 		//Nanopore
 		l.add(DescriptionFactory.newTreatmentType("MinKnow-Metrichor","minknow-metrichor", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "minknowMetrichor", 
@@ -422,4 +431,16 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases perdues","lostBasesPercent", LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Pairs), Double.class, false, "single"));
 		return propertyDefinitions;		
 	}
+	
+	public static List<PropertyDefinition> getAssignationBAPropertyDefinitions() throws DAOException{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("cluster","assignationBilan.cluster",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("OTU","assignationBilan.otu",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Abundance","assignationBilan.abudance",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taxonomy","assignationBilan.taxonomy",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% id","assignationBilan.idPercent",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), Double.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% match length","assignationBilan.matchLength",LevelService.getLevels(Level.CODE.Analysis, Level.CODE.Read1), Double.class, false, "object_list"));
+		return propertyDefinitions;		
+	}
+
 }
