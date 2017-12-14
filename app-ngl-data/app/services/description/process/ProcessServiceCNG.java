@@ -104,7 +104,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS 13/03/2017 NGL-1167 ajout "wg-chromium-lib-prep" en -1
 		// chgt label 06/09/2017 (NGL-1576); 
 		// chgt label  13/09/2017 NGL-1201; erreur=> correction label + ajout pcr+indexing en -1 
-		l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt (4000/X5)", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+		// FDS 14/12/2017 NGL-1730 renommage label ajout Novaseq 
+		l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt (4000 / X5 / NovaSeq)", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
 				20,
 				null,  // pas de propriétés ??
 				Arrays.asList(
@@ -120,10 +121,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("lib-normalization").get(0),            //first experiment type
 				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
 				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
-
-		// FDS 11/12/2017 NGL-1201: renommage label supprimer "2000" ne sont en fonction
-		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt (2500/MiSeq/NextSeq)", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		
+		// FDS 13/09/2017 NGL-1201: renommage label en "Dénat, prep FC, dépôt (2000/2500/MiSeq/NextSeq)"
+		// FDS 14/12/2017 NGL-1730: renommage label ( supprimer 2000 : ne sont en fonction )
+		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt (2500 / MiSeq / NextSeq)", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				40,
 		        getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(
@@ -138,8 +140,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-denat-dil-lib").get(0),  //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS 11/12/2017 NGL-1201: renommage label supprimer "2000" ne sont en fonction
-		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt (2500/MiSeq/NextSeq)", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
+		// FDS 13/09/2017 NGL-1201: renommage label en "Prep FC, dépôt (2000/2500/MiSeq/NextSeq)"
+		// FDS 14/12/2017 NGL-1730: renommage label (supprimer 2000 : ne sont en fonction)
+		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt (2500 / MiSeq / NextSeq)", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),
 				42,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(
@@ -152,8 +155,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
-		// FDS 11/12/2017 NGL-1730: renomage label: ajout NovaSeq
-		l.add(DescriptionFactory.newProcessType("prep FC ordonnée, dépôt (4000/X5/NovaSeq)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
+		// FDS 14/12/2017 NGL-1730: renomage label: ajout NovaSeq
+		l.add(DescriptionFactory.newProcessType("Prep FC ordonnée, dépôt (4000 / X5 / NovaSeq)", "prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				43,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
 				Arrays.asList(
@@ -168,9 +171,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS 02/06/2017: NGL-1447 =>  duplication 4000/X5 (prep FC ordonnée) avec tranfert en experience de niveau 0
-		// => il faut declarer ce noeud 0 dans experimentService !!
-		// FDS 11/12/2017 NGL-1730: renomage label: ajout NovaSeq
-		l.add(DescriptionFactory.newProcessType("Transfert puis prep FC ordonnée, dépôt (4000/X5/NovaSeq)", "tf-prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
+		// FDS 14/12/2017 NGL-1730: renomage label: ajout NovaSeq
+		l.add(DescriptionFactory.newProcessType("Transfert puis prep FC ordonnée, dépôt (4000 / X5 / NovaSeq)", "tf-prepfcordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				44,
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"), 
 				Arrays.asList(
@@ -202,8 +204,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
         // FDS ajout 28/10/2016 JIRA NGL-1025: nouveau processus court pour RNAseq; modif du label=> supprimer RNA;
 		// FDS chgt label (NGL-1576); 
-		// FDS chgt label 13/07/2017 NGL-1201 erreur => correction label + ajout pcr+indexing en -1
-		l.add(DescriptionFactory.newProcessType("Norm(+pooling), dénat, FC, dépôt (2000/2500/MiSeq/NextSeq)", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
+		// FDS 13/07/2017 NGL-1201 erreur => correction label + ajout pcr+indexing en -1
+		// FDS 14/12/2017 NGL-1730: renomage label (suppression 2000 : plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Norm(+pooling), dénat, FC, dépôt (2500 / MiSeq / NextSeq)", "norm-and-pool-denat-fc-depot", ProcessCategory.find.findByCode("normalization"),
 				21,   
 				null, // pas de propriétés ??
 				Arrays.asList(
@@ -264,8 +267,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.addAll(new Nanopore().getProcessType());
 	
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (4000/X5 = FC ordonnée)
-		// FDS 13/12/2017 NGL-1730 : (arrivée novaseq6000) .......VOIR JULIE pb specs ??....
-		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000/X5/NovaSeq)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (ajout NovaSeq)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (4000 / X5 / NovaSeq)", "capture-prep-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				5,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
@@ -285,8 +288,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect principal (2000/2500/Miseq/NextSeq)
-		// FDS 13/12/2017 NGL-1730 : renommage label (2000 ne sont plus en fonction) .......VOIR JULIE pb specs ??....
-		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2500/NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (suppression 2000 : ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture prod. (2500 / NextSeq)", "capture-prep-process-fc", ProcessCategory.find.findByCode("library"),
 				6,
 				getPropertyDefinitionsCapture(), 
 				Arrays.asList(
@@ -307,8 +310,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));  	
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (4000/X5)
-		// FDS 13/12/2017 NGL-1730 : renommage label (arrivée novaseq6000)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture à partir sple prep svgarde", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (ajout NovaSeq)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (4000 / X5 / NovaSeq)", "pcr-capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				7,
 				null,
 				Arrays.asList(
@@ -327,8 +330,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (1) (2000/2500/NextSeq)
-		// FDS 13/12/2017 NGL-1730 : renommage label (2000 ne sont plus en fonction)
-		l.add(DescriptionFactory.newProcessType("Prep. Capture à partir sple prep svgarde", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (suppression 2000 : ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (1) (2500 / NextSeq)", "pcr-capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				8,
 				null,
 				Arrays.asList(
@@ -348,8 +351,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (4000/X5)
-		// FDS 13/12/2017 NGL-1730 : renommage label (arrivée novaseq6000)
-		l.add(DescriptionFactory.newProcessType("Capture à partir sample prep + pcr", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (ajout NovaSeq)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (4000 / X5 / NovaSeq)", "capture-pcr-indexing-fc-ord", ProcessCategory.find.findByCode("library"),
 				9,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
@@ -367,8 +370,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (2) (2000/2500/NextSeq)
-		// FDS 13/12/2017 NGL-1730 : renommage label("2000" ne sont plus en fonction)
-		l.add(DescriptionFactory.newProcessType("Capture à partir sample prep + pcr", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (suppression 2000 : ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Prep. Capture reprise (2) (2500 / NextSeq)", "capture-pcr-indexing-fc", ProcessCategory.find.findByCode("library"),
 				10,
 				getPropertyDefinitionsCapturePcrIndexing(),
 				Arrays.asList(
@@ -387,8 +390,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));					
 
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (4000/X5 = FC ordonnée)
-		// FDS 11/12/2017 NGL-1730 : renommage label (arrivée novaseq6000)
-		l.add(DescriptionFactory.newProcessType("PCR indexing à partir capture svgarde", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
+		// FDS 14/12/2017 NGL-1730 : renommage label (ajout NovaSeq)
+		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (4000 / X5 / NovaSeq)", "pcr-indexing-process-fc-ord", ProcessCategory.find.findByCode("library"),
 				11,
 				null,
 				Arrays.asList(
@@ -405,8 +408,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 10/07/2017 NGL-1201: processus Capture Sureselect reprise (3) (2000/2500/NextSeq)
-		// FDS 11/12/2017 NGL-1730 : renommage label (2000 ne sont plus en fonction)
-		l.add(DescriptionFactory.newProcessType("PCR indexing à partir capture svgarde", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),		
+		// FDS 14/12/2017 NGL-1730 : renommage label (supression 2000 : ne sont plus en fonction)
+		l.add(DescriptionFactory.newProcessType("Processus reprise (3) (2500 / NextSeq)", "pcr-indexing-process-fc", ProcessCategory.find.findByCode("library"),		
 				12,
 				null,
 				Arrays.asList(
@@ -450,7 +453,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			listSequencers.addAll(DescriptionFactory.newValues("ASTERIX","DIAGNOSTIX","IDEFIX","OBELIX","PANORAMIX"));		
 			// HISEQ4000
 			listSequencers.addAll(DescriptionFactory.newValues("FALBALA"));
-			// 07/12/2017 NGL-1730 ajout NOVASEQ6000
+			// 07/12/2017 NGL-1730 ajout NOVASEQ6000: MARIECURIX
 			listSequencers.addAll(DescriptionFactory.newValues("MARIECURIX"));
 		}	
 
