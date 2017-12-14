@@ -20,6 +20,8 @@ import com.mongodb.DB;
 import controllers.CommonController;
 import controllers.migration.MigrationForm;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
@@ -58,6 +60,7 @@ public class MigrationTransfertCCRT extends CommonController{
 				String codeProject = tabLine[0];
 				String codeFG = tabLine[1];
 				boolean localDataDeleted = Boolean.parseBoolean(tabLine[2]);
+				PropertySingleValue propLocalDataDeleted = new PropertySingleValue(localDataDeleted);
 				if(codeProject!=null && codeFG!=null && codeFG.startsWith("fg")){
 					//Get project in DB
 					Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, codeProject);
@@ -77,7 +80,7 @@ public class MigrationTransfertCCRT extends CommonController{
 									DBUpdate.set("location", "CCRT").set("path", pathCCRT));
 							if(localDataDeleted){
 								MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readSet.code),
-										DBUpdate.set("properties.localDataDeleted", localDataDeleted));
+										DBUpdate.set("properties.localDataDeleted", propLocalDataDeleted));
 							}
 						}
 						
