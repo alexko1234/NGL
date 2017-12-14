@@ -262,7 +262,7 @@ public class ResolutionService {
 		al.add("RHSX");
 		al.add("RMISEQ");
 		al.add("RNEXTSEQ500");
-		al.add("RNOVASEQ6000");  // NGL-1730 ajout 07/12/2017
+		al.add("RNVS6000");  // NGL-1730 ajout 14/12/2017
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
