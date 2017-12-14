@@ -215,7 +215,7 @@ public class TreatmentServiceGET extends AbstractTreatmentService {
         return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
+	public static List<PropertyDefinition> getReadSetPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         // just readset level
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful sequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));

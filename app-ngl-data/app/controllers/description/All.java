@@ -22,6 +22,7 @@ import services.description.run.RunService;
 import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
+//import services.instance.resolution.ResolutionService;
 import controllers.CommonController;
 
 
@@ -33,7 +34,12 @@ public class All extends CommonController {
 			InstituteService.main(errors);
 			ObjectTypeService.main(errors);
 			StateService.main(errors); 
-			//ResolutionService.main(errors); 
+			/*
+			 * new ResolutionServiceGET(); peut être appeler dans ImportDataGET
+			 * 
+			 *ResolutionService.main(errors); 
+			 * n'est donc pas adapté pour GET
+			 */ 
 			LevelService.main(errors);
 			MeasureService.main(errors);
 			ContainerService.main(errors);

@@ -515,7 +515,7 @@ public HashMap<String, PropertyValue> getCaracteristiquesForContainer(int barcod
 
 				Project project = new Project();
 				project.code = rs.getString(2).trim();
-				project.name = rs.getString(3);
+				project.name = rs.getString(3).replaceAll("[\\s\"]+", " ").trim();
 				String fgGroupe=null;
 				//String fgGroupe=rs.getString("groupefg");
 				//				if(fgGroupe==null){
