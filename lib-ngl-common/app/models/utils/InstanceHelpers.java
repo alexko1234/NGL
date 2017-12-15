@@ -33,6 +33,7 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
@@ -417,8 +418,9 @@ public class InstanceHelpers {
 							|| (null != tags  && content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && sampleCodes.contains(content.sampleCode) && projectCodes.contains(content.projectCode) 
 									&&  tags.contains(content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value))))
 					.forEach(content -> {
+						Query findContentQuery = Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content);
 						content.properties = InstanceHelpers.updatePropertiesWithOldValueComparison(content.properties, updatedProperties, deletedPropertyCodes);		
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content), DBUpdate.set("contents.$", content));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, findContentQuery, DBUpdate.set("contents.$", content));
 					});			
 		});
 		
@@ -504,12 +506,13 @@ public class InstanceHelpers {
 				container.contents.stream()
 					.filter(content -> sample.code.equals(content.sampleCode) && sample.projectCodes.contains(content.projectCode) )
 					.forEach(content -> {
+						Query findContentQuery = Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content);
 						content.ncbiScientificName = sample.ncbiScientificName;
 						content.taxonCode = sample.taxonCode;
 						content.referenceCollab = sample.referenceCollab;
 						
 						content.properties = InstanceHelpers.updateProperties(content.properties, updatedProperties, deletedPropertyCodes);
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Spring.getBeanOfType(ContentHelper.class).getContentQuery(container, content), DBUpdate.set("contents.$", content));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,findContentQuery, DBUpdate.set("contents.$", content));
 					});				
 		});
 		

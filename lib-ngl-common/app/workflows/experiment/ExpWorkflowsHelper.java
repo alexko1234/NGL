@@ -1573,7 +1573,7 @@ public class ExpWorkflowsHelper {
 		if(contentPropertyCodes.size() > 0){
 			
 			Experiment oldExp = (Experiment) validation.getObject(OBJECT_IN_DB);
-			Map<String, Content> oldExpContents = flatMapContentsToMap(oldExp, exp.categoryCode);
+			Map<String, Content> oldExpContents = flatMapContentsToMap(oldExp, exp.categoryCode, contentPropertyCodes);
 			
 			exp.atomicTransfertMethods.forEach(atm -> {
 				if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
@@ -1593,7 +1593,7 @@ public class ExpWorkflowsHelper {
 		
 	}
 	
-	private Map<String, Content> flatMapContentsToMap(Experiment oldExp, String expCategoryCode) {
+	private Map<String, Content> flatMapContentsToMap(Experiment oldExp, String expCategoryCode, Set<String> contentPropertyCodes) {
 		Map<String, Content> m = oldExp.atomicTransfertMethods
 			.stream()
 			.map(atm -> {
@@ -1601,13 +1601,13 @@ public class ExpWorkflowsHelper {
 				if (ExperimentCategory.CODE.qualitycontrol.toString().equals(expCategoryCode)){
 					acuMapping = atm.inputContainerUseds
 						.stream()
-						.map(icu -> icu.contents.stream().map(content -> Pair.of(getKey(icu, content), content)).collect(Collectors.toList()))
+						.map(icu -> icu.contents.stream().map(content -> Pair.of(getKey(icu, content, contentPropertyCodes), content)).collect(Collectors.toList()))
 						.flatMap(List::stream)
 						.collect(Collectors.toMap(pair -> pair.getLeft(), pair -> pair.getRight()));
 				}else if (atm.outputContainerUseds != null){
 					acuMapping = atm.outputContainerUseds
 							.stream()
-							.map(icu -> icu.contents.stream().map(content -> Pair.of(getKey(icu, content), content)).collect(Collectors.toList()))
+							.map(icu -> icu.contents.stream().map(content -> Pair.of(getKey(icu, content, contentPropertyCodes), content)).collect(Collectors.toList()))
 							.flatMap(List::stream)
 							.collect(Collectors.toMap(pair -> pair.getLeft(), pair -> pair.getRight()));					
 				}
@@ -1619,9 +1619,9 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private String getKey(AbstractContainerUsed acu,Content content) {
+	private String getKey(AbstractContainerUsed acu,Content content, Set<String> contentPropertyCodes) {
 		// TODO Auto-generated method stub
-		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME) && !contentPropertyCodes.contains(InstanceConstants.TAG_PROPERTY_NAME)){
 			return acu.code+"_"+content.projectCode+"_"+content.sampleCode+"_"+content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value.toString();
 		}else{
 			return acu.code+"_"+content.projectCode+"_"+content.sampleCode;
@@ -1638,7 +1638,7 @@ public class ExpWorkflowsHelper {
 		Set<String> containerCodes = containerMustBeUpdated.stream().map(c -> c.code).collect(Collectors.toSet());
 		
 		acu.contents.forEach(ocuContent -> {
-			Content oldContent = oldExpContents.get(getKey(acu, ocuContent));
+			Content oldContent = oldExpContents.get(getKey(acu, ocuContent, contentPropertyCodes));
 			Map<String, Pair<PropertyValue, PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			
@@ -1649,8 +1649,8 @@ public class ExpWorkflowsHelper {
 			Set<String> projectCodes = allSamples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 			Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
 			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes, updatedProperties);
-			logger.debug(getKey(acu, ocuContent)+" updatedProperties "+updatedProperties);
-			logger.debug(getKey(acu, ocuContent)+" deletedPropertyCodes "+deletedPropertyCodes);
+			logger.debug(getKey(acu, ocuContent, contentPropertyCodes)+" updatedProperties "+updatedProperties);
+			logger.debug(getKey(acu, ocuContent, contentPropertyCodes)+" deletedPropertyCodes "+deletedPropertyCodes);
 			
 			InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, containerCodes, tags, updatedProperties,
 					deletedPropertyCodes, validation);
