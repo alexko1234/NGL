@@ -22,6 +22,7 @@ import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 import controllers.CommonController;
+import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -161,7 +162,16 @@ public class Experiments extends CommonController {
 			Html html = (Html)m.invoke(null);
 			return html;
 		}catch(Exception e){
-			return null;
+			try{
+				//TODO for template with @Inject need improvement
+				Class<?> clazz = Class.forName("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());//package in java are always in lower case
+				Object o = IGGlobals.injector().instanceOf(clazz);
+				Method m = clazz.getDeclaredMethod("render");
+				Html html = (Html)m.invoke(o);
+				return html;
+			}catch(Exception e1){
+				return null;
+			}
 		}
 	}
 	

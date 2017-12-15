@@ -278,7 +278,7 @@
 					</div>	
 				</td>
 				@* @if("CNG" == play.Play.application().configuration().getString("institute")){ *@
-				if(CNG){
+				@if(CNG){
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">	
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.code" />						 

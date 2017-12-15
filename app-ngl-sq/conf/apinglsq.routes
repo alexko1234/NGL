@@ -69,7 +69,7 @@ PUT		/api/experiments/:code/comments/:commentCode					@controllers.experiments.a
 DELETE	/api/experiments/:code/comments/:commentCode					@controllers.experiments.api.ExperimentComments.delete(code:java.lang.String, commentCode:java.lang.String)
 
 
-POST	/api/experiments/:code/file/generation							@controllers.instruments.io.IO.generateFile(code:java.lang.String)
+GET	/api/experiments/:code/file/generation							@controllers.instruments.io.IO.generateFile(code:java.lang.String)
 #FDS 25/10/2017 ajout extraInstrument:java
 POST	/api/experiments/:code/file/import								@controllers.instruments.io.IO.importFile(code:java.lang.String, extraInstrument:java.lang.String ?= "")
 
