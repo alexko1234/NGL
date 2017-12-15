@@ -119,6 +119,9 @@
 			<th ng-if="isAllOpen">
 				@Messages("containers.table.code")
 			</th>
+			<td ng-if="isAllOpen">
+                @Messages("containers.table.nomPool")
+            </td>
 			<th ng-if="isAllOpen">
 				@Messages("containers.table.percentage")
 			</th>
@@ -191,7 +194,8 @@
 					<td colspan="{{5}}" >
 						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 							ng-model="inputContainer" draggable drag="dragInProgress">
-							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
+							{{inputContainer.projectCodes}} / {{atm.inputContainerUseds[0].contents[0].properties.Nom_pool_sequencage.value || ""}} / {{inputContainer.code}} ;// PhiX:{{atm.inputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;
+                            <br/>
 						</span>
 					</td>
 				</tr>
@@ -216,6 +220,10 @@
 						</td>			
 						<td>							
 							{{inputContainer.code}}
+						</td>        
+                        <td>                            
+                            <div list-resize='inputContainer.contents | getArray:"properties.Nom_pool_sequencage.value"| unique' list-resize-min-size='1' below vertical>    
+						
 						</td>
 						<td>
 							<div ng-switch on="mainService.isEditMode()">						

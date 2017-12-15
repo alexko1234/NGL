@@ -7,6 +7,8 @@ import play.GlobalSettings;
 import play.Logger;
 import play.api.Play;
 import rules.services.RulesServices6;
+import services.instance.ImportDataCNG;
+import services.instance.ImportDataCNS;
 //import services.instance.ImportDataCNG;
 //import services.instance.ImportDataCNS;
 import services.instance.ImportDataGET;
@@ -70,10 +72,10 @@ public class Global extends GlobalSettings {
 
 					if ("GET".equals(institute)){
 						new ImportDataGET();
-					}else if("CNG".equals(institute)){
-						new ImportDataCNG();
-					}else if ("CNS".equals(institute)){
-						 new ImportDataCNS();
+//					}else if("CNG".equals(institute)){
+//						new ImportDataCNG();
+//					}else if ("CNS".equals(institute)){
+//						 new ImportDataCNS();
 					} else {
 						throw new RuntimeException("La valeur de l'attribut import.institute dans application.conf n'a pas d'implementation");
 					}
