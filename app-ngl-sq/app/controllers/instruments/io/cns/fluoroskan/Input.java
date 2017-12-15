@@ -16,6 +16,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import validation.ContextValidation;
 import controllers.instruments.io.utils.AbstractInput;
 
+import play.Logger;
+
 public class Input extends AbstractInput {
 
 	@Override

@@ -169,10 +169,11 @@ public class OutputHelper {
 	}
 	
 	public static String getContentProperty(Content content, String propertyName){
-		Logger.debug("OutputHelper.getContentProperty propertyName = "+ propertyName);
+//		Logger.debug("OutputHelper.getContentProperty propertyName = "+ propertyName);
 		if(content.properties.get(propertyName) != null){
 			return (String) content.properties.get(propertyName).value;
 		}
+        Logger.debug("OutputHelper.getContentProperty property " + propertyName + " is null for " + content.sampleCode);
 		return "";
 	}
 	

@@ -96,7 +96,9 @@ public class LimsGETDAO{
 
 		String getProjectForBarcode = "SELECT pr.ident as project FROM project pr "
 				+ "INNER JOIN trace_object_project top ON top.projectid=pr.projectid  "
-				+ "WHERE top.object_id = ?";
+				+ "WHERE top.object_id = ?"
+                + "order by top.trace_object_project_id DESC";
+
 
 		List<String> projects = new ArrayList<String>();
 		List<Map<String,Object>>rows = this.jdbcTemplate.queryForList(getProjectForBarcode,barcodeId);
@@ -105,6 +107,23 @@ public class LimsGETDAO{
 		}
 		return projects;
 	}
+	
+    public List<String> findProjectsForBarcode(String barcode){
+
+        String getProjectForBarcode = "SELECT pr.ident as project FROM project pr "
+                + "INNER JOIN trace_object_project top ON top.projectid=pr.projectid "
+                + "WHERE top.object_id = (SELECT object_id FROM trace_object "
+                + "                            WHERE object_barcode = ?) "
+                + "ORDER BY top.trace_object_project_id DESC";
+
+        List<String> projects = new ArrayList<String>();
+        List<Map<String,Object>>rows = this.jdbcTemplate.queryForList(getProjectForBarcode,barcode);
+        for (Map<String, Object> row : rows) {
+            projects.add(row.get("project").toString());
+        }
+        return projects;
+    }
+
 	public List<User> findUsersToSynchronize(String SQLUsers){
 		List<User> resultsUsers = this.jdbcTemplate.query(SQLUsers,new Object[]{},new RowMapper<User>() {
 

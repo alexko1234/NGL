@@ -13,6 +13,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import models.LimsGETDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -25,6 +26,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
+import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingGET;
 import models.utils.InstanceConstants;
@@ -34,7 +36,9 @@ import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
+import controllers.MongoCommonController;
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataGET;
@@ -52,13 +56,10 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 
 	public static Boolean saveSampleFromContainer(ContextValidation contextError,Container container,String sqlContent, Container containerDB) throws SQLException, DAOException{
 	
-		Sample sample =null;
-		Sample newSample =null;
+		Sample sample =null; //instance before creation
+		Sample newSample =null; //sample in Mongo
+		List<String> refLibraryProjectCodes = null; // list of projects from reference library in e-SiToul
 		String rootKeyName=null;
-//		List<Container> containersList=new ArrayList<Container>(containers);
-//		List<Container> noSave = new ArrayList<Container>();
-		
-//		for(Container container :containersList){
 			
 			//récuperer des contents
 			List<Content> contents;
@@ -81,21 +82,17 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 				if(smplUsd.properties.isEmpty()){
 					Logger.error("Container " + container.code + " n'a pas été importé");
 					return false;
-//					noSave.add(container);
 				//si l'index non renceigné - assigner valeur "NoIndex"
 				}else if(smplUsd.properties.get("Nom_echantillon_collaborateur") == null){
 					Logger.error("Container " + container.code + " n'a pas été importé, car " + smplUsd.sampleCode +" n'a pas de Nom_echantillon_collaborateur");
 					return false;
-//					noSave.add(container);
 				//si l'index non renceigné - assigner valeur "NoIndex"
 				}else if(smplUsd.properties.get("tag") == null){
 					smplUsd.properties.put("tag", new PropertySingleValue("NoIndex"));
 					Logger.debug("ContainerImportGET saveSampleFromContainer Content " + smplUsd.sampleCode +" n'a pas d'index");
 				}
 			}
-			
-//			if (noSave.contains(container) == false){
-				
+							
 				container.sampleCodes.clear();
 				for(Content sampleUsed : contents){
 					
@@ -119,12 +116,25 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 						contextError.removeKeyFromRootKeyName(rootKeyName);
 						
 					}else {	
-						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ sampleUsed.sampleCode + " existe dans mongoDB");
 						/* Find sample in Mongodb */
+						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ sampleUsed.sampleCode + " existe dans mongoDB");
 						newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);
 						
 						Logger.debug("ContainerImportGET - saveSampleFromContainer - "+ newSample.referenceCollab);
 						sampleUsed.referenceCollab = newSample.referenceCollab;
+						
+						/*
+						 * check if container to update
+						 * update sample projects list by corresponding library projects list from Barcode
+						 */
+						
+						refLibraryProjectCodes = limsServices.findProjectsForBarcode(sampleUsed.sampleCode);
+						if (!refLibraryProjectCodes.isEmpty()){
+						Logger.debug("ContainerImportGET - saveSampleFromContainer project to update for sample " + newSample.code);
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
+									DBQuery.is("code", newSample.code),
+									DBUpdate.set("projectCodes", refLibraryProjectCodes));
+						}
 						
 					}	
 					sampleUsed.percentage = 100.0 / contents.size();
@@ -261,11 +271,6 @@ public abstract class ContainerImportGET extends AbstractImportDataGET {
 		/* supprimer les containers à ajourner et leurs supports */
 		Logger.debug("ContainerImportGET - createContainers, avant ContainerImportGET.deleteContainerAndContainerSupport");
 		ContainerImportGET.deleteContainerAndContainerSupport(containers);
-		
-//		Logger.debug("ContainerImportGET - createContainers, avant ContainerImportGET.saveSampleFromContainer");
-//			ContainerImportGET.saveSampleFromContainer(contextError,containers,sqlContent);
-//		Logger.debug("ContainerImportGET - createContainers, après ContainerImportGET.saveSampleFromContainer");
-		
 		
 		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
 		for(Container container : containers){

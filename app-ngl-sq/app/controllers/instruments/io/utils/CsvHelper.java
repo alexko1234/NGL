@@ -98,7 +98,7 @@ public class CsvHelper {
 	 * @return a same String, after replace, all special character except "-", by "-"
 	 */
 	public static String checkName(String name) {
-		return name.replaceAll("[^\\d\\w- && [^\\t]]+", "-").replaceAll("_", "-").replaceAll("[-]{2}", "-o");	
+        return name.replaceAll("[^\\w-]+", "-").replaceAll("_", "-").replaceAll("[-]{2}", "-");
 	}
 	
 	/**
@@ -226,7 +226,7 @@ public class CsvHelper {
 
 	public static String getContentProcessProperties(Content content, String propertyName, Experiment experiment) {
 		if(content.processProperties != null){
-			Logger.debug("content.ProcessProperties - OK");
+			Logger.debug("content.ProcessProperties - OK pour " + propertyName);
 			if(content.processProperties != null && content.processProperties.containsKey(propertyName)){
 				return (String) content.processProperties.get(propertyName).getValue();
 			}
@@ -239,6 +239,7 @@ public class CsvHelper {
 				}
 			}
 		}
+		Logger.error("content.ProcessProperties - " + propertyName + " null pour " + content.sampleCode);
 		return null;
 	}
 }

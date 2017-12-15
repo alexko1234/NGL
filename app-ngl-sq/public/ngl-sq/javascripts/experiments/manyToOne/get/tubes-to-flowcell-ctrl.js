@@ -288,6 +288,7 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tubes-to-flowcell");
 		$scope.atmService.viewToExperiment($scope.experiment);
+		$scope.updateConcentration($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 		addReagents();
 	});
@@ -432,7 +433,6 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
 
-		$scope.updateConcentration($scope.experiment);
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
