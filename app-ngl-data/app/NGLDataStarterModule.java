@@ -26,7 +26,6 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),
 				bind(rules.services.Rules6Component.class             ).toSelf().eagerly(),
-				bind(GlobalStarterComponent.class                     ).toSelf().eagerly(),
 				//bind(NGLStarter.class                                 ).toSelf().eagerly() // asEagerSingleton ?
 				// Force JsMessages init
 				//bind(controllers.main.tpl.Main.class                  ).toSelf().eagerly(),
@@ -35,7 +34,8 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 				// possible anymore. We should be able to use spring as the play injector but the
 				// eager initialization of the component-scan part of the configuration fails
 				// miserably. We should add @Lazy to @Component.*/
-				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
+				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly(),
+				bind(GlobalStarterComponent.class                     ).toSelf().eagerly()				
 			);
 	}
 
