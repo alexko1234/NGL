@@ -397,7 +397,7 @@ public class InstanceHelpers {
 	 */
 	public static Map<String, PropertyValue> updatePropertiesWithOldValueComparison(Map<String, PropertyValue> properties, Map<String, Pair<PropertyValue,PropertyValue>> newProperties, Set<String> deletedPropertyCodes){
 		//1 replace if old value equals old value
-		properties.replaceAll((k,v) -> (newProperties.containsKey(k) && newProperties.get(k).getLeft().equals(v))?newProperties.get(k).getRight():v);							
+		properties.replaceAll((k,v) -> (newProperties.containsKey(k) && ((newProperties.get(k).getLeft() != null && newProperties.get(k).getLeft().equals(v)) || newProperties.get(k).getLeft() == null))?newProperties.get(k).getRight():v);							
 		//2 add new properties
 		newProperties.forEach((k,v)-> properties.putIfAbsent(k, newProperties.get(k).getRight()));
 		//3 delete remove properties
