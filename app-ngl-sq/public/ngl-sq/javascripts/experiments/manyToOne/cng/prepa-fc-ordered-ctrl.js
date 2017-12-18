@@ -214,8 +214,13 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.$emit('askRefreshReagents');
 			
 		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.import.error'));	
+		.error(function(data, status, headers, config) {	
+			// correction 18/12/2017 
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();	
 			
 			// reinit select File..
 			$scope.file = undefined;
