@@ -6,6 +6,7 @@ import scala.concurrent.duration.Duration;
 import services.instance.container.ContainerImportCNG;
 import services.instance.parameter.IndexImportCNG;
 import services.instance.project.ProjectImportCNG;
+import services.instance.sample.UpdateReportingData;
 import services.instance.sample.UpdateSampleNCBITaxonCNG;
 import services.instance.sample.UpdateSamplePropertiesCNS;
 
@@ -37,5 +38,8 @@ public class ImportDataCNG {
 		 
 		//11/04/2017 ajouter la propagation des modifications apportées aux samples...
 		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS));
+		
+		new UpdateReportingData(ImportDataUtil.getDurationInMillinsBefore(20, 0),Duration.create(1,TimeUnit.DAYS));
+		
 	}
 }
