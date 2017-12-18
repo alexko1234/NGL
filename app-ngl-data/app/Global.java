@@ -61,7 +61,7 @@ public class Global { // extends GlobalSettings {
 	public static void importData(){
 
 		// if (play.Play.application().configuration().getBoolean("import.data")) {
-		if (IGGlobals.configuration().getBoolean("import.data")) {
+		if (IGGlobals.configuration().getBoolean("import.data",false)) {
 			Logger.info("NGL import data has started");
 			try {
 
@@ -87,7 +87,7 @@ public class Global { // extends GlobalSettings {
 	public static void generateReporting(){
 
 		// if (play.Play.application().configuration().getBoolean("reporting.active")) {
-		if (IGGlobals.configuration().getBoolean("reporting.active")) {
+		if (IGGlobals.configuration().getBoolean("reporting.active",false)) {
 
 			Logger.info("NGL reporting has started");
 			try {
