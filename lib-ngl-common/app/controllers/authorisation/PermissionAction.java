@@ -29,9 +29,11 @@ public class PermissionAction extends Action<Permission> {
 	public CompletionStage<Result> call(final play.mvc.Http.Context context) {
 		//TODO GA need to upgrade to play 2.4 to have the benefit of :
 		/*
-		 Note: If you want the action composition annotation(s) put on a Controller class to be executed before the one(s) put on action methods 
+		 Note: If you want the action composition annotation(s) put on a Controller class to be 
+		 executed before the one(s) put on action methods 
 		 set play.http.actionComposition.controllerAnnotationsFirst = true in application.conf. 
-		 However, be aware that if you use a third party module in your project it may rely on a certain execution order of its annotations.
+		 However, be aware that if you use a third party module in your project it may rely on 
+		 a certain execution order of its annotations.
 		 */
 		String username = context.session().get(COOKIE_SESSION);
 		
@@ -60,6 +62,7 @@ public class PermissionAction extends Action<Permission> {
 					});
 			}			
 		}
+		// TODO: return unauthorized instead of null
 		return null;
 	}
 	

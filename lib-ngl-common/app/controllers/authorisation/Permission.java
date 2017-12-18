@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 import play.mvc.With;
 
-/**
+/*
  * Exemple:
  *	 {@literal @}Permission(value={"54ki2"},teams={"THETEAM"})
  * 	
@@ -28,3 +28,4 @@ public @interface Permission {
 //	String[] teams() default "";//the teams
 //	boolean  allPermissions() default false;//need to have all the permission(true) or just one(false) 
 }
+

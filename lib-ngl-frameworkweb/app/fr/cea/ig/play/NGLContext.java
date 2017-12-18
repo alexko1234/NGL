@@ -1,6 +1,6 @@
 package fr.cea.ig.play;
 
-import java.awt.font.ImageGraphicAttribute;
+// import java.awt.font.ImageGraphicAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,14 +17,14 @@ import play.i18n.MessagesApi;
 import play.libs.Json;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
-import play.Logger;
+// import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import play.data.validation.ValidationError;
 import play.data.Form;
 
 import fr.cea.ig.play.NGLConfig;
-import io.jsonwebtoken.lang.Collections;
+// import io.jsonwebtoken.lang.Collections;
 
 
 // TODO: clean, comment
@@ -104,7 +104,9 @@ public class NGLContext {
 	}
 	
 	public String currentUser() {
+		fr.cea.ig.authentication.Helper.unsetUsername(play.mvc.Http.Context.current().session());
 		return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
+		// return "bob l'eponge";
 	}
 
 	public Lang currentLang() {

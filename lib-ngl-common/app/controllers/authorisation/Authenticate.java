@@ -9,13 +9,14 @@ import java.lang.annotation.Target;
 
 import play.mvc.With;
 
-/**
+/*
  * Exemple:
  *	 {@literal @}Permission(value={"54ki2"},teams={"THETEAM"})
  * 	
  * 
  * 	@author ydeshayes
  */
+// TODO: explain why it's needed
 
 @With({fr.cea.ig.authentication.Authenticate.class, PermissionAction.class})
 @Retention(RetentionPolicy.RUNTIME)

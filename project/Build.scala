@@ -26,6 +26,11 @@ object ApplicationBuild extends Build {
 	// import PlayKeys._
 	import play.sbt.PlayImport._
 
+	// Command line definition that allows the compilation 
+	// of a linked authentication library instead of the published one.
+	// It is enabled using sbt command line option -Dembedded.auth=true .
+	val embeddedAuth = System.getProperty("embedded.auth") == "true"
+	
 	// Disable paralell test execution (hoped to fixed test failure but didn't work)
 	// parallelExecution in Global := false
 	
@@ -54,11 +59,13 @@ object ApplicationBuild extends Build {
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
 
 	// IG libraries
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "1.9.9-SNAPSHOT"
-	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.0.0-SNAPSHOT"
-	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.0-SNAPSHOT"
+  // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
+  // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.4-SNAPSHOT"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.0-SNAPSHOT"
+	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
+	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions
-	val postgresql  = "org.postgresql"       % "postgresql"     % "9.4-1206-jdbc41"  
+	val postgresql  = "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41"  
   val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
   val jsMessages  = "org.julienrf"        %% "play-jsmessages"    % "3.0.0" 
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
@@ -182,11 +189,11 @@ object ApplicationBuild extends Build {
 	  val nglreagentsDependencies = Seq(
 		  javaCore
 		)
-					   
+			
 		val nglframeworkwebDependencies = Seq(
 		  javaCore,
 		  javaWs,
-		  ceaAuth,
+		  //ceaAuth,
 		  ceaMongo,
 		  "javax.mail" % "mail"            % "1.4.2",
 		  "org.drools" % "drools-core"     % "6.1.0.Final",
@@ -194,7 +201,7 @@ object ApplicationBuild extends Build {
 		  "org.drools" % "knowledge-api"   % "6.1.0.Final",
 		  "org.kie"    % "kie-api"         % "6.1.0.Final",
 		  "org.kie"    % "kie-internal"    % "6.1.0.Final"
-		)
+		) ++ (if (embeddedAuth) Seq() else Seq(ceaAuth))
 		
 		val nglbiDependencies = Seq(
 			javaCore, 
@@ -227,8 +234,7 @@ object ApplicationBuild extends Build {
 	  val nglsubDependencies = Seq(
 	    javaCore, 
 	    javaJdbc,
-	    "org.apache.commons" % "commons-csv" % "1.5",
-	    "xerces"             % "xercesImpl"  % "2.8.0"
+	    "xerces" % "xercesImpl" % "2.8.0"
   	)
 
 	  val nglprojectsDependencies = Seq(
@@ -243,13 +249,48 @@ object ApplicationBuild extends Build {
 	    ws
     )
     
+    val springVersion    = "4.1.6.RELEASE"
+    val springSecVersion = "4.0.0.RELEASE"
+
+    val authenticationDependencies = Seq(
+      javaCore,
+		  ws,
+		  javaJdbc,
+		  ceaSpring,
+  		"org.springframework.security"  % "spring-security-web"    % springSecVersion,
+		  "org.springframework.security"  % "spring-security-ldap"   % springSecVersion,
+      "org.springframework.security"  % "spring-security-config" % springSecVersion,
+  		"org.springframework"           % "spring-aop"             % springVersion
+    )
+    
   }
- 
+
+  // Allow the use of embbeded auth sources instead of the lib.
+  // We use a virtual project that has only one dependency when using the
+  // external dependency.
+  val authentication = 
+    if (embeddedAuth)
+      Project("auth",file("authentication"),settings = buildSettings)
+        .enablePlugins(play.sbt.PlayJava)
+        .settings(
+      libraryDependencies ++= authenticationDependencies,
+      version              := "2.0.0-SNAPSHOT",
+      resolvers            := nexus
+    )
+    else
+      Project("auth",file("dependency-authentication"),settings = buildSettings)
+        .enablePlugins(play.sbt.PlayJava)
+        .settings(
+      libraryDependencies  += ceaAuth,
+      version              := "0.1-SNAPSHOT",
+      resolvers            := nexus
+    )
+  
   val nglPlayMigration =  Project("ngl-play-migration",file("lib-ngl-play-migration"),settings = buildSettings)
       .enablePlugins(play.sbt.PlayJava)
       .settings(
     libraryDependencies ++= nglPlayMigrationDependencies,   
-    version              := "0.1-SNAPHSHOT",
+    version              := "0.1-SNAPSHOT",
     resolvers            := nexus
 	)
 	
@@ -257,7 +298,7 @@ object ApplicationBuild extends Build {
       .enablePlugins(play.sbt.PlayJava)
       .settings(
     libraryDependencies       ++= nglTestingDependencies, 
-    version                    := "0.1-SNAPHSHOT",
+    version                    := "0.1-SNAPSHOT",
     resolvers                  := nexus
   )	    
 
@@ -295,8 +336,8 @@ object ApplicationBuild extends Build {
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     }
-  ).dependsOn(ngldatatable)
-
+  ).dependsOn(ngldatatable,authentication)
+  
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     version                    := appVersion,
     libraryDependencies       ++= nglcommonDependencies,
@@ -325,7 +366,7 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    version                    := dataVersion,
+    version                    := appVersion,
     libraryDependencies       ++= ngldataDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
@@ -416,10 +457,38 @@ object ApplicationBuild extends Build {
    	nglprojects, // 2.6
     // play migration and testing
     nglPlayMigration,
-   	nglTesting
+   	nglTesting,
+   	authentication
    	//,bcRoute,bcRouteCommon,bcRouteAuth
   )
 
   
+  // TODO: remove dead code
+       /*
+   val bcRoute = Project("bc-route",file("buildcheck/route"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
+		     version := "0.1-SNAPHSHOT"
+		     )
+	 // Use ngl-seq dependencies 
+   val bcRouteCommon = Project("bc-routeCommon",file("buildcheck/routeCommon"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
+		     version := "0.1-SNAPHSHOT",
+		     //libraryDependencies ++= nglcommonDependencies,
+		     libraryDependencies ++= nglsqDependencies,
+		     // libraryDependencies ++= nglsubDependencies,
+		     // libraryDependencies += "fr.cea.ig.modules" %% "authentication" % "1.4-SNAPSHOT",
+       resolvers := nexus/*,
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish)*/
+		   ).dependsOn(nglcommon % "test->test;compile->compile")
+		   
+  val bcRouteAuth = Project("bc-routeAuth",file("buildcheck/routeAuth"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
+    version             := "0.1-SNAPHSHOT",
+    libraryDependencies += ceaAuth, // "fr.cea.ig.modules" %% "authentication" % "2.4-1.5-SNAPSHOT",
+    // libraryDependencies += "fr.cea.ig"         %% "mongodbplugin"  % "1.6.0-SNAPSHOT",
+    libraryDependencies += ceaSpring, // "fr.cea.ig" %% "play-spring-module" % "2.4-1.4-SNAPSHOT",
+    // libraryDependencies ++= nglsqDependencies,
+    libraryDependencies ++= nglcommonDependencies,
+    resolvers           := nexus
+	)
+		   */
 
 }

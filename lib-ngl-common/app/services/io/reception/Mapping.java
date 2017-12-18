@@ -53,7 +53,7 @@ public abstract class Mapping<T extends DBObject> {
 		this.key = key;
 	}
 	
-	/**
+	/*
 	 * convert a file line in DBObject
 	 * @param rowMap
 	 * @return
