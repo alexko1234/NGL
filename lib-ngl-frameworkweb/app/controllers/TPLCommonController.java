@@ -1,6 +1,8 @@
 package controllers;
 
 
+import java.util.Map;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import play.data.Form;
@@ -24,6 +26,20 @@ public abstract class TPLCommonController extends Controller {
 		Form<P> filledForm = form.fill(input); 
 		return filledForm;
 	}
+	
+	
+	protected void fillDataWith(Map<String, Object> data, Map<String, String[]> urlFormEncoded) {
+	        urlFormEncoded.forEach((key, values) -> {
+	            if (key.endsWith("[]")) {
+	                String k = key.substring(0, key.length() - 2);
+	                for (int i = 0; i < values.length; i++) {
+	                    data.put(k + "[" + i + "]", values[i]);
+	                }
+	            } else if (values.length > 0) {
+	                data.put(key, values[0]);
+	            }
+	        });
+	    }
 	
 	protected String getCurrentUser() {
 		// return Context.current().request().username();

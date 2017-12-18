@@ -128,9 +128,8 @@ public class IO extends TPLCommonController {
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
 		PropertyFileValue pfv = filledForm.get();
 		
-		DynamicForm dynamicfilledForm = form().bindFromRequest(); 
-        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-        contextValidation.getContextObjects().putAll(dynamicfilledForm.data());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+        fillDataWith(contextValidation.getContextObjects(), request().queryString());
 		
 		if(null != pfv){
 			AbstractInput input = getInputInstance(experiment, contextValidation, extraInstrument ); // FDS 25/10 ajout param optionnel pour instrument additionnel
