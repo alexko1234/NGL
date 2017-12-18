@@ -25,6 +25,8 @@ public class ReceptionConfiguration extends DBObject implements IValidation{
 	public FileType fileType;
 	public Action action;
 	public TraceInformation traceInformation;
+	public Short displayOrder;
+	 
 	@JsonIgnore
 	public Map<String, Map<String, ? extends AbstractFieldConfiguration>> configs = new HashMap<String, Map<String, ? extends AbstractFieldConfiguration>>();
 
