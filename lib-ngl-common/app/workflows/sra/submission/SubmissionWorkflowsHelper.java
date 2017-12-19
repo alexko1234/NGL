@@ -97,7 +97,7 @@ public class SubmissionWorkflowsHelper {
 		
 		if (submission.studyCode != null) {
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
-				DBQuery.is("accession", submission.studyCode),
+				DBQuery.is("code", submission.studyCode),
 				DBUpdate.set("firstSubmissionDate", date).set("releaseDate", release_date));
 		}
 		for(String sampleCode : submission.sampleCodes){
