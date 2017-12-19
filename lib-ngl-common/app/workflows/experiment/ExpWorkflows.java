@@ -1,6 +1,7 @@
 package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.OBJECT_IN_DB;
 
 import java.util.List;
 import java.util.Set;
@@ -50,6 +51,10 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		}else if("F".equals(exp.state.code)){
 			expWorkflowsHelper.updateATMContainerContents(exp);		
 			expWorkflowsHelper.updateWithNewSampleCodesIfNeeded(exp);
+			if (PermissionHelper.checkPermission(validation.getUser(), "admin") && validation.getObject("updateContentProperties") != null){
+				Experiment dbExp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+				validation.putObject(OBJECT_IN_DB, dbExp);
+			}
 		}
 		expWorkflowsHelper.updateStatus(exp, validation);
 		expWorkflowsHelper.updateComments(exp, validation);		

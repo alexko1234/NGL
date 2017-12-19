@@ -33,7 +33,7 @@ public class MigrationUpdateSampleProperties  extends CommonController{
 		Logger.info("Nb samples to update :"+samples.size());
 		samples.parallelStream().forEach(sample -> {
 			//Logger.debug("Sample "+sample.code);
-			UpdateSamplePropertiesCNS.updateOneSample(sample,contextError);
+			//UpdateSamplePropertiesCNS.updateOneSample(sample,contextError);
 		});
 		
 		

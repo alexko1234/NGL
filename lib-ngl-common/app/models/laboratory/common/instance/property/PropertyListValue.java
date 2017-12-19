@@ -46,6 +46,29 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 		}
 		
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PropertyListValue other = (PropertyListValue) obj;
+		if (unit == null) {
+			if (other.unit != null)
+				return false;
+		} else if (!unit.equals(other.unit))
+			return false;
+		return true;
+	}
 	
 
 }

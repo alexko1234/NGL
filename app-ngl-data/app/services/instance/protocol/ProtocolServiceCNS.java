@@ -189,6 +189,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("Tag_ITS2_ITSD","Tag ITS2_ITSD","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_CP23S","Tag_CP23S","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
 		lp.add(newProtocol("Tag_COI","Tag COI","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr"),false));
+		lp.add(newProtocol("Access_Array_48.48","Access Array 48.48","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr","dna-illumina-indexed-library")));
+		lp.add(newProtocol("Protocole_EPGV","Protocole EPGV","path2","1","production",InstanceFactory.setExperimentTypeCodes("solution-stock","chip-migration","reception-fluo-quantification","pool")));
+		
 		
 		lp.add(newProtocol("Tag16S_Full_Length_16S_V4V5_Fuhrman","Tag 16S_Full Length + 16S_V4V5_Fuhrman","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 		lp.add(newProtocol("Tag_16S_V1V2V3","Tag 16S_V1V2V3","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));

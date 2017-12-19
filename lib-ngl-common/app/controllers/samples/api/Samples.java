@@ -60,7 +60,7 @@ public class Samples extends DocumentController<Sample>{
 	final static Form<SampleBatchElement> batchElementForm = form(SampleBatchElement.class);
 
 	final static List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
-	final static List<String> authorizedUpdateFields = Arrays.asList("comments","volume","quantity","size","concentration");
+	final static List<String> authorizedUpdateFields = Arrays.asList("comments");
 	
 	
 	public Samples() {
@@ -225,89 +225,89 @@ public class Samples extends DocumentController<Sample>{
 	}
 
 
-private static Sample findSample(String sampleCode){
-	return  MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sampleCode));
-}
-
-
-@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-@Permission(value={"writing"})
-public  Result update(String code) throws DAOException{
-
-	
-	Sample sampleInDB = findSample(code);
-	Logger.debug("Sample with code "+code);
-	if(sampleInDB == null){
-		return badRequest("Sample with code "+code+" not exist");
+	private static Sample findSample(String sampleCode){
+		return  MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sampleCode));
 	}
-		
-	Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+
+
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@Permission(value={"writing"})
+	public  Result update(String code) throws DAOException{
 	
-	QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-	Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
-	Sample sampleInForm = filledForm.get();
-
-	if(queryFieldsForm.fields == null){
-		if (code.equals(sampleInForm.code)) {
-			if(null != sampleInForm.traceInformation){
-				sampleInForm.traceInformation = getUpdateTraceInformation(sampleInForm.traceInformation);				
-			}else{
-				Logger.error("traceInformation is null !!");
-			}
-						
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-			ctxVal.setUpdateMode();
-			sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
-
-			sampleInForm.validate(ctxVal);
-			if (!ctxVal.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sampleInForm);
-				return ok(Json.toJson(sampleInForm));
-			}else {
-				return badRequest(filledForm.errorsAsJson());
-			}
+		
+		Sample sampleInDB = findSample(code);
+		Logger.debug("Sample with code "+code);
+		if(sampleInDB == null){
+			return badRequest("Sample with code "+code+" not exist");
+		}
 			
-		}else{
-			return badRequest("sample code are not the same");
-		}	
-	}else{
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-		ctxVal.setUpdateMode();
-		validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
-		validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-		if(!filledForm.hasErrors()){
-			sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
-			
-			TraceInformation ti = sampleInDB.traceInformation;
-			ti.setTraceInformation(getCurrentUser());
-			
-			if(queryFieldsForm.fields.contains("valuation")){
-				sampleInForm.valuation.user = getCurrentUser();
-				sampleInForm.valuation.date = new Date();
-			}
-			
-			if(!ctxVal.hasErrors()){
-				updateObject(DBQuery.and(DBQuery.is("code", code)), 
-						getBuilder(sampleInForm, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(sampleInDB.traceInformation)));
-				if(queryFieldsForm.fields.contains("code") && null != sampleInForm.code){
-					code = sampleInForm.code;
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		Sample sampleInForm = filledForm.get();
+	
+		if(queryFieldsForm.fields == null){
+			if (code.equals(sampleInForm.code)) {
+				if(null != sampleInForm.traceInformation){
+					sampleInForm.traceInformation = getUpdateTraceInformation(sampleInForm.traceInformation);				
+				}else{
+					Logger.error("traceInformation is null !!");
 				}
-				return ok(Json.toJson(findSample(code)));
+							
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ctxVal.setUpdateMode();
+				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
+	
+				sampleInForm.validate(ctxVal);
+				if (!ctxVal.hasErrors()) {
+					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sampleInForm);
+					return ok(Json.toJson(sampleInForm));
+				}else {
+					return badRequest(filledForm.errorsAsJson());
+				}
 				
 			}else{
-				return badRequest(filledForm.errorsAsJson());
-			}				
+				return badRequest("sample code are not the same");
+			}	
 		}else{
-			return badRequest(filledForm.errorsAsJson());
-		}
-	}	
-}
-
-private static DatatableForm updateForm(SamplesSearchForm form) {
-	if(form.includes.contains("default")){
-		form.includes.remove("default");
-		form.includes.addAll(defaultKeys);
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal.setUpdateMode();
+			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
+			if(!filledForm.hasErrors()){
+				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
+				
+				TraceInformation ti = sampleInDB.traceInformation;
+				ti.setTraceInformation(getCurrentUser());
+				
+				if(queryFieldsForm.fields.contains("valuation")){
+					sampleInForm.valuation.user = getCurrentUser();
+					sampleInForm.valuation.date = new Date();
+				}
+				
+				if(!ctxVal.hasErrors()){
+					updateObject(DBQuery.and(DBQuery.is("code", code)), 
+							getBuilder(sampleInForm, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(sampleInDB.traceInformation)));
+					if(queryFieldsForm.fields.contains("code") && null != sampleInForm.code){
+						code = sampleInForm.code;
+					}
+					return ok(Json.toJson(findSample(code)));
+					
+				}else{
+					return badRequest(filledForm.errorsAsJson());
+				}				
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}
+		}	
 	}
-	return form;
-}
+	
+	private static DatatableForm updateForm(SamplesSearchForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			form.includes.addAll(defaultKeys);
+		}
+		return form;
+	}
 }

@@ -318,7 +318,7 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 		if(compute.isReady()){
 			
 			var result;
-			if( compute.requiredVol> compute.inputVol){
+			if( compute.requiredVol> compute.outputVol){
 				result=compute.outputVol;
 			} else {
 				result=compute.requiredVol;

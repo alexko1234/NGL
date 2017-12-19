@@ -331,9 +331,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				instruments.add(createInstrument("thermo"+i, "Thermo_"+i, null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 				
 			}
+			instruments.add(createInstrument("thermo0"+i, "Thermo_0"+i, null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 				
 			
 		}
-		instruments.add(createInstrument("thermoX", "Thermo_X", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		instruments.add(createInstrument("FC1-Cycler", "FC1 Cycler", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 		return instruments;
 	}
 

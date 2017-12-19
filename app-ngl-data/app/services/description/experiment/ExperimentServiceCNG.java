@@ -302,18 +302,20 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			//FDS modif 23/01/2017 modif janus-and-cBot=>  janus-and-cBotV2, il n'y a plus de Cbot non V2...
+			//FDS 07/12/2017  NGL-1730 ajout "cBot-onboard" pour NovaSeq6000
 			l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 					getPropertyDefinitionsPrepaflowcellOrderedCNG(),
-					getInstrumentUsedTypes("cBotV2","janus-and-cBotV2"),
+					getInstrumentUsedTypes("cBotV2","janus-and-cBotV2","cBot-onboard"),
 					"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	
-			//FDS modif 28/10/2015 : ajout "HISEQ4000","HISEQX"
+			//FDS 28/10/2015 : ajout "HISEQ4000","HISEQX"
+			//FDS 07/12/2017 NGL-1730: ajout NOVASEQ6000
 			l.add(newExperimentType("Dépôt sur séquenceur","illumina-depot",null, 1400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyDefinitionsIlluminaDepot(),
-					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX","NOVASEQ6000"), 
 					"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 			
@@ -339,8 +341,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsFragmentation(),
 					getInstrumentUsedTypes("covaris-e220-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx",
 							               "covaris-e220","covaris-le220",                                 // ajoutés 29/08/2017
-							               "covaris-e220-and-bravows","covaris-le220-and-bravows"),        // ajoutés 16/11/2017
-							               
+							               "covaris-e220-and-bravows","covaris-le220-and-bravows"),        // ajoutés 16/11/2017						               
 					"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
@@ -1028,8 +1029,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single",28,false, "50",null));
 		
 		// NGL-1325 ajout propriété sequencingType de niveau Experiment, optionnelle
+		// NGL-1730 ajout NovaSeq 6000
 		propertyDefinitions.add(newPropertiesDefinition("Type de séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
-				DescriptionFactory.newValues("Hiseq 4000","Hiseq X"),null,null,null, 
+				DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000"),null,null,null, 
 				"single",10, true, null,null));	
 		
 		return propertyDefinitions;

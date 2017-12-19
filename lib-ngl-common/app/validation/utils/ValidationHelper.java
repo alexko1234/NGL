@@ -136,7 +136,7 @@ public class ValidationHelper {
 	
 	private static void cleanningProperties(Map<String, PropertyValue> properties) {
 		List<String> removedKeys = properties.entrySet().parallelStream()
-			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null))
+			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString())))
 			.map(entry -> entry.getKey())
 			.collect(Collectors.toList());
 		

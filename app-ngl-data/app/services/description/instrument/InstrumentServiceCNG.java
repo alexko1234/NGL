@@ -66,11 +66,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		// FDS 20/02/2017 NGL-1167 (Chromium)
 		l.add(newInstrumentCategory("10x Genomics Instrument","10x-genomics-instrument"));
-		
-		
-				
-		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
-		
+			
+		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);	
 	}
 	
 	// NOTE FDS 12/07/2017: mettre le booleen 'active' a false sur un instrument deja existant n'est pas suffisant, il y a un cache (??)
@@ -114,13 +111,24 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		// 07/12/2017 NGL-1730 "cBot-MarieCurix-A et "cBot-MarieCurix-B
+		// 11/12/2017 les Hi9, Hi10 et Hi11 auraient dus etre dédoublés en -A et -B => TODO car necessitent reprise historique MongoDB
 		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
+						//createInstrument("cBot-Hi9-A",     "cBot-interne-Hi9-A",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi9-B",     "cBot-interne-Hi9-B",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi10-A",    "cBot-interne-Hi10-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi10-B",    "cBot-interne-Hi10-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi11-A",    "cBot-interne-Hi11-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi11-B",    "cBot-interne-Hi11-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-Hi9",     "cBot-interne-Hi9",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-Hi10",    "cBot-interne-Hi10",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-Hi11",    "cBot-interne-Hi11",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						
 						createInstrument("cBot-Miseq1",  "cBot-interne-Miseq1",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-NextSeq1","cBot-interne-Nextseq1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
+						createInstrument("cBot-NextSeq1","cBot-interne-Nextseq1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-MarieCurix-A","cBot-interne-MarieCurix-A",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-MarieCurix-B","cBot-interne-MarieCurix-B",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube"}), 
 				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-4" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -165,6 +173,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8"}), 
 				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		// 07/12/2017 NGL-1730: ajout Novaseq6000
+		l.add(newInstrumentUsedType("NOVASEQ6000", "NOVASEQ6000", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaseq6000Properties(), 
+				getInstrumentNovaseq6000(),
+				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
+				null, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+		
 		
 		/* NOTE GENERALE 30/08/2017 
 		 * les noms (names) de machine affichés a l'utilisateur se terminent par un numéro décollé du nom mais sans "-" exemple "BioAnalyzer 1" et pas "BioAnalyzer1" ni "BioAnalyzer-1"
@@ -585,8 +601,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Position","position"
-		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
+		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
@@ -598,6 +613,22 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getHiseqXProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		// idem Hiseq4000 !!
+		
+		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
+		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+		
+		return propertyDefinitions;
+	}
+	
+	// NGL-1730: ajout Novaseq
+	private static List<PropertyDefinition> getNovaseq6000Properties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		// idem Hiseq4000, HiseqX !!
 		
 		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
@@ -905,7 +936,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		//06/03/2017 chipPosition est une propriete d'instrument et pas d'experience...
-		//14 03 essayer ne ne mettre obligatoire qu'a 'F' ??????? =>pire
 		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, 
 										newValues("1","2","3","4","5","6","7","8"), 
 										"single",23, true, null,null));
@@ -1009,40 +1039,50 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 
+	// 06/12/2017 FDS : ne sont plus actifs=> booleen a false, pas suffisant pour les désactiver...
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-		instruments.add(createInstrument("HISEQ1", "HISEQ1", null, true, "/env/ig/atelier/illumina/cng/HISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ2", "HISEQ2", null, true, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ3", "HISEQ3", null, true, "/env/ig/atelier/illumina/cng/HISEQ3/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ4", "HISEQ4", null, true, "/env/ig/atelier/illumina/cng/HISEQ4/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ5", "HISEQ5", null, true, "/env/ig/atelier/illumina/cng/HISEQ5/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ6", "HISEQ6", null, true, "/env/ig/atelier/illumina/cng/HISEQ6/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ7", "HISEQ7", null, true, "/env/ig/atelier/illumina/cng/HISEQ7/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ8", "HISEQ8", null, true, "/env/ig/atelier/illumina/cng/HISEQ8/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("HISEQ1", "HISEQ1", null, false, "/env/ig/atelier/illumina/cng/HISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ2", "HISEQ2", null, false, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ3", "HISEQ3", null, false, "/env/ig/atelier/illumina/cng/HISEQ3/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ4", "HISEQ4", null, false, "/env/ig/atelier/illumina/cng/HISEQ4/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ5", "HISEQ5", null, false, "/env/ig/atelier/illumina/cng/HISEQ5/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ6", "HISEQ6", null, false, "/env/ig/atelier/illumina/cng/HISEQ6/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ7", "HISEQ7", null, false, "/env/ig/atelier/illumina/cng/HISEQ7/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ8", "HISEQ8", null, false, "/env/ig/atelier/illumina/cng/HISEQ8/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-		instruments.add( createInstrument("HISEQ9",  "HISEQ9",  "H1", true, "/env/ig/atelier/illumina/cng/HISEQ9/",  DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H2", true, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H3", true, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ9",  "HISEQ9",  "H1", true, "/env/ig/atelier/illumina/cng/HISEQ9/",  DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ10", "HISEQ10", "H2", true, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ11", "HISEQ11", "H3", true, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
 	
 	// FDS ajout 30/03/2017 NGL-1225 (Nanopore)
 	private static List<Instrument> getInstrumentMKIB() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
+		
 		instruments.add(createInstrument("MN18834", "MN18834", null, true, "/env/ig/atelier/nanopore/cng/MN18834", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		instruments.add(createInstrument("MN19213", "MN19213", null, true, "/env/ig/atelier/nanopore/cng/MN19213", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19240", "MN19240", null, true, "/env/ig/atelier/nanopore/cng/MN19240", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19270", "MN19270", null, true, "/env/ig/atelier/nanopore/cng/MN19270", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		instruments.add(createInstrument("MN19813", "MN19813", null, true, "/env/ig/atelier/nanopore/cng/MN19813", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19802","MN19802", null, true, "/env/ig/atelier/nanopore/cng/MN19802", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add(createInstrument("MN19190","MN19190", null, true, "/env/ig/atelier/nanopore/cng/MN19190", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19802", "MN19802", null, true, "/env/ig/atelier/nanopore/cng/MN19802", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add(createInstrument("MN19190", "MN19190", null, true, "/env/ig/atelier/nanopore/cng/MN19190", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
 	
+	// FDS ajout 06/12/2017 NGL-1730 (Novaseq6000) + SUPSQCNG-506 (EXTNOVASEQ)(inactivé)
+	private static List<Instrument> getInstrumentNovaseq6000() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		
+		instruments.add( createInstrument("MARIECURIX", "MARIECURIX", "V1", true, "/env/ig/atelier/illumina/cng/MARIECURIX/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add( createInstrument("EXTNOVASEQ", "EXTNOVASEQ", null, false, "/env/ig/atelier/illumina/cng/EXTNOVASEQ/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		return instruments;
+	}
 }

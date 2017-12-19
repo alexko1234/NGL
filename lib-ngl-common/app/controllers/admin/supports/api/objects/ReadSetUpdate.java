@@ -110,7 +110,7 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 	private void updateReadSetProperties(ReadSet readSet, String oldValue, String newValue)
 	{
 		readSet.code=readSet.code.replace(oldValue, newValue);
-		readSet.sampleOnContainer.properties.put("tag", new PropertySingleValue(newValue));
+		readSet.sampleOnContainer.properties.put(InstanceConstants.TAG_PROPERTY_NAME, new PropertySingleValue(newValue));
 		
 		readSet.files = readSet.files.stream().filter(file->!file.typeCode.equals("CLEAN")).collect(Collectors.toList());
 		readSet.files.stream().forEach(file->{

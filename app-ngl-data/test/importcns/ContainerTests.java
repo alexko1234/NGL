@@ -227,7 +227,7 @@ public class ContainerTests extends AbstractTests {
 
 	}
 
-	*/
+	
 	//@Test
 	public void updateSampleTest() throws SQLException, DAOException{
 
@@ -253,4 +253,5 @@ public class ContainerTests extends AbstractTests {
 
 
 	}
+	*/
 }
