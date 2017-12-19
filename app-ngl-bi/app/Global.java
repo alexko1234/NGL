@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import play.Application;
-import play.GlobalSettings;
+//import play.GlobalSettings;
 import play.Logger;
 import play.api.Play;
 import play.api.modules.spring.Spring;
@@ -15,15 +15,17 @@ import play.mvc.Http.Request;
 import rules.services.RulesServices6;
 
 
-public class Global extends GlobalSettings {
-
+// public class Global extends GlobalSettings {
+class UNUSED_Global { // extends GlobalSettings {
 	
+	// Should use the same start sequence as NGL-SQ.
 	
-	@Override
+	// @Override
 	public void onStart(Application app) {
 		Logger.info("NGL-BI has started");		   	
-		Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
+		//Formatters.register(Date.class,new DateFormatter("yyyy-MM-dd"));
 		
+		/* Started using the module DI
 		Logger.info("Load knowledge base");
 		
 		
@@ -33,9 +35,9 @@ public class Global extends GlobalSettings {
 			Logger.error("Error Load knowledge base");
 			e.printStackTrace();
 			//Shutdown application
-			Play.stop();
+			Play.stop(app.getWrappedApplication());
 		}
-		
+		*/
 		/*
 		RulesServices rulesServices = new RulesServices();
 		try {
@@ -54,15 +56,15 @@ public class Global extends GlobalSettings {
 	
 
 
-	@Override
+	// @Override
 	public void onStop(Application app) {
 		Logger.info("NGL-BI shutdown...");
 	}  
 
 	
 	
-	
-	@Override
+	/*
+	// @Override
 	public Action onRequest(Request request, Method actionMethod) {
 		//if(Integer.valueOf(request.getHeader("Content-Length")).intValue() < (100*1024) ){
 		if(!request.uri().contains("/authentication")){
@@ -73,6 +75,7 @@ public class Global extends GlobalSettings {
 		return super.onRequest(request, actionMethod);
 	}
 
+	
 	@Override
     public <A> A getControllerInstance(Class<A> controllerClass) throws Exception {
       try{
@@ -81,7 +84,7 @@ public class Global extends GlobalSettings {
     	  return super.getControllerInstance(controllerClass);
       }
 	}
-
+*/
 
 	/**
      * Formatter for <code>java.util.Date</code> values.

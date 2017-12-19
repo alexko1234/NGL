@@ -14,9 +14,9 @@ import rules.services.RulesServices6;
 
 public class ExperimentHelper extends InstanceHelpers {
 
-	public static List<InputContainerUsed> getAllInputContainers(Experiment expFromDB){
+	public static List<InputContainerUsed> getAllInputContainers(Experiment expFromDB) {
 		List<InputContainerUsed> containersUSed=new ArrayList<InputContainerUsed>();
-		if(expFromDB.atomicTransfertMethods!=null){
+		if (expFromDB.atomicTransfertMethods!=null) {
 			for(int i=0;i<expFromDB.atomicTransfertMethods.size();i++){
 				if(expFromDB.atomicTransfertMethods.get(i)!=null && expFromDB.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
 					containersUSed.addAll(expFromDB.atomicTransfertMethods.get(i).inputContainerUseds);
@@ -27,23 +27,23 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 		return containersUSed;
 	}
-	public static void doCalculations(Experiment exp,String rulesName){
+	
+	public static void doCalculations(Experiment exp,String rulesName) {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(exp);
-		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++) {
 			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);
 			facts.add(atomic);
 		}
-		
+
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
 		
-		for(Object obj:factsAfterRules){
-			if(ManyToOneContainer.class.isInstance(obj)){
+		for(Object obj:factsAfterRules) {
+			if (ManyToOneContainer.class.isInstance(obj)) {
 				exp.atomicTransfertMethods.remove((ManyToOneContainer)obj);
 				exp.atomicTransfertMethods.add((ManyToOneContainer) obj);
 			}
-		}
-		
+		}	
 	}
 
 	

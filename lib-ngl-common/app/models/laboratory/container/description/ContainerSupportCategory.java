@@ -5,8 +5,12 @@ import java.util.List;
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.utils.dao.DAOException;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 
-public class ContainerSupportCategory extends AbstractCategory<ContainerSupportCategory>{
+// This link : {@link models.laboratory.container.description ContainerSupportCategory}
+
+public class ContainerSupportCategory extends AbstractCategory<ContainerSupportCategory> {
 	
 	public Integer nbUsableContainer;
 	
@@ -29,15 +33,14 @@ public class ContainerSupportCategory extends AbstractCategory<ContainerSupportC
 			
 		}
 
-		public List<ContainerSupportCategory> findByContainerCategoryCode(String categoryCode) throws DAOException{
+		public List<ContainerSupportCategory> findByContainerCategoryCode(String categoryCode) throws DAOException {
 			return ((ContainerSupportCategoryDAO) getInstance()).findByContainerCategoryCode(categoryCode);
 		}
 		
-		public List<ContainerSupportCategory> findInputByExperimentTypeCode(String experimentTypeCode) throws DAOException{
+		public List<ContainerSupportCategory> findInputByExperimentTypeCode(String experimentTypeCode) throws DAOException {
 			return ((ContainerSupportCategoryDAO) getInstance()).findInputByExperimentTypeCode(experimentTypeCode);
 		}
 
 	}	
-	
-	
+
 }

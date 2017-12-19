@@ -1,6 +1,9 @@
 package controllers.readsets.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +29,8 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -57,12 +60,17 @@ import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.readset.ReadSetWorkflows;
+//import workflows.run.Workflows;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
-
+// TODO: cleanup
 
 public class ReadSets extends ReadSetsController{
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
+	
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
@@ -87,7 +95,9 @@ public class ReadSets extends ReadSetsController{
 
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
-			return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");			
+			// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
 		}else if(form.count){
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
@@ -104,7 +114,9 @@ public class ReadSets extends ReadSetsController{
 			return ok(Json.toJson(toListObjects(results.toList())));
 		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
-			return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");	
+			// return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");
+			// return ok(MongoStreamer.stream(results)).as("application/json");
+			return MongoStreamer.okStream(results);
 		}
 	}
 
@@ -382,7 +394,8 @@ public class ReadSets extends ReadSetsController{
 
 			return ok(Json.toJson(readSetInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -398,7 +411,8 @@ public class ReadSets extends ReadSetsController{
 
 
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public static Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
@@ -439,8 +453,9 @@ public class ReadSets extends ReadSetsController{
 							DBUpdate.push("sampleCodes", readSetInput.sampleCode));
 
 					return ok(Json.toJson(readSetInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());			
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				return badRequest("readset code are not the same");
@@ -456,7 +471,8 @@ public class ReadSets extends ReadSetsController{
 				ReadSetValidationHelper.validateCode(readSetInput, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ctxVal);
 			}
 
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("code", readSetCode)), 
 						getBuilder(readSetInput, queryFieldsForm.fields, ReadSet.class).set("traceInformation", getUpdateTraceInformation(readSet)));
@@ -473,8 +489,9 @@ public class ReadSets extends ReadSetsController{
 					readSetCode = readSetInput.code;											
 				}
 				return ok(Json.toJson(getReadSet(readSetCode)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
@@ -547,8 +564,9 @@ public class ReadSets extends ReadSetsController{
 		workflows.setState(ctxVal, readSet, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -594,7 +612,7 @@ public class ReadSets extends ReadSetsController{
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setUpdateMode();
 		manageValidation(readSet, valuations.productionValuation, valuations.bioinformaticValuation, ctxVal);
-		if(!ctxVal.hasErrors()) {
+		if (!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("productionValuation", valuations.productionValuation)
@@ -604,7 +622,8 @@ public class ReadSets extends ReadSetsController{
 			workflows.nextState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -658,7 +677,7 @@ public class ReadSets extends ReadSetsController{
 		ctxVal.setUpdateMode();
 		ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
 
-		if(!ctxVal.hasErrors()){
+		/*if(!ctxVal.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("properties", properties)
@@ -668,8 +687,18 @@ public class ReadSets extends ReadSetsController{
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));		
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
-		}		
+			return badRequest(filledForm.errors-AsJson());			
+		}*/
+		if (!ctxVal.hasErrors()) {
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.and(DBQuery.is("code", code)),
+					DBUpdate.set("properties", properties)
+					.set("traceInformation", getUpdateTraceInformation(readSet)));								
+			return ok(Json.toJson(getReadSet(code)));		
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
+		}
 	}
 
 	@Permission(value={"writing"})

@@ -11,7 +11,8 @@ import models.utils.InstanceConstants;
 @Service
 public class ContentHelper {
 	
-	/**
+	
+	/*
 	 * Give MongoDB query to find a specific content inside containers
 	 * @param container
 	 * @param content
@@ -29,6 +30,5 @@ public class ContentHelper {
 		
 		return query;
 	}
-	
 
 }

@@ -124,7 +124,7 @@ public class ProcWorkflowHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Find the tag assign during process or existing at the beginning of process
 	 * @param process
 	 * @return
@@ -196,7 +196,7 @@ public class ProcWorkflowHelper {
 	
 	
 	
-	/**
+	/*
 	 * Query to retrieve container and content (using tag if exist)
 	 * @param process
 	 * @return

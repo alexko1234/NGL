@@ -1,6 +1,10 @@
 package controllers.experiments.tpl;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 
 import java.lang.reflect.Method;
 
@@ -8,7 +12,6 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.DescriptionHelper;
 import play.Logger;
-import play.Routes;
 import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
@@ -19,28 +22,66 @@ import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 import controllers.CommonController;
+import fr.cea.ig.play.IGGlobals;
+import fr.cea.ig.play.NGLContext;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class Experiments extends CommonController{
+// TODO: cleanup, comment
+
+// @Singleton
+public class Experiments extends CommonController {
 	
-	final static Form<Experiment> experimentForm = form(Experiment.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
-	public static Result home(String code){
+	private final home home;
+	private final details details;
+	private final search search;
+	private final searchContainers searchContainers;
+	private final Form<Experiment> experimentForm;
+	
+	// final static Form<Experiment> experimentForm = form(Experiment.class);
+	
+	/*
+	private Experiments() {
+		experimentForm = null;
+		this.home = null;
+		this.details = null;
+		this.search = null;
+		this.searchContainers = null;
+		throw new RuntimeException("why ?");
+	}
+	*/
+	
+	@Inject
+	public Experiments(NGLContext tools, home home, details details, search search, searchContainers searchContainers) {
+		experimentForm = tools.form(Experiment.class);
+		this.home = home;
+		this.details = details;
+		this.search = search;
+		this.searchContainers = searchContainers;
+		logger.debug("created injected instance " + this);
+	}
+	
+	public /*static*/ Result home(String code){
 		return ok(home.render(code));
 	}
 	
-	public static Result get(String code){
+	public /*static*/ Result get(String code){
 		return ok(home.render("search"));
 	}
 	
-	public static Result details(){
+	public static Result _get(String code) { return ok(code); }
+	
+	public /*static*/ Result details(){
 		return ok(details.render(getCurrentUser()));
 	}
 	
-	public static Result search(String experimentType){
+	public /*static*/ Result search(String experimentType){
 		return ok(search.render());
 	}
 	
-	public static Result searchContainers(){
+	public /*static*/ Result searchContainers(){
 		return ok(searchContainers.render());
 	}
 	
@@ -121,7 +162,16 @@ public class Experiments extends CommonController{
 			Html html = (Html)m.invoke(null);
 			return html;
 		}catch(Exception e){
-			return null;
+			try{
+				//TODO for template with @Inject need improvement
+				Class<?> clazz = Class.forName("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());//package in java are always in lower case
+				Object o = IGGlobals.injector().instanceOf(clazz);
+				Method m = clazz.getDeclaredMethod("render");
+				Html html = (Html)m.invoke(o);
+				return html;
+			}catch(Exception e1){
+				return null;
+			}
 		}
 	}
 	
@@ -130,7 +180,8 @@ public class Experiments extends CommonController{
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      // Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),

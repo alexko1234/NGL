@@ -2,6 +2,8 @@ package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.*;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -69,7 +71,7 @@ import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import play.Logger;
+// import play.Logger;
 import play.Play;
 import play.Logger.ALogger;
 import play.libs.Akka;
@@ -91,6 +93,8 @@ import fr.cea.ig.MongoDBResult.Sort;
 @Service
 public class ExpWorkflowsHelper {
 	private ALogger logger = Logger.of(ExpWorkflowsHelper.class);
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ExpWorkflowsHelper.class);
 	
 	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
 	private final String NEW_SAMPLE_CODES = "NEW_SAMPLE_CODES";
@@ -304,7 +308,7 @@ public class ExpWorkflowsHelper {
 
 		return removeContainersCodes;
 	}
-	/**
+	/*
 	 * Update ouput container code but not generate if null
 	 * Used when user change plate line or column
 	 * @param exp
@@ -314,7 +318,7 @@ public class ExpWorkflowsHelper {
 		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> atm.updateOutputCodeIfNeeded(outputCsc, null));
 	}
 	
-	/**
+	/*
 	 * Update only content
 	 * @param exp
 	 */
@@ -329,7 +333,7 @@ public class ExpWorkflowsHelper {
 		});					
 	}
 	
-	/**
+	/*
 	 * Update OutputContainerUsed :
 	 * 		- generate ContainerSupportCode and ContainerCode if needed
 	 * 		- populate content, projectCodes, sampleCodes, fromTransformationTypeCodes, processTypeCodes, inputProcessCodes
@@ -438,7 +442,7 @@ public class ExpWorkflowsHelper {
 		return contents;
 	}
 
-	/**
+	/*
 	 * Generate Support and container and save it in MongoDB
 	 * Add the support code inside processes
 	 * Il only one error during validation process all object are delete from MongoDB
@@ -554,7 +558,7 @@ public class ExpWorkflowsHelper {
 						DBQuery.in("code", container.processCodes),
 						DBUpdate.pull("sampleCodes",container.sampleCodes.iterator().next()));
 						if(processusWithNewProjectCode.contains(container.code)){
-							Logger.debug("Pull container "+container.code+", projectCodes "+container.projectCodes.iterator().next());
+							logger.debug("Pull container "+container.code+", projectCodes "+container.projectCodes.iterator().next());
 							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 									DBQuery.in("code", container.processCodes),
 									DBUpdate.pull("projectCodes",container.projectCodes.iterator().next()));
@@ -610,7 +614,7 @@ public class ExpWorkflowsHelper {
 		if(experimentType.newSample){	
 			Set<String> newSampleCodes = (Set<String>)validation.getObject(NEW_SAMPLE_CODES);
 			if(null != newSampleCodes && newSampleCodes.size() > 0){
-				Logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
+				logger.debug("Nb newSampleCodes :"+newSampleCodes.size());
 				List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes)).toList();
 				Set<String> projectCodes = samples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 				MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", newSampleCodes));
@@ -963,7 +967,7 @@ public class ExpWorkflowsHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Get all property for a level in expererimentProperties, instrumentProperties and inpoutContainerProperties
 	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
 	 * @param exp
@@ -1032,7 +1036,7 @@ public class ExpWorkflowsHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Get all property for a level in experimentProperties, instrumentProperties and inpoutContainerProperties
 	 * NOT INCLUDE OUTPUT CONTAINER PROPERTY USED getOutputPropertiesForALevel METHOD
 	 * @param exp
@@ -1183,7 +1187,14 @@ public class ExpWorkflowsHelper {
 		}
 
 	}
-	private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private ActorRef _rulesActor;
+	private ActorRef rulesActor() {
+		if (_rulesActor == null)
+			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+		return _rulesActor;
+	}
 
 	public void callWorkflowRules(ContextValidation validation, Experiment exp) {
 		ArrayList<Object> facts = new ArrayList<Object>();
@@ -1195,10 +1206,10 @@ public class ExpWorkflowsHelper {
 			facts.add(atomic);
 		}
 		
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
+		rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 	}
 
-	/**
+	/*
 	 * Update only the qc result and not the container attribut
 	 * used in admin case
 	 * @param exp
@@ -1223,7 +1234,7 @@ public class ExpWorkflowsHelper {
 				});
 
 	}
-	/**
+	/*
 	 * update volume, concentration, quantity and size only if present
 	 * @param exp
 	 * @param validation
@@ -1313,7 +1324,7 @@ public class ExpWorkflowsHelper {
 		}
 	};
 	
-	/**
+	/*
 	 * Create new sample code for the output containers in case we want to create another sample
 	 * @param exp
 	 * @param validation
@@ -1506,7 +1517,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	/**
+	/*
 	 * Delete created sample and reset the last sampleCode on project
 	 * @param contextValidation
 	 * @param exp
@@ -1589,7 +1600,7 @@ public class ExpWorkflowsHelper {
 			});			
 		}
 		long t2 = System.currentTimeMillis();
-		Logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
+		logger.debug("Time to progate experiment content properties : "+(t2-t1)+" ms");
 		
 	}
 	
@@ -1658,7 +1669,6 @@ public class ExpWorkflowsHelper {
 		});			
 	}
 
-
 	
 
 
@@ -1689,9 +1699,6 @@ public class ExpWorkflowsHelper {
 		}
 		return tags;
 	}
-
-	
-	
 
 }
 

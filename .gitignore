@@ -15,4 +15,6 @@
 .project
 **/.cache*
 /logs/
+**/app-2.12
+**/test-2.12
 /ejacoby@appdev.genoscope.cns.fr

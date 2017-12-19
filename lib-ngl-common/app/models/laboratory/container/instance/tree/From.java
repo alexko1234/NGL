@@ -7,4 +7,5 @@ public class From {
 	public List<ParentContainers> containers;
 	public String experimentCode;
 	public String experimentTypeCode;
+	
 }

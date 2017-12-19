@@ -1,6 +1,8 @@
 package controllers.analyses.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +30,7 @@ import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -49,8 +54,10 @@ import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.analyses.AnalysisWorkflows;
-@Controller
-public class Analyses extends DocumentController<Analysis>{
+
+
+//@Controller
+public class Analyses extends DocumentController<Analysis> {
 
 	//final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
@@ -59,11 +66,13 @@ public class Analyses extends DocumentController<Analysis>{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
-	public Analyses() {
-		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
+	@Inject
+	public Analyses(NGLContext ctx) {
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
 	}
 	
 	@Permission(value={"reading"})
@@ -182,7 +191,8 @@ public class Analyses extends DocumentController<Analysis>{
 			//TODO Update ReadSet
 			return ok(Json.toJson(input));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -209,28 +219,26 @@ public class Analyses extends DocumentController<Analysis>{
 		
 		if(queryFieldsForm.fields == null){
 			if (input.code.equals(code)) {
-				if(null != input.traceInformation){
+				if (null != input.traceInformation) {
 					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
-				}else{
+				} else {
 					Logger.error("traceInformation is null !!");
 				}
-				
-				if(!objectInDB.state.code.equals(input.state.code)){
+				if (!objectInDB.state.code.equals(input.state.code)) {
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
-				
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 				ctxVal.setUpdateMode();
 				input.validate(ctxVal);
-				
 				if (!ctxVal.hasErrors()) {
 					updateObject(input);
 					//TODO Update READSET
 					return ok(Json.toJson(input));
-				}else {
-					return badRequest(filledForm.errorsAsJson());			
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("Analysis code are not the same");
 			}
 		}else{ //update only some authorized properties
@@ -245,15 +253,16 @@ public class Analyses extends DocumentController<Analysis>{
 				//TODO Update READSET
 			}
 			
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(input, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
-				if(queryFieldsForm.fields.contains("code") && null != input.code){
+				if (queryFieldsForm.fields.contains("code") && null != input.code) {
 					code = input.code;
 				}
 				return ok(Json.toJson(getObject(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
@@ -273,8 +282,9 @@ public class Analyses extends DocumentController<Analysis>{
 		workflows.setState(ctxVal, objectInDB, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -286,7 +296,7 @@ public class Analyses extends DocumentController<Analysis>{
 		for(Form<AnalysesBatchElement> filledForm: filledForms){
 			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
-			if(null != objectInDB){
+			if (null != objectInDB) {
 				State state = element.data.state;
 				state.date = new Date();
 				state.user = getCurrentUser();
@@ -294,8 +304,9 @@ public class Analyses extends DocumentController<Analysis>{
 				workflows.setState(ctxVal, objectInDB, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getObject(objectInDB.code), element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
+				} else {
+					//response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST,errorsAsJson(ctxVal.getErrors()), element.index));
 				}
 			}else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
@@ -319,7 +330,7 @@ public class Analyses extends DocumentController<Analysis>{
 		input.user = getCurrentUser();
 		
 		CommonValidationHelper.validateValuation(objectInDB.typeCode, input, ctxVal);
-		if(!ctxVal.hasErrors()) {
+		if (!ctxVal.hasErrors()) {
 			updateObject(DBQuery.and(DBQuery.is("code", code)), DBUpdate.set("valuation", input)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 										
@@ -327,7 +338,8 @@ public class Analyses extends DocumentController<Analysis>{
 			workflows.nextState(ctxVal, objectInDB);
 			return ok(Json.toJson(objectInDB));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -352,10 +364,11 @@ public class Analyses extends DocumentController<Analysis>{
 					objectInDB = getObject(objectInDB.code);
 					workflows.nextState(ctxVal, objectInDB);
 					response.add(new DatatableBatchResponseElement(OK, objectInDB, element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
+				} else {
+					// response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST,errorsAsJson(ctxVal.getErrors()), element.index));
 				}
-			}else {
+			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
 			
@@ -377,22 +390,23 @@ public class Analyses extends DocumentController<Analysis>{
 		ctxVal.setUpdateMode();
 		//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
 		
-		if(!ctxVal.hasErrors()){
+		if (!ctxVal.hasErrors()) {
 		    updateObject(DBQuery.and(DBQuery.is("code", objectInDB.code)), DBUpdate.set("properties", properties)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			objectInDB = getObject(objectInDB.code);
 			return ok(Json.toJson(objectInDB));		
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 	
 	@Permission(value={"writing"})
-	public Result propertiesBatch(){
+	public Result propertiesBatch() {
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		
-		for(Form<AnalysesBatchElement> filledForm: filledForms){
+		for(Form<AnalysesBatchElement> filledForm: filledForms) {
 			AnalysesBatchElement element = filledForm.get();
 			Analysis objectInDB = getObject(element.data.code);
 			if(null != objectInDB){
@@ -400,14 +414,15 @@ public class Analyses extends DocumentController<Analysis>{
 				Map<String, PropertyValue> properties = element.data.properties;
 				ctxVal.setUpdateMode();
 				//TODO AnalysisValidationHelper.validateAnalysisType(objectInDB.typeCode, properties, ctxVal);
-				if(!ctxVal.hasErrors()){
+				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.and(DBQuery.is("code", objectInDB.code)), DBUpdate.set("properties", properties)
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));				   							
 				    response.add(new DatatableBatchResponseElement(OK, getObject(element.data.code), element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
+				} else {
+					// response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index));
 				}
-			}else {
+			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
 			
@@ -416,8 +431,7 @@ public class Analyses extends DocumentController<Analysis>{
 	}
 	
 	@Permission(value={"writing"})
-	public Result applyRules(String code, String rulesCode)
-	{
+	public Result applyRules(String code, String rulesCode)	{
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
 			return notFound();

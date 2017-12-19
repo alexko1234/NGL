@@ -10,7 +10,7 @@
 
 
 # Home page
-GET     /                           									controllers.main.tpl.Main.home()
+GET     /                           									@controllers.main.tpl.Main.home()
 
 #Kit catalogs TPL
 GET 	/kit-catalogs/:code										@controllers.reagents.tpl.KitCatalogs.get(code: java.lang.String)

@@ -1,5 +1,7 @@
 package services.io.reception.mapping;
 
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -33,9 +35,10 @@ import fr.cea.ig.MongoDBResult.Sort;
 
 public class SampleMapping extends Mapping<Sample> {
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
-	/**
+	/*
 	 * 
 	 * @param objects : list of all db objects need by type samples, supports, containers
 	 * @param configuration : the filed configuration for the current type
@@ -46,7 +49,7 @@ public class SampleMapping extends Mapping<Sample> {
 		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
 	}
 	
-	/**
+	/*
 	 * convert a file line in Sample
 	 * we override the defaut comportment to reused a prexist sample.
 	 * @param rowMap

@@ -2,9 +2,11 @@ package models.laboratory.common.description;
 
 import models.laboratory.common.description.dao.MeasureUnitDAO;
 import models.utils.Model;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
-public class MeasureUnit extends Model<MeasureUnit>{
+public class MeasureUnit extends Model<MeasureUnit> {
 
 	public String value;   
 	
@@ -18,11 +20,8 @@ public class MeasureUnit extends Model<MeasureUnit>{
 		super(MeasureUnitDAO.class.getName());
 	}
 	
-	
 	public static MeasureUnitFinder find = new MeasureUnitFinder();
-	
-		
-	
+
 	public static class MeasureUnitFinder extends Finder<MeasureUnit> {
 
 		public MeasureUnitFinder() {
@@ -34,7 +33,5 @@ public class MeasureUnit extends Model<MeasureUnit>{
 		}
 		
 	}
-	
-	
-	
+
 }

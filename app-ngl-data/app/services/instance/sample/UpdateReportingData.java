@@ -145,8 +145,8 @@ public class UpdateReportingData extends AbstractImportData {
 		sampleProcess.traceInformation= process.traceInformation;
 		sampleProcess.sampleOnInputContainer = process.sampleOnInputContainer;
 		
-		if(process.properties != null && process.properties.size() > 0){
-			sampleProcess.properties= process.properties;			
+		if (process.properties != null && process.properties.size() > 0) {
+			sampleProcess.properties = process.properties;			
 		}
 		sampleProcess.currentExperimentTypeCode = process.currentExperimentTypeCode;
 		if(process.experimentCodes != null && process.experimentCodes.size() > 0){

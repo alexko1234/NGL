@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import play.Logger;
 import play.Logger.ALogger;
-import play.test.FakeApplication;
+//import play.test.FakeApplication;
 import play.test.Helpers;
 import utils.AbstractTests;
 

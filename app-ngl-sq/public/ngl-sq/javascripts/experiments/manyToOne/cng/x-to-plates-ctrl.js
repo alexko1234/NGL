@@ -260,38 +260,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 		}
 	}
 	
-    //    06/2016 FDS ajout param ftype + {'fdrType':ftype} 
-	// 25/10/2016 FDS le mode 2 feuilles de routes distinctes est-il valide pour tous les type d'instruments ??
-	//           Janus    : oui
-	//           Epimotion: ???
-	var generateSampleSheet = function(ftype){
-		console.log ("generateSampleSheet type="+ftype);
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url, {'fdrType':ftype})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-				$scope.messages.showDetails = false;
-				$scope.messages.open();	
-				
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();				
-		});
-	};
+  
 
 	// A servit pour déterminer quels mode  de pooling est laissé à l'utilisateur: bouton ou select ?
 	// pour l'instant décision de toujours laisser les 2 modes actifs...
@@ -312,14 +281,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse', '
 			$scope.setAdditionnalButtons([{
 				isDisabled : function(){return $scope.isNewState();} ,
 				isShow:function(){return !$scope.isNewState();},
-				//click:generateSampleSheet,
-				click: function(){return generateSampleSheet("samples")},
+				click: function(){return $scope.fileUtils.generateSampleSheet({'fdrType':"samples"})},
 				label: Messages("experiments.sampleSheet")+ " / échantillons"
 			},{
 				isDisabled : function(){return $scope.isNewState();} ,
 				isShow:function(){return !$scope.isNewState();},
-				//click:generateSampleSheet,
-				click: function(){return generateSampleSheet("buffer")},
+				click: function(){return $scope.fileUtils.generateSampleSheet({'fdrType':"buffer"})},
 				label:Messages("experiments.sampleSheet")+ " / tampon"
 			}]);		
 	}

@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
+//import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
@@ -17,7 +17,7 @@ import org.apache.commons.collections.MapUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
+// import play.Logger;
 import validation.utils.ValidationHelper;
 
 public class NGLControllerHelper {

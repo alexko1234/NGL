@@ -1,6 +1,7 @@
 package controllers.sra.submissions.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -25,6 +28,7 @@ import controllers.QueryFieldsForm;
 import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
@@ -61,8 +65,9 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
 
-	public Submissions() {
-		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
+	@Inject
+	public Submissions(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
 	}
 
 	final static Form<Submission> submissionForm = form(Submission.class);
@@ -153,7 +158,8 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			//return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 		Submission submissionInput = filledForm.get();
 
@@ -168,12 +174,14 @@ public class Submissions extends DocumentController<Submission>{
 					MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
 					return ok(Json.toJson(submissionInput));
 				}else {
-					return badRequest(filledForm.errorsAsJson());
+					//return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 			}else{
 				//return badRequest("submission code are not the same");
 				ctxVal.addErrors("submission "+code, "submission code  " +code + " and submissionInput.code "+ submissionInput.code + "are not the same");
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
 		}else{ //update only some authorized properties
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -182,13 +190,14 @@ public class Submissions extends DocumentController<Submission>{
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 			
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(submissionInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(submission.traceInformation)));
 			
 				return ok(Json.toJson(getObject(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}
@@ -207,14 +216,16 @@ public class Submissions extends DocumentController<Submission>{
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 
 		subWorkflows.setState(ctxVal, submission, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -228,24 +239,24 @@ public class Submissions extends DocumentController<Submission>{
 		// pouvoir afficher l'ensemble des erreurs.
 		//Form initialise avec l'objet submission car pas d'objet submission dans le body
 		//Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
-		Form<Submission> filledForm = Form.form(Submission.class);
+		Form<Submission> filledForm = /*Form.*/form(Submission.class);
 		filledForm.fill(submission);
 
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		try {
 			submission = XmlServices.writeAllXml(code);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
 			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		} catch (SraException e) {
 			//return badRequest(e.getMessage());
 			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		return ok(Json.toJson(submission));
 	}
@@ -319,12 +330,14 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	// methode appelée  depuis interface submissions.create-ctrl.js (submissions.create.scala.html)
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
+	@BodyParser.Of(value = fr.cea.ig.play.IGBodyParsers.Json5MB.class)
 	public Result save() throws SraException, IOException {
 
-		if(request().body().isMaxSizeExceeded()){
-			return badRequest("Max size exceeded");
-		}
+		// play 2.6: This should not be needed as the body parser should fail if the limit is exceeeded
+		//if(request().body().isMaxSizeExceeded()){
+		//	return badRequest("Max size exceeded");
+		//}
 
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		logger.debug("filledForm "+filledForm);
@@ -402,14 +415,16 @@ public class Submissions extends DocumentController<Submission>{
 
 			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
-			if (contextValidation.hasErrors()){
+			if (contextValidation.hasErrors()) {
 				contextValidation.displayErrors(logger);
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(contextValidation.getErrors()));
 			}	
 
 		} catch (SraException e) {
 			contextValidation.addErrors("save submission ", e.getMessage()); // si solution avec ctxVal
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		return ok(Json.toJson(submissionCode));
 	}
@@ -432,10 +447,12 @@ public class Submissions extends DocumentController<Submission>{
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
 			//return badRequest(Json.toJson(e.getMessage()));
-			filledForm.reject("Submission "+submissionCode, e.getMessage());  // si solution filledForm.reject
-			//ctxVal.addErrors("Submission "+submissionCode, e.getMessage()); // si solution avec ctxVal
+			// filledForm.reject("Submission "+submissionCode, e.getMessage());  // si solution filledForm.reject
+			contextValidation.addErrors("Submission "+submissionCode, e.getMessage()); // si solution avec ctxVal
+			// Logger.debug("filled form "+filledForm.errors-AsJson());
 			logger.debug("filled form "+filledForm.errorsAsJson());
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
 		}
 		return ok(Json.toJson(submission));
 	}

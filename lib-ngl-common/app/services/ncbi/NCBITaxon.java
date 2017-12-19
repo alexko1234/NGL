@@ -7,16 +7,18 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 
-import play.Logger;
+// import play.Logger;
 
 public class NCBITaxon {
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(NCBITaxon.class);
+	
 	private Document doc;
 	public  String code;
 	public Boolean error; 
 	public Boolean exists; 
 	
-	public NCBITaxon(){
-		
+	public NCBITaxon() {
 	}
 	
 	public NCBITaxon(String code, Document doc) {
@@ -49,7 +51,7 @@ public class NCBITaxon {
 				return Boolean.TRUE;
 			}
 		} catch (XPathExpressionException e) {
-			Logger.error("Error Xpath /TaxaSet/Taxon "+e.getMessage());
+			logger.error("Error Xpath /TaxaSet/Taxon "+e.getMessage());
 		}
 		return Boolean.FALSE;
 		
@@ -62,7 +64,7 @@ public class NCBITaxon {
 				return Boolean.TRUE;
 			}
 		} catch (XPathExpressionException e) {
-			Logger.error("Error Xpath /eFetchResult/ERROR "+e.getMessage());
+			logger.error("Error Xpath /eFetchResult/ERROR "+e.getMessage());
 		}
 		return Boolean.FALSE;
 		
@@ -91,7 +93,7 @@ public class NCBITaxon {
 				return null;
 			}
 		} catch (XPathExpressionException e) {
-			Logger.error("Error Xpath"+xpath+" "+e.getMessage());
+			logger.error("Error Xpath"+xpath+" "+e.getMessage());
 		}
 		return null;
 	}

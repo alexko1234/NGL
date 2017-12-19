@@ -1,9 +1,12 @@
 package controllers.sra.experiments.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
 
@@ -11,6 +14,7 @@ import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 //import play.Logger;
@@ -26,8 +30,9 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 	
-	public ExperimentsRuns() {
-		super(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+	@Inject
+	public ExperimentsRuns(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
 	public Result get(String code)
@@ -53,7 +58,8 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 		if (experiment == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("experiments ", " not exist");
-			return badRequest(filledForm.errorsAsJson());
+			//return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 
 		if(queryFieldsForm.fields != null){
@@ -69,7 +75,8 @@ public class ExperimentsRuns extends DocumentController<Experiment> {
 
 				return ok(Json.toJson(getExperiment(code)));
 			}else{
-				return badRequest(filledForm.errorsAsJson());
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}
 		return ok();

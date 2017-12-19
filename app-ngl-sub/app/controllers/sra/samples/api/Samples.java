@@ -1,9 +1,12 @@
 package controllers.sra.samples.api;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
@@ -12,6 +15,7 @@ import org.mongojack.DBQuery.Query;
 import controllers.DocumentController;
 import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
 
@@ -30,8 +34,9 @@ public class Samples extends DocumentController<AbstractSample>{
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
 	final static Form<AbstractSample> sampleForm = form(AbstractSample.class);
 
-	public Samples() {
-		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
+	@Inject
+	public Samples(NGLContext ctx) {
+		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
 	}
 
 	public Result get(String code)
@@ -57,7 +62,7 @@ public class Samples extends DocumentController<AbstractSample>{
 
 		if (sample == null) {
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 		System.out.println(" ok je suis dans Samples.update\n");
 		AbstractSample sampleInput = filledForm.get();
@@ -78,11 +83,12 @@ public class Samples extends DocumentController<AbstractSample>{
 			}else {
 				System.out.println(" ok je suis dans Samples.update et erreurs \n");
 				logger.debug(Json.toJson(sampleInput).toString());
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
 		}else{
 			filledForm.reject("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
-			return badRequest(filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
 	}
 

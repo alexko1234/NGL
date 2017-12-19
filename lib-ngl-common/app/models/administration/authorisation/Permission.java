@@ -7,14 +7,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import models.administration.authorisation.description.dao.PermissionDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;
-import play.Logger;
+// import play.Logger;
+
+// TODO: comment
 
 /**
  * 
  * @author michieli
  *
  */
-public class Permission extends Model<Permission>{
+public class Permission extends Model<Permission> {
 
 	public String label;
 	public String code;
@@ -22,13 +24,18 @@ public class Permission extends Model<Permission>{
 	@JsonIgnore
 	public static PermissionFinder find = new PermissionFinder();
 	
-	public static class PermissionFinder extends Finder<Permission>{
+	// Doc generation produces an error with the parent unqualified name.
+	// public static class PermissionFinder extends Finder<Permission> {
+	public static class PermissionFinder extends Model.Finder<Permission> {
 
 		public PermissionFinder() {
 			super(PermissionDAO.class.getName());
 		}
-		public List<Permission> findByUserLogin(String aLogin) throws DAOException{
+		
+		public List<Permission> findByUserLogin(String aLogin) throws DAOException {
 			return ((PermissionDAO)getInstance()).findByUserLogin(aLogin);
 		}
+		
 	}
+	
 }

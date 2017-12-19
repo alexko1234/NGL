@@ -1,10 +1,14 @@
 package controllers.projects.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.UmbrellaProject;
@@ -28,12 +32,13 @@ import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around Project object
  *
  */
-@Controller
+// @Controller
 public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 
 	
@@ -42,8 +47,9 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
-	public UmbrellaProjects() {
-		super(InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
+	@Inject
+	public UmbrellaProjects(NGLContext ctx) {
+		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
 	}
 
 
@@ -121,7 +127,8 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			projectInput = saveObject(projectInput);
 			return ok(Json.toJson(projectInput));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
@@ -151,11 +158,12 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 				if (!ctxVal.hasErrors()) {
 					updateObject(projectInput);
 					return ok(Json.toJson(projectInput));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
 				
-			}else{
+			} else {
 				return badRequest("Project codes are not the same");
 			}	
 		}else{
@@ -164,12 +172,14 @@ public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(projectInput, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 				return ok(Json.toJson(getObject(code)));
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}			
 		}
 	}

@@ -542,33 +542,12 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 	}
 	
 	var generateSampleSheetNormalisation = function(){
-		generateSampleSheet("normalisation");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
 	var generateSampleSheetNormalisationPostPCR = function(){
-		generateSampleSheet("normalisation-post-pcr");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation-post-pcr"});
 	};
 	
-	var generateSampleSheet = function(type){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
-	};
 	if($scope.experiment.instrument.outContainerSupportCategoryCode !== "tube" 
 		|| $scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
 		

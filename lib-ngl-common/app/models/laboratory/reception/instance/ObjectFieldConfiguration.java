@@ -37,7 +37,7 @@ public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
 		super(type);
 	}
 
-	/**
+	/*
 	 * Populate sub object fields
 	 * @param object
 	 * @param rowMap

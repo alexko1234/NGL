@@ -1,7 +1,11 @@
 package models.utils;
 
+import static fr.cea.ig.play.IGGlobals.ws;
+
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import ch.qos.logback.core.util.TimeUtil;
 
@@ -13,8 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 
-
-// TODO
+// TODO: cleanup
 public class HttpReference<T> implements IFetch<T> {
 
 	@JsonIgnore
@@ -25,7 +28,6 @@ public class HttpReference<T> implements IFetch<T> {
 
 	public HttpReference(Class<T> className) {
 		this.className = className;
-
 	}
 
 	public HttpReference(Class<T> className, String code) {
@@ -35,20 +37,29 @@ public class HttpReference<T> implements IFetch<T> {
 
 	@Override
 	public T getObject() {
+		try {
 		// execute GET external URL
-		WSResponse reponse = WS.url(code).get().get(10, TimeUnit.SECONDS);
-
+		// WSResponse reponse = WS.url(code).get().get(10, TimeUnit.SECONDS);
+		// WSResponse reponse = WS.url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
+		WSResponse reponse = ws().url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
 		//if (reponse.getStatus()!=play.mvc.Http.Status.OK) throw new Exception  
 				
-		try {
+			// TODO: Should probably be better to use the play object mapper
 			return new  ObjectMapper().readValue(reponse.getBody(),className);
+			// play.libs.Json.mapper().readValue(reponse.getBody(),className);
 		} catch (JsonParseException e) {
 			//TODO
 		} catch (JsonMappingException e) {
 			//TODO
 		} catch (IOException e) {
 			//TODO
-		}
+		} catch (TimeoutException e) {
+			// TODO
+		} catch (ExecutionException e) {
+			// TODO
+		} catch (InterruptedException e) {
+			// TODO
+		} 
 		return null;
 	}
 

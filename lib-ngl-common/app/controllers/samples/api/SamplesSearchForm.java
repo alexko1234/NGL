@@ -8,7 +8,7 @@ import java.util.Set;
 
 import controllers.ListForm;
 
-public class SamplesSearchForm extends ListForm{
+public class SamplesSearchForm extends ListForm {
 	public String code; 
 	public String codeRegex;
 	public String treeOfLifePathRegex;
@@ -35,6 +35,7 @@ public class SamplesSearchForm extends ListForm{
 	public String taxonCode;
 	
 	public Map<String, List<String>> experimentProperties = new HashMap<String, List<String>>();
+	
 	public String toString() {
 		return "SamplesSearchForm [projectCode=" + projectCode
 

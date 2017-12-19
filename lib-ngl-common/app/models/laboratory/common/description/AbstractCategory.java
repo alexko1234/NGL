@@ -3,11 +3,12 @@ package models.laboratory.common.description;
 import models.utils.Model;
 
 /**
- * Parent class categories not represented by a table in the database
+ * Parent class categories not represented by a table in the database.
+ * 
  * @author ejacoby
  *
  */
-public abstract class AbstractCategory<T> extends Model<T>{
+public abstract class AbstractCategory<T> extends Model<T> {
 
 	public String name;
 
@@ -17,11 +18,16 @@ public abstract class AbstractCategory<T> extends Model<T>{
 
 	@Override
 	public int hashCode() {
+		return hash(super.hashCode(),name);
+	}
+
+	/*@Override
+	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
-	}
+	}*/
 
 	@Override
 	public boolean equals(Object obj) {
@@ -31,15 +37,14 @@ public abstract class AbstractCategory<T> extends Model<T>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AbstractCategory other = (AbstractCategory) obj;
+		AbstractCategory<?> other = (AbstractCategory<?>) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} /*else if (!name.equals(other.name))
 			return false;
-		return true;
+		return true;*/
+		return name.equals(other.name);
 	}
-	
-	
 
 }

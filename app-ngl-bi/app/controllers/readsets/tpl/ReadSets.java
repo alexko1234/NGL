@@ -1,12 +1,17 @@
 package controllers.readsets.tpl;
 
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.mvc.Result;
 import views.html.readsets.details;
 import views.html.readsets.home;
 import views.html.readsets.printView;
 import views.html.readsets.search;
 import views.html.readsets.treatments;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 
 /**
@@ -16,44 +21,59 @@ import controllers.CommonController;
  */
 public class ReadSets extends CommonController {
 	
-	public static Result home(String homecode) {
+	private final home home;
+	private final search search;
+	private final details details;
+	private final printView printView;
+	private final treatments treatments;
+	@Inject
+	public ReadSets(home home, search search, details details, printView printView, treatments treatments) {
+		this.home       = home;
+		this.search     = search;
+		this.details    = details;
+		this.printView  = printView;
+		this.treatments = treatments;	
+	}
+	
+	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	public static Result get(String code) {
+	public Result get(String code) {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result valuation(String code) {
+	public Result valuation(String code) {
 		return ok(home.render("valuation")); 
 	}
 	
-	public static Result other(String code, String other) {
+	public Result other(String code, String other) {
 		return ok(home.render("search")); 
 	}
 	
-	public static Result search() {
+	public Result search() {
 		return ok(search.render());		
 	}
 	
-	public static Result details() {
+	public Result details() {
 		return ok(details.render());
 	}
 	
 	
 	
-	public static Result detailsPrintView() {
+	public Result detailsPrintView() {
 		return ok(printView.render());
 	}
 	
-	public static Result treatments(String code, String media) {
+	public Result treatments(String code, String media) {
 		return ok(treatments.render(code, media));
 	}
 	
-	public static Result javascriptRoutes() {
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
-  	      Routes.javascriptRouter("jsRoutes",
+  	      //Routes.javascriptRouter("jsRoutes",
+  	    		JavaScriptReverseRouter.create("jsRoutes",
   	        // Routes
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.home(),  
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.get(),   	    		

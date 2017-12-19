@@ -23,9 +23,10 @@ import fr.cea.ig.MongoDBDAO;
  * 
  */
 public class BusinessValidationHelper {
+	
 	public static final String FIELD_CODE = "code";
 	
-	/**
+	/*
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
 	 * @param contextValidation
@@ -35,7 +36,6 @@ public class BusinessValidationHelper {
 	 */
 	public static <T extends DBObject> boolean validateUniqueInstanceCode(ContextValidation contextValidation,
 			String code, Class<T> type, String collectionName){
-	
 		if (null != code) {
 			if (MongoDBDAO.checkObjectExistByCode(collectionName, type, code)) {
 				contextValidation.addErrors(FIELD_CODE,	ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);
@@ -45,13 +45,11 @@ public class BusinessValidationHelper {
 			}
 		} else {
 			throw new IllegalArgumentException("code is null");
-		}
-		
-		
+		}	
 	}
 	
 	
-	/**
+	/*
 	 * Validate if field value is unique in MongoDB collection
 	 * @param errors
 	 * @param key : field name
@@ -77,7 +75,7 @@ public class BusinessValidationHelper {
 
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param code
@@ -89,7 +87,7 @@ public class BusinessValidationHelper {
 		 validateRequiredDescriptionCode(contextValidation, code, key, find,false);
 	}
 
-	/**
+	/*
 	 * Validate i a description code is not null and exist in description DB
 	 * @param errors
 	 * @param code
@@ -108,7 +106,7 @@ public class BusinessValidationHelper {
 	}
 
 
-	/***
+	/*
 	 * Validate if a code in a description table exist
 	 * @param errors
 	 * @param code
@@ -123,7 +121,7 @@ public class BusinessValidationHelper {
 		 validateExistDescriptionCode(contextValidation, code, key, find, false);
 	}
 
-	/***
+	/*
 	 * Validate if a code in a description table exist
 	 * @param errors
 	 * @param code
@@ -152,7 +150,7 @@ public class BusinessValidationHelper {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param code
@@ -167,7 +165,7 @@ public class BusinessValidationHelper {
 		}
 	}
 
-	/**
+	/*
 	 * Validate if code is not null and exist
 	 * @param errors
 	 * @param code
@@ -187,7 +185,7 @@ public class BusinessValidationHelper {
 	}
 
 
-	/**
+	/*
 	 * Validate if list is not null and code exist
 	 * @param errors
 	 * @param sampleCode
@@ -211,7 +209,7 @@ public class BusinessValidationHelper {
 	
 	
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param sampleCode
@@ -238,7 +236,7 @@ public class BusinessValidationHelper {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param code
@@ -251,7 +249,7 @@ public class BusinessValidationHelper {
 		validateExistInstanceCode(contextValidation, code, key, type, collectionName, false);
 	}
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection, code is not required and can be null
 	 * @param errors
 	 * @param code
@@ -281,9 +279,8 @@ public class BusinessValidationHelper {
 		}
 		return null;
 	}	
-	
-	
-	/**
+		
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param code
@@ -296,7 +293,7 @@ public class BusinessValidationHelper {
 		validateExistInstanceCode(contextValidation, code, type, collectionName, false);
 	}
 	
-	/**
+	/*
 	 * Validate a code of a MongoDB Collection
 	 * @param errors
 	 * @param code
@@ -309,8 +306,5 @@ public class BusinessValidationHelper {
 			String code, Class<T> type, String collectionName, boolean returnObject) {
 		return validateExistInstanceCode(contextValidation, code, FIELD_CODE, type, collectionName, returnObject);
 	}	
-	
-	
-	
-	
+
 }

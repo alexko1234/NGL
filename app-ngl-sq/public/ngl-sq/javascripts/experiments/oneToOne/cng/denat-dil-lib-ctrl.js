@@ -449,42 +449,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	}
 
 
-	/*  pas de sample sheet demandee pour l'instant...
-	var generateSampleSheet = function(){
-		$scope.messages.clear();
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-				$scope.messages.showDetails = false;
-				$scope.messages.open();	
-				
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();				
-		});
-	};
-	
-	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')}, // FDS pourquoi ce forcage ???
-		click: generateSampleSheet,
-		label:Messages("experiments.sampleSheet") 
-	}]);
-	*/
 	
 	
 }]);

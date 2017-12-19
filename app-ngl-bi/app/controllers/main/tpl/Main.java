@@ -3,6 +3,8 @@ package controllers.main.tpl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -22,7 +24,8 @@ import play.Logger;
 import play.Play;
 import play.api.modules.spring.Spring;
 import play.i18n.Lang;
-import play.mvc.Content;
+import play.libs.Scala;
+// import play.mvc.Content;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
 import play.mvc.Result;
@@ -31,30 +34,41 @@ import views.html.home ;
 
 public class Main extends CommonController {
 
-   final static JsMessages messages = JsMessages.create(play.Play.application());	
+   // final static JsMessages messages = JsMessages.create(play.Play.application());	
+	private final JsMessages messages;
+
+	private final home home;
 	
-   public static Result home() {
+	@Inject
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
+		messages = jsMessagesFactory.all();
+		this.home = home;
+	}
+
+   public Result home() {
 	   return ok(home.render());
         
     }
    
-   public static Result jsMessages() {
-       return ok(messages.generate("Messages")).as("application/javascript");
+   public Result jsMessages() {
+       // return ok(messages.generate("Messages")).as("application/javascript");
+       // return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
+       return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
 
    }
    
-   public static Result jsCodes() {
+   public Result jsCodes() {
 	   return ok(generateCodeLabel()).as("application/javascript");
    }
    
    /*
     * jsPermissions() method
     */
-   public static Result jsPermissions(){
+   public Result jsPermissions(){
 	   return ok(listPermissions()).as("application/javascript");
    }
    
-   public static Result jsAppURL(){
+   public Result jsAppURL(){
 	   return ok(getAppURL()).as("application/javascript");
    }
    

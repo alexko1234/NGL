@@ -11,38 +11,37 @@ import models.utils.DescriptionHelper;
 import models.utils.HelperObjects;
 import models.utils.Model;
 import models.utils.Model.Finder;
-import play.Logger;
+// import play.Logger;
 import play.data.validation.ValidationError;
 
 public class DAOHelpers {
 
-
+	private static final play.Logger.ALogger logger = play.Logger.of(DAOHelpers.class);
+	
 	private static String SQLInstitute = null;
 
-	/**
+	/*
 	 * Save an object Model in the description DB
 	 * @param type
 	 * @param models
 	 * @return
 	 * @throws DAOException
 	 */
-	public static <T extends Model> Map<String,List<ValidationError>>  saveModels(Class<T> type,Map<String, T > models) throws DAOException{
+	public static <T extends Model> Map<String,List<ValidationError>>  saveModels(Class<T> type,Map<String, T > models) throws DAOException {
 
-		Map<String,List<ValidationError>>errors=new HashMap<String, List<ValidationError>>();
+		Map<String,List<ValidationError>>errors = new HashMap<String, List<ValidationError>>();
 
 		for(Entry<String,T> model : models.entrySet()){
 			T samp = new HelperObjects<T>().getObject(type, model.getKey());
-			if(samp != null){
+			if (samp != null) {
 				samp.remove(); //TODO Remove ???
 			}
-
-			Logger.debug(" Before save :"+model.getValue().code);
+			logger.debug(" Before save :"+model.getValue().code);
 			model.getValue().save();
-			Logger.debug(" After save :"+model.getValue().code);
-			samp=new  HelperObjects<T>().getObject(type, model.getKey());
-			Logger.debug(" After find :"+model.getValue().code);
+			logger.debug(" After save :"+model.getValue().code);
+			samp = new  HelperObjects<T>().getObject(type, model.getKey());
+			logger.debug(" After find :"+model.getValue().code);
 		}	
-
 		return errors;
 	}
 
@@ -50,7 +49,7 @@ public class DAOHelpers {
 	public static <T extends Model> void removeAll(Class<T> type, Finder<T> finder) throws DAOException {
 		List<T> list = finder.findAll();
 		for(T t : list){
-			Logger.debug("remove "+type.getName() + " : "+t.code);
+			logger.debug("remove "+type.getName() + " : "+t.code);
 			t.remove();
 		}		
 	}
@@ -61,13 +60,13 @@ public class DAOHelpers {
 
 	public static <T extends Model> List<T> getModelByCodes(Class<T> type, Finder<T> finder, String...codes) throws DAOException {
 		List<T> l = new ArrayList<T>();
-		for(String code : codes){
+		for (String code : codes) {
 			//Logger.debug("Load "+type.getName() + " : "+code);
 			l.add(finder.findByCode(code));
 		}
 		return l;
 	}
-	/**
+	/*
 	 * Save an object Model in the description DB if not exist also nothing
 	 * Used the code to find the object
 	 * @param type
@@ -78,14 +77,14 @@ public class DAOHelpers {
 	public static <T extends Model> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
 		T t = (T) model.getInstance().findByCode(model.code);
 		if (t == null) {
-			Logger.debug("Save "+type.getName() + " : "+model.code);
+			logger.debug("Save "+type.getName() + " : "+model.code);
 			model.save();
-		}else{
-			Logger.debug("Allready exists "+type.getName() + " : "+model.code);
+		} else {
+			logger.debug("Already exists "+type.getName() + " : "+model.code);
 		}
 	}
 
-	/**
+	/*
 	 * Save a list of models
 	 * @param type
 	 * @param models
@@ -93,12 +92,12 @@ public class DAOHelpers {
 	 * @throws DAOException 
 	 */
 	public static <T extends Model> void saveModels(Class<T> type, List<T> models, Map<String,List<ValidationError>> errors) throws DAOException {
-		for(T model : models){
+		for (T model : models) {
 			saveModel(type, model, errors);
 		}		
 	}
 
-	/**
+	/*
 	 * 
 	 * @param type
 	 * @param model
@@ -109,8 +108,8 @@ public class DAOHelpers {
 		T t = (T) model.getInstance().findByCode(model.code);
 		if (t != null) {
 			model.update();
-		}else{
-			Logger.debug("Not exists "+type.getName() + " : "+model.code);
+		} else {
+			logger.debug("Not exists "+type.getName() + " : "+model.code);
 		}
 	}
 
@@ -120,7 +119,7 @@ public class DAOHelpers {
 		}		
 	}
 
-	/**
+	/*
 	 * Create the sql to join with institute
 	 * The rule is simple the join table name equals <main_table_name>_institute
 	 * @param mainTable
@@ -129,16 +128,16 @@ public class DAOHelpers {
 	 */
 	public static String getSQLForInstitute(String mainTable, String mainTableAlias){
 		 
-		List<String> institutes=DescriptionHelper.getInstitute();
+		List<String> institutes = DescriptionHelper.getInstitute();
 		String SQLInstitute=" inner join "+mainTable+"_institute as "+mainTable+"_join_institute on "+mainTable+"_join_institute.fk_"+mainTable+" = "
 								+mainTableAlias+".id inner join institute as "+mainTable+"_inst on "+mainTable+"_inst.id = "+mainTable+"_join_institute.fk_institute ";
 		//Prend en compte tous les instituts
-		if(institutes.size()==0){
+		if (institutes.size() == 0) {
 			return SQLInstitute ="";
 			//Si un seul institut
-		}else if(institutes.size()==1){
+		} else if (institutes.size() == 1) {
 			return SQLInstitute+= " and "+mainTable+"_inst.code = '" + DescriptionHelper.getInstitute().get(0)+"' ";
-		}else {
+		} else {
 			// Si plusieurs instituts (clause in)
 			SQLInstitute+="  and "+mainTable+"_inst.code in (";
 			
@@ -166,4 +165,5 @@ public class DAOHelpers {
 		}
 		return SQLInstitute;
 	}
+	
 }

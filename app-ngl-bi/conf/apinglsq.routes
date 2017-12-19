@@ -4,14 +4,14 @@ GET		/api/samples/:code							@controllers.samples.api.Samples.get(code: java.la
 
 
 #containers api
-GET		/api/containers								controllers.containers.api.Containers.list()
-GET		/api/containers/:code						controllers.containers.api.Containers.get(code:java.lang.String)
-HEAD	/api/containers/:code						controllers.containers.api.Containers.head(code:java.lang.String)
+GET		/api/containers								@controllers.containers.api.Containers.list()
+GET		/api/containers/:code						@controllers.containers.api.Containers.get(code:java.lang.String)
+HEAD	/api/containers/:code						@controllers.containers.api.Containers.head(code:java.lang.String)
 
 #supports api
-GET		/api/supports								controllers.containers.api.ContainerSupports.list()
-GET		/api/supports/:code							controllers.containers.api.ContainerSupports.get(code:java.lang.String)
-HEAD	/api/supports/:code							controllers.containers.api.ContainerSupports.head(code:java.lang.String)
+GET		/api/supports								@controllers.containers.api.ContainerSupports.list()
+GET		/api/supports/:code							@controllers.containers.api.ContainerSupports.get(code:java.lang.String)
+HEAD	/api/supports/:code							@controllers.containers.api.ContainerSupports.head(code:java.lang.String)
 
 #experiment api
 GET		/api/experiments							@controllers.experiments.api.Experiments.list()

@@ -1,5 +1,8 @@
 package services;
 
+import static fr.cea.ig.play.IGGlobals.ws;
+
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 //import play.Logger;
 import validation.ContextValidation;
@@ -60,6 +67,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -68,9 +76,10 @@ import java.io.StringReader;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import play.api.modules.spring.Spring;
-import play.libs.F.Promise;
+// import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 //import specs2.run;
@@ -96,7 +105,7 @@ public class SubmissionServices {
 					DBUpdate.set("ncbiScientificName", scientificName).set("traceInformation.modifyUser", contextValidation.getUser()).set("traceInformation.modifyDate", new Date()));
 			return scientificName;
 			
-		} catch (XPathExpressionException | IOException e) {
+		} catch (XPathExpressionException | IOException | InterruptedException | ExecutionException | TimeoutException e) {
 			e.printStackTrace();
 			throw new SraException("impossible de recuperer le scientificName au ncbi pour le taxonId '" + taxonCode + "' : \n" + e.getMessage());
 		}
@@ -1020,23 +1029,39 @@ public class SubmissionServices {
 	
 	
 
-	public String getNcbiScientificName(Integer taxonId) throws IOException, XPathExpressionException  {
-		Promise<WSResponse> homePage = WS.url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
-		Promise<Document> xml = homePage.map(response -> {
-			System.out.println("response "+response.getBody());
-			//Document d = XML.fromString(response.getBody());
-			//Node n = scala.xml.XML.loadString(response.getBody());
-			//System.out.println("J'ai une reponse ?"+ n.toString());
-			DocumentBuilderFactory dbf =
-		            DocumentBuilderFactory.newInstance();
-			//dbf.setValidating(false);
-			//dbf.setSchema(null);
-	        DocumentBuilder db = dbf.newDocumentBuilder();
-	        Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
-			return doc;
+	public String getNcbiScientificName(Integer taxonId) 
+			throws IOException, 
+			XPathExpressionException, 
+			InterruptedException,
+			ExecutionException,
+			TimeoutException {
+		//Promise<WSResponse> homePage = WS.url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
+		CompletionStage<WSResponse> homePage = ws().url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
+		// Promise<Document> xml = homePage.map(response -> {
+		CompletionStage<Document> xml = homePage.thenApplyAsync(response -> {
+			try {
+				System.out.println("response "+response.getBody());
+				//Document d = XML.fromString(response.getBody());
+				//Node n = scala.xml.XML.loadString(response.getBody());
+				//System.out.println("J'ai une reponse ?"+ n.toString());
+				DocumentBuilderFactory dbf =
+						DocumentBuilderFactory.newInstance();
+				//dbf.setValidating(false);
+				//dbf.setSchema(null);
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
+				return doc;
+			} catch (SAXException e) {
+				throw new RuntimeException("xml parsing failed",e);
+			} catch (IOException e) {
+				throw new RuntimeException("io error while parsing xml",e);
+			} catch (ParserConfigurationException e) {
+				throw new RuntimeException("xml parser configuration error",e);
+			}
+
 		});
 		
-		Document doc = xml.get(1000);
+		Document doc = xml.toCompletableFuture().get(1000,TimeUnit.MILLISECONDS);
 		XPath xPath =  XPathFactory.newInstance().newXPath();
 		String expression = "/TaxaSet/Taxon/ScientificName";
 

@@ -10,7 +10,7 @@ import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class ReagentCatalog extends AbstractCatalog{
+public class ReagentCatalog extends AbstractCatalog {
 	public String boxCatalogCode;
 	public String kitCatalogCode;
 	public Double storageConditions;

@@ -1,6 +1,7 @@
 package controllers.containers.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,31 +18,34 @@ import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 
-public class ContainerCategories extends CommonController{
+
+// Could provide implementation through CRUD base class.
+public class ContainerCategories extends CommonController {
 	
 	final static Form<ContainerCategoriesSearchForm> containerCategoriesTypeForm = form(ContainerCategoriesSearchForm.class);
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public static Result list() throws DAOException {
 		Form<ContainerCategoriesSearchForm>  containerCategoryFilledForm = filledFormQueryString(containerCategoriesTypeForm,ContainerCategoriesSearchForm.class);
 		ContainerCategoriesSearchForm containerCategoriesSearch = containerCategoryFilledForm.get();
-		try{
+		try {
 			List<ContainerCategory> containerCategories = ContainerCategory.find.findAll();
 			
-			if(containerCategoriesSearch.datatable){
+			if (containerCategoriesSearch.datatable) {
 				return ok(Json.toJson(new DatatableResponse<ContainerCategory>(containerCategories, containerCategories.size()))); 
-			}else if(containerCategoriesSearch.list){
+			} else if(containerCategoriesSearch.list) {
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(ContainerCategory et:containerCategories){
 					lop.add(new ListObject(et.code, et.name));
 				}
 				return Results.ok(Json.toJson(lop));
-			}else{
+			} else {
 				return Results.ok(Json.toJson(containerCategories));
 			}
-		}catch (DAOException e) {
-			Logger.error("DAO error: "+e.getMessage(),e);
+		} catch (DAOException e) {
+			Logger.error("DAO error: " + e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}
+	
 }

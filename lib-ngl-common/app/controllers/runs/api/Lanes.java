@@ -14,7 +14,10 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import play.Logger;
 import play.data.Form;
-import static play.data.Form.form;
+
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
@@ -23,7 +26,7 @@ import fr.cea.ig.MongoDBDAO;
 import controllers.CommonController;
 import controllers.authorisation.Permission;
 
-
+import fr.cea.ig.play.NGLContext;
 
 public class Lanes extends RunsController{
 	
@@ -89,8 +92,10 @@ public class Lanes extends RunsController{
 					DBUpdate.push("lanes", laneValue).set("traceInformation", getUpdateTraceInformation(run)));
 			return ok(Json.toJson(laneValue));	
 		} else {
-			Logger.error(filledForm.errorsAsJson().toString());
-			return badRequest(filledForm.errorsAsJson());
+			// Logger.error(filledForm.errors-AsJson().toString());
+			Logger.error(NGLContext._errorsAsJson(ctxVal.getErrors()).toString());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
@@ -115,7 +120,8 @@ public class Lanes extends RunsController{
 						DBUpdate.set("lanes.$", laneValue).set("traceInformation", getUpdateTraceInformation(run))); 
 				return ok(Json.toJson(laneValue));
 			} else {
-				return badRequest(filledForm.errorsAsJson());
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
 		}else{
 			return badRequest("lane number are not the same");
@@ -168,7 +174,8 @@ public class Lanes extends RunsController{
 					DBUpdate.set("lanes.$.valuation", valuation).set("traceInformation", getUpdateTraceInformation(run))); 
 			return get(code, laneNumber);
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 		
 	}	

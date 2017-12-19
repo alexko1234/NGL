@@ -30,10 +30,8 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 	}
 
 	@Override
-	public long save(SampleType sampleType) throws DAOException
-	{
-		
-		if(null == sampleType){
+	public long save(SampleType sampleType) throws DAOException	{
+		if (null == sampleType) {
 			throw new DAOException("sampleType is mandatory");
 		}
 		//Check if category exist
@@ -79,4 +77,5 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 		SampleTypeMappingQuery sampleTypeMappingQuery = new SampleTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
 		return sampleTypeMappingQuery.execute(id);
 	}
+	
 }

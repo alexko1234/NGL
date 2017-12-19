@@ -23,7 +23,7 @@ import fr.cea.ig.MongoDBDAO;
 
 /**
  * Import tubes (type 3,4,5) from Solexa to NGL
- * Scope : validation of "prepa-flowcell" experiment (the view only import data > 01/08/2014)
+ * Scope : validation of "prepa-flowcell" experiment (the view only import data {@literal > } 01/08/2014)
  * Corresponds to lib-b10n, lib-b5n et lib-b2n
  * @author dnoisett
  * 27/10/2014

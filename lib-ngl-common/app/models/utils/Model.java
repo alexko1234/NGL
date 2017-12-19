@@ -9,14 +9,20 @@ import models.utils.dao.DAOException;
 import play.Logger;
 import play.api.modules.spring.Spring;
 
+// TODO: fix serialization uid but not serializable
+// TODO: fix @JsonIgnore, seems overkill
+
 public class Model<T> {
 
 	/**
-	 * 
+	 * Serialization version id.  
 	 */
 	private static final long serialVersionUID = -3835776102653386895L;
+	
 	public Long id;
+	
 	public String code;
+	
 	protected String classNameDAO;
 
 	@JsonIgnore
@@ -64,10 +70,17 @@ public class Model<T> {
 		}
 	}
 
+	// TODO: 
+	// - make Finder<T> an interface
+	// - modify finders to inherit from the SQL version
+	// - implement a mongo version, requires a mongo based abstract DAO implementation
+	// - swap implementations
+	
 	public static class Finder<T> {
 
 		private String className;
 
+		// Could take a class instance.
 		@JsonIgnore
 		public Finder(String className) {
 			this.className = className;
@@ -78,7 +91,6 @@ public class Model<T> {
 			return getInstance().findByCode(code);
 		}
 		
-
 		@JsonIgnore
 		public List<T> findByCodes(List<String> codes) throws DAOException {
 			return getInstance().findByCodes(codes);
@@ -103,8 +115,7 @@ public class Model<T> {
 		@SuppressWarnings("unchecked")
 		public AbstractDAO<T> getInstance() throws DAOException {
 			try {
-				return (AbstractDAO<T>) Spring.getBeanOfType(Class
-						.forName(className));
+				return (AbstractDAO<T>)Spring.getBeanOfType(Class.forName(className));
 			} catch (ClassNotFoundException e) {
 				throw new DAOException(e);
 			}
@@ -113,15 +124,32 @@ public class Model<T> {
 		public String getClassName() {
 			return className;
 		}
+		
 	}
 
-	@Override
+	// Model equality and hashing is defined for code.
+	
+	// Hashing using the same algorithm here and in subclasses.
+	protected int hash(int hash, Object toAdd) {
+		final int prime = 31;
+		int result = prime * hash;
+		if (code != null) 
+			result += code.hashCode();
+		return result;		
+	}
+	
+	/*@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		return result;
-	}
+	}*/
+	
+	@Override
+	public int hashCode() {
+		return hash(1,code);
+	}	
 
 	@JsonIgnore
 	@Override
@@ -132,8 +160,9 @@ public class Model<T> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		Model<T> other = (Model<T>) obj;
+		/*@SuppressWarnings("unchecked")
+		Model<T> other = (Model<T>) obj;*/
+		Model<?> other = (Model<?>) obj;
 		if (code == null) {
 			if (other.code != null)
 				return false;

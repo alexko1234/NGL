@@ -19,11 +19,12 @@ import play.Logger;
 
 /**
  * Generic operations for SimpleDAO
+ * 
  * @author ejacoby
  *
- * @param <T>
+ * @param <T> DAO
  */
-public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
+public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 
 	protected String sqlCommon;
 	protected boolean usedInstitute = false;
@@ -38,43 +39,40 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<String> getColumns() throws MetaDataAccessException
-	{
+	private List<String> getColumns() throws MetaDataAccessException {
 		return (List<String>)JdbcUtils.extractDatabaseMetaData(dataSource, new ColumnMetaDataCallback(tableName));
 	}
 
-	
-	protected String getSqlCommon() throws DAOException{
-		if(null == sqlCommon){
+	protected String getSqlCommon() throws DAOException {
+		if (null == sqlCommon) {
 			sqlCommon = getSQLSelect();
-			if(usedInstitute)sqlCommon += DAOHelpers.getSQLForInstitute(tableName, "t");
+			if (usedInstitute) sqlCommon += DAOHelpers.getSQLForInstitute(tableName, "t");
 		}
 		return sqlCommon;
 	}
 	
-	private String getSQLSelect() throws DAOException  
-	{
+	// TODO: use String.join(",",getColumns())
+	private String getSQLSelect() throws DAOException {
 		try {
 			String sql = "SELECT ";
-			if(usedInstitute)sql+="distinct ";
-			for(String column : getColumns()){
-				sql+="t."+column+", ";
+			if (usedInstitute) sql += "distinct ";
+			for (String column : getColumns()) {
+				sql += "t." + column + ", ";
 			}
 			sql = sql.substring(0, sql.lastIndexOf(","));
-			sql+=" FROM "+tableName+" as t";
+			sql += " FROM "+tableName+" as t";
 			return sql;
 		} catch (MetaDataAccessException e) {
 			throw new DAOException(e);
 		}
 	}
 	
-	private String getSQLUpdate() throws DAOException
-	{
+	private String getSQLUpdate() throws DAOException {
 		try {
-			String sql = "UPDATE "+tableName+" SET ";
-			for(String column : getColumns()){
-				if(!column.equals("id"))
-					sql+=column+"=:"+column+", ";
+			String sql = "UPDATE " + tableName + " SET ";
+			for (String column : getColumns()) {
+				if (!column.equals("id"))
+					sql += column + "=:" + column + ", ";
 			}
 			sql = sql.substring(0, sql.lastIndexOf(","));
 			sql += " WHERE id=:id";
@@ -84,10 +82,10 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		}
 	}
 
-	public List<T> findAll() throws DAOException
-	{
+	// TODO: fix silent error handling
+	public List<T> findAll() throws DAOException {
 		try {
-			String sql = getSqlCommon()+" ORDER by t.code";
+			String sql = getSqlCommon() + " ORDER by t.code";
 			//Logger.debug(sql);
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper);
@@ -96,15 +94,15 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		}
 	}
 
-	public List<ListObject> findAllForList(){
-		String sql = "SELECT code, name from "+tableName +" ORDER by t.code";
+	public List<ListObject> findAllForList() {
+		String sql = "SELECT code, name from " + tableName + " ORDER by t.code";
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}
 	
-	public T findById(Long id) throws DAOException
-	{
-		if(null == id){
+	// TODO: fix silent error handling	
+	public T findById(Long id) throws DAOException {
+		if (null == id) {
 			throw new DAOException("id is mandatory");
 		}
 		try {
@@ -116,19 +114,18 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		}
 	}
 
-	public T findByCode(String code) throws DAOException
-	{
-		if(null == code){
+	// TODO: fix silent error handling		
+	public T findByCode(String code) throws DAOException {
+		if (null == code) {
 			throw new DAOException("code is mandatory");
 		}
-		
 		T o = getObjectInCache(code);
-		if(null != o){
+		if (null != o) {
 			//Logger.debug("find in cache "+entityClass.getCanonicalName() + " : "+code);
 			return o;
-		}else{
+		} else {
 			try {
-				String sql = getSqlCommon()+" WHERE t.code=?";
+				String sql = getSqlCommon() + " WHERE t.code=?";
 				BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 				o = this.jdbcTemplate.queryForObject(sql, mapper, code);
 				setObjectInCache(o, code);
@@ -140,13 +137,12 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		}
 	}
 	
-	public List<T> findByCodes(List<String> codes) throws DAOException
-	{
+	public List<T> findByCodes(List<String> codes) throws DAOException {
 		if(null == codes){
 			throw new DAOException("codes is mandatory");
 		}
 		try {
-			String sql = getSqlCommon()+" WHERE t.code in ("+listToParameters(codes)+")";
+			String sql = getSqlCommon() + " WHERE t.code in (" + listToParameters(codes) + ")";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
 		} catch (DataAccessException e) {
@@ -155,10 +151,8 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		}
 	}
 
-
-	public long save(T value) throws DAOException
-	{
-		if(null == value){
+	public long save(T value) throws DAOException {
+		if (null == value) {
 			throw new DAOException("value is mandatory");
 		}
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
@@ -166,18 +160,12 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		return id;
 	}
 
-
-	public void update(T value) throws DAOException
-	{
-		if(null == value){
+	public void update(T value) throws DAOException	{
+		if (null == value) {
 			throw new DAOException("value is mandatory");
 		}
 		SqlParameterSource ps = new BeanPropertySqlParameterSource(value);
 		jdbcTemplate.update(getSQLUpdate(), ps);
 	}
-
-
-
-
 
 }

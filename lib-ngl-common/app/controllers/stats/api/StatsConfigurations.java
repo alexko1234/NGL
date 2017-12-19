@@ -1,7 +1,8 @@
 package controllers.stats.api;
 
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import controllers.authorisation.Permission;
 import controllers.reporting.api.ConfigurationsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class StatsConfigurations extends CommonController {
 	final static Form<StatsConfiguration> reportConfigForm = form(StatsConfiguration.class);
@@ -107,7 +109,8 @@ public class StatsConfigurations extends CommonController {
 			statsConfiguration = MongoDBDAO.save(InstanceConstants.STATS_CONFIG_COLL_NAME, statsConfiguration);
 			return ok(Json.toJson(statsConfiguration));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -133,10 +136,11 @@ public class StatsConfigurations extends CommonController {
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.STATS_CONFIG_COLL_NAME, statsConfigurationInput);
 				return ok(Json.toJson(statsConfigurationInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("readset code are not the same");
 		}				
 	}

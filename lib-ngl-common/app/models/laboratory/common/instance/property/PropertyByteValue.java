@@ -13,15 +13,16 @@ import models.laboratory.common.instance.PropertyValue;
  * 
  *
  */
-public class PropertyByteValue extends PropertyValue<byte[]>{
+public class PropertyByteValue extends PropertyValue<byte[]> {
 	
+	// TODO: Should be protected and define typeless constructors. 
 	public PropertyByteValue(String _type) {
 		super(_type);
 	}
+	
 	public PropertyByteValue(String _type, byte[] value) {
 		super(_type, value);		
 	}
-	
 	
 	@Override
 	public String toString() {
@@ -32,10 +33,9 @@ public class PropertyByteValue extends PropertyValue<byte[]>{
 	public void validate(ContextValidation contextValidation) { 
 		super.validate(contextValidation);
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
-		if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
+		if (ValidationHelper.checkIfActive(contextValidation, propertyDefinition)) {
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 
 		}		
 	}
 	
-
 }

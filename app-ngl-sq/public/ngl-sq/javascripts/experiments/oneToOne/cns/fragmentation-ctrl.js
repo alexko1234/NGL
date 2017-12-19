@@ -563,31 +563,9 @@ angular.module('home').controller('FragmentationCtrl',['$scope','$http', '$parse
 	$scope.atmService = atmService;
 	
 	var generateSampleSheetNormalisation = function(){
-		generateSampleSheet("normalisation");
+		$scope.fileUtils.generateSampleSheet({"type":"normalisation"});
 	};
 	
-	
-	var generateSampleSheet = function(type){
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url+"?type="+type,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.setSuccess(Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath);
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.generateSampleSheet.error'));
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;							
-		});
-	};
 	if($scope.experiment.instrument.typeCode === "biomek-fx-and-covaris-e220"){
 		
 		$scope.setAdditionnalButtons([{

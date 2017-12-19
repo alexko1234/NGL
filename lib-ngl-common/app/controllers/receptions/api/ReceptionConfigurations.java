@@ -1,12 +1,16 @@
 package controllers.receptions.api;
 
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reception.instance.ReceptionConfiguration;
@@ -29,12 +33,14 @@ import controllers.DocumentController;
 import controllers.ListForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class ReceptionConfigurations extends DocumentController<ReceptionConfiguration> {
-	final Form<ReceptionConfiguration> reportConfigForm = form(ReceptionConfiguration.class);
 	
-	public ReceptionConfigurations() {
-		super(InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
+	final Form<ReceptionConfiguration> reportConfigForm = form(ReceptionConfiguration.class);
+	@Inject
+	public ReceptionConfigurations(NGLContext ctx) {
+		super(ctx,InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
 	}
 	
 	@Permission(value={"reading"})
@@ -87,7 +93,8 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			input = saveObject(input);			
 			return ok(Json.toJson(input));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}	
 	}
 	
@@ -113,8 +120,9 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			if (!ctxVal.hasErrors()) {
 				updateObject(input);
 				return ok(Json.toJson(input));
-			}else {
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 			
 		}else{

@@ -2,6 +2,13 @@ package controllers;
 
 
 import java.beans.PropertyDescriptor;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,30 +41,45 @@ import play.libs.Json;
 import play.modules.jongo.MongoDBPlugin;
 import play.mvc.Controller;
 import play.mvc.Http.Context;
-import play.mvc.Results.StringChunks;
-import play.mvc.Results.Chunks.Out;
+//import play.mvc.Results.StringChunks;
+//import play.mvc.Results.Chunks.Out;
 import play.mvc.Result;
 import play.mvc.With;
+// import scala.io.Source;
 import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
+import akka.stream.javadsl.Source;
+import akka.util.ByteString;
 import controllers.history.UserHistory;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
+import fr.cea.ig.mongo.MongoStreamer;
+
 @Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public abstract class CommonController extends Controller{
+public abstract class CommonController extends Controller {
+// abstract class UNUSED_CommonController extends Controller {
 
-	protected final static DynamicForm listForm = new DynamicForm();
+	// TODO: fix initialization
+	//protected final static DynamicForm listForm = // new DynamicForm(null,null,null); // new DynamicForm()
+		//	fr.cea.ig.play.IGGlobals.form();
 
-
-	/**
+	private static DynamicForm _listForm;
+	
+	protected final static DynamicForm listForm() {
+		if (_listForm == null)
+			_listForm = fr.cea.ig.play.IGGlobals.form();
+		return _listForm;
+	}
+	
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -85,7 +107,7 @@ public abstract class CommonController extends Controller{
 		return results;
 	}
 
-	/**
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -117,7 +139,7 @@ public abstract class CommonController extends Controller{
 		return filledForm;
 	}
 
-	/**
+	/*
 	 * Fill a form in json mode
 	 * @param form
 	 * @param clazz
@@ -169,10 +191,12 @@ public abstract class CommonController extends Controller{
 	}
 
 	protected static String getCurrentUser(){
-		return Context.current().request().username();
+		//return Context.current().request().username();
+		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
+		return fr.cea.ig.authentication.Helper.username(Context.current().session());
 	}
 	
-	/**
+	/*
 	 * A finder for mongoDB
 	 * @param collection
 	 * @param form
@@ -248,7 +272,7 @@ public abstract class CommonController extends Controller{
 		return values;
     }
 	
-	/**
+	/*
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
 	 * @param value
@@ -260,7 +284,7 @@ public abstract class CommonController extends Controller{
 		return getBuilder(value, fields, clazz, null);
 	}
 	
-	/**
+	/*
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
 	 * @param value
@@ -281,7 +305,8 @@ public abstract class CommonController extends Controller{
 		
 		return builder;
 	}
-	/**
+	
+	/*
 	 * Validate authorized field for specific update field
 	 * @param ctxVal
 	 * @param fields
@@ -296,7 +321,7 @@ public abstract class CommonController extends Controller{
 		}				
 	}
 	
-	/**
+	/*
 	 * Validate ig the field is present in the form
 	 * @param ctxVal
 	 * @param fields
@@ -321,8 +346,6 @@ public abstract class CommonController extends Controller{
 		return cal;
 	}
 
-
-
 	protected static Calendar getFromDate(Date date) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -335,20 +358,46 @@ public abstract class CommonController extends Controller{
 	protected static <T extends DBObject> Result nativeMongoDBQQuery(String collectionName, ListForm form, Class<T> type){
 		MongoCollection collection = MongoDBPlugin.getCollection(collectionName);
 		MongoCursor<T> all = collection.find(form.reportingQuery).as(type);
-		if(form.datatable){
-			return ok(getUDTChunk(all)).as("application/json");
-		}else if(form.list){
-			return ok(getChunk(all)).as("application/json");									
-		}else if(form.count){
+		if (form.datatable) {
+			// return ok(getUDTChunk(all)).as("application/json");
+			return MongoStreamer.okStreamUDT(all);
+		} else if(form.list) {
+			// return ok(getChunk(all)).as("application/json");
+			return MongoStreamer.okStream(all);
+		} else if(form.count) {
 			int count = all.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
-		}else{
+		} else {
 			return badRequest();
 		}
 	}
 
+	/*
+	public Result index() {
+	    java.io.File file = new java.io.File("/tmp/fileToServe.pdf");
+	    java.nio.file.Path path = file.toPath();
+	    Source<ByteString, ?> source = FileIO.fromPath(path);
+
+	    Optional<Long> contentLength = Optional.of(file.length());
+
+	    return new Result(
+	        new ResponseHeader(200, Collections.emptyMap()),
+	        new HttpEntity.Streamed(source, contentLength, Optional.of("text/plain"))
+	    );
+	}
+	*/
+	/*
+	private static <T extends DBObject> Source<ByteString, ?> getChunk(MongoCursor<T> all) {
+		return MongoStreamer.stream(all);
+	}
+	
+	private static <T extends DBObject> Source<ByteString, ?> getUDTChunk(MongoCursor<T> all) {
+		return MongoStreamer.streamUDT(all);
+	}
+	*/
+/*	
 	private static <T extends DBObject> StringChunks getChunk(MongoCursor<T> all) {
 		return new StringChunks() {
 			@Override
@@ -357,7 +406,7 @@ public abstract class CommonController extends Controller{
 		    	out.write("[");
 			    while (iter.hasNext()) {
 			    	out.write(Json.toJson(iter.next()).toString());
-		            if(iter.hasNext())out.write(",");
+		            if (iter.hasNext()) out.write(",");
 		        }					
 		        out.write("]");
 			    out.close();					
@@ -374,13 +423,13 @@ public abstract class CommonController extends Controller{
 			    Iterator<T> iter = all.iterator();
 			    while(iter.hasNext()){
 			    	out.write(Json.toJson(iter.next()).toString());
-		            if(iter.hasNext())out.write(",");    	
+		            if (iter.hasNext()) out.write(",");    	
 			    }
 			    out.write("]}");
 			    out.close();				
 			}
 		};
 	}
-	
+	*/
 	
 }

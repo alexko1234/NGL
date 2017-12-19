@@ -1,28 +1,32 @@
 package controllers.samples.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
-import static validation.sample.instance.SampleValidationHelper.*;
+// import static validation.sample.instance.SampleValidationHelper.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+//import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.State;
+// import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.run.instance.Analysis;
+// import models.laboratory.container.instance.Container;
+// import models.laboratory.experiment.instance.Experiment;
+// import models.laboratory.run.instance.Analysis;
 import models.laboratory.sample.instance.Sample;
-import models.utils.CodeHelper;
+// import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import models.utils.ListObject;
+// import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import models.utils.instance.ExperimentHelper;
+// import models.utils.instance.ExperimentHelper;
 import models.utils.instance.SampleHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -36,56 +40,108 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
-import play.mvc.Results;
+// import play.mvc.Results;
 import validation.ContextValidation;
-import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
+// import views.components.datatable.DatatableForm;
+// import views.components.datatable.DatatableResponse;
+//import controllers.AbstractCRUDAPIController;
 
-import com.mongodb.BasicDBObject;
+// import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
+//import controllers.ListForm;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-import controllers.containers.api.ContainerBatchElement;
-import controllers.containers.api.ContainersSearchForm;
+// import controllers.containers.api.ContainerBatchElement;
+// import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResult;
+//import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
-public class Samples extends DocumentController<Sample>{
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static Form<Sample> sampleForm = form(Sample.class);
-	final static Form<SamplesSearchForm> sampleSearchForm = form(SamplesSearchForm.class);
-	final static Form<SampleBatchElement> batchElementForm = form(SampleBatchElement.class);
+//import static fr.cea.ig.mongo.DBQueryBuilder.*;
 
-	final static List<String> defaultKeys =  Arrays.asList("code","typeCode","categoryCode","projectCodes","referenceCollab","properties","valuation","taxonCode","ncbiScientificName","comments","traceInformation");
-	final static List<String> authorizedUpdateFields = Arrays.asList("comments");
+// TODO: cleanup
+// indirection so that it's clear what to implement and who does,
+// real method export would not use a subclass so all the methods
+// are re-exported and their export status explicit. 
+
+public class Samples extends Samples2 {
+// public class Samples extends SamplesCRUD {
+	@Inject
+	public Samples(NGLContext ctx) {
+		super(ctx);
+	}
+	@Permission(value={"reading"})
+	public Result list() {
+		return super.list();
+	}
+	@Permission(value={"writing"})
+	public Result save() throws DAOException {
+		return super.save();
+	}
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	@Permission(value={"writing"})
+	public Result update(String code) throws DAOException {
+		return super.update(code);
+	}
+}
+
+// Standard NGL implementation
+class Samples2 extends DocumentController<Sample> {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
 	
-	public Samples() {
-		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);	
+	private final Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	//private final Form<Sample> sampleForm; // = form(Sample.class);
+	// private final Form<SamplesSearchForm> sampleSearchForm; // = form(SamplesSearchForm.class);
+	//private final Form<SampleBatchElement> batchElementForm; // = form(SampleBatchElement.class);
+
+	public static final List<String> defaultKeys =  
+			Arrays.asList("code",
+					      "typeCode",
+					      "categoryCode",
+					      "projectCodes",
+					      "referenceCollab",
+					      "properties",
+					      "valuation",
+					      "taxonCode",
+					      "ncbiScientificName",
+					      "comments",
+					      "traceInformation");
+	
+	private static final List<String> authorizedUpdateFields = 
+			Arrays.asList("comments");
+	
+	@Inject
+	public Samples2(NGLContext ctx) {
+		super(ctx, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, defaultKeys);
+		updateForm       = ctx.form(QueryFieldsForm.class);
+		//sampleForm       = ctx.form(Sample.class);
+		// sampleSearchForm = ctx.form(SamplesSearchForm.class);
+		//batchElementForm = ctx.form(SampleBatchElement.class);
 	}
 	
-	
-	
 	@Permission(value={"reading"})
-	public Result list(){
+	public Result list() {
 		SamplesSearchForm samplesSearch = filledFormQueryString(SamplesSearchForm.class);
-		if(samplesSearch.reporting){
+		if (samplesSearch.reporting) {
 			return nativeMongoDBQuery(samplesSearch);
-		}else{
+		} else {
 			DBQuery.Query query = getQuery(samplesSearch);
 			return mongoJackQuery(samplesSearch, query);			
 		}		
 	}
 
-	/**
+	/*
 	 * Construct the sample query
 	 * @param samplesSearch
 	 * @return
 	 */
-	private static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
+	public static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
+		// TODO: simply build return value at method end
 		Query query = DBQuery.empty();
 		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
@@ -118,7 +174,7 @@ public class Samples extends DocumentController<Sample>{
 			queryElts.add(DBQuery.regex("life.path", Pattern.compile(samplesSearch.treeOfLifePathRegex)));
 		}
 		
-		
+		// TODO: redundant code, done at method end 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}
@@ -199,10 +255,27 @@ public class Samples extends DocumentController<Sample>{
 		
 		return query;
 	}
+	/*
+	// generic arguments
+	protected <T> Result save_wrapper(BiConsumer<ContextValidation,T> f) {
+		Form<T> filledForm = getMainFilledForm();
+		Sample input = filledForm.get();
+
+	}
 	
+	// Getting the instance to save goes through the getMainFilledForm
+	// function that is used for the instance construction and the errors
+	// from the form.
+	@Permission(value={"writing"})
+	public Result save_small() throws DAOException {
+		return save_wrapper((ctx,val) -> {
+			
+		});
+	}
+	*/
 	
 	@Permission(value={"writing"})
-	public Result save() throws DAOException{
+	public Result save() throws DAOException {
 		Form<Sample> filledForm = getMainFilledForm();
 		Sample input = filledForm.get();
 		
@@ -215,12 +288,14 @@ public class Samples extends DocumentController<Sample>{
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
 		SampleHelper.executeRules(input, "sampleCreation");
-		input.validate(ctxVal);	
+		input.validate(ctxVal);
+		
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);			
 			return ok(Json.toJson(input));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}				
 	}
 
@@ -230,23 +305,22 @@ public class Samples extends DocumentController<Sample>{
 	}
 
 
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
-	public  Result update(String code) throws DAOException{
-	
-		
+	public Result update(String code) throws DAOException {
 		Sample sampleInDB = findSample(code);
 		Logger.debug("Sample with code "+code);
-		if(sampleInDB == null){
-			return badRequest("Sample with code "+code+" not exist");
-		}
-			
+		if (sampleInDB == null)
+			return badRequest("Sample with code " + code + " does not exist");
+
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
-		
+
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		// Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		Form<Sample> filledForm = getMainFilledForm();
 		Sample sampleInForm = filledForm.get();
-	
+
 		if(queryFieldsForm.fields == null){
 			if (code.equals(sampleInForm.code)) {
 				if(null != sampleInForm.traceInformation){
@@ -254,20 +328,21 @@ public class Samples extends DocumentController<Sample>{
 				}else{
 					Logger.error("traceInformation is null !!");
 				}
-							
+
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
-	
+
 				sampleInForm.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, sampleInForm);
 					return ok(Json.toJson(sampleInForm));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-				
-			}else{
+
+			} else {
 				return badRequest("sample code are not the same");
 			}	
 		}else{
@@ -275,39 +350,47 @@ public class Samples extends DocumentController<Sample>{
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
+			// if(!filledForm.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				sampleInForm.comments = InstanceHelpers.updateComments(sampleInForm.comments, ctxVal);
-				
+
 				TraceInformation ti = sampleInDB.traceInformation;
 				ti.setTraceInformation(getCurrentUser());
-				
+
 				if(queryFieldsForm.fields.contains("valuation")){
 					sampleInForm.valuation.user = getCurrentUser();
 					sampleInForm.valuation.date = new Date();
 				}
-				
-				if(!ctxVal.hasErrors()){
+
+				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.and(DBQuery.is("code", code)), 
 							getBuilder(sampleInForm, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(sampleInDB.traceInformation)));
 					if(queryFieldsForm.fields.contains("code") && null != sampleInForm.code){
 						code = sampleInForm.code;
 					}
 					return ok(Json.toJson(findSample(code)));
-					
-				}else{
-					return badRequest(filledForm.errorsAsJson());
+				} else {
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}				
-			}else{
-				return badRequest(filledForm.errorsAsJson());
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		}	
 	}
-	
-	private static DatatableForm updateForm(SamplesSearchForm form) {
+
+	/*private static DatatableForm updateForm(SamplesSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
 		}
 		return form;
-	}
+	}*/
+	
 }
+
+
+
+
+

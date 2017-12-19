@@ -561,6 +561,39 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}				
 	};
 	
+	$scope.fileUtils = {
+			generateSampleSheet : function(params, msgSuccessKey, msgErrorKey){
+				
+				if(!msgSuccessKey)msgSuccessKey='experiments.msg.generateSampleSheet.success';
+				if(!msgErrorKey)msgErrorKey='experiments.msg.generateSampleSheet.error';
+				
+				$http.get(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url, {params:params})
+				.success(function(data, status, headers, config) {
+					var header = headers("Content-disposition");
+					var filepath = header.split("filename=")[1];
+					var filename = filepath.split(/\/|\\/);
+					filename = filename[filename.length-1];
+					filename = filename.replace(/\"/g,"");
+					if(data!=null){
+						$scope.messages.clazz="alert alert-success";
+						$scope.messages.text=Messages(msgSuccessKey)+" : "+filepath;
+						$scope.messages.showDetails = false;
+						$scope.messages.open();	
+						
+						var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+						saveAs(blob, filename);
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.messages.clazz = "alert alert-danger";
+					$scope.messages.text = Messages(msgErrorKey);
+					$scope.messages.setDetails(data);
+					$scope.messages.showDetails = true;
+					$scope.messages.open();				
+				});
+			}
+	};
+	
 	$scope.plateUtils = {
 			/**
 			 * Compute A1, B1, C1, etc.

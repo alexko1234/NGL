@@ -1,6 +1,8 @@
 package controllers.receptions.io;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.reception.instance.ReceptionConfiguration;
 import models.utils.InstanceConstants;
@@ -13,7 +15,13 @@ import validation.ContextValidation;
 import controllers.TPLCommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
+
+// TODO: cleanup
+
+// TODO: cleanup
 
 public class Receptions extends TPLCommonController {
 
@@ -23,7 +31,8 @@ public class Receptions extends TPLCommonController {
 		return MongoDBDAO.findByCode(InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class, code);
 	}
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
 	public Result importFile(String receptionConfigCode){
 		ReceptionConfiguration configuration = getReceptionConfig(receptionConfigCode);
@@ -34,16 +43,17 @@ public class Receptions extends TPLCommonController {
 		if(null != pfv){
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-			try{
+			try {
 				FileService fileService = ReceptionFileService.getFileService(configuration, pfv, contextValidation);
 				fileService.analyse();
-			}catch(Throwable e){
+			} catch(Throwable e) {
 				e.printStackTrace();
-				contextValidation.addErrors("Error", e.getMessage()+"");
+				contextValidation.addErrors("Error", e.getMessage());
 			}
-			if(contextValidation.hasErrors()){
-				return badRequest(filledForm.errorsAsJson());
-			}else{
+			if (contextValidation.hasErrors()) {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
+			} else {
 				return ok();
 			}
 			

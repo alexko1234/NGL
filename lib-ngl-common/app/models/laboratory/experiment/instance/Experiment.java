@@ -1,6 +1,5 @@
 package models.laboratory.experiment.instance;
 
-
 import static validation.common.instance.CommonValidationHelper.FIELD_EXPERIMENT;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.validateCode;
@@ -32,14 +31,13 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.MongoCollection;
 
-import play.Logger;
+//import play.Logger;
 import validation.ContextValidation;
 import validation.IValidation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.DBObject;
-
 
 /**
  * 
@@ -50,7 +48,6 @@ import fr.cea.ig.DBObject;
  * @author mhaquell
  *
  */
-
 @MongoCollection(name="Experiment")
 public class Experiment extends DBObject implements IValidation {
 	
@@ -89,20 +86,19 @@ public class Experiment extends DBObject implements IValidation {
 	
 	
 	
-	public Experiment(){
-		traceInformation=new TraceInformation();		
+	public Experiment() {
+		traceInformation = new TraceInformation();		
 	}
 	
-	public Experiment(String code){
-		this.code=code;		
+	public Experiment(String code) {
+		this.code = code;		
 	}
-	
 	
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		long t0 = System.currentTimeMillis();
-		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);
 			
 		}

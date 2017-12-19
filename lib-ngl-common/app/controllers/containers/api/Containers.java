@@ -1,6 +1,9 @@
 package controllers.containers.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+import fr.cea.ig.mongo.MongoStreamer;
+
 import static validation.container.instance.ContainerValidationHelper.validateConcentration;
 import static validation.container.instance.ContainerValidationHelper.validateQuantity;
 import static validation.container.instance.ContainerValidationHelper.validateSize;
@@ -17,6 +20,8 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -26,6 +31,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
@@ -49,8 +55,8 @@ import play.modules.jongo.MongoDBPlugin;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.Results.StringChunks;
-import play.mvc.Results.Chunks.Out;
+// import play.mvc.Results.StringChunks;
+// import play.mvc.Results.Chunks.Out;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
@@ -62,27 +68,85 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import controllers.CommonController;
+import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
+// import fr.cea.ig.MongoDBDatatableResponseChunks;
+// import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
-public class Containers extends CommonController {
+
+// Indirection so we can swap implementations.
+public class Containers extends Containers2 {
+	@Inject
+	public Containers(NGLContext ctx) {
+		super(ctx);
+	}
+	@Permission(value={"reading"})
+	public Result get(String code) {
+		return super.get(code);
+	}
+	@Permission(value={"reading"})
+	public Result head(String code) {
+		return super.head(code);
+	}
+	@Permission(value={"reading"})
+	public Result list() throws DAOException {
+		return super.list();
+	}
+	@Permission(value={"writing"})
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	public Result update(String code) {
+		return super.update(code);
+	}
+	@Permission(value={"writing"})
+	public Result updateState(String code) {
+		return super.updateState(code);
+	}
+	@Permission(value={"writing"})
+	public Result updateStateBatch() {
+		return super.updateStateBatch();
+	}
+}
+
+class Containers2 extends DocumentController<Container> {
+	
+	/**
+	 * Logger.
+	 */
+	private static final play.Logger.ALogger logger = play.Logger.of(Containers.class);
+	
+	
+	private static final List<String> defaultKeys = 
+			Arrays.asList("code",   "importTypeCode","categoryCode",
+					"state","valuation","traceInformation","properties",
+					"comments","support","contents","volume",
+					"concentration","quantity","size","projectCodes",
+					"sampleCodes",  "fromTransformationTypeCodes","processTypeCodes");
+	
+	private static final List<String> authorizedUpdateFields = 
+			Arrays.asList("valuation","state","comments","volume","quantity","size","concentration");
+	
+	// -- Move to instance fields
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static Form<Container> containerForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","importTypeCode","categoryCode","state","valuation","traceInformation","properties",
-			"comments","support","contents","volume","concentration","quantity","size","projectCodes","sampleCodes","fromTransformationTypeCodes","processTypeCodes");
-	final static List<String> authorizedUpdateFields = Arrays.asList("valuation","state","comments","volume","quantity","size","concentration");
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
 	final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
-	@Permission(value={"reading"})
+		
+	@Inject
+	public Containers2(NGLContext ctx) {
+		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
+	}
+	
+	/*@Permission(value={"reading"})
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 		if(container != null){
@@ -90,15 +154,23 @@ public class Containers extends CommonController {
 		}
 
 		return notFound();
+	}*/
+	@Permission(value={"reading"})
+	public Result get(String code) {
+		return super.get(code);
 	}
 	
-	@Permission(value={"reading"})
+	/*@Permission(value={"reading"})
 	public static Result head(String code) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code)){			
 			return ok();					
 		}else{
 			return notFound();
 		}	
+	}*/
+	@Permission(value={"reading"})
+	public Result head(String code) {
+		return super.head(code);
 	}
 	
 	private static Container findContainer(String containerCode){
@@ -107,67 +179,68 @@ public class Containers extends CommonController {
 
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
-		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
+	public Result list() throws DAOException{
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 		DBQuery.Query query = getQuery(containersSearch);
 		BasicDBObject keys = getKeys(updateForm(containersSearch));
 		
-		if(containersSearch.reporting){
-			return nativeMongoDBQQuery(InstanceConstants.CONTAINER_COLL_NAME,containersSearch, Container.class);
-		}else{
-			if(containersSearch.datatable){
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
-			}else if(containersSearch.count){
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("code", 1);
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
-				int count = results.count();
-				Map<String, Integer> m = new HashMap<String, Integer>(1);
-				m.put("result", count);
-				return ok(Json.toJson(m));
-			}else if(containersSearch.list){
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				List<Container> containers = results.toList();
-
-				List<ListObject> los = new ArrayList<ListObject>();
-				for(Container p: containers){
-					los.add(new ListObject(p.code, p.code));
-				}
-
-				return ok(Json.toJson(los));
-			}else{
-				MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
-
-				return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");	
+		if (containersSearch.reporting) {
+			return nativeMongoDBQQuery(containersSearch);
+		} else if (containersSearch.datatable) {
+			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
+			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
+			return MongoStreamer.okStreamUDT(results);
+		} else if (containersSearch.count) {
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
+			int count = results.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		} else if (containersSearch.list) {
+			// MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			MongoDBResult<Container> results = mongoDBFinder(containersSearch,query, keys);
+			List<Container> containers = results.toList();
+			List<ListObject> los = new ArrayList<ListObject>();
+			for (Container p: containers) {
+				los.add(new ListObject(p.code, p.code));
 			}
-		}			
+			return ok(Json.toJson(los));
+		} else {
+			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query, keys);
+			// return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");
+			// return ok(MongoStreamer.stream(results)).as("application/json");
+			return MongoStreamer.okStream(results);
+		}
 	}
 
 	
 	@Permission(value={"writing"})
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-	public static Result update(String code){
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	public Result update(String code) {
+		logger.debug("udpate " + code);
 		Container container = findContainer(code);
-		if(container == null){
-			return badRequest("Container with code "+code+" not exist");
-		}
+		// 
+		if (container == null)
+			return badRequest("container with code " + code + " does not exist");
 		
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		Form<Container> filledForm = getFilledForm(containerForm, Container.class);
 		Container input = filledForm.get();
 
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (code.equals(input.code)) {
-				if(null != input.traceInformation){
+				if (null != input.traceInformation) { 
 					input.traceInformation.setTraceInformation(getCurrentUser());
-				}else{
+				} else {
 					Logger.error("traceInformation is null !!");
 				}
 				
-				if(!input.state.code.equals(input.state.code)){
+				if (!container.state.code.equals(input.state.code)) {
 					return badRequest("You cannot change the state code. Please used the state url ! ");
 				}
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -175,54 +248,44 @@ public class Containers extends CommonController {
 				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
 				cleanProperty(input);
 				input.validate(ctxVal);
-				if (!ctxVal.hasErrors()) {
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
-					return ok(Json.toJson(input));
-				}else {
-					return badRequest(filledForm.errorsAsJson());
-				}
-				
-			}else{
-				return badRequest("container code are not the same");
+				if (ctxVal.hasErrors())
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, input);
+				return ok(Json.toJson(input));				
+			} else {
+				// This uses a non json overload and this makes the result unreadable
+				// in the UI.
+				return badRequest("url container code and json container code are not the same");
 			}	
-		}else{
+		} else {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			if(!filledForm.hasErrors()){
-				input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
-				
-				TraceInformation ti = container.traceInformation;
-				ti.setTraceInformation(getCurrentUser());
-				
-				if(queryFieldsForm.fields.contains("valuation")){
-					input.valuation.user = getCurrentUser();
-					input.valuation.date = new Date();
-				}
-				
-				if(queryFieldsForm.fields.contains("volume")){
-					validateVolume(input.volume, ctxVal);					
-				}
-				if(queryFieldsForm.fields.contains("quantity")){
-					validateQuantity(input.quantity, ctxVal);					
-				}
-				if(queryFieldsForm.fields.contains("size")){
-					validateSize(input.size, ctxVal);
-				}
-				if(queryFieldsForm.fields.contains("concentration")){
-					validateConcentration(input.concentration, ctxVal);					
-				}
-				if(!ctxVal.hasErrors()){
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-							DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Container.class).set("traceInformation", ti));
-					return ok(Json.toJson(findContainer(code)));
-				}else{
-					return badRequest(filledForm.errorsAsJson());
-				}				
-			}else{
-				return badRequest(filledForm.errorsAsJson());
-			}		
+			if(ctxVal.hasErrors())
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
+			
+			input.comments = InstanceHelpers.updateComments(input.comments, ctxVal);
+
+			TraceInformation ti = container.traceInformation;
+			ti.setTraceInformation(getCurrentUser());
+
+			if (queryFieldsForm.fields.contains("valuation")) {
+				input.valuation.user = getCurrentUser();
+				input.valuation.date = new Date();
+			}
+
+			if (queryFieldsForm.fields.contains("volume"))        validateVolume(input.volume, ctxVal);					
+			if (queryFieldsForm.fields.contains("quantity"))	  validateQuantity(input.quantity, ctxVal);
+			if (queryFieldsForm.fields.contains("size"))          validateSize(input.size, ctxVal);
+			if (queryFieldsForm.fields.contains("concentration")) validateConcentration(input.concentration, ctxVal);					
+
+			if (ctxVal.hasErrors())
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+					DBQuery.and(DBQuery.is("code", code)), getBuilder(input, queryFieldsForm.fields, Container.class).set("traceInformation", ti));
+			return ok(Json.toJson(findContainer(code)));
 		}		
 		
 	}
@@ -233,6 +296,7 @@ public class Containers extends CommonController {
 		if(null != input.volume && null == input.volume.value){
 			input.volume = null;
 		}
+		
 		if(null != input.concentration && null == input.concentration.value){
 			input.concentration = null;
 		}
@@ -246,11 +310,10 @@ public class Containers extends CommonController {
 	}
 
 	@Permission(value={"writing"})
-	public static Result updateState(String code){
+	public Result updateState(String code) {
 		Container container = findContainer(code);
-		if(container == null){
-			return badRequest("Container with code "+code+" not exist");
-		}
+		if (container == null)
+			return badRequest("Container with code " + code + " not exist");
 		Form<State> filledForm =  getFilledForm(stateForm, State.class);
 		State state = filledForm.get();
 		state.date = new Date();
@@ -261,13 +324,14 @@ public class Containers extends CommonController {
 		workflows.setState(ctxVal, container, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(findContainer(code)));
-		}else {
-			return badRequest(filledForm.errorsAsJson());
+		} else {
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 
 	@Permission(value={"writing"})
-	public static Result updateStateBatch(){
+	public Result updateStateBatch() {
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
 		final String user = getCurrentUser();
 		final Lang lang = Http.Context.Implicit.lang();
@@ -296,7 +360,7 @@ public class Containers extends CommonController {
 		return ok(Json.toJson(response));
 	}
 
-	/**
+	/*
 	 * Construct the container query
 	 * @param containersSearch
 	 * @return

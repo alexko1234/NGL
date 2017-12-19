@@ -1,0 +1,11 @@
+@(nav : String, name : String, message : String)(entries : Html)
+<li class="dropdown @("active".when(nav.startsWith(name)))">
+	<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">
+		@Messages(message)
+		<b class="caret"></b>
+	</a>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="process">
+		@entries
+	</ul>					
+</li>
+

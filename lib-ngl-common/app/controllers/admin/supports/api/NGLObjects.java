@@ -1,6 +1,7 @@
 package controllers.admin.supports.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.container.instance.Container;
@@ -39,15 +42,16 @@ import controllers.admin.supports.api.objects.ProcessUpdate;
 import controllers.admin.supports.api.objects.ReadSetUpdate;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
-public class NGLObjects extends APICommonController<NGLObject>{
+public class NGLObjects extends APICommonController<NGLObject> {
 
 	final static Form<NGLObjectsSearchForm> searchForm = form(NGLObjectsSearchForm.class);
 	private Map<String, AbstractUpdate> mappingCollectionUpdates;
 	
-	
-	public NGLObjects() {
-		super(NGLObject.class);
+	@Inject
+	public NGLObjects(NGLContext ctx) {
+		super(ctx,NGLObject.class);
 		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
 		mappingCollectionUpdates.put("ngl_sq.Container", new ContainerUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Process", new ProcessUpdate());
@@ -59,12 +63,14 @@ public class NGLObjects extends APICommonController<NGLObject>{
 	public Result list() {
 		NGLObjectsSearchForm form = filledFormQueryString(NGLObjectsSearchForm.class);
 		
-		Form d = Form.form(); //just used to have errors
+		//Form d = Form.form(); //just used to have errors
+		Form d = form();
 		ContextValidation cv = new ContextValidation(getCurrentUser(), d.errors());
 		form.validate(cv);
-		if(cv.hasErrors()){
-			return badRequest(Json.toJson(d.errorsAsJson()));
-		}else{
+		if (cv.hasErrors()) {
+			// return badRequest(Json.toJson(d.errors-AsJson()));
+			return badRequest(errorsAsJson(cv.getErrors()));
+		} else {
 			List<NGLObject> results = form.collectionNames
 				.stream()
 				.map(collectionName -> getNGLObjects(form, collectionName))
@@ -82,18 +88,19 @@ public class NGLObjects extends APICommonController<NGLObject>{
 		if (input.code.equals(code)) {
 			ContextValidation cv = new ContextValidation(getCurrentUser(), filledForm.errors());
 			input.validate(cv);
-			if(cv.hasErrors()){
-				return badRequest(filledForm.errorsAsJson());
-			}else{
-				
+			if (cv.hasErrors()) {
+				//return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(cv.getErrors()));
+			} else {				
 				mappingCollectionUpdates.get(input.collectionName).update(input, cv);
-				if(cv.hasErrors()){
-					return badRequest(filledForm.errorsAsJson());
-				}else{
+				if (cv.hasErrors()){
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(cv.getErrors()));
+				} else {
 					return ok();
 				}
 			}
-		}else{
+		} else {
 			return badRequest("NGLObject code are not the same");
 		}		
 	}
