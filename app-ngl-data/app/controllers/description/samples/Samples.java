@@ -20,7 +20,7 @@ public class Samples extends CommonController {
 	public static Result save(){
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
-			SampleService.main(errors);
+			//SampleService.main(errors);
 			ImportService.main(errors);
 			
 			if (errors.size() > 0) {
