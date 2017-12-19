@@ -512,11 +512,11 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 						, null, "single" ,101, true, null, null));
 		
 		// FDS 23/11/2016 SUPSQCNG-424 : ajout sequencingType optionnelle avec liste de choix,  niveau process uniquement
-		// FDS 02/08/2017 NGL-1543 la fonction getX5WgPcrFreeSequencingTypes a introduit des incohérences de codes...=> utiliser newValues
+		// FDS 19/12/2017 ajout "NovaSeq 6000"
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de séquencage","sequencingType"
 						, LevelService.getLevels(Level.CODE.Process), String.class, false, "F"
-						, DescriptionFactory.newValues("Hiseq 4000","Hiseq X"), "single" ,102, null, null, null));
+						, DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000"), "single" ,102, null, null, null));
 		
 		// FDS 18/01/2017 JIRA NGL-1259 ajout plateWorkLabel: optionnel,niveau process uniquement
 		propertyDefinitions.add(
