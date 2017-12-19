@@ -70,8 +70,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);	
 	}
 	
-	// NOTE FDS 12/07/2017: mettre le booleen 'active' a false sur un instrument deja existant n'est pas suffisant, il y a un cache (??)
-	// => modifier dans la base de donnees
+	// NOTE FDS 12/07/2017: attention lors de la modification du booleen 'active' sur un instrument il y a un cache de 1Heure
 	public void saveInstrumentUsedTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		
 		List<InstrumentUsedType> l = new ArrayList<InstrumentUsedType>();		
@@ -88,7 +87,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	    /** cBots and sequencers **/	
 		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
 				getInstruments(
-						// 16/01/2017 cbot ancienne version plus sur site => desactiver ??? on ne plus faire de recherche !!!
+						// 16/01/2017 cbot ancienne version plus sur site => desactiver ???
 						createInstrument("cBot1", "cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -112,21 +111,20 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// 07/12/2017 NGL-1730 "cBot-MarieCurix-A et "cBot-MarieCurix-B
-		// 11/12/2017 les Hi9, Hi10 et Hi11 auraient dus etre dédoublés en -A et -B => TODO car necessitent reprise historique MongoDB
+		// 19/12/2017 NGL-1750 les Hi9, Hi10 et Hi11 auraient dus etre dédoublés en -A et -B => !! necessite reprise historique MongoDB
 		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
-						//createInstrument("cBot-Hi9-A",     "cBot-interne-Hi9-A",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi9-B",     "cBot-interne-Hi9-B",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi10-A",    "cBot-interne-Hi10-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi10-B",    "cBot-interne-Hi10-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi11-A",    "cBot-interne-Hi11-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi11-B",    "cBot-interne-Hi11-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-Hi9",     "cBot-interne-Hi9",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-Hi10",    "cBot-interne-Hi10",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-Hi11",    "cBot-interne-Hi11",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						
-						createInstrument("cBot-Miseq1",  "cBot-interne-Miseq1",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("cBot-NextSeq1","cBot-interne-Nextseq1",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi9",   "cBot-interne-Hi9",      null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi10",  "cBot-interne-Hi10",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						//createInstrument("cBot-Hi11",  "cBot-interne-Hi11",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),	
+						createInstrument("cBot-Hi9-A",   "cBot-interne-Hi9-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi9-B",   "cBot-interne-Hi9-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi10-A",  "cBot-interne-Hi10-A",   null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi10-B",  "cBot-interne-Hi10-B",   null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi11-A",  "cBot-interne-Hi11-A",   null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Hi11-B",  "cBot-interne-Hi11-B",   null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-Miseq1",  "cBot-interne-Miseq1",   null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("cBot-NextSeq1","cBot-interne-Nextseq1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-MarieCurix-A","cBot-interne-MarieCurix-A",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-MarieCurix-B","cBot-interne-MarieCurix-B",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube"}), 
@@ -1077,12 +1075,12 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	// FDS ajout 06/12/2017 NGL-1730 (Novaseq6000) + SUPSQCNG-506 (EXTNOVASEQ)(inactivé)
+	// FDS ajout 06/12/2017 NGL-1730 (Novaseq6000) + SUPSQCNG-506 (EXTNOVASEQ)
 	private static List<Instrument> getInstrumentNovaseq6000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
 		instruments.add( createInstrument("MARIECURIX", "MARIECURIX", "V1", true, "/env/ig/atelier/illumina/cng/MARIECURIX/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		instruments.add( createInstrument("EXTNOVASEQ", "EXTNOVASEQ", null, false, "/env/ig/atelier/illumina/cng/EXTNOVASEQ/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add( createInstrument("EXTNOVASEQ", "EXTNOVASEQ", null, true, "/env/ig/atelier/illumina/cng/EXTNOVASEQ/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
 }
