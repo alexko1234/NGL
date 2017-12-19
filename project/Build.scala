@@ -40,13 +40,13 @@ object ApplicationBuild extends Build {
   val distSuffix             = ".2.6-SNAPSHOT"
   val appVersion             = "1.0"    + distSuffix
 	
-	val sqVersion              = "1.36.0" + distSuffix
-	val biVersion              = "1.38.0" + distSuffix
+	val sqVersion              = "1.37.0" + distSuffix
+	val biVersion              = "1.39.0" + distSuffix
 
 	val projectsVersion        = "1.3.1"  + distSuffix
 	val reagentsVersion        = "1.3.0"  + distSuffix
 
-	val subVersion             = "1.3.0"  + distSuffix
+	val subVersion             = "1.4.0"  + distSuffix
 	
 	
 	val libDatatableVersion    = "1.2"    + distSuffix
