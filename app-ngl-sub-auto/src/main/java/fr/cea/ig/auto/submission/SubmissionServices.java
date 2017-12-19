@@ -26,6 +26,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+
 import fr.genoscope.lis.devsi.birds.api.device.JSONDevice;
 import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
@@ -382,7 +385,7 @@ public class SubmissionServices implements ISubmissionServices{
 	private void updateSampleAC(String code, String accession, String externalId) throws FatalException, JSONDeviceException
 	{
 		JSONDevice jsonDevice = new JSONDevice();
-		String sample = "{\"code\":\""+code+"\",\"accession\":\""+accession+"\",\"externalId\":\""+externalId+"\"}";
+		String sample = "{\"code\":\""+StringEscapeUtils.escapeHtml(code)+"\",\"accession\":\""+accession+"\",\"externalId\":\""+externalId+"\"}";
 		//Call PUT update with submission modified
 		log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/api/sra/samples/internal/"+code+"?fields=accession&fields=externalId");
 		log.debug("with JSON "+sample);
