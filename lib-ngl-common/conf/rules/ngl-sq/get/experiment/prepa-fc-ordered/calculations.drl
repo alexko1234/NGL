@@ -14,33 +14,6 @@ rule "prepa-fc-ordered"
     then
     	Logger.debug("Experiment prepa-fc-ordered calculations");
     end
-
-rule "prepa-fc-ordered properties from process to experiment containerIn"
-	@nglSQ( calculations )
-	dialect "java"
-	salience 1000
-	no-loop
-	lock-on-active true
-    when
-    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
-    	 $atomicTransfert: ManyToOneContainer( )
-    	 $InputContainerUsed :InputContainerUsed( $processProperties : contents.get(0).processProperties, $experimentProperties : experimentProperties) from $atomicTransfert.inputContainerUseds
-		 $finalConcentration1 : PropertyValue() from $processProperties.get("finalConcentration1")
-		 $phixPercent : PropertyValue() from $processProperties.get("phixPercent")
-   	then
-   			Logger.debug("experiment properties from process "+ $experiment.code+ " "+ $atomicTransfert.line+" "+ $finalConcentration1.value+" "+$phixPercent.value);
-
-   		if(null == $experimentProperties.get("finalConcentration1")){
-   			PropertySingleValue value = new PropertySingleValue($finalConcentration1.value, "nM");
-   			$experimentProperties.remove("finalConcentration1");
-   			$experimentProperties.put("finalConcentration1",value);
-   		} 
- 		if(null == $experimentProperties.get("phixPercent")){
-   			PropertySingleValue value = new PropertySingleValue($phixPercent.value);
-   			$experimentProperties.put("phixPercent",value);
-   		}    		 		
-   		update($experiment);
-   	end
    	
 rule "prepa-fc-ordered volume stock engaged in denaturation"
 	@nglSQ( calculations )
