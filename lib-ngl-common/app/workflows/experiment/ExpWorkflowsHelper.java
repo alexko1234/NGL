@@ -71,9 +71,9 @@ import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// import play.Logger;
-import play.Play;
+import play.Logger;
 import play.Logger.ALogger;
+import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -94,7 +94,6 @@ import fr.cea.ig.MongoDBResult.Sort;
 public class ExpWorkflowsHelper {
 	private ALogger logger = Logger.of(ExpWorkflowsHelper.class);
 	
-	private static final play.Logger.ALogger logger = play.Logger.of(ExpWorkflowsHelper.class);
 	
 	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
 	private final String NEW_SAMPLE_CODES = "NEW_SAMPLE_CODES";

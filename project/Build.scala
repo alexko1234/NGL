@@ -243,11 +243,7 @@ object ApplicationBuild extends Build {
     )
     
   }
-  val nglSubAuto = Project("ngl-sub-auto", file("ngl-sub-auto"),settings = buildSettingsLib).enablePlugins(play.PlayJava).settings(
-    // Add your own project settings here
-    version := "0.1"
-  )
-
+ 
   val nglPlayMigration =  Project("ngl-play-migration",file("lib-ngl-play-migration"),settings = buildSettings)
       .enablePlugins(play.sbt.PlayJava)
       .settings(

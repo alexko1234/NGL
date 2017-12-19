@@ -44,7 +44,6 @@ import workflows.sra.study.StudyWorkflows;
 public class Studies extends DocumentController<AbstractStudy>{
 	private static final play.Logger.ALogger logger = play.Logger.of(Studies.class);
 
-	private static final play.Logger.ALogger logger = play.Logger.of(Studies.class);
 	
 	final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
