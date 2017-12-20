@@ -52,7 +52,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNGCtrl',['$scope'
 	//NGL-1761: pour l'instant seul le fichier spectramax est disponible (masquer le bouton pour qbit)
 	$scope.button = {
 		isShow:function(){
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() && ($scope.experiment.instrument.typeCode === "spectramax"))
+			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() && ($scope.experiment.instrument.typeCode === "spectramax") || Permissions.check("admin"))
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
