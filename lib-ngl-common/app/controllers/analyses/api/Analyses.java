@@ -79,7 +79,6 @@ public class Analyses extends DocumentController<Analysis> {
 	public Result list() {
 		//Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
 		//AnalysesSearchForm form = filledForm.get();
-		
 		AnalysesSearchForm form = filledFormQueryString( AnalysesSearchForm.class);
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);

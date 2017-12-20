@@ -8,6 +8,7 @@ import java.util.Map;
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
@@ -42,7 +43,6 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
         instrument.id = newId;
         
         insertInstitutes(instrument.institutes, instrument.id, false);
-        
         return instrument.id;
 	}
 	
@@ -50,6 +50,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	public void update(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET code=?, short_name=?, name=?, active=?, path=? WHERE id=?";
 		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);
+		this.cleanCache();
 	}
 	
 	/*
@@ -60,6 +61,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	public void updateByCode(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET short_name=?, name=?, path=? WHERE code=?";
 		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);
+		this.cleanCache();
 	}
 	
 	private void insertInstitutes(List<Institute> institutes, Long instrumentId, boolean deleteBefore) throws DAOException {
