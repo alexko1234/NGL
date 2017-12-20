@@ -69,6 +69,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 		// start order has not to be hard coded here.
 		return seq(
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
+				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				
 				// bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				
@@ -79,12 +80,14 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 				// bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.HtmlAuthenticator.class).eagerly(),
 				bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.ConfiguredAuthenticator.class).eagerly(),
 				// pass validator is for html login test
-				bind(fr.cea.ig.authentication.ILoginPasswordValidator.class).to(fr.cea.ig.authentication.EqualsLoginPasswordValidator.class).eagerly(),
+				// bind(fr.cea.ig.authentication.ILoginPasswordValidator.class).to(fr.cea.ig.authentication.validators.EqualsLoginPasswordValidator.class).eagerly(),
 				
+				// bind(fr.cea.ig.authorization.IAuthorizator.class).to(fr.cea.ig.authorization.authorizators.NeverAuthorizator.class),
+				bind(fr.cea.ig.authorization.IAuthorizator.class).to(fr.cea.ig.authorization.authorizators.ConfiguredAuthorizator.class),
+				 
 				// This should possibly be used as the IAuthenticator instance
 				// models.administration.authorisation.description.dao.AuthenticateDAO
 				
-				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
 				bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),

@@ -1,5 +1,7 @@
 package fr.cea.ig.play;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -40,6 +42,8 @@ public class NGLConfig {
 	
 	public static final String NGL_APPLICATION_VERSION_KEY = "application.version";
 	
+	public static final String NGL_APPLICATION_NAME_KEY = "application.name";
+
 	/**
 	 * Configuration to use.
 	 */
@@ -74,7 +78,7 @@ public class NGLConfig {
 	public String getRulesKey() {
 		return config.getString(NGL_RULES_KEY);
 	}
-	
+		
 	/**
 	 * Is the NGL bar code printing enabled ?
 	 * The configuration path is {@link #NGL_BARCODE_PRINTING_KEY}. 
@@ -94,7 +98,16 @@ public class NGLConfig {
 	 * @return empty string if not defined in the configuration, the configured value otherwise
 	 */
 	public String getApplicationVersion() {
-		return config.getString("application.version","");
+		return config.getString(NGL_APPLICATION_VERSION_KEY,"");
 	}
+	
+	public String getApplicationName() {
+		return config.getString(NGL_APPLICATION_NAME_KEY,"");
+	}
+	
+	public List<String> getStringList(String path) {
+		return config.getStringList(path);
+	}
+	
 	
 }

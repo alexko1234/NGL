@@ -2,6 +2,8 @@ package fr.cea.ig.play;
 
 import com.typesafe.config.Config;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -67,10 +69,34 @@ public class IGConfig {
 		return config.getString(path);
 	}
 	
+	// Silently fails, not good
+	/*
+	public String getString(String[] paths, String defaultValue) {
+		String result = null;
+		for (String path : paths) {
+			if (config.hasPath(path)) {
+				if (result == null) {
+					result = config.getString(path);
+				} else {
+					
+				}
+			}
+		}
+	}
+	*/
+	
 	public String getString(String path, String defaultValue) {
 		if (!config.hasPath(path))
 			return defaultValue;
 		return config.getString(path);
 	}
 	
+	public List<String> getStringList(String path) {
+		try {
+			return config.getStringList(path);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 }

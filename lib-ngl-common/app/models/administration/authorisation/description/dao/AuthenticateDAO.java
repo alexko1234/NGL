@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import fr.cea.ig.authentication.html.IAuthenticate;
 
 @Repository
-public class AuthenticateDAO extends UserDAO implements IAuthenticate{
+public class AuthenticateDAO extends UserDAO implements IAuthenticate {
 
 }

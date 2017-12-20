@@ -25,10 +25,10 @@ public class PermissionHelper {
 	 * @throws DAOException 
 	 */
 	public static boolean checkPermission(String username, String codePermission) throws DAOException {
-		if(null != username){
+		if (null != username) {
 			List<Permission> permissions = Permission.find.findByUserLogin(username);
-			for(Permission p:permissions){
-				if(codePermission.equals(p.code))
+			for (Permission p:permissions) {
+				if (codePermission.equals(p.code))
 					return true;
 			}
 		}

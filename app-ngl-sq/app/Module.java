@@ -1,5 +1,8 @@
 
 // Would have been correct iff play started the Module class by default.
+//   import com.google.inject.AbstractModule;
+//   public class Module extends AbstractModule {
+// Not play.api.inject.Module
 
 /**
  * Started by default by play. Actual definition is in superclass.

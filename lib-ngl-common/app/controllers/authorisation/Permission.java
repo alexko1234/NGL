@@ -18,6 +18,8 @@ import play.mvc.With;
  * 	@author michieli
  */
 
+// TODO: possibly add AuthenticateAction (tbd) to @With
+
 @With(PermissionAction.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

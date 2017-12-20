@@ -26,7 +26,6 @@ import play.data.Form;
 import fr.cea.ig.play.NGLConfig;
 // import io.jsonwebtoken.lang.Collections;
 
-
 // TODO: clean, comment
 
 /**
@@ -104,9 +103,11 @@ public class NGLContext {
 	}
 	
 	public String currentUser() {
-		fr.cea.ig.authentication.Helper.unsetUsername(play.mvc.Http.Context.current().session());
+		// WTF ?
+		// fr.cea.ig.authentication.Helper.unsetUsername(play.mvc.Http.Context.current().session());
 		return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
 		// return "bob l'eponge";
+		// return Authentication.getUser();
 	}
 
 	public Lang currentLang() {
