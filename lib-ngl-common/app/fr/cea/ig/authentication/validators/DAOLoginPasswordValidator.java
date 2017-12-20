@@ -32,7 +32,11 @@ public class DAOLoginPasswordValidator implements ILoginPasswordValidator {
 		String passwordInDB = auth.getUserPassword(login);
 		if (isBlank(passwordInDB))
 			throw new ValidationFailedException("no password or blank in db for user '" + login + "'");
-		System.out.println(" *** " + password + " *** " + passwordInDB + " ***");
+		// Hashed pass must start with $2a$ and not $2y$ otherwise 
+		// a bad salt exception is thrown.
+		if (passwordInDB.startsWith("$2y$"))
+			passwordInDB = "$2a$" + passwordInDB.substring(4);
+		// System.out.println(" *** " + password + " *** " + passwordInDB + " ***");
 		if (!BCrypt.checkpw(password,passwordInDB))
 			throw new ValidationFailedException("bad password");
 	}

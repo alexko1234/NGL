@@ -33,7 +33,8 @@ public class ConfiguredAuthorizator implements IAuthorizator {
 		String mode = config.getString(AUTHZ_MODE_KEY, null);
 		if (mode != null) {
 			delegateClass = modeMap.get(mode);
-			logger.error("unkown mode {}",mode);
+			if (delegateClass == null)
+				logger.error("unkown mode {}",mode);
 		}
 		String delegateClassName = config.getString(AUTHZ_CLASS_KEY, null);
 		if (delegateClassName != null) {
