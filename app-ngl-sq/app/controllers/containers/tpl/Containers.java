@@ -23,12 +23,14 @@ public class Containers extends CommonController {
 	private final home home;
 	private final search search;
 	private final newFromFile newFromFile;
+	private final details details;
 	
 	@Inject
-	public Containers(home home, search search, newFromFile newFromFile) {
+	public Containers(home home, search search, newFromFile newFromFile, details details) {
 		this.home = home;
 		this.search = search;
 		this.newFromFile = newFromFile;
+		this.details = details;
 	}
 	
     public /*static*/ Result home(String code){

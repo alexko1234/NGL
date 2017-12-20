@@ -44,7 +44,8 @@
 			</form>
 	      </div>
 	      
-	      @if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
+	      @* @if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){ *@
+	      @if(PermissionHelper.checkPermission(currentUser,"writing")){
 		     <div class="modal-footer">
 		       	<button class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="cancel();">@Messages("experiment.comment.button.cancel")</button>
 				<button data-dismiss="modal" class="btn btn-primary" ng-show="!isUpdate()"  ng-click="save();">@Messages("experiment.comment.button.save")</button>

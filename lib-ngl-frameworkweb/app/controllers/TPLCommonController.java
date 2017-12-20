@@ -44,7 +44,8 @@ public abstract class TPLCommonController extends Controller {
 	protected String getCurrentUser() {
 		// return Context.current().request().username();
 		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
-		return fr.cea.ig.authentication.Helper.username(Context.current().session());
+		// return fr.cea.ig.authentication.Helper.username(Context.current().session());
+		return controllers.Authentication.getUser(Context.current().session());
 	}
 	
 }

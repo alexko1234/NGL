@@ -375,7 +375,7 @@ public class InstanceHelpers {
 				.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSet.runCode), keys);
 		return r.containerSupportCode;
 	}
-	/**
+	/*
 	 * Used to update content properties 
 	 * @param properties
 	 * @param newProperties
@@ -388,7 +388,7 @@ public class InstanceHelpers {
 		deletedPropertyCodes.forEach(code -> properties.remove(code));
 		return properties;
 	}
-	/**
+	/*
 	 * Update properties with using the oldValue to check if update is needed
 	 * @param properties
 	 * @param newProperties
@@ -588,7 +588,7 @@ public class InstanceHelpers {
 		
 	}
 
-	/**
+	/*
 	 * WARNING : NEED TO CALL AFTER VALIDATION BECAUSE SOME CONVERTION ARE EXECUTE DURING VALIDATION
 	 * @param availablePropertyCodes
 	 * @param oldProperties
@@ -604,7 +604,7 @@ public class InstanceHelpers {
 					 .collect(Collectors.toMap(code -> code, code -> Pair.of(oldProperties.get(code), newProperties.get(code))));		
 	}
 	
-	/**
+	/*
 	 * WARNING : NEED TO CALL AFTER VALIDATION BECAUSE SOME CONVERTION ARE EXECUTE DURING VALIDATION
 	 * @param availablePropertyCodes
 	 * @param dbProperties

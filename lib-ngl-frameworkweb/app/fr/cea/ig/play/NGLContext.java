@@ -102,12 +102,14 @@ public class NGLContext {
 		return message(key) + "-" + config.nglEnv();
 	}
 	
+	// TODO: define as static as this relies on statics
 	public String currentUser() {
 		// WTF ?
 		// fr.cea.ig.authentication.Helper.unsetUsername(play.mvc.Http.Context.current().session());
-		return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
+		// return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
 		// return "bob l'eponge";
 		// return Authentication.getUser();
+		return controllers.Authentication.getUser(play.mvc.Http.Context.current().session());
 	}
 
 	public Lang currentLang() {

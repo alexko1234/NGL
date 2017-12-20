@@ -1,6 +1,11 @@
 @()
+
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
+
+@user            = @{ controllers.Authentication.getUser(Context.current().session()) }
+@writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
+
 <div class="row" ng-controller="DispatchCtrl">
 	<!-- Modal -->
 	<div class="modal fade" id="finalDispatchModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -15,7 +20,7 @@
 	      			<div class="col-md-12 col-lg-12"  ultimate-datatable="containersDT"></div>
 	      		</div>	
 	      </div>
-	      @if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
+	      @if(writePermission){
 		      <div class="modal-footer">
 		          <button class="btn btn-primary" ng-click="containersDT.save()" ng-if="containersDT.getData().length > 0"><i class="fa fa-save"></i></button>							      
 		      </div>

@@ -1,6 +1,11 @@
 @()
+
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
+
+@user            = @{ controllers.Authentication.getUser(Context.current().session()) }
+@writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
+
 <div class="row">
 	<!-- Modal -->
 	<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -17,7 +22,7 @@
 					 </div>
 	      		</div>	
 	      </div>
-	      @if(PermissionHelper.checkPermission(fr.cea.ig.authentication.Helper.username(Context.current().session()), "writing")){
+	      @if(writePermission){
 		      <div class="modal-footer">
 		          <button class="btn btn-danger" ng-click="deleteExperiment()" >@Messages("experiment.question.delete.yes")</i></button>
 		          <button type="button" class="btn btn-default" data-dismiss="modal">@Messages("experiment.question.delete.no")</button>							      
