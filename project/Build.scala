@@ -53,15 +53,14 @@ object ApplicationBuild extends Build {
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
 
 	// IG libraries
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
-	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
-	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "1.9.9-SNAPSHOT"
+	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.0.0-SNAPSHOT"
+	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.0.0-SNAPSHOT"
   // External libraries versions
-	val postgresql  = "org.postgresql"           % "postgresql"         % "9.4-1206-jdbc41"  
+	val postgresql  = "org.postgresql"       % "postgresql"     % "9.4-1206-jdbc41"  
   val commonsLang = "commons-lang"         % "commons-lang"       % "2.4"
   val jsMessages  = "org.julienrf"        %% "play-jsmessages"    % "3.0.0" 
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
-  // val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.2.2"
   val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
 
 	override def settings = super.settings ++ Seq(
@@ -420,32 +419,5 @@ object ApplicationBuild extends Build {
   )
 
   
-  // TODO: remove dead code
-       /*
-   val bcRoute = Project("bc-route",file("buildcheck/route"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		     version := "0.1-SNAPHSHOT"
-		     )
-	 // Use ngl-seq dependencies 
-   val bcRouteCommon = Project("bc-routeCommon",file("buildcheck/routeCommon"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		     version := "0.1-SNAPHSHOT",
-		     //libraryDependencies ++= nglcommonDependencies,
-		     libraryDependencies ++= nglsqDependencies,
-		     // libraryDependencies ++= nglsubDependencies,
-		     // libraryDependencies += "fr.cea.ig.modules" %% "authentication" % "1.4-SNAPSHOT",
-       resolvers := nexus/*,
-       publishArtifact in makePom := false,
-       publishTo := Some(nexusigpublish)*/
-		   ).dependsOn(nglcommon % "test->test;compile->compile")
-		   
-  val bcRouteAuth = Project("bc-routeAuth",file("buildcheck/routeAuth"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    version             := "0.1-SNAPHSHOT",
-    libraryDependencies += ceaAuth, // "fr.cea.ig.modules" %% "authentication" % "2.4-1.5-SNAPSHOT",
-    // libraryDependencies += "fr.cea.ig"         %% "mongodbplugin"  % "1.6.0-SNAPSHOT",
-    libraryDependencies += ceaSpring, // "fr.cea.ig" %% "play-spring-module" % "2.4-1.4-SNAPSHOT",
-    // libraryDependencies ++= nglsqDependencies,
-    libraryDependencies ++= nglcommonDependencies,
-    resolvers           := nexus
-	)
-		   */
 
 }
