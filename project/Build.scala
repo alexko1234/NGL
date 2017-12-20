@@ -37,20 +37,20 @@ object ApplicationBuild extends Build {
   // so the deployed application do not land in the same directories. This could be defined 
   // in some configuration instead of being hardcoded.
   // val distSuffix             = "-SNAPSHOT"
-  val distSuffix             = ".2.6-SNAPSHOT"
-  val appVersion             = "1.0"    + distSuffix
+  val distSuffix             = "-SNAPSHOT"
+  val appVersion             = "2.0.0"    + distSuffix
 	
-	val sqVersion              = "1.37.0" + distSuffix
-	val biVersion              = "1.39.0" + distSuffix
+	val sqVersion              = "2.0.0" + distSuffix
+	val biVersion              = "2.0.0" + distSuffix
 
-	val projectsVersion        = "1.3.1"  + distSuffix
-	val reagentsVersion        = "1.3.0"  + distSuffix
+	val projectsVersion        = "2.0.0"  + distSuffix
+	val reagentsVersion        = "2.0.0"  + distSuffix
 
-	val subVersion             = "1.4.0"  + distSuffix
+	val subVersion             = "2.0.0"  + distSuffix
 	
 	
-	val libDatatableVersion    = "1.2"    + distSuffix
-	val libFrameworkWebVersion = "1.1"    + distSuffix
+	val libDatatableVersion    = "2.0.0"    + distSuffix
+	val libFrameworkWebVersion = "2.0.0"    + distSuffix
 
 	// IG libraries
   val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
