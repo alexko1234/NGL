@@ -27,7 +27,7 @@ public class NGLConfig {
 	/**
 	 * Valid values for the NGL_ENV_PATH value.
 	 */
-	public static final String[] NGL_ENV_VALUES = { "DEV", "PROD" };
+	public static final String[] NGL_ENV_VALUES = { "DEV", "UAT", "PROD" };
 	
 	/**
 	 * NGL institute path in configuration.
