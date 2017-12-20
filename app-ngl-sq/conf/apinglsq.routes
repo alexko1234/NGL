@@ -74,7 +74,7 @@ GET		/api/experiment-type-nodes/:code								@controllers.experiments.api.Experi
 GET		/api/reagents													@controllers.experiments.api.ExperimentReagents.list()
 
 #protocols api
-GET		/api/protocols													controllers.protocols.api.Protocols.list()
+GET		/api/protocols													@controllers.protocols.api.Protocols.list()
 
 
 GET		/api/printing/tags												@controllers.printing.api.Tags.list()
