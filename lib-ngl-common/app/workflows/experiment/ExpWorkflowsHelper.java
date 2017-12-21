@@ -1652,18 +1652,20 @@ public class ExpWorkflowsHelper {
 			Map<String, Pair<PropertyValue, PropertyValue>> updatedProperties = InstanceHelpers.getUpdatedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			Set<String> deletedPropertyCodes = InstanceHelpers.getDeletedPropertiesForSomePropertyCodes(contentPropertyCodes, oldContent.properties, ocuContent.properties);
 			
-			List<Sample> allSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  
-					DBQuery.or(DBQuery.is("code", ocuContent.sampleCode), DBQuery.regex("life.path", Pattern.compile(","+ocuContent.sampleCode+"$|,"+ocuContent.sampleCode+","))))
-			.toList();
-			
-			Set<String> projectCodes = allSamples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
-			Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
-			Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes, updatedProperties);
-			logger.debug(getKey(acu, ocuContent, contentPropertyCodes)+" updatedProperties "+updatedProperties);
-			logger.debug(getKey(acu, ocuContent, contentPropertyCodes)+" deletedPropertyCodes "+deletedPropertyCodes);
-			
-			InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, containerCodes, tags, updatedProperties,
-					deletedPropertyCodes, validation);
+			if(updatedProperties.size() > 0 || deletedPropertyCodes.size() > 0){
+				List<Sample> allSamples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,  
+						DBQuery.or(DBQuery.is("code", ocuContent.sampleCode), DBQuery.regex("life.path", Pattern.compile(","+ocuContent.sampleCode+"$|,"+ocuContent.sampleCode+","))))
+				.toList();
+				
+				Set<String> projectCodes = allSamples.stream().map(s -> s.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
+				Set<String> sampleCodes = allSamples.stream().map(s -> s.code).collect(Collectors.toSet());
+				Set<String> tags = getTagAssignFromContainerLife(containerCodes, ocuContent, projectCodes, sampleCodes, updatedProperties);
+				logger.debug(getKey(acu, ocuContent, contentPropertyCodes)+" updatedProperties "+updatedProperties);
+				logger.debug(getKey(acu, ocuContent, contentPropertyCodes)+" deletedPropertyCodes "+deletedPropertyCodes);
+				
+				InstanceHelpers.updateContentProperties(projectCodes, sampleCodes, containerCodes, tags, updatedProperties,
+						deletedPropertyCodes, validation);
+			}
 			
 		});			
 	}
