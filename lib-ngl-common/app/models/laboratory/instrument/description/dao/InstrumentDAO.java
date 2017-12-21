@@ -49,8 +49,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	@Override
 	public void update(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET code=?, short_name=?, name=?, active=?, path=? WHERE id=?";
-		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);
-		this.cleanCache();
+		jdbcTemplate.update(sql, instrument.code, instrument.shortName, instrument.name, instrument.active, instrument.path, instrument.id);		
 	}
 	
 	/*
@@ -60,8 +59,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument> {
 	// * @throws DAOException
 	public void updateByCode(Instrument instrument) throws DAOException {
 		String sql = "UPDATE instrument SET short_name=?, name=?, path=? WHERE code=?";
-		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);
-		this.cleanCache();
+		jdbcTemplate.update(sql, instrument.shortName, instrument.name, instrument.path, instrument.code);		
 	}
 	
 	private void insertInstitutes(List<Institute> institutes, Long instrumentId, boolean deleteBefore) throws DAOException {
