@@ -3,7 +3,7 @@
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
 
-@user            = @{ controllers.Authentication.getUser(Context.current().session()) }
+@user            = @{ controllers.AuthenticationController.getUser(Context.current().session()) }
 @writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 
 <div class="row" ng-controller="DispatchCtrl">

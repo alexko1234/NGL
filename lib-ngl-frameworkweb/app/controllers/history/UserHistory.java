@@ -75,7 +75,7 @@ public class UserHistory extends Action.Simple {
 				// String login = context.request().username();
 				// String login = fr.cea.ig.authentication.Helper.username(context.request());
 				// String login = fr.cea.ig.authentication.Helper.username(context.session());
-				String login = controllers.Authentication.getUser(context.session());
+				String login = controllers.AuthenticationController.getUser(context.session());
 				String params = Json.toJson(context.request().queryString()).toString();
 				String action = context.request().toString();
 				

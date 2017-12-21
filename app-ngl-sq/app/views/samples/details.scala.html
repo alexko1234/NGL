@@ -7,7 +7,7 @@
 
 @partials.imageModal()
 
-@user            = @{ controllers.Authentication.getUser(Context.current().session()) }
+@user            = @{ controllers.AuthenticationController.getUser(Context.current().session()) }
 @writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 
 

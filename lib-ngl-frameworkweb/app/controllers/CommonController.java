@@ -194,7 +194,7 @@ public abstract class CommonController extends Controller {
 		//return Context.current().request().username();
 		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
 		// return fr.cea.ig.authentication.Helper.username(Context.current().session());
-		return controllers.Authentication.getUser(Context.current().session());
+		return controllers.AuthenticationController.getUser(Context.current().session());
 	}
 	
 	/*
