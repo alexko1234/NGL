@@ -80,7 +80,7 @@ public class Instruments extends CommonController{
 				instrumentInput.update();
 				Instrument.find.cleanCache();
 				InstrumentUsedType.find.cleanCache();
-				return ok(Json.toJson(instrumentInput));
+				return ok(Json.toJson(Instrument.find.findByCode(code)));
 			
 		}else{
 			return badRequest("instrument code are not the same");
