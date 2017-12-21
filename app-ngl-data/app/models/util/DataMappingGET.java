@@ -28,10 +28,12 @@ public class DataMappingGET {
 
 		//Logger.debug("Adaptateur "+adapter);
 		//Logger.debug("Tara "+tara);
+		Logger.debug("getObjectTypeCodeFromLims : " + eSIToulObjectTypeCode);
+		
 		if(eSIToulObjectTypeCode.equals("PLAQUE_96")){
 			return "96-well-plate";
 		}
-		else if(eSIToulObjectTypeCode.equals("PLAQUE_96")){
+		else if(eSIToulObjectTypeCode.equals("PLAQUE_384")){
 			return "384-well-plate";
 		}
 		else if(eSIToulObjectTypeCode.equals("TUBE") || eSIToulObjectTypeCode.equals("TUBERTL")){
