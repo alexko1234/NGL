@@ -54,7 +54,7 @@ rule "Init property retry Job "
 	no-loop
 	when
 		$executionService : ExecutionService( status == ExecutionService.PRE_JOB_EXECUTION_STATUS)
-		$job : Job( treatmentSpecification.specificationGroup == false,  treatmentSpecification.name != null , treatmentSpecification.name in ("sendXML", "transfertRawData", "sendReleaseXML"))
+		$job : Job( treatmentSpecification.specificationGroup == false,  treatmentSpecification.name != null , treatmentSpecification.name == "transfertRawData")
 		not ($jobProperties : JobProperties(key=="retryJob") from $job.jobProperties)
 	then
 		$job.setProperty("retryJob","1");
@@ -68,7 +68,7 @@ rule "Retry Job "
 	no-loop
 	when
 		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
-		$job : Job( treatmentSpecification.specificationGroup == false, executionState == Job.ERROR_STATUS,  treatmentSpecification.name != null , treatmentSpecification.name in ("sendXML", "transfertRawData", "sendReleaseXML"))
+		$job : Job( treatmentSpecification.specificationGroup == false, executionState == Job.ERROR_STATUS,  treatmentSpecification.name != null , treatmentSpecification.name == "transfertRawData")
 		not ($jobProperties : JobProperties(key=="retryJob", value=="3") from $job.jobProperties)
 	then
 		int nb = Integer.parseInt($job.getProperty("retryJob")) +1;
