@@ -31,7 +31,7 @@ public abstract class AbstractImportData implements Runnable{
 		this.name=name;
 		logger=Logger.of(this.getClass().getName());
 		
-		Logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
+		logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
 		
 		//Akka.system()
 		akkaSystem()
