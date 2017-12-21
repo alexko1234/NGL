@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.instrument.description.dao.InstrumentDAO;
+import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.Model;
 //TODO: fix doc generation that produces an error with the unqualified name
 import models.utils.Model.Finder;
@@ -48,6 +49,9 @@ public class Instrument extends Model<Instrument> {
 			return ((InstrumentDAO)getInstance()).findByExperimentTypeQueryParams(instrumentsQueryParams);
 		}
 		
+		public void cleanCache() throws DAOException{
+			 ((InstrumentDAO)getInstance()).cleanCache();
+		}
 	}
 	
 }
