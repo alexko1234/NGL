@@ -45,7 +45,7 @@ public abstract class Workflows<T> {
 	}
 
 	
-	/**
+	/*
 	 * Clone State without historical
 	 * @param state
 	 * @return

@@ -46,7 +46,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		return instrumentUsedTypeMappingQuery.execute(code);
 	}
 
-	/**
+	/*
 	 * Used only in InstrumentMappingQuery
 	 * @param id
 	 * @return

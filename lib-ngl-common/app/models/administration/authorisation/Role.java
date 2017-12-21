@@ -13,7 +13,7 @@ import models.utils.dao.DAOException;
  * @author michieli
  *
  */
-public class Role extends Model<Role>{
+public class Role extends Model<Role> {
 	
 	public String label;
 	public List<Permission> permissions;
@@ -21,19 +21,22 @@ public class Role extends Model<Role>{
 	@JsonIgnore
 	public static RoleFinder find = new RoleFinder();
 	
-	public static class RoleFinder extends Finder<Role>{
+	// Doc generation produces an error with the parent unqualified name.
+	// public static class RoleFinder extends Finder<Role> {
+	public static class RoleFinder extends Model.Finder<Role> {
 		
-		public RoleFinder(){
+		public RoleFinder() {
 			super(RoleDAO.class.getName());
 		}
 		
-		public List<Role> findAll() throws DAOException{
+		public List<Role> findAll() throws DAOException {
 			return ((RoleDAO)getInstance()).findAll();
 		}
 		
-		public List<Role> findByUserLogin(String aLogin) throws DAOException{
+		public List<Role> findByUserLogin(String aLogin) throws DAOException {
 			return ((RoleDAO)getInstance()).findByUserLogin(aLogin);
 		}
+		
 	}
 
 }

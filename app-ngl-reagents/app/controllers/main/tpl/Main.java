@@ -2,6 +2,8 @@ package controllers.main.tpl;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
@@ -12,19 +14,35 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 
-import play.Routes;
+import play.Logger;
+// import play.Routes;
+import play.routing.JavaScriptReverseRouter;
 import play.api.modules.spring.Spring;
+import play.libs.Scala;
 import play.mvc.Result;
 import views.html.home;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 
-public class Main extends CommonController{
+public class Main extends CommonController {
 
-	final static JsMessages messages = JsMessages.create(play.Play.application());
+	private static final Logger.ALogger logger = Logger.of(Main.class);
+	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
-	public static Result home() {
+	private static JsMessages messages;
+	
+	private final home home;
+
+	@Inject
+	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
+		logger.debug("injecting " + jsMessagesFactory);
+		messages = jsMessagesFactory.all();
+		this.home = home;
+		logger.info("injected");
+	}
+
+	public /*static*/ Result home() {
 		return ok(home.render());
 	}
 
@@ -68,7 +86,8 @@ public class Main extends CommonController{
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
-				Routes.javascriptRouter("jsRoutes"  	       
+				// Routes.javascriptRouter("jsRoutes"
+				JavaScriptReverseRouter.create("jsRoutes"
 						// Routes	  	         	        
 						)
 				);
@@ -76,9 +95,10 @@ public class Main extends CommonController{
 
 
 	public static Result jsMessages() {
+		//return ok(messages.generate("Messages")).as("application/javascript");
+		//return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
+		return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
 
-
-		return ok(messages.generate("Messages")).as("application/javascript");
 	}
 
 }

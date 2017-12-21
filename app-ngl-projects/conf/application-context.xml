@@ -17,7 +17,7 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	<context:component-scan base-package="models" />
 	<context:component-scan base-package="services" />
     <context:component-scan base-package="workflows" />
-    
+    <bean id="code" class="models.utils.code.DefaultCodeImpl"></bean>
   	<jee:jndi-lookup id="ngl" jndi-name="ngl" />
   	
 	<!-- Define the transaction strategy depends environment here JDBC. Reference 

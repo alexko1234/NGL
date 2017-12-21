@@ -15,21 +15,21 @@ public class PrintServicesException extends Exception {
 		super();		
 	}
 
-	/**
+	/*
 	 * @param message
 	 */
 	public PrintServicesException(String message) {
 		super(message);
 	}
 
-	/**
+	/*
 	 * @param cause
 	 */
 	public PrintServicesException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
+	/*
 	 * @param message
 	 * @param cause
 	 */

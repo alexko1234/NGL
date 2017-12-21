@@ -35,6 +35,5 @@ public class RemoveStateFromFile  extends CommonController {
 		Logger.info("Migration finish");
 		return ok("Migration Finish");
 	}
-
 	
 }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.ITracingAccess;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -25,54 +26,87 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.tree.TreeOfLifeNode;
 import models.utils.InstanceConstants;
 
-import org.mongojack.MongoCollection;
+// import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.experiment.instance.ContainerUsedValidationHelper;
+// import validation.experiment.instance.ContainerUsedValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import controllers.ICommentable;
 import fr.cea.ig.DBObject;
 
-
+// link to this : {@link models.laboratory.container.instance.Container}
 
 /**
  * 
- * Instances Container are stored in MongoDB collection named Container 
- * Container is referenced in collection Experiment, Purifying, TransferMethod, Extraction, QC in embedded class ListInputOutputContainer
- * The Relationship between containers aren't storing in the container but in class/collection RelationshipContainer 
- * In Container, the link with experiment are the attribut 'fromExperimentTypes' who help to manage Container in workflow 
+ * Container is referenced from Experiment, Purifying, TransferMethod, 
+ * Extraction, QC in embedded class ListInputOutputContainer.
+ * The Relationship between containers aren't stored in the container 
+ * but in class/collection RelationshipContainer. 
+ * In Container, the link with experiment is the attribute 'fromExperimentTypes' 
+ * who helps to manage Container in workflow. 
  *  
+ * Container collection name is defined as {@link models.utils.InstanceConstants#CONTAINER_COLL_NAME}.
+ * 
  * @author mhaquell
+ * @author vrd
  *
  */
-@MongoCollection(name="Container")
-public class Container extends DBObject implements IValidation {
+// @MongoCollection(name="Container")
+public class Container extends DBObject implements IValidation, ITracingAccess, ICommentable {
 
 	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
 	//duplication for output in exp :code, categoryCode, contents, mesured*, //contents just for tag and tagCategory
 	
 	
 	public String importTypeCode;
-	//ContainerCategory Ref
+	
+	/**
+	 * Category code ({@link models.laboratory.container.description.ContainerCategory}). 
+	 */
 	public String categoryCode;
 
+	/**
+	 * State information, see {@link models.laboratory.common.instance.State} for definition.
+	 */
 	public State state;
+	
+	/**
+	 * Valuation information.
+	 */
 	public Valuation valuation;
 
-	// Container informations
+	/**
+	 * Access information.
+	 */
 	public TraceInformation traceInformation;
+	
+	/**
+	 * Properties.
+	 */
 	public Map<String, PropertyValue> properties;
+	
+	/**
+	 * Comments.
+	 */
 	public List<Comment> comments = new ArrayList<Comment>(0);
 
-	//Relation with container support
+	/**
+	 * Relation with container support.
+	 */
 	public LocationOnContainerSupport support; 
 
-	//Embedded content with values;
-	//public List<Content> contents;
+	/**
+	 * Content description as a list of content that describe the
+	 * parts contained in this container (percentages of samples).
+	 */
 	public List<Content> contents;
-	// Embedded QC result, this data are copying from collection QC
+	
+	/**
+	 * QC Experiment results (projection). 
+	 */
 	public List<QualityControlResult> qualityControlResults; 
 
 	public PropertySingleValue volume;        
@@ -95,27 +129,29 @@ public class Container extends DBObject implements IValidation {
 	public String fromTransfertCode;
 	public String fromTransfertTypeCode;
 	
-	//tree of life
+	/**
+	 * Container history tree.
+	 */
 	public TreeOfLifeNode treeOfLife;
 	
 	
-	public Container(){
+	public Container() {
 		//properties=new HashMap<String, PropertyValue>();
-		contents=new ArrayList<Content>();
-		traceInformation=new TraceInformation();
-		projectCodes = new HashSet<String>();
-		sampleCodes = new HashSet<String>();
+		contents          = new ArrayList<Content>();
+		traceInformation  = new TraceInformation();
+		projectCodes      = new HashSet<String>();
+		sampleCodes       = new HashSet<String>();
 		//comments = new ArrayList<>();
 		//qualityControlResults = new HashSet<>();
 		fromTransformationTypeCodes = new HashSet<>();
-		valuation = new Valuation();	
+		valuation         = new Valuation();	
 	}
 		
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation){
 		
-		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+		if (contextValidation.getObject(FIELD_STATE_CODE) == null) {
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
 		}
 		
@@ -146,5 +182,25 @@ public class Container extends DBObject implements IValidation {
 		validateRules(this, contextValidation);
 	}
 
+	// IAccessTracking
 	
+	@Override
+	public TraceInformation getTraceInformation() {
+		if (traceInformation == null)
+			traceInformation = new TraceInformation();
+		return traceInformation;
+	}
+
+	// ICommentable
+	
+	@Override
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	@Override
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 }

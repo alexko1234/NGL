@@ -10,29 +10,59 @@ import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
 
+// This link : {@link models.laboratory.common.instance.State}
+
+/**
+ * State, at least embedded in 
+ * <ul>
+ *   <li>{@link models.laboratory.container.instance.Container}.</li>
+ *   <li>{@link models.laboratory.container.instance.ContainerSupport}</li>
+ * </ul>
+ * 
+ * @author vrd
+ *
+ */
 public class State implements IValidation {
 
+	/**
+	 * State code, possible values are defined in {@link models.laboratory.common.description.State}.
+	 */
 	public String code;
+	
+	/**
+	 * Creation date.
+	 */
 	public Date date;
+	
+	/**
+	 * Creation user name.
+	 */
 	public String user;
+	
+	/**
+	 * State extraneous info (from some mongo definition ~Resolution).
+	 */
 	public Set<String> resolutionCodes;
 
+	/**
+	 * History of previous states.
+	 */
 	public Set<TransientState> historical;
 
-	public State(String code,String user){
-		this.code=code;
-		this.user=user;
-		this.date = new Date();
+	public State(String code, String user) {
+		this.code = code;
+		this.user = user;
+		date      = new Date();
 	}
 	
-	public State(){
-		this.date = new Date();
+	public State() {
+		date = new Date();
 	}
 	
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		CommonValidationHelper.validateStateCode(this.code, contextValidation);
+		CommonValidationHelper.validateStateCode(code, contextValidation);
 		ValidationHelper.required(contextValidation, date, "date");
 		ValidationHelper.required(contextValidation, user, "user");
 		CommonValidationHelper.validateResolutionCodes(resolutionCodes,	contextValidation);

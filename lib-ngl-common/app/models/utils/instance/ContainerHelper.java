@@ -83,7 +83,8 @@ public class ContainerHelper {
 		container.sampleCodes.add(sample.code);
 
 	}
-	/**
+	
+	/*
 	 * fusion content if same projectCode, sampleCode and tag if exist.
 	 * 
 	 * the fusion : 
@@ -197,14 +198,14 @@ public class ContainerHelper {
 	}
 
 	private static String getContentKey(Content content) {
-		if(content.properties.containsKey("tag")){
-			return content.projectCode+"_"+content.sampleCode+"_"+content.properties.get("tag").value;
+		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+			return content.projectCode+"_"+content.sampleCode+"_"+content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value;
 		}else{
 			return content.projectCode+"_"+content.sampleCode;
 		}		
 	}
 
-	/**
+	/*
 	 * clone and compute percentage
 	 * @param contents
 	 * @param percentage
@@ -223,7 +224,6 @@ public class ContainerHelper {
 		}
 		return newContents;
 	}
-
 
 	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 

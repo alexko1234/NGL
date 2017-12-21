@@ -30,7 +30,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Project")
-public class Project extends DBObject implements IValidation{
+public class Project extends DBObject implements IValidation {
 
 	public String name;
 	public String typeCode;

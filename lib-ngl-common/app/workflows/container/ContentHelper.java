@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.utils.InstanceConstants;
 
 @Service
 public class ContentHelper {
-	public static final String TAG_PROPERTY_NAME = "tag";
-	/**
+	
+	
+	/*
 	 * Give MongoDB query to find a specific content inside containers
 	 * @param container
 	 * @param content
@@ -21,13 +23,12 @@ public class ContentHelper {
 		
 		Query contentQuery =  DBQuery.is("projectCode", content.projectCode).is("sampleCode", content.sampleCode);
 		
-		if(content.properties.containsKey(TAG_PROPERTY_NAME)){
-			contentQuery.is("properties.tag.value", content.properties.get(TAG_PROPERTY_NAME).value);
+		if(content.properties.containsKey(InstanceConstants.TAG_PROPERTY_NAME)){
+			contentQuery.is("properties.tag.value", content.properties.get(InstanceConstants.TAG_PROPERTY_NAME).value);
 		}
 		query.elemMatch("contents", contentQuery);
 		
 		return query;
 	}
-	
 
 }

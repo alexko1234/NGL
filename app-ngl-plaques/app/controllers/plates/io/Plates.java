@@ -1,6 +1,7 @@
 package controllers.plates.io;
 
-import static play.data.Form.form;
+//import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,32 +32,43 @@ import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.TPLCommonController;
 
+import fr.cea.ig.play.NGLContext;
+import javax.inject.Inject;
 
+// TODO: extends DocumentController
 public class Plates extends TPLCommonController {
 	
 	final static Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
 	
+	private final NGLContext ctx;
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@Inject
+	public Plates(NGLContext ctx) {
+		this.ctx = ctx;	
+	}
+	
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = fr.cea.ig.play.IGBodyParsers.Json5MB.class)
 	public Result importFile(Integer emnco){
 		
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
 		PropertyFileValue pfv = filledForm.get();
-		if(null != pfv){
+		if (null != pfv) {
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-			if(!contextValidation.hasErrors()){
-				try{
+			if (!contextValidation.hasErrors()) {
+				try {
 					List<Well> wells = importFile(emnco, pfv, contextValidation);
 					if (!contextValidation.hasErrors()) {	
 						return ok(Json.toJson(wells));
 					}
-				}catch(Throwable e){
+				} catch(Throwable e) {
 					e.printStackTrace();
 					contextValidation.addErrors("Error :", e.getMessage()+"");
 				}
 			}
-			return badRequest(filledForm.errorsAsJson());
-		}else{
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(ctx.errorsAsJson(contextValidation.getErrors()));
+		} else {
 			return badRequest("missing file");
 		}		
 	}

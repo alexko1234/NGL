@@ -13,35 +13,33 @@ import org.springframework.stereotype.Repository;
 import play.api.modules.spring.Spring;
 
 @Repository
-public class ImportTypeDAO extends AbstractDAOCommonInfoType<ImportType>{
-
+public class ImportTypeDAO extends AbstractDAOCommonInfoType<ImportType> {
 
 	protected ImportTypeDAO() {
 		super("import_type", ImportType.class, ImportTypeMappingQuery.class, 
-				"SELECT distinct c.id, c.fk_common_info_type, c.fk_import_category ",
-				"FROM import_type as c "+sqlCommonInfoType, false);
-						
+			  "SELECT distinct c.id, c.fk_common_info_type, c.fk_import_category ",
+			  "FROM import_type as c " + sqlCommonInfoType, false);
 	}
 
 	@Override
 	public long save(ImportType importType) throws DAOException {
-		
-		if(null == importType){
+
+		if (null == importType) {
 			throw new DAOException("importType is mandatory");
 		}
 		//Check if category exist
-		if(importType.category == null || importType.category.id == null){
+		if (importType.category == null || importType.category.id == null) {
 			throw new DAOException("ImportCategory is not present !!");
 		}
-		
+
 		//Add commonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		importType.id = commonInfoTypeDAO.save(importType);
 		//Create sampleType 
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("id", importType.id);
+		parameters.put("id",                  importType.id);
 		parameters.put("fk_common_info_type", importType.id);
-		parameters.put("fk_import_category", importType.category.id);
+		parameters.put("fk_import_category",  importType.category.id);
 		jdbcInsert.execute(parameters);
 		return importType.id;
 	}
@@ -60,6 +58,5 @@ public class ImportTypeDAO extends AbstractDAOCommonInfoType<ImportType>{
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(importType);
 	}
-
 
 }

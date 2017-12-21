@@ -49,14 +49,12 @@ public class ReadSetWorkflowsHelper {
 	
 	public void updateBioinformaticValuation(ReadSet readSet, TBoolean valid, String user, Date date)
 	{
-		if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 			readSet.bioinformaticValuation.valid = valid;
 			readSet.bioinformaticValuation.user = user;
 			readSet.bioinformaticValuation.date = date;
 
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation));
-		}
 	}
 	
 	public void updateFiles(ReadSet readSet, ContextValidation contextValidation)

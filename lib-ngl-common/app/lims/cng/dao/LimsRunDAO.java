@@ -25,7 +25,7 @@ public class LimsRunDAO {
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
     }
-    /**
+    /*
      * Return the list of active sequencers.
      * @return
      */
@@ -40,7 +40,7 @@ public class LimsRunDAO {
     	return this.jdbcTemplate.query(sql, mapper);
     }
     
-    /**
+    /*
      * Returns the list of experiments (illumina runs) for a containerSupportCode (flowcell barcode).
      * @return experiments (illumina runs) for a containerSupportCode (flowcell barcode)
      */

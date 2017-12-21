@@ -1,6 +1,7 @@
 package controllers.runs.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 
-public class RunCategories extends CommonController{
+public class RunCategories extends CommonController {
 
 	final static Form<RunCategoriesSearchForm> runCategoriesForm = form(RunCategoriesSearchForm.class);
 	

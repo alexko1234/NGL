@@ -1,11 +1,16 @@
 package controllers.reagents.api;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static play.data.Form.form;
+import javax.inject.Inject;
+
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
+
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reagent.description.AbstractCatalog;
@@ -31,12 +36,14 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
-
+import fr.cea.ig.play.NGLContext;
 import views.components.datatable.DatatableResponse;
 
-public class Reagents extends DocumentController<Reagent>{
-	public Reagents() {
-		super(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
+public class Reagents extends DocumentController<Reagent> {
+	
+	@Inject
+	public Reagents(NGLContext ctx) {
+		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
 	}
 
 	final static Form<ReagentSearchForm> reagentSearchForm = form(ReagentSearchForm.class);
@@ -57,45 +64,41 @@ public class Reagents extends DocumentController<Reagent>{
 
 	public Result save(){
 		Form<Reagent> reagentFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			Reagent reagent = reagentFilledForm.get();
-			reagent.code = ReagentCodeHelper.getInstance().generateReagentCode();
-			
-			reagent.traceInformation = new TraceInformation();
-			reagent.traceInformation.createUser =  getCurrentUser();
-			reagent.traceInformation.creationDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setCreationMode();
-			/*if(ValidationHelper.required(contextValidation, reagent.name, "name")){
-				reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
-			}*/
+		Reagent reagent = reagentFilledForm.get();
+		reagent.code = ReagentCodeHelper.getInstance().generateReagentCode();
+		
+		reagent.traceInformation = new TraceInformation();
+		reagent.traceInformation.createUser =  getCurrentUser();
+		reagent.traceInformation.creationDate = new Date();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+		contextValidation.setCreationMode();
+		/*if(ValidationHelper.required(contextValidation, reagent.name, "name")){
+			reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
+		}*/
 
-			reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(reagent));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson());
+		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(reagent));
+		 // legit, spaghetti above
 	}
 
 	public Result update(String code){
 		Form<Reagent> reagentFilledForm = getMainFilledForm();
-		if(!mainForm.hasErrors()){
-			Reagent reagent = reagentFilledForm.get();
+		Reagent reagent = reagentFilledForm.get();
 
-			reagent.traceInformation.modifyUser =  getCurrentUser();
-			reagent.traceInformation.modifyDate = new Date();
-			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
-			contextValidation.setUpdateMode();
+		reagent.traceInformation.modifyUser =  getCurrentUser();
+		reagent.traceInformation.modifyDate = new Date();
+		
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), reagentFilledForm.errors());
+		contextValidation.setUpdateMode();
 
-			reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok(Json.toJson(reagent));
-			}
-		}
-		return badRequest(mainForm.errorsAsJson());
+		reagent = (Reagent)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, reagent, contextValidation);
+		if (contextValidation.hasErrors())
+			return badRequest(errorsAsJson(contextValidation.getErrors()));
+		return ok(Json.toJson(reagent));
+		 // legit, spaghetti above
 	}
 
 	public Result list(){

@@ -22,7 +22,9 @@ import play.api.modules.spring.Spring;
  * Class attributes common types
  * Represented by a table in the database with its own id
  * The subclasses are represented by tables in the database with the same id as the parent class
- * Relations with the protocols and instruments are accessible by the common_info_type table for the experiment subclasses (experimentType, qualityCcontrolType ...)
+ * Relations with the protocols and instruments are accessible by the common_info_type table for the
+ * experiment subclasses (experimentType, qualityCcontrolType ...)
+ * 
  * @author ejacoby
  *
  */
@@ -79,7 +81,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.active=commonInfoType.active;
 	}
 
-	/**
+	/*
 	 * Return the PropertyDefinition that's contain all levels
 	 * @param levels
 	 * @return

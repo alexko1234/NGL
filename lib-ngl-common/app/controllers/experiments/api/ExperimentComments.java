@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.description.Level;
@@ -23,11 +25,13 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.SubDocumentController;
 import controllers.authorisation.Permission;
-@Controller
-public class ExperimentComments extends SubDocumentController<Experiment, Comment>{
+import fr.cea.ig.play.NGLContext;
 
-	public ExperimentComments() {
-		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
+// @Controller
+public class ExperimentComments extends SubDocumentController<Experiment, Comment>{
+	@Inject
+	public ExperimentComments(NGLContext ctx) {
+		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, Comment.class);
 	}
 	
 	protected Query getSubObjectQuery(String parentCode, String code){
@@ -70,13 +74,14 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 		ctxVal.setCreationMode();
 		ctxVal.putObject("experiment", objectInDB);		
 		inputComment.validate(ctxVal);
-		if(!ctxVal.hasErrors()){
+		if (!ctxVal.hasErrors()) {
 			updateObject(DBQuery.is("code", parentCode), 
 					DBUpdate.push("comments", inputComment)
 					.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 			return get(parentCode, inputComment.code);
 		} else {
-			return badRequest(filledForm.errorsAsJson());			
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}		
 	}
 
@@ -96,18 +101,19 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 				ctxVal.setUpdateMode();
 				ctxVal.putObject("experiment", objectInDB);
 				inputComment.validate(ctxVal);
-				if(!ctxVal.hasErrors()){
+				if (!ctxVal.hasErrors()) {
 					updateObject(DBQuery.is("code", parentCode).is("comments.code", inputComment.code), 
 							DBUpdate.set("comments.$", inputComment)
 							.set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 					return get(parentCode, code);
 				} else {
-					return badRequest(filledForm.errorsAsJson());			
+					// return badRequest(filledForm.errors-AsJson());
+					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				return badRequest("treatment code are not the same");
 			}
-		}else{
+		} else {
 			return forbidden();
 		}
 	}

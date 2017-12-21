@@ -1,6 +1,7 @@
 package controllers.instruments.io;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.lang.reflect.Constructor;
 
@@ -24,6 +25,8 @@ import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
 
 public class IO extends TPLCommonController {
 	
@@ -98,23 +101,25 @@ public class IO extends TPLCommonController {
 
 		AbstractOutput output = getOutputInstance(experiment, contextValidation);
 		
-		if(!contextValidation.hasErrors()){
-			try{
+		if (!contextValidation.hasErrors()) {
+			try {
 				File file = output.generateFile(experiment, contextValidation);
 				if (!contextValidation.hasErrors() && null != file) {									
 					response().setContentType("application/x-download");  
 					response().setHeader("Content-disposition","attachment; filename="+file.filename);
 					return ok(file.content);
 				}
-			}catch(Throwable e){
+			} catch(Throwable e) {
 				Logger.error("IO Error :", e);
 				contextValidation.addErrors("Error :", e.getMessage());
 			}
 		}		
-		return badRequest(filledForm.errorsAsJson());
+		// return badRequest(filledForm.errors-AsJson());
+		return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
 	}
 	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	@Permission(value={"writing"})
 	public Result importFile(String experimentCode, String extraInstrument){ // FDS 25/10 ajout param optionnel pour instrument additionnel  (voir apinglsq.routes??)
 		Experiment experiment = getExperiment(experimentCode);
@@ -123,26 +128,26 @@ public class IO extends TPLCommonController {
 		Form<PropertyFileValue> filledForm = getFilledForm(fileForm,PropertyFileValue.class);
 		PropertyFileValue pfv = filledForm.get();
 		
-		DynamicForm dynamicfilledForm = form().bindFromRequest(); 
-        ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-        contextValidation.getContextObjects().putAll(dynamicfilledForm.data());
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+        fillDataWith(contextValidation.getContextObjects(), request().queryString());
 		
 		if(null != pfv){
 			AbstractInput input = getInputInstance(experiment, contextValidation, extraInstrument ); // FDS 25/10 ajout param optionnel pour instrument additionnel
 			
-			if(!contextValidation.hasErrors()){
-				try{
+			if (!contextValidation.hasErrors()) {
+				try {
 					experiment = input.importFile(experiment, pfv,contextValidation);
 					if (!contextValidation.hasErrors()) {	
 						return ok(Json.toJson(experiment));
 					}
-				}catch(Throwable e){
+				} catch(Throwable e) {
 					Logger.error(e.getMessage(),e);
 					contextValidation.addErrors("Error :", e.getMessage()+"");
 				}
 			}
-			return badRequest(filledForm.errorsAsJson());
-		}else{
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(contextValidation.getErrors()));
+		} else {
 			return badRequest("missing file");
 		}		
 	}

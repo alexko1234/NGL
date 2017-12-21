@@ -42,7 +42,7 @@ public class ValidationHelper {
 		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param properties
@@ -52,7 +52,7 @@ public class ValidationHelper {
 		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param properties
@@ -136,7 +136,7 @@ public class ValidationHelper {
 	
 	private static void cleanningProperties(Map<String, PropertyValue> properties) {
 		List<String> removedKeys = properties.entrySet().parallelStream()
-			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null))
+			.filter(entry -> (entry.getValue() == null || entry.getValue().value == null || StringUtils.isBlank(entry.getValue().value.toString())))
 			.map(entry -> entry.getKey())
 			.collect(Collectors.toList());
 		
@@ -157,7 +157,7 @@ public class ValidationHelper {
 		}						
 	}
 
-	/**
+	/*
 	 * transform the list of multimap where the key is the prefix of the code.
 	 * 
 	 * ex : code = prop.toto the key is prop.
@@ -178,7 +178,7 @@ public class ValidationHelper {
 	
 
 	
-	/**
+	/*
 	 * 
 	 * @param className
 	 * @return
@@ -194,7 +194,7 @@ public class ValidationHelper {
 		return clazz;
 	}	
 	
-	/**
+	/*
 	 * 
 	 * @param type : final type
 	 * @param value : the value
@@ -236,7 +236,7 @@ public class ValidationHelper {
 		return o;
 	}
 
-	/**
+	/*
 	 * Convert a String to the good object
 	 * @param type
 	 * @param value
@@ -253,14 +253,14 @@ public class ValidationHelper {
 	}
 	
 	public static List<Object> convertStringToType(String type, List<String> values){
-		try{
+		try {
 			Class<?> valueClass = getClass(type);
 			List<Object> objects = new ArrayList<Object>(values.size());
-			for(String value : values){
+			for (String value : values) {
 				objects.add(convertValue(valueClass, value, null));
 			}			
 			return objects;
-		}catch(Throwable e){
+		} catch(Throwable e) {
 			Logger.error(e.getMessage(),e);			
 		}
 		return null;		
@@ -268,14 +268,14 @@ public class ValidationHelper {
 	
 	
 	public static Object convertValue(Class<?> valueClass, Object value, String inputFormat) {
-		if(Number.class.isAssignableFrom(value.getClass())){
+		if (Number.class.isAssignableFrom(value.getClass())) {
 			return convertValue(valueClass, (Number)value);
-		}else{
+		} else {
 			return convertValue(valueClass, value.toString(), inputFormat);
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param type : final type
 	 * @param value : the value
@@ -303,7 +303,7 @@ public class ValidationHelper {
 		return o;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param type : final type
 	 * @param value : the value
@@ -344,7 +344,7 @@ public class ValidationHelper {
 		return o;
 	}
 	
-	/**
+	/*
 	 * Check if the property is not empty (null, "", " "; size = 0, etc.)
 	 * @param errors
 	 * @param object
@@ -377,10 +377,10 @@ public class ValidationHelper {
 	
 	/**
 	 * add an error message
-	 * @param errors : list of errors
-	 * @param key : property key
-	 * @param message : message key
-	 * @param arguments : message args
+	 * @param errors    list of errors
+	 * @param key       property key
+	 * @param message   message key
+	 * @param arguments message args
 	 * @deprecated used ContextValidation.addErrors
 	 */
 	public static void addErrors(Map<String, List<ValidationError>> errors,
@@ -391,7 +391,7 @@ public class ValidationHelper {
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));
 	}
 
-	/**
+	/*
 	 * 
 	 * @param rootKeyName
 	 * @param property
@@ -404,7 +404,7 @@ public class ValidationHelper {
 	
 	
 
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -431,24 +431,22 @@ public class ValidationHelper {
 	}
 	
 	public static Object cleanValue(Object object){
-		if(object == null) {
+		if (object == null) {
 			return null;
-        }else if(object instanceof String && StringUtils.isBlank((String)object)) {
+        } else if (object instanceof String && StringUtils.isBlank((String)object)) {
         	return null;
-        }else if(object instanceof Collection && CollectionUtils.isEmpty((Collection)object)) {
+        } else if (object instanceof Collection && CollectionUtils.isEmpty((Collection)object)) {
         	return null;        	
-        }else if(object instanceof Map && MapUtils.isEmpty((Map)object)) {
+        } else if (object instanceof Map && MapUtils.isEmpty((Map)object)) {
         	return null;       	
-        }else if(object instanceof byte[] && ((byte[])object).length==0) {
+        } else if (object instanceof byte[] && ((byte[])object).length==0) {
         	return null;
-        }else{
+        } else {
         	return object;
         }
-               
-       		
 	}
 	
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -478,7 +476,7 @@ public class ValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -505,7 +503,7 @@ public class ValidationHelper {
 		return true;
 	}
 	
-	/**
+	/*
 	 * Transform the value of propertyValue to the good type
 	 * @param propertyValue
 	 * @param propertyDefinition
@@ -534,7 +532,7 @@ public class ValidationHelper {
 		return true;
 	}
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -551,7 +549,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -581,7 +579,7 @@ public class ValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -603,7 +601,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Check if propertyValue is required
 	 * @param contextValidation
 	 * @param propertyValue
@@ -630,7 +628,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param propertyValue
@@ -647,7 +645,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Split the propertyDefinition code with "." if exist
 	 * @param propertyDefinition
 	 * @return
@@ -657,7 +655,7 @@ public class ValidationHelper {
 		return propertyDefinition.code.split("\\.", 2);
 	}
 	
-	/**
+	/*
 	 * Check if the property is not empty (null, "", " "; size = 0, etc.)
 	 * @param object
 	 * @param key
@@ -673,11 +671,11 @@ public class ValidationHelper {
         }
         
         if(isValid && object instanceof Collection) {
-        	isValid =  CollectionUtils.isNotEmpty((Collection)object);        	
+        	isValid =  CollectionUtils.isNotEmpty((Collection<?>)object);        	
         }
         
         if(isValid && object instanceof Map) {
-        	isValid =  MapUtils.isNotEmpty((Map)object);        	
+        	isValid =  MapUtils.isNotEmpty((Map<?,?>)object);        	
         }
         
         if(isValid && object instanceof byte[]) {
@@ -691,9 +689,25 @@ public class ValidationHelper {
         return isValid;		
 	}
 	
+	// Assertion style, cases are mutually exclusive
+	public static boolean required_(ContextValidation contextValidation, Object object, String property) {
+		if (object == null) {
+			contextValidation.addErrors(property, ERROR_REQUIRED_MSG, object);
+			return false;
+		}
+        if ((object instanceof String) && StringUtils.isNotBlank((String)object))
+        	return true;
+        if ((object instanceof Collection) && CollectionUtils.isNotEmpty((Collection<?>)object))        	
+        	return true;
+        if ((object instanceof Map) && MapUtils.isNotEmpty((Map<?,?>)object))        	
+        	return true;
+        if ((object instanceof byte[]) && (((byte[])object).length > 0))
+        	return true;        
+        contextValidation.addErrors(property, ERROR_REQUIRED_MSG,object);        
+        return false;		
+	}
 	
-	
-	/**
+	/*
 	 * Check if the value is in the list
 	 * @param contextValidation
 	 * @param propertyValue
@@ -709,7 +723,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * Check if the value is in the list
 	 * @param contextValidation
 	 * @param propertyValue
@@ -734,7 +748,7 @@ public class ValidationHelper {
 	}
 	
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param propertyValue
@@ -756,7 +770,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param contextValidation
 	 * @param propertyValue
@@ -782,7 +796,7 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param propertyDefinition
 	 * @param value
@@ -799,7 +813,7 @@ public class ValidationHelper {
 		return false;
 	}
 	
-	/**
+	/*
 	 * Check if the propertyDefinition is active
 	 * @param contextValidation
 	 * @param propertyDefinition
@@ -820,7 +834,7 @@ public class ValidationHelper {
 	}
 
 	
-	/**
+	/*
 	 * Check if property value type is the same as property definition type 
 	 * @param contextValidation
 	 * @param propertyValue

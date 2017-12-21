@@ -1,6 +1,7 @@
 package controllers.resolutions.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,34 +9,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.resolutions.instance.Resolution;
-import models.laboratory.resolutions.instance.ResolutionConfiguration;
-import models.utils.InstanceConstants;
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-import org.springframework.stereotype.Controller;
 
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
+import models.utils.InstanceConstants;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBResult;
 
 /**
  * Controller around ResolutionConfigurations object
  *
  */
-@Controller
+//@Controller
 public class Resolutions extends DocumentController<ResolutionConfiguration> {
 
 	final static Form<ResolutionConfigurationsSearchForm> searchForm = form(ResolutionConfigurationsSearchForm.class); 
 	final static Form<ResolutionConfiguration> resolutionConfigurationsForm = form(ResolutionConfiguration.class);
 
-	public Resolutions() {
-		super(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);		
+	@Inject
+	public Resolutions(NGLContext ctx) {
+		super(ctx,InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);		
 	}
 
 

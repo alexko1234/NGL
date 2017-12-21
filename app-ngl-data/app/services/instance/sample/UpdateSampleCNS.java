@@ -25,7 +25,7 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 
-public class UpdateSampleCNS extends AbstractImportDataCNS{
+public class UpdateSampleCNS extends UpdateSamplePropertiesCNS{
 
 	public UpdateSampleCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
@@ -40,7 +40,7 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 
 	}
 
-	public static void updateSampleFromTara(ContextValidation contextError,
+	public void updateSampleFromTara(ContextValidation contextError,
 			List<String> sampleCodes) throws SQLException, DAOException {
 
 		List<String> results=limsServices.findSampleUpdated(sampleCodes);
@@ -69,7 +69,7 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 				SampleHelper.updateSampleReferenceCollab(sample,contextError);
 				*/
 				
-				UpdateSamplePropertiesCNS.updateOneSample(newSample, contextError);
+				super.updateOneSample(newSample, contextError);
 				
 			}else {
 				contextError.errors.putAll(contextValidation.errors);

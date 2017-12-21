@@ -3,38 +3,57 @@ package controllers.processes.tpl;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import play.Logger;
-import play.Routes;
+//import play.Routes;
+import play.routing.JavaScriptReverseRouter;
+
 import play.libs.Json;
 import play.mvc.Result;
 import views.html.processes.home;
 import views.html.processes.newProcesses;
 import views.html.processes.search;
 import views.html.processes.searchContainers;
+
+import javax.inject.Inject;
+
 import controllers.CommonController;
 
 public class Processes extends CommonController{
 
 	
-	public static Result home(String code){
+	private final home home;
+	private final searchContainers searchContainers;
+	private final search search;
+	private final newProcesses newProcesses;
+	
+	@Inject
+	public Processes(home home, searchContainers searchContainers, search search, newProcesses newProcesses) {
+		this.home = home;
+		this.searchContainers = searchContainers;
+		this.search = search;
+		this.newProcesses = newProcesses;
+	}
+	
+	public /*static*/ Result home(String code){
 		return ok(home.render(code));
 	}
 
-	public static Result searchContainers(){
+	public /*static*/ Result searchContainers(){
 		return ok(searchContainers.render());
 	}
 
-	public static Result search(String processTypeCode){
+	public /*static*/ Result search(String processTypeCode){
 		return ok(search.render());
 	}
 
-	public static Result newProcesses(String processTypeCode){
+	public /*static*/ Result newProcesses(String processTypeCode){
 		return ok(newProcesses.render());
 	}
 
-	public static Result javascriptRoutes() {
+	public /*static*/ Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
-				Routes.javascriptRouter("jsRoutes",
+				// Routes.javascriptRouter("jsRoutes",
+			JavaScriptReverseRouter.create("jsRoutes",
 						// Routes
 						controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
 						controllers.processes.tpl.routes.javascript.Processes.search(),

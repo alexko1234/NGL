@@ -137,7 +137,7 @@ public class SampleHelper {
 		Set<String> projectCodes=new HashSet<String>();
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.in("code", sampleCodes)).toList();
 		
-		for(Sample s:samples){
+		for (Sample s : samples) {
 			projectCodes.addAll(s.projectCodes);
 		}
 		

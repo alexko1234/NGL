@@ -11,7 +11,7 @@ import play.mvc.With;
 
 /**
  * Exemple:
- *	 @Permission(value={"54ki2"},teams={"THETEAM"})
+ *	 {@literal @}Permission(value={"54ki2"},teams={"THETEAM"})
  * 	
  * 
  * 	@author ydeshayes

@@ -3,6 +3,8 @@ package models.laboratory.run.description;
 
 import models.laboratory.run.description.dao.TreatmentContextDAO;
 import models.utils.Model;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 
 public class TreatmentContext extends Model<TreatmentContext> {
 	
@@ -25,9 +27,7 @@ public class TreatmentContext extends Model<TreatmentContext> {
 		this.code = code;
 	}
 	
-
 	public static Finder<TreatmentContext> find = new Finder<TreatmentContext>(TreatmentContextDAO.class.getName());
-
 
 	@Override
 	public int hashCode() {
@@ -36,7 +36,6 @@ public class TreatmentContext extends Model<TreatmentContext> {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -54,9 +53,5 @@ public class TreatmentContext extends Model<TreatmentContext> {
 			return false;
 		return true;
 	}
-
-
-	
-	
 	
 }

@@ -27,22 +27,22 @@ import play.api.modules.spring.Spring;
 
 
 @Repository
-public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>{
+public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType> {
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
 				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
 				"FROM experiment_type as c "+ sqlCommonInfoType, false);
 	}
+	
 	@Override
-	public long save(ExperimentType experimentType) throws DAOException
-	{
+	public long save(ExperimentType experimentType) throws DAOException	{
 
-		if(null == experimentType){
+		if(null == experimentType) {
 			throw new DAOException("ExperimentType is mandatory");
 		}
 		//Check if category exist
-		if(experimentType.category == null || experimentType.category.id == null){
+		if (experimentType.category == null || experimentType.category.id == null) {
 			throw new DAOException("ExperimentCategory is not present !!");
 		}
 

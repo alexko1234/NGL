@@ -59,7 +59,7 @@ public class MigrationSampleInformations extends CommonController {
 			if(null != o.code){
 				Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code",o.code));
 				Logger.debug("update "+sample.code);
-				UpdateSamplePropertiesCNS.updateOneSample(sample, contextError);
+				//UpdateSamplePropertiesCNS.updateOneSample(sample, contextError);
 			}
 		});
 		
@@ -69,7 +69,7 @@ public class MigrationSampleInformations extends CommonController {
 			s.properties.get("taxonSize").value=taxonSize;
 			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,DBQuery.is("code",s.code),DBUpdate.set("properties.taxonSize", s.properties.get("taxonSize")));
 			Logger.debug("update "+s.code);
-			UpdateSamplePropertiesCNS.updateOneSample(s, contextError);
+			//UpdateSamplePropertiesCNS.updateOneSample(s, contextError);
 		});
 		/*
 		List<Sample> samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.empty()).toList();

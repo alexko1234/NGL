@@ -48,7 +48,7 @@ import play.Logger;
 
 public class DescriptionFactory {
 
-	/**
+	/*
 	 * 
 	 * @param classCat
 	 * @param name
@@ -118,7 +118,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -143,7 +143,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -171,7 +171,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -199,7 +199,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -241,7 +241,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -270,7 +270,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -301,7 +301,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -327,7 +327,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -355,7 +355,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -388,7 +388,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -427,7 +427,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -467,6 +467,7 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		return pd;
 	}
+	
 	@Deprecated
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable) throws DAOException{
@@ -519,8 +520,7 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
-
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
@@ -552,8 +552,7 @@ public class DescriptionFactory {
 		return value;
 	}
 	
-	
-	/**
+	/*
 	 * 
 	 * @param defaultValue
 	 * @param code
@@ -576,7 +575,7 @@ public class DescriptionFactory {
 		return l;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -589,7 +588,7 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @return
@@ -602,7 +601,7 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param generic
@@ -621,7 +620,7 @@ public class DescriptionFactory {
 		return l;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param states
@@ -639,7 +638,7 @@ public class DescriptionFactory {
 		return cit;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param value
@@ -659,7 +658,7 @@ public class DescriptionFactory {
 	}
 
 	
-	/**
+	/*
 	 * define institute
 	 * @param name
 	 * @param code
@@ -672,7 +671,7 @@ public class DescriptionFactory {
 			return i;
 		}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -689,7 +688,7 @@ public class DescriptionFactory {
 		return s;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -722,7 +721,7 @@ public class DescriptionFactory {
 		return sh;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -743,7 +742,7 @@ public class DescriptionFactory {
 
 	
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -787,7 +786,7 @@ public class DescriptionFactory {
 		return newExperimentType(name, code, shortCode, displayOrder, category, propertiesDefinitions, instrumentUsedTypes, atomicTransfertMethod, true, institutes);
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param experimentType
@@ -825,7 +824,7 @@ public class DescriptionFactory {
 		return etn;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param code
 	 * @param experimentType
@@ -840,7 +839,7 @@ public class DescriptionFactory {
 		return newExperimentTypeNode(code, experimentType, mandatoryPurif, mandatoryQC, false, previousExp, purifTypes, qcTypes, null);
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -851,7 +850,7 @@ public class DescriptionFactory {
 		return ic;
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -880,7 +879,7 @@ public class DescriptionFactory {
 		return iut; 
 	}
 
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -922,7 +921,7 @@ public class DescriptionFactory {
 		return pt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -944,7 +943,7 @@ public class DescriptionFactory {
 		return st;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -966,7 +965,7 @@ public class DescriptionFactory {
 		return it;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -988,7 +987,7 @@ public class DescriptionFactory {
 		return pt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1010,7 +1009,7 @@ public class DescriptionFactory {
 		return rt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1033,7 +1032,7 @@ public class DescriptionFactory {
 		return rt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1060,7 +1059,7 @@ public class DescriptionFactory {
 		return rt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1074,7 +1073,7 @@ public class DescriptionFactory {
 		return tc;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param name
 	 * @param code
@@ -1101,7 +1100,7 @@ public class DescriptionFactory {
 		return tt;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
@@ -1115,7 +1114,7 @@ public class DescriptionFactory {
 		return institutes;
 	}
 	
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return
@@ -1130,7 +1129,7 @@ public class DescriptionFactory {
 	}
 
 
-	/**
+	/*
 	 * 
 	 * @param codes
 	 * @return

@@ -1,6 +1,7 @@
 package controllers.runs.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,8 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.run.RunWorkflows;
+
+import fr.cea.ig.play.NGLContext;
 
 public class State extends RunsController {
     final static Form<models.laboratory.common.instance.State> stateForm = form(models.laboratory.common.instance.State.class);
@@ -56,7 +59,8 @@ public class State extends RunsController {
 		if (!ctxVal.hasErrors()) {
 		    return ok(Json.toJson(getRun(code)));
 		} else {
-		    return badRequest(filledForm.errorsAsJson());
+		    // return badRequest(filledForm.errors-AsJson());
+			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
     }
     
@@ -76,10 +80,11 @@ public class State extends RunsController {
 				workflows.setState(ctxVal, run, state);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK, getRun(run.code), element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
+				} else {
+					// response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(), element.index));
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, NGLContext._errorsAsJson(ctxVal.getErrors()), element.index));
 				}
-			}else {
+			} else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
 			

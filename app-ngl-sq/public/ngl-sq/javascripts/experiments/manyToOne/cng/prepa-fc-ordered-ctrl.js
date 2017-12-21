@@ -153,38 +153,10 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	})
 	
 	
-	var generateSampleSheet = function(){
-		$scope.messages.clear();
-		
-		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
-		.success(function(data, status, headers, config) {
-			var header = headers("Content-disposition");
-			var filepath = header.split("filename=")[1];
-			var filename = filepath.split(/\/|\\/);
-			filename = filename[filename.length-1];
-			if(data!=null){
-				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
-				$scope.messages.showDetails = false;
-				$scope.messages.open();	
-				
-				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
-				saveAs(blob, filename);
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.clazz = "alert alert-danger";
-			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
-			$scope.messages.setDetails(data);
-			$scope.messages.showDetails = true;
-			$scope.messages.open();				
-		});
-	};
-	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
 		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus-and-cBotV2')},
-		click:generateSampleSheet,
+		click:$scope.fileUtils.generateSampleSheet,
 		label:Messages("experiments.sampleSheet")
 	}]);
 	
@@ -214,8 +186,13 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.$emit('askRefreshReagents');
 			
 		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError(Messages('experiments.msg.import.error'));	
+		.error(function(data, status, headers, config) {	
+			// correction 18/12/2017 
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+			$scope.messages.open();	
 			
 			// reinit select File..
 			$scope.file = undefined;
@@ -294,14 +271,14 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
     //-1- stripCode.value
 	$scope.$watch("experiment.instrumentProperties.stripCode.value", function(newValue, OldValue){
 			if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
-				if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined;} // 26/04 ajout if exists
+				if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined;}
 			}
 	});	
 	
 	//-2- code Flowcell
 	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
-			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } // 26/04 ajout if exists
+			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } 
 		    checkFCsequencingType();// ajout 24/04/2017 NGL-1325
 		}
 	});	
@@ -309,7 +286,17 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	//-3- code cBot
 	$scope.$watch("experiment.instrument.code" , function(newValue, OldValue){
 		if ( newValue !== OldValue ) {
-			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } //26/04 ajout if exists
+			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; }
+			
+			// 18/12/2017 NGL-1754: restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est sequencage choisi est NovaSeq 6000
+			$scope.messages.clear();
+			var NovaSeq6000Regexp=/MarieCurix/;
+			if (( $scope.experiment.experimentProperties.sequencingType.value === "NovaSeq 6000") && ( null===$scope.experiment.instrument.code.match(NovaSeq6000Regexp))){
+				$scope.messages.clazz = "alert alert-warning";
+				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
+				$scope.messages.showDetails = false;
+				$scope.messages.open();
+			}	
 		}
 	});	
 	
@@ -336,12 +323,24 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.messages.text = "Code Flowcell n'est pas du type Hiseq 4000 (*BBXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
-		} else	if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq X') && ( null===fcBarcode.match(HXfcRegexp))) {
+		} else if (($scope.experiment.experimentProperties.sequencingType.value === 'Hiseq X') && ( null===fcBarcode.match(HXfcRegexp))) {
 				//( null ===$scope.experiment.instrumentProperties.containerSupportCode.value.match(HXfcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type Hiseq X (*ALXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
+		} else if (($scope.experiment.experimentProperties.sequencingType.value === 'NovaSeq 6000') && ( $scope.experiment.instrument.code !== undefined )) {
+			//18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
+			var NovaSeq6000Regexp=/MarieCurix/;
+		
+			console.log('intrument='+ $scope.experiment.instrument.code);
+					
+			if ( null===$scope.experiment.instrument.code.match(NovaSeq6000Regexp) ){
+				$scope.messages.clazz = "alert alert-warning";
+				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
+				$scope.messages.showDetails = false;
+				$scope.messages.open();
+			}	
 		} else {
 			console.log('checkFCsequencingType OK');
 			$scope.messages.clear();

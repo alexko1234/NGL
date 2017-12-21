@@ -8,8 +8,9 @@ import org.slf4j.MDC;
 
 import play.Logger;
 import play.Logger.ALogger;
-import play.libs.Akka;
+// import play.libs.Akka;
 import scala.concurrent.duration.FiniteDuration;
+import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 public abstract class AbstractReporting implements Runnable{
 
@@ -21,8 +22,11 @@ public abstract class AbstractReporting implements Runnable{
 	public AbstractReporting(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration){
 		this.name=name;
 		logger=Logger.of(this.getClass().getName());
-		Akka.system().scheduler().schedule(durationFromStart,durationFromNextIteration
-				, this, Akka.system().dispatcher()
+		// Akka.system()
+		akkaSystem()
+		.scheduler().schedule(durationFromStart,durationFromNextIteration
+				, this, //Akka.system().dispatcher()
+				akkaSystem().dispatcher()
 				); 
 	}
 

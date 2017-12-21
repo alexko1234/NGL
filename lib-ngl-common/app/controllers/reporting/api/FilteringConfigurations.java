@@ -1,12 +1,15 @@
 package controllers.reporting.api;
 
-import static play.data.Form.form;
+// import static play.data.Form.form;
+import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reporting.instance.FilteringConfiguration;
@@ -31,19 +34,21 @@ import validation.ContextValidation;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around ResolutionConfigurations object
  *
  */
-@Controller
+// @Controller
 public class FilteringConfigurations extends DocumentController<FilteringConfiguration> {
 	
 	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class); 
 	final static Form<FilteringConfiguration> filteringConfigurationsForm = form(FilteringConfiguration.class);
 	
-	public FilteringConfigurations() {
-		super(InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);		
+	@Inject
+	public FilteringConfigurations(NGLContext ctx) {
+		super(ctx,InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);		
 	}
 
 
@@ -90,7 +95,8 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 			configuration = saveObject(configuration);
 			return ok(Json.toJson(configuration));
 		} else {
-			return badRequest(filledForm.errorsAsJson());
+			// return badRequest(filledForm.errors-AsJson());
+			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
 	
@@ -115,10 +121,11 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 			if (!ctxVal.hasErrors()) {
 				updateObject(configurationInput);
 				return ok(Json.toJson(configurationInput));
-			}else {
-				return badRequest(filledForm.errorsAsJson());			
+			} else {
+				// return badRequest(filledForm.errors-AsJson());
+				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
-		}else{
+		} else {
 			return badRequest("FilteringConfiguration code are not the same");
 		}				
 	}

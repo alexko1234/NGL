@@ -1,14 +1,15 @@
+@this(menu_ : menu)
 @(code : String)
 
 @import models.laboratory.common.description.ObjectType
 
 @scripts() = {
    <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
-	<script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script> 
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>     
+	<script src="@routes.Assets.at("lib/datatable/datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script> 
+	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>     
 	<script src="@routes.Assets.at("ngl-reagents/javascripts/declarations/app.js")" type="text/javascript" charset="utf-8"></script>  
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script>
-	<script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script> 
+	<script src="@routes.Assets.at("lib/ngl-common/ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("lib/lib-frameworkweb/ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script> 
 	<script src="@routes.Assets.at("ngl-reagents/javascripts/declarations/services.js")" type="text/javascript" charset="utf-8"></script>  	
 	<script src="@routes.Assets.at("ngl-reagents/javascripts/declarations/creation-kits-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-reagents/javascripts/declarations/creation-orders-ctrl.js")" type="text/javascript" charset="utf-8"></script>
@@ -21,4 +22,4 @@
 <link rel="stylesheet" href="@routes.Assets.at("ngl-reagents/css/reagents/creation.css")">
 }
 
-@views.html.main("declarations.title", menu("reagents."+code), scripts, css)(views.html.contents.lefttabs())
+@views.html.main("declarations.title", menu_("reagents."+code), scripts, css)(views.html.contents.lefttabs())

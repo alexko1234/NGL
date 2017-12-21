@@ -18,12 +18,11 @@ import play.api.modules.spring.Spring;
 
 public class ImportTypeMappingQuery extends MappingSqlQuery<ImportType>{
 
-	public ImportTypeMappingQuery()
-	{
+	public ImportTypeMappingQuery()	{
 		super();
 	}
-	public ImportTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)
-	{
+	
+	public ImportTypeMappingQuery(DataSource ds, String sql, SqlParameter sqlParameter)	{
 		super(ds,sql);
 		if(sqlParameter!=null)
 			super.declareParameter(sqlParameter);

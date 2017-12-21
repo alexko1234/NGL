@@ -6,12 +6,17 @@ import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.dao.StateDAO;
 import models.utils.ListObject;
 import models.utils.Model;
+//TODO: fix doc generation that produces an error with the unqualified name
+import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
+
+// This link : {@link models.laboratory.common.description.State}
 
 /**
  * Value of the possible state of type
  * 
- * @author ejacoby, dnoisett
+ * @author ejacoby
+ * @author dnoisett
  * 
  */
 public class State extends Model<State> {
@@ -54,9 +59,8 @@ public class State extends Model<State> {
 		
 		public boolean isCodeExistForObjectTypeCode(String code, CODE objectTypeCode)
 				throws DAOException {
-			    return ((StateDAO) getInstance()).isCodeExistForObjectTypeCode(code,
-				    objectTypeCode);
-			}
+			return ((StateDAO) getInstance()).isCodeExistForObjectTypeCode(code,objectTypeCode);
+		}
 	
 		public List<ListObject> findAllForContainerList() throws DAOException {
 		    return ((StateDAO) getInstance()).findAllForContainerList();
@@ -69,5 +73,7 @@ public class State extends Model<State> {
 		public List<State> findByDisplayAndObjectTypeCode(Boolean display, CODE objectTypeCode) throws DAOException {
 		    return ((StateDAO) getInstance()).findByDisplayAndObjectTypeCode(display, objectTypeCode);
 		}
+		
     }
+    
 }

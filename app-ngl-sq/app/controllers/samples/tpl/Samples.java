@@ -3,37 +3,54 @@ package controllers.samples.tpl;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import play.Logger;
-import play.Routes;
+// import play.Routes;
 import play.libs.Json;
 import play.mvc.Result;
 import views.html.samples.details;
 import views.html.samples.home;
 import views.html.samples.search;
-import controllers.CommonController;
 
+import javax.inject.Inject;
+
+import controllers.CommonController;
+import play.routing.JavaScriptReverseRouter;
+
+
+// TODO: clean, comment*
 public class Samples extends CommonController{
 
-
-	public static Result home(String code){
+	private final home home;
+	private final search search;
+	private final details details;
+	
+	@Inject
+	public Samples(home home, search search, details details) {
+		this.home = home;
+		this.search = search;
+		this.details = details;
+	}
+	
+	public /*static*/ Result home(String code){
 		return ok(home.render(code));
 	}
 
-	public static Result search(){
+	public /*static*/ Result search(){
 		return ok(search.render());
 	}
 
-	public static Result get(String code) {
+	public /*static*/ Result get(String code) {
 		return ok(home.render("search"));
 	}
 
-	public static Result details() {
+	public /*static*/ Result details() {
 		return ok(details.render());
 	}
 
-	public static Result javascriptRoutes() {
+	public /*static*/ Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
-				Routes.javascriptRouter("jsRoutes",
+				// Routes.javascriptRouter("jsRoutes",
+				JavaScriptReverseRouter.create("jsRoutes",
 						// Routes
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
