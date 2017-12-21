@@ -1,0 +1,68 @@
+@()
+
+<div class="row">
+	<div class="col-md-11 col-lg-11">	
+		 <table class="table table-condensed table-hover table-bordered">
+			<thead>
+				<tr>
+					<th></th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.input")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.output")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.trimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.startTrimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.endTrimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.bothTrimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.short")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>@Messages("readsets.treatments.trimming.nanopore.read")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.inputNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.outputNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedStartNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedEndNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedBothNbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.shortNbReads.value | number}}</td>
+				</tr>						
+				<tr>
+					<th>@Messages("readsets.treatments.trimming.nanopore.base")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.inputNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.outputNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedStartNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedEndNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.trimmedBothNbBases.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.shortNbBases.value | number}}</td>
+				</tr>						
+			</tbody>
+		 </table>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-4 col-lg-4">
+		<table class="table table-condensed table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>@Messages("readsets.treatments.trimming.nanopore.name")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.trimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.startTrimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.endTrimmed")</th>
+					<th>@Messages("readsets.treatments.trimming.nanopore.bothTrimmed")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="adapterConta in readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.adapterConta.value">
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.adapterConta.seqName.value}}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.adapterConta.trimNbReads.value}}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.adapterConta.trimStartNbReads.value}}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.adapterConta.trimEndNbReads.value}}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.adapterConta.trimBothNbReads.value}}}</td>
+				</tr>		
+			</tbody>
+		</table>			
+	</div>
+</div>		
+

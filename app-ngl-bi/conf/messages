@@ -591,6 +591,18 @@ readsets.treatments.trimming.storedSingleton = Stored Singleton
 readsets.treatments.trimming.rejectedPairs = Rejected Pairs
 readsets.treatments.trimming.trimStored = Trim. Stored
 
+readsets.treatments.trimming.nanopore.input=Input
+readsets.treatments.trimming.nanopore.output=Output
+readsets.treatments.trimming.nanopore.trimmed=Trimmed
+readsets.treatments.trimming.nanopore.startTrimmed=Trimmed start
+readsets.treatments.trimming.nanopore.endTrimmed=Trimmed end
+readsets.treatments.trimming.nanopore.bothTrimmed=Trimmed both
+readsets.treatments.trimming.nanopore.short=Short
+readsets.treatments.trimming.nanopore.name=Name
+readsets.treatments.trimming.nanopore.read=Read
+readsets.treatments.trimming.nanopore.base=Base
+
+
 
 readsets.treatments.exome.nbReads = Nb reads
 readsets.treatments.exome.mappedReads = Mapped reads

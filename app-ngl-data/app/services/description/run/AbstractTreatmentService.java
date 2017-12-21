@@ -546,6 +546,36 @@ public abstract class AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("stored singleton","storedSingleton",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Single), Long.class, true, "single"));
 		return propertyDefinitions;		
 	}
+
+	public static List<PropertyDefinition> getTrimmingNanoporePropertyDefinitions()
+	{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb input reads","inputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb input bases","inputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb output reads","outputNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb output bases","outputNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb trimmed reads","trimmedNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb trimmed bases","trimmedNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb start trimmed reads","trimmedStartNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb start trimmed bases","trimmedStartNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb end trimmed reads","trimmedEndNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb end trimmed bases","trimmedEndNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb both trimmed reads","trimmedBothNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb both trimmed bases","trimmedBothNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb short reads","shortNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb short bases","shortNbBases",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Curve known adapters start","curveKnownAdaptersStart",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Curve known adapters end","curveKnownAdaptersEnd",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist known adapters start","histKnownAdaptersStart",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Hist known adapters end","histKnownAdaptersEnd",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur sequence name","adapterConta.seqName",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), String.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim read","adapterConta.trimNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim start reads","adapterConta.trimStartNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim end reads","adapterConta.trimEndNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. adaptateur nb trim both reads","adapterConta.trimBothNbReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "object_list"));
+		
+		return propertyDefinitions;	
+	}
 	
 	public static List<PropertyDefinition> getFirstBaseReportPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

@@ -25,6 +25,10 @@
 	@_treatments.trimming()
 }
 
+@if(code == "trimming-nanopore") {
+	@_treatments.trimmingNanopore()
+}
+
 
 @if(code == "merging") {
 	@_treatments.merging()

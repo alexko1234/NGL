@@ -108,6 +108,11 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 						getTreatmentTypeContext("single", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "33,50"));
+		
+		l.add(DescriptionFactory.newTreatmentType("Trimming Nanopore","trimming-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimming", 
+				getTrimmingNanoporePropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "34"));
 
 		l.add(DescriptionFactory.newTreatmentType("First Base Report", "firstBaseReport", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "firstBaseReport",
 				getFirstBaseReportPropertyDefinitions(),
@@ -283,7 +288,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Overlap distribution","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));
 		return propertyDefinitions;		
 	}
-
+	
 
 	public static List<PropertyDefinition> getMergingBAPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -339,6 +344,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;		
 	}
 
+	
 
 	public static List<PropertyDefinition> getScaffoldingBAPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -443,4 +449,5 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;		
 	}
 
+	
 }
