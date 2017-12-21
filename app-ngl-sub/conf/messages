@@ -21,7 +21,7 @@ studies.menu.consultation = Recherche
 study.code=Code
 study.projectCode=ProjectCode
 study.state.code=State
-study.accession=Numeros d'accession
+study.accession=Numéros d accession
 study.releaseDate=ReleaseDate
 study.centerName=CenterName
 study.centerProjectName=CenterProjectName
@@ -39,8 +39,8 @@ studies.msg.details-release-1=Study :
 studies.msg.details.states=state :
 studies.msg.release.success=Demande de release du study enregistrée
 study.state=Etat :
-study.abstract=Resumé :
-study.description=Description
+study.abstract=Résumé :
+study.description=Déscription
 study.projectCodes=Codes projets
 
 #Configuration
@@ -101,17 +101,16 @@ submissions.msg.consultation=Recherche des soumission
 submissions.code=Code
 submissions.state=Etat
 submissions.creationDate=Date de création
-userFileReadSet=userFileReadSet :
-userFileExperiments=userFileExperiments :
-userFileCloneToAc=userFileCloneToAc :
-
+userFileReadSet=Fichier des readsets :
+userFileExperiments=Fichier des experiments :
+userFileCloneToAc=Fichier Clones - AC :
 consultation.placeholder.state= Choisir l'état de la soumission
 
 #RUN
 
 run.experiment.code=Code experiment
 run.code=Code 
-run.accession=Numeros d'accession 
+run.accession=Numéros d'accession 
 run.date=Date
 
 #RAW DATA
@@ -119,7 +118,7 @@ rawData.relatifName=Nom du fichier
 
 #SAMPLE 
 sample.code=Code
-sample.accession=Numeros d'accession
+sample.accession=Numéros d'accession
 sample.projectCode=Code projet
 sample.state=Etat
 sample.title=Title
@@ -135,7 +134,7 @@ sample.classification=Classification
 
 #EXPERIMENT
 experiment.code=Code
-experiment.accession=Numeros d'accession
+experiment.accession=Numéros d'accession
 experiment.projectCode=Code projet
 experiment.state=Etat
 experiment.sampleCode=Code Sample

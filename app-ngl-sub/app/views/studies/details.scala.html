@@ -1,57 +1,59 @@
 @()
+
+@import views.html.tools._
+
 @column()(value: Html) = {
 	<div class="col-md-4 col-lg-4">
 		@value
 	</div>
 }
 
+@* @views.html.tools.imageModal() *@
+@*
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 	<div class="page-header">	
 		<div class="btn-toolbar pull-right" >
-			 <!-- 
-			 affichage uniquement si on vient du menu release : variable release a mettre dans $main
-			 <button class="btn btn-default"  ng-if="release"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
-			 -->
-
-             <!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable--> 
-			 <button class="btn btn-default"  ng-if="isReleasable"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
-		</div>	 
+		
+		</div>	
+		<-- genere le titre-->
+		@views.html.tools.details_header("study")
 	</div>
 	</div>
 </div>
-
 
 <div class="row">
 	<!--Affichage du message de reussite ou echec si bouton release activé --> 
 	<div class="col-md-12 col-lg-12" messages="messages"></div>
 </div>
+*@
 
+
+<!--debut-->
+
+@standard_header("study"){ 
+  <!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable--> 
+  <button class="btn btn-default"  ng-if="isReleasable"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
+  <button class="btn btn-default"   ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
+}
 
 
 <form class="form-horizontal" name="studyForm">
-
-
-</div>
-	<h1 >
-	<span  ng-bind="study.code" ></span>
-	</h1>
-	<h5>
-	</h5>
-</div>
-
 
 <div class="row">
 	@column(){
 		@views.html.helper.columnLabelValue(Messages("study.code")){
 			<p class="form-control-static">{{study.code}}</p>
 		}
-		@views.html.helper.columnLabelValue(Messages("study.accession")){
-			<p class="form-control-static">{{study.accession}}</p>
-		}
 		@views.html.helper.columnLabelValue(Messages("study.state")){
 			<p class="form-control-static">{{study.state.code}}</p>
 		}
+		
+		@views.html.helper.columnLabelValue(Messages("study.state")){
+			<p class="form-control-static">{{Codes("state."+study.state.code)}}</p>
+	        <span ng-bind="study.state.code|codes:'state'" ></span>
+		}
+		
 		@views.html.helper.columnLabelValue(Messages("study.title")){
 			<p class="form-control-static">{{study.title}}</p>
 		}
