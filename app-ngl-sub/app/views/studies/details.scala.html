@@ -32,10 +32,10 @@
 
 <!--debut-->
 
-@standard_header("study"){ 
+@standard_header("study", "TRUE"){ 
   <!-- affichage uniquement si donnee releasable : study avec state.code=F-SUB et date relase > date du jour : voir details.ctrl.js.$scope.isReleasable--> 
   <button class="btn btn-default"  ng-if="isReleasable"  ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
-  <button class="btn btn-default"   ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>
+  @*<button class="btn btn-default"   ng-click="userRelease()" data-toggle="tooltip" title="@Messages("button.release")" ><i class="fa fa-save"></i> @Messages("button.release")</button>*@
 }
 
 
@@ -43,30 +43,17 @@
 
 <div class="row">
 	@column(){
-		@views.html.helper.columnLabelValue(Messages("study.code")){
-			<p class="form-control-static">{{study.code}}</p>
-		}
-		@views.html.helper.columnLabelValue(Messages("study.state")){
-			<p class="form-control-static">{{study.state.code}}</p>
-		}
-		
-		@views.html.helper.columnLabelValue(Messages("study.state")){
-			<p class="form-control-static">{{Codes("state."+study.state.code)}}</p>
-	        <span ng-bind="study.state.code|codes:'state'" ></span>
-		}
-		
-		@views.html.helper.columnLabelValue(Messages("study.title")){
-			<p class="form-control-static">{{study.title}}</p>
-		}
-		@views.html.helper.columnLabelValue(Messages("study.abstract")){
-			<p class="form-control-static">{{study.studyAbstract}}</p>
-		}
-		@views.html.helper.columnLabelValue(Messages("study.description")){
-			<p class="form-control-static">{{study.description}}</p>
-		}	
+		@* Ecriture de la ligne status :*@
+  		<div ng-if="isReleasable"> @simpleLine(Messages("study.status"),Messages("study.private"))</div>
+  		<div ng-if="!isReleasable"> @simpleLine(Messages("study.status"),Messages("study.public"))</div>
+	    @* Ecriture des autres lignes code, state, title, abstract et description :*@
+		@line("study.code")
+		@labelLine("study.state")
+		@line("study.title")
+		@line("study.abstract", "study.studyAbstract") @* nom du champs different de nom de label *@
+		@line("study.description")
 	}
 </div>
-
 
 </form>		
 
@@ -84,11 +71,6 @@
 </div>
 
 </form>		
-
-
-
-
-
 
 
 <!-- stopPropagation on checkbox prevent parents default behavior (stop <a> call) -->
