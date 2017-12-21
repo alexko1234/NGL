@@ -78,6 +78,7 @@ public class Instruments extends CommonController{
 		
 		if (code.equals(instrumentInput.code)) {
 				instrumentInput.update();
+				Instrument.find.cleanCache();
 				InstrumentUsedType.find.cleanCache();
 				return ok(Json.toJson(instrumentInput));
 			
