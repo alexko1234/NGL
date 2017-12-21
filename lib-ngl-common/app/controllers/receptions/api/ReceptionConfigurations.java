@@ -51,7 +51,8 @@ public class ReceptionConfigurations extends DocumentController<ReceptionConfigu
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("name", 1);
 			keys.put("code", 1);
-			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm,query).sort("code");
+			keys.put("displayOrder", 1);
+			MongoDBResult<ReceptionConfiguration> results = mongoDBFinder(searchForm,query).sort("displayOrder");
 			List<ReceptionConfiguration> configurations = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(ReceptionConfiguration p: configurations){
