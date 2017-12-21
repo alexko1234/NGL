@@ -230,7 +230,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	order:true
 					},
 					 {property:"state.code",
-					     "filter":"codes:'state'",
+					      "filter":"codes:'state'",
 			        	  header: Messages("experiment.state"),
 			        	  type :"text",		    	  	
 			        	  order:true,

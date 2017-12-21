@@ -65,7 +65,7 @@ public class SraCodeHelper extends DefaultCodeImpl {
 		if (StringUtils.isBlank(code)){
 			throw new SraException("generateSubmissionCode : argument sans aucune valeur ???");
 		}
-		return ("cns" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
+		return ("GSC" + code + "_" + this.getInstance().generateBarCode()).toUpperCase();
 	}
 	
 	public String generateExperimentCode(String readSetCode) {

@@ -296,7 +296,7 @@ public class XMLServices implements IXMLServices{
 
 				//get rawData
 				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode"+runCode);
-				Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode"+runCode,"bot");
+				Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?runCode="+runCode,"bot");
 				for (ResourceProperties rp: rpsRawData) {
 					String fileType = rp.get("extention");
 					String relatifName = rp.get("relatifName");

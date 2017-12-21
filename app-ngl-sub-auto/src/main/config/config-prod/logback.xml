@@ -21,7 +21,7 @@
 
 	</appender>
 	
-	<logger name="fr.genoscope.lis.devsi.birds" level="ERROR"  />
+	<logger name="fr.genoscope.lis.devsi.birds" level="DEBUG"  />
 	
 	<logger name="fr.genoscope.lis.devsi.birds.api.client.BirdsLineCommands" level="INFO"  />
 	
