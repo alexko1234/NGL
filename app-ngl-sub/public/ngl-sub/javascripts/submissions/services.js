@@ -74,7 +74,6 @@
 				},
 				
 				refreshReadSets : function(){
-					console.log
 					if(this.form.projCodes && this.form.projCodes.length > 0){
 						// appel de refresh.ReadSets dans lists de common.js
 						// Dans ReadSetsSearchForm.java champs projectCodes et non projCodes !!!
