@@ -42,7 +42,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-4 col-lg-4">
+	<div class="col-md-6 col-lg-6">
 		<table class="table table-condensed table-hover table-bordered">
 			<thead>
 				<tr>
@@ -65,4 +65,54 @@
 		</table>			
 	</div>
 </div>		
+
+<div class="row"> 
+   
+    <div class="col-md-6 col-lg-6">
+	   <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersStart.value,'curveKnownAdaptersStart','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersStart.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersStart.height)">
+		 <a href="#">
+		    <img id="default_curveKnownAdaptersStart" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersStart.value}}" />
+		 </a> 
+	    </div>
+    </div>
+    
+   <div class="col-md-6 col-lg-6">
+	    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersEnd.value,'curveKnownAdaptersEnd','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersEnd.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersEnd.height)">
+		 <a href="#">
+		    <img id="default_curveKnownAdaptersEnd" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.curveKnownAdaptersEnd.value}}" />
+		 </a> 
+	    </div>
+    </div> 	
+</div>
+
+<div class="row"> 
+   
+    <div class="col-md-6 col-lg-6">
+	   <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersStart.value,'histKnownAdaptersStart','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersStart.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersStart.height)">
+		 <a href="#">
+		    <img id="default_histKnownAdaptersStart" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersStart.value}}" />
+		 </a> 
+	    </div>
+    </div>
+    
+   <div class="col-md-6 col-lg-6">
+	    <div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersEnd.value,'histKnownAdaptersEnd','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersEnd.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersEnd.height)">
+		 <a href="#">
+		    <img id="default_histKnownAdaptersEnd" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.histKnownAdaptersEnd.value}}" />
+		 </a> 
+	    </div>
+    </div> 	
+</div>
 
