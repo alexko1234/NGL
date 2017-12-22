@@ -129,7 +129,6 @@ GET		/api/projects								@controllers.projects.api.Projects.list()
 
 # states from ngl-Common
 GET		/api/commons/states							controllers.commons.api.States.list()
-
 #----------------
 # documentation
 #----------------

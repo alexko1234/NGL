@@ -393,7 +393,7 @@ angular.module('commonsServices', []).
     			getReadSets : function(params,key){
     				key = (key)?key:'readSets';
     				if(results[key] === undefined){
-    					refresh.tags(params, key);
+    					refresh.readSets(params, key);
     				}
     				return results[key];
     			},
