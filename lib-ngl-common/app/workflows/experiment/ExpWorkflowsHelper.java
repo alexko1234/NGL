@@ -1392,9 +1392,9 @@ public class ExpWorkflowsHelper {
 			InputContainerUsed icu = atm.inputContainerUseds.get(0);
 			String inputContentSampleCode = atm.inputContainerUseds.get(0).contents.get(0).sampleCode;
 			String inputContentProjectCode = atm.inputContainerUseds.get(0).contents.get(0).projectCode;
-			
 			Sample sampleIn=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, inputContentSampleCode);
-
+			
+			
 			atm.outputContainerUseds
 				.stream()
 				.forEach(ocu -> createNewSamplesFromSampleIn(exp, ocu, icu, sampleIn, inputContentProjectCode, validation))
@@ -1445,7 +1445,8 @@ public class ExpWorkflowsHelper {
 			String sampleTypeCode=ocu.experimentProperties.get("sampleTypeCode").value.toString();
 			String projectCode=ocu.experimentProperties.get("projectCode").value.toString();
 			String sampleCode=ocu.experimentProperties.get("sampleCode").value.toString();
-		
+			
+			
 			if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sampleCode)){
 					
 				Sample newSample = new Sample();
@@ -1456,7 +1457,13 @@ public class ExpWorkflowsHelper {
 				newSample.projectCodes.add(projectCode);
 		
 				newSample.taxonCode=sampleIn.taxonCode;
-				newSample.properties=sampleIn.properties;
+				
+				Map<String, PropertyValue> newSampleProperties = getCommonPropertiesForALevel(exp, CODE.Sample);
+				newSampleProperties.putAll(getInputPropertiesForALevel(exp, icu, CODE.Sample));
+				newSampleProperties.putAll(getOutputPropertiesForALevel(exp, ocu, CODE.Sample));
+				newSampleProperties.putAll(sampleIn.properties);
+				newSample.properties=newSampleProperties;
+				
 				newSample.importTypeCode=sampleIn.importTypeCode;
 				newSample.ncbiLineage=sampleIn.ncbiLineage;
 				newSample.ncbiScientificName=sampleIn.ncbiScientificName;
