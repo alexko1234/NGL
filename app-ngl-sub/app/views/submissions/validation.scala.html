@@ -10,17 +10,6 @@
 		}													
 	}
 	@columnSearchForm{
-		@formGroup{
-			<div class="form-control" bt-select  ng-model="consultationService.form.stateCodes" filter="true" multiple="true" placeholder='@Messages("consultation.placeholder.stateCodes")'  bt-options="state.code as state.name for state in consultationService.lists.getStates()"></div>	
-		}													
-	}
-	@columnSearchForm{
-		@formGroup{
-			<bt-input  class="form-control"  input-ng-model="consultationService.form.accessionRegex" textarea-ng-model="consultationService.form.accessions" placeholder='@Messages("consultation.placeholder.submissionAccessions")' ></bt-input>									
-		}
-	}
-	
-	@columnSearchForm{
 		@formGroup{			
 			<bt-input  class="form-control"  input-ng-model="consultationService.form.codeRegex" textarea-ng-model="consultationService.form.codes" placeholder='@Messages("consultation.placeholder.submissionCodes")' ></bt-input>									
 		}
@@ -59,7 +48,7 @@
 <div class="col-md-12 col-lg-12"  messages="messages"></div>
 </div>
 
-@* XXXXXXXX CONSULTATION XXXXXXXXXXXXXX *@
+@* XXXXXXXX VALIDATION XXXXXXXXXXXXXXX *@
 
 <div class="row"> 
 	<div class="col-md-12 col-lg-12" ultimate-datatable="consultationService.datatable">

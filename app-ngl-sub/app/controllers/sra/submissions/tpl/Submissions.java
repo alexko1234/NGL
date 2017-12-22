@@ -5,6 +5,7 @@ import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.submissions.activate;
 import views.html.submissions.consultation;
+import views.html.submissions.validation;
 import views.html.submissions.create;
 import views.html.submissions.details;
 import views.html.submissions.home;
@@ -21,13 +22,17 @@ public class Submissions extends CommonController {
 	private final details details;
 	private final activate activate;
 	private final consultation consultation;
+	private final validation validation;
+	
 	@Inject
-	public Submissions(home home, create create, details details, activate activate, consultation consultation) {
+	public Submissions(home home, create create, details details, activate activate, consultation consultation, validation validation) {
 		this.home         = home;
 		this.create       = create;
 		this.details      = details;
 		this.activate     = activate;
-		this.consultation = consultation;	
+		this.consultation = consultation;
+		this.validation   = validation;
+
 	}
 	
 	public Result home(String homecode) {
@@ -52,6 +57,10 @@ public class Submissions extends CommonController {
 	
 	public Result consultation()	{
 		return ok(consultation.render());
+	}
+	
+	public Result validation()	{
+		return ok(validation.render());
 	}
 
 	public Result javascriptRoutes() {
