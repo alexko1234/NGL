@@ -1,6 +1,6 @@
 package controllers.authorisation;
 
-import controllers.AuthenticationController;
+import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.authorization.IAuthorizator;
 
 import java.util.concurrent.CompletionStage;
@@ -49,9 +49,9 @@ public class PermissionAction extends Action<Permission> {
 		//}
 		if (configuration.value().length == 0) 
 			throw new RuntimeException("badly configured permission control with no values");
-		if (!AuthenticationController.isAuthenticatedSession(context.session()))
+		if (!Authentication.isAuthenticatedSession(context.session()))
 			return CompletableFuture.supplyAsync(() -> unauthorized("not authenticated"));
-		String username = AuthenticationController.getUser(context.session());
+		String username = Authentication.getUser(context.session());
 		// We run the authorizator implementation.
 		if (true) {
 			if (authorizator.authorize(username, configuration.value()))

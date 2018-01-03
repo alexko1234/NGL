@@ -109,7 +109,7 @@ public class NGLContext {
 		// return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
 		// return "bob l'eponge";
 		// return Authentication.getUser();
-		return controllers.AuthenticationController.getUser(play.mvc.Http.Context.current().session());
+		return fr.cea.ig.authentication.Authentication.getUser(play.mvc.Http.Context.current().session());
 	}
 
 	public Lang currentLang() {

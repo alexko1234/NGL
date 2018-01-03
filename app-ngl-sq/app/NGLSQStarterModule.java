@@ -74,7 +74,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 				// bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				
 				// Eager binding allows configuration errors to be detected ASAP
-				// bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.NoAuthenticator.class).eagerly(),
+				// bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.FixedAuthenticator.class).eagerly(),
 				// bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.ErrorAuthenticator.class).eagerly(),
 				// bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.CASAuthenticator.class).eagerly(),
 				// bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.HtmlAuthenticator.class).eagerly(),
