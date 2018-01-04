@@ -211,14 +211,11 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 //				getContainerSupportCategories(new String[]{"sheet-384","96-well-plate"}),null, 
 //				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		l.add(newInstrumentUsedType("QuantStudio 6", "QS6", InstrumentCategory.find.findByCode("qPCR-system"), null, 
-				getInstruments(createInstrument("QS6", "QS6", null, true, "/save/devcrgs/src/NGL_Feuille_route/QS6", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+				getInstruments(
+						createInstrument("QS6", "QS6", null, true, "/save/devcrgs/src/NGL_Feuille_route/QS6", DescriptionFactory.getInstitutes(Constants.CODE.GET)),
+						createInstrument("QS6_2", "QS6_2", null, true, "/save/devcrgs/src/NGL_Feuille_route/QS6_2", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"96-well-plate","384-well-plate"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));	
-		l.add(newInstrumentUsedType("ABI 7900HT", "ABI7900HT", InstrumentCategory.find.findByCode("qPCR-system"), null, 
-				getInstruments(
-						createInstrument("ABI7900HT", "ABI7900HT", null, true, "/save/devcrgs/src/NGL_Feuille_route/ABI7900HT", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
-				getContainerSupportCategories(new String[]{"96-well-plate","384-well-plate"}), null, 
-				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		l.add(newInstrumentUsedType("PacBio RSII", "PacBioRSII", InstrumentCategory.find.findByCode("qPCR-system"), null, 
 				getInstruments(
 						createInstrument("RSII", "PacBioRSII", null, true, "/save/devcrgs/src/NGL_Feuille_route/RSII", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
