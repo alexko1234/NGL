@@ -573,6 +573,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	private static List<PropertyDefinition> getAmpliconReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
 		
@@ -595,26 +596,34 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	private static List<PropertyDefinition> getAmpliconToAmplifyReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 2, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate",
+				LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null,
+				null));
+		propertyDefinitions.add(
+				newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),
+						Boolean.class, true, null, null, "single", 2, true, null, null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Région ciblée (origine)", "originTargetedRegion", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
-				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
-						"16S_V5V6","18S_V1V2","16S_V4"), null, null, null,"single", 3, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Issu du type d'échantillon (origine)", "fromOriginSampleTypeCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
-				DescriptionFactory.newValues("DNA","ARN"), null, null, null,"single", 4, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Amorces (origine)", "originAmplificationPrimers", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
-				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV",
-						"ITSD / ITS2REV","CP23S primers","5.8S F1 / R1","18S_V4 primer","COI primer m1COIintF / jgHCO2198","Sneed2015 27F / 519Rmodbio",
-						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote"), null, null, null,"single", 5, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue (origine)", "originExpectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null,
-				DescriptionFactory.newValues("400","170","300","180","150","380","313","500","270","450","250"), null, null, null,"single", 6, true, null,null));
+		propertyDefinitions.add(newPropertiesDefinition("Amorces (origine)", "originAmplificationPrimers",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
+				getOriginAmplificationPrimers(), null, null, null, "single", 5, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Région ciblée (origine)", "originTargetedRegion",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
+				getOriginTargetedRegion(), null, null, null, "single", 3, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue (origine)",
+				"originExpectedAmpliconSize", LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content),
+				String.class, true, null, null, null, null, null, "single", 6, true, null, null));
+		propertyDefinitions
+				.add(newPropertiesDefinition("Issu du type d'échantillon (origine)", "fromOriginSampleTypeCode",
+						LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, true, null,
+						DescriptionFactory.newValues("DNA", "ARN"), null, null, null, "single", 4, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), String.class, false, null, null, null,
+				null, null, "single", 17, false, null, null));
 
-		propertyDefinitions.add(newPropertiesDefinition("Nom organisme / collaborateur", "collabScientificName", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, false, null, 
-				null, null,null,null,"single", 17, false, null,null));		
-
-		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, false, null, 
-				null, null,null,null,"single", 20, true, null,null));	
+		propertyDefinitions.add(newPropertiesDefinition("Contrôle négatif", "negativeControl",
+				LevelService.getLevels(Level.CODE.Sample, Level.CODE.Content), Boolean.class, false, null, null, null,
+				null, null, "single", 20, true, null, null));
 
 		return propertyDefinitions;
 	}
@@ -711,17 +720,30 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
-	private static List<Value> getAmplificationPrimers(){
-		return DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", 
-					"ITSD / ITS2REV","CP23S primers","5.8S F1 / R1","18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "COI primer LCO1490/ HC02198", "Sneed2015 27F / 519Rmodbio",
-					"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote"
-					);
+	private static List<Value> getAmplificationPrimers() {
+		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer", "ITS2 primer",
+				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
+				"5.8S F1 / R1", "18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "COI primer LCO1490/ HC02198",
+				"Sneed2015 27F / 519Rmodbio", "16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire",
+				"16SV4 Procaryote", "16SFL");
 	}
-	private static List<Value> getTargetedRegion(){
-		return DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
-					"16S_V5V6","18S_V1V2","16S_V4","5.8S");	
+
+	private static List<Value> getOriginAmplificationPrimers() {
+		return DescriptionFactory.newValues("Fuhrman primer", "V9 primer", "16S primer + Fuhrman primer",
+				"ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", "ITSD / ITS2REV", "CP23S primers",
+				"5.8S F1 / R1", "18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
+				"16SV4V5 Archae", "16SV5V6 Prok", "18SV1V2 Metazoaire", "16SV4 Procaryote", "16SFL");
 	}
-	
+
+	private static List<Value> getTargetedRegion() {
+		return DescriptionFactory.newValues("16S_V4V5", "18S_V9", "16S_Full Length + 16S_V4V5", "ITS2", "CP23S",
+				"18S_V4", "COI", "16S_V1V2V3", "16S_V5V6", "18S_V1V2", "16S_V4", "5.8S","16SFL");
+	}
+
+	private static List<Value> getOriginTargetedRegion() {
+		return DescriptionFactory.newValues("16S_V4V5", "18S_V9", "16S_Full Length + 16S_V4V5", "ITS2", "CP23S",
+				"18S_V4", "COI", "16S_V1V2V3", "16S_V5V6", "18S_V1V2", "16S_V4","5.8S", "16SFL");
+	}
 	private List<PropertyDefinition> getPoolLibraryReceptionPropertyDefinitions() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, false, null, null));
