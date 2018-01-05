@@ -31,9 +31,6 @@ public class Global extends GlobalSettings {
 		}
 		
 		importData();
-		
-//		generateReporting();
-	 
 	}
 
 	@Override
