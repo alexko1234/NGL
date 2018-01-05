@@ -1,16 +1,23 @@
 package fr.cea.ig.authorization.authorizators;
 
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import fr.cea.ig.authorization.IAuthorizator;
 
+/**
+ * Never authorizes.
+ * 
+ * @author vrd
+ *
+ */
+@Singleton
 public class NeverAuthorizator implements IAuthorizator {
 
-	// Not needed but clearer
-	@Inject
-	public NeverAuthorizator() {
-	}
+	// Implicit DI no arg constructor
 	
+	/**
+	 * Never authorized.
+	 */
 	@Override
 	public boolean authorize(String login, String[] perms) {
 		return false;

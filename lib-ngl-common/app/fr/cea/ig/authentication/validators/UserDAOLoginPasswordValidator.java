@@ -2,19 +2,33 @@ package fr.cea.ig.authentication.validators;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import javax.inject.Singleton;
+
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import fr.cea.ig.authentication.ILoginPasswordValidator;
 import models.administration.authorisation.User;
-import models.administration.authorisation.description.dao.AuthenticateDAO;
+// import models.administration.authorisation.description.dao.AuthenticateDAO;
 import models.administration.authorisation.description.dao.UserDAO;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 
-// TODO: fix name, it is backed by the UserDAO but still
-public class DAOLoginPasswordValidator implements ILoginPasswordValidator {
+/**
+ * Login password validation based on the user DAO implementation.
+ * 
+ * @author vrd
+ *
+ */
+@Singleton
+public class UserDAOLoginPasswordValidator implements ILoginPasswordValidator {
 
-	private static final play.Logger.ALogger logger = play.Logger.of(DAOLoginPasswordValidator.class);
+	/**
+	 * Logger.
+	 */
+	private static final play.Logger.ALogger logger = play.Logger.of(UserDAOLoginPasswordValidator.class);
 	
+	/**
+	 * Validate the login password pair against data from the user DAO.
+	 */
 	@Override
 	public void validate(String login, String password) throws ValidationFailedException {
 		if (isBlank(login))
@@ -36,7 +50,6 @@ public class DAOLoginPasswordValidator implements ILoginPasswordValidator {
 		// a bad salt exception is thrown.
 		if (passwordInDB.startsWith("$2y$"))
 			passwordInDB = "$2a$" + passwordInDB.substring(4);
-		// System.out.println(" *** " + password + " *** " + passwordInDB + " ***");
 		if (!BCrypt.checkpw(password,passwordInDB))
 			throw new ValidationFailedException("bad password");
 	}

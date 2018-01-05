@@ -18,8 +18,7 @@ public class NGLCommonStarterModule extends play.api.inject.Module {
 		// -- Recreating the play.conf boot order
 		return seq(
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
-				
-				// Hardcode no authentication
+				// 
 				bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.FixedAuthenticator.class).eagerly(),
 				// bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
 				

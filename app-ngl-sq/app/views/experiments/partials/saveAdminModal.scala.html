@@ -3,7 +3,7 @@
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
 
-@user            = @{ controllers.AuthenticationController.getUser(Context.current().session()) }
+@user            = @{ fr.cea.ig.authentication.Authentication.getUser(Context.current().session()) }
 @writePermission = @{ PermissionHelper.checkPermission(user, "writing") }
 
 <div class="row">

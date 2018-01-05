@@ -40,7 +40,9 @@ import javax.inject.Inject;
 
 // public class Main extends CommonController {
 // public class Main extends APICommonController {
-@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+// @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+@fr.cea.ig.authentication.Authenticated
+@With(UserHistory.class)
 public class Main extends Controller {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());

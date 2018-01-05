@@ -13,6 +13,7 @@ import play.sbt.routes.RoutesCompiler.autoImport._
 import play.sbt.routes.RoutesKeys.routesGenerator
 import play.routes.compiler.StaticRoutesGenerator
 // import play.routes.compiler.DynamicRoutesGenerator
+import play.routes.compiler.InjectedRoutesGenerator
 
 
 object ApplicationBuild extends Build {
@@ -273,6 +274,7 @@ object ApplicationBuild extends Build {
       Project("auth",file("authentication"),settings = buildSettings)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
+      // routesGenerator     := InjectedRoutesGenerator, // does not work
       libraryDependencies ++= authenticationDependencies,
       version              := "2.0.0-SNAPSHOT",
       resolvers            := nexus

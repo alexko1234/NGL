@@ -135,6 +135,7 @@ class NGLComponents {
 // same. The only required global is the injector that is defined in the play application
 // and in the spring plugin. It could be the same in the end but this requires that
 // we define an application loader.
+/*
 @Singleton
 class LazyInit {
 	
@@ -152,7 +153,7 @@ class LazyInit {
 	}
 	
 }
-
+*/
 /*
 public class Module extends NGLSQStarterModule {
 	public Module(play.api.Environment environment, play.api.Configuration configuration) {
