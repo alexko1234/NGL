@@ -124,13 +124,26 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
+		l.add(newExperimentType("Prep. flowcell NovaSeaq", "prepa-fc-ns",null,1200, 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+				getPropertyDefinitionsPrepaflowcellOrdered(),
+				getInstrumentUsedTypes("XPWORKFLOW","cBot-NovaSeq"), 
+				"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ3000"), 
 				"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-		
+
+		l.add(newExperimentType("Depot NovaSeq", "novaseq-depot",null, 1400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyDefinitionsNovaSeqDepot(),
+				getInstrumentUsedTypes("NOVASEQ"), 
+				"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
@@ -257,10 +270,24 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 //				getExperimentTypeNodes("ext-to-prepa-fc-ordered"),
 				null, null, null
 				).save();
+		
+		newExperimentTypeNode("prepa-fc-ns",getExperimentTypes("prepa-fc-ns").get(0),
+				false, false, false,
+				getExperimentTypeNodes("ext-to-prepa-flowcell"),
+				null, null, null
+				).save();
 
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
 				getExperimentTypeNodes("prepa-fc-ordered"), // previous nodes
+				null,
+				null, // pas qc
+				null  // pas tranfert
+				).save();
+
+		newExperimentTypeNode("novaseq-depot",getExperimentTypes("novaseq-depot").get(0),
+				false,false,false,
+				getExperimentTypeNodes("prepa-fc-ns"), // previous nodes
 				null,
 				null, // pas qc
 				null  // pas tranfert
@@ -667,7 +694,16 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Genome de reference","reference_genome", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false, "single",22)); 
 		return propertyDefinitions;
 	}
-
+	
+	private static List<PropertyDefinition> getPropertyDefinitionsNovaSeqDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Utiliser par import ngl-data CNG de creation des depot-illumina
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Espèce","species", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false,"single",20)); 
+		propertyDefinitions.add(newPropertiesDefinition("Transcriptome de reference","reference_transcriptome", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false,"single",21)); 
+		propertyDefinitions.add(newPropertiesDefinition("Genome de reference","reference_genome", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, false, "single",22)); 
+		return propertyDefinitions;
+	}
 	
 //	private static List<PropertyDefinition> getPropertyDefinitionExtToOpgenDepot() throws DAOException {
 //		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

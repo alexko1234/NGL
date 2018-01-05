@@ -99,6 +99,21 @@ public class ProcessServiceGET extends AbstractProcessService {
 				
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
+//		//"Sequençage NovaSeq"
+		l.add(DescriptionFactory.newProcessType("Run NovaSeq", "novaseq-run", ProcessCategory.find.findByCode("sequencing"), 3,
+				
+				getPropertyDefinitionsNovaSeqDepot() , 
+				Arrays.asList(
+						getPET("ext-to-prepa-flowcell",-1),
+						getPET("prepa-fc-ns",0),
+						getPET("novaseq-depot",1)),
+						
+				getExperimentTypes("prepa-fc-ns").get(0), 
+				getExperimentTypes("novaseq-depot").get(0),
+				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
+				
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 
@@ -138,6 +153,64 @@ public class ProcessServiceGET extends AbstractProcessService {
 				DescriptionFactory.newPropertiesDefinition("Nombre de lanes", "nbrLanes"
 						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, true, DescriptionFactory.newValues("1","2","3","4","5","6","7","8"), "single",305));
 		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),Double.class, true,"single",400,"100"));
+		
+		propertyDefinitions.add(
+		DescriptionFactory.newPropertiesDefinition("Urgent", "urgent"
+				, LevelService.getLevels(Level.CODE.Process),String.class, false, DescriptionFactory.newValues("oui","non"), "non", "single",404));
+		
+		propertyDefinitions.add(
+		DescriptionFactory.newPropertiesDefinition("Conserver bam", "store_bam"
+				, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("oui","non"), "non", "single",405));
+		
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getPropertyDefinitionsNovaSeqDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Concentration dilution souhaitée", "finalConcentration1"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container), Double.class, true, null
+						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",11,true)); 
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("% PhiX à ajouter", "phixPercent", LevelService.getLevels(Level.CODE.Process, Level.CODE.Container), Double.class, true, null, null, null, null, "single",16,true,"1", null));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"),"150", "single",300));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type d'analyse","analyseType"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, getAnalyseType(),null,"single",301));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Espèce", "species"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,"single",302));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Transcriptome de reference","reference_transcriptome", 
+						LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,null,null, null, null, "single",303,true,null, null)); 
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Genome de reference","reference_genome", 
+						LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,null,null, null, null, "single",304,true,null, null)); 
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nombre de reads", "nbrRead"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, null, null, "single",305));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nombre de reads", "nbrRead"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, null, null, "single",305));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Kit utilisé", "kit"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),Long.class, false, null, null, "single",306));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Index", "tag"
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false, null, null, "single",306));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
 						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),Double.class, true,"single",400,"100"));

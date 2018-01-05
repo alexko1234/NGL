@@ -45,6 +45,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 		
 		l.add(newInstrumentCategory("Main","hand"));
 		l.add(newInstrumentCategory("CBot","cbot"));
+		l.add(newInstrumentCategory("XP Workflow","xp-wf"));
 		
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
 //		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
@@ -95,6 +96,13 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 						createInstrument("cBot-Miseq_4","cBot Miseq_4",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
 						),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+
+		l.add(newInstrumentUsedType("cBot-interne-NovaSeq", "cBot-int-NS", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
+				getInstruments(
+						createInstrument("cBot-NovaSeq","cBot NovaSeq",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
+						),
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 // TODO:  Added cbot machine
@@ -179,7 +187,20 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
-			
+		/* NovaSeq*/
+        l.add(newInstrumentUsedType("NovaSeq", "NOVASEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaSeqProperties(), 
+                getInstruments(
+                 createInstrument("NOVASEQ","NovaSeq",  null, true,"/save/devcrgs/src/NGL_Feuille_route/NOVASEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+                 getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+                DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+
+		/* NovaSeq*/
+        l.add(newInstrumentUsedType("XP Workflow", "XPWORKFLOW ", InstrumentCategory.find.findByCode("xp-wf"), getNovaSeqProperties(), 
+                getInstruments(
+                 createInstrument("XPWORKFLOW","XP Workflow",  null, true,"/save/devcrgs/src/NGL_Feuille_route/XPWF", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+                getContainerSupportCategories(new String[]{"tube","96-well-plate", "384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+                DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+        
 //TODO: Fragment Analyser machine 
 	
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
@@ -250,6 +271,19 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
 //        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
 //        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single",100));
+        return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getNovaSeqProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Workflow", "workflow", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Standard","XP"), null, "single",200));
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",800, "n/a"));
+        propertyDefinitions.add(newPropertiesDefinition("Position", "position", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B","n/a"), "n/a", "single",900));
         return propertyDefinitions;
 	}
 	
