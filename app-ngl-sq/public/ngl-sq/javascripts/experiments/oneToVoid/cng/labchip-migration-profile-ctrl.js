@@ -70,7 +70,7 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 	$scope.button = {
 			isShow:function(){
 				// ajout parenthese pour grouper isInProgressState() et check("admin")
-				return ( $scope.mainService.isEditMode() && ( $scope.isInProgressState()|| Permissions.check("admin")))
+				return ( !$scope.mainService.isEditMode() && ( $scope.isInProgressState()|| Permissions.check("admin")) )
 				/////return ( $scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
 				}	
 	};
