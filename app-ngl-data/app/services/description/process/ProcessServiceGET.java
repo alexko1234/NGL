@@ -88,11 +88,11 @@ public class ProcessServiceGET extends AbstractProcessService {
 				Arrays.asList(
 						getPET("ext-to-prepa-flowcell",-1),
 //						getPET("solution-stock",-1),
-//						getPET("prepa-flowcell",0),
+						getPET("prepa-flowcell",0),
 						getPET("prepa-fc-ordered",0),
 						getPET("illumina-depot",1)),
 						
-//				getExperimentTypes("prepa-flowcell").get(0), 
+				//getExperimentTypes("prepa-flowcell").get(0), 
 				getExperimentTypes("prepa-fc-ordered").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
@@ -100,19 +100,19 @@ public class ProcessServiceGET extends AbstractProcessService {
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 //		//"Sequençage NovaSeq"
-		l.add(DescriptionFactory.newProcessType("Run NovaSeq", "novaseq-run", ProcessCategory.find.findByCode("sequencing"), 3,
-				
-				getPropertyDefinitionsNovaSeqDepot() , 
-				Arrays.asList(
-						getPET("ext-to-prepa-flowcell",-1),
-						getPET("prepa-fc-ns",0),
-						getPET("novaseq-depot",1)),
-						
-				getExperimentTypes("prepa-fc-ns").get(0), 
-				getExperimentTypes("novaseq-depot").get(0),
-				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
-				
-				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+//		l.add(DescriptionFactory.newProcessType("Run NovaSeq", "novaseq-run", ProcessCategory.find.findByCode("sequencing"), 3,
+//				
+//				getPropertyDefinitionsNovaSeqDepot() , 
+//				Arrays.asList(
+//						getPET("ext-to-prepa-flowcell",-1),
+//						getPET("prepa-fc-ns",0),
+//						getPET("novaseq-depot",1)),
+//						
+//				getExperimentTypes("prepa-fc-ns").get(0), 
+//				getExperimentTypes("novaseq-depot").get(0),
+//				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
+//				
+//				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
@@ -203,9 +203,6 @@ public class ProcessServiceGET extends AbstractProcessService {
 				DescriptionFactory.newPropertiesDefinition("Nombre de reads", "nbrRead"
 						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, null, null, "single",305));
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Nombre de reads", "nbrRead"
-						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, null, null, "single",305));
-		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Kit utilisé", "kit"
 						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),Long.class, false, null, null, "single",306));
 		propertyDefinitions.add(
@@ -233,6 +230,7 @@ public class ProcessServiceGET extends AbstractProcessService {
 //		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
 		values.add(DescriptionFactory.newValue("Hiseq 3000", "Hiseq 3000"));
+		values.add(DescriptionFactory.newValue("NovaSeq", "NovaSeq"));
 		return values;	
 	}
 	

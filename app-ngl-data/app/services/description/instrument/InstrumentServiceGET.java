@@ -98,11 +98,11 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
-		l.add(newInstrumentUsedType("cBot-interne-NovaSeq", "cBot-int-NS", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
+		l.add(newInstrumentUsedType("cBot-interne-NovaSeq", "cBot-interne-novaseq", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
 						createInstrument("cBot-NovaSeq","cBot NovaSeq",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
 						),
-				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 // TODO:  Added cbot machine
@@ -191,15 +191,15 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
         l.add(newInstrumentUsedType("NovaSeq", "NOVASEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaSeqProperties(), 
                 getInstruments(
                  createInstrument("NOVASEQ","NovaSeq",  null, true,"/save/devcrgs/src/NGL_Feuille_route/NOVASEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
-                 getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+                 getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), null , 
                 DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
 		/* NovaSeq*/
-        l.add(newInstrumentUsedType("XP Workflow", "XPWORKFLOW ", InstrumentCategory.find.findByCode("xp-wf"), getNovaSeqProperties(), 
-                getInstruments(
-                 createInstrument("XPWORKFLOW","XP Workflow",  null, true,"/save/devcrgs/src/NGL_Feuille_route/XPWF", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
-                getContainerSupportCategories(new String[]{"tube","96-well-plate", "384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
-                DescriptionFactory.getInstitutes(Constants.CODE.GET)));
+//        l.add(newInstrumentUsedType("XP Workflow", "XPWORKFLOW ", InstrumentCategory.find.findByCode("xp-wf"), getNovaSeqProperties(), 
+//                getInstruments(
+//                 createInstrument("XPWORKFLOW","XP Workflow",  null, true,"/save/devcrgs/src/NGL_Feuille_route/XPWF", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+//                getContainerSupportCategories(new String[]{"tube","96-well-plate", "384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+//                DescriptionFactory.getInstitutes(Constants.CODE.GET)));
         
 //TODO: Fragment Analyser machine 
 	
@@ -245,13 +245,10 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 						createInstrument("RSII", "PacBioRSII", null, true, "/save/devcrgs/src/NGL_Feuille_route/RSII", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
 				getContainerSupportCategories(new String[]{"smrtcell-150k"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-//		
+
 //		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(),  getInstrumentEppendorfMiniSpinPlus()
 //				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
-		
-		
-		
-		
+				
 //		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMinIon() 
 //				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
