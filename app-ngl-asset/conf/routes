@@ -1,3 +1,2 @@
 
-->  /               libframeworkweb.Routes  
-
+GET     /*file               controllers.Assets.at(path="/public", file)
