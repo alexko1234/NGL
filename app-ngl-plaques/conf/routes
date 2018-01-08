@@ -1,6 +1,5 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
+
+->  /               libframeworkweb.Routes  
 
 # Home page
 GET     /                           @controllers.main.tpl.Main.home()
@@ -49,6 +48,6 @@ GET /api/combo/users								controllers.combo.api.Lists.users()
 ->  /authentication authentication.Routes
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+# GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /messages.js                @controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        @controllers.main.tpl.Main.jsCodes()

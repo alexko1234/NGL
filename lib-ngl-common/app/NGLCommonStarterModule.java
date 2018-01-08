@@ -9,20 +9,22 @@ public class NGLCommonStarterModule extends play.api.inject.Module {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(NGLCommonStarterModule.class);
 		
+	// Required constructor
 	public NGLCommonStarterModule(Environment environment, Configuration configuration) {
 	}
 
+	// Application bindings
 	@Override
 	public Seq<Binding<?>> bindings(Environment environment, Configuration configuration) {
-		logger.debug("bindings are requested for module " + this);		
-		// -- Recreating the play.conf boot order
 		return seq(
 				bind(fr.cea.ig.play.IGGlobals.class                   ).toSelf().eagerly(),
-				// 
-				bind(fr.cea.ig.authentication.IAuthenticator.class).to(fr.cea.ig.authentication.authenticators.FixedAuthenticator.class).eagerly(),
-				// bind(fr.cea.ig.authentication.AuthenticatePlugin.class).toSelf().eagerly(),
-				
 				bind(controllers.resources.AssetPlugin.class          ).toSelf().eagerly(),
+				// Authenticator binding
+				bind(fr.cea.ig.authentication.IAuthenticator.class)
+				  .to(fr.cea.ig.authentication.authenticators.ConfiguredAuthenticator.class).eagerly(),
+				bind(fr.cea.ig.authorization.IAuthorizator.class)
+				  .to(fr.cea.ig.authorization.authorizators.ConfiguredAuthorizator.class).eagerly(),
+
 				// bind(play.modules.jongo.MongoDBPlugin.class           ).toSelf().eagerly(),
 				// was started in the mongodbplugin playplugins. 
 				bind(play.modules.mongojack.MongoDBPlugin.class       ).toSelf().eagerly(),

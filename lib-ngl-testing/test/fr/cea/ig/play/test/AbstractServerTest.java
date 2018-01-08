@@ -15,7 +15,7 @@ import play.test.TestServer;
  * Base class for tests that require a heavy initialization.
  * Subclasses must implement a BeforeClass annotated method
  * <code>
- * @BeforeClass
+ * {@literal @BeforeClass}
  * public static void startTestApplication() {
  *     initFrom(new CompleteTestServerSubClass());
  * }

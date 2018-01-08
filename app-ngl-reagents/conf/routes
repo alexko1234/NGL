@@ -1,13 +1,9 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
 
 ->  / apinglcommon.Routes
 ->  / apinglsq.Routes
 ->  / apinglreagents.Routes
 ->  /authentication authentication.Routes
-
-
+->  /               libframeworkweb.Routes  
 
 # Home page
 GET     /                           									@controllers.main.tpl.Main.home()
@@ -39,6 +35,6 @@ GET		/tpl/boxes/search									@controllers.reagents.tpl.Boxes.search()
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               									controllers.Assets.at(path="/public", file)
+# GET     /assets/*file               									controllers.Assets.at(path="/public", file)
 GET     /messages.js                									controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()

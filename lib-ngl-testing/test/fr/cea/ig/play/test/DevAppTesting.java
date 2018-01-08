@@ -139,7 +139,7 @@ public class DevAppTesting {
 					File file = new File(url.toURI());
 					return file.toString();
 				} catch (Exception e) {
-					// throw new RuntimeException("resource " + resources.get(0) + " cannot be converted to File",e);
+					logger.warn(" {} cannot be converted to a File",url);
 				}
 			}
 		} catch (IOException e) {
@@ -158,7 +158,7 @@ public class DevAppTesting {
 	 */
 	private static Application application;
 	
-	/**
+	/*
 	 * DEV application singleton instance. This does not sets the play global application
 	 * instance. Actual configuration should be done using an application specifc tag that
 	 * is used to look for the application configuration that is in "ngl-{tag}-test.conf" 
@@ -167,51 +167,66 @@ public class DevAppTesting {
 	 * @return dev application instance
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
+	// TODO: change to use the devappF version that use file configuration and not resource.
 	public static Application devapp(String appConfFile, String logConfFile) {
 		if (application != null) {
 			logger.warn("returning already application");
 			return application;
 		}
 		
-		if (application == null) {
-			try {
-				// File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
-				// String confFileName = resourceFileName(appConfFile);
-				String confFileName = appConfFile;
-				// String confFileName = "conf.play.frag";
-				logger .debug("using config file '" + confFileName + "'");
-				//logger.debug("config file name : " + confFileName + " " + resourceFileName(confFileName));
-				System.setProperty("config.resource", confFileName); // + ".frag")); // resourceFileName("conf/ngl-sq-test.conf"));
-				//System.setProperty("config.file", resourceFileName(confFileName));
-				//System.setProperty("config.file", unfragedConf.toString());
-				// System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
-				System.setProperty("logger.resource",logConfFile);
-				System.setProperty("play.server.netty.maxInitialLineLength", "16384");
-				// TODO: use play.Mode.TEST
-				Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-				GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
-				application = applicationBuilder.build();
-			} catch (Exception e) {
-				throw new RuntimeException("application build init failed",e);
-			}
-			// GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
-			// Application builder runs the db connection pool manager.
-			//throw new RuntimeException("abort application creation");
-			//application = applicationBuilder.build();
+		try {
+			// File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
+			// String confFileName = resourceFileName(appConfFile);
+			String confFileName = appConfFile;
+			// String confFileName = "conf.play.frag";
+			logger .debug("using config file '" + confFileName + "'");
+			//logger.debug("config file name : " + confFileName + " " + resourceFileName(confFileName));
+			System.setProperty("config.resource", confFileName); // + ".frag")); // resourceFileName("conf/ngl-sq-test.conf"));
+			//System.setProperty("config.file", resourceFileName(confFileName));
+			//System.setProperty("config.file", unfragedConf.toString());
+			// System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
+			System.setProperty("logger.resource",logConfFile);
+			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
+			// TODO: use play.Mode.TEST
+			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
+
+			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+			application = applicationBuilder.build();
+			// Register an aplication lifecycle cleaner.
+			application.injector().instanceOf(Cleaner.class);
+			return application; //Builder.build();
+		} catch (Exception e) {
+			throw new RuntimeException("application build init failed",e);
 		}
-		// Register an aplication lifecycle cleaner.
-		application.injector().instanceOf(Cleaner.class);
-		return application; //Builder.build();
-		// return applicationBuilder.build();		
 	}
-		
+	
+	// Locate the configuration through the resources but use it with 'config.file'
+	// so the configuration file includes are consistent with the usual -Dconfig.file
+	public static Application devappF(String appConfFile, String logConfFile) {
+		if (application != null) {
+			logger.warn("returning already application");
+			return application;
+		}
+		try {
+			String confFileName = resourceFileName(appConfFile);
+			logger .debug("using config file '" + confFileName + "'");
+			System.setProperty("config.file",     confFileName);
+			System.setProperty("logger.resource", logConfFile);
+			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
+			Environment env = new Environment(play.Mode.TEST);
+			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+			application = applicationBuilder.build();
+			// Register an aplication lifecycle cleaner.
+			application.injector().instanceOf(Cleaner.class);
+			return application;
+		} catch (Exception e) {
+			throw new RuntimeException("application build init failed",e);
+		}
+	}
+
 	static class Cleaner {
 		@Inject
 		public Cleaner(ApplicationLifecycle c) {
-			// c.addStopHook(new Callable() {
-			//	public CompletionStage call() throws Exception {		
-			//	}
-			//});
 			c.addStopHook(() -> {
 				logger.debug("clearing application reference");
 				application = null;

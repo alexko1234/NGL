@@ -1,3 +1,17 @@
+//
+// Configuration from command line or environment
+//
+//   embedded.auth=true
+//     configures the build to use the authentication directory
+//     in ngl instead of an external dependency.
+//
+//   NGL_CONF_TEST_DIR=<path>
+//   ngl.test.conf.dir=<path>
+//     Those definitions are added to the build classpath and the test
+//     infrastructure will locate the test configuration through the
+//     classpath.
+//
+
 import sbt._
 import Keys._
 
@@ -62,7 +76,7 @@ object ApplicationBuild extends Build {
 	// IG libraries
   // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
   // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.4-SNAPSHOT"
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.0-SNAPSHOT"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.1-SNAPSHOT"
 	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions

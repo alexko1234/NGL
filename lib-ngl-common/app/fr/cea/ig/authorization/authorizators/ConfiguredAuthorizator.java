@@ -9,6 +9,8 @@ import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.play.IGConfig;
 import play.api.inject.Injector;
 
+// TODO : complete doc
+
 /**
  * Delegated authorization implementation that is configured 
  * through the application configuration.
@@ -48,10 +50,10 @@ public class ConfiguredAuthorizator implements IAuthorizator {
 	 */
 	static {
 		modeMap = new HashMap<>();
-		modeMap.put("always", AlwaysAuthorizator.class);
-		modeMap.put("never",  NeverAuthorizator.class);
-		modeMap.put("fixed",  FixedAuthorizator.class);
-		modeMap.put("dao",    UserDAOAuthorizator.class);
+		modeMap.put("always",   AlwaysAuthorizator.class);
+		modeMap.put("never",    NeverAuthorizator.class);
+		modeMap.put("fixed",    FixedAuthorizator.class);
+		modeMap.put("user_dao", UserDAOAuthorizator.class);
 	}
 	
 	/**
