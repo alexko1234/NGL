@@ -1,7 +1,7 @@
 package controllers.analyses.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.ArrayList;
@@ -60,11 +60,11 @@ import workflows.analyses.AnalysisWorkflows;
 public class Analyses extends DocumentController<Analysis> {
 
 	//final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
-	final static Form<Valuation> valuationForm = form(Valuation.class);
-	final static Form<State> stateForm = form(State.class);
-	final static Form<AnalysesBatchElement> batchElementForm = form(AnalysesBatchElement.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
+	private final /*static*/ Form<Valuation> valuationForm; // = form(Valuation.class);
+	private final /*static*/ Form<State> stateForm; // = form(State.class);
+	private final /*static*/ Form<AnalysesBatchElement> batchElementForm; // = form(AnalysesBatchElement.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	private final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
 	final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
@@ -72,7 +72,12 @@ public class Analyses extends DocumentController<Analysis> {
 	
 	@Inject
 	public Analyses(NGLContext ctx) {
-		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
+		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);
+		this.valuationForm = getNGLContext().form(Valuation.class);
+		this.stateForm = getNGLContext().form(State.class);
+		this.batchElementForm = getNGLContext().form(AnalysesBatchElement.class);
+		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
+		
 	}
 	
 	@Permission(value={"reading"})

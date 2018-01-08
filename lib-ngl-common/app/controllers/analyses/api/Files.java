@@ -1,7 +1,7 @@
  package controllers.analyses.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -30,12 +30,13 @@ import fr.cea.ig.play.NGLContext;
 // @Controller
 public class Files extends SubDocumentController<Analysis, File> {
 
-	final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	private final static List<String> authorizedUpdateFields = Arrays.asList("fullname");
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	
 	@Inject
 	public Files(NGLContext ctx) {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, File.class);
+		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
 	}
 	@Override
 	protected Object getSubObject(Analysis objectInDB, String fullname) {

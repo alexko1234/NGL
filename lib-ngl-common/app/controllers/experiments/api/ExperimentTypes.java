@@ -1,7 +1,7 @@
 package controllers.experiments.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +19,16 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
+import controllers.commons.api.UserSearchForm;
 
-public class ExperimentTypes extends CommonController {
+import javax.inject.Inject;
+
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
+
+public class ExperimentTypes extends APICommonController<ExperimentTypesSearchForm> {
 	
 	/**
 	 * Logger.
@@ -30,10 +36,16 @@ public class ExperimentTypes extends CommonController {
 	private final static play.Logger.ALogger logger = play.Logger.of(ExperimentTypes.class);
 	
 	
-	final static Form<ExperimentTypesSearchForm> experimentTypeForm = form(ExperimentTypesSearchForm.class);
+	private final /*static*/ Form<ExperimentTypesSearchForm> experimentTypeForm;// = form(ExperimentTypesSearchForm.class);
+	
+	@Inject
+	public ExperimentTypes(NGLContext ctx) {
+		super(ctx, ExperimentTypesSearchForm.class);
+		this.experimentTypeForm = ctx.form(ExperimentTypesSearchForm.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result get(String code){
+	public Result get(String code){
 		ExperimentType experimentType = null;
 		try {
 			experimentType = ExperimentType.find.findByCode(code);
@@ -47,7 +59,7 @@ public class ExperimentTypes extends CommonController {
 	}
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException {
+	public Result list() throws DAOException {
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
@@ -98,7 +110,7 @@ public class ExperimentTypes extends CommonController {
 	}
 	
 	@Permission(value={"reading"})
-	public static Result getDefaultFirstExperiments(String processTypeCode) throws DAOException{		
+	public Result getDefaultFirstExperiments(String processTypeCode) throws DAOException{		
 			ProcessType processType = ProcessType.find.findByCode(processTypeCode);
 			List<ExperimentType> expTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(processType.firstExperimentType.code, processType.code);
 			return ok(Json.toJson(expTypes));		

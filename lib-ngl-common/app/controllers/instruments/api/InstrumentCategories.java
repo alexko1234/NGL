@@ -1,7 +1,7 @@
 package controllers.instruments.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,21 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+//import controllers.CommonController;
+import javax.inject.Inject;
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
 
-public class InstrumentCategories extends CommonController{
-	final static Form<InstrumentCategoriesSearchForm> instrumentCategoriesForm = form(InstrumentCategoriesSearchForm.class);
+public class InstrumentCategories extends APICommonController<InstrumentCategoriesSearchForm> { //CommonController{
+	private final /*static*/ Form<InstrumentCategoriesSearchForm> instrumentCategoriesForm;// = form(InstrumentCategoriesSearchForm.class);
 
-	public static Result list() throws DAOException{
+	@Inject
+	public InstrumentCategories(NGLContext ctx) {
+		super(ctx, InstrumentCategoriesSearchForm.class);
+		instrumentCategoriesForm = ctx.form(InstrumentCategoriesSearchForm.class);
+	}
+	
+	public Result list() throws DAOException{
 		Form<InstrumentCategoriesSearchForm> instrumentCategoriesTypeFilledForm = filledFormQueryString(instrumentCategoriesForm,InstrumentCategoriesSearchForm.class);
 		InstrumentCategoriesSearchForm instrumentCategoriesQueryParams = instrumentCategoriesTypeFilledForm.get();
 

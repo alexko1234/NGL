@@ -48,6 +48,9 @@ public abstract class APICommonController<T> extends Controller {
 		mainForm = ctx.form(type);
 	}
 
+	public final NGLContext getNGLContext(){
+		return this.ctx;
+	}
 	/*
 	 * Filled the main form
 	 * @return

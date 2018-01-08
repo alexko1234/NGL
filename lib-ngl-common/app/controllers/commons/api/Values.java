@@ -1,7 +1,7 @@
 package controllers.commons.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,22 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+//import controllers.CommonController;
+import javax.inject.Inject;
 
-public class Values extends CommonController {
-    final static Form<ValuesSearchForm> form = form(ValuesSearchForm.class);
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
 
-    public static Result list() throws DAOException {
+public class Values extends APICommonController<ValuesSearchForm> { // CommonController {
+    private final /*static*/ Form<ValuesSearchForm> form; // = form(ValuesSearchForm.class);
+
+    @Inject
+    public Values(NGLContext ctx) {
+    	super(ctx, ValuesSearchForm.class);
+    	this.form = ctx.form(ValuesSearchForm.class);
+    }
+    
+    public Result list() throws DAOException {
 		Form<ValuesSearchForm> filledForm = filledFormQueryString(
 				form, ValuesSearchForm.class);
 		ValuesSearchForm valuesSearch = filledForm.get();

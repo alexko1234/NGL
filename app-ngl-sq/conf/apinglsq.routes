@@ -19,13 +19,13 @@ GET		/api/containers													@controllers.containers.api.Containers.list()
 PUT		/api/containers/:code											@controllers.containers.api.Containers.update(code:java.lang.String)
 
 #TODO a revoir plutot /api/containers/supports/categories
-GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
+GET		/api/containers/container-support-categories  					@controllers.containers.api.ContainerSupportCategories.list()
 GET		/api/containers/:code											@controllers.containers.api.Containers.get(code:java.lang.String)
 
 PUT		/api/containers/batch/state										@controllers.containers.api.Containers.updateStateBatch()
 PUT		/api/containers/:code/state										@controllers.containers.api.Containers.updateState(code:java.lang.String)
 
-GET		/api/container-categories										controllers.containers.api.ContainerCategories.list()
+GET		/api/container-categories										@controllers.containers.api.ContainerCategories.list()
 
 #processes api
 GET		/api/processes													@controllers.processes.api.Processes.list()
@@ -62,12 +62,12 @@ GET	/api/experiments/:code/file/generation							@controllers.instruments.io.IO.
 POST	/api/experiments/:code/file/import								@controllers.instruments.io.IO.importFile(code:java.lang.String, extraInstrument:java.lang.String ?= "")
 
 
-GET		/api/experiment-categories										controllers.experiments.api.ExperimentCategories.list()
-GET		/api/experiment-types											controllers.experiments.api.ExperimentTypes.list()
-GET		/api/experiment-types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
-GET		/api/experiment-types/:code/default-first						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
-GET		/api/experiment-type-nodes										controllers.experiments.api.ExperimentTypeNodes.list()
-GET		/api/experiment-type-nodes/:code								controllers.experiments.api.ExperimentTypeNodes.get(code:java.lang.String)
+GET		/api/experiment-categories										@controllers.experiments.api.ExperimentCategories.list()
+GET		/api/experiment-types											@controllers.experiments.api.ExperimentTypes.list()
+GET		/api/experiment-types/:code										@controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
+GET		/api/experiment-types/:code/default-first						@controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
+GET		/api/experiment-type-nodes										@controllers.experiments.api.ExperimentTypeNodes.list()
+GET		/api/experiment-type-nodes/:code								@controllers.experiments.api.ExperimentTypeNodes.get(code:java.lang.String)
 
 
 #reagents api

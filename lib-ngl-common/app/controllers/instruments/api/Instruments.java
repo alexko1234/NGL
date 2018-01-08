@@ -1,7 +1,7 @@
 package controllers.instruments.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +19,24 @@ import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+//import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import javax.inject.Inject;
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
 
-public class Instruments extends CommonController{
-	final static Form<InstrumentsSearchForm> instrumentSearchForm = form(InstrumentsSearchForm.class);
+public class Instruments extends APICommonController<InstrumentsSearchForm> { //CommonController{
+	private final /*static*/ Form<InstrumentsSearchForm> instrumentSearchForm; // = form(InstrumentsSearchForm.class);
+	private final /*static*/ Form<Instrument> instrumentForm; // = form(Instrument.class);
 
-	final static Form<Instrument> instrumentForm = form(Instrument.class);
-
+	@Inject
+	public Instruments(NGLContext ctx) {
+		super(ctx, InstrumentsSearchForm.class);
+		instrumentSearchForm = ctx.form(InstrumentsSearchForm.class);
+		instrumentForm = ctx.form(Instrument.class);
+	}
 	
-	public static Result list() throws DAOException{
+	public Result list() throws DAOException{
 		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentSearchForm,InstrumentsSearchForm.class);
 		InstrumentsSearchForm instrumentsQueryParams = instrumentTypeFilledForm.get();
 
@@ -58,7 +66,7 @@ public class Instruments extends CommonController{
 		}	
 	}
 	
-	public static Result get(String code) throws DAOException{
+	public Result get(String code) throws DAOException{
 		Instrument instrument =  Instrument.find.findByCode(code);
 		if (instrument != null) {
 			return ok(Json.toJson(instrument));
@@ -68,7 +76,7 @@ public class Instruments extends CommonController{
 		
 	}
 	
-	public static Result update(String code) throws DAOException{
+	public Result update(String code) throws DAOException{
 		Instrument instrument =  Instrument.find.findByCode(code);
 		if (instrument == null) {
 			return badRequest("Instrument with code "+code+" not exist");

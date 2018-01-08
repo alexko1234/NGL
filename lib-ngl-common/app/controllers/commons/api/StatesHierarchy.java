@@ -1,7 +1,7 @@
 package controllers.commons.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,21 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+//import controllers.CommonController;
+import javax.inject.Inject;
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
 
-public class StatesHierarchy extends CommonController {
-    final static Form<StatesHierarchySearchForm> statesHierarchyForm = form(StatesHierarchySearchForm.class);
+public class StatesHierarchy extends APICommonController<StatesHierarchySearchForm> {// CommonController {
+    private final /*static*/ Form<StatesHierarchySearchForm> statesHierarchyForm; // = form(StatesHierarchySearchForm.class);
 
-    public static Result list() throws DAOException {
+    @Inject
+    public StatesHierarchy(NGLContext ctx){
+    	super(ctx, StatesHierarchySearchForm.class);
+    	this.statesHierarchyForm = ctx.form(StatesHierarchySearchForm.class);
+    }
+    
+    public Result list() throws DAOException {
 		Form<StatesHierarchySearchForm> statesHierarchyFilledForm = filledFormQueryString(
 				statesHierarchyForm, StatesHierarchySearchForm.class);
 		StatesHierarchySearchForm statesHierarchySearch = statesHierarchyFilledForm.get();

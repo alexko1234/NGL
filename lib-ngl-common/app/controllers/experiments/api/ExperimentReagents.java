@@ -1,7 +1,7 @@
 package controllers.experiments.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 import fr.cea.ig.util.Streamer;
 //import static fr.cea.ig.util.Streamer.IStreamer.write;
 
@@ -55,10 +55,11 @@ import fr.cea.ig.play.NGLContext;
 public class ExperimentReagents extends Experiments{
 	
 	
-	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
+	final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
 	@Inject
 	public ExperimentReagents(NGLContext ctx) {
 		super(ctx);	
+		experimentSearchForm = ctx.form(ExperimentSearchForm.class);
 	}
 	
 	@Permission(value={"reading"})

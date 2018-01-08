@@ -2,7 +2,7 @@ package controllers.containers.api;
 
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,25 +67,31 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupports.class);
 	
-	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
+	private final /*static*/ Form<ContainerSupportsSearchForm> supportForm; // = form(ContainerSupportsSearchForm.class);
 	
-	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
+	private final /*static*/ Form<ContainerSupportsUpdateForm> containerSupportUpdateForm; // = form(ContainerSupportsUpdateForm.class);
 
-	final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
+	private final /*static*/ Form<ContainerSupport> containerSupportForm; // = form(ContainerSupport.class);
 	
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
 	
-	final static List<String> authorizedUpdateFields = Arrays.asList("storageCode"); //liste des champs qui peuvent etre mis a jour
+	private final static List<String> authorizedUpdateFields = Arrays.asList("storageCode"); //liste des champs qui peuvent etre mis a jour
 	
-	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
+	private final /*static*/ Form<ContainerSupportBatchElement> batchElementForm; // = form(ContainerSupportBatchElement.class);
 	
-	final static Form<State> stateForm = form(State.class);
+	private final /*static*/ Form<State> stateForm; // = form(State.class);
 	
-	final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);
+	private final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);
 	
 	@Inject
 	public ContainerSupports(NGLContext ctx) {
 		super(ctx, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class);
+		supportForm = ctx.form(ContainerSupportsSearchForm.class);
+		containerSupportUpdateForm = ctx.form(ContainerSupportsUpdateForm.class);
+		containerSupportForm = ctx.form(ContainerSupport.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
+		batchElementForm = ctx.form(ContainerSupportBatchElement.class);
+		stateForm = ctx.form(State.class);
 	}
 	
 	/*@Permission(value={"reading"})

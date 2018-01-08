@@ -1,7 +1,7 @@
 package controllers.experiments.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,15 +20,26 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
+import javax.inject.Inject;
 
-public class ExperimentTypeNodes extends CommonController{
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
 
-	final static Form<ExperimentTypeNodesSearchForm> experimentTypeNodeForm = form(ExperimentTypeNodesSearchForm.class);
+public class ExperimentTypeNodes extends APICommonController<ExperimentTypeNodesSearchForm> { //CommonController{
+
+	private final /*static*/ Form<ExperimentTypeNodesSearchForm> experimentTypeNodeForm; // = form(ExperimentTypeNodesSearchForm.class);
+	
+	@Inject
+	public ExperimentTypeNodes(NGLContext ctx) {
+		super(ctx, ExperimentTypeNodesSearchForm.class);
+		experimentTypeNodeForm = ctx.form(ExperimentTypeNodesSearchForm.class);
+	}
+	
 	
 	@Permission(value={"reading"})
-	public static Result get(String code){
+	public Result get(String code){
 		try {
 			ExperimentTypeNode experimentTypeNode = ExperimentTypeNode.find.findByCode(code);
 			if(experimentTypeNode == null){
@@ -43,7 +54,7 @@ public class ExperimentTypeNodes extends CommonController{
 	}
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public Result list() throws DAOException{
 		Form<ExperimentTypeNodesSearchForm>  experimentTypeNodeFilledForm = filledFormQueryString(experimentTypeNodeForm,ExperimentTypeNodesSearchForm.class);
 		ExperimentTypeNodesSearchForm experimentTypeNodesSearch = experimentTypeNodeFilledForm.get();
 		try{

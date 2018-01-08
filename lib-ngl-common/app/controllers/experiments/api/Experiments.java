@@ -70,11 +70,11 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
-	final static Form<State> stateForm = form(State.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final Form<Experiment> experimentForm = form(Experiment.class);
+	private final /*static*/ Form<State> stateForm; // = form(State.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	private final Form<Experiment> experimentForm; // = form(Experiment.class);
 	
-	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
+	private final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
 	
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents");
@@ -85,7 +85,11 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	@Inject
 	public Experiments(NGLContext ctx) {
-		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);	
+		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);
+		stateForm = ctx.form(State.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
+		experimentForm = ctx.form(Experiment.class);
+		experimentSearchForm = ctx.form(ExperimentSearchForm.class);
 	}
 	
 	

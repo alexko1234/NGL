@@ -1,7 +1,7 @@
 package controllers.admin.supports.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,12 +46,14 @@ import fr.cea.ig.play.NGLContext;
 
 public class NGLObjects extends APICommonController<NGLObject> {
 
-	final static Form<NGLObjectsSearchForm> searchForm = form(NGLObjectsSearchForm.class);
+	private final Form<NGLObjectsSearchForm> searchForm ; //= form(NGLObjectsSearchForm.class);
 	private Map<String, AbstractUpdate> mappingCollectionUpdates;
+	private NGLContext ctx;
 	
 	@Inject
 	public NGLObjects(NGLContext ctx) {
-		super(ctx,NGLObject.class);
+		super(ctx, NGLObject.class);
+		this.searchForm = ctx.form(NGLObjectsSearchForm.class);
 		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
 		mappingCollectionUpdates.put("ngl_sq.Container", new ContainerUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Process", new ProcessUpdate());
@@ -64,7 +66,7 @@ public class NGLObjects extends APICommonController<NGLObject> {
 		NGLObjectsSearchForm form = filledFormQueryString(NGLObjectsSearchForm.class);
 		
 		//Form d = Form.form(); //just used to have errors
-		Form d = form();
+		Form d = getNGLContext().form();
 		ContextValidation cv = new ContextValidation(getCurrentUser(), d.errors());
 		form.validate(cv);
 		if (cv.hasErrors()) {

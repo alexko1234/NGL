@@ -1,6 +1,6 @@
 package controllers.containers.api;
 
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 import static validation.container.instance.ContainerValidationHelper.validateConcentration;
 import static validation.container.instance.ContainerValidationHelper.validateQuantity;
 import static validation.container.instance.ContainerValidationHelper.validateSize;
@@ -81,20 +81,25 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 			Arrays.asList("valuation","state","comments","volume","quantity","size","concentration");
 	
 	// -- Move to instance fields
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static Form<Container> containerForm = form(Container.class);
-	final static Form<ContainersSearchForm> containerSearchForm = form(ContainersSearchForm.class);
-	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	private final /*static*/ Form<Container> containerForm; // = form(Container.class);
+	private final /*static*/ Form<ContainersSearchForm> containerSearchForm; // = form(ContainersSearchForm.class);
+	private final /*static*/ Form<ContainerBatchElement> batchElementForm; // = form(ContainerBatchElement.class);
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
-	final static Form<State> stateForm = form(State.class);
-	final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
+	private final /*static*/ Form<State> stateForm; // = form(State.class);
+	private final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
 		
 	@Inject
 	public ContainersCRUD(NGLContext ctx) {
 		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
+		updateForm = getNGLContext().form(QueryFieldsForm.class);
+		containerForm = getNGLContext().form(Container.class);
+		containerSearchForm = getNGLContext().form(ContainersSearchForm.class);
+		batchElementForm = getNGLContext().form(ContainerBatchElement.class);
+		stateForm = getNGLContext().form(State.class);
 	}
-	
+
 	@Permission(value={"reading"})
 	public Result get(String code) {
 		return super.get(code);
@@ -322,7 +327,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {		
+	public DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = DBQuery.empty();
 

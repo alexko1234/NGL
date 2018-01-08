@@ -1,14 +1,14 @@
 package controllers.commons.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import controllers.CommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
 import models.administration.authorisation.User;
 import models.administration.authorisation.description.dao.UserDAO;
@@ -22,13 +22,26 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 
-public class Users extends CommonController{
-	final static Form<UserSearchForm> userSearchForm = form(UserSearchForm.class);
-	final static Form<User> userForm = form(User.class);
+import javax.inject.Inject;
+import fr.cea.ig.play.NGLContext;
+import controllers.APICommonController;
+
+public class Users extends APICommonController<UserSearchForm> { //CommonController{
+	private final /*static*/ Form<UserSearchForm> userSearchForm; // = form(UserSearchForm.class);
+	private final /*static*/ Form<User> userForm; // = form(User.class);
+	
+	
+	@Inject
+	public Users(NGLContext ctx) {
+		super(ctx, UserSearchForm.class);
+		this.userSearchForm = ctx.form(UserSearchForm.class);
+		this.userForm = ctx.form(User.class);
+	}
+	
 	/*
 	 * Get Method
 	 */
-	public static Result get(String login) throws DAOException{
+	public Result get(String login) throws DAOException{
 		User user = User.find.findByLogin(login);
 		if(user == null){
 			return notFound(login);
@@ -40,7 +53,7 @@ public class Users extends CommonController{
 	 * List Method
 	 */
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public Result list() throws DAOException{
 		UserSearchForm form = filledFormQueryString(UserSearchForm.class);
 
 		try{
@@ -73,7 +86,7 @@ public class Users extends CommonController{
 	 * rolesUpdate()		>( PUT )
 	 */
 	@Permission(value={"admin"})
-	public static Result update(String userLogin) throws DAOException{
+	public Result update(String userLogin) throws DAOException{
 		User user = getUsers(userLogin);
 		if(user == null)
 			return badRequest("User with login "+userLogin+" does not exist");
@@ -99,7 +112,7 @@ public class Users extends CommonController{
 	 * toLikeLogin
 	 * Change a String into %String%
 	 */
-	private static String toLikeLogin(String aLogin){
+	private String toLikeLogin(String aLogin){
 		return "%" + aLogin + "%";	
 	}
 	
@@ -107,7 +120,7 @@ public class Users extends CommonController{
 	 * Method to getUsers
 	 * 		used in update()..
 	 */
-	private static User getUsers(String aLogin) throws DAOException{
+	private User getUsers(String aLogin) throws DAOException{
 		User user = User.find.findByLogin(aLogin);
 		return user;
 	}

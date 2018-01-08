@@ -1,19 +1,19 @@
 #Common
-GET		/api/commons/states												controllers.commons.api.States.list()
+GET		/api/commons/states												@controllers.commons.api.States.list()
 GET		/api/commons/types												controllers.commons.api.CommonInfoTypes.list()
-GET		/api/commons/users  											controllers.commons.api.Users.list()
+GET		/api/commons/users  											@controllers.commons.api.Users.list()
 
 #value of property definition
-GET		/api/values														controllers.commons.api.Values.list()
+GET		/api/values														@controllers.commons.api.Values.list()
 
 
 GET		/api/resolutions		  										@controllers.resolutions.api.Resolutions.list()
 
 
 #Parameter
-GET		/api/parameters									controllers.commons.api.Parameters.list()
-GET		/api/parameters/:typeCode						controllers.commons.api.Parameters.listByCode(typeCode: java.lang.String)
-GET     /api/parameters/:typeCode/:code 				controllers.commons.api.Parameters.get(typeCode:java.lang.String,code:java.lang.String)
+GET		/api/parameters									@controllers.commons.api.Parameters.list()
+GET		/api/parameters/:typeCode						@controllers.commons.api.Parameters.listByCode(typeCode: java.lang.String)
+GET     /api/parameters/:typeCode/:code 				@controllers.commons.api.Parameters.get(typeCode:java.lang.String,code:java.lang.String)
 
 
 #reporting
@@ -40,14 +40,14 @@ POST	/api/reception/configs/:code/file/import		@controllers.receptions.io.Recept
 
 
 #instruments
-GET		/api/instruments								controllers.instruments.api.Instruments.list()
-GET		/api/instruments/:code							controllers.instruments.api.Instruments.get(code: java.lang.String)
-PUT		/api/instruments/:code							controllers.instruments.api.Instruments.update(code: java.lang.String)
+GET		/api/instruments								@controllers.instruments.api.Instruments.list()
+GET		/api/instruments/:code							@controllers.instruments.api.Instruments.get(code: java.lang.String)
+PUT		/api/instruments/:code							@controllers.instruments.api.Instruments.update(code: java.lang.String)
 
 #instruments type
-GET		/api/instrument-categories  					controllers.instruments.api.InstrumentCategories.list()
-GET 	/api/instrument-types/:code 					controllers.instruments.api.InstrumentUsedTypes.get(code:java.lang.String)
-GET		/api/instrument-types  							controllers.instruments.api.InstrumentUsedTypes.list()
+GET		/api/instrument-categories  					@controllers.instruments.api.InstrumentCategories.list()
+GET 	/api/instrument-types/:code 					@controllers.instruments.api.InstrumentUsedTypes.get(code:java.lang.String)
+GET		/api/instrument-types  							@controllers.instruments.api.InstrumentUsedTypes.list()
 
 #valuation configuration
 GET    	/api/valuation/criterias    	        		controllers.valuation.api.ValuationCriterias.list()
