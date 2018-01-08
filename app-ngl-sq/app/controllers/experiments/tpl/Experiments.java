@@ -1,7 +1,7 @@
 package controllers.experiments.tpl;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 // import play.Routes;
 import play.routing.JavaScriptReverseRouter;
 

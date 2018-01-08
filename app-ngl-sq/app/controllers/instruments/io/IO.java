@@ -1,7 +1,7 @@
 package controllers.instruments.io;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.lang.reflect.Constructor;
 
@@ -27,15 +27,22 @@ import controllers.instruments.io.utils.File;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
+import javax.inject.Inject;
 
 public class IO extends TPLCommonController {
 	
-	final Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
+	private final Form<PropertyFileValue> fileForm ; //= form(PropertyFileValue.class);
+	private NGLContext context;
+
+	@Inject
+	public IO(NGLContext context) {
+		this.context = context;
+		this.fileForm = context.form(PropertyFileValue.class);
+	}
 	
 	private Experiment getExperiment(String code){
 		return MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 	}
-	
 	
 	private AbstractOutput getOutputInstance(Experiment experiment, ContextValidation contextValidation){
 		
@@ -95,7 +102,7 @@ public class IO extends TPLCommonController {
 		if(null == experiment)return badRequest("experiment not exist");
 		
 		// GA/FDS 22/07/2016 ajout .bindFromRequest() + context....putAll pour recuperer un parametre de la query string...
-		DynamicForm filledForm = form().bindFromRequest(); 
+		DynamicForm filledForm = this.context.form().bindFromRequest(); 
         ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
         contextValidation.getContextObjects().putAll(filledForm.data());
 
