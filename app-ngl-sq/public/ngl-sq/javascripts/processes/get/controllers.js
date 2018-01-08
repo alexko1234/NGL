@@ -438,7 +438,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		containers.forEach(function(container){
 			var codes = [];
 			if(container.group){
-				codes = $scope.datatable.getGroupColumnValue(container, "code")				
+				codes = codes.concat($scope.datatable.getGroupColumnValue(container, "code"));				
 			}else if($scope.basket.get().indexOf(container.code) === -1){
 				codes[0] = container.code;												
 			}	
