@@ -42,7 +42,7 @@ public class XMLServices implements IXMLServices{
 		String existingStudyType = rpsStudy.getProperty("existingStudyType");
 		log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/variables/existingStudyType/"+existingStudyType.toLowerCase().replaceAll(" ", "%20"));
 		ResourceProperties rpsExistingStudy = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/existingStudyType/"+existingStudyType.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
-		if (accession!=null && !accession.equals("")) {	
+		if (SRAFilesUtil.isNotNullValue(accession)) {	
 			chaine = chaine + " accession=\"" + accession + "\" ";
 		}
 
@@ -88,7 +88,7 @@ public class XMLServices implements IXMLServices{
 		JSONDevice jsonDevice = new JSONDevice();
 		for (int i=0; i<sampleCodes.length; i++){
 			String sampleCode = sampleCodes[i].replaceAll("\"", "");
-			if(sampleCode!=null && !sampleCode.equals("")){
+			if(SRAFilesUtil.isNotNullValue(sampleCode)){
 				log.debug("sampleCode = '" + sampleCode +"'");
 				ResourceProperties rpsSample = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/samples/"+sampleCode,"bot").iterator().next();
 				String accession = rpsSample.get("accession");
@@ -100,26 +100,26 @@ public class XMLServices implements IXMLServices{
 				// Recuperer objet sample dans la base :
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 
-				if (accession!=null && !accession.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(accession)) {
 					chaine = chaine + " accession=\"" + accession + "\"";
 				}
 				chaine = chaine + ">\n";
-				if (title!=null && !title.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(title)) {
 					chaine = chaine + "    <TITLE>" + title + "</TITLE>\n";
 				}
 				chaine = chaine + "    <SAMPLE_NAME>\n";
 				chaine = chaine + "      <TAXON_ID>" + rpsSample.get("taxonId") + "</TAXON_ID>\n";
-				if (scientificName!=null && !scientificName.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(scientificName)) {
 					chaine = chaine + "      <SCIENTIFIC_NAME>" + scientificName + "</SCIENTIFIC_NAME>\n";
 				}
-				if (commonName!=null && !commonName.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(commonName)) {
 					chaine = chaine + "      <COMMON_NAME>" + commonName + "</COMMON_NAME>\n";
 				}
-				if (anonymizedName!=null && !anonymizedName.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(anonymizedName)) {
 					chaine = chaine + "      <ANONYMIZED_NAME>" + anonymizedName + "</ANONYMIZED_NAME>\n";
 				}
 				chaine = chaine + "    </SAMPLE_NAME>\n";
-				if (description!=null && !description.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(description)) {
 					chaine = chaine + "      <DESCRIPTION>" + description + "</DESCRIPTION>\n";
 				}
 				chaine = chaine + "  </SAMPLE>\n";
@@ -176,7 +176,7 @@ public class XMLServices implements IXMLServices{
 				ResourceProperties rpsInstrumentModel = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/instrumentModel/"+instrumentModel.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
 
 				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + ProjectProperties.getProperty("centerName") + "\"";
-				if (accession!=null && !accession.equals("")) {
+				if (accession!=null && !accession.equals("")&& !accession.equals("null")) {
 					chaine = chaine + " accession=\"" + accession + "\" ";	
 				}
 				chaine = chaine + ">\n";
@@ -198,7 +198,7 @@ public class XMLServices implements IXMLServices{
 				if (sampleCode!=null && !sampleCode.equals("") && !sampleCode.startsWith("external")){
 					chaine = chaine+  "refname=\"" + sampleCode + "\"";
 				}
-				if (sampleAccession!=null && !sampleAccession.equals("")){
+				if (sampleAccession!=null && !sampleAccession.equals("")&& !sampleAccession.equals("null")){
 					chaine = chaine + " accession=\""+sampleAccession + "\"";
 				}
 				chaine = chaine + "/>\n";
@@ -217,7 +217,7 @@ public class XMLServices implements IXMLServices{
 				chaine = chaine + " />\n";
 
 				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
-				if (libraryConstructionProtocol!=null && !libraryConstructionProtocol.equals("")){
+				if (libraryConstructionProtocol!=null && !libraryConstructionProtocol.equals("") && !libraryConstructionProtocol.equals("null")){
 					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
 				} else {
 					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
