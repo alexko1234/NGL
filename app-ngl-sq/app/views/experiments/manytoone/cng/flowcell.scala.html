@@ -273,10 +273,12 @@
 </div>
 
 <!-- FDS 25/10/2017 NGL-1326 ajout bouton import fichier Mettler/LabX
+     FDS 04/12/2017 trop collee a la div du dessus; pas trouve autre solution que <br/> !!!
      FDS 09/01/2018 cacher le bouton tant que 1) l'algo d'import n'est pas au point
                                               2) la décision d'utilise la Balance Mettler n'est pas confirmee...
                                               
-<div class="col-md-12 col-lg"> 
+<div class="col-md-12 col-lg-12"> 
+<div><br/></div> 
   <form class="form-horizontal" role="form">
    <div class="row margin-bottom-7">
         <div class="form-group col-lg-6"  ng-show="buttonMettler.isShow()">         
