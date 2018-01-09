@@ -20,9 +20,16 @@ rule "Code Flowcell catch full"
 	salience 900
 	no-loop
     when
-	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $atomicTransfertMethods:atomicTransfertMethods, $atomicTransfertMethods.size()!=8)
+	    //$atomicTransfertMethods.size()!=8
+	    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $atomicTransfertMethods:atomicTransfertMethods, $typeFlowcell:instrument.outContainerSupportCategoryCode)
+	    //$typeFlowcell:PropertyValue() from $instrument.get("outContainerSupportCategoryCode")
 	    $contextValidation:ContextValidation()
     then
-    	Logger.debug("Code Flowcell not full " + $atomicTransfertMethods.size());
-	    $contextValidation.addErrors("instrument",	"error.validationexp.lanefull", $atomicTransfertMethods.size());
+        Logger.debug("Validation, Code Flowcell catch full : Nombre de atomicTransfertMethods " + $atomicTransfertMethods.size() + " pour une flowcell " + $typeFlowcell);
+    	if (($typeFlowcell.equals("flowcell-8") && $atomicTransfertMethods.size()!=8) || ($typeFlowcell.equals("flowcell-1") && $atomicTransfertMethods.size()!=1) || ($typeFlowcell.equals("flowcell-2-s1") && $atomicTransfertMethods.size()!=2)|| ($typeFlowcell.equals("flowcell-2-s2") && $atomicTransfertMethods.size()!=2)|| ($typeFlowcell.equals("flowcell-4-s4") && $atomicTransfertMethods.size()!=4)){
+            Logger.debug("Code Flowcell not full " + $atomicTransfertMethods.size());
+            $contextValidation.addErrors("instrument",  "error.validationexp.lanefull", $atomicTransfertMethods.size());
+        }
+    	
+    	
 end
