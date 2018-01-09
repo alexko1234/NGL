@@ -144,7 +144,7 @@ public class XMLServices implements IXMLServices{
 		JSONDevice jsonDevice = new JSONDevice();
 		for (int i=0; i<experimentCodes.length;i++){
 			String experimentCode = experimentCodes[i].replaceAll("\"", "");
-			if(experimentCode!=null && !experimentCode.equals("")){
+			if(SRAFilesUtil.isNotNullValue(experimentCode)){
 				ResourceProperties rpsExp = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+experimentCode,"bot").iterator().next();
 				log.debug("rspExp "+rpsExp);
 				log.debug("ReadSpec "+rpsExp.get("readSpecs"));
@@ -176,17 +176,17 @@ public class XMLServices implements IXMLServices{
 				ResourceProperties rpsInstrumentModel = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/variables/instrumentModel/"+instrumentModel.toLowerCase().replaceAll(" ", "%20"),"bot").iterator().next();
 
 				chaine = chaine + "  <EXPERIMENT alias=\"" + experimentCode + "\" center_name=\"" + ProjectProperties.getProperty("centerName") + "\"";
-				if (accession!=null && !accession.equals("")&& !accession.equals("null")) {
+				if (SRAFilesUtil.isNotNullValue(accession)) {
 					chaine = chaine + " accession=\"" + accession + "\" ";	
 				}
 				chaine = chaine + ">\n";
 				// Les champs title et libraryName sont considerés comme obligatoires
 				chaine = chaine + "    <TITLE>" + rpsExp.get("title") + "</TITLE>\n";
 				chaine = chaine + "    <STUDY_REF ";
-				if (studyCode!=null && !studyCode.equals("") && !studyCode.startsWith("external")) { 
+				if (SRAFilesUtil.isNotNullValue(studyCode) && !studyCode.startsWith("external")) { 
 					chaine = chaine + " refname=\"" + studyCode +"\"";
 				}
-				if (studyAccession!=null && !studyAccession.equals("")){
+				if (SRAFilesUtil.isNotNullValue(studyAccession)){
 					chaine = chaine + " accession=\"" + studyAccession + "\"";
 				}
 				chaine = chaine + "/>\n"; 
@@ -195,10 +195,10 @@ public class XMLServices implements IXMLServices{
 				chaine = chaine + "        <DESIGN_DESCRIPTION></DESIGN_DESCRIPTION>\n";
 				chaine = chaine + "          <SAMPLE_DESCRIPTOR  ";
 
-				if (sampleCode!=null && !sampleCode.equals("") && !sampleCode.startsWith("external")){
+				if (SRAFilesUtil.isNotNullValue(sampleCode) && !sampleCode.startsWith("external")){
 					chaine = chaine+  "refname=\"" + sampleCode + "\"";
 				}
-				if (sampleAccession!=null && !sampleAccession.equals("")&& !sampleAccession.equals("null")){
+				if (SRAFilesUtil.isNotNullValue(sampleAccession) && !sampleAccession.equals("null")){
 					chaine = chaine + " accession=\""+sampleAccession + "\"";
 				}
 				chaine = chaine + "/>\n";
@@ -217,7 +217,7 @@ public class XMLServices implements IXMLServices{
 				chaine = chaine + " />\n";
 
 				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
-				if (libraryConstructionProtocol!=null && !libraryConstructionProtocol.equals("") && !libraryConstructionProtocol.equals("null")){
+				if (SRAFilesUtil.isNotNullValue(libraryConstructionProtocol)){
 					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>"+libraryConstructionProtocol+"</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
 				} else {
 					chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
@@ -271,7 +271,7 @@ public class XMLServices implements IXMLServices{
 		chaine = chaine + "<RUN_SET>\n";
 		for (int i=0; i<runCodes.length; i++){
 			String runCode = runCodes[i].replaceAll("\"", "");
-			if(runCode!=null && !runCode.equals("")){
+			if(SRAFilesUtil.isNotNullValue(runCode)){
 				log.debug("URL "+ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+runCode);
 				ResourceProperties rpsRun = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/run/"+runCode,"bot").iterator().next();
 				String accession = rpsRun.get("accession");
@@ -280,7 +280,7 @@ public class XMLServices implements IXMLServices{
 
 				System.out.println("Ecriture du run " + runCode);
 				chaine = chaine + "  <RUN alias=\""+ runCode + "\" ";
-				if (accession!=null && !accession.equals("")) {
+				if (SRAFilesUtil.isNotNullValue(accession)) {
 					chaine = chaine + " accession=\"" + accession + "\" ";
 				}
 
@@ -337,13 +337,13 @@ public class XMLServices implements IXMLServices{
 		chaine = chaine + "    <ACTIONS>\n";
 		// soumission systematique en confidential meme si study deja public
 		chaine = chaine + "      <ACTION>\n        <HOLD/>\n      </ACTION>\n";
-		if (studyCode!=null && !studyCode.equals("")) {
+		if (SRAFilesUtil.isNotNullValue(studyCode)) {
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
 		}
-		if (sampleCodes!=null &&!sampleCodes.equals("")){
+		if (SRAFilesUtil.isNotNullValue(sampleCodes)){
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"sample.xml\" schema=\"sample\"/>\n      </ACTION>\n";
 		}
-		if (experimentCodes!=null && !experimentCodes.equals("")){
+		if (SRAFilesUtil.isNotNullValue(experimentCodes)){
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"experiment.xml\" schema=\"experiment\"/>\n      </ACTION>\n";
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"run.xml\" schema=\"run\"/>\n      </ACTION>\n";
 		}
