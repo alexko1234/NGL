@@ -1,7 +1,7 @@
 package controllers.reagents.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,9 +44,10 @@ public class Kits extends DocumentController<Kit>{
 	@Inject
 	public Kits(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Kit.class);
+		kitSearchForm = ctx.form(KitSearchForm.class);
 	}
 
-	final static Form<KitSearchForm> kitSearchForm = form(KitSearchForm.class);
+	private final /*static*/ Form<KitSearchForm> kitSearchForm; // = form(KitSearchForm.class);
 
 	public Result get(String code){
 		Kit kit = getObject(code);

@@ -44,9 +44,10 @@ public class Reagents extends DocumentController<Reagent> {
 	@Inject
 	public Reagents(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Reagent.class);
+		reagentSearchForm = ctx.form(ReagentSearchForm.class);
 	}
 
-	final static Form<ReagentSearchForm> reagentSearchForm = form(ReagentSearchForm.class);
+	private final /*static*/ Form<ReagentSearchForm> reagentSearchForm; // = form(ReagentSearchForm.class);
 
 	public Result get(String code){
 		Reagent reagent = getObject(code);

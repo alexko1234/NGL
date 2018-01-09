@@ -1,6 +1,6 @@
 #lists api
-GET		/api/projects/types								controllers.projects.api.ProjectTypes.list()
-GET		/api/projects/categories						controllers.projects.api.ProjectCategories.list()
+GET		/api/projects/types								@controllers.projects.api.ProjectTypes.list()
+GET		/api/projects/categories						@controllers.projects.api.ProjectCategories.list()
 GET		/api/projects/bionformaticsParameters			@controllers.projects.api.ProjectBioinformaticParameters.list()
 
 #project api

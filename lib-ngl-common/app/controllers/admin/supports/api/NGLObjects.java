@@ -41,6 +41,7 @@ import controllers.admin.supports.api.objects.ExperimentUpdate;
 import controllers.admin.supports.api.objects.ProcessUpdate;
 import controllers.admin.supports.api.objects.ReadSetUpdate;
 import controllers.authorisation.Permission;
+import controllers.readsets.api.ReadSets;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
 
@@ -51,14 +52,14 @@ public class NGLObjects extends APICommonController<NGLObject> {
 	private NGLContext ctx;
 	
 	@Inject
-	public NGLObjects(NGLContext ctx) {
+	public NGLObjects(NGLContext ctx, ReadSets readSets) {
 		super(ctx, NGLObject.class);
 		this.searchForm = ctx.form(NGLObjectsSearchForm.class);
 		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
 		mappingCollectionUpdates.put("ngl_sq.Container", new ContainerUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Process", new ProcessUpdate());
 		mappingCollectionUpdates.put("ngl_sq.Experiment", new ExperimentUpdate());
-		mappingCollectionUpdates.put("ngl_bi.ReadSetIllumina", new ReadSetUpdate());
+		mappingCollectionUpdates.put("ngl_bi.ReadSetIllumina", new ReadSetUpdate(readSets));
 	}
 
 	@Permission(value={"admin"})

@@ -2,7 +2,7 @@ package controllers.receptions.api;
 
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 
 import java.text.SimpleDateFormat;
@@ -37,10 +37,11 @@ import fr.cea.ig.play.NGLContext;
 
 public class ReceptionConfigurations extends DocumentController<ReceptionConfiguration> {
 	
-	final Form<ReceptionConfiguration> reportConfigForm = form(ReceptionConfiguration.class);
+	final Form<ReceptionConfiguration> reportConfigForm;// = form(ReceptionConfiguration.class);
 	@Inject
 	public ReceptionConfigurations(NGLContext ctx) {
 		super(ctx,InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class);	
+		reportConfigForm = ctx.form(ReceptionConfiguration.class);
 	}
 	
 	@Permission(value={"reading"})

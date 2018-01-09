@@ -1,7 +1,7 @@
 package controllers.reporting.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,12 +43,14 @@ import fr.cea.ig.play.NGLContext;
 // @Controller
 public class FilteringConfigurations extends DocumentController<FilteringConfiguration> {
 	
-	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class); 
-	final static Form<FilteringConfiguration> filteringConfigurationsForm = form(FilteringConfiguration.class);
+	private final /*static*/ Form<ConfigurationsSearchForm> searchForm; // = form(ConfigurationsSearchForm.class); 
+	private final /*static*/ Form<FilteringConfiguration> filteringConfigurationsForm;// = form(FilteringConfiguration.class);
 	
 	@Inject
 	public FilteringConfigurations(NGLContext ctx) {
-		super(ctx,InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);		
+		super(ctx,InstanceConstants.FILTERING_CONFIG_COLL_NAME, FilteringConfiguration.class);
+		searchForm = ctx.form(ConfigurationsSearchForm.class);
+		filteringConfigurationsForm = ctx.form(FilteringConfiguration.class);
 	}
 
 

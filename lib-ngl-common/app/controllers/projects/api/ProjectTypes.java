@@ -1,10 +1,12 @@
 package controllers.projects.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.project.description.ProjectType;
 import models.utils.ListObject;
@@ -15,13 +17,21 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+import controllers.APICommonController;
+//import controllers.CommonController;
+import fr.cea.ig.play.NGLContext;
 
-public class ProjectTypes extends CommonController{
+public class ProjectTypes extends APICommonController<ProjectTypesSearchForm> { //CommonController{
 	
-	final static Form<ProjectTypesSearchForm> projectTypeForm = form(ProjectTypesSearchForm.class);
+	private final /*static*/ Form<ProjectTypesSearchForm> projectTypeForm ;//= form(ProjectTypesSearchForm.class);
 	
-	public static Result list() throws DAOException{
+	@Inject
+	public ProjectTypes(NGLContext ctx) {
+		super(ctx, ProjectTypesSearchForm.class);
+		projectTypeForm = ctx.form(ProjectTypesSearchForm.class);
+	}
+	
+	public /*static*/ Result list() throws DAOException{
 		Form<ProjectTypesSearchForm> projectTypeFilledForm = filledFormQueryString(projectTypeForm,ProjectTypesSearchForm.class);
 		ProjectTypesSearchForm projectTypesSearch = projectTypeFilledForm.get();
 		

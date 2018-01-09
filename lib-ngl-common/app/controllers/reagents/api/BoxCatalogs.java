@@ -1,7 +1,7 @@
 package controllers.reagents.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,11 +40,12 @@ import fr.cea.ig.play.NGLContext;
 
 public class BoxCatalogs extends DocumentController<BoxCatalog>{
 	
-	final static Form<BoxCatalogSearchForm> boxCatalogSearchForm = form(BoxCatalogSearchForm.class);
+	private final /*static*/ Form<BoxCatalogSearchForm> boxCatalogSearchForm; // = form(BoxCatalogSearchForm.class);
 	
 	@Inject
 	public BoxCatalogs(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class);
+		boxCatalogSearchForm = ctx.form(BoxCatalogSearchForm.class);
 	}
 	
 	public Result save() {

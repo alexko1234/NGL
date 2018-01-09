@@ -2,7 +2,7 @@ package controllers.valuation.api;
 
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 
 import java.text.SimpleDateFormat;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,38 +30,50 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+import controllers.APICommonController;
+import controllers.DocumentController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
-public class ValuationCriterias extends CommonController {
-	final static Form<ValuationCriteria> valuationCriteriaForm = form(ValuationCriteria.class);
-	final static Form<ValuationCriteriasSearchForm> searchForm = form(ValuationCriteriasSearchForm.class);
+public class ValuationCriterias extends DocumentController<ValuationCriteria> {//CommonController {
+	private final /*static*/ Form<ValuationCriteria> valuationCriteriaForm;// = form(ValuationCriteria.class);
+	private final /*static*/ Form<ValuationCriteriasSearchForm> searchForm;// = form(ValuationCriteriasSearchForm.class);
 	
-	public static Result list() {
+	@Inject
+	public ValuationCriterias(NGLContext ctx) {
+		super(ctx, InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class);
+		searchForm = ctx.form(ValuationCriteriasSearchForm.class);
+		valuationCriteriaForm = ctx.form(ValuationCriteria.class);
+	}
+	
+	public /*static*/ Result list() {
 		Form<ValuationCriteriasSearchForm> filledForm = filledFormQueryString(searchForm, ValuationCriteriasSearchForm.class);
 		ValuationCriteriasSearchForm form = filledForm.get();
 		
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
-			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);				
+			MongoDBResult<ValuationCriteria> results = mongoDBFinder(form, q, keys);
+//			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);
 			List<ValuationCriteria> list = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ValuationCriteria>(list, results.count())));
 		}else if(form.list){
-			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);							
+			MongoDBResult<ValuationCriteria> results = mongoDBFinder(form, q, keys);
+//			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);
 			List<ValuationCriteria> criterias = results.toList();
 			return ok(Json.toJson(criterias));
 		}else {
-			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);							
+			MongoDBResult<ValuationCriteria> results = mongoDBFinder(form, q, keys);
+//			MongoDBResult<ValuationCriteria> results = mongoDBFinder(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, form, ValuationCriteria.class, q, keys);							
 			List<ValuationCriteria> criterias = results.toList();
 			return ok(Json.toJson(criterias));
 		}
 	}
 	
-	private static Query getQuery(ValuationCriteriasSearchForm form) {
+	private /*static*/ Query getQuery(ValuationCriteriasSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
@@ -84,7 +98,7 @@ public class ValuationCriterias extends CommonController {
 		return query;
 	}
 
-	public static Result get(String code) {
+	public /*static*/ Result get(String code) {
 		ValuationCriteria reportingConfiguration =  getByCode(code);		
 		if(reportingConfiguration != null) {
 			return ok(Json.toJson(reportingConfiguration));	
@@ -94,7 +108,7 @@ public class ValuationCriterias extends CommonController {
 		}			
 	}
 	
-	public static Result save() {
+	public /*static*/ Result save() {
 		Form<ValuationCriteria> filledForm = getFilledForm(valuationCriteriaForm, ValuationCriteria.class);
 		ValuationCriteria objectInput = filledForm.get();
 
@@ -119,7 +133,7 @@ public class ValuationCriterias extends CommonController {
 		}
 	}
 	
-	public static Result update(String code) {
+	public /*static*/ Result update(String code) {
 		ValuationCriteria objectFromDB = getByCode(code);
 		if(objectFromDB == null) {
 			return badRequest("ValuationCriteria with code "+objectFromDB+" does not exist");
@@ -149,7 +163,7 @@ public class ValuationCriterias extends CommonController {
 		}				
 	}
 	
-	public static Result delete(String code) {
+	public /*static*/ Result delete(String code) {
 		ValuationCriteria objectFromDB =  getByCode(code);
 		if(objectFromDB == null) {
 			return badRequest("ValuationCriteria with code "+objectFromDB+" does not exist");

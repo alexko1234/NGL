@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -28,11 +30,15 @@ import controllers.admin.supports.api.NGLObject;
 import controllers.admin.supports.api.NGLObjectsSearchForm;
 import controllers.readsets.api.ReadSets;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 
-	public ReadSetUpdate() {
-		super(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);		
+	private ReadSets readSets;
+	@Inject
+	public ReadSetUpdate(ReadSets readSets) {
+		super(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);	
+		this.readSets = readSets;
 	}
 	
 	@Override
@@ -55,7 +61,8 @@ public class ReadSetUpdate extends AbstractUpdate<ReadSet>{
 	@Override
 	public void update(NGLObject input, ContextValidation cv) {
 		if(NGLObject.Action.delete.equals(NGLObject.Action.valueOf(input.action))){
-			ReadSets.delete(input.code);
+			this.readSets.delete(input.code);
+			//ReadSets.delete(input.code);
 		}else if(NGLObject.Action.exchange.equals(NGLObject.Action.valueOf(input.action))){
 			//Update readset and switch readSet
 			

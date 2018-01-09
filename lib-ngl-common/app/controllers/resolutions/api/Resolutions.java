@@ -1,7 +1,7 @@
 package controllers.resolutions.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,12 +33,14 @@ import play.mvc.Result;
 //@Controller
 public class Resolutions extends DocumentController<ResolutionConfiguration> {
 
-	final static Form<ResolutionConfigurationsSearchForm> searchForm = form(ResolutionConfigurationsSearchForm.class); 
-	final static Form<ResolutionConfiguration> resolutionConfigurationsForm = form(ResolutionConfiguration.class);
+	private final /*static*/ Form<ResolutionConfigurationsSearchForm> searchForm;// = form(ResolutionConfigurationsSearchForm.class); 
+	private final /*static*/ Form<ResolutionConfiguration> resolutionConfigurationsForm;// = form(ResolutionConfiguration.class);
 
 	@Inject
 	public Resolutions(NGLContext ctx) {
-		super(ctx,InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);		
+		super(ctx,InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);	
+		searchForm = ctx.form(ResolutionConfigurationsSearchForm.class);
+		resolutionConfigurationsForm = ctx.form(ResolutionConfiguration.class);
 	}
 
 

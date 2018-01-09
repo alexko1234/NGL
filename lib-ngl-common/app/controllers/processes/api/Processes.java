@@ -1,7 +1,7 @@
 package controllers.processes.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,9 +53,9 @@ public class Processes extends DocumentController<Process> {
 
 	private static final Logger.ALogger logger = Logger.of(Processes.class);
 	
-	final static Form<State> stateForm = form(State.class);
-	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
-	final static Form<ProcessesBatchElement> batchElementForm = form(ProcessesBatchElement.class);
+	private final /*static*/ Form<State> stateForm;// = form(State.class);
+	private final /*static*/ Form<ProcessesSearchForm> processesSearchForm;// = form(ProcessesSearchForm.class);
+	private final /*static*/ Form<ProcessesBatchElement> batchElementForm;// = form(ProcessesBatchElement.class);
 	
 	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
 	final static ProcWorkflowHelper workflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
@@ -65,6 +65,9 @@ public class Processes extends DocumentController<Process> {
 	public Processes(NGLContext ctx) {
 		super(ctx,InstanceConstants.PROCESS_COLL_NAME, Process.class);		
 		defaultKeys =  Arrays.asList("*");
+		stateForm = ctx.form(State.class);
+		processesSearchForm = ctx.form(ProcessesSearchForm.class);
+		batchElementForm = ctx.form(ProcessesBatchElement.class);
 	}
 
 	@Permission(value={"reading"})
@@ -423,7 +426,7 @@ public class Processes extends DocumentController<Process> {
 			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
 		}
 		
-		DynamicForm deleteForm = form();
+		DynamicForm deleteForm = getNGLContext().form();
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		
 		if(process.state.code.equals("IP")) {

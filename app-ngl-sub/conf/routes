@@ -122,7 +122,7 @@ GET		/api/sra/experiments/:code/rawDatas/:relatifName	@controllers.sra.experimen
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 #--------
-GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
+GET    	/api/readsets	                 			@controllers.readsets.api.ReadSets.list()
 
 #---------
 # projects from ngl-common
@@ -130,7 +130,8 @@ GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list
 GET		/api/projects								@controllers.projects.api.Projects.list()
 
 # states from ngl-Common
-GET		/api/commons/states							controllers.commons.api.States.list()
+GET		/api/commons/states							@controllers.commons.api.States.list()
+
 #----------------
 # documentation
 #----------------

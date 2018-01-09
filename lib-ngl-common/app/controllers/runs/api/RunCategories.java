@@ -1,13 +1,16 @@
 package controllers.runs.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
-
+//import static fr.cea.ig.play.IGGlobals.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import controllers.CommonController;
+import javax.inject.Inject;
+
+import controllers.APICommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.run.description.RunCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -18,12 +21,18 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 
-public class RunCategories extends CommonController {
+public class RunCategories extends APICommonController<RunCategoriesSearchForm> { //CommonController {
 
-	final static Form<RunCategoriesSearchForm> runCategoriesForm = form(RunCategoriesSearchForm.class);
+	private final /*static*/ Form<RunCategoriesSearchForm> runCategoriesForm;// = form(RunCategoriesSearchForm.class);
+	
+	@Inject
+	public RunCategories(NGLContext ctx) {
+		super(ctx, RunCategoriesSearchForm.class);
+		runCategoriesForm = ctx.form(RunCategoriesSearchForm.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result list(){
+	public /*static*/ Result list(){
 		Form<RunCategoriesSearchForm> runCategoryFilledForm = filledFormQueryString(runCategoriesForm,RunCategoriesSearchForm.class);
 		RunCategoriesSearchForm runCategoriesSearch = runCategoryFilledForm.get();
 		

@@ -2,12 +2,14 @@ package controllers.reporting.api;
 
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reporting.instance.ReportingConfiguration;
@@ -26,27 +28,38 @@ import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.CommonController;
+import controllers.APICommonController;
+import controllers.DocumentController;
+//import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
-public class ReportingConfigurations extends CommonController {
-	final static Form<ReportingConfiguration> reportConfigForm = form(ReportingConfiguration.class);
-	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class);
+public class ReportingConfigurations extends DocumentController<ReportingConfiguration> {// CommonController {
+	private final /*static*/ Form<ReportingConfiguration> reportConfigForm; // = form(ReportingConfiguration.class);
+	private final /*static*/ Form<ConfigurationsSearchForm> searchForm; // = form(ConfigurationsSearchForm.class);
 	
-	public static Result list() {
+	@Inject
+	public ReportingConfigurations(NGLContext ctx) {
+		super(ctx, InstanceConstants.REPORTING_CONFIG_COLL_NAME, ReportingConfiguration.class);
+		reportConfigForm = ctx.form(ReportingConfiguration.class);
+		searchForm = ctx.form(ConfigurationsSearchForm.class);
+	}
+	
+	public /*static*/ Result list() {
 		Form<ConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ConfigurationsSearchForm.class);
 		ConfigurationsSearchForm form = filledForm.get();
 		
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
-			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);				
+			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(form, q, keys);
+			//MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);				
 			List<ReportingConfiguration> reportingConfigurations = results.toList();
 			return ok(Json.toJson(new DatatableResponse<ReportingConfiguration>(reportingConfigurations, results.count())));
 		}else{
-			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);							
+			MongoDBResult<ReportingConfiguration> results = mongoDBFinder(form, q, keys);	
+			//MongoDBResult<ReportingConfiguration> results = mongoDBFinder(InstanceConstants.REPORTING_CONFIG_COLL_NAME, form, ReportingConfiguration.class, q, keys);							
 			List<ReportingConfiguration> reportingConfigurations = results.toList();
 			return ok(Json.toJson(reportingConfigurations));
 		}
@@ -66,7 +79,7 @@ public class ReportingConfigurations extends CommonController {
 		return query;
 	}
 
-	public static Result get(String code) {
+	public /*static*/ Result get(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);		
 		if(reportingConfiguration != null) {
 			return ok(Json.toJson(reportingConfiguration));	
@@ -76,7 +89,7 @@ public class ReportingConfigurations extends CommonController {
 		}			
 	}
 	
-	public static Result save() {
+	public /*static*/ Result save() {
 		Form<ReportingConfiguration> filledForm = getFilledForm(reportConfigForm, ReportingConfiguration.class);
 		ReportingConfiguration reportingConfiguration = filledForm.get();
 
@@ -101,7 +114,7 @@ public class ReportingConfigurations extends CommonController {
 		}
 	}
 	
-	public static Result update(String code) {
+	public /*static*/ Result update(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);
 		if(reportingConfiguration == null) {
 			return badRequest("ReportingConfiguration with code "+code+" does not exist");
@@ -131,7 +144,7 @@ public class ReportingConfigurations extends CommonController {
 		}				
 	}
 	
-	public static Result delete(String code) {
+	public /*static*/ Result delete(String code) {
 		ReportingConfiguration reportingConfiguration =  getReportingConfiguration(code);
 		if(reportingConfiguration == null) {
 			return badRequest("ReportingConfiguration with code "+reportingConfiguration+" does not exist");

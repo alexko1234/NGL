@@ -1,7 +1,7 @@
 package controllers.runs.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,14 +29,21 @@ import workflows.run.RunWorkflows;
 import fr.cea.ig.play.NGLContext;
 
 public class State extends RunsController {
-    final static Form<models.laboratory.common.instance.State> stateForm = form(models.laboratory.common.instance.State.class);
-    final static Form<HistoricalStateSearchForm> historicalForm = form(HistoricalStateSearchForm.class);
-    final static Form<RunBatchElement> batchElementForm = form(RunBatchElement.class);
+    private final /*static*/ Form<models.laboratory.common.instance.State> stateForm;// = form(models.laboratory.common.instance.State.class);
+    private final /*static*/ Form<HistoricalStateSearchForm> historicalForm;// = form(HistoricalStateSearchForm.class);
+    private final /*static*/ Form<RunBatchElement> batchElementForm;// = form(RunBatchElement.class);
     
     final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
 	
+    @Inject
+    public State(NGLContext ctx) {
+    	stateForm = ctx.form(models.laboratory.common.instance.State.class);
+    	historicalForm = ctx.form(HistoricalStateSearchForm.class);
+    	batchElementForm = ctx.form(RunBatchElement.class);
+	}
+    
     @Permission(value={"reading"})
-    public static Result get(String code) {
+    public /*static*/ Result get(String code) {
 	Run runValue = getRun(code, "state");
 		if (runValue != null) {
 		    return ok(Json.toJson(runValue.state));
@@ -44,7 +53,7 @@ public class State extends RunsController {
     }
 
     @Permission(value={"writing"})	// @Permission(value={"workflow_run_lane"})
-    public static Result update(String code) {
+    public /*static*/ Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 		    return badRequest();
@@ -65,7 +74,7 @@ public class State extends RunsController {
     }
     
     @Permission(value={"writing"})
-    public static Result updateBatch() {
+    public /*static*/ Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -93,7 +102,7 @@ public class State extends RunsController {
     }
     
     @Permission(value={"reading"})
-    public static Result historical(String code) {
+    public /*static*/ Result historical(String code) {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {
 		    Form<HistoricalStateSearchForm> inputForm = filledFormQueryString(historicalForm, HistoricalStateSearchForm.class);

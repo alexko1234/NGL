@@ -1,7 +1,7 @@
 package controllers.reagents.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,9 +44,10 @@ public class Boxes extends DocumentController<Box> {
 	@Inject
 	public Boxes(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class);
+		boxSearchForm = ctx.form(BoxSearchForm.class);
 	}
 
-	final static Form<BoxSearchForm> boxSearchForm = form(BoxSearchForm.class);
+	private final /*static*/ Form<BoxSearchForm> boxSearchForm;// = form(BoxSearchForm.class);
 
 	public Result get(String code){
 		Box box = getObject(code);

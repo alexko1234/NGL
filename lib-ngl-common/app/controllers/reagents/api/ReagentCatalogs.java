@@ -1,7 +1,7 @@
 package controllers.reagents.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +38,12 @@ import fr.cea.ig.play.NGLContext;
 
 public class ReagentCatalogs extends DocumentController<ReagentCatalog> {
 	
-	final static Form<ReagentCatalogSearchForm> ReagentCatalogSearchForm = form(ReagentCatalogSearchForm.class);
+	private final /*static*/ Form<ReagentCatalogSearchForm> ReagentCatalogSearchForm; // = form(ReagentCatalogSearchForm.class);
 	
 	@Inject
 	public ReagentCatalogs(NGLContext ctx) {
 		super(ctx,InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class);
+		ReagentCatalogSearchForm = ctx.form(ReagentCatalogSearchForm.class);
 	}
 	
 	public Result save(){

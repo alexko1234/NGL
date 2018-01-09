@@ -1,7 +1,9 @@
 package controllers.runs.api;
 
+import javax.inject.Inject;
+
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 
 import org.mongojack.DBQuery;
@@ -16,7 +18,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
-import controllers.CommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.IGBodyParsers;
@@ -26,10 +28,15 @@ import fr.cea.ig.play.NGLContext;
 
 public class RunTreatments extends RunsController{
 
-	final static Form<Treatment> treatmentForm = form(Treatment.class);
+	private final /*static*/ Form<Treatment> treatmentForm;// = form(Treatment.class);
+	
+	@Inject
+	public RunTreatments(NGLContext ctx) {
+		treatmentForm = ctx.form(Treatment.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result list(String runCode){
+	public /*static*/ Result list(String runCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", runCode));
 		if (run != null) {
 			return ok(Json.toJson(run.treatments));
@@ -39,7 +46,7 @@ public class RunTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-	public static Result get(String runCode, String treatmentCode){
+	public /*static*/ Result get(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (run != null) {
@@ -50,7 +57,7 @@ public class RunTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-	public static Result head(String runCode, String treatmentCode){
+	public /*static*/ Result head(String runCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)))){
 			return ok();
@@ -62,7 +69,7 @@ public class RunTreatments extends RunsController{
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public static Result save(String runCode){
+	public /*static*/ Result save(String runCode){
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
 			return badRequest();
@@ -100,7 +107,7 @@ public class RunTreatments extends RunsController{
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public static Result update(String runCode, String treatmentCode){
+	public /*static*/ Result update(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (run==null) {
@@ -143,7 +150,7 @@ public class RunTreatments extends RunsController{
 	}
 	
 	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
-	public static Result delete(String runCode, String treatmentCode){
+	public /*static*/ Result delete(String runCode, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (run==null) {

@@ -1,11 +1,13 @@
 package controllers.processes.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,15 +23,23 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+import controllers.APICommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 
-public class ProcessTypes extends CommonController{
+public class ProcessTypes extends APICommonController<ProcessTypesSearchForm> {//CommonController{
 	
-	final static Form<ProcessTypesSearchForm> processTypeForm = form(ProcessTypesSearchForm.class);
+	private final /*static*/ Form<ProcessTypesSearchForm> processTypeForm;// = form(ProcessTypesSearchForm.class);
+	
+	@Inject
+	public ProcessTypes(NGLContext ctx) {
+		super(ctx, ProcessTypesSearchForm.class);
+		processTypeForm = ctx.form(ProcessTypesSearchForm.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public /*static*/ Result list() throws DAOException{
 		Form<ProcessTypesSearchForm> processTypeFilledForm = filledFormQueryString(processTypeForm,ProcessTypesSearchForm.class);
 		ProcessTypesSearchForm processTypesSearch = processTypeFilledForm.get();
 		
@@ -69,7 +79,7 @@ public class ProcessTypes extends CommonController{
 	}
 	
 	@Permission(value={"reading"})
-	public static Result get(String code) throws DAOException{		 
+	public /*static*/ Result get(String code) throws DAOException{		 
 			ProcessType processType = ProcessType.find.findByCode(code);
 			if(processType!=null){
 				return ok(Json.toJson(processType));

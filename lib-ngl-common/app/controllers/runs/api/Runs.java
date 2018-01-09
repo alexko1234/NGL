@@ -1,7 +1,7 @@
 package controllers.runs.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 import static fr.cea.ig.play.IGGlobals.akkaSystem;
 import fr.cea.ig.mongo.MongoStreamer;
 
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,9 +64,9 @@ public class Runs extends RunsController {
 
 	
 	//final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
-	final static Form<Run> runForm = form(Run.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static Form<Valuation> valuationForm = form(Valuation.class);
+	private final /*static*/ Form<Run> runForm;// = form(Run.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
+	private final /*static*/ Form<Valuation> valuationForm;// = form(Valuation.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "sequencingStartDate", "state", "valuation");
 
@@ -72,8 +74,16 @@ public class Runs extends RunsController {
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
+	@Inject
+	public Runs(NGLContext ctx) {
+		runForm = ctx.form(Run.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
+		valuationForm = ctx.form(Valuation.class);
+	}
+	
+	
 	@Permission(value={"reading"})
-	public static Result list(){
+	public /*static*/ Result list(){
 
 		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
 		//RunsSearchForm form = filledForm.get();
@@ -104,7 +114,7 @@ public class Runs extends RunsController {
 		}
 	}
 
-	private static DatatableForm updateForm(RunsSearchForm form) {
+	private /*static*/ DatatableForm updateForm(RunsSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
@@ -112,7 +122,7 @@ public class Runs extends RunsController {
 		return form;
 	}
 	
-	private static List<ListObject> toListObjects(List<Run> runs){
+	private /*static*/ List<ListObject> toListObjects(List<Run> runs){
 		List<ListObject> jo = new ArrayList<ListObject>();
 		for(Run r: runs){
 			jo.add(new ListObject(r.code, r.code));
@@ -120,7 +130,7 @@ public class Runs extends RunsController {
 		return jo;
 	}
 	
-	private static Query getQuery(RunsSearchForm form) {
+	private /*static*/ Query getQuery(RunsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		
@@ -246,7 +256,7 @@ public class Runs extends RunsController {
 
 	
 	@Permission(value={"reading"})
-	public static Result get(String code) {
+	public /*static*/ Result get(String code) {
 		
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		
@@ -259,7 +269,7 @@ public class Runs extends RunsController {
 	}
 
 	@Permission(value={"reading"})
-	public static Result head(String code){
+	public /*static*/ Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
 		}else{
@@ -269,7 +279,7 @@ public class Runs extends RunsController {
 
 	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
-	public static Result save() throws DAOException {
+	public /*static*/ Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runInput = filledForm.get();
 
@@ -313,7 +323,7 @@ public class Runs extends RunsController {
 	}
 
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
-	public static Result update(String code) {
+	public /*static*/ Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 			return badRequest("Run with code "+code+" not exist");
@@ -378,7 +388,7 @@ public class Runs extends RunsController {
 
 
 	@Permission(value={"writing"})
-	public static Result delete(String code) {
+	public /*static*/ Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 			return badRequest();
@@ -392,7 +402,7 @@ public class Runs extends RunsController {
 	
 	
 	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
-	public static Result valuation(String code){
+	public /*static*/ Result valuation(String code){
 		Run run = getRun(code);
 		if(run == null){
 			return badRequest();
@@ -421,7 +431,7 @@ public class Runs extends RunsController {
 	}
 
 	@Permission(value={"writing"})
-	public static Result applyRules(String code, String rulesCode){
+	public /*static*/ Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if(run!=null){
 			//Send run fact			

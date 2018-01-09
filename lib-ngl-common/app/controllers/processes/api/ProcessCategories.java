@@ -1,10 +1,12 @@
 package controllers.processes.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import models.laboratory.processes.description.ProcessCategory;
 import models.utils.ListObject;
@@ -15,15 +17,23 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
-import controllers.CommonController;
+import controllers.APICommonController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
+import fr.cea.ig.play.NGLContext;
 
-public class ProcessCategories extends CommonController{
+public class ProcessCategories extends APICommonController<ProcessCategoriesSearchForm> { // CommonController{
 	
-	final static Form<ProcessCategoriesSearchForm> processCategoryForm = form(ProcessCategoriesSearchForm.class);
+	private final /*static*/ Form<ProcessCategoriesSearchForm> processCategoryForm; // = form(ProcessCategoriesSearchForm.class);
+	
+	@Inject
+	public ProcessCategories(NGLContext ctx) {
+		super(ctx, ProcessCategoriesSearchForm.class);
+		processCategoryForm = ctx.form(ProcessCategoriesSearchForm.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result list() throws DAOException{
+	public Result list() throws DAOException{
 		Form<ProcessCategoriesSearchForm> processCategoryFilledForm = filledFormQueryString(processCategoryForm,ProcessCategoriesSearchForm.class);
 		ProcessCategoriesSearchForm processCategoriesSearch = processCategoryFilledForm.get();
 		

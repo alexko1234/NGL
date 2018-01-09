@@ -2,7 +2,7 @@ package controllers.stats.api;
 
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.stats.StatsConfiguration;
@@ -28,36 +30,47 @@ import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.CommonController;
+import controllers.DocumentController;
+//import controllers.CommonController;
 import controllers.authorisation.Permission;
 import controllers.reporting.api.ConfigurationsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 
-public class StatsConfigurations extends CommonController {
-	final static Form<StatsConfiguration> reportConfigForm = form(StatsConfiguration.class);
-	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class);
+public class StatsConfigurations extends DocumentController<StatsConfiguration> {// CommonController {
+	private final /*static*/ Form<StatsConfiguration> reportConfigForm;// = form(StatsConfiguration.class);
+	private final /*static*/ Form<ConfigurationsSearchForm> searchForm;// = form(ConfigurationsSearchForm.class);
+	
+	@Inject
+	public StatsConfigurations(NGLContext ctx) {
+		super(ctx, InstanceConstants.STATS_CONFIG_COLL_NAME, StatsConfiguration.class);
+		reportConfigForm = ctx.form(StatsConfiguration.class);
+		searchForm = ctx.form(ConfigurationsSearchForm.class);
+	}
 	
 	@Permission(value={"reading"})
-	public static Result list() {
+	public /*static*/ Result list() {
 		Form<ConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ConfigurationsSearchForm.class);
 		ConfigurationsSearchForm form = filledForm.get();
 		
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
-			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");				
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(form, q, keys).sort("name");
+//			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
 			List<StatsConfiguration> statsConfigurations = results.toList();
 			return ok(Json.toJson(new DatatableResponse<StatsConfiguration>(statsConfigurations, results.count())));
 		}else if(form.count){
-			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(form, q, keys).sort("name");
+//			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
 			int count = results.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		}else{
-			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");							
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(form, q, keys).sort("name");
+//			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
 			List<StatsConfiguration> statsConfigurations = results.toList();
 			return ok(Json.toJson(statsConfigurations));
 		}
@@ -78,7 +91,7 @@ public class StatsConfigurations extends CommonController {
 	}
 
 	@Permission(value={"reading"})
-	public static Result get(String code) {
+	public /*static*/ Result get(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);		
 		if(statsConfiguration != null) {
 			return ok(Json.toJson(statsConfiguration));	
@@ -89,7 +102,7 @@ public class StatsConfigurations extends CommonController {
 	}
 	
 	@Permission(value={"writing"})
-	public static Result save() {
+	public /*static*/ Result save() {
 		Form<StatsConfiguration> filledForm = getFilledForm(reportConfigForm, StatsConfiguration.class);
 		StatsConfiguration statsConfiguration = filledForm.get();
 
@@ -115,7 +128,7 @@ public class StatsConfigurations extends CommonController {
 	}
 	
 	@Permission(value={"writing"})
-	public static Result update(String code) {
+	public /*static*/ Result update(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);
 		if(statsConfiguration == null) {
 			return badRequest("StatsConfiguration with code "+code+" does not exist");
@@ -146,7 +159,7 @@ public class StatsConfigurations extends CommonController {
 	}
 	
 	@Permission(value={"writing"})
-	public static Result delete(String code) {
+	public /*static*/ Result delete(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);
 		if(statsConfiguration == null) {
 			return badRequest("StatsConfiguration with code "+statsConfiguration+" does not exist");

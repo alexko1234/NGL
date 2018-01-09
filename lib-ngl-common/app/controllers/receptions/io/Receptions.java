@@ -1,7 +1,9 @@
 package controllers.receptions.io;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.reception.instance.ReceptionConfiguration;
@@ -25,7 +27,12 @@ import fr.cea.ig.play.NGLContext;
 
 public class Receptions extends TPLCommonController {
 
-	final Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
+	final Form<PropertyFileValue> fileForm;// = form(PropertyFileValue.class);
+	
+	@Inject
+	public Receptions(NGLContext ctx) {
+		fileForm = ctx.form(PropertyFileValue.class);
+	}
 	
 	private ReceptionConfiguration getReceptionConfig(String code){
 		return MongoDBDAO.findByCode(InstanceConstants.RECEPTION_CONFIG_COLL_NAME, ReceptionConfiguration.class, code);

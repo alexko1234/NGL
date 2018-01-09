@@ -1,7 +1,7 @@
 package controllers.projects.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 import fr.cea.ig.mongo.MongoStreamer;
 import fr.cea.ig.play.NGLContext;
 
@@ -42,12 +42,14 @@ import fr.cea.ig.MongoDBResult;
 // @Controller
 public class Projects extends DocumentController<Project> {
 	
-	final static Form<ProjectsSearchForm> searchForm = form(ProjectsSearchForm.class); 
-	final static Form<Project> projectForm = form(Project.class);
+	private final /*static*/ Form<ProjectsSearchForm> searchForm;// = form(ProjectsSearchForm.class); 
+	private final /*static*/ Form<Project> projectForm;// = form(Project.class);
 	
 	@Inject
 	public Projects(NGLContext ctx) {
 		super(ctx,InstanceConstants.PROJECT_COLL_NAME, Project.class);		
+		searchForm = ctx.form(ProjectsSearchForm.class); 
+		projectForm = ctx.form(Project.class);
 	}
 
 

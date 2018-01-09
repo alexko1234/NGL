@@ -1,7 +1,9 @@
 package controllers.runs.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+
+import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -28,10 +30,15 @@ import fr.cea.ig.play.NGLContext;
 
 public class LaneTreatments extends RunsController{
 
-	final static Form<Treatment> treatmentForm = form(Treatment.class);
+	private final /*static*/ Form<Treatment> treatmentForm;// = form(Treatment.class);
 
+	@Inject
+	public LaneTreatments(NGLContext ctx) {
+		treatmentForm = ctx.form(Treatment.class);
+	}
+	
 	@Permission(value={"reading"})
-	public static Result list(String runCode, Integer laneNumber){
+	public /*static*/ Result list(String runCode, Integer laneNumber){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes",DBQuery.is("number", laneNumber))));
@@ -43,7 +50,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-	public static Result get(String runCode, Integer laneNumber, String treatmentCode){
+	public /*static*/ Result get(String runCode, Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -58,7 +65,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"reading"})
-	public static Result head(String runCode, Integer laneNumber, String treatmentCode){
+	public /*static*/ Result head(String runCode, Integer laneNumber, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -74,7 +81,7 @@ public class LaneTreatments extends RunsController{
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public static Result save(String runCode, Integer laneNumber){
+	public /*static*/ Result save(String runCode, Integer laneNumber){
 		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
 		if(run == null){
@@ -108,7 +115,7 @@ public class LaneTreatments extends RunsController{
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public static Result update(String runCode, Integer laneNumber, String treatmentCode){
+	public /*static*/ Result update(String runCode, Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -143,7 +150,7 @@ public class LaneTreatments extends RunsController{
 	}
 	
 	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
-	public static Result delete(String runCode,  Integer laneNumber, String treatmentCode){
+	public /*static*/ Result delete(String runCode,  Integer laneNumber, String treatmentCode){
 		Run run  = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", runCode), 
 						DBQuery.elemMatch("lanes", 
@@ -160,7 +167,7 @@ public class LaneTreatments extends RunsController{
 	}	
 	
 	
-	private static Lane getLane(Run run, Integer laneNumber) {
+	private /*static*/ Lane getLane(Run run, Integer laneNumber) {
 		if(null != run.lanes){
 			for (Lane lane : run.lanes) {
 				if (lane.number.equals(laneNumber)) {

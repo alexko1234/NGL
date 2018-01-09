@@ -1,7 +1,7 @@
 package controllers.projects.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 
 import java.util.ArrayList;
@@ -42,14 +42,17 @@ import fr.cea.ig.play.NGLContext;
 public class UmbrellaProjects extends DocumentController<UmbrellaProject> {
 
 	
-	final static Form<UmbrellaProjectsSearchForm> searchForm = form(UmbrellaProjectsSearchForm.class); 
-	final static Form<UmbrellaProject> projectForm = form(UmbrellaProject.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	private final /*static*/ Form<UmbrellaProjectsSearchForm> searchForm; // = form(UmbrellaProjectsSearchForm.class); 
+	private final /*static*/ Form<UmbrellaProject> projectForm; // = form(UmbrellaProject.class);
+	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep");
 	
 	@Inject
 	public UmbrellaProjects(NGLContext ctx) {
 		super(ctx,InstanceConstants.UMBRELLA_PROJECT_COLL_NAME, UmbrellaProject.class);		
+		searchForm = ctx.form(UmbrellaProjectsSearchForm.class); 
+		projectForm = ctx.form(UmbrellaProject.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
 

@@ -40,9 +40,9 @@ PUT		/api/processes/:code/state										@controllers.processes.api.Processes.up
 DELETE	/api/processes/:code											@controllers.processes.api.Processes.delete(code:java.lang.String)
 
 
-GET		/api/process-categories											controllers.processes.api.ProcessCategories.list()
-GET		/api/process-types												controllers.processes.api.ProcessTypes.list()
-GET		/api/process-types/:code										controllers.processes.api.ProcessTypes.get(code: java.lang.String)
+GET		/api/process-categories											@controllers.processes.api.ProcessCategories.list()
+GET		/api/process-types												@controllers.processes.api.ProcessTypes.list()
+GET		/api/process-types/:code										@controllers.processes.api.ProcessTypes.get(code: java.lang.String)
 
 
 #experiments api
