@@ -102,7 +102,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("cBot-NovaSeq","cBot NovaSeq",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.GET))
 						),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate","384-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-2-s1","flowcell-2-s2","flowcell-4-s4"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
 // TODO:  Added cbot machine
@@ -191,7 +191,7 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
         l.add(newInstrumentUsedType("NovaSeq", "NOVASEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaSeqProperties(), 
                 getInstruments(
                  createInstrument("NOVASEQ","NovaSeq",  null, true,"/save/devcrgs/src/NGL_Feuille_route/NOVASEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
-                 getContainerSupportCategories(new String[]{"flowcell-S1","flowcell-S2","flowcell-S4"}), null , 
+                 getContainerSupportCategories(new String[]{"flowcell-2-s1","flowcell-2-s2","flowcell-4-s4"}), null , 
                 DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
 		/* NovaSeq*/

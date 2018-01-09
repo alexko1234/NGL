@@ -65,9 +65,9 @@ public class ContainerService {
 		l.add(newContainerSupportCategory("Flowcell 4", "flowcell-4", 4, 1, 4, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 2", "flowcell-2", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 1", "flowcell-1", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell S1", "flowcell-S1", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell S2", "flowcell-S2", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
-		l.add(newContainerSupportCategory("Flowcell S4", "flowcell-S4", 4, 1, 4, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Flowcell S1", "flowcell-2-s1", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Flowcell S2", "flowcell-2-s2", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Flowcell S4", "flowcell-4-s4", 4, 1, 4, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("SMRT Cell", "smrtcell-150k", 1, 1, 1, ContainerCategory.find.findByCode("smrtcell")));
 		l.add(newContainerSupportCategory("Void", "void", 0, 0, 0, ContainerCategory.find.findByCode("void")));
 //		l.add(newContainerSupportCategory("Irys Chip", "irys-chip-2", 2, 1, 1, ContainerCategory.find.findByCode("irys-fc")));
