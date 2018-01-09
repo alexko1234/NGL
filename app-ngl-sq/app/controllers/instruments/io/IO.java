@@ -94,6 +94,12 @@ public class IO extends TPLCommonController {
 				if (!contextValidation.hasErrors() && null != file) {									
 					response().setContentType("application/x-download");  
 					response().setHeader("Content-disposition","attachment; filename="+file.filename);
+					//si le fichier a une extension .csv ou .txt, il est en UTF-8, alors on ajoute le BOM pour que le texte soit affiché correctement dans excel
+					String extensionFileName = file.filename.substring(file.filename.lastIndexOf(".") + 1);
+					Logger.debug("generateFile : extensionFileName = " + extensionFileName);
+					if (extensionFileName.equals("txt") || extensionFileName.equals("csv")){
+						return ok('\ufeff'+file.content);
+					}
 					return ok(file.content);
 				}
 			}catch(Throwable e){
