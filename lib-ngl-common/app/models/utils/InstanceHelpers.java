@@ -490,7 +490,7 @@ public class InstanceHelpers {
 		MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
 				DBQuery.is("life.from.sampleCode",sample.code).in("life.from.projectCode", sample.projectCodes))
 			.cursor.forEach(updatedSample -> {
-				updatedSample.traceInformation.setTraceInformation(validation.getUser());
+				//not update traceInformation because during automatic update that's never finish
 				updatedSample.referenceCollab = sample.referenceCollab;
 				updatedSample.taxonCode = sample.taxonCode;
 				updatedSample.ncbiScientificName = sample.ncbiScientificName;
