@@ -5,7 +5,11 @@
 ->  /authentication authentication.Routes
 
 # Home page
-GET		/											@controllers.main.tpl.Main.home()
+GET		/											    @controllers.main.tpl.Main.home()
+
+
+GET		/sra/scripts/noRest/:clazz/:method				@controllers.sra.scripts.ScriptController.noRest(clazz : java.lang.String, method : java.lang.String)
+GET		/sra/scripts/run/:clazz							@controllers.sra.scripts.ScriptController.run(clazz : java.lang.String)
 
 #------------
 # Submission

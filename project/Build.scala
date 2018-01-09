@@ -226,7 +226,8 @@ object ApplicationBuild extends Build {
 	  val nglsubDependencies = Seq(
 	    javaCore, 
 	    javaJdbc,
-	    "xerces" % "xercesImpl" % "2.8.0"
+	    "org.apache.commons" % "commons-csv" % "1.5",
+	    "xerces"             % "xercesImpl"  % "2.8.0"
   	)
 
 	  val nglprojectsDependencies = Seq(
