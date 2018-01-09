@@ -1,5 +1,5 @@
 package rules
-
+ 
 rule "Set RunStartDate to Illumina Depot, Opgen Depot, Nanopore Depot if not exist"
 @nglSQ (calculations )
 	dialect "java"
