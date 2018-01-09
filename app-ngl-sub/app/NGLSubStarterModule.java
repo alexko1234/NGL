@@ -1,6 +1,30 @@
 
 
+import play.api.Configuration;
+import play.api.Environment;
 
+/**
+ * NGL sub application start module.
+ *  
+ * @author vrd
+ *
+ */
+public class NGLSubStarterModule extends NGLCommonStarterModule {
+	
+	/**
+	 * Constructor.
+	 * @param environment   environment
+	 * @param configuration configuration 
+	 */
+	public NGLSubStarterModule(Environment environment, Configuration configuration) {
+		super(environment,configuration);
+		logger.debug("created module " + this);
+		logger.info("starting NGL-Sub");
+	}
+
+}
+
+/*
 // import play.Logger;
 // import play.Application;
 import play.api.Configuration;
@@ -43,3 +67,4 @@ public class NGLSubStarterModule extends play.api.inject.Module {
 	}
 	
 }
+*/

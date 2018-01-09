@@ -1,8 +1,7 @@
 
-->	/	            apinglcommon.Routes
-->	/ 	            apinglprojects.Routes
-->  /authentication authentication.Routes
-->  /               libframeworkweb.Routes  
+-> / apinglcommon.Routes
+-> / apinglprojects.Routes
+-> / nglcommon.Routes
 
 # Home page
 GET     /                           					@controllers.main.tpl.Main.home()

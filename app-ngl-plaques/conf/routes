@@ -1,5 +1,5 @@
 
-->  /               libframeworkweb.Routes  
+->  / nglcommon.Routes  
 
 # Home page
 GET     /                           @controllers.main.tpl.Main.home()

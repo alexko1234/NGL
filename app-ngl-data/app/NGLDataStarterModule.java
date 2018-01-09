@@ -1,12 +1,58 @@
 import play.api.Configuration;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
-import play.Logger;
 import play.api.Environment;
-import scala.collection.Seq;
 import play.api.inject.Binding;
 
+public class NGLDataStarterModule extends NGLCommonStarterModule {
+	
+	/**
+	 * Constructor.
+	 * @param environment   environment
+	 * @param configuration configuration 
+	 */
+	public NGLDataStarterModule(Environment environment, Configuration configuration) {
+		super(environment,configuration);
+		logger.debug("created module " + this);
+		logger.info("starting NGL-DATA");	
+	}
+
+	/**
+	 * Add the drools component initialization.
+	 */
+	@Override
+	public List<Binding<?>> nglCustomBindings(Environment environment, Configuration configuration) {
+		List<Binding<?>> l = super.nglCustomBindings(environment,configuration);
+		l.add(bind(rules.services.Rules6Component.class             ).toSelf().eagerly());
+		l.add(bind(GlobalStarterComponent.class                     ).toSelf().eagerly());
+		return l;
+	}
+
+	/**
+	 * Add GlobalStarterComponent last.
+	 */
+	@Override
+	public List<Binding<?>> nglBindings(Environment environment, Configuration configuration) {
+		List<Binding<?>> l = super.nglBindings(environment, configuration);
+		return l;
+	}
+	
+}
+
+//Start the old global instance using module level binding.
+class GlobalStarterComponent {
+	
+	@Inject
+	public GlobalStarterComponent(play.Application app) {
+		new Global().onStart(app);
+	}
+	
+}
+
+/*
 public class NGLDataStarterModule extends play.api.inject.Module {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(NGLDataStarterModule.class);
@@ -37,7 +83,7 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 				// application is created because of global application instance access but it's not
 				// possible anymore. We should be able to use spring as the play injector but the
 				// eager initialization of the component-scan part of the configuration fails
-				// miserably. We should add @Lazy to @Component.*/
+				// miserably. We should add @Lazy to @Component.
 				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly(),
 				bind(GlobalStarterComponent.class                     ).toSelf().eagerly()				
 			);
@@ -45,14 +91,6 @@ public class NGLDataStarterModule extends play.api.inject.Module {
 
 	
 }
+*/
 
-// Start the old global instance using module level binding.
-class GlobalStarterComponent {
-	
-	@Inject
-	public GlobalStarterComponent(play.Application app) {
-		new Global().onStart(app);
-	}
-	
-}
 

@@ -1,14 +1,30 @@
 
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import play.api.Application;
 import play.api.Configuration;
 import play.api.Environment;
-import play.api.inject.Binding;
-import scala.collection.Seq;
 
+/**
+ * NGL SQ application start module.
+ *  
+ * @author vrd
+ *
+ */
+public class NGLSQStarterModule extends NGLCommonStarterModule {
+	
+	/**
+	 * Constructor.
+	 * @param environment   environment
+	 * @param configuration configuration 
+	 */
+	public NGLSQStarterModule(Environment environment, Configuration configuration) {
+		super(environment,configuration);
+		logger.debug("created module " + this);
+		logger.info("starting NGL-SQ");
+		enableDrools();
+	}
+
+}
+
+/*
 public class NGLSQStarterModule extends play.api.inject.Module {
 	
 	private static final play.Logger.ALogger logger; //  = Logger.of(Module.class);
@@ -21,7 +37,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 	public NGLSQStarterModule(Environment environment, Configuration configuration) {
 		logger.debug("created module " + this);
 		logger.info("starting NGL-SQ");
-		/*
+		/ *
 		// Set env and config in some global as dependencis on Play.application() are mostly
 		// about the configuration.
 		fr.cea.ig.play.IGGlobals.environment   = new play.Environment(environment);
@@ -50,7 +66,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 					}
 				}
 			}}).start();
-		}*/
+		}* /
 	}
 	
 	@Override
@@ -105,6 +121,7 @@ public class NGLSQStarterModule extends play.api.inject.Module {
 	}
 	
 }
+*/
 
 /*
 @javax.inject.Singleton

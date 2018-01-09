@@ -28,21 +28,21 @@ import models.administration.authorisation.description.dao.UserDAO;
  * Application name that is checked against the database is set using:
  * <br>
  * <code>
- * authorization.userdao.application = "ngl-sq"
+ * authorization.user_dao.application = "ngl-sq"
  * </code>
  * <p>
  * Automatic user creation is specified using a boolean flag, it defaults
  * to false:
  * <br>
  * <code>
- * authorization.userdao.user_creation
+ * authorization.user_dao.user_creation
  * </code>
  * <p>
  * Created user role name is not needed if the user_creation is set to false and
  * is set using:
  * <br>
  * <code>
- * authorization.userdao.role_at_creation = "reader"
+ * authorization.user_dao.role_at_creation = "reader"
  * </code>
  * 
  * @author vrd
@@ -59,7 +59,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	/**
 	 * Root configuration path.
 	 */
-	public static final String CONF_ROOT_PATH = "authorization.userdao";
+	public static final String CONF_ROOT_PATH = "authorization.user_dao";
 	
 	/**
 	 * Path in the configuration for the application name as defined in the UserDAO.
@@ -95,6 +95,10 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * User DAO.
 	 */
 	private final UserDAO userDAO;
+	
+	// At this point the system may not support application
+	// checks. Implementation in the UserDOA is incorrect.
+	private static final boolean enableApplicationCheck = false; 
 	
 	/**
 	 * DI constructor.
@@ -185,7 +189,9 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * @return      tue if the user can access the application
 	 */
 	public boolean canAccessApplication(String login, String app) {
-		return userDAO.canAccessApplication(login, app);
+		if (enableApplicationCheck)
+			return userDAO.canAccessApplication(login, app);
+		return true;
 	}
 	
 	/**
@@ -213,7 +219,8 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * @param application application key
 	 */
 	public void grantApplicationAccess(String login, String application) {
-		userDAO.grantApplicationAccess(login, application);
+		if (enableApplicationCheck)
+			userDAO.grantApplicationAccess(login, application);
 	}
 	
 }

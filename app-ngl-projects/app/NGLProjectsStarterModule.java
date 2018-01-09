@@ -1,17 +1,23 @@
 
-import play.Logger;
-import play.Application;
 import play.api.Configuration;
 import play.api.Environment;
-import play.api.inject.Binding;
-//import rules.services.RulesServices6;
-import scala.collection.Seq;
-import play.inject.ApplicationLifecycle;
-import play.libs.F;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+public class NGLProjectsStarterModule extends NGLCommonStarterModule {
+	
+	/**
+	 * Constructor.
+	 * @param environment   environment
+	 * @param configuration configuration 
+	 */
+	public NGLProjectsStarterModule(Environment environment, Configuration configuration) {
+		super(environment,configuration);
+		logger.debug("created module " + this);
+		logger.info("starting NGL-Projects");	
+	}
 
+}
+
+/*
 public class NGLProjectsStarterModule extends play.api.inject.Module {
 	
 	private static final Logger.ALogger logger = Logger.of(NGLProjectsStarterModule.class);
@@ -43,3 +49,4 @@ public class NGLProjectsStarterModule extends play.api.inject.Module {
 	}
 	
 }
+*/

@@ -1,9 +1,30 @@
-import play.api.Configuration;
-import play.Logger;
-import play.api.Environment;
-import scala.collection.Seq;
-import play.api.inject.Binding;
 
+import play.api.Configuration;
+import play.api.Environment;
+
+/**
+ * NGL plates application start module.
+ *  
+ * @author vrd
+ *
+ */
+public class NGLPlatesStarterModule extends NGLCommonStarterModule {
+	
+	/**
+	 * Constructor.
+	 * @param environment   environment
+	 * @param configuration configuration 
+	 */
+	public NGLPlatesStarterModule(Environment environment, Configuration configuration) {
+		super(environment,configuration);
+		logger.debug("created module " + this);
+		logger.info("starting NGL-Plates");
+		enableDrools();
+	}
+
+}
+
+/*
 public class NGLPlatesStarterModule extends play.api.inject.Module {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(NGLPlatesStarterModule.class);
@@ -35,10 +56,11 @@ public class NGLPlatesStarterModule extends play.api.inject.Module {
 				// application is created because of global application instance access but it's not
 				// possible anymore. We should be able to use spring as the play injector but the
 				// eager initialization of the component-scan part of the configuration fails
-				// miserably. We should add @Lazy to @Component.*/
+				// miserably. We should add @Lazy to @Component.
 				bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly()
 			);
 	}
 
 	
 }
+*/

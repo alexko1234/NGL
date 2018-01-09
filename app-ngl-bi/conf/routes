@@ -1,11 +1,10 @@
 
-->  /               apinglcommon.Routes
-->  /               apinglprojects.Routes
-->  /               apinglsq.Routes
-->  /               apinglbi.Routes
-->	/               apimigration.Routes
-->  /authentication authentication.Routes
-->  /               libframeworkweb.Routes  
+-> / apinglcommon.Routes
+-> / apinglprojects.Routes
+-> / apinglsq.Routes
+-> / apinglbi.Routes
+-> / apimigration.Routes
+-> / nglcommon.Routes   
 
 # Home page
 GET     /                           				@controllers.main.tpl.Main.home()
