@@ -1370,6 +1370,7 @@ public class SubmissionServices {
 		}
 		experiment.libraryConstructionProtocol = VariableSRA.defaultLibraryConstructionProtocol;
 		experiment.run = createRunEntity(readSet);
+		experiment.run.expCode=experiment.code;
 
 		// Renseigner l'objet experiment pour lastBaseCoord : Recuperer les lanes associées au
 		// run associé au readSet et recuperer le lane contenant le readSet.code. C'est dans les
