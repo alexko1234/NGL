@@ -33,6 +33,7 @@ import controllers.CommonController;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.authentication.Authentication;
 
 import javax.inject.Inject;
 
@@ -82,7 +83,8 @@ public class Main extends Controller {
 	}
 
 	private String listPermissions() {
-		List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
+//		List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
+		List<Permission> permissions = Permission.find.findByUserLogin(Authentication.getUser(Context.current().session()));
 		StringBuilder sb = new StringBuilder();
 		sb.append("Permissions={}; Permissions.check=(function(param){var listPermissions=[");
 		for(Permission p:permissions){
