@@ -3787,7 +3787,7 @@ filter('udtCollect', ['$parse','$filter',function($parse,$filter) {
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
@@ -3825,7 +3825,7 @@ filter('udtCount', ['$parse',function($parse) {
     	    			}else if(!distinct && undefined !== currentValue && null !== currentValue){
     	    				possibleValues.push(currentValue);
     	    			}    	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		

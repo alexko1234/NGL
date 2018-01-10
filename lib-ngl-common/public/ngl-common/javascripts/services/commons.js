@@ -1396,7 +1396,7 @@ angular.module('commonsServices', []).
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
@@ -1432,7 +1432,7 @@ angular.module('commonsServices', []).
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
