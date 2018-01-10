@@ -77,10 +77,10 @@ public class DAOHelpers {
 	public static <T extends Model> void saveModel(Class<T> type, T model, Map<String,List<ValidationError>> errors) throws DAOException {
 		T t = (T) model.getInstance().findByCode(model.code);
 		if (t == null) {
-			logger.debug("Save "+type.getName() + " : "+model.code);
+			logger.info("Save "+type.getName() + " : "+model.code);
 			model.save();
 		} else {
-			logger.debug("Already exists "+type.getName() + " : "+model.code);
+			logger.info("Already exists "+type.getName() + " : "+model.code);
 		}
 	}
 
