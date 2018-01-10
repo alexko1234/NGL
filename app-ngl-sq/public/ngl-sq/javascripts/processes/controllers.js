@@ -1,5 +1,11 @@
 "use strict";
 
+angular.module('home').controller('SearchContainersCtrlOld', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', 
+    function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
+	
+	$scope.lists = lists;	
+	$scope.searchService = {};
+	$scope.searchService.lists = lists;
 
 
 	var datatableConfig = {
