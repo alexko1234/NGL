@@ -36,7 +36,7 @@ public class NGLADAuthenticator extends ADAuthenticator {
 	 */
 	@Override
 	public Html getDefaultLoginForm(String message) { 
-		return views.html.nglAuthFormAD.render(message);
+		return views.html.nglLoginPassForm.render(message);
 	}
 
 	

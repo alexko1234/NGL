@@ -36,7 +36,7 @@ public class NGLHtmlAuthenticator extends HtmlAuthenticator {
 	 */
 	@Override
 	public Html getDefaultLoginForm(String message) { 
-		return views.html.nglAuthFormHtml.render(message);
+		return views.html.nglLoginPassForm.render(message);
 	}
 
 }

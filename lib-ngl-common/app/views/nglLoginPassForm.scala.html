@@ -1,4 +1,4 @@
-@(action : play.api.mvc.Call, error : String)
+@(error : String)
 
 @import helper._
 
@@ -51,7 +51,7 @@ body {
 		@* TODO: makes some proper rendering of the error message *@
 		@if(error!=null){@error}
 		<div id="body" class="container">
-			<form class="form-signin" method="POST"	action="@action">
+			<form class="form-signin" method="POST"	action="@fr.cea.ig.authentication.routes.Authentication.callback_POST">
 				<h2 class="form-signin-heading">@Messages("signin")</h2>
 				<input type="text" name="login" class="input-block-level" placeholder="@Messages("login")" /> 
 				<input type="password" name="password" class="input-block-level" placeholder="@Messages("password")" />
