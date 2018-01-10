@@ -673,4 +673,804 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	};
 
 	return searchService;
-} ]);
+}]).factory('processesNewService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'datatable', 'messages',
+    function($q, $http, $parse, $filter, mainService, datatable,messages) {
+
+	var getDisplayUnitFromProperty = function(propertyDefinition){
+		var unit = $parse("displayMeasureValue.value")(propertyDefinition);
+		if(undefined !== unit && null !== unit) return " ("+unit+")";
+		else return "";
+	};
+	var getPropertyColumnType = function(type){
+		if(type === "java.lang.String"){
+			return "text";
+		}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
+			return "number";
+		}else if(type === "java.util.Date"){
+			return "date";
+		}else if(type ==="java.io.File"){
+			return "file";
+		}else if(type ==="java.awt.Image"){
+			return "img";
+		}else if(type ==="java.lang.Boolean"){
+			return "boolean";	
+		}else{
+			throw 'not manage : '+type;
+		}
+
+		return type;
+	};
+
+	var	getEditDatatableConfig = function(newService){
+		var editDatatableConfig = {
+				 columns: [],
+		         pagination:{
+		        	 active:false
+		         },		
+		         search:{
+		        	 active:false
+		         },
+		         order:{
+		        	 mode:'local',
+		        	 active:true
+		         },
+		         edit:{  		
+		        	 active:true,
+		        	 columnMode:true,
+		        	 byDefault : true,
+		        	 showButton:false
+		         },
+		         save:{
+		        	 active: true,
+		        	 withoutEdit:true,
+		        	 showButton : true,
+		        	 mode:"local",
+		        	 changeClass : false,
+		        	 callback : function(datatable){
+		        		 newService.udtSaveCallback(datatable);
+		        	 }
+		         },
+		         remove:{
+		        	 active:true,
+		        	 mode:'local',
+		        	 withEdit:true,
+		        	 callback : function(datatable){
+		        		 newService.udtRemoveCallback(datatable);
+		        	 }
+		         },
+		         lines:{
+		        	trClass:function(data,line){
+		        		return newService.udtTrClass(data,line);
+		        	}
+		         },
+		         messages:{
+		        	 active:false,
+		        	 transformKey: function(key, args) {
+			             return Messages(key, args);
+		        	 }
+		         },
+		         cancel:{
+		        	 active:false
+		         },
+		         otherButtons :newService.udtOtherButtons()
+		};
+		return editDatatableConfig;
+	}
+
+	var getProcessColumnOk = function(){
+		var columns = [
+		         {
+		        	 "header":Messages("processes.table.inputContainerCode"),
+		        	 "property":"inputContainerCode",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":1,
+		        	 "type":"text"
+		         },
+		         {
+		 			"header":Messages("containers.table.contents.length"),
+		 			"property":"contents.length",
+		 			"url":"'/api/containers/'+inputContainerCode",
+		 			"order":true,
+		 			"hide":true,
+		 			"position":2,
+		 			"type":"number"
+			 	},
+		         {
+		        	 "header":Messages("processes.table.sampleCode"),
+		        	 "property":"sampleCodes",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":2.01,
+		        	 "type":"text"
+		         },			        
+		         {
+		        	"header" : Messages("containers.table.tags"),
+		 			"property" : "sampleOnInputContainer.properties.tag.value",
+		 			"type" : "text",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position":4,
+		 			"groupMethod" : "collect",
+		 			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",		        	
+		         },		         
+		         {
+		        	 "header" : Messages("processes.table.typeCode"),
+		 			"property" : "typeCode",
+		 			"filter" : "codes:'type'",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position" : 9,
+		 			"type" : "text"		        	
+		         },
+		         {
+		        	 "header":Messages("processes.table.stateCode"),
+		        	 "property":"state.code",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "filter": "codes:'state'",
+		        	 "position":30,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.code"),
+		        	 "property":"code",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":33,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.creationDate"),
+		        	 "property":"traceInformation.creationDate",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":34,
+		        	 "type":"date"
+		         },
+		         {
+		        	 "header":Messages("processes.table.projectCode"),
+		        	 "property":"projectCodes",
+		        	 "order":true,
+		        	 "hide":true,
+		        	 "position":37,
+		        	 "type":"text"
+		         },
+		         {
+		         "header" : Messages("processes.table.comments"),
+					"property" : "comments[0].comment",
+					"position" : 500,
+					"order" : false,
+					"edit" : true,
+					"hide" : true,
+					"type" : "text"
+			        }
+		 ];
+		
+		
+		return columns;
+	};
+	
+	var	datatableConfigProcessOK = {
+			 columns: [],
+	         pagination:{
+	        	 active:true,
+	        	 mode:'local',
+	        	 numberRecordsPerPage:50
+	         },		
+	         search:{
+	        	 active:false
+	         },
+	         order:{
+	        	 mode:'local',
+	        	 active:true
+	         },
+	         lines:{
+	        	trClass:function(data, line){
+	        		return 'success';	        			        	
+	        	} 
+	         }
+	};
+	
+	var newService = {
+			datatable : undefined,
+			messages:messages(),
+			processesDoneWithSuccess : [],
+			getEditDatatableConfig : getEditDatatableConfig,
+			getProcessColumnOk : getProcessColumnOk,
+			datatableConfigProcessOK:datatableConfigProcessOK,
+			processType : undefined,
+			processPropertyColumns :[],
+			computeProcessColumns : function(properties){
+				this.processPropertyColumns = [];
+				if(properties){
+					properties.forEach(function(propertyDefinition){
+						
+						var column = {};
+						column.watch=true;
+						column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
+						column.required=propertyDefinition.required;
+						    				
+						column.property = "properties."+propertyDefinition.code+".value";
+						column.edit = propertyDefinition.editable;
+						column.type = getPropertyColumnType(propertyDefinition.valueType);
+						column.choiceInList = propertyDefinition.choiceInList;
+						column.position = (9+(propertyDefinition.displayOrder/1000));
+						column.defaultValues = propertyDefinition.defaultValue;
+						column.format = propertyDefinition.displayFormat;
+						
+						if(column.choiceInList){
+							if(propertyDefinition.possibleValues.length > 100){
+								column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
+							}else{
+								column.listStyle = "bt-select";
+							}
+							column.possibleValues = propertyDefinition.possibleValues; 
+							column.filter = "codes:'value."+propertyDefinition.code+"'";    					
+						}
+						
+						if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
+							column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
+									"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
+						}
+						
+						this.processPropertyColumns.push(column);					
+					},this);
+				}
+				
+			},
+			setDatatableProcessOk : function(){
+				var columns = this.getProcessColumnOk().concat(this.processPropertyColumns);
+				this.datatable = datatable(this.datatableConfigProcessOK);
+				this.datatable.setColumnsConfig(columns);
+				this.datatable.setData(this.processesDoneWithSuccess);				
+			},
+			initProcessType : function(processTypeCode) {
+				var promise = $q.when(this);
+				if(processTypeCode){
+					promise = $http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{newService:this})
+						.then(function(result){
+							var newService = result.config.newService;
+							newService.processType = result.data;
+							newService.computeProcessColumns(newService.processType.propertiesDefinitions);
+							return newService;
+					});				
+				}		
+				return promise;
+			}
+		}
+		return newService;
+	
+}]).factory('processesNewFromSamplesService', ['$q', '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
+    function($q, $http, $parse, $filter, mainService, lists, datatable, processesNewService) {
+	
+	var getDefaultColumns = function() {
+		var columns = [];
+		
+		columns.push({
+			"header":Messages("samples.table.projectCodes"),
+			"property":"projectCodes",
+			"order":true,
+			"hide":true,
+			"group":true,
+			"position":1,					
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"type":"text",
+			"groupMethod":"collect"
+		});	
+		
+		columns.push({
+			"header":Messages("samples.table.code"),
+			"property":"code",
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3' vertical>",
+			"order":true,
+			"hide":true,
+			"position":2,
+			"type":"text",
+			"group":true,
+			"groupMethod":"collect"
+		});
+		columns.push({
+			"header":Messages("samples.table.typeCode"),
+			"property":"typeCode",
+			"filter":"codes:'type'",
+			"order":true,
+			"hide":true,
+			"position":3,
+			"type":"text",			
+			"groupMethod":"collect:true"
+		});
+		columns.push({
+			"header":Messages("samples.table.referenceCollab"),
+			"property":"referenceCollab",
+			"order":true,
+			"hide":true,
+			"position":4,
+			"type":"text",			
+			"groupMethod":"count:true"
+		});	
+		columns.push({
+			"header":Messages("samples.table.taxonCode"),
+			"property":"taxonCode",
+			"render":"<div list-resize='cellValue' ' list-resize-min-size='3' vertical>",
+			"order":true,
+			"hide":true,
+			"position":5,
+			"type":"text",			
+			"groupMethod":"collect:true"
+		});	
+		columns.push({
+			"header":Messages("samples.table.ncbiScientifiName"),
+			"property":"ncbiScientificName",
+			"render":"<div list-resize='cellValue' ' list-resize-min-size='3' vertical>",
+			"order":true,
+			"hide":true,
+			"position":6,
+			"type":"text",			
+			"groupMethod":"collect:true"
+		});	
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
+	
+	
+	var newService = {
+		getDefaultColumns : getDefaultColumns,
+		sampleViewData : undefined,
+		computeData : function(samples, isFirst){
+			this.sampleViewData = {};
+			samples.forEach(function(sample){
+				if(isFirst){
+					sample.properties = null;
+					sample.comments = [];
+				}
+				this.sampleViewData[sample.code]=sample;
+			},this);
+			return samples;
+		},
+		swithToSampleErrorView : function(){
+			var samples = [];
+			this.messages.setError("save");
+			for(var key in this.sampleViewData){
+				if(this.sampleViewData[key].onError){
+					samples.push(this.sampleViewData[key]);
+					this.messages.addDetails(this.sampleViewData[key].errors);						
+				}
+			}
+			samples = $filter('orderBy')(samples, ['sampleCodes']);
+			
+			this.datatable = datatable(this.getEditDatatableConfig(newService));
+			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
+			this.datatable.setData(samples);
+		},
+		swithToGlobalErrorView : function(){
+			var samples = [];
+			this.messages.setError("save");
+			for(var key in this.sampleViewData){
+				samples.push(this.sampleViewData[key]);				
+			}
+			samples = $filter('orderBy')(samples, ['sampleCodes']);
+			
+			this.datatable = datatable(this.getEditDatatableConfig(newService));
+			this.datatable.setColumnsConfig(this.getDefaultColumns().concat(newService.processPropertyColumns))
+			this.datatable.setData(samples);
+		},
+		udtSaveCallback : function(datatable){
+			this.messages.clear();
+			var data = this.computeData(datatable.getData());
+			var allProcesses = [];
+			data.forEach(function(value, index){
+				var process = {};
+				process.typeCode = this.processType.code;
+				process.categoryCode = this.processType.category.code;
+				process.properties = value.properties;
+				process.comments = value.comments;	
+				process.sampleCodes = [value.code];
+				allProcesses.push({data:process, index:index});
+			},this);
+			
+			var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+			var queries = [];
+	        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+	        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+	        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch("from-sample").url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+	        }
+			var $that = this;
+			$q.all(queries).then(function(results) {
+				var atLeastOneError = false;
+				
+				results.forEach(function(result){
+					if (result.status !== 200) {
+						console.log("Batch in error");					
+		            } else {
+		            	result.data.forEach(function(data){
+		            		
+		            		if (data.status === 200) {
+		            			$that.sampleViewData[data.data[0].sampleCodes[0]].trClass = "success";
+		            			$that.processesDoneWithSuccess = $that.processesDoneWithSuccess.concat(data.data);
+		            		}else{
+		            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+		            			$that.sampleViewData[process.data.sampleCodes[0]].trClass = "danger";
+		            			$that.sampleViewData[process.data.sampleCodes[0]].onError = true;
+		            			$that.sampleViewData[process.data.sampleCodes[0]].errors = {};
+		            			$that.sampleViewData[process.data.sampleCodes[0]].errors[process.data.sampleCodes[0]] = data.data;
+		            			atLeastOneError = true;		            					            			
+		            		}	            		
+		            	});	            	
+		            }
+				});
+				
+				if(atLeastOneError){
+					$that.swithToSampleErrorView();
+	    		}else{
+	    			$that.setDatatableProcessOk();		    					    		
+	    		}
+				
+			},function(result){
+				$that.swithToGlobalErrorView();						
+			});
+		},
+		udtRemoveCallback : function(datatable){
+			mainService.getBasket().reset();
+			datatable.getData().forEach(function(elt){
+				mainService.getBasket().add(elt);
+			});				 
+			this.computeData(mainService.getBasket().get());	 
+		},
+		udtTrClass : function(data, line){
+    		if(this.sampleViewData[data.code]){
+    			return this.sampleViewData[data.code].trClass
+    		}else{
+    			return '';
+    		}    		
+    	},
+    	udtOtherButtons : function(){return undefined;},
+    	/**
+		 * initialise the service
+		 */
+		init : function(processTypeCode) {
+			this.initProcessType(processTypeCode).then(function(newService){
+				if(newService.processType){
+					var data = newService.computeData(mainService.getBasket().get(),true);
+					newService.datatable = datatable(newService.getEditDatatableConfig(newService));
+					newService.datatable.setColumnsConfig(newService.getDefaultColumns().concat(newService.processPropertyColumns))
+					newService.datatable.setData(data);
+				}
+			});
+		}
+	}
+	
+	newService = $.extend(true,{},newService,processesNewService);
+	
+	return newService;
+	
+}]).factory('processesNewFromContainersService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'processesNewService',
+    function($q, $http, $parse, $filter, mainService, lists, datatable, processesNewService) {
+	
+	var getDefaultColumns = function(view) {
+		var columns = [];
+
+		if("container" === view){
+
+			columns.push({
+				"header":Messages("processes.table.supportCode"),
+				"property":"support.code",
+				"order":true,
+				"hide":true,
+				"position":1,
+				"type":"text"
+			});
+
+			columns.push({
+				"header":Messages("processes.table.line"),
+				"property":"support.line",
+				"order":true,
+				"hide":true,
+				"position":2,
+				"type":"text"
+			});
+			columns.push({
+				"header":Messages("processes.table.columns"),
+				"property":"support.column*1",
+				"order":true,
+				"hide":true,
+				"position":3,
+				"type":"number"
+			});			
+
+		}else{
+			columns.push({
+				"header":Messages("processes.table.supportCode"),
+				"property":"support.code",
+				"order":true,
+				"hide":true,
+				"position":1,
+				"type":"text"
+			});
+
+		}
+
+		columns.push({
+			"header":Messages("processes.table.projectCode"),
+			"property":"projectCodes",
+			"order":true,
+			"hide":true,
+			"position":4,
+			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("processes.table.sampleCode"),
+			"property":"sampleCodes",
+			"order":true,
+			"hide":true,
+			"position":5,
+			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.sampleTypes"),
+			"property":"contents",
+			"order":false,
+			"hide":false,
+			"position":5.01,
+			"type":"text",
+			"filter":"getArray:'sampleTypeCode' | unique | codes:\"type\"",
+			"groupMethod":"collect"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":5.05,
+			"type":"number"
+		});
+		columns.push({
+			"header":Messages("containers.table.stateCode"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"position":6,
+			"filter": "codes:'state'",
+			"type":"text"
+		});
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
+
+	
+	var newService = {
+			containerViewData : undefined,
+			supportViewData : undefined,
+			containerErroView : false,
+			getDefaultColumns : getDefaultColumns,
+			computeData : function(){
+				var containerViewData = this.containerViewData = {};
+				var supportViewData = this.supportViewData = {};
+
+				var containerCodes = [];
+				containerCodes = containerCodes.concat(mainService.getBasket().get());
+
+				if(containerCodes.length > 0){
+					var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+					var queries = [];
+					for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+						var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+						queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
+					}
+
+					return $q.all(queries).then(function(results) {
+						var allData = [];
+						results.forEach(function(result){
+							allData = allData.concat(result.data);
+						});
+
+						allData.forEach(function(data){
+							data.properties = null;
+							data.comments = [];
+							containerViewData[data.code]=data;
+							containerViewData[data.code].code = [data.code];
+							if(supportViewData[data.support.code]){
+								supportViewData[data.support.code].code = supportViewData[data.support.code].code.concat(data.code);
+								supportViewData[data.support.code].projectCodes = supportViewData[data.support.code].projectCodes.concat(data.projectCodes);
+								supportViewData[data.support.code].sampleCodes = supportViewData[data.support.code].sampleCodes.concat(data.sampleCodes);
+								supportViewData[data.support.code].contents = supportViewData[data.support.code].contents.concat(data.contents);
+							}else{
+								supportViewData[data.support.code] = $.extend(true,{},data);						
+							}	
+						});
+
+
+					});		
+				}
+			},
+			swithView : function(){		
+				if(this.supportView){
+					this.swithToContainerView();
+				}else{
+					this.swithToSupportView()
+				}
+			},
+			swithToContainerErrorView : function(){
+				var containers = [];
+				this.messages.setError("save");
+				for(var key in this.containerViewData){
+					if(this.containerViewData[key].onError){
+						containers.push(this.containerViewData[key]);
+						this.messages.addDetails(this.containerViewData[key].errors);
+					}
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);
+				this.containerErroView = true;
+			},
+			swithToGlobalErrorView : function(){
+				var containers = [];
+				this.messages.setError("save");
+				for(var key in this.containerViewData){
+					containers.push(this.containerViewData[key]);					
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);
+				this.containerErroView = true;
+			},
+			swithToContainerView : function(){
+				var containers = [];
+				for(var key in this.containerViewData){
+					containers.push(this.containerViewData[key]);
+				}
+				containers = $filter('orderBy')(containers, ['support.code', 'support.column*1', 'support.line']);
+				this.datatable.setColumnsConfig(this.getDefaultColumns("container").concat(newService.processPropertyColumns));
+				this.datatable.setData(containers);	
+				this.supportView = false;
+
+			},
+			swithToSupportView : function(){
+				var supports = [];
+				for(var key in this.supportViewData){
+					supports.push(this.supportViewData[key]);
+				}
+				supports = $filter('orderBy')(supports, 'support.code');
+				this.datatable.setColumnsConfig(this.getDefaultColumns("support").concat(newService.processPropertyColumns));
+				this.datatable.setData(supports);			
+				this.supportView = true;
+			},
+			udtSaveCallback : function(datatable){
+				this.messages.clear();
+				var data = datatable.getData();
+				var allProcesses = [];
+				data.forEach(function(value, index){
+					var process = {};
+					process.typeCode = this.processType.code;
+					process.categoryCode = this.processType.category.code;
+					process.properties = value.properties;
+					process.inputContainerSupportCode = value.support.code;
+					process.comments = value.comments;
+					value.code.forEach(function(containerCode){
+						var processContainer =  $.extend(true,{},process);
+						processContainer.inputContainerCode = containerCode;
+						allProcesses.push({data:processContainer, index:index});
+					})			
+				},this);
+				
+				var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+				var queries = [];
+		        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+		        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+		        	queries.push($http.post(jsRoutes.controllers.processes.api.Processes.saveBatch("from-container").url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+		        }
+				var $that = this;
+				$q.all(queries).then(function(results) {
+					$that.containerErroView = false;
+					var atLeastOneError = false;
+					
+					results.forEach(function(result){
+						if (result.status !== 200) {
+							console.log("Batch in error");					
+			            } else {
+			            	result.data.forEach(function(data){
+			            		
+			            		if (data.status === 200) {
+			            			$that.containerViewData[data.data[0].inputContainerCode].trClass = "success";
+			            			if($that.supportViewData[data.data[0].inputContainerSupportCode].trClass !== "danger"){
+			            				$that.supportViewData[data.data[0].inputContainerSupportCode].trClass = "success";
+			            			}
+			            			$that.processesDoneWithSuccess = $that.processesDoneWithSuccess.concat(data.data);
+			            		}else{
+			            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+			            			$that.containerViewData[process.data.inputContainerCode].trClass = "danger";
+			            			$that.containerViewData[process.data.inputContainerCode].onError = true;
+			            			$that.containerViewData[process.data.inputContainerCode].errors = {};
+			            			$that.containerViewData[process.data.inputContainerCode].errors[process.data.inputContainerCode] = data.data;
+			            			$that.supportViewData[process.data.inputContainerSupportCode].trClass = "danger";
+			            			atLeastOneError = true;
+			            		}	            		
+			            	});	            	
+			            }
+					});
+					
+					if(atLeastOneError){
+						$that.swithToContainerErrorView();
+		    		}else{
+		    			$that.setDatatableProcessOk();		    					    		
+		    		}
+					
+				},function(result){
+					$that.swithToGlobalErrorView();						
+				});
+			},
+			udtRemoveCallback : function(datatable){
+				mainService.getBasket().reset();
+				datatable.getData().forEach(function(elt){
+					mainService.getBasket().add(elt.code);
+				});
+				this.computeData();	        		 
+			},
+			udtTrClass:function(data, line){
+        		if(this.supportView && this.supportViewData[data.support.code]){
+        			return this.supportViewData[data.support.code].trClass
+        		}else if(this.containerViewData[data.code[0]]){	        			
+        			return this.containerViewData[data.code[0]].trClass	        			
+        		}else{
+        			return '';
+        		}	        		
+        	}, 
+        	udtOtherButtons : function(){
+        		return {
+        			active:true,
+        			template:''
+        				+' <button ng-click="newService.swithView()" ng-disabled="newService.loadView"  class="btn btn-info" ng-switch="newService.supportView" ng-if="!newService.containerErroView">'+Messages("baskets.switchView")+
+        				' '+'<b ng-switch-when="true" class="switchLabel">'+
+        				Messages("baskets.switchView.containers")+'</b>'+
+        				'<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
+        		};
+        	},
+
+			/**
+			 * initialise the service
+			 */
+			init : function(processTypeCode) {
+				this.initProcessType(processTypeCode).then(function(newService){
+					if(newService.processType){
+						newService.supportView = false;
+						newService.computeData().then(function(){
+							newService.datatable = datatable(newService.getEditDatatableConfig(newService));
+							if(!newService.supportView){
+								newService.swithToContainerView();
+							}else{
+								newService.swithToSupportView()
+							}
+						});
+					}
+				});
+			}
+	}
+
+	newService = $.extend(true,{},newService,processesNewService);
+
+	return newService;
+
+}]);

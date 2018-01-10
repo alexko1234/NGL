@@ -45,7 +45,11 @@ angular.module('commonsServices', []).
 								if(this.details[pName] === undefined || this.details[pName] === null){
 									this.details[pName] = details[pName];
 								}else{
-									this.details[pName].push(details[pName]);
+									if(angular.isArray(details[pName])){
+										this.details[pName] = this.details[pName].concat(details[pName]);
+									}else{
+										this.details[pName].push(details[pName]);
+									}									
 								}
 							}
 							this.isDetails = true;

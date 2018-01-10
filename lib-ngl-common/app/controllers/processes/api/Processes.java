@@ -234,7 +234,7 @@ public class Processes extends DocumentController<Process> {
 	
 	
 	@Permission(value={"writing"})
-	public Result save(){	
+	public Result save(String from){	
 		Form<Process> filledForm = getMainFilledForm();
 		Process input = filledForm.get();		
 		if (null != input._id) {
@@ -242,14 +242,14 @@ public class Processes extends DocumentController<Process> {
 		}
 		
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
-		List<Process> processes = saveOneElement(contextValidation, input);
+		List<Process> processes = saveOneElement(contextValidation, input, from);
 		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(processes));
 		// return badRequest(filledForm.errors-AsJson());
 		return badRequest(errorsAsJson(contextValidation.getErrors()));
 	}
 
-	private List<Process> saveOneElement(ContextValidation contextValidation, Process input) {
+	private List<Process> saveOneElement(ContextValidation contextValidation, Process input, String from) {
 		//the trace
 		input.traceInformation = new TraceInformation();
 		input.traceInformation.setTraceInformation(contextValidation.getUser());
@@ -265,7 +265,7 @@ public class Processes extends DocumentController<Process> {
 		input.validate(contextValidation);
 		
 		if (!contextValidation.hasErrors()) {
-			List<Process> processes = getNewProcessList(contextValidation, input);
+			List<Process> processes = ProcessHelper.getNewProcessList(contextValidation, input, from);
 			if (processes.size()>0) {
 				processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
 			}
@@ -286,21 +286,15 @@ public class Processes extends DocumentController<Process> {
 		return null;
 	}
 	
-	private List<Process> getNewProcessList(ContextValidation contextValidation, Process input) {
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, input.inputContainerCode);
-		return container.contents.parallelStream().map(content ->{
-				Process process = input.cloneCommon();
-				process.sampleCodes = SampleHelper.getSampleParent(content.sampleCode);
-				process.projectCodes = SampleHelper.getProjectParent(process.sampleCodes);
-				process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
-				//need sampleOnInputContainer to generate code
-				process.code = CodeHelper.getInstance().generateProcessCode(process);
-				return process;
-			}).collect(Collectors.toList());		
-	}
 	
+	
+	/**
+	 * 
+	 * @param from : origin of process creation Container or Sample
+	 * @return
+	 */
 	@Permission(value={"writing"})
-	public Result saveBatch() {	
+	public Result saveBatch(String from){	
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
 		final Lang lang = Http.Context.Implicit.lang();
@@ -310,7 +304,7 @@ public class Processes extends DocumentController<Process> {
 			Process process = element.data;
 			if (null == process._id) {
 				ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
-				List<Process> processes = saveOneElement(contextValidation, process);
+				List<Process> processes = saveOneElement(contextValidation, process, from);
 				if(!contextValidation.hasErrors()){
 					return new DatatableBatchResponseElement(OK,  processes, element.index);
 				}else {

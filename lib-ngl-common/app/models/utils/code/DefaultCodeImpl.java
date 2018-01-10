@@ -70,7 +70,13 @@ public class DefaultCodeImpl implements Code {
 
 	// ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public synchronized String generateProcessCode(Process process) {
-		return (process.sampleOnInputContainer.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
+		if(process.sampleOnInputContainer != null){
+			return (process.sampleOnInputContainer.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
+		}else if(process.sampleCodes != null && process.sampleCodes.size() > 0){
+			return (process.sampleCodes.iterator().next() + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
+		}else{
+			throw new RuntimeException("Cannot generate process code");
+		}
 	}
 
 	public synchronized String generateExperimentCode(Experiment exp) {

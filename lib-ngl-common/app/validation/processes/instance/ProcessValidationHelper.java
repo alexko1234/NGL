@@ -8,6 +8,7 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
@@ -66,22 +67,31 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 	}
 	
 	public static void validateSampleOnInputContainer(SampleOnInputContainer soic, ContextValidation contextValidation ){				
-		if(ValidationHelper.required(contextValidation, soic, "sampleOnInputContainer")){		
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
+		
+		if(!"IW-C".equals(stateCode) && ValidationHelper.required(contextValidation, soic, "sampleOnInputContainer")){		
 			contextValidation.addKeyToRootKeyName("sampleOnInputContainer");
 			soic.validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("sampleOnInputContainer");
 		}
 	}
-
-	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
-		
-		Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
-		
+	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation, String propertyName) {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		if(!"IW-C".equals(stateCode)){
+			BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerSupportCode, propertyName, ContainerSupport.class,InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
+		}
+	}
+	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
 		if("N".equals(stateCode) && contextValidation.isCreationMode()){
+			Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
 			if(null != c && !"IW-P".equals(c.state.code)){
 				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
 			}
+		}else if(!"IW-C".equals(stateCode)){
+			Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);			
 		}
 	}
 	

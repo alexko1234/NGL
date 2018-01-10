@@ -34,6 +34,7 @@ GET		/tpl/containers/js-routes										@controllers.containers.tpl.Containers.j
 GET 	/processes/:homecode/home										@controllers.processes.tpl.Processes.home(homecode:java.lang.String)
 GET		/tpl/processes/search/:processTypeCode							@controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
 GET		/tpl/processes/searchContainers									@controllers.processes.tpl.Processes.searchContainers()
+GET		/tpl/processes/searchSamples									@controllers.processes.tpl.Processes.searchSamples()
 GET		/tpl/processes/newProcesses/:processTypeCode					@controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
 GET		/tpl/processes/js-routes										@controllers.processes.tpl.Processes.javascriptRoutes()
 
