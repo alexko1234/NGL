@@ -19,6 +19,7 @@ import models.utils.InstanceConstants;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.authentication.Authentication;
 import jsmessages.JsMessages;
 import play.Logger;
 import play.Play;
@@ -73,7 +74,7 @@ public class Main extends CommonController {
    }
    
    private static String listPermissions(){
-	   List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
+	   List<Permission> permissions = Permission.find.findByUserLogin(Authentication.getUser());
 	   StringBuilder sb = new StringBuilder();
 	   sb.append("Permissions={}; Permissions.check=(function(param){var listPermissions=[");
 	   for(Permission p:permissions){
