@@ -43,11 +43,12 @@ object ApplicationBuild extends Build {
 	val sqVersion              = "2.0.0" + distSuffix
 	val biVersion              = "2.0.0" + distSuffix
 
-	val projectsVersion        = "2.0.0"  + distSuffix
-	val reagentsVersion        = "2.0.0"  + distSuffix
+	val projectsVersion        = "2.1.0"  + distSuffix
+	val reagentsVersion        = "2.1.0"  + distSuffix
 
 	val subVersion             = "2.0.0"  + distSuffix
 	
+	val dataVersion            = "2.0.0"  + distSuffix
 	
 	val libDatatableVersion    = "2.0.0"    + distSuffix
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
@@ -324,7 +325,7 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    version                    := appVersion,
+    version                    := dataVersion,
     libraryDependencies       ++= ngldataDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
