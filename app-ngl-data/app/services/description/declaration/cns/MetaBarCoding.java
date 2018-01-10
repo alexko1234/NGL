@@ -325,11 +325,11 @@ public class MetaBarCoding extends AbstractDeclaration {
 		
 		propertyDefinitions.add(newPropertiesDefinition("DNA polymerase", "dnaPolymerase", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
 				DescriptionFactory.newValues("taq Phusion","FastStart Taq"), null, null, null,"single", 1, false, "taq Phusion",null));
-		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", 
 						"ITSD / ITS2REV","CP23S primers","18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
 						"16SV4V5 Archae","16SV5V6 Prok","18SV1V2 Metazoaire","16SV4 Procaryote","Amp 48-1", "Amp 48-2"),null, null, null,"single", 2, true, null,null));
-		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("16S_V4V5","18S_V9", "16S_Full Length + 16S_V4V5", "ITS2","CP23S","18S_V4","COI", "16S_V1V2V3",
 						"16S_V5V6","18S_V1V2","16S_V4", "Multi-Amplicons"), null, null, null,"single", 3, true, null,null));
 

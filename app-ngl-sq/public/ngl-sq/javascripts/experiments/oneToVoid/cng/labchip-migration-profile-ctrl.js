@@ -52,15 +52,29 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		});
 	};
 	
-	$scope.button = {
+	// 04/01/2018 bug il y a 2 boutons, il faut donc 2 variables differentes !!!
+	//    bouton well table... renommer en importButton
+	$scope.importButton = {
 		isShow:function(){
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
+			// ajout parenthese pour grouper isInProgressState() et check("admin")
+			return ( !$scope.mainService.isEditMode() && ( $scope.isInProgressState() || Permissions.check("admin")) )
+			////return ( $scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
 		click:importData,		
 	};
+	
+	//    bouton profil, etait manquant...voir aussi le watch ("profils") car il il n'y a pas d'action click ici !!
+	$scope.button = {
+			isShow:function(){
+				// ajout parenthese pour grouper isInProgressState() et check("admin")
+				return ( !$scope.mainService.isEditMode() && ( $scope.isInProgressState()|| Permissions.check("admin")) )
+				/////return ( $scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin"))
+				}	
+	};
+	
 	
 	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	var columns = $scope.atmService.data.getColumnsConfig();
@@ -146,7 +160,7 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 			}, _profilsMap);
 		
 		}
-		
+		angular.element('#importProfils')[0].value = null;// ajouté 04/01/2018
 	});
 	
 }]);

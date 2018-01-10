@@ -187,7 +187,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		})
 		.error(function(data, status, headers, config) {	
-			// correction 18/12/2017 
+			// correction 18/12/2017 ; setError ne peut afficher qu'une seule erreur....
 			$scope.messages.clazz = "alert alert-danger";
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
@@ -205,7 +205,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	$scope.buttonCbot = {
 			isShow:function(){
 				// 31/01/2017  activer le bouton d'import si l'experience est a InProgress
-				return ($scope.isInProgressState());
+				// 19/12/2018 et pas en edit mode  || afficher bouton pour admin
+				return ($scope.isInProgressState() && !$scope.mainService.isEditMode() || Permissions.check("admin")  );
 				},
 			isFileSet:function(){
 				return ($scope.file === undefined)?"disabled":"";
@@ -238,8 +239,6 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		})
 		.error(function(data, status, headers, config) {
-			///$scope.messages.setError(Messages('experiments.msg.import.error')); // Ne fonctionne que pour une seule erreur !!!!!!!
-			
 			$scope.messages.clazz = "alert alert-danger";
 			$scope.messages.text = Messages('experiments.msg.import.error');
 			$scope.messages.setDetails(data);
@@ -333,8 +332,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			//18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
 			var NovaSeq6000Regexp=/MarieCurix/;
 		
-			console.log('intrument='+ $scope.experiment.instrument.code);
-					
+			console.log('intrument='+ $scope.experiment.instrument.code);	
 			if ( null===$scope.experiment.instrument.code.match(NovaSeq6000Regexp) ){
 				$scope.messages.clazz = "alert alert-warning";
 				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
