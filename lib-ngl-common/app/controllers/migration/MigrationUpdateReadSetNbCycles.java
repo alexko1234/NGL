@@ -1,6 +1,6 @@
 package controllers.migration;		
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -29,21 +29,28 @@ import akka.actor.Props;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * Update SampleOnContainer on ReadSet
  * @author galbini
  *
  */
-public class MigrationUpdateReadSetNbCycles extends CommonController {
+public class MigrationUpdateReadSetNbCycles extends DocumentController<ReadSet> { //CommonController {
 	
 	//private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
-	public static Result migration(){
+	public MigrationUpdateReadSetNbCycles(NGLContext ctx) {
+		super(ctx, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);
+		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+	}
+	
+	public /*static*/ Result migration(){
 		
 		Logger.info("Start MigrationUpdateReadSetNbCycles");
 		

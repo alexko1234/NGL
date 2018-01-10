@@ -2,7 +2,7 @@ package controllers.runs.api;
 
 // import static play.data.Form.form;
 //import static fr.cea.ig.play.IGGlobals.form;
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
@@ -72,13 +72,14 @@ public class Runs extends RunsController {
 
 	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	@Inject
 	public Runs(NGLContext ctx) {
 		runForm = ctx.form(Run.class);
 		updateForm = ctx.form(QueryFieldsForm.class);
 		valuationForm = ctx.form(Valuation.class);
+		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
 	
 	

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
@@ -13,6 +14,7 @@ import org.drools.core.base.DroolsQuery;
 import org.mongojack.DBQuery;
 import com.mongodb.MongoException;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -28,9 +30,10 @@ import services.reporting.txt.*;
 
 public class ReportingCNS extends AbstractReporting {
 
+	@Inject
 	public ReportingCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("ReportingCNS", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("ReportingCNS", durationFromStart, durationFromNextIteration, ctx);
 	}
 	
 	

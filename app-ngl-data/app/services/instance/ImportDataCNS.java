@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import fr.cea.ig.play.NGLContext;
 import scala.concurrent.duration.Duration;
 import services.instance.container.BanqueAmpliImportCNS;
 import services.instance.container.SizingImportCNS;
@@ -24,7 +27,8 @@ import services.instance.sample.UpdateSamplePropertiesCNS;
 
 public class ImportDataCNS{
 
-	public ImportDataCNS(){
+	@Inject
+	public ImportDataCNS(NGLContext ctx){
 		// Import Projects tous les jours à 16h00
 		new ProjectImportCNS(ImportDataUtil.getDurationForNextHour(0),Duration.create(1,TimeUnit.HOURS));
 		new TubeImportCNS(ImportDataUtil.getDurationForNextHour(10),Duration.create(1,TimeUnit.HOURS));

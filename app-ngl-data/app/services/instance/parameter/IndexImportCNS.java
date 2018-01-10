@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TraceInformation;
@@ -20,12 +22,14 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class IndexImportCNS extends AbstractImportDataCNS{
 
+	@Inject
 	public IndexImportCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("IndexImportCNS",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("IndexImportCNS",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

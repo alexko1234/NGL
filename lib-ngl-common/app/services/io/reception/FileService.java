@@ -34,6 +34,7 @@ import services.io.reception.mapping.SupportMapping;
 import validation.ContextValidation;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public abstract class FileService {
 
@@ -42,6 +43,8 @@ public abstract class FileService {
 	protected ReceptionConfiguration configuration;
 	protected PropertyFileValue fileValue;
 	protected ContextValidation contextValidation;
+	
+	private final NGLContext ctx;
 
 	private Map<String, Project> lastSampleCodeForProjects = new HashMap<String, Project>(0);
 
@@ -55,7 +58,7 @@ public abstract class FileService {
 	}
 
 	protected FileService(ReceptionConfiguration configuration,
-			PropertyFileValue fileValue, ContextValidation contextValidation) {
+			PropertyFileValue fileValue, ContextValidation contextValidation, NGLContext ctx) {
 		this.configuration = configuration;
 		this.fileValue = fileValue;
 		this.contextValidation = contextValidation;
@@ -64,13 +67,14 @@ public abstract class FileService {
 			objects.put(s, new TreeMap<String, DBObject>());
 			mappings.put(s, mappingFactory(s));						
 		});
+		this.ctx = ctx;
 
 	}
 
 	private Mapping<? extends DBObject> mappingFactory(String objectType) {
 
 		if(Mapping.Keys.sample.toString().equals(objectType)){
-			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
+			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation, ctx);
 		}else if(Mapping.Keys.support.toString().equals(objectType)){
 			return new SupportMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
 		}else if(Mapping.Keys.container.toString().equals(objectType)){

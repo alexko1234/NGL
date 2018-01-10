@@ -106,8 +106,8 @@ GET		/cns/migration-error-flowcellChemistry	controllers.migration.cns.MigrationU
 GET 	/cns/migration-projects					controllers.migration.MigrationProjet.migration()
 GET 	/cns/migration-tara-station				controllers.migration.cns.MigrationSampleTaraStation.migration()
 
-GET		/cns/migration-readset-nanopore			controllers.migration.cns.MigrationReadSetNanopore.migration(collectionName: java.lang.String)
-GET		/cns/migration-readset-nanopore-update-trt	controllers.migration.cns.MigrationReadSetNanopore.updateMinknowBasecalling(collectionNameRun: java.lang.String, collectionNameReadSet: java.lang.String)
+GET		/cns/migration-readset-nanopore			@controllers.migration.cns.MigrationReadSetNanopore.migration(collectionName: java.lang.String)
+GET		/cns/migration-readset-nanopore-update-trt	@controllers.migration.cns.MigrationReadSetNanopore.updateMinknowBasecalling(collectionNameRun: java.lang.String, collectionNameReadSet: java.lang.String)
 
 GET		/migration-quality-score				controllers.migration.MigrationReadSetQualityScore.migration(fileName: java.lang.String)
 

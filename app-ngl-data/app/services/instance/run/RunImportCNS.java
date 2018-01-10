@@ -7,12 +7,15 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.Constants;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -42,9 +45,10 @@ public class RunImportCNS extends AbstractImportDataCNS{
 
 	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
 	
+	@Inject
 	public RunImportCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("RunCNS",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("RunCNS",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

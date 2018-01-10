@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import play.Logger;
 import models.LimsCNGDAO;
 import models.laboratory.common.instance.TraceInformation;
@@ -18,6 +20,7 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNG;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 /**
  * @author dnoisett
@@ -27,9 +30,10 @@ import fr.cea.ig.MongoDBDAO;
 
 public class IndexImportCNG extends AbstractImportDataCNG{
 
+	@Inject
 	public IndexImportCNG(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("IndexImportCNS",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("IndexImportCNS",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

@@ -4,11 +4,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.sample.instance.Sample;
@@ -23,10 +26,12 @@ import validation.ContextValidation;
 
 public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 
+	@Inject
 	public UpdateTaraPropertiesCNS(
 			FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdateTara", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, 
+			NGLContext ctx) {
+		super("UpdateTara", durationFromStart, durationFromNextIteration, ctx);
 	
 	}
 

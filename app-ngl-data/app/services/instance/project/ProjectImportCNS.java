@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
@@ -18,12 +20,14 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class ProjectImportCNS extends AbstractImportDataCNS{
 
+	@Inject
 	public ProjectImportCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("Project CNS",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("Project CNS",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

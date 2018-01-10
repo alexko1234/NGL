@@ -1,7 +1,10 @@
 
+import javax.inject.Inject;
+
 import org.joda.time.DateTime;
 import org.joda.time.Seconds;
 
+import fr.cea.ig.play.NGLContext;
 // import play.Application;
 //import play.GlobalSettings;
 import play.Logger;
@@ -11,10 +14,15 @@ import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;
 import services.reporting.RunReportingCNS;
 
-import fr.cea.ig.play.IGGlobals;
+//import fr.cea.ig.play.IGGlobals;
 
 public class Global { // extends GlobalSettings {
-
+	private NGLContext ctx;
+	
+	@Inject
+	public Global (NGLContext ctx) {
+		this.ctx = ctx;
+	}
 	// @Override
 	public void onStart(play.Application app) {
 		Logger.info("NGL has started");
@@ -58,21 +66,22 @@ public class Global { // extends GlobalSettings {
 						: next;
 	}
 
-	public static void importData(){
+	public /*static*/ void importData(){
 
 		// if (play.Play.application().configuration().getBoolean("import.data")) {
-		if (IGGlobals.configuration().getBoolean("import.data",false)) {
+//		if (IGGlobals.configuration().getBoolean("import.data",false)) {
+		if (ctx.config().getBoolean("import.data",false)) {
 			Logger.info("NGL import data has started");
 			try {
 
 				// String institute=play.Play.application().configuration().getString("import.institute");
-				String institute = IGGlobals.configuration().getString("import.institute");
+				String institute = ctx.config().getString("import.institute");
 				Logger.info("Import institute "+ institute);
 
 				if("CNG".equals(institute)){
-					new ImportDataCNG();
+					new ImportDataCNG(ctx);
 				}else if ("CNS".equals(institute)){
-					new ImportDataCNS();
+					new ImportDataCNS(ctx);
 				} else {
 					throw new RuntimeException("La valeur de l'attribut import.institute dans application.conf n'a pas d'implementation");
 				}
@@ -84,20 +93,21 @@ public class Global { // extends GlobalSettings {
 		} else { Logger.info("No import data"); }
 	}
 
-	public static void generateReporting(){
+	public /*static*/ void generateReporting(){
 
 		// if (play.Play.application().configuration().getBoolean("reporting.active")) {
-		if (IGGlobals.configuration().getBoolean("reporting.active",false)) {
+//		if (IGGlobals.configuration().getBoolean("reporting.active",false)) {
 
+		if (ctx.config().getBoolean("reporting.active",false)) {
 			Logger.info("NGL reporting has started");
 			try {
 
 				// String institute=play.Play.application().configuration().getString("institute");
-				String institute = IGGlobals.configuration().getString("institute");
+				String institute = ctx.config().getString("institute");
 				Logger.info("institute for the reporting : "+ institute);
 
 				if (institute.equals("CNS")) {
-					new RunReportingCNS();
+					new RunReportingCNS(ctx);
 				} else {
 					throw new RuntimeException("La valeur de l'attribut institute dans application.conf n'a pas d'implementation");
 				}

@@ -2,6 +2,8 @@ package services.instance;
 
 import java.sql.SQLException;
 
+import javax.inject.Inject;
+
 import models.Constants;
 import models.utils.dao.DAOException;
 
@@ -9,10 +11,11 @@ import org.slf4j.MDC;
 
 import com.mongodb.MongoException;
 
+import fr.cea.ig.play.NGLContext;
 import play.Logger;
 import play.Logger.ALogger;
 // import play.libs.Akka;
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
@@ -26,7 +29,8 @@ public abstract class AbstractImportData implements Runnable{
 
 	public abstract void runImport() throws SQLException, DAOException, MongoException, RulesException;
 
-	public AbstractImportData(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration){
+	@Inject
+	public AbstractImportData(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx){
 		this.contextError=new ContextValidation(Constants.NGL_DATA_USER);
 		this.name=name;
 		logger=Logger.of(this.getClass().getName());
@@ -34,11 +38,11 @@ public abstract class AbstractImportData implements Runnable{
 		logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
 		
 		//Akka.system()
-		akkaSystem()
+		ctx.akkaSystem()
 		.scheduler().schedule(durationFromStart,durationFromNextIteration
 				, this, 
 				// Akka.system()
-				akkaSystem()
+				ctx.akkaSystem()
 				.dispatcher()
 				);
 				 

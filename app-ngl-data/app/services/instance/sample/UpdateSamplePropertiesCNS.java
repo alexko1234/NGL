@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
@@ -38,21 +40,25 @@ import workflows.container.ContentHelper;
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class UpdateSamplePropertiesCNS extends AbstractImportDataCNS {
 
 	ContentHelper contentHelper;
 	
+	@Inject
 	public UpdateSamplePropertiesCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, 
+			NGLContext ctx) {
+		super("UpdatePropertiesSampleCNS", durationFromStart, durationFromNextIteration, ctx);
 		contentHelper = Spring.getBeanOfType(ContentHelper.class);
 		
 	}
 
+	@Inject
 	public UpdateSamplePropertiesCNS(String string, FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super(string, durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(string, durationFromStart, durationFromNextIteration, ctx);
 		contentHelper = Spring.getBeanOfType(ContentHelper.class);
 		
 	}

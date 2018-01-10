@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import fr.cea.ig.play.NGLContext;
 import play.Logger;
 import services.io.ExcelHelper;
 import models.laboratory.common.instance.property.PropertyFileValue;
@@ -25,8 +26,8 @@ import validation.ContextValidation;
 public class ExcelFileService extends FileService {
 	
 	public ExcelFileService(ReceptionConfiguration configuration,
-			PropertyFileValue fileValue, ContextValidation contextValidation) {
-		super(configuration, fileValue, contextValidation);		
+			PropertyFileValue fileValue, ContextValidation contextValidation, NGLContext ctx) {
+		super(configuration, fileValue, contextValidation, ctx);		
 	}
 
 	@Override

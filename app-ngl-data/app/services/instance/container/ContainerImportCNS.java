@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -37,9 +40,10 @@ import validation.ContextValidation;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
+	@Inject
 	public ContainerImportCNS(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super(name,durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(name,durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	public static void saveSampleFromContainer(ContextValidation contextError,List<Container> containers,String sqlContent) throws SQLException, DAOException{

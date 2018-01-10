@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.run.instance.File;
@@ -27,12 +29,14 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.play.NGLContext;
 
 public class UpdateReadSetCNS extends AbstractImportDataCNS{
 
+	@Inject
 	public UpdateReadSetCNS( FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdateReadSetCNS", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("UpdateReadSetCNS", durationFromStart, durationFromNextIteration, ctx);
 	}
 				
 	@Override

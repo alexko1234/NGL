@@ -2,7 +2,7 @@ package controllers.readsets.api;
 
 // import static play.data.Form.form;
 //import static fr.cea.ig.play.IGGlobals.form;
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 import fr.cea.ig.mongo.MongoStreamer;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class ReadSets extends ReadSetsController{
 	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
 	
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	private final /*static*/ Form<ReadSet> readSetForm; // = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
@@ -91,6 +91,7 @@ public class ReadSets extends ReadSetsController{
 		stateForm = ctx.form(State.class);
 		batchElementForm = ctx.form(ReadSetBatchElement.class);
 		updateForm = ctx.form(QueryFieldsForm.class);
+		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
 	
 	

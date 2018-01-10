@@ -3,6 +3,8 @@ package controllers.migration.cns;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -10,6 +12,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.run.instance.ReadSet;
@@ -24,14 +27,21 @@ import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 public class MigrationReadSetNanopore extends CommonController{
 
-	private static ActorRef rulesActor = // Akka.system().actorOf(Props.create(RulesActor6.class));
-			akkaSystem().actorOf(Props.create(RulesActor6.class));
+	/*private static ActorRef rulesActor = // Akka.system().actorOf(Props.create(RulesActor6.class));
+			akkaSystem().actorOf(Props.create(RulesActor6.class));*/
 
-	public static Result migration(String collectionName){
+	private static ActorRef rulesActor;
+	
+	@Inject
+	public MigrationReadSetNanopore(NGLContext ctx) {
+		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+	}
+	
+	public /*static*/ Result migration(String collectionName){
 
 		//Get RunNanopore  from backup for project and sampleCodes
 		List<Run> runs = MongoDBDAO.find(collectionName, Run.class, DBQuery.in("sampleCodes", "BWW_V","BWW_AT").is("categoryCode","nanopore")).toList();
@@ -63,7 +73,7 @@ public class MigrationReadSetNanopore extends CommonController{
 		return ok("MigrationReadSetNanopore finished");
 	}
 
-	public static Result updateMinknowBasecalling(String collectionNameRun, String collectionNameReadSet)
+	public /*static*/ Result updateMinknowBasecalling(String collectionNameRun, String collectionNameReadSet)
 	{
 		//get all runs to copy treatment
 		List<Run> backupRuns = MongoDBDAO.find(collectionNameRun, Run.class).toList();

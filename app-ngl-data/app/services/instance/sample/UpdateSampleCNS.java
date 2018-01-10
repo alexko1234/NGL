@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import models.Constants;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -24,12 +26,14 @@ import validation.utils.BusinessValidationHelper;
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class UpdateSampleCNS extends UpdateSamplePropertiesCNS{
 
+	@Inject
 	public UpdateSampleCNS(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("UpdateSample", durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("UpdateSample", durationFromStart, durationFromNextIteration, ctx);
 
 	}
 

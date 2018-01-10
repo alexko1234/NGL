@@ -93,6 +93,10 @@ public class NGLConfig {
 		return config.getString(path);
 	}
 	
+	public Boolean getBoolean(String path, boolean defValue) {
+		return config.getBoolean(path, defValue);
+	}
+	
 	/**
 	 * Application version string if defined in the configuration file at {@link #NGL_APPLICATION_VERSION_KEY}. 
 	 * @return empty string if not defined in the configuration, the configured value otherwise

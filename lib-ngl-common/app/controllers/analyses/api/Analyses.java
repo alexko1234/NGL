@@ -2,7 +2,7 @@ package controllers.analyses.api;
 
 //import static play.data.Form.form;
 //import static fr.cea.ig.play.IGGlobals.form;
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +68,7 @@ public class Analyses extends DocumentController<Analysis> {
 	
 	final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	@Inject
 	public Analyses(NGLContext ctx) {
@@ -77,7 +77,7 @@ public class Analyses extends DocumentController<Analysis> {
 		this.stateForm = getNGLContext().form(State.class);
 		this.batchElementForm = getNGLContext().form(AnalysesBatchElement.class);
 		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
-		
+		this.rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
 	
 	@Permission(value={"reading"})

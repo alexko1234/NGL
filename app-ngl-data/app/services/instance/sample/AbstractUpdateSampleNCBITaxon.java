@@ -8,6 +8,8 @@ import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.run.instance.ReadSet;
@@ -34,13 +36,14 @@ import services.ncbi.NCBITaxon;
 import services.ncbi.TaxonomyServices;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 
-	
+	@Inject
 	public AbstractUpdateSampleNCBITaxon(String name, FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super(name, durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(name, durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	public void run() {

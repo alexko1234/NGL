@@ -4,11 +4,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
@@ -23,10 +26,10 @@ import workflows.container.ContWorkflows;
 
 public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 
-	
+	@Inject
 	public UpdateContainerImportCNS(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super(name,durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super(name,durationFromStart, durationFromNextIteration, ctx);
 	}
 	
 	

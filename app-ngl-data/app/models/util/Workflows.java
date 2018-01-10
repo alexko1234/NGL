@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -36,16 +38,22 @@ import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 public class Workflows {
 	
-	private static ActorRef rulesActor = // Akka.system().actorOf(Props.create(RulesActor6.class));
-			akkaSystem().actorOf(Props.create(RulesActor6.class));
+	/*private static ActorRef rulesActor = // Akka.system().actorOf(Props.create(RulesActor6.class));
+			akkaSystem().actorOf(Props.create(RulesActor6.class));*/
+	private static ActorRef rulesActor;
 	private static final String ruleStatRG="F_RG_1";
 			
+	@Inject
+	public Workflows(NGLContext ctx) {
+		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+	}
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
 		

@@ -4,8 +4,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.cea.ig.MongoDBDAO;
+import javax.inject.Inject;
 
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -16,9 +18,10 @@ import services.instance.AbstractImportDataCNG;
 
 public class ExperimentImportCNG extends AbstractImportDataCNG{
 	
+	@Inject
 	public ExperimentImportCNG(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("ExperimentImportCNG",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("ExperimentImportCNG",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

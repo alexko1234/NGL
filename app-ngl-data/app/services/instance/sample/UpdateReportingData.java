@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -26,6 +28,7 @@ import controllers.migration.OneToVoidContainer;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
@@ -51,8 +54,9 @@ import workflows.process.ProcWorkflowHelper;
 public class UpdateReportingData extends AbstractImportData {
 	private ProcWorkflowHelper procWorkflowHelper;
 	
-	public UpdateReportingData(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration) {
-			super("UpdateReportingData", durationFromStart, durationFromNextIteration);
+	@Inject
+	public UpdateReportingData(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+			super("UpdateReportingData", durationFromStart, durationFromNextIteration, ctx);
 			procWorkflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
 	}
 

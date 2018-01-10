@@ -1,9 +1,11 @@
 package services.io.reception.mapping;
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -32,11 +34,12 @@ import validation.utils.ValidationConstants;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult.Sort;
+import fr.cea.ig.play.NGLContext;
 
 public class SampleMapping extends Mapping<Sample> {
 	
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	/*
 	 * 
@@ -45,8 +48,14 @@ public class SampleMapping extends Mapping<Sample> {
 	 * @param action
 	 * @param contextValidation
 	 */
-	public SampleMapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action, ContextValidation contextValidation) {
+	@Inject
+	public SampleMapping(Map<String, Map<String, DBObject>> objects, 
+						 Map<String, ? extends AbstractFieldConfiguration> configuration, 
+						 Action action, 
+						 ContextValidation contextValidation,
+						 NGLContext ctx) {
 		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
+		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
 	
 	/*

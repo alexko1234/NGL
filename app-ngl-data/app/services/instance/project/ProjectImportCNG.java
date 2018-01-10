@@ -3,7 +3,10 @@ package services.instance.project;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.parameter.index.Index;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
@@ -21,9 +24,10 @@ import play.Logger;
 
 public class ProjectImportCNG extends AbstractImportDataCNG{
 
+	@Inject
 	public ProjectImportCNG(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration) {
-		super("ProjectImportCNG",durationFromStart, durationFromNextIteration);
+			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		super("ProjectImportCNG",durationFromStart, durationFromNextIteration, ctx);
 	}
 
 	@Override

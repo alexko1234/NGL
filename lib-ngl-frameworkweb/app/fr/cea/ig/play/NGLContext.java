@@ -12,6 +12,8 @@ import javax.inject.Singleton;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import akka.actor.ActorRefFactory;
+import akka.actor.ActorSystem;
 import play.i18n.Lang;
 import play.i18n.MessagesApi;
 import play.libs.Json;
@@ -59,6 +61,12 @@ public class NGLContext {
 	 */
 	private final FormFactory formFactory;
 	
+	
+	/**
+	 * Akka ActorSystem.
+	 */
+	private final ActorSystem actor;
+	
 	/*
 	// TODO: remove static NGL context access 
 	private static NGLContext nglContext;
@@ -73,10 +81,12 @@ public class NGLContext {
 	@Inject
 	public NGLContext(NGLConfig   config,
 					  MessagesApi messagesApi,
-			          FormFactory formFactory) {
+			          FormFactory formFactory,
+			          ActorSystem actor) {
 		this.config   = config;
 		this.messagesApi = messagesApi;
 		this.formFactory = formFactory;
+		this.actor = actor;
 	}
 		
 	public NGLConfig config() { 
@@ -152,6 +162,10 @@ public class NGLContext {
 	
 	public List<Object> rulesServices6(String ruleAnnotationName, List<Object> facts) { 
 		return RulesServices6.getInstance().callRulesWithGettingFacts(getRulesKey(), ruleAnnotationName, facts);
+	}
+	
+	public ActorSystem akkaSystem() {
+		return this.actor;
 	}
 	
 	// ---------------------------------------------------------------------------------------

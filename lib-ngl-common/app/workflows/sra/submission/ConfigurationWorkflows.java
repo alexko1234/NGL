@@ -7,6 +7,7 @@ import org.mongojack.DBUpdate;
 import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.ContainerSupport;
@@ -25,6 +26,13 @@ import workflows.Workflows;
 
 @Service
 public class ConfigurationWorkflows extends Workflows<Configuration>{
+
+//	public ConfigurationWorkflows(NGLContext ctx) {
+//		super(ctx);
+//		// TODO Auto-generated constructor stub
+//	}
+
+
 	private static final play.Logger.ALogger logger = play.Logger.of(ConfigurationWorkflows.class);
 
 	//public static ConfigurationWorkflows instance= new ConfigurationWorkflows();

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.play.NGLContext;
 import play.api.Environment;
 import play.api.inject.Binding;
 
@@ -46,8 +47,8 @@ public class NGLDataStarterModule extends NGLCommonStarterModule {
 class GlobalStarterComponent {
 	
 	@Inject
-	public GlobalStarterComponent(play.Application app) {
-		new Global().onStart(app);
+	public GlobalStarterComponent(play.Application app, NGLContext ctx) {
+		new Global(ctx).onStart(app);
 	}
 	
 }
