@@ -86,6 +86,11 @@
 				getStatColumns : function(){
 					if(this.statColumns.length === 0){
 						this.initStatColumns();
+						for(var i = 0; i < this.statColumns.length ; i++){
+							if(this.statColumns[i].headerTpl != null){
+								this.statColumns[i].header=this.statColumns[i].headerTpl.match(/<span [^>]+>([^<]+)<\/>/)[1];
+							}
+						}
 					}
 					return this.statColumns;									
 				},
