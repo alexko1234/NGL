@@ -32,8 +32,8 @@ import controllers.APICommonController;
 import controllers.CommonController;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.authentication.Authentication;
+import fr.cea.ig.play.NGLContext;
 
 import javax.inject.Inject;
 
