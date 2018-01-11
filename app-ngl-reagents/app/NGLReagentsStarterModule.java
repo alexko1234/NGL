@@ -1,4 +1,29 @@
 
+import play.api.Configuration;
+import play.api.Environment;
+
+/**
+ * NGL SQ application start module.
+ *  
+ * @author vrd
+ *
+ */
+public class NGLReagentsStarterModule extends NGLCommonStarterModule {
+	
+	/**
+	 * Constructor.
+	 * @param environment   environment
+	 * @param configuration configuration 
+	 */
+	public NGLReagentsStarterModule(Environment environment, Configuration configuration) {
+		super(environment,configuration);
+		logger.debug("created module " + this);
+		logger.info("starting NGL-Reagents");
+	}
+
+}
+
+/*
 import play.Logger;
 import play.Application;
 import play.api.Configuration;
@@ -43,3 +68,4 @@ public class NGLReagentsStarterModule extends play.api.inject.Module {
 	}
 	
 }
+*/

@@ -24,6 +24,8 @@ public class NGLSQStarterModule extends NGLCommonStarterModule {
 
 }
 
+// TODO: remove dead code
+
 /*
 public class NGLSQStarterModule extends play.api.inject.Module {
 	
