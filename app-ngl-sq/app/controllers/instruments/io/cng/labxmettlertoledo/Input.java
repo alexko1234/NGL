@@ -40,7 +40,7 @@ public class Input extends AbstractInput {
     *            ajout Exception et try/catch
     */
 	
-	private class CatalogException extends Exception{
+	private class CatalogException extends Exception {
 		public CatalogException(String message) { super(message); }
 	}
 
@@ -77,7 +77,7 @@ public class Input extends AbstractInput {
 		
 		
 		//-2-------- Parsing
-		Logger.debug ("-- START PARSING --");
+		Logger.debug ("------ START PARSING ------");
 		
 		byte[] ibuf = pfv.value;
 		InputStream is = new ByteArrayInputStream(ibuf);
@@ -124,11 +124,10 @@ public class Input extends AbstractInput {
 				} else {
 					if ( !cols[0].trim().equals("") ){
 						// section boîtes
-						// 30/11/2017 ajouter Map pour les box
-						processBoxSectionLine(n, cols, contextValidation, currCatalog, otherCatalog, parsedReagentsMap, parsedBoxesMap ) ;
+						processBoxSectionLine(n, cols, currCatalog, otherCatalog, parsedReagentsMap, parsedBoxesMap, contextValidation ) ;
 					} else if ( !cols[1].trim().equals("Position") ){
 						//section resultats
-						processPositionSectionLine(n, cols, contextValidation, currCatalog, otherCatalog, parsedReagentsMap, parsedBoxesMap);
+						processPositionSectionLine(n, cols, currCatalog, otherCatalog, parsedReagentsMap, parsedBoxesMap, contextValidation);
 					}
 				}
 			}
@@ -220,10 +219,12 @@ public class Input extends AbstractInput {
 		} 
 	}
 	
-	// 30/11/2017 ajouter hashMap pour box
-	private static void processBoxSectionLine( int n, String[] cols, ContextValidation contextValidation, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedReagentsMap, Map<String,ReagentUsed> parsedBoxesMap) {
+	/* Traitement de la section qui comence en ligne 6: contient a la fois des boites et des reactifs
+	 * les reactifs de cette section n'on pas de poids entree, poids sortie et difference
+	 * la colonne 0 contient un label
+	 */
+	private static void processBoxSectionLine( int n, String[] cols, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedReagentsMap, Map<String,ReagentUsed> parsedBoxesMap, ContextValidation contextValidation) {
 		
-		// section "boîtes" : colonne 0 contient un label, contient des boîtes ET des reactifs !!!!
 		// 07/11/2017:  pour la flowcell => LOT; pour le manifold => SN; pour le reste =>RGT
 		// 23/11/2017: en V1 on a LOT *ET* RGT  => on va trouver 2 lignes pour chaque item !!! il faut concaténer les valeurs trouvées pour la création du reagent used
 		//Logger.debug ("processing ligne "+ n +" section boîtes");
@@ -251,11 +252,7 @@ public class Input extends AbstractInput {
 		// Pas trouvé comment chercher sur "name" uniquement, il faut 2 requetes, sinon pb de class
 		List<ReagentCatalog> matchListReagent = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, (DBQuery.is("category", "Reagent").and(DBQuery.is("name",fileItemName)))).toList();
 		List<BoxCatalog> matchListBox = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, (DBQuery.is("category", "Box").and(DBQuery.is("name", fileItemName)))).toList();
-		
-		if (matchListReagent.size() == 0 && matchListBox.size() == 0 ) {
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +": '"+ fileItemName+ "': n'existe pas dans le catalogue (ni boîte, ni réactif).");
-			return ; 
-		} 
+
 		//29/11/2017 Julie estime qu'on ne doit pas trouver une boîte ou un reactif plusieurs fois dans le catalogue !!
 		
 		/* 09/01/2018 suppression unicité reagent dans tous le catalogue; ce qui compte c'est l'unicité dans les boites declarees pour l'experience...
@@ -264,144 +261,51 @@ public class Input extends AbstractInput {
 			return ; 	
 		} */
 		
-		/* 09/01/2018 suppression unicité reagent dans tous le catalogue, ce qui compte ce sont les boites des kits actifs=> traité au niveau new ExperimentCatalog
+		/* 09/01/2018 suppression unicité boite dans tous le catalogue, ce qui compte ce sont les boites des kits actifs=> traité au niveau new ExperimentCatalog
 		if ( matchListBox.size() > 1 )  {
 			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +":'"+ fileItemName+ "': boîte trouvée plusieurs fois dans le catalogue.");
 			return ; 
 		}
-		*/
+		*/	
 		
-		/* 09/01/2018quelle importance ?? en plus test inexact par exemple 2 boite de meme nom et un reactif de meme nom 
-		if (matchListReagent.size() == 1 && matchListBox.size() == 1 ) {
-			// l'utilisateur a créé une boite et un reactif de meme nom ???????
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +":'"+ fileItemName+ "':  boîte et réactif de même nom.");
-			return ;
+		if (matchListReagent.size() == 0 && matchListBox.size() == 0 ) {
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +": '"+ fileItemName+ "': n'existe pas dans le catalogue (ni boîte, ni réactif).");
+
+		} else if (matchListReagent.size() == 0 && matchListBox.size() > 0 ) {  // c'est une boîte; 
+			Logger.debug(fileItemName+ "=BOITE...");
+			createBoxtypeReagentUsed( n, fileItemName, fileItemCode, currCatalog, otherCatalog, parsedBoxesMap, contextValidation);
+	
+		} else if ( matchListBox.size() == 0 && matchListReagent.size() > 0 ) { // c'est un réactif
+			Logger.debug(fileItemName+ "=REACTIF...");
+			createReagtypeReagentUsed( n, null, fileItemName, fileItemCode, currCatalog, otherCatalog, parsedReagentsMap, matchListReagent, contextValidation);
+		} else {
+			// boite ET reactif de meme nom
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +": '"+ fileItemName+ "': un réactif et une boite ont le meme nom.");
 		}
-		*/
 		
-
-		if ( matchListBox.size() > 0 ) {  // c'est une boîte;  09/01/2018 chger le test en > 0 au lieu de ==1 (voir ci dessus)
-			//-1- chercher dans current boxMap
-			if ( currCatalog.boxMap.containsKey(fileItemName) ){	
-				//Logger.debug (fileItemName+ ": DANS CURR BOX HASHMAP...");
-				
-				BoxCatalog currBc= currCatalog.boxMap.get(fileItemName); 
-				// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
-				ReagentUsed ru=null;
-				if ( ! parsedBoxesMap.containsKey(fileItemName) ){
-					ru=new ReagentUsed();  
-					ru.kitCatalogCode=currBc.kitCatalogCode;  
-					ru.boxCatalogCode=currBc.code; 
-					ru.boxCode=fileItemCode+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
-					
-					// rafraichir la liste des reactifs succeptibles d'etre trouvés grace a cette nouvelle boite d'apres son code
-					Logger.debug("mise a jour des reactifs de la boite :"+ fileItemName + "("+ currBc.code + ")" );
-					updateExperimentCatalog(currBc.code, currCatalog, contextValidation );
-					
-				} else {
-					Logger.debug ("boite deja connue; mise a jour du code de boite:"+ fileItemName + "("+ currBc.code + ")" );
-					ru= parsedBoxesMap.get(fileItemName);
-					ru.boxCode=ru.boxCode+fileItemCode+"_" ;
-				}
-
-				parsedBoxesMap.put(fileItemName, ru);
-				
-				//!! utiliser le boxCode mis a jour !! pour ses reagents plus tard...
-				//Logger.debug(" ajouter boite :'" +fileItemName+ "'("+ currBc.code+ ") dans currCatalog boxCodeMap");
-				currCatalog.boxCodeMap.put(currBc.code,ru.boxCode);
-				
-				   //DEBUG
-				   //Logger.debug(">>BOX:kitCatalogCode="+ru.kitCatalogCode);
-				   //Logger.debug(">>BOX:boxCatalogCode="+ru.boxCatalogCode);
-				   //Logger.debug(">>BOX:boxCode="+ ru.boxCode); 
-			} 
-			//-2- chercher dans other BoxMap
-			else if ( otherCatalog.boxMap.containsKey(fileItemName) ){
-				//Logger.debug (fileItemName+ ": BOITE DANS OTHER BOX HASHMAP...");
-				// rien a faire, sera traité lors de l'autre import....
-			}
-			else
-			{
-				//    1- soit boite inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
-				// ou 2- la boite n'a pas ete trouvee dans le fichier donc updateExperimentCatalog n'a pas pu faire son travail
-				//   comment distinguer le cas 2 ???????
-				
-				contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ fileItemName+ "': boîte du réactif inactive ou est dans un kit inactif ou non reliée aux type d'expériences attendus");
-				return ; 
-			}	
-		} else if ( matchListReagent.size() > 0 ) { // c'est un réactif; 09/01/2018 chger le test en > 0 au lieu de ==1
-			//-1- chercher dans current ReagentMap
-			if ( currCatalog.reagentMap.containsKey(fileItemName) ){	
-				Logger.debug (fileItemName+ ": REACTIF DANS CURR REAGENT HASH...");
-				
-				ReagentCatalog currRc= currCatalog.reagentMap.get(fileItemName);	
-				if (null == currCatalog.boxCodeMap.get(currRc.boxCatalogCode)){
-					Logger.debug ("chercher boite "+ currRc.boxCatalogCode +" dans currCatalog boxCodeMap");
-					contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": "+ fileItemName +"':  boîte du réactif manquante dans le fichier");
-					return;
-				} 
-				
-				// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
-				ReagentUsed ru=null;
-				if (! parsedReagentsMap.containsKey(fileItemName) ){	
-					ru=new ReagentUsed();  
-					ru.kitCatalogCode=currRc.kitCatalogCode; 
-					ru.boxCatalogCode=currRc.boxCatalogCode; 
-					ru.reagentCatalogCode=currRc.code; 
-					ru.boxCode=currCatalog.boxCodeMap.get(currRc.boxCatalogCode); 
-					ru.code=fileItemCode+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
-					// ru.description=....     // pas de description dans cette section du fichier...	
-					
-				} else {
-					//Logger.debug ("mise a jour code de réactif");
-					ru= parsedReagentsMap.get(fileItemName);
-					ru.code=ru.code +fileItemCode+"_" ;
-				}
-				parsedReagentsMap.put(fileItemName, ru);
-				
-					//DEBUG	
-					//Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
-					//Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
-					//Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
-					//Logger.debug(">>REAG:boxCode="+ru.boxCode); 
-					//Logger.debug(">>REAG:code="+ ru.code); 
-			}
-			//-2- chercher dans other ReagentMap	
-			else if ( otherCatalog.reagentMap.containsKey(fileItemName) ){
-				Logger.debug (fileItemName+ ": REACTIF DANS OTHER REAGENT HASHMAP..."); 
-				// rien a faire, sera traité lors de l'autre import....
-			} 
-			else
-			{
-				//Logger.debug (fileItemName+ ": NI DANS CURRENT HASHMAP NI DANS OTHER REAGENT HASHMAP..."); 
-				//    1- soit boite inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
-				// ou 2- la boite n'a pas ete trouvee dans le fichier donc updateExperimentCatalog n'a pas pu faire son travail
-				//   comment distinguer le cas 2 ???????
-
-				contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ fileItemName+ "': boîte du réactif inactive ou dans un kit inactif ou non relié aux types expériences attendus");
-				return; 
-			}
-		}	
-		
-		return;
+		return ; 
 	}
-		
-	private static void processPositionSectionLine( int n, String[] cols,  ContextValidation contextValidation, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedReagentsMap, Map<String,ReagentUsed> parsedBoxesMap ) {
+	
+	/* Traitement de la section qui commence a la ligne "Resultats"
+	 * dans cette section ne doivent se trouver QUE des reactifs (pas de boîtes)
+	 * la colonne 0 est vide et la colonne 1 contient la position ( 1-->N )
+	 */
+	private static void processPositionSectionLine( int n, String[] cols, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedReagentsMap, Map<String,ReagentUsed> parsedBoxesMap, ContextValidation contextValidation ) {
 
-		Logger.debug ("processing ligne "+ n +" section  position...");		
-		// reactifs en positions 1-->N
-		// dans cette section ne doivent se trouver QUE des reactifs (pas de boîtes ni de kits)	=> chercher dans reagentMap
+		//Logger.debug ("processing ligne "+ n +" section  position...");		
 		
 		String fileReagentName=cols[2].trim();
+		String fileReagentCode = cols[5].trim();
+
 		
 		//-1- chercher si existe dans TOUT le catalogue !!	
 		//Logger.debug ("ligne "+ n +" chercher :"+fileReagentName + " dans TOUT le catalogue");	
 		
 		// ici on peut ajouter le fitre type dans la requete (evite l'erreur: Class models.laboratory.reagent.description.BoxCatalog not subtype of [simple type, class models.laboratory.reagent.description.ReagentCatalog]
 		// s'il y a autre chose (kit ou boite) de meme nom !!!
-		List<ReagentCatalog>  testList= MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").and(DBQuery.is("name", fileReagentName))).toList();
+		List<ReagentCatalog>  matchListReagent= MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").and(DBQuery.is("name", fileReagentName))).toList();
 
-		if (testList.size() == 0 ) {
+		if (matchListReagent.size() == 0 ) {
 			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)+ ": '"+ fileReagentName+ "': ce réactif n'existe pas dans le catalogue.");
 			return;
 		// 08/01/2018 suppression unicité dans le catalogue car on le rechche dans les boites trouvees
@@ -410,68 +314,8 @@ public class Input extends AbstractInput {
 		//	contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +":'"+ fileReagentName+ "': réactif trouvé plusieurs fois dans le catalogue.");
 		//	return ;
 		} else {
-			Logger.debug (fileReagentName + "existe...");
-			
-			//-1- chercher dans current reagentMap
-			if (currCatalog.reagentMap.containsKey(fileReagentName) ){	
-				//Logger.debug (fileReagentName+": REACTIF DANS CURRENT REAGENT HASHMAP...");
-				
-				ReagentCatalog currRc= currCatalog.reagentMap.get(fileReagentName);	
-				
-				//Logger.debug ("chercher boite "+ currRc.boxCatalogCode +" dans currcatalog boxCodemap");
-				// NE SORT PAS car ...currCatalog.boxCodeMap est rempli des le depart 
-				if ( null == currCatalog.boxCodeMap.get(currRc.boxCatalogCode)){
-					//la boîte de ce reactif n'est pas présente dans la section de déclaration des boîtes ??
-				    contextValidation.addErrors("Erreurs fichier", "ligne "+ (n+1) +": '"+ fileReagentName+ "': boîte du réactif manquante dans le fichier.");
-				    return;
-				}
-					
-				String fileReagentCode = cols[5].trim();
-				String position= cols[1].trim();
-				
-				// construire un reagent 
-				// dans cette section on PEUT trouver le même réactif a plusieurs lignes (plusieurs positions), c'est normal !! => ne pas concatener les infos
-				// par contre la cle du hash doit etre nom/position
-				ReagentUsed ru=new ReagentUsed();  
-
-				ru.kitCatalogCode=currRc.kitCatalogCode; 
-				ru.boxCatalogCode=currRc.boxCatalogCode;
-				ru.reagentCatalogCode=currRc.code; 
-				ru.boxCode=currCatalog.boxCodeMap.get(currRc.boxCatalogCode);  
-				// TEST ajouter la position dans code ?? a garder ou pas voir avec Julie==> NON
-				//ru.code="Position-"+position+"_"+fileReagentCode+"_" ;    // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
-				ru.code=fileReagentCode+"_";    // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
-				
-				String fileInputReagentWeight = cols[6].trim();
-				String fileOutputReagentWeight = cols[11].trim();
-				String fileDiffReagentWeight = cols[15].trim();
-				// meme si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
-				ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
-				
-				parsedReagentsMap.put(fileReagentName+"/"+position, ru);
-					
-					//DEBUG
-					//Logger.debug (">>REAG2:kitCatalogCode="+ru.kitCatalogCode);
-					//Logger.debug (">>REAG2:boxCatalogCode="+ru.boxCatalogCode);
-					//Logger.debug (">>REAG2:reagentCatalogCode"+ru.reagentCatalogCode);
-					//Logger.debug (">>REAG2:boxCode="+ru.boxCode);
-					//Logger.debug (">>REAG2:code="+ru.code);
-					//Logger.debug (">>REAG2:description="+ ru.description);
-			} 
-			//-2- chercher dans other ReagentMap
-			else if ( otherCatalog.reagentMap.containsKey(fileReagentName) ){
-				//Logger.debug (fileReagentName+ ": REACTIF DANS OTHER REAGENT HASHMAP..."); 
-				//rien a faire sera traité dans prochain import
-			}
-			else {
-				//Logger.debug (fileReagentName+ ": NI DANS CURRENT HASHMAP NI DANS OTHER REAGENT HASHMAP..."); 
-				//    1- existe mais soit pas boite inactive soit dans un kit inactif soit pas relié aux 2 expériences impliquees...
-				// ou 2- la boite n'a pas ete trouvee dans le fichier donc updateExperimentCatalog n'a pas pu faire son travail
-				//  comment distinguer le cas 2 ????
-				
-				contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ fileReagentName+"': boîte du réactif inactive ou dans un kit inactif ou non relié aux types expériences attendus.");
-				return;
-			}
+			//Logger.debug (fileReagentName + " existe...");
+			createReagtypeReagentUsed( n, cols, fileReagentName, fileReagentCode, currCatalog, otherCatalog, parsedReagentsMap, matchListReagent, contextValidation);
 		} 
 	}
 	
@@ -489,8 +333,8 @@ public class Input extends AbstractInput {
 		}
 		
 		// methodes
-		private void  getCatalogInfoExperiment(String experimentTypeCode, Map<String,BoxCatalog> boxMap,Map<String,ReagentCatalog> reagentMap, Map<String,String> boxCodeMap ) throws CatalogException {
-			//Logger.debug (" -- getCatalogInfoExperiment for "+experimentTypeCode+ "--");
+		private void getCatalogInfoExperiment(String experimentTypeCode, Map<String,BoxCatalog> boxMap,Map<String,ReagentCatalog> reagentMap, Map<String,String> boxCodeMap ) throws CatalogException {
+			Logger.debug (" -- getCatalogInfoExperiment for "+experimentTypeCode+ "--");
 			
 			List<KitCatalog> kitList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
 					DBQuery.is("category", "Kit").and(DBQuery.is("active", true)).and(DBQuery.in("experimentTypeCodes", experimentTypeCode))).toList();
@@ -507,13 +351,13 @@ public class Input extends AbstractInput {
 							DBQuery.is("category", "Box").and(DBQuery.is("active", true)).and(DBQuery.is("kitCatalogCode", kit.code))).toList();
 					
 					for(BoxCatalog box:  kitBoxList){
-						//Logger.debug (" boîte ACTIVE:'"+ box.name + "'("+box.code+")");
+						Logger.debug (" boîte ACTIVE:'"+ box.name + "'("+box.code+")");
 						// 09/01/2018 verifier que la meme boîte n'existe pas deja dans un autre  kit actif !!!!
 						if (boxMap.containsKey(box.name) ){
 							//Logger.debug ("BOITE EN DOUBLON :"+ box.name + " dans boxMap !!");
 							throw new CatalogException("Kit '"+ kit.name +"' :une boîte active de même nom '"+ box.name +"' existe déjà dans un autre kit actif pour ce type d'expérience");
 						}	 
-						//Logger.debug ("  ...ajoutee dans boxMap");
+						Logger.debug ("  ...ajoutee dans boxMap");
 						boxMap.put(box.name, box);		
 					}
 			     }
@@ -545,4 +389,200 @@ public class Input extends AbstractInput {
 		}
 		return;
 	}
+	
+	
+	// creation d'un reagent Used de type boite
+	private static void createBoxtypeReagentUsed (int n, String name, String code, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedBoxesMap , ContextValidation contextValidation) {
+	
+		//-1- chercher dans current boxMap
+		if ( currCatalog.boxMap.containsKey(name) ){	
+			//Logger.debug ("  TROUVEE DANS CURR BOX HASHMAP...");
+
+			BoxCatalog currBc= currCatalog.boxMap.get(name); 
+			// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
+			ReagentUsed ru=null;
+			if ( ! parsedBoxesMap.containsKey(name) ){
+				ru=new ReagentUsed();  
+				ru.kitCatalogCode=currBc.kitCatalogCode;  
+				ru.boxCatalogCode=currBc.code; 
+				ru.boxCode=code+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+			
+				// rafraichir la liste des reactifs succeptibles d'etre trouvés grace a cette nouvelle boite d'apres son code
+				Logger.debug("mise a jour des reactifs de la boite :"+ name + "("+ currBc.code + ")" );
+				updateExperimentCatalog(currBc.code, currCatalog, contextValidation );
+			
+			} else {
+				Logger.debug ("boite deja connue; mise a jour du code de boite:"+ name + "("+ currBc.code + ")" );
+				ru= parsedBoxesMap.get(name);
+				ru.boxCode=ru.boxCode+code+"_" ;
+			}
+
+			parsedBoxesMap.put(name, ru);
+		
+			//!! utiliser le boxCode mis a jour !! pour ses reagents plus tard...
+			//Logger.debug(" ajouter boite :'" +fileItemName+ "'("+ currBc.code+ ") dans currCatalog boxCodeMap");
+			currCatalog.boxCodeMap.put(currBc.code,ru.boxCode);
+		
+				//DEBUG
+				//Logger.debug(">>BOX:kitCatalogCode="+ru.kitCatalogCode);
+				//Logger.debug(">>BOX:boxCatalogCode="+ru.boxCatalogCode);
+				//Logger.debug(">>BOX:boxCode="+ ru.boxCode); 
+		} 
+		//-2- chercher dans other BoxMap
+		else if ( otherCatalog.boxMap.containsKey(name) ){
+			//Logger.debug ("  TROUVEE DANS OTHER BOX HASHMAP...");
+			// rien a faire, sera traité lors de l'autre import....
+		}
+		else
+		{
+			//  boite inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': boîte inactive ou dans un kit inactif ou non relié aux type d'expériences attendus");
+		}
+	
+	return ;
+	
+	} // fin method
+	
+	
+	// creation d'un reagent Used de type reactif
+	// si on appelle depuis la section Boite cols est null
+	private static void createReagtypeReagentUsed ( int n, String[] cols, String name, String code, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedReagentsMap, List<ReagentCatalog> matchListReagent, ContextValidation contextValidation ) {
+		
+		String position=null;
+		String fileInputReagentWeight =null;
+		String fileOutputReagentWeight =null;
+		String fileDiffReagentWeight =null;
+		String key=name;
+		
+		//-1- chercher dans current ReagentMap
+		if ( currCatalog.reagentMap.containsKey(name) ){	
+			Logger.debug ("  TROUVE DANS CURR REAGENT HASH...");
+				
+			if ( null != cols ) {
+				fileInputReagentWeight = cols[6].trim();
+				fileOutputReagentWeight = cols[11].trim();
+				fileDiffReagentWeight = cols[15].trim();
+				position= cols[1].trim();
+			}
+				
+			ReagentCatalog currRc= currCatalog.reagentMap.get(name);	
+		
+			// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
+			ReagentUsed ru=null;
+			if (! parsedReagentsMap.containsKey(name) ){	
+				ru=new ReagentUsed();  
+				ru.kitCatalogCode=currRc.kitCatalogCode; 
+				ru.boxCatalogCode=currRc.boxCatalogCode; 
+				ru.reagentCatalogCode=currRc.code; 
+				ru.boxCode=currCatalog.boxCodeMap.get(currRc.boxCatalogCode); 
+				ru.code=code+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+				
+				if ( null != cols ) {
+					// appel depuis la section position
+					// meme si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
+					ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
+					
+					//la cle doit contenir la position "name" ne suffit pas
+					key=name+position;
+				}		
+			} else {
+					//Logger.debug ("mise a jour code de réactif");
+					ru= parsedReagentsMap.get(name);
+					ru.code=ru.code +code+"_" ;
+			}
+			
+			// ajouter/ecraser dans la map
+			parsedReagentsMap.put(key, ru);
+				
+				//DEBUG	
+				Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
+				Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
+				Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
+				Logger.debug(">>REAG:boxCode="+ru.boxCode); 
+				Logger.debug(">>REAG:code="+ ru.code); 
+		}
+		//-2- chercher dans other ReagentMap	
+		else if ( otherCatalog.reagentMap.containsKey(name) ){
+			Logger.debug (" TROUVE DANS OTHER REAGENT HASHMAP..."); 
+			// rien a faire, sera traité lors de l'autre import....
+		} 
+		else
+		{
+			Logger.debug (name+ ": NI DANS CURRENT HASHMAP NI DANS OTHER REAGENT HASHMAP..."); 
+			//    1- soit boite inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
+			// ou 2- la boite n'a pas ete trouvee dans le fichier donc updateExperimentCatalog n'a pas pu faire son travail
+			//   comment distinguer le cas 2 ???
+				
+			if (matchListReagent.size() == 1 ){
+				Logger.debug("1 seul reactif avec ce nom...");
+				// un seul reactif avec ce nom, trouver sa boite parent et verifier si elle est legitime=> dans currCatalog.boxMap 
+				// si oui construire un reagentUsed...
+				
+				for(ReagentCatalog reagent:  matchListReagent) {	
+					Logger.debug("sa boite est :"+ reagent.boxCatalogCode);
+					boolean foundBoxMap=false;
+					// !!!! la cle est le nom est pas le code !!!
+					 for (Map.Entry<String, BoxCatalog> pair : currCatalog.boxMap.entrySet() ) {
+				         //Logger.debug((">>>>"+ pair.getKey()  +  pair.getValue().code);
+				                
+				          if  ( pair.getValue().code.equals( reagent.boxCatalogCode ) ) {
+				                foundBoxMap=true;
+				                break;
+				          }
+				     }
+						 
+					 if ( foundBoxMap ) {
+						Logger.debug("Boite "+ reagent.boxCatalogCode +" trouvee dans currCatalog.boxMap => creer le reagentUsed TODO");
+						
+						// EN COURS...
+						// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
+						ReagentUsed ru=null;
+						if (! parsedReagentsMap.containsKey(name) ){	
+							ru=new ReagentUsed();  
+							ru.kitCatalogCode=reagent.kitCatalogCode;   // code NGL du kit parent
+							ru.boxCatalogCode=reagent.boxCatalogCode;   // code NGL de la boite parent
+							ru.reagentCatalogCode=reagent.code;         // code NGL du reactif
+							ru.boxCode="XXXXXXX"  ;                          // barcode de la boite !! vide dans ce cas !!! mettre null
+							ru.code=code+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
+							
+							if ( null != cols ) {
+								// appel depuis la section position
+								// meme si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
+								ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
+								
+								//la cle doit contenir la position "name" ne suffit pas
+								key=name+position;
+							}		
+						} else {
+								//Logger.debug ("mise a jour code de réactif");
+								ru= parsedReagentsMap.get(name);
+								ru.code=ru.code +code+"_" ;
+						}
+						
+						// ajouter/ecraser dans la map
+						parsedReagentsMap.put(key, ru);
+							
+							//DEBUG	
+							//Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
+							//Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
+							//Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
+							//Logger.debug(">>REAG:boxCode="+ru.boxCode); 
+							//Logger.debug(">>REAG:code="+ ru.code); 
+					
+		
+					} else {
+						Logger.debug("Boite "+ reagent.boxCatalogCode +"pas trouvee dans currCatalog.boxMap");
+						contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "':  boîte du réactif inactive ou dans un kit inactif ou non relié aux types d'expériences attendus");
+					}
+				}	
+			} else {
+				Logger.debug("plusieurs reactifs avec ce nom...");
+				contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': plusieurs réactifs de meme nom et boite manquante dans le fichier");
+			}
+		}
+		
+		return;
+		
+	}  // fin method
+	
 }
