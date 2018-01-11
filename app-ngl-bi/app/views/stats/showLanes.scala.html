@@ -8,7 +8,7 @@
 		<div class="row">
 		@columnSearchForm{
 			@formGroup{
-					<div  class="form-control" bt-select ng-model="chartsLanesService.treatmentType" placeholder="@Messages("search.placeholder.treatment")" bt-options="trt.names as trt.name for trt in chartsLanesService.lists.getTreatmentTypes()" ng-change="chartsLanesService.refreshProperty()"></div>	
+					<div  class="form-control" bt-select ng-model="chartsLanesService.treatmentType" placeholder="@Messages("search.placeholder.treatment")" bt-options="trt.code as trt.name for trt in chartsLanesService.lists.getTreatmentTypes()" ng-change="chartsLanesService.refreshProperty()"></div>	
 					<div  class="form-control" bt-select ng-model="chartsLanesService.property" placeholder="@Messages("search.placeholder.property")" bt-options="prop.code as prop.name for prop in chartsLanesService.properties" ng-change="chartsLanesService.selectProperty()"></div>	
 			}
 		}	
@@ -22,7 +22,35 @@
 <div ng-switch on="chartsLanesService.isData()">	
 		<div ng-switch-when="true">
 			<div class="row">
-				<div class="col-md-12 col-lg-12" ultimate-datatable="chartsLanesService.datatable()"></div>
+			<ul class="nav nav-tabs margin-bottom-5">
+			<li class="active"><a href="#" data-target="#chart" data-toggle="tab">@Messages("stats.tabs.charts")</a></li>
+			<li ng-if="chartsLanesService.getExcludeData().length > 0"><a href="#" data-target="#exclude" data-toggle="tab">@Messages("stats.tabs.exclude")</a></li>
+			</ul>
+			
+			
+			
+			<div class="tab-content">
+				<div class="tab-pane active" id="chart">
+				<div class="row">
+					<div class="col-md-12 col-lg-12" ultimate-datatable="chartsLanesService.datatable()"></div>
+				</div>
+				</div>
+				<div class="tab-pane" id="exclude">
+					<div class="row">
+					<div class="col-md-4 col-lg-4">
+					<div class="panel panel-danger">
+					  <div class="panel-body">
+					  	<ul>
+					  		<li ng-repeat="d in chartsLanesService.getExcludeData()|orderBy:'code'">{{d.code}}</li>	
+					  	</ul>
+					    
+					  </div>
+					  </div>
+					</div>
+					</div>
+				</div>
+			</div>
+				
 			</div>
 			<div class="row">
 				<ul class="nav nav-tabs margin-bottom-5">

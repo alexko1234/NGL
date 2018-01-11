@@ -1052,8 +1052,8 @@ stats.page.tab.lanes.select = Selectionner des Runs
 stats.page.tab.lanes.config = Configuration Statistiques
 
 stats.tabs.charts = Graphiques
-stats.tabs.mean.charts = Graphique moy. par Lane
-stats.tabs.lanes.charts = Graphiques par lanes
+stats.tabs.mean.charts = Graphique moy. par Run
+stats.tabs.lanes.charts = Graphiques par lane
 stats.tabs.exclude = Valeurs exclues
 stats.tabs.query = Requête
 stats.property = Propriété
