@@ -39,7 +39,9 @@ public class AnalysisWorkflowsHelper {
 		for(String rsCode : analysis.masterReadSetCodes){
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 			//if different of state IW-VBA
-			if(valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)){
+			//if(valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)){
+			if((analysis.state.code.equals("IW-V") && !"IW-VBA".equals(readSet.state.code)) ||
+					(analysis.state.code.equals("F-V") && TBoolean.TRUE.equals(analysis.valuation.valid))){
 				readSet.bioinformaticValuation.valid = valid;
 				readSet.bioinformaticValuation.date = date;
 				readSet.bioinformaticValuation.user = user;
