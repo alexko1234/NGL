@@ -40,7 +40,7 @@ object ApplicationBuild extends Build {
   val distSuffix             = "-SNAPSHOT"
   val appVersion             = "2.0.0"    + distSuffix
 	
-	val sqVersion              = "2.0.0" + distSuffix
+	val sqVersion              = "2.1.0" + distSuffix
 	val biVersion              = "2.1.0" + distSuffix
 
 	val projectsVersion        = "2.1.0"  + distSuffix

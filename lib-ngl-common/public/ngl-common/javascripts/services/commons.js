@@ -1040,7 +1040,10 @@ angular.module('commonsServices', []).
       		      
       		      scope.itemLabel = function(item){	      		    	
       		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
-      		    	return $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
+      		    	//return $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
+      		    	var obj = {};
+      		    	obj[optionsConfig.itemName]=item;
+      		    	return $parse(optionsConfig.viewMapper)(obj);  
       		      };
       		      
       		      scope.itemValue = function(item){
@@ -1396,7 +1399,7 @@ angular.module('commonsServices', []).
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
@@ -1432,7 +1435,7 @@ angular.module('commonsServices', []).
     	    			}
     	    			
     	    			
-    	    		}else if (!params.key && angular.isObject(value)){
+    	    		}else if (!key && angular.isObject(value)){
     	    			throw "missing key !";
     	    		}
     	    		
@@ -1469,5 +1472,20 @@ angular.module('commonsServices', []).
     			      });
     			    }
     			  };
-    			});
+    	}).filter('format',  ['$parse',function($parse){ //transform object to array
+  		  return function (obj,pattern) {
+			  if(obj === null || obj === undefined)return;  
+			  if(pattern === null || pattern === undefined)return;
+			  return $parse(pattern)(obj);
+			  };
+		}]).filter('formatProjectListLabel',  ['$parse',function($parse){ //transform object to array
+	  		  return function (proj) {
+				  if(proj === null || proj === undefined)return;  
+				  if(proj.code !== proj.name)
+					  return $parse('code+\" \(\"+name+\"\)\"')(proj);
+				  else
+					  return $parse('code')(proj);
+				  
+	  		  };
+		}]);
     	
