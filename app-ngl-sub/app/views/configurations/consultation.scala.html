@@ -6,7 +6,7 @@
 
 	@columnSearchForm{
 		@formGroup{
-			<div class="form-control" bt-select  ng-model="consultationService.form.projCodes" filter="true" multiple="true" placeholder='@Messages("consultation.placeholder.projectCodes")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()"></div>	
+			<div class="form-control" bt-select  ng-model="consultationService.form.projCodes" filter="true" multiple="true" placeholder='@Messages("consultation.placeholder.projectCodes")' bt-options="project.code as project|formatProjectListLabel for project in consultationService.lists.getProjects()"></div>	
 		}													
 	}
 
