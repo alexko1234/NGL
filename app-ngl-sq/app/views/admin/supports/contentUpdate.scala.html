@@ -10,7 +10,7 @@
 	}	
 	@columnSearchForm{			
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.projectCode" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>
+			<div class="form-control" bt-select ng-model="searchService.form.projectCode" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project|formatProjectListLabel for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>
 		}
 		
 	}
