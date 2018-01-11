@@ -105,6 +105,9 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 					display+="</tr>";
 				}
 				display +="</tbody></table>";
+				
+				if(mapData.size==0)
+					display="";
 				return display;
 			}
 				
@@ -150,6 +153,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 	}
 	var queriesConfigs = [];
 	var readsetDatatable;
+	var excludeData;
 	var charts = [];
 	var chartMean;
 	var mapSeriesLane = new Map();
@@ -173,7 +177,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 		properties.push(statsConfigs.property);	
 		propExistingFiels.push(statsConfigs.property);	
 		properties.push("lanes.number");
-		var form = angular.copy(runSearchService.convertForm());
+		var form = angular.copy(runSearchService.convertForm());		
 		form.excludes = undefined;
 		form.includes = properties;
 		form.existingFields = propExistingFiels;
@@ -184,6 +188,21 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 		});
 		
 	};	
+	
+	var computeExcludeData = function(property){
+		var properties = ["default"];
+		var propNotExistingFiels = [];
+		properties.push(statsConfigs.property);	
+		propNotExistingFiels.push(statsConfigs.property);	
+		properties.push("lanes.number");
+		var form = angular.copy(runSearchService.convertForm());		
+		form.excludes = undefined;
+		form.includes = properties;
+		form.notExistingFields = propNotExistingFiels;
+		$http.get(jsRoutes.controllers.runs.api.Runs.list().url,{params:form}).success(function(data) {
+			excludeData=data;
+		});
+	}
 
 	var computeChart = function() {	
 		var data = readsetDatatable.getData();
@@ -410,7 +429,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 	
 	var getPointProperty = function(runCode,positionRun,valueProperty,symbol)
 	{
-		return {'name':runCode,'x':positionRun,'y':valueProperty,'marker':symbol,events : {
+		return {'name':runCode,'x':positionRun,'y':valueProperty, events : {
 			// Redirects to valuation page of the clicked readset
 			click : function() {
 				$window.open(jsRoutes.controllers.runs.tpl.Runs.get(this.name).url);
@@ -471,6 +490,8 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			            }
 			        }
 			    },
+			    
+		        
 		}
 		return chart;
 	}
@@ -480,13 +501,13 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 		var allSeries = [];
 		
 		if(dataLane.dataRead1.length>0){
-			allSeries.push({name:'read1',data:dataLane.dataRead1});
+			allSeries.push({name:'read1',marker:symbols.read1, data:dataLane.dataRead1});
 		}
 		if(dataLane.dataRead2.length>0){
-			allSeries.push({name:'read2',data:dataLane.dataRead2});
+			allSeries.push({name:'read2',marker:symbols.read2,data:dataLane.dataRead2});
 		}
 		if(dataLane.dataDefault.length>0){
-			allSeries.push({name:'default',data:dataLane.dataDefault});
+			allSeries.push({name:'default',marker:symbols.default,data:dataLane.dataDefault});
 		}
 		
 		var chart = getCommonChart();
@@ -503,10 +524,9 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 	var getChartGroup = function(laneNumber, dataLane,propertyGroup) {
 		
 		var allSeries = [];
-		
 		for(var key of dataLane.keys()){
 			var data = dataLane.get(key);
-			allSeries.push({name:key,data:data.dataGroup});
+			allSeries.push({name:key,data:data.dataGroup,linkedTo:'main'});
 		}
 		var chart = getCommonChart();
 		chart.title = {text : statsConfigs.header+' Lane '+laneNumber,};
@@ -514,7 +534,15 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 				headerFormat: '<b>{series.name} </b><br>',
                 pointFormat: '{point.y} ({point._group})'
             };
+		chart.legend={
+		        labelFormatter: function() {
+		            return '<span style="color: '+this.color+'">'+ this.name + '</span>';
+		         
+		        }
+		        
+		    };
 		chart.series=allSeries;
+		
 		return chart;
 	};
 	
@@ -523,13 +551,13 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 		var allSeries = [];
 		
 		if(dataMean.dataRead1.length>0){
-			allSeries.push({name:'read1',data:dataMean.dataRead1});
+			allSeries.push({name:'read1',marker:symbols.read1,data:dataMean.dataRead1});
 		}
 		if(dataMean.dataRead2.length>0){
-			allSeries.push({name:'read2',data:dataMean.dataRead2});
+			allSeries.push({name:'read2',marker:symbols.read2,data:dataMean.dataRead2});
 		}
 		if(dataMean.dataDefault.length>0){
-			allSeries.push({name:'default',data:dataMean.dataDefault});
+			allSeries.push({name:'default',marker:symbols.default,data:dataMean.dataDefault});
 		}
 		
 		var chart = getCommonChart();
@@ -558,6 +586,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
                 pointFormat: '{point.y} ({point._group})'
             };
 		chart.series=allSeries;
+		chart.legend={squareSymbol:true};
 		
 		return chart;
 	};
@@ -622,11 +651,17 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			loadData:function() {
 				if(this.isData()){
 					statsConfigs = {header:this.treatmentType+' '+this.property, code:this.treatmentType+'.'+this.property,property:'lanes.treatments.'+this.treatmentType,value:this.property,treatment:this.treatmentType,label:getLabelProperty()};
+					computeExcludeData(this.property);
 					generateCharts(this.property);
+					this.getExcludeData();
 				}else{
 					charts=[];
 					readsetDatatable=undefined;
 				}
+			},
+			getExcludeData:function()
+			{
+				return excludeData;
 			},
 	};
 	return chartService;
