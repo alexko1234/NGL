@@ -54,6 +54,7 @@ public class ContainersSearchForm extends ListForm{
 	public Map<String, List<String>> contentsProperties = new HashMap<String, List<String>>();
 	
 	public Map<String, Boolean> existingFields;
+	public Map<String, String> queryFields;
 	
 	@Override
 	public String toString() {
