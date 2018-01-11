@@ -29,7 +29,7 @@ public class AnalysisWorkflowsHelper {
 		for(String rsCode : analysis.masterReadSetCodes){
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 			State nextStep = cloneState(readSet.state, validation.getUser());
-			nextStep.code = "IP-BA";
+			nextStep.code = nextStepCode;
 			readSetWorflows.setState(validation, readSet, nextStep);
 		}
 	}
