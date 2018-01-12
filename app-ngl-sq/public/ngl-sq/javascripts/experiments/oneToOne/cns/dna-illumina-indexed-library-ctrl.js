@@ -327,6 +327,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		
 	}
 	*/
+	/*
 	var populateIndex12LinePlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
 		
@@ -351,6 +352,64 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		}
 		return values
 	}
+	*/
+	/**
+	 * More Generic than populateIndex12LinePlate
+	 */
+	var populateIndexLinePlate = function(prefix, startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var j=0; j < lines.length; j++){
+			var line = lines[j];
+			for(var i = 1 ; i <= 12; i++){
+				var pos = currentIndex+i-1;
+				var computePrefix = null;
+				if(pos < 10){
+					computePrefix = prefix+"00";
+				}else if(pos < 100){
+					computePrefix = prefix+"0";
+				}else {
+					computePrefix = prefix;
+				}
+				values[line+i]=computePrefix+pos;;
+			}
+			currentIndex = currentIndex+12;
+		}
+		return values
+	}
+	
+	
+	
+	
+	var populateIndexColumnPlate = function(prefix, startIndex, endIndex){
+		var currentIndex = startIndex;
+		
+		var values={};
+		var lines = ["A","B","C","D","E","F","G","H"];
+		
+		for(var i = 1 ; i <= 12; i++){
+			for(var j=0; j < lines.length; j++){
+				var line = lines[j];
+				
+				var computePrefix = null;
+				if(currentIndex < 10){
+					computePrefix = prefix+"00";
+				}else if(currentIndex < 100){
+					computePrefix = prefix+"0";
+				}else {
+					computePrefix = prefix;
+				}
+				values[line+i]=computePrefix+currentIndex;
+				currentIndex++;
+			}
+			
+		}
+		return values
+	}
+	
 	
 	var populateIndex6ColumnPlate = function(startIndex, endIndex){
 		var currentIndex = startIndex;
@@ -370,8 +429,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 				}else{
 					currentIndex++;
 				}
-			}
-			
+			}			
 		}
 		return values
 	}
@@ -379,11 +437,16 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 	$scope.indexPlates = [];
 	//12BA001-12BA096 ; 12BA097-12BA192 ; 12BA193-12BA288 ; 12BA289-12BA384
 	
-	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndex12LinePlate(1, 96)});
-	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndex12LinePlate(97, 192)});
-	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndex12LinePlate(193, 288)});
-	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndex12LinePlate(289, 384)});
+	$scope.indexPlates.push({label:"12BA001-12BA096", value:populateIndexLinePlate("12BA", 1, 96)});
+	$scope.indexPlates.push({label:"12BA097-12BA192", value:populateIndexLinePlate("12BA", 97, 192)});
+	$scope.indexPlates.push({label:"12BA193-12BA288", value:populateIndexLinePlate("12BA", 193, 288)});
+	$scope.indexPlates.push({label:"12BA289-12BA384", value:populateIndexLinePlate("12BA", 289, 384)});
 	$scope.indexPlates.push({label:"IND1-IND48", value:populateIndex6ColumnPlate(1, 48)});
+	
+	$scope.indexPlates.push({label:"FLD0001-FLD0096 (EPGV)", value:populateIndexColumnPlate("fld0", 1, 96)});
+	$scope.indexPlates.push({label:"FLD0097-FLD0192 (EPGV)", value:populateIndexColumnPlate("fld0", 97, 192)});
+	$scope.indexPlates.push({label:"FLD0193-FLD0288 (EPGV)", value:populateIndexColumnPlate("fld0", 193, 288)});
+	$scope.indexPlates.push({label:"FLD0289-FLD0384 (EPGV)", value:populateIndexColumnPlate("fld0", 289, 384)});
 	
 	$scope.updatePlateWithIndex = function(selectedPlateIndex){
 		console.log("choose : "+selectedPlateIndex);
