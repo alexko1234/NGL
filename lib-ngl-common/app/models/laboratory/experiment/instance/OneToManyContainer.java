@@ -33,7 +33,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 						String newSupportCode = CodeHelper.getInstance().generateContainerSupportCode();
 						ocu.locationOnContainerSupport.code = newSupportCode;
 						ocu.code = newSupportCode;
-					}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code ){
+					}else if(null != ocu.locationOnContainerSupport.code 
+							&& (null == ocu.code || !ocu.code.equals(ocu.locationOnContainerSupport.code))){
 						ocu.code = ocu.locationOnContainerSupport.code;
 					}
 				}
