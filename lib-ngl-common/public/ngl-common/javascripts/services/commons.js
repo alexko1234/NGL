@@ -1042,7 +1042,12 @@ angular.module('commonsServices', []).
       		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
       		    	//return $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
       		    	var obj = {};
-      		    	obj[optionsConfig.itemName]=item;
+  		    		
+      		    	if(optionsConfig.viewMapper.indexOf(optionsConfig.itemName) > -1){
+      		    		obj[optionsConfig.itemName]=item;
+      		    	}else{
+      		    		obj = item;
+      		    	}
       		    	return $parse(optionsConfig.viewMapper)(obj);  
       		      };
       		      
