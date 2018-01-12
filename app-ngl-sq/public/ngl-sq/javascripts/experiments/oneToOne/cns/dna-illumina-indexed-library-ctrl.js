@@ -236,11 +236,11 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		if( col.property === 'inputContainerUsed.experimentProperties.libraryInputQuantity.value'){
 			computeInputVolume(value.data);			
 		}
-		
+		*/
 		if(col.property === 'inputContainerUsed.experimentProperties.inputVolume.value' ){
 			computelibraryInputQuantity(value.data);				
 		}
-		*/
+		
 	}
 	
 
@@ -270,7 +270,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		
 	}
 	
-	/*
+	
 	var computelibraryInputQuantity = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.libraryInputQuantity.value");
 		var libraryInputQuantity = getter(udtData);
@@ -298,7 +298,7 @@ angular.module('home').controller('DNAIlluminaIndexedLibraryCtrl',['$scope', '$p
 		}
 		
 	}
-	
+	/*
 	var computeInputVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.inputVolume.value");
 		var inputVolume = getter(udtData);
