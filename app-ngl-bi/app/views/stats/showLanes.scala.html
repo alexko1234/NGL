@@ -23,14 +23,14 @@
 		<div ng-switch-when="true">
 			<div class="row">
 			<ul class="nav nav-tabs margin-bottom-5">
-			<li class="active"><a href="#" data-target="#chart" data-toggle="tab">@Messages("stats.tabs.charts")</a></li>
+			<li class="active"><a href="#" data-target="#chartData" data-toggle="tab">@Messages("stats.tabs.charts")</a></li>
 			<li ng-if="chartsLanesService.getExcludeData().length > 0"><a href="#" data-target="#exclude" data-toggle="tab">@Messages("stats.tabs.exclude")</a></li>
 			</ul>
 			
 			
 			
 			<div class="tab-content">
-				<div class="tab-pane active" id="chart">
+				<div class="tab-pane active" id="chartData">
 				<div class="row">
 					<div class="col-md-12 col-lg-12" ultimate-datatable="chartsLanesService.datatable()"></div>
 				</div>

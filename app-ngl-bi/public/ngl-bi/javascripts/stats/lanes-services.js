@@ -473,7 +473,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 				plotOptions: {
 			        scatter: {
 			            marker: {
-			                radius: 3,
+			                radius: 4,
 			                states: {
 			                    hover: {
 			                        enabled: true,
@@ -526,7 +526,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 		var allSeries = [];
 		for(var key of dataLane.keys()){
 			var data = dataLane.get(key);
-			allSeries.push({name:key,data:data.dataGroup,linkedTo:'main'});
+			allSeries.push({name:key,data:data.dataGroup});
 		}
 		var chart = getCommonChart();
 		chart.title = {text : statsConfigs.header+' Lane '+laneNumber,};
@@ -534,15 +534,18 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 				headerFormat: '<b>{series.name} </b><br>',
                 pointFormat: '{point.y} ({point._group})'
             };
-		chart.legend={
-		        labelFormatter: function() {
-		            return '<span style="color: '+this.color+'">'+ this.name + '</span>';
-		         
-		        }
-		        
-		    };
 		chart.series=allSeries;
-		
+		chart.legend={
+				layout: 'horizontal',
+		        align: 'center',
+		        verticalAlign: 'bottom',
+				symbolWidth:'0px',
+				symbolHeight:'0px',
+				labelFormatter: function () {
+					return '<span style="color:' + this.color + ';">' + this.name + '</span>';
+				},
+				itemWidth:100
+			};
 		return chart;
 	};
 	
@@ -573,7 +576,6 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 	var getChartMeanGroup = function(dataMean,propertyGroup) {
 		
 		var allSeries = [];
-		
 		for(var key of dataMean.keys()){
 			var data = dataMean.get(key);
 			allSeries.push({name:key,data:data.dataGroup});
@@ -586,10 +588,24 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
                 pointFormat: '{point.y} ({point._group})'
             };
 		chart.series=allSeries;
-		chart.legend={squareSymbol:true};
+		
+		
+		chart.legend={
+			layout: 'horizontal',
+	        align: 'center',
+	        verticalAlign: 'bottom',
+			symbolWidth:'0px',
+			symbolHeight:'0px',
+			labelFormatter: function () {
+				return '<span style="color:' + this.color + ';">' + this.name + '</span>';
+			},
+			itemWidth:100
+		};
 		
 		return chart;
 	};
+	
+	
 	
 	var initListService = function(){
 			lists.refresh.treatmentTypes({levels:'Lane'});
