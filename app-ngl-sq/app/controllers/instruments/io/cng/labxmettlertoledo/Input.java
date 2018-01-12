@@ -28,7 +28,7 @@ public class Input extends AbstractInput {
 	
    /* 25/10/2017 NGL-1326
     * Description du fichier à importer: fichier CSV ";"  delimité generé par le Logiciel LabX de Mettler Toledo 
-    * LabX fait lui meme des controles, donc certains cas ne doivent pas etre gérés ici: codes barres manquants ou mal formés...
+    * LabX fait lui même des controles, donc certains cas ne doivent pas etre gérés ici: codes barres manquants ou mal formés...
     * 
     * 22/11/2017 NGL-1710 modifications... 
     * le fichier Mettler V2 n'est pas pret. Repartir du fichier V1 ( 2 lignes LOT et RGT pour les boîtes et "réactifs" non pesés )
@@ -36,8 +36,10 @@ public class Input extends AbstractInput {
     * Structuration du code pour le rendre plus lisible et modulaire
     * Attention le flag "active" pour les reagents est toujours a true dans la base mongo, NE PAS L'UTILISER
     * 
-    * 09/01/2018 algo V3
-    *            ajout Exception et try/catch
+    * 09/01/2018 ajout Exception et try/catch
+    *            algo V3: n'ajouter les reactifs dans le has qu'une fois la boîte trouvee dans le fichier et pas dans new ExperimentCatalog
+    *            creation des reactifs (s'il sont uniques) même en abscence de la boîte parent dans le fichier
+    *            
     */
 	
 	private class CatalogException extends Exception {
@@ -47,7 +49,7 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {		
 		
-		//-1-------- Récupérer la liste des kits actifs / boîtes actives / reactifs actifs 
+		//-1-------- Récupérer la liste des kits actifs / boîtes actives 
 		//Logger.debug ("--GET CATALOGS INFO --");
 		
 		// currCatalog est le catalog pour le type d'experience en cours, otherCatalog est le catalogue pour l'autre experience egalement traitee dans le fichier
@@ -77,7 +79,7 @@ public class Input extends AbstractInput {
 		
 		
 		//-2-------- Parsing
-		Logger.debug ("------ START PARSING ------");
+		Logger.debug ("------ START PARSING METTLER FILE ------");
 		
 		byte[] ibuf = pfv.value;
 		InputStream is = new ByteArrayInputStream(ibuf);
@@ -135,19 +137,19 @@ public class Input extends AbstractInput {
 		}//end while
 		
 		reader.close();
-		//Logger.debug ("-- END PARSING --");
+		Logger.debug ("------ END PARSING METTLER FILE --------");
 			
 		//-3---------- creer les reagents used parsés
 		if ( ! contextValidation.hasErrors() ) {
 			//Logger.debug ("-- CREATION DES REAGENTS --");
 
 			// 30/11/2017 avec 2 map distincts on peut ne creer que les reagent et pas les box !!
-			// 01/12/2017 oui mais certaines boites particulieres doivent etre crees qd meme (la boite de la flow cell , et la boite du Manifold )
+			// 01/12/2017 oui mais certaines boîtes particulieres doivent etre crees qd même (la boîte de la flow cell , et la boîte du Manifold )
 			for (Map.Entry<String, ReagentUsed> pair : parsedBoxesMap.entrySet())
             {
 				//Logger.debug("parsedBOX... :"+ pair.getKey());
 				if ( (pair.getKey().equals("HiSeq X Flow Cell")) || (pair.getKey().equals("HiSeq 3000/4000 PE Flow Cell"))|| (pair.getKey().matches("(.*)Manifold(.*)")) ){
-					Logger.debug("creation boite: "+ pair.getKey());
+					Logger.debug("creation boîte seule: "+ pair.getKey());
 					experiment.reagents.add(pair.getValue());
 				}
             }
@@ -190,7 +192,7 @@ public class Input extends AbstractInput {
 		//Logger.debug (">>>fifthLineCorrect:" + cols[0]);
 		
 		// en 6eme ligne (n=5) il y actuellement le nom d'un kit "de Flow Cell" qui permet de vérifier que le fichier correspond au type d'expérience
-		//HARDCODED
+		//HARDCODED !!!
 		if ( cols[0].trim().equals("HiSeq X Flow Cell") || cols[0].trim().equals("HiSeq 3000/4000 PE Flow Cell")) {
 			// verifier le code flow cell
 			String flowcellId=cols[8].trim();
@@ -199,14 +201,14 @@ public class Input extends AbstractInput {
 			if ( experiment.typeCode.equals("prepa-fc-ordered") ) {	
 				// barcode FC dans propriete d'instrument (ou container out c'est pareil)
 				if ( !experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
-				    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.");
+				    contextValidation.addErrors("Erreurs fichier", "ligne 6: Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.");
 					return false;
 				}
 			} else {
 				// ("illumina-depot").equals.experiment.typeCode
 				// barcode FC dans container in inputContainerSupportcodes
 				if ( ! experiment.inputContainerSupportCodes.contains(flowcellId) )  {
-				    contextValidation.addErrors("Erreurs fichier", "ligne 6 : Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.");
+				    contextValidation.addErrors("Erreurs fichier", "ligne 6: Le code flowcell ("+flowcellId+") ne correspond pas à celui de l'expérience.");
 					return false;
 				}
 			}		               
@@ -214,12 +216,12 @@ public class Input extends AbstractInput {
 			return true;
 			
 		} else {	
-			contextValidation.addErrors("Erreurs fichier","ligne 6 :'"+ cols[0].trim() + "': type de fichier LabX non pris en charge.");
+			contextValidation.addErrors("Erreurs fichier","ligne 6:'"+ cols[0].trim() + "': type de fichier LabX non pris en charge.");
 			return false;
 		} 
 	}
 	
-	/* Traitement de la section qui comence en ligne 6: contient a la fois des boites et des reactifs
+	/* Traitement de la section qui comence en ligne 6: contient a la fois des boîtes et des reactifs
 	 * les reactifs de cette section n'on pas de poids entree, poids sortie et difference
 	 * la colonne 0 contient un label
 	 */
@@ -255,32 +257,32 @@ public class Input extends AbstractInput {
 
 		//29/11/2017 Julie estime qu'on ne doit pas trouver une boîte ou un reactif plusieurs fois dans le catalogue !!
 		
-		/* 09/01/2018 suppression unicité reagent dans tous le catalogue; ce qui compte c'est l'unicité dans les boites declarees pour l'experience...
+		/* 09/01/2018 suppression unicité reagent dans tous le catalogue; ce qui compte c'est l'unicité dans les boîtes declarees pour l'experience...
 		if ( matchListReagent.size() > 1 ) {
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +":'"+ fileItemName+ "': réactif trouvé plusieurs fois dans le catalogue.");
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +":'"+ fileItemName+ "': réactif trouvé plusieurs fois dans le catalogue.");
 			return ; 	
 		} */
 		
-		/* 09/01/2018 suppression unicité boite dans tous le catalogue, ce qui compte ce sont les boites des kits actifs=> traité au niveau new ExperimentCatalog
+		/* 09/01/2018 suppression unicité boîte dans tous le catalogue, ce qui compte ce sont les boîtes des kits actifs=> traité au niveau new ExperimentCatalog
 		if ( matchListBox.size() > 1 )  {
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +":'"+ fileItemName+ "': boîte trouvée plusieurs fois dans le catalogue.");
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +":'"+ fileItemName+ "': boîte trouvée plusieurs fois dans le catalogue.");
 			return ; 
 		}
 		*/	
 		
 		if (matchListReagent.size() == 0 && matchListBox.size() == 0 ) {
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +": '"+ fileItemName+ "': n'existe pas dans le catalogue (ni boîte, ni réactif).");
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ fileItemName+ "': n'existe pas dans le catalogue (ni boîte, ni réactif).");
 
 		} else if (matchListReagent.size() == 0 && matchListBox.size() > 0 ) {  // c'est une boîte; 
-			Logger.debug(fileItemName+ "=BOITE...");
+			//Logger.debug(fileItemName+ "=BOITE...");
 			createBoxtypeReagentUsed( n, fileItemName, fileItemCode, currCatalog, otherCatalog, parsedBoxesMap, contextValidation);
 	
 		} else if ( matchListBox.size() == 0 && matchListReagent.size() > 0 ) { // c'est un réactif
-			Logger.debug(fileItemName+ "=REACTIF...");
+			//Logger.debug(fileItemName+ "=REACTIF...");
 			createReagtypeReagentUsed( n, null, fileItemName, fileItemCode, currCatalog, otherCatalog, parsedReagentsMap, matchListReagent, contextValidation);
 		} else {
-			// boite ET reactif de meme nom
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +": '"+ fileItemName+ "': un réactif et une boite ont le meme nom.");
+			// boîte ET reactif de même nom
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ fileItemName+ "': un réactif et une boîte ont le même nom.");
 		}
 		
 		return ; 
@@ -297,21 +299,20 @@ public class Input extends AbstractInput {
 		String fileReagentName=cols[2].trim();
 		String fileReagentCode = cols[5].trim();
 
-		
 		//-1- chercher si existe dans TOUT le catalogue !!	
 		//Logger.debug ("ligne "+ n +" chercher :"+fileReagentName + " dans TOUT le catalogue");	
 		
 		// ici on peut ajouter le fitre type dans la requete (evite l'erreur: Class models.laboratory.reagent.description.BoxCatalog not subtype of [simple type, class models.laboratory.reagent.description.ReagentCatalog]
-		// s'il y a autre chose (kit ou boite) de meme nom !!!
+		// s'il y a autre chose (kit ou boîte) de même nom !!!
 		List<ReagentCatalog>  matchListReagent= MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").and(DBQuery.is("name", fileReagentName))).toList();
 
 		if (matchListReagent.size() == 0 ) {
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)+ ": '"+ fileReagentName+ "': ce réactif n'existe pas dans le catalogue.");
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ fileReagentName+ "': ce réactif n'existe pas dans le catalogue.");
 			return;
-		// 08/01/2018 suppression unicité dans le catalogue car on le rechche dans les boites trouvees
+		// 08/01/2018 suppression unicité dans le catalogue car on le rechche dans les boîtes trouvees
 		//} 
 		//else if ( testList.size() > 1 ) {
-		//	contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1)  +":'"+ fileReagentName+ "': réactif trouvé plusieurs fois dans le catalogue.");
+		//	contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +":'"+ fileReagentName+ "': réactif trouvé plusieurs fois dans le catalogue.");
 		//	return ;
 		} else {
 			//Logger.debug (fileReagentName + " existe...");
@@ -334,7 +335,7 @@ public class Input extends AbstractInput {
 		
 		// methodes
 		private void getCatalogInfoExperiment(String experimentTypeCode, Map<String,BoxCatalog> boxMap,Map<String,ReagentCatalog> reagentMap, Map<String,String> boxCodeMap ) throws CatalogException {
-			Logger.debug (" -- getCatalogInfoExperiment for "+experimentTypeCode+ "--");
+			//Logger.debug (" -- getCatalogInfoExperiment for "+experimentTypeCode+ "--");
 			
 			List<KitCatalog> kitList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, 
 					DBQuery.is("category", "Kit").and(DBQuery.is("active", true)).and(DBQuery.in("experimentTypeCodes", experimentTypeCode))).toList();
@@ -351,13 +352,13 @@ public class Input extends AbstractInput {
 							DBQuery.is("category", "Box").and(DBQuery.is("active", true)).and(DBQuery.is("kitCatalogCode", kit.code))).toList();
 					
 					for(BoxCatalog box:  kitBoxList){
-						Logger.debug (" boîte ACTIVE:'"+ box.name + "'("+box.code+")");
-						// 09/01/2018 verifier que la meme boîte n'existe pas deja dans un autre  kit actif !!!!
+						//Logger.debug (" boîte ACTIVE:'"+ box.name + "'("+box.code+")");
+						// 09/01/2018 verifier que la même boîte n'existe pas deja dans un autre  kit actif !!!!
 						if (boxMap.containsKey(box.name) ){
 							//Logger.debug ("BOITE EN DOUBLON :"+ box.name + " dans boxMap !!");
-							throw new CatalogException("Kit '"+ kit.name +"' :une boîte active de même nom '"+ box.name +"' existe déjà dans un autre kit actif pour ce type d'expérience");
+							throw new CatalogException("Kit '"+ kit.name +"': une boîte active de même nom '"+ box.name +"' existe déjà dans un autre kit actif pour ce type d'expérience.");
 						}	 
-						Logger.debug ("  ...ajoutee dans boxMap");
+						//Logger.debug ("  ...ajoutee dans boxMap");
 						boxMap.put(box.name, box);		
 					}
 			     }
@@ -366,11 +367,11 @@ public class Input extends AbstractInput {
 	} // fin private class ExperimentCatalog
 	
 	
-	// ajouter les reactifs d'une boite qui a ete validée
+	// ajouter les reactifs d'une boîte qui a ete trouvee dans le fichier
 	private static void updateExperimentCatalog (String boxCatalogCode, ExperimentCatalog currCatalog, ContextValidation contextValidation)  {
-		Logger.debug ("   update reagentMap de: "+ boxCatalogCode);
+		//Logger.debug ("   update reagentMap de la boîte : "+ boxCatalogCode);
 
-		//trouver la liste des reagent correspondant a box... les ajouter dans currCatalog.reagentMap
+		//trouver la liste des reagent ce la boîte les ajouter dans currCatalog.reagentMap
 		// !! le flag "active" des reactifs est toujours "true" inutile de l'utiliser !!!
 		List<ReagentCatalog>  boxReagentList = MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, 
         		 DBQuery.is("category", "Reagent").and(DBQuery.is("active", true)).and(DBQuery.is("boxCatalogCode", boxCatalogCode))).toList();
@@ -382,24 +383,24 @@ public class Input extends AbstractInput {
 				//Logger.debug ("   ....REACTIF ACTIF AJOUTE");
 				currCatalog.reagentMap.put(reagent.name, reagent);
 			} else {
-				// le meme reactif existe deja dans une autre boite active !!
+				// le même reactif existe deja dans une autre boîte active !!
 				//Logger.debug ("   ....REACTIF EN DOUBLON");
-				contextValidation.addErrors("Erreurs catalogue","le réactif '"+ reagent.name+ "' existe dans plusieurs boîtes actives pour ce type d'expérience");	
+				contextValidation.addErrors("Erreurs catalogue","le réactif '"+ reagent.name+ "' existe dans plusieurs boîtes actives pour ce type d'expérience.");	
 			}
 		}
 		return;
 	}
 	
 	
-	// creation d'un reagent Used de type boite
+	// creation d'un reagent Used de type boîte
 	private static void createBoxtypeReagentUsed (int n, String name, String code, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedBoxesMap , ContextValidation contextValidation) {
 	
 		//-1- chercher dans current boxMap
 		if ( currCatalog.boxMap.containsKey(name) ){	
-			//Logger.debug ("  TROUVEE DANS CURR BOX HASHMAP...");
+			//Logger.debug ("  boîte '"+name+" TROUVEE DANS CURR BOX HASHMAP...");
 
 			BoxCatalog currBc= currCatalog.boxMap.get(name); 
-			// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
+			// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boîte/reactif 
 			ReagentUsed ru=null;
 			if ( ! parsedBoxesMap.containsKey(name) ){
 				ru=new ReagentUsed();  
@@ -407,12 +408,12 @@ public class Input extends AbstractInput {
 				ru.boxCatalogCode=currBc.code; 
 				ru.boxCode=code+"_" ;  // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 			
-				// rafraichir la liste des reactifs succeptibles d'etre trouvés grace a cette nouvelle boite d'apres son code
-				Logger.debug("mise a jour des reactifs de la boite :"+ name + "("+ currBc.code + ")" );
+				// rafraichir la liste des reactifs succeptibles d'etre trouvés grace a cette nouvelle boîte d'apres son code
+				//Logger.debug("mise a jour des reactifs de la boîte :"+ name + "("+ currBc.code + ")" );
 				updateExperimentCatalog(currBc.code, currCatalog, contextValidation );
 			
 			} else {
-				Logger.debug ("boite deja connue; mise a jour du code de boite:"+ name + "("+ currBc.code + ")" );
+				//Logger.debug ("boîte deja connue; mise a jour du code de boîte:"+ name + "("+ currBc.code + ")" );
 				ru= parsedBoxesMap.get(name);
 				ru.boxCode=ru.boxCode+code+"_" ;
 			}
@@ -420,23 +421,23 @@ public class Input extends AbstractInput {
 			parsedBoxesMap.put(name, ru);
 		
 			//!! utiliser le boxCode mis a jour !! pour ses reagents plus tard...
-			//Logger.debug(" ajouter boite :'" +fileItemName+ "'("+ currBc.code+ ") dans currCatalog boxCodeMap");
+			//Logger.debug(" ajouter boîte :'" +name+ "'("+ currBc.code+ ") dans currCatalog boxCodeMap");
 			currCatalog.boxCodeMap.put(currBc.code,ru.boxCode);
 		
-				//DEBUG
-				//Logger.debug(">>BOX:kitCatalogCode="+ru.kitCatalogCode);
-				//Logger.debug(">>BOX:boxCatalogCode="+ru.boxCatalogCode);
-				//Logger.debug(">>BOX:boxCode="+ ru.boxCode); 
+			//DEBUG
+			//Logger.debug(">>BOX:kitCatalogCode="+ru.kitCatalogCode);
+			//Logger.debug(">>BOX:boxCatalogCode="+ru.boxCatalogCode);
+			//Logger.debug(">>BOX:boxCode="+ ru.boxCode); 
 		} 
 		//-2- chercher dans other BoxMap
 		else if ( otherCatalog.boxMap.containsKey(name) ){
-			//Logger.debug ("  TROUVEE DANS OTHER BOX HASHMAP...");
+			//Logger.debug ("  boîte '"+name+"' TROUVEE DANS OTHER BOX HASHMAP...");
 			// rien a faire, sera traité lors de l'autre import....
 		}
 		else
 		{
-			//  boite inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
-			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': boîte inactive ou dans un kit inactif ou non relié aux type d'expériences attendus");
+			//  boîte inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
+			contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': boîte inactive ou dans un kit inactif ou non relié aux type d'expériences attendus.");
 		}
 	
 	return ;
@@ -444,140 +445,137 @@ public class Input extends AbstractInput {
 	} // fin method
 	
 	
-	// creation d'un reagent Used de type reactif
-	// si on appelle depuis la section Boite cols est null
+	/* creation d'un reagent Used de type reactif
+	 * si on appelle depuis la section Boite cols est null
+	 */
 	private static void createReagtypeReagentUsed ( int n, String[] cols, String name, String code, ExperimentCatalog currCatalog, ExperimentCatalog otherCatalog, Map<String,ReagentUsed> parsedReagentsMap, List<ReagentCatalog> matchListReagent, ContextValidation contextValidation ) {
+		//Logger.debug ("createReagtypeReagentUsed "+ name);
 		
 		String position=null;
 		String fileInputReagentWeight =null;
 		String fileOutputReagentWeight =null;
 		String fileDiffReagentWeight =null;
-		String key=name;
+		String reagParsedKey=null;
+		
+		if ( null != cols ) {
+			// appel depuis la section Position	
+			fileInputReagentWeight = cols[6].trim();
+			fileOutputReagentWeight = cols[11].trim();
+			fileDiffReagentWeight = cols[15].trim();
+			position= cols[1].trim();
+			reagParsedKey=name+"/"+position; // le même reactif peut etre present a plusieurs positions !!
+		} else {
+			reagParsedKey=name;
+		}
 		
 		//-1- chercher dans current ReagentMap
 		if ( currCatalog.reagentMap.containsKey(name) ){	
-			Logger.debug ("  TROUVE DANS CURR REAGENT HASH...");
-				
-			if ( null != cols ) {
-				fileInputReagentWeight = cols[6].trim();
-				fileOutputReagentWeight = cols[11].trim();
-				fileDiffReagentWeight = cols[15].trim();
-				position= cols[1].trim();
-			}
+			//Logger.debug ("  reactif '"+name+"' TROUVE DANS CURR REAGENT HASH...");
 				
 			ReagentCatalog currRc= currCatalog.reagentMap.get(name);	
 		
-			// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
+			// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boîte/reactif
+			// pour les reactifs de la section boîtes....
 			ReagentUsed ru=null;
-			if (! parsedReagentsMap.containsKey(name) ){	
+			if (! parsedReagentsMap.containsKey(reagParsedKey) ){	
 				ru=new ReagentUsed();  
-				ru.kitCatalogCode=currRc.kitCatalogCode; 
-				ru.boxCatalogCode=currRc.boxCatalogCode; 
-				ru.reagentCatalogCode=currRc.code; 
-				ru.boxCode=currCatalog.boxCodeMap.get(currRc.boxCatalogCode); 
+				ru.kitCatalogCode=currRc.kitCatalogCode;  // code NGL du kit parent
+				ru.boxCatalogCode=currRc.boxCatalogCode;  // code NGL de la boîte parent
+				ru.reagentCatalogCode=currRc.code;        // code NGL du reactif
+				ru.boxCode=currCatalog.boxCodeMap.get(currRc.boxCatalogCode); // barcode de la boîte parent
 				ru.code=code+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 				
 				if ( null != cols ) {
 					// appel depuis la section position
-					// meme si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
+					// même si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
 					ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
-					
-					//la cle doit contenir la position "name" ne suffit pas
-					key=name+position;
 				}		
 			} else {
 					//Logger.debug ("mise a jour code de réactif");
-					ru= parsedReagentsMap.get(name);
+					ru= parsedReagentsMap.get(reagParsedKey);
 					ru.code=ru.code +code+"_" ;
 			}
 			
 			// ajouter/ecraser dans la map
-			parsedReagentsMap.put(key, ru);
+			parsedReagentsMap.put(reagParsedKey, ru);
 				
-				//DEBUG	
-				Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
-				Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
-				Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
-				Logger.debug(">>REAG:boxCode="+ru.boxCode); 
-				Logger.debug(">>REAG:code="+ ru.code); 
+			//DEBUG	
+			//Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
+			//Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
+			//Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
+			//Logger.debug(">>REAG:boxCode="+ru.boxCode); 
+			//Logger.debug(">>REAG:code="+ ru.code); 
 		}
 		//-2- chercher dans other ReagentMap	
 		else if ( otherCatalog.reagentMap.containsKey(name) ){
-			Logger.debug (" TROUVE DANS OTHER REAGENT HASHMAP..."); 
+			//Logger.debug (" reactif '"+name+"' TROUVE DANS OTHER REAGENT HASHMAP..."); 
 			// rien a faire, sera traité lors de l'autre import....
 		} 
 		else
 		{
-			Logger.debug (name+ ": NI DANS CURRENT HASHMAP NI DANS OTHER REAGENT HASHMAP..."); 
-			//    1- soit boite inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
-			// ou 2- la boite n'a pas ete trouvee dans le fichier donc updateExperimentCatalog n'a pas pu faire son travail
-			//   comment distinguer le cas 2 ???
+			//Logger.debug (name+ ": NI DANS CURRENT HASHMAP NI DANS OTHER REAGENT HASHMAP..."); 
+			//    1- soit boîte inactive soit dans kit inactif  soit pas relié aux 2 expériences impliquees...
+			// ou 2- la boîte n'a pas ete trouvee dans le fichier donc updateExperimentCatalog n'a pas pu faire son travail
 				
 			if (matchListReagent.size() == 1 ){
-				Logger.debug("1 seul reactif avec ce nom...");
-				// un seul reactif avec ce nom, trouver sa boite parent et verifier si elle est legitime=> dans currCatalog.boxMap 
+				//Logger.debug("1 seul reactif avec ce nom...");
+				// un seul reactif avec ce nom, trouver sa boîte parent et verifier si elle est legitime=> dans currCatalog.boxMap 
 				// si oui construire un reagentUsed...
 				
 				for(ReagentCatalog reagent:  matchListReagent) {	
-					Logger.debug("sa boite est :"+ reagent.boxCatalogCode);
+					//Logger.debug("sa boîte est :"+ reagent.boxCatalogCode);
 					boolean foundBoxMap=false;
 					// !!!! la cle est le nom est pas le code !!!
 					 for (Map.Entry<String, BoxCatalog> pair : currCatalog.boxMap.entrySet() ) {
-				         //Logger.debug((">>>>"+ pair.getKey()  +  pair.getValue().code);
-				                
-				          if  ( pair.getValue().code.equals( reagent.boxCatalogCode ) ) {
+				         //Logger.debug((">>>>"+ pair.getKey()  +  pair.getValue().code);          
+				         if  ( pair.getValue().code.equals( reagent.boxCatalogCode ) ) {
 				                foundBoxMap=true;
 				                break;
-				          }
+				         }
 				     }
-						 
+					 
+					 // construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boîte/reactif 
 					 if ( foundBoxMap ) {
-						Logger.debug("Boite "+ reagent.boxCatalogCode +" trouvee dans currCatalog.boxMap => creer le reagentUsed TODO");
+						//Logger.debug("boîte "+ reagent.boxCatalogCode +" trouvee dans currCatalog.boxMap => creer le reagentUsed");
 						
-						// EN COURS...
-						// construire un reagentUsed s'il n'est pas deja dans le hash, le completer sinon... necessaire en V1 car il y a 2 lignes par boite/reactif 
 						ReagentUsed ru=null;
-						if (! parsedReagentsMap.containsKey(name) ){	
+						if (! parsedReagentsMap.containsKey(reagParsedKey) ){	
 							ru=new ReagentUsed();  
 							ru.kitCatalogCode=reagent.kitCatalogCode;   // code NGL du kit parent
-							ru.boxCatalogCode=reagent.boxCatalogCode;   // code NGL de la boite parent
+							ru.boxCatalogCode=reagent.boxCatalogCode;   // code NGL de la boîte parent
 							ru.reagentCatalogCode=reagent.code;         // code NGL du reactif
-							ru.boxCode="XXXXXXX"  ;                          // barcode de la boite !! vide dans ce cas !!! mettre null
+							ru.boxCode=null  ;                          // barcode de la boîte parent => mettre null car n'est pas dans le fichier !!
 							ru.code=code+"_" ; // !!!! les codes doivent se terminer par "_" pour etre filtrables par la suite
 							
 							if ( null != cols ) {
 								// appel depuis la section position
-								// meme si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
-								ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;	
-								
-								//la cle doit contenir la position "name" ne suffit pas
-								key=name+position;
+								// même si a priori la recherche n'est pas possible actuellement sur le champs description, utiliser aussi "_" pour separer les items
+								ru.description=fileInputReagentWeight +"_"+ fileOutputReagentWeight +"_"+ fileDiffReagentWeight;		
 							}		
 						} else {
-								//Logger.debug ("mise a jour code de réactif");
-								ru= parsedReagentsMap.get(name);
-								ru.code=ru.code +code+"_" ;
+							//Logger.debug ("mise a jour code de réactif");
+							ru= parsedReagentsMap.get(reagParsedKey);
+							ru.code=ru.code +code+"_" ;
 						}
 						
 						// ajouter/ecraser dans la map
-						parsedReagentsMap.put(key, ru);
+						parsedReagentsMap.put(reagParsedKey, ru);
 							
-							//DEBUG	
-							//Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
-							//Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
-							//Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
-							//Logger.debug(">>REAG:boxCode="+ru.boxCode); 
-							//Logger.debug(">>REAG:code="+ ru.code); 
+						//DEBUG	
+						//Logger.debug(">>REAG:kitCatalogCode="+ru.kitCatalogCode);
+						//Logger.debug(">>REAG:boxCatalogCode="+ru.boxCatalogCode);
+						//Logger.debug(">>REAG:reagentCatalogCode="+ru.reagentCatalogCode);
+						//Logger.debug(">>REAG:boxCode="+ru.boxCode); 
+						//Logger.debug(">>REAG:code="+ ru.code); 
 					
-		
 					} else {
-						Logger.debug("Boite "+ reagent.boxCatalogCode +"pas trouvee dans currCatalog.boxMap");
-						contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "':  boîte du réactif inactive ou dans un kit inactif ou non relié aux types d'expériences attendus");
+						//Logger.debug("Boite "+ reagent.boxCatalogCode +"pas trouvee dans currCatalog.boxMap");
+						contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': boîte du réactif inactive ou dans un kit inactif ou non relié aux types d'expériences attendus.");
 					}
 				}	
 			} else {
-				Logger.debug("plusieurs reactifs avec ce nom...");
-				contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': plusieurs réactifs de meme nom et boite manquante dans le fichier");
+				//Logger.debug("plusieurs reactifs avec ce nom...");
+				contextValidation.addErrors("Erreurs fichier","ligne "+ (n+1) +": '"+ name+ "': plusieurs réactifs de même nom et boîte manquante dans le fichier.");
 			}
 		}
 		
