@@ -246,7 +246,7 @@ class Samples2 extends DocumentController<Sample> {
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.properties,Level.CODE.Sample, "properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(samplesSearch.experimentProperties,Level.CODE.Experiment, "processes.experiments.properties"));
 
-		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(samplesSearch.existingFields));
+		queryElts.addAll(NGLControllerHelper.generateExistsQueriesForFields(samplesSearch.existingFields));
 		
 		
 		if(queryElts.size() > 0){

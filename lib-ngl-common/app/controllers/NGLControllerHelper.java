@@ -116,7 +116,7 @@ public class NGLControllerHelper {
 		return queries;
 	}
 
-	public static Collection<? extends Query> generateQueriesForExistingProperties(Map<String, Boolean> existingFields) {
+	public static Collection<? extends Query> generateExistsQueriesForFields(Map<String, Boolean> existingFields) {
 		List<Query> queries = new ArrayList<Query>();
 		if (MapUtils.isNotEmpty(existingFields)) { //all
 			for(String field : existingFields.keySet()){
@@ -126,6 +126,55 @@ public class NGLControllerHelper {
 					queries.add(DBQuery.exists(field));
 				}
 			}		
+		}
+		return queries;
+	}
+	
+	public static Collection<? extends Query> generateQueriesForFields(Map<String, String> fieldsQueries) {
+		List<Query> queries = new ArrayList<Query>();
+		if (MapUtils.isNotEmpty(fieldsQueries)) {
+			try {
+				for(String keyValue : fieldsQueries.keySet()){
+					
+					String[] keys = keyValue.split("\\|",2);
+					if(keys.length != 2){
+						throw new RuntimeException("bad query fields configuration :"+keyValue);
+						
+					}
+					String fieldName = keys[0];
+					String operator = keys[1];
+					String value = fieldsQueries.get(keyValue);
+							
+					Query subQueries = DBQuery.empty();
+					
+					switch (operator) {
+					case "regex":
+						Pattern pattern = convertStringToPattern(value);
+						subQueries = DBQuery.regex(fieldName, pattern);
+						queries.add(subQueries);
+						break;
+					case "eq":
+						subQueries = DBQuery.is(fieldName, value);
+						break;
+					case "ne":
+						subQueries = DBQuery.notEquals(fieldName, value);
+						break;
+					case "exists":
+						if("TRUE".equals(value)){
+							subQueries = DBQuery.exists(fieldName);
+						}else if("FALSE".equals(value)){
+							subQueries = DBQuery.notExists(fieldName);
+						}	
+						break;
+					default:
+						throw new RuntimeException("operator not managed or not valid : "+operator);					
+					}				
+					queries.add(subQueries);
+								
+				}
+			} catch (DAOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		return queries;
 	}

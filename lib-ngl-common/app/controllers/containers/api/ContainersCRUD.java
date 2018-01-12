@@ -589,7 +589,8 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.properties,Level.CODE.Container, "properties"));
 
-		queryElts.addAll(NGLControllerHelper.generateQueriesForExistingProperties(containersSearch.existingFields));
+		queryElts.addAll(NGLControllerHelper.generateExistsQueriesForFields(containersSearch.existingFields));
+		queryElts.addAll(NGLControllerHelper.generateQueriesForFields(containersSearch.queryFields));
 		
 		
 		if(queryElts.size() > 0){
