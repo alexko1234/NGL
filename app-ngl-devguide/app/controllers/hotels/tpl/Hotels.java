@@ -2,31 +2,30 @@ package controllers.hotels.tpl;
 
 import controllers.CommonController;
 
-import play.Routes;
 import play.mvc.Result;
+import play.routing.JavaScriptReverseRouter;
 
 public class Hotels extends CommonController {
 	
-	public static Result home(String homecode){		
+	public Result home(String homecode){		
 		return ok(views.html.hotels.home.render(homecode));
 	}
 		
-	public static Result get(String code){
+	public Result get(String code){
 		return ok(views.html.hotels.home.render("search"));
 	}
 	
-	public static Result search(){		
+	public Result search(){		
 		return ok(views.html.hotels.search.render());
 	}
 		
-	public static Result details(){
+	public Result details(){
 		return ok(views.html.hotels.details.render());
 	}
 	
-	public static Result javascriptRoutes() {
-	    response().setContentType("text/javascript");
+	public Result javascriptRoutes() {
 	  	    return ok(  	    		
-	  	      Routes.javascriptRouter("jsRoutes",
+	  	    		JavaScriptReverseRouter.create("jsRoutes",
 	  	        // Routes
 	  	    		controllers.hotels.tpl.routes.javascript.Hotels.home(),
 	  	    		controllers.hotels.tpl.routes.javascript.Hotels.details(),
@@ -35,8 +34,7 @@ public class Hotels extends CommonController {
 	  	    		controllers.hotels.api.routes.javascript.Bedrooms.get(),
 	  	    		controllers.hotels.api.routes.javascript.Bedrooms.list(),
 	  	    		controllers.hotels.api.routes.javascript.Bedrooms.save(),
-	  	    		controllers.hotels.api.routes.javascript.Bedrooms.delete()
-	  	      )	  	      
-		    );
+	  	    		controllers.hotels.api.routes.javascript.Bedrooms.delete())
+	  	    		).as("text/javascript"); 	  
 	}
 }
