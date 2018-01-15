@@ -211,10 +211,10 @@
 									"order":true,
 									"position":80
 				    });
-					columns.push({	"property":"properties.isSentCCRT.value",
-									"header":Messages("readsets.properties.isSentCCRT"),
-									"type":"boolean",
-									"edit":true,
+					columns.push({	"property":"location",
+									"header":Messages("readsets.files.location"),
+									"type":"text",
+									"order":true,
 									"position":90
 					});
 					columns.push({	"property":"properties.isSentCollaborator.value",
