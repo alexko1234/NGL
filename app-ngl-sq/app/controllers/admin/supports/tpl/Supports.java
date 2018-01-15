@@ -7,23 +7,25 @@ import play.mvc.Result;
 import play.mvc.With;
 import views.html.admin.supports.*;
 import controllers.APICommonController;
-import controllers.CommonController;
+//import controllers.CommonController;
+import controllers.NGLBaseController;
 import controllers.history.UserHistory;
+import fr.cea.ig.play.NGLContext;
 
 import javax.inject.Inject;
 
 // TODO: cleanup and comment
 
-// public class Supports extends CommonController {
+// public class Supports extends -CommonController {
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public class Supports extends Controller {
+public class Supports extends NGLBaseController {
 
-	private final home home;
-	
+	private final home              home;
 	private final searchSwitchIndex searchSwitchIndex;
 	
 	@Inject
-	public Supports(home home, searchSwitchIndex searchSwitchIndex) {
+	public Supports(NGLContext ctx, home home, searchSwitchIndex searchSwitchIndex) {
+		super(ctx);
 		this.home              = home;
 		this.searchSwitchIndex = searchSwitchIndex;
 	}
@@ -43,6 +45,24 @@ public class Supports extends Controller {
 	}
 
 	public Result javascriptRoutes() {
+		return jsRoutes(controllers.projects.api.routes.javascript.Projects.list(),
+						controllers.samples.api.routes.javascript.Samples.list(),
+						controllers.containers.api.routes.javascript.Containers.list(),
+						controllers.containers.api.routes.javascript.ContainerSupports.list(),
+						controllers.experiments.api.routes.javascript.Experiments.list(),
+						controllers.commons.api.routes.javascript.States.list(),
+						controllers.readsets.api.routes.javascript.ReadSets.list(),
+						controllers.commons.api.routes.javascript.Users.list(),
+						controllers.commons.api.routes.javascript.Values.list(),
+						controllers.commons.api.routes.javascript.Parameters.list(),
+						controllers.commons.api.routes.javascript.PropertyDefinitions.list(),
+						controllers.admin.supports.tpl.routes.javascript.Supports.home(),
+						controllers.admin.supports.tpl.routes.javascript.Supports.search(),
+						controllers.admin.supports.api.routes.javascript.NGLObjects.list(),
+						controllers.admin.supports.api.routes.javascript.NGLObjects.update());
+	}
+	
+	/*public Result javascriptRoutes() {
 		//response().setContentType("text/javascript");
 		return ok(  	    		
 				JavaScriptReverseRouter.create("jsRoutes",
@@ -64,6 +84,6 @@ public class Supports extends Controller {
 						controllers.admin.supports.api.routes.javascript.NGLObjects.update()
 						)  	      
 				).as("text/javascript");
-	}
+	}*/
 	
 }

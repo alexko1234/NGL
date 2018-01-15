@@ -13,47 +13,96 @@ import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
 import views.html.container.*;
 
-import controllers.CommonController;
+// import controllers.CommonController;
 import javax.inject.Inject;
+
+import controllers.NGLBaseController;
+import fr.cea.ig.play.NGLContext;
 
 // TODO: clean, comment
 
-public class Containers extends CommonController {
+// public class Containers extends -CommonController {
+public class Containers extends NGLBaseController {
 
-	private final home home;
-	private final search search;
+	private final home        home;
+	private final search      search;
 	private final newFromFile newFromFile;
-	private final details details;
+	private final details     details;
 	
 	@Inject
-	public Containers(home home, search search, newFromFile newFromFile, details details) {
-		this.home = home;
-		this.search = search;
+	public Containers(NGLContext ctx, home home, search search, newFromFile newFromFile, details details) {
+		super(ctx);
+		this.home        = home;
+		this.search      = search;
 		this.newFromFile = newFromFile;
-		this.details = details;
+		this.details     = details;
 	}
 	
-    public /*static*/ Result home(String code){
+    public Result home(String code) {
         return ok(home.render(code));
     }
 
-    public /*static*/ Result search(){
+    public Result search() {
         return ok(search.render());
     }
 
-    public /*static*/ Result newFromFile(){
+    public Result newFromFile() {
         return ok(newFromFile.render());
     }
 
-    public /*static*/ Result get(String code){
+    public Result get(String code) {
         return ok(home.render("search"));
     }
 
-    public /*static*/ Result details() {
+    public Result details() {
         return ok(details.render());
     }
 
-    public /*static*/ Result javascriptRoutes() {
+    public Result javascriptRoutes() {
+        return jsRoutes(controllers.projects.api.routes.javascript.Projects.list(),
+                		controllers.containers.tpl.routes.javascript.Containers.get(),
+                		controllers.containers.tpl.routes.javascript.Containers.details(),
+                		controllers.containers.tpl.routes.javascript.ContainerSupports.get(),
+                		controllers.containers.tpl.routes.javascript.Containers.newFromFile(),
+                		controllers.printing.tpl.routes.javascript.Printing.home(),
+                		controllers.containers.api.routes.javascript.Containers.get(),
+                		controllers.containers.api.routes.javascript.Containers.update(),
+                		controllers.samples.api.routes.javascript.Samples.list(),
+                		controllers.containers.api.routes.javascript.Containers.list(),
+                		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
+                		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
+                		controllers.commons.api.routes.javascript.States.list(),
+                		controllers.commons.api.routes.javascript.PropertyDefinitions.list(),
+                		controllers.processes.api.routes.javascript.ProcessTypes.list(),
+                		controllers.processes.api.routes.javascript.ProcessCategories.list(),
+                		controllers.containers.api.routes.javascript.ContainerCategories.list(),
+                		controllers.containers.tpl.routes.javascript.Containers.search(),
+                		controllers.containers.tpl.routes.javascript.Containers.home(),
+                		controllers.containers.api.routes.javascript.ContainerSupports.list(),
+                		controllers.containers.api.routes.javascript.ContainerSupports.saveCode(),
+                		controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
+                		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
+                		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
+                		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),
+                		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
+                		controllers.commons.api.routes.javascript.Users.list(),
+                		controllers.commons.api.routes.javascript.PropertyDefinitions.list(),
+                		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
+                		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
+                		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+                		controllers.commons.api.routes.javascript.Values.list(),
+                		controllers.commons.api.routes.javascript.Parameters.list(),
+                		controllers.experiments.tpl.routes.javascript.Experiments.get(),
+                		controllers.receptions.api.routes.javascript.ReceptionConfigurations.list(),
+                		controllers.resolutions.api.routes.javascript.Resolutions.list(),
+                		controllers.receptions.io.routes.javascript.Receptions.importFile(),
+                		controllers.printing.api.routes.javascript.Tags.list(),
+                		controllers.printing.api.routes.javascript.Tags.print(),
+                		controllers.printing.tpl.routes.javascript.Printing.home(),
+                		controllers.commons.api.routes.javascript.Parameters.list());
+    }
+    
+    /*public Result javascriptRoutes() {
         response().setContentType("text/javascript");
         return ok(
           // Routes.javascriptRouter("jsRoutes",
@@ -102,5 +151,6 @@ public class Containers extends CommonController {
                 controllers.commons.api.routes.javascript.Parameters.list()
           )
         );
-    }
+    }*/
+    
 }

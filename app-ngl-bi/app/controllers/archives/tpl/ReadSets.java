@@ -1,14 +1,18 @@
 package controllers.archives.tpl;
 
 // import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+//import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
+
 import views.html.archives.home;
 import views.html.archives.search;
 
 import javax.inject.Inject;
 
 import controllers.CommonController;
+
+import fr.cea.ig.play.NGLContext;
+
 /**
  * Controller around archive readset object
  * @author galbini
@@ -18,8 +22,10 @@ public class ReadSets extends CommonController {
 
 	private final home home;
 	private final search search;
+	
 	@Inject
-	public ReadSets(home home, search search) {
+	public ReadSets(/*NGLContext ctx,*/ home home, search search) {
+		// super(ctx);
 		this.home   = home;
 		this.search = search;
 	}
@@ -37,6 +43,13 @@ public class ReadSets extends CommonController {
 	}
 
 	public Result javascriptRoutes() {
+		return jsRoutes(controllers.archives.tpl.routes.javascript.ReadSets.home(),  
+						controllers.archives.tpl.routes.javascript.ReadSets.get(),  
+						controllers.archives.api.routes.javascript.ReadSets.list());	  	      
+	}
+	
+	/*
+	public Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
 				//Routes.javascriptRouter("jsRoutes",
@@ -48,5 +61,5 @@ public class ReadSets extends CommonController {
 						)	  	      
 				);
 	}
-
+*/
 }

@@ -61,7 +61,7 @@ public class RulesServices
 		return knowledgeBase;
 	}
 	
-	/**
+	/*
 	 * Call rules and session management 
 	 * @param keyRules
 	 * @param ruleAnnotationName
@@ -84,7 +84,7 @@ public class RulesServices
 		
 	}
 	
-	/**
+	/*
 	 * Call rules
 	 * @param keyRules
 	 * @param ruleAnnotationName

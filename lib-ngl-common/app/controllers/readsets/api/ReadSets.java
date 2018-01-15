@@ -70,7 +70,7 @@ import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
-public class ReadSets extends ReadSetsController{
+public class ReadSets extends ReadSetsController {
 	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
 	
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
@@ -88,12 +88,13 @@ public class ReadSets extends ReadSetsController{
 
 	@Inject
 	public ReadSets(NGLContext ctx) {
-		readSetForm = ctx.form(ReadSet.class);
-		valuationForm = ctx.form(ReadSetValuation.class);
-		stateForm = ctx.form(State.class);
+		// super(ctx);
+		readSetForm      = ctx.form(ReadSet.class);
+		valuationForm    = ctx.form(ReadSetValuation.class);
+		stateForm        = ctx.form(State.class);
 		batchElementForm = ctx.form(ReadSetBatchElement.class);
-		updateForm = ctx.form(QueryFieldsForm.class);
-		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		updateForm       = ctx.form(QueryFieldsForm.class);
+		rulesActor       = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
 	
 	@Permission(value={"reading"})

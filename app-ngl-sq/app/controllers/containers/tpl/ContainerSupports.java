@@ -12,47 +12,76 @@ import views.html.containerSupports.search;
 
 import javax.inject.Inject;
 
-import controllers.CommonController;
+import controllers.NGLBaseController;
+import fr.cea.ig.play.NGLContext;
+
+// import controllers.CommonController;
 
 // TODO: cleanup and comment
 
-public class ContainerSupports extends CommonController{
+// public class ContainerSupports extends -CommonController{
+public class ContainerSupports extends NGLBaseController {
 	
-	private final home home;
-	private final details details;
+	private final home        home;
+	private final details     details;
 	private final homeScanner homeScanner;
 	
 	@Inject
-	public ContainerSupports(home home, details details, homeScanner homeScanner) {
-		this.home = home;
-		this.details = details;
+	public ContainerSupports(NGLContext ctx, home home, details details, homeScanner homeScanner) {
+		super(ctx);
+		this.home        = home;
+		this.details     = details;
 		this.homeScanner = homeScanner;
 	}
 	
-	public /*static*/ Result home(String code){		
+	public Result home(String code) {		
 		return ok(home.render(code));		
 	}
 	
-	public /*static*/ Result homeScanner(){		
+	public Result homeScanner() {		
 		return ok(homeScanner.render());		
 	}
 	
-	public /*static*/ Result search(){
+	public Result search() {
 		return ok(search.render());
 	}
 	
-	
-	
-	public /*static*/ Result get(String code){
+	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 	
-	public /*static*/ Result details() {
+	public Result details() {
 		return ok(details.render());
 	}
 	
+	public Result javascriptRoutes() {
+  	    return jsRoutes(controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
+  	    				controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
+  	    				controllers.printing.tpl.routes.javascript.Printing.home(),
+  	    				controllers.containers.tpl.routes.javascript.ContainerSupports.homeScanner(),
+  	    				controllers.containers.tpl.routes.javascript.ContainerSupports.details(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.list(),
+  	    				controllers.containers.tpl.routes.javascript.ContainerSupports.get(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.get(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.update(),        // 26/05/2016 NLG-825
+  	    				controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
+  	    				controllers.projects.api.routes.javascript.Projects.list(),
+  	    				controllers.samples.api.routes.javascript.Samples.list(),
+  	    				controllers.samples.api.routes.javascript.Samples.save(),
+  	    				controllers.containers.api.routes.javascript.Containers.list(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentTypes.list(),  	    		
+  	    				controllers.commons.api.routes.javascript.States.list(),
+  	    				controllers.processes.api.routes.javascript.ProcessTypes.list(),
+  	    				controllers.processes.api.routes.javascript.ProcessCategories.list(),
+  	    				controllers.containers.api.routes.javascript.ContainerCategories.list(),
+  	    				controllers.commons.api.routes.javascript.Users.list(),
+  	    				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+  	    				controllers.containers.tpl.routes.javascript.Containers.get());
+  	}
 	
-	public /*static*/ Result javascriptRoutes() {
+	/*
+	public Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
   	      //Routes.javascriptRouter("jsRoutes",
@@ -84,4 +113,6 @@ public class ContainerSupports extends CommonController{
   	      )	  	      
   	    );
   	}
+  	*/
+	
 }

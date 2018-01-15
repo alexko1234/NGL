@@ -36,7 +36,7 @@ public class NGLConfig {
 	 */
 	public static final String NGL_INSTITUTE_PATH = "institute"; 
 	
-	public static final String NGL_RULES_KEY = "rules.key";
+	public static final String NGL_RULES_PATH = "rules.key";
 	
 	public static final String NGL_BARCODE_PRINTING_KEY = "ngl.printing.cb";
 	
@@ -57,8 +57,10 @@ public class NGLConfig {
 
 	/**
 	 * NGL environment, typically DEV or PROD, see NGL_ENV_VALUES. 
-	 * @return
+	 * @return NGL environment, should be the application attribute 
 	 */
+	// TODO: use application attribute 
+	@Deprecated
 	public String nglEnv() {
 		return config.getCheckedString(NGL_ENV_PATH,NGL_ENV_VALUES);
 	}
@@ -76,7 +78,7 @@ public class NGLConfig {
 	}
 	
 	public String getRulesKey() {
-		return config.getString(NGL_RULES_KEY);
+		return config.getString(NGL_RULES_PATH);
 	}
 		
 	/**
@@ -113,5 +115,16 @@ public class NGLConfig {
 		return config.getStringList(path);
 	}
 	
+	public String getSQUrl() {
+		return config.getString("sq.url");
+	}
+	
+	public String getBIUrl() {
+		return config.getString("bi.url");
+	}
+	
+	public String getProjectUrl() {
+		return config.getString("project.url");
+	}
 	
 }

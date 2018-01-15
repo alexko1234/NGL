@@ -22,14 +22,16 @@ import play.data.Form;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Result;
 import play.mvc.Http.Context;
+import play.routing.JavaScriptReverseRouter;
 import play.mvc.With;
 import controllers.history.UserHistory;
 import fr.cea.ig.play.NGLContext;
 
 
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public abstract class APICommonController<T> extends Controller {
+public abstract class APICommonController<T> extends NGLBaseController {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(APICommonController.class);
 	
@@ -41,7 +43,7 @@ public abstract class APICommonController<T> extends Controller {
 	protected NGLContext ctx;
 	
 	public APICommonController(NGLContext ctx, Class<T> type) {
-		super();
+		super(ctx);
 		this.type = type;
 		this.ctx = ctx;
 		listForm = ctx.form();
@@ -117,7 +119,7 @@ public abstract class APICommonController<T> extends Controller {
 		return filledForm;
 	}
 	
-	/**
+	/*
 	 * Returns a form built from the query string.
 	 * @param clazz type of the form to build
 	 * @return      built form
@@ -174,15 +176,5 @@ public abstract class APICommonController<T> extends Controller {
 		return true;
 	}
 
-	protected String getCurrentUser(){
-		//return Context.current().request().username();
-		// return fr.cea.ig.authentication.Helper.username(Context.current().request());
-		// return fr.cea.ig.authentication.Helper.username(Context.current().session());
-		return ctx.currentUser();
-	}
-	
-	public JsonNode errorsAsJson(Map<String, List<ValidationError>> errors) {
-		return ctx.errorsAsJson(errors);
-	}
 	
 }

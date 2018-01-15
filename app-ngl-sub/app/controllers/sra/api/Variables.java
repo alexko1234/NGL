@@ -31,6 +31,7 @@ import play.mvc.Result;
 public class Variables extends CommonController{
 
 	final static Form<VariablesSearchForm> form = form(VariablesSearchForm.class);
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(Variables.class);
 	
 	public static Result list() {
@@ -74,7 +75,7 @@ public class Variables extends CommonController{
 		if (StringUtils.isNotBlank(form.code)) { 
 			queries.add(DBQuery.is("code", form.code));
 		}
-		if(queries.size() > 0){
+		if (queries.size() > 0) {
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
@@ -83,11 +84,11 @@ public class Variables extends CommonController{
 
 	private static Result list(VariablesSearchForm variableSearch) {
 		logger.debug("variableSearch type " + variableSearch.type);
-		if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategySample")){
+		if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategySample")) {
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategySample)));
-		} else if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategyStudy")){
+		} else if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategyStudy")) {
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategyStudy)));
-		}else{
+		} else {
 			Query query = getQuery(variableSearch);		
 
 			List<SraParameter> values = MongoDBDAO.find(InstanceConstants.SRA_PARAMETER_COLL_NAME, SraParameter.class, query).toList();

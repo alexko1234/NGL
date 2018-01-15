@@ -21,31 +21,36 @@ import play.api.modules.spring.Spring;
 import play.libs.Scala;
 import play.mvc.Result;
 import views.html.home;
-import controllers.CommonController;
+//import controllers.CommonController;
+import controllers.NGLBaseController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.ngl.Javascript.Codes;
 
-
-public class Main extends CommonController {
+// public class Main extends -CommonController {
+public class Main extends NGLBaseController {
 
 	private static final Logger.ALogger logger = Logger.of(Main.class);
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
-	private static JsMessages messages;
+	// private static JsMessages messages;
 	
 	private final home home;
 
 	@Inject
-	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
-		logger.debug("injecting " + jsMessagesFactory);
-		messages = jsMessagesFactory.all();
+	public Main(NGLContext ctx, /*jsmessages.JsMessagesFactory jsMessagesFactory,*/ home home) {
+		super(ctx);
+		// logger.debug("injecting " + jsMessagesFactory);
+		// messages = jsMessagesFactory.all();
 		this.home = home;
 		logger.info("injected");
 	}
 
-	public /*static*/ Result home() {
+	public Result home() {
 		return ok(home.render());
 	}
 
+	/*
 	public static Result jsCodes() {
 		return ok(generateCodeLabel()).as("application/javascript");
 	}
@@ -82,7 +87,28 @@ public class Main extends CommonController {
 		sb.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 		return sb.toString();
 	}
-
+*/
+	
+	public Result jsCodes() {
+		return new Codes()
+				.mapDotColon(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
+						     x -> x.tableName,       x -> x.code, x -> x.label)
+				.valuationCodes()
+				.mapDotColon(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
+						     x -> "kitCatalogs",     x -> x.code, x -> x.name)
+				.mapDotColon(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
+						     x -> "boxCatalogs",     x -> x.code, x -> x.name)
+				.mapDotColon(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
+						     x -> "reagentCatalogs", x -> x.code, x -> x.name)
+				.asCodeFunction();
+	}
+	
+	
+	public Result javascriptRoutes() {
+		return jsRoutes();
+	}
+	
+	/*
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
@@ -92,13 +118,13 @@ public class Main extends CommonController {
 						)
 				);
 	}
+*/
 
-
-	public static Result jsMessages() {
+	/*public static Result jsMessages() {
 		//return ok(messages.generate("Messages")).as("application/javascript");
 		//return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
 		return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
 
-	}
+	}*/
 
 }

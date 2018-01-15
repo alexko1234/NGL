@@ -7,11 +7,12 @@ import play.routing.JavaScriptReverseRouter;
 
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.DescriptionHelper;
-import play.Logger;
+// import play.Logger;
 import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
@@ -21,16 +22,21 @@ import views.html.experiments.home;
 import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
-import controllers.CommonController;
-import fr.cea.ig.play.IGGlobals;
+// import controllers.CommonController;
+import controllers.NGLBaseController;
+import static fr.cea.ig.ngl.FunCollections.first;
+// import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.reflect.Renderer;
+
 import javax.inject.Inject;
-import javax.inject.Singleton;
+// import javax.inject.Singleton;
 
 // TODO: cleanup, comment
 
 // @Singleton
-public class Experiments extends CommonController {
+// public class Experiments extends CommonController {
+public class Experiments extends NGLBaseController {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
@@ -54,42 +60,43 @@ public class Experiments extends CommonController {
 	*/
 	
 	@Inject
-	public Experiments(NGLContext tools, home home, details details, search search, searchContainers searchContainers) {
-		experimentForm = tools.form(Experiment.class);
-		this.home = home;
-		this.details = details;
-		this.search = search;
+	public Experiments(NGLContext ctx, home home, details details, search search, searchContainers searchContainers) {
+		super(ctx);
+		experimentForm        = ctx.form(Experiment.class);
+		this.home             = home;
+		this.details          = details;
+		this.search           = search;
 		this.searchContainers = searchContainers;
 		logger.debug("created injected instance " + this);
 	}
 	
-	public /*static*/ Result home(String code){
+	public Result home(String code) {
 		return ok(home.render(code));
 	}
 	
-	public /*static*/ Result get(String code){
+	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 	
-	public static Result _get(String code) { return ok(code); }
+	// public static Result _get(String code) { return ok(code); }
 	
-	public /*static*/ Result details(){
+	public Result details() {
 		return ok(details.render(getCurrentUser()));
 	}
 	
-	public /*static*/ Result search(String experimentType){
+	public Result search(String experimentType) {
 		return ok(search.render());
 	}
 	
-	public /*static*/ Result searchContainers(){
+	public Result searchContainers() {
 		return ok(searchContainers.render());
 	}
 	
-	public static Result listContainers(){
+	public Result listContainers() {
 		return ok(listContainers.render());
 	}
 	
-	public static Result graph(){
+	public Result graph() {
 		return ok(graph.render());
 	}
 	
@@ -102,15 +109,18 @@ public class Experiments extends CommonController {
 	 * then if the class doesn't exist it will search for views.html.experiments.@atomicType.default.@outputCategoryCode
 	 * if all classes doesn't exist, a badRequest result is returned with the message "not implemented"
 	 * */
-	public static Result getTemplate(String atomicType, String outputCategoryCode, String experimentCategoryCode, String experimentType){
+	/*
+	public Result getTemplate(String atomicType, String outputCategoryCode, String experimentCategoryCode, String experimentType){
 		
 		
-		if(ExperimentCategory.CODE.qualitycontrol.toString().equals(experimentCategoryCode)){
-			outputCategoryCode = outputCategoryCode+"_"+experimentCategoryCode;			
+		if (ExperimentCategory.CODE.qualitycontrol.toString().equals(experimentCategoryCode)) {
+			outputCategoryCode = outputCategoryCode + "_" + experimentCategoryCode;			
 		}
 		
 		String institute = DescriptionHelper.getInstitute().get(0);	
-		Logger.info(atomicType+" / "+outputCategoryCode+" / "+experimentType+" / "+institute);
+		// logger.info(atomicType+" / "+outputCategoryCode+" / "+experimentType+" / "+institute);
+		logger.info("{}/{}/{}/{}",atomicType,outputCategoryCode,experimentType,institute);
+		
 		Html result = getTemplateClass(atomicType, outputCategoryCode, experimentType, institute);
 		if(result == null){
 			result = getTemplateClass(atomicType, outputCategoryCode, experimentType, "common");
@@ -137,6 +147,39 @@ public class Experiments extends CommonController {
 		}
 		
 		return badRequest("Not implemented");
+	}*/
+
+	public Result getTemplate(final String atomicType, String outputCategoryCode, final String experimentCategoryCode, final String experimentType){
+		if (ExperimentCategory.CODE.qualitycontrol.toString().equals(experimentCategoryCode))
+			outputCategoryCode = outputCategoryCode + "_" + experimentCategoryCode; // + "_qualitycontrol" ? 	
+		final String institute = DescriptionHelper.getInstitute().get(0);
+		final String outputCategoryCode_ = outputCategoryCode;
+		logger.info("{}/{}/{}/{}",atomicType,outputCategoryCode,experimentType,institute);
+		return first(() -> render(atomicType, outputCategoryCode_, experimentType, institute ),
+				     () -> render(atomicType, outputCategoryCode_, experimentType, "common"  ),
+				     () -> render(atomicType, outputCategoryCode_, experimentType, "defaults"),
+				     () -> render(atomicType, outputCategoryCode_, null,           institute ),
+				     () -> render(atomicType, outputCategoryCode_, null,           "common"  ),
+				     () -> render(atomicType, outputCategoryCode_, null,           "defaults"))
+				.orElse(badRequest("Not implemented"));
+	}
+	
+	
+	private Optional<Result> render(String atomicType, String outputCategoryCode, String experimentType, String institute) {
+		String keyWord = null;
+		//We use the experimentType in priority
+		if (experimentType != null && !experimentType.equals("")) {
+			keyWord = experimentType.replaceAll("-", "");     //Scala template can't have a '-' in their name;
+		} else {
+			keyWord = outputCategoryCode.replaceAll("-", ""); //Scala template can't have a '-' in their name
+		}
+		String className = "views.html.experiments." + atomicType.toLowerCase() + "." + institute.toLowerCase() + "." + keyWord.toLowerCase();
+		logger.info("class name {}",className);
+		try {
+			return Optional.of(ok(Renderer.create(ctx.injector(), className).apply())); 
+		} catch(Exception e) {
+			return Optional.empty();
+		}		
 	}
 	
 	/*This method return the HTML if the class exist, or NULL if not
@@ -144,7 +187,8 @@ public class Experiments extends CommonController {
 	 * the template need to have an empty signature like @() because we call the method
 	 * without args
 	 * */
-	private static Html getTemplateClass(String atomicType, String outputCategoryCode, String experimentType, String institute){
+	/*
+	private Html getTemplateClass(String atomicType, String outputCategoryCode, String experimentType, String institute) {
 		
 		String keyWord = null;
 		//We use the experimentType in priority
@@ -154,7 +198,7 @@ public class Experiments extends CommonController {
 			keyWord = outputCategoryCode.replaceAll("-", "");//Scala template can't have a '-' in their name
 		}
 		
-		Logger.info("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());
+		logger.info("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());
 		
 		try{
 			Class<?> clazz = Class.forName("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());//package in java are always in lower case
@@ -165,7 +209,8 @@ public class Experiments extends CommonController {
 			try{
 				//TODO for template with @Inject need improvement
 				Class<?> clazz = Class.forName("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());//package in java are always in lower case
-				Object o = IGGlobals.injector().instanceOf(clazz);
+				// Object o = IGGlobals.injector().instanceOf(clazz);
+				Object o = ctx.injector().instanceOf(clazz);
 				Method m = clazz.getDeclaredMethod("render");
 				Html html = (Html)m.invoke(o);
 				return html;
@@ -174,9 +219,86 @@ public class Experiments extends CommonController {
 			}
 		}
 	}
+	*/
 	
-	
-	
+	public Result javascriptRoutes() {
+  	    return jsRoutes(controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.search(),
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.graph(),
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.listContainers(),
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.getTemplate(),
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.home(),  	    		
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.details(),
+  	    				controllers.experiments.tpl.routes.javascript.Experiments.get(),
+  	    				controllers.printing.tpl.routes.javascript.Printing.home(),
+
+  	    				controllers.instruments.api.routes.javascript.InstrumentUsedTypes.get(),
+  	    				controllers.experiments.api.routes.javascript.Experiments.list(),
+  	    				controllers.experiments.api.routes.javascript.Experiments.get(),
+  	    				controllers.experiments.api.routes.javascript.Experiments.save(),
+  	    				controllers.experiments.api.routes.javascript.Experiments.delete(),
+  	    				controllers.experiments.api.routes.javascript.Experiments.update(),
+  	    				controllers.experiments.api.routes.javascript.Experiments.updateState(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentComments.save(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentComments.update(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentComments.delete(),
+
+  	    				controllers.experiments.api.routes.javascript.ExperimentTypeNodes.get(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentReagents.list(),
+
+  	    				controllers.containers.api.routes.javascript.Containers.updateState(),
+  	    				controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.updateState(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
+
+  	    				controllers.processes.api.routes.javascript.Processes.updateState(),
+  	    				controllers.processes.api.routes.javascript.Processes.updateStateBatch(),
+
+  	    				controllers.instruments.io.routes.javascript.IO.generateFile(),
+  	    				controllers.instruments.io.routes.javascript.IO.importFile(),
+
+  	    				controllers.containers.api.routes.javascript.Containers.list(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupports.list(),
+  	    				controllers.containers.api.routes.javascript.Containers.get(),
+  	    				controllers.processes.api.routes.javascript.Processes.list(),
+  	    				controllers.processes.api.routes.javascript.ProcessTypes.list(),
+  	    				controllers.processes.api.routes.javascript.ProcessTypes.get(),
+  	    				controllers.processes.api.routes.javascript.ProcessCategories.list(),
+  	    				controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentTypes.get(),  	    		
+  	    				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
+  	    				controllers.instruments.api.routes.javascript.Instruments.list(),
+  	    				controllers.instruments.api.routes.javascript.InstrumentUsedTypes.list(),
+  	    				controllers.instruments.api.routes.javascript.InstrumentCategories.list(),
+  	    				controllers.protocols.api.routes.javascript.Protocols.list(),
+  	    				//instruments.io.routes.javascript.Outputs.generateFile(),
+  	    				//instruments.io.routes.javascript.Inputs.importFile(),
+  	    				controllers.resolutions.api.routes.javascript.Resolutions.list(),
+  	    				controllers.commons.api.routes.javascript.States.list(),
+  	    				controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
+  	    				controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
+  	    				controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
+  	    				controllers.reagents.api.routes.javascript.KitCatalogs.list(),
+  	    				controllers.reagents.api.routes.javascript.BoxCatalogs.list(),
+  	    				controllers.reagents.api.routes.javascript.ReagentCatalogs.list(),
+  	    				controllers.reagents.api.routes.javascript.Kits.list(),
+  	    				controllers.reagents.api.routes.javascript.Boxes.list(),
+  	    				controllers.reagents.api.routes.javascript.Reagents.list(),
+  	    				controllers.commons.api.routes.javascript.Values.list(),
+  	    				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+  	    				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
+  	    				controllers.projects.api.routes.javascript.Projects.list(),
+  	    				controllers.samples.api.routes.javascript.Samples.list(),
+  	    				controllers.commons.api.routes.javascript.Users.list(),  	    
+  	    				controllers.commons.api.routes.javascript.Parameters.list(),
+  	    				controllers.valuation.api.routes.javascript.ValuationCriterias.get(),
+  	    				controllers.valuation.api.routes.javascript.ValuationCriterias.list(),
+  	    				controllers.runs.api.routes.javascript.Runs.list());
+  	}
+
+	/*
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
@@ -260,4 +382,6 @@ public class Experiments extends CommonController {
   	      )	  	      
   	    );
   	}
+  	*/
+	
 }

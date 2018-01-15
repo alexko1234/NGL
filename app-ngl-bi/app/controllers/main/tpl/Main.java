@@ -1,6 +1,5 @@
 package controllers.main.tpl;
 
-
 import java.util.List;
 
 import javax.inject.Inject;

@@ -1,28 +1,32 @@
 package controllers.reagents.tpl;
 
+import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.declarations.home;
 import views.html.declarations.boxesSearch;
 
 import javax.inject.Inject;
 
-import controllers.CommonController;
+// import controllers.CommonController;
 
-public class Boxes  extends CommonController {
+
+// public class Boxes  extends -CommonController {
+public class Boxes extends Controller {
 	
-	private final home home;
+	private final home        home;
 	private final boxesSearch boxesSearch;
+	
 	@Inject
 	public Boxes(home home, boxesSearch boxesSearch) {
-		this.home = home;
+		this.home        = home;
 		this.boxesSearch = boxesSearch;
 	}
 	
-	public Result home(String code){
+	public Result home(String code) {
 		return ok(home.render(code+".boxes"));
 	}
 	
-	public Result search(){
+	public Result search() {
 		return ok(boxesSearch.render());
 	}
 	

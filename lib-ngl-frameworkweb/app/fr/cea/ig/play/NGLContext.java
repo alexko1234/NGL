@@ -16,6 +16,7 @@ import akka.actor.ActorRefFactory;
 import akka.actor.ActorSystem;
 import play.i18n.Lang;
 import play.i18n.MessagesApi;
+import play.inject.Injector;
 import play.libs.Json;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
@@ -27,6 +28,8 @@ import play.data.Form;
 
 import fr.cea.ig.play.NGLConfig;
 // import io.jsonwebtoken.lang.Collections;
+import jsmessages.JsMessages;
+import jsmessages.JsMessagesFactory;
 
 // TODO: clean, comment
 
@@ -67,6 +70,13 @@ public class NGLContext {
 	 */
 	private final ActorSystem actor;
 	
+	/**
+	 * Injector.
+	 */
+	private final Injector injector;
+	
+	private final JsMessagesFactory jsMessagesFactory;
+	
 	/*
 	// TODO: remove static NGL context access 
 	private static NGLContext nglContext;
@@ -79,14 +89,18 @@ public class NGLContext {
     */
 	
 	@Inject
-	public NGLContext(NGLConfig   config,
+	public NGLContext(Injector injector,
+					  NGLConfig   config,
 					  MessagesApi messagesApi,
 			          FormFactory formFactory,
-			          ActorSystem actor) {
-		this.config   = config;
+			          ActorSystem actor,
+			          JsMessagesFactory jsMessagesFactory) {
+		this.injector    = injector;
+		this.config      = config;
 		this.messagesApi = messagesApi;
 		this.formFactory = formFactory;
-		this.actor = actor;
+		this.actor       = actor;
+		this.jsMessagesFactory = jsMessagesFactory;
 	}
 		
 	public NGLConfig config() { 
@@ -98,6 +112,8 @@ public class NGLContext {
 		// return play.api.i18n.Messages.get(key);
 		// return "Messages(" + key + ")";
 	}
+	
+	
 	
 	/**
 	 * Pretty poor shortcut that is used in application name displays in the
@@ -114,12 +130,8 @@ public class NGLContext {
 	
 	// TODO: define as static as this relies on statics
 	public String currentUser() {
-		// WTF ?
-		// fr.cea.ig.authentication.Helper.unsetUsername(play.mvc.Http.Context.current().session());
-		// return fr.cea.ig.authentication.Helper.username(play.mvc.Http.Context.current().session());
-		// return "bob l'eponge";
-		// return Authentication.getUser();
-		return fr.cea.ig.authentication.Authentication.getUser(play.mvc.Http.Context.current().session());
+		// return fr.cea.ig.authentication.Authentication.getUser(play.mvc.Http.Context.current().session());
+		return fr.cea.ig.authentication.Authentication.getUser();
 	}
 
 	public Lang currentLang() {
@@ -164,8 +176,19 @@ public class NGLContext {
 		return RulesServices6.getInstance().callRulesWithGettingFacts(getRulesKey(), ruleAnnotationName, facts);
 	}
 	
+	// TODO
+	// public ActorRef rules6Actor() {}
+	
 	public ActorSystem akkaSystem() {
 		return this.actor;
+	}
+	
+	public Injector injector() {
+		return injector;
+	}
+	
+	public JsMessages jsMessages() {
+		return jsMessagesFactory.all();
 	}
 	
 	// ---------------------------------------------------------------------------------------
@@ -173,6 +196,8 @@ public class NGLContext {
 	
 	/**
 	 * Returns form errors serialized as JSON.
+	 * @param errors errors to format
+	 * @return       JSON formatted errors
 	 */
 	public JsonNode errorsAsJson(Map<String, List<ValidationError>> errors) {
 		// return errorsAsJson(play.mvc.Http.Context.current() != null ? play.mvc.Http.Context.current().lang() : null, errors);

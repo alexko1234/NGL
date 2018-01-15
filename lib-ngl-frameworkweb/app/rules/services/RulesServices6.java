@@ -56,7 +56,7 @@ public class RulesServices6 {
 		logger.debug("singleton initialized");
 	}
 	
-	/** Point d'accès pour l'instance unique du singleton */
+	/* Point d'accès pour l'instance unique du singleton */
 	public static RulesServices6 getInstance() {
 		if (SingletonHolder.instance == null)
 			throw new RuntimeException("RulesServices6 not intiailized, call initSingleton");

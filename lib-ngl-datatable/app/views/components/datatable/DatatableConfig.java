@@ -57,11 +57,11 @@ public class DatatableConfig {
 		this.button = (this.edit.booleanValue() || this.hidding.booleanValue() || this.show.booleanValue() || this.remove.booleanValue())?Boolean.TRUE:Boolean.FALSE;
 	}	
 	
-	public JsonNode toJson(){
+	public JsonNode toJson() {
 		return Json.toJson(columnList);		
 	}
 	
-	public JsonNode allConfigtoJson(){
+	public JsonNode allConfigtoJson() {
 		return Json.toJson(this);		
 	}
 }

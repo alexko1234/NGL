@@ -44,7 +44,8 @@ object ApplicationBuild extends Build {
 	// Command line definition that allows the compilation 
 	// of a linked authentication library instead of the published one.
 	// It is enabled using sbt command line option -Dembedded.auth=true .
-	val embeddedAuth = System.getProperty("embedded.auth") == "true"
+	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
+	val eclipseLinking = System.getProperty("eclipse.linking") == "true"
 	
 	// Disable paralell test execution (hoped to fixed test failure but didn't work)
 	// parallelExecution in Global := false
@@ -58,7 +59,11 @@ object ApplicationBuild extends Build {
   // in some configuration instead of being hardcoded.
   // val distSuffix             = "-SNAPSHOT"
   val distSuffix             = "-SNAPSHOT"
-  val appVersion             = "2.0.0"    + distSuffix
+  //val appVersion             = "2.0.0"    + distSuffix
+  
+  val buildOrganization      = "fr.cea.ig"
+	val buildVersion           = "2.1"    + distSuffix
+	val nglVersion             = "2.0"    + distSuffix
 	
 	val sqVersion              = "2.1.0" + distSuffix
 	val biVersion              = "2.2.0" + distSuffix
@@ -69,9 +74,14 @@ object ApplicationBuild extends Build {
 	val subVersion             = "2.2.0"  + distSuffix
 	
 	val dataVersion            = "2.0.1"  + distSuffix
+	val nglAssetsVersion       = "2.0"    + distSuffix
+	val nglDataVersion         = "2.0"    + distSuffix
+	val nglPlatesVersion       = "2.0"    + distSuffix
+	val nglDevGuideVersion     = "2.0"    + distSuffix
 	
 	val libDatatableVersion    = "2.0.0"    + distSuffix
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
+	val nglCommonVersion       = "2.1"    + distSuffix
 
 	// IG libraries
   // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
@@ -86,6 +96,15 @@ object ApplicationBuild extends Build {
   val fest        = "org.easytesting"      % "fest-assert"        % "1.4" % "test"
   val jtds        = "net.sourceforge.jtds" % "jtds"               % "1.3.1"
 
+  // This does not work
+  val eclipseLinkingSettings =
+    /*if (eclipseLinking) 
+      Seq(EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources),	
+          EclipseKeys.preTasks  := Seq(compile in Compile),
+          EclipseKeys.skipParents in ThisBuild := false) 
+    else*/ 
+      Seq()
+          
 	override def settings = super.settings ++ Seq(
 		EclipseKeys.skipParents in ThisBuild := false,
     // Compile the project before generating Eclipse files,
@@ -95,12 +114,10 @@ object ApplicationBuild extends Build {
     EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
     // Use .class files instead of generated .scala files for views and routes
     // EclipseKeys.createSrc := EclipseCreateSrc.ValueSet(EclipseCreateSrc.ManagedClasses, EclipseCreateSrc.ManagedResources)	
-  )
+  ) ++ eclipseLinkingSettings
 
 	object BuildSettings {
 
-		val buildOrganization = "fr.cea.ig"
-		val buildVersion      = appVersion
 
 		// Probably poor scala style
     val tev0 = if (System.getProperty("ngl.test.conf.dir") != null)
@@ -262,7 +279,8 @@ object ApplicationBuild extends Build {
 	  val nglPlayMigrationDependencies = Seq(
 	    ceaMongo,
 	    ehcache,
-	    ws
+	    ws,
+	    jsMessages
     )
     
     val springVersion    = "4.1.6.RELEASE"
@@ -356,7 +374,8 @@ object ApplicationBuild extends Build {
   ).dependsOn(ngldatatable,authentication)
   
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    version                    := appVersion,
+    // version                    := appVersion,
+    version                    := nglCommonVersion,
     libraryDependencies       ++= nglcommonDependencies,
     resolvers                  := nexus,
     resolvers                  += "julienrf.github.com" at "http://julienrf.github.com/repo/",
@@ -383,7 +402,7 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val ngldata = Project(appName + "-data", file("app-ngl-data"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    version                    := appVersion,
+    version                    := nglDataVersion,
     libraryDependencies       ++= ngldataDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
@@ -414,7 +433,7 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := appVersion,		
+		version                    := nglAssetsVersion,
 		libraryDependencies        += guice,
 		resolvers                  := nexus,
 		publishArtifact in makePom := false,
@@ -422,7 +441,7 @@ object ApplicationBuild extends Build {
   )
    
   val nglplates = Project(appName + "-plates", file("app-ngl-plaques"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-    version                    := appVersion,
+    version                    := nglPlatesVersion,
 		libraryDependencies       ++= nglplaquesDependencies,	
     resolvers                  := nexus,
     publishArtifact in makePom := false,
@@ -430,7 +449,7 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val ngldevguide = Project(appName + "-devguide", file("app-ngl-devguide"),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(      
-    version                    := appVersion,
+    version                    := nglDevGuideVersion,
 		libraryDependencies       ++= ngldevguideDependencies,
     resolvers                  := nexus,
     publishArtifact in makePom := false,
@@ -454,7 +473,7 @@ object ApplicationBuild extends Build {
   ).dependsOn(nglcommon % "test->test;compile->compile", nglTesting % "test->test")
 
   val main = Project(appName, file("."),settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
-		version                    := appVersion,			  
+		version                    := nglVersion,			  
     resolvers                  := nexus,
     publishArtifact in makePom := false,
     publishTo                  := Some(nexusigpublish)
