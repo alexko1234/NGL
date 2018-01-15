@@ -164,7 +164,6 @@ public class Experiments extends NGLBaseController {
 				.orElse(badRequest("Not implemented"));
 	}
 	
-	
 	private Optional<Result> render(String atomicType, String outputCategoryCode, String experimentType, String institute) {
 		String keyWord = null;
 		//We use the experimentType in priority

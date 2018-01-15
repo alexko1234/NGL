@@ -17,6 +17,7 @@ import Keys._
 
 import com.typesafe.sbteclipse.core.EclipsePlugin.EclipseKeys
 import com.typesafe.sbteclipse.core.EclipsePlugin._
+// import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys._
 
 import play.sbt.routes.RoutesKeys.routesGenerator
 import play.routes.compiler.StaticRoutesGenerator
@@ -73,11 +74,12 @@ object ApplicationBuild extends Build {
 
 	val subVersion             = "2.2.0"  + distSuffix
 	
-	val dataVersion            = "2.0.1"  + distSuffix
-	val nglAssetsVersion       = "2.0"    + distSuffix
-	val nglDataVersion         = "2.0"    + distSuffix
-	val nglPlatesVersion       = "2.0"    + distSuffix
-	val nglDevGuideVersion     = "2.0"    + distSuffix
+	
+	// val dataVersion            = "2.0.0"  + distSuffix
+	val nglAssetsVersion       = "2.0.0"  + distSuffix
+	val nglDataVersion         = "2.0.1"  + distSuffix
+	val nglPlatesVersion       = "2.0.0"  + distSuffix
+	val nglDevGuideVersion     = "2.0.0"  + distSuffix
 	
 	val libDatatableVersion    = "2.0.0"    + distSuffix
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
@@ -267,7 +269,7 @@ object ApplicationBuild extends Build {
 	    javaCore, 
 	    javaJdbc,
 	    "org.apache.commons" % "commons-csv" % "1.5",
-	    "xerces" % "xercesImpl" % "2.8.0"
+	    "xerces"             % "xercesImpl"  % "2.8.0"
   	)
 
 	  val nglprojectsDependencies = Seq(

@@ -12,6 +12,13 @@ public class Javascript {
 
 	// Build a javascript  map from codes to names
 	// replaces : jsCodes() & generateCodeLabel() of some controllers
+	
+	/**
+	 * Key value entries where the key is dotted.
+	 * 
+	 * @author vrd
+	 *
+	 */
 	public static class Codes {
 		
 		private boolean first;
@@ -19,11 +26,18 @@ public class Javascript {
 		private StringBuilder sb;
 		
 		public Codes() {
-			sb = new StringBuilder();
+			sb    = new StringBuilder();
 			first = true;
 		}
 		
-		public Codes dotColon(String key, String name, String value) {
+		/**
+		 * Add a key and value pair. 
+		 * @param key   key
+		 * @param name  attribute name
+		 * @param value value
+		 * @return      this to chain calls
+		 */
+		public Codes add(String key, String name, String value) {
 			optComma();
 			sb	.append('"')
 				.append(key)
@@ -34,39 +48,62 @@ public class Javascript {
 				.append('"');
 			return this;
 		}
-		
-		public <S,T> Codes flatMapDotColon(Collection<S> c, Function<S,Collection<T>> flat, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
+
+		/**
+		 * Add a collection using function to extract the needed (key,name,value) from the
+		 * collection elements.
+		 * @param c     collection to add
+		 * @param key   element to key function
+		 * @param name  element to name function
+		 * @param value element to value function
+		 * @return      this to chain calls
+		 */
+		public <T> Codes add(Collection<T> c, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
+			for (T t : c) 
+				add(key.apply(t),name.apply(t),value.apply(t));
+			return this;
+		}
+
+		/**
+		 * Add a collection of collection holders.
+		 * @param c     collection of collection holders
+		 * @param flat  collection holder to collection function
+		 * @param key   element to key function
+		 * @param name  element to name function
+		 * @param value element to value function
+		 * @return      this to chain calls
+		 */
+		public <S,T> Codes add(Collection<S> c, Function<S,Collection<T>> flat, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
 			for (S s : c)
 				for (T t : flat.apply(s)) 
-					dotColon(key.apply(t),name.apply(t),value.apply(t));
+					add(key.apply(t),name.apply(t),value.apply(t));
 			return this;
 		}
 
-		public <T> Codes mapDotColon(Collection<T> c, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
-			for (T t : c) 
-				dotColon(key.apply(t),name.apply(t),value.apply(t));
-			return this;
-		}
-		
-		private void optComma() {
-			if (first)
-				first = false;
-			else
-				sb.append(',');
-		}
-		
+		/**
+		 * Add valuation codes.
+		 * @return this to chain calls.
+		 */
 		public Codes valuationCodes() {
-			return dotColon("valuation", "TRUE",  "Oui")
-				  .dotColon("valuation", "FALSE", "Non")
-				  .dotColon("valuation", "UNSET", "---");
+			return add("valuation", "TRUE",  "Oui")
+				  .add("valuation", "FALSE", "Non")
+				  .add("valuation", "UNSET", "---");
 		}
 		
+		/**
+		 * Add status codes.
+		 * @return this to chain calls
+		 */
 		public Codes statusCodes() {
-			return dotColon("status",    "TRUE",  "OK" )
-				  .dotColon("status",    "FALSE", "KO" )
-				  .dotColon("status",    "UNSET", "---");
+			return add("status",    "TRUE",  "OK" )
+				  .add("status",    "FALSE", "KO" )
+				  .add("status",    "UNSET", "---");
 		}
 
+		/**
+		 * Return the built collection as a javascript Codes function.
+		 * @return javascript Codes function
+		 */
 		public Result asCodeFunction() {
 			StringBuilder r = 
 					new StringBuilder()
@@ -74,6 +111,13 @@ public class Javascript {
 						.append(sb)
 						.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 			return ok(r.toString()).as("application/javascript");
+		}
+		
+		private void optComma() {
+			if (first)
+				first = false;
+			else
+				sb.append(',');
 		}
 		
 	}

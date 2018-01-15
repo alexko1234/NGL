@@ -9,6 +9,7 @@ import views.html.submissions.consultation;
 import views.html.submissions.create;
 import views.html.submissions.details;
 import views.html.submissions.home;
+import views.html.submissions.validation;
 
 import javax.inject.Inject;
 
@@ -21,22 +22,22 @@ import fr.cea.ig.play.NGLContext;
 //public class Submissions extends -CommonController {
 public class Submissions extends NGLBaseController {
 	
-	private final home home;
-	private final create create;
-	private final details details;
-	private final activate activate;
+	private final home         home;
+	private final create       create;
+	private final details      details;
+	private final activate     activate;
 	private final consultation consultation;
-	private final validation validation;
-	
+	private final validation   validation;
 	
 	@Inject
-	public Submissions(NGLContext ctx, home home, create create, details details, activate activate, consultation consultation) {
+	public Submissions(NGLContext ctx, home home, create create, details details, activate activate, consultation consultation, validation validation) {
 		super(ctx);
 		this.home         = home;
 		this.create       = create;
 		this.details      = details;
 		this.activate     = activate;
 		this.consultation = consultation;	
+		this.validation = validation;	
 	}
 	
 	public Result home(String homecode) {
@@ -63,6 +64,10 @@ public class Submissions extends NGLBaseController {
 		return ok(consultation.render());
 	}
 
+	public Result validation()	{
+		return ok(validation.render());
+	}
+	
 	public Result javascriptRoutes() {
 		return jsRoutes(controllers.sra.submissions.tpl.routes.javascript.Submissions.home(),
 						controllers.projects.api.routes.javascript.Projects.list(),

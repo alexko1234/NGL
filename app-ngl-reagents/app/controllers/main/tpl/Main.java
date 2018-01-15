@@ -91,14 +91,14 @@ public class Main extends NGLBaseController {
 	
 	public Result jsCodes() {
 		return new Codes()
-				.mapDotColon(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
+				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
 						     x -> x.tableName,       x -> x.code, x -> x.label)
 				.valuationCodes()
-				.mapDotColon(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
+				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
 						     x -> "kitCatalogs",     x -> x.code, x -> x.name)
-				.mapDotColon(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
+				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
 						     x -> "boxCatalogs",     x -> x.code, x -> x.name)
-				.mapDotColon(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
+				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
 						     x -> "reagentCatalogs", x -> x.code, x -> x.name)
 				.asCodeFunction();
 	}

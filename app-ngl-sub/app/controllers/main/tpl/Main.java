@@ -47,11 +47,11 @@ public class Main extends Controller {
 	
 	public Result jsCodes() {
 		return new Codes()
-				.mapDotColon(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), 
+				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), 
 						     x -> x.tableName, x -> x.code, x -> x.label)
 				.valuationCodes()
 				.statusCodes()
-				.mapDotColon(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(),
+				.add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(),
 						     x -> "protocol", x -> x.code, x -> x.name)
 				.asCodeFunction();
 	}
