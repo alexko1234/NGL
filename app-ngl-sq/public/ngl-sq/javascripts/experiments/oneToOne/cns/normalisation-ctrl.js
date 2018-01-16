@@ -785,7 +785,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				outputQuantity.value = Math.round(result*10)/10;	
-				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'nmol':'ng';
+				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'fmol':'ng';
 			}else{
 				outputQuantity = undefined;
 			}	

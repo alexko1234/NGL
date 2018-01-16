@@ -347,7 +347,7 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
     				if(angular.isNumber(result) && !isNaN(result)){
     					outputQuantity.value = Math.round(result*10)/10;   
     					if($parse("outputConc.unit")(compute) == "nM"){
-    						outputQuantity.unit = "nMol";	
+    						outputQuantity.unit = "fmol";	
     					}else if ($parse("outputConc.unit")(compute) == "ng/µl"){
     						outputQuantity.unit = "ng";
     					}else{
@@ -366,7 +366,10 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
     			}
 
     		}else{
-    			console.log("not ready to compute outputQuantity");
+    			outputQuantity.value = undefined;
+				outputQuantity.unit = undefined;
+				getter.assign(atm,outputQuantity);
+				console.log("not ready to compute outputQuantity");
     		}
     	});
     }
