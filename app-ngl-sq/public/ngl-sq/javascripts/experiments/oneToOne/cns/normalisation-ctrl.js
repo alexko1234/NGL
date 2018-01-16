@@ -535,30 +535,31 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	
 	var refreshMaxConc = function(udtData){
 		
-		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration.value");
+		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration");
 		var maxConc = getter(udtData);
-		var getter2 = $parse("inputContainerUsed.experimentProperties.maximumConcentration.unit");
-		var maxConcUnit = getter2(udtData);
 		
 		var compute = {
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputConcUnit : $parse("inputContainerUsed.concentration.unit")(udtData),
 				inputVol : $parse("inputContainerUsed.volume.value")(udtData),
 				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
 				isReady:function(){
-					return (this.inputConc && this.inputVol && this.outputVol);
+					return (this.inputConc && this.inputVol && this.outputVol );
 				}
 		};
-		
+
 		if(compute.isReady()){
 			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
 			console.log("refreshMaxConcfunction result"+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				newMaxConcInput = Math.round(result*10)/10;					
+				maxConc.value = Math.round(result*10)/10;	
+				maxConc.unit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
+				console.log("refreshMaxConcfunction newMaxConc.unit "+maxConc.unit);
 			}else{
-				newMaxConcInput = undefined;
+				maxConc.value =undefined;
+				maxConc.unit= undefined;
 			}	
-			//getter.assign(udtData, newMaxConcInput);
-				getter.assign(udtData, newMaxConcInput);
+				getter.assign(udtData, maxConc);
 		}
 	};
 	
@@ -833,19 +834,13 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 
 				atm.inputContainerUseds[0].experimentProperties.bufferVolume.value =0;
 
-				if (atm.outputContainerUseds[0].volume.value && atm.inputContainerUseds[0].experimentProperties.inputVolume.value ){
-					atm.inputContainerUseds[0].experimentProperties.inputVolume.value = atm.outputContainerUseds[0].volume.value;
-				}else if (atm.outputContainerUseds[0].volume.value ){
+				if (atm.outputContainerUseds[0].volume.value  ){
 					atm.inputContainerUseds[0].experimentProperties.inputVolume.value = atm.outputContainerUseds[0].volume.value;
 				}else {
 					atm.outputContainerUseds[0].volume.value = atm.inputContainerUseds[0].experimentProperties.inputVolume.value; 
 				}
 
-			};
+			}
 
 		});		
 	}
-	
-	
-	
-}]);
