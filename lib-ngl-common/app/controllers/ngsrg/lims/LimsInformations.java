@@ -72,7 +72,7 @@ public class LimsInformations  extends  APICommonController<Experiment> { //Comm
 	 * @return
 	 */
 	//@Permission(value={"read_generation"})
-	public static Result containerSupport(String supportCode) {
+	public /*static*/ Result containerSupport(String supportCode) {
 		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);  		
 		ContainerSupport containerSupport = limsRunServices.getContainerSupport(supportCode);
 		if (null != containerSupport) {

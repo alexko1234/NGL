@@ -11,7 +11,7 @@ public class Tags extends Controller{
 	
 	
 	
-	public static Result display(){
+	public /*static*/ Result display(){
 		return ok(display.render());
 	}
 }

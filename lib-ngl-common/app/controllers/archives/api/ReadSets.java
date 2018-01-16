@@ -38,7 +38,7 @@ public class ReadSets extends CommonController {
 	 */
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
-	public static Result list(){
+	public /*static*/ Result list(){
 
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
@@ -51,7 +51,7 @@ public class ReadSets extends CommonController {
 		return MongoStreamer.okStreamUDT(results, r -> { return convertToArchive(archive, r); });
 	}
 
-	private static Archive convertToArchive(Integer archive, ReadSet readSet) {
+	private /*static*/ Archive convertToArchive(Integer archive, ReadSet readSet) {
 		if (readSet != null) {
 			if ( (archive.intValue() == 0) 
 					|| (archive.intValue() == 1 && readSet.archiveId != null) 
@@ -62,7 +62,7 @@ public class ReadSets extends CommonController {
 		return null;
 	}
 
-	private static Integer getArchiveValue() {
+	private /*static*/ Integer getArchiveValue() {
 		try {
 			return Integer.valueOf(request().queryString().get("archive")[0]);
 
@@ -72,7 +72,7 @@ public class ReadSets extends CommonController {
 		}
 	}
 
-	private static Query getQuery(Integer archive) {
+	private /*static*/ Query getQuery(Integer archive) {
 		Query query = null;
 		if (archive.intValue() == 0) { //all
 			query = DBQuery.is("dispatch", true);
@@ -84,7 +84,7 @@ public class ReadSets extends CommonController {
 		return query;
 	}
 
-	private static Archive createArchive(ReadSet readset) {
+	private /*static*/ Archive createArchive(ReadSet readset) {
 		Archive archive =  new Archive();
 		archive.runCode=readset.runCode;
 		archive.projectCode=readset.projectCode;
@@ -98,7 +98,7 @@ public class ReadSets extends CommonController {
 
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})	//@Permission(value={"archiving"})
-	public static Result save(String readSetCode) {
+	public /*static*/ Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();		
 		if (archiveId != null) {
@@ -124,7 +124,7 @@ public class ReadSets extends CommonController {
 	
 	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
-	public static Result delete(Integer i){
+	public /*static*/ Result delete(Integer i){
 		
 		if(i % 2 == 0){
 			return notFound();

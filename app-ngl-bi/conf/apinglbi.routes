@@ -59,9 +59,9 @@ PUT     /api/readsets/:code/properties				@controllers.readsets.api.ReadSets.pro
 PUT		/api/readsets/:code/apply-rules/:codeRules	@controllers.readsets.api.ReadSets.applyRules(code: java.lang.String, codeRules: java.lang.String)
 
 
-GET		/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)
-GET		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.get(code: java.lang.String, trCode: java.lang.String)
-HEAD	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.head(code: java.lang.String, trCode: java.lang.String)
+GET		/api/readsets/:code/treatments				@controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)
+GET		/api/readsets/:code/treatments/:trCode		@controllers.readsets.api.ReadSetTreatments.get(code: java.lang.String, trCode: java.lang.String)
+HEAD	/api/readsets/:code/treatments/:trCode		@controllers.readsets.api.ReadSetTreatments.head(code: java.lang.String, trCode: java.lang.String)
 POST	/api/readsets/:code/treatments				@controllers.readsets.api.ReadSetTreatments.save(code: java.lang.String)
 PUT		/api/readsets/:code/treatments/:trCode		@controllers.readsets.api.ReadSetTreatments.update(code: java.lang.String, trCode: java.lang.String)
 DELETE	/api/readsets/:code/treatments/:trCode		@controllers.readsets.api.ReadSetTreatments.delete(code: java.lang.String, trCode: java.lang.String)
@@ -111,8 +111,8 @@ DELETE  /api/analyses/:code/files					@controllers.analyses.api.Files.deleteByPa
 
 
 #archive api
-PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.save(readSetCode: java.lang.String)
-GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
+PUT	   	/api/archives/readsets/:readSetCode			@controllers.archives.api.ReadSets.save(readSetCode: java.lang.String)
+GET	   	/api/archives/readsets						@controllers.archives.api.ReadSets.list() 
 
 
 #treatmenttype
@@ -128,6 +128,6 @@ HEAD	/api/alerts/:code               			@controllers.alerts.api.Alerts.head(code
 #ngs-rg api
 GET		/api/ngsrs/instruments						@controllers.ngsrg.lims.LimsInformations.instruments()
 GET		/api/ngsrs/experiments						@controllers.ngsrg.lims.LimsInformations.experiments()
-GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
+GET		/api/ngsrs/container/:barCode				@controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
 HEAD	/api/ngsrs/container/:barCode				@controllers.ngsrg.lims.LimsInformations.isContainerSupport(barCode: java.lang.String)
 

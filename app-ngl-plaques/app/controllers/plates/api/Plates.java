@@ -1,7 +1,7 @@
 package controllers.plates.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import static validation.utils.ValidationHelper.addErrors;
 import static validation.utils.ValidationHelper.required;
@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.inject.Inject;
 
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
@@ -29,17 +31,26 @@ import fr.cea.ig.play.NGLContext;
 // TODO: use DI, extends DocumemntController to start with
 public class Plates extends CommonController {
 	
+	private final NGLContext ctx;
+	
+	@Inject
+	public Plates(NGLContext ctx) {
+		this.ctx = ctx;
+		wellsForm = ctx.form(Plate.class);
+		manipForm = ctx.form(MaterielManipSearch.class);
+	}
+	
 	/**
 	 * Logger.
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(Plates.class);
 	
 	
-	final static Form<Plate> wellsForm = form(Plate.class);
+	final /*static*/ Form<Plate> wellsForm;// = form(Plate.class);
 	
-	final static Form<MaterielManipSearch> manipForm = form(MaterielManipSearch.class);
+	final /*static*/ Form<MaterielManipSearch> manipForm;// = form(MaterielManipSearch.class);
 	
-	public static Result save() {
+	public /*static*/ Result save() {
 		Form<Plate> filledForm = getFilledForm(wellsForm, Plate.class);
 
 		Plate plate = filledForm.get();
@@ -70,7 +81,7 @@ public class Plates extends CommonController {
 		}
 	}
 	
-	public static Result list(){
+	public /*static*/ Result list(){
 		Form<MaterielManipSearch> filledForm =  manipForm.bindFromRequest();
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		logger.info("Manip Form :"+filledForm.toString());		
@@ -79,7 +90,7 @@ public class Plates extends CommonController {
 		return ok(Json.toJson(new DatatableResponse(plates, plates.size())));
 	}
 	
-	public static Result get(String code){
+	public /*static*/ Result get(String code){
 		logger.info("GET Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		Plate plate = limsManipDAO.getPlate(code);
@@ -90,7 +101,7 @@ public class Plates extends CommonController {
 		}
 	}
 	
-	public static Result remove(String code){
+	public /*static*/ Result remove(String code){
 		logger.info("DELETE Plate : "+code);
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		limsManipDAO.deletePlate(code);
@@ -98,7 +109,7 @@ public class Plates extends CommonController {
 	}
 	
 	
-	private static void validatePlate(Plate plate, Map<String, List<ValidationError>> errors, boolean isUpdate) {
+	private /*static*/ void validatePlate(Plate plate, Map<String, List<ValidationError>> errors, boolean isUpdate) {
 		if(required(errors, plate, "plate")){
 			required(errors, plate.code, "code");
 			required(errors, plate.typeCode, "typeCode");
@@ -133,14 +144,14 @@ public class Plates extends CommonController {
 	}
 
 
-	private static void validatePlateCode(Plate plate,
+	private /*static*/ void validatePlateCode(Plate plate,
 			Map<String, List<ValidationError>> errors) {
 		if(Spring.getBeanOfType(LimsManipDAO.class).isPlateExist(plate.code)){
 			addErrors(errors, "code", "plates.error.code.exist");
 		}
 	}
 
-	private static String newCode(Integer typeCode) {
+	private /*static*/ String newCode(Integer typeCode) {
 		String code = CodeHelper.getInstance().generateContainerSupportCode();
 		if(Integer.valueOf(12).equals(typeCode)){
 		    code = "FRG_"+code;

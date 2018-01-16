@@ -56,7 +56,7 @@ GET		/tpl/samples/js-routes										@controllers.samples.tpl.Samples.javascript
 #tags api
 GET 	/printing/:homecode/home										@controllers.printing.tpl.Printing.home(homecode:java.lang.String)
 GET		/tpl/printing/js-routes											@controllers.printing.tpl.Printing.javascriptRoutes()
-GET		/tpl/printing/tags/display										controllers.printing.tpl.Tags.display()
+GET		/tpl/printing/tags/display										@controllers.printing.tpl.Tags.display()
 
 # Map static resources from the /public folder to the /assets URL path
 # GET     /assets/*file               									@controllers.Assets.at(path="/public", file)

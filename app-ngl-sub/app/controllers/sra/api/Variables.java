@@ -17,6 +17,7 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.parameter.Parameter;
 import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
@@ -30,18 +31,23 @@ import play.mvc.Result;
 
 public class Variables extends CommonController{
 
-	final static Form<VariablesSearchForm> form = form(VariablesSearchForm.class);
+	private final NGLContext ctx;
+	public Variables(NGLContext ctx) {
+		this.ctx = ctx;
+		form = ctx.form(VariablesSearchForm.class);
+	}
 	
+	final /*static*/ Form<VariablesSearchForm> form;// = form(VariablesSearchForm.class);
 	private static final play.Logger.ALogger logger = play.Logger.of(Variables.class);
 	
-	public static Result list() {
+	public /*static*/ Result list() {
 		Form<VariablesSearchForm> filledForm = filledFormQueryString(form, VariablesSearchForm.class);
 		VariablesSearchForm variableSearch = filledForm.get();
 		logger.debug("variableSearch "+variableSearch);
 		return list(variableSearch);
 	}
 
-	public static Result get(String type, String code) {
+	public /*static*/ Result get(String type, String code) {
 		logger.debug("Get " + type + " code " + code);
 		if (type.equalsIgnoreCase("strategySample")) {
 			SraParameter parameter = new SraParameter();
@@ -66,7 +72,7 @@ public class Variables extends CommonController{
 		}
 	}
 
-	private static Query getQuery(VariablesSearchForm form) {
+	private /*static*/ Query getQuery(VariablesSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 		if (StringUtils.isNotBlank(form.type)) { 
@@ -75,18 +81,18 @@ public class Variables extends CommonController{
 		if (StringUtils.isNotBlank(form.code)) { 
 			queries.add(DBQuery.is("code", form.code));
 		}
-		if (queries.size() > 0) {
+		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
 
 
-	private static Result list(VariablesSearchForm variableSearch) {
+	private /*static*/ Result list(VariablesSearchForm variableSearch) {
 		logger.debug("variableSearch type " + variableSearch.type);
-		if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategySample")) {
+		if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategySample")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategySample)));
-		} else if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategyStudy")) {
+		} else if (variableSearch.type!=null && variableSearch.type.equalsIgnoreCase("strategyStudy")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategyStudy)));
 		} else {
 			Query query = getQuery(variableSearch);		
@@ -102,7 +108,7 @@ public class Variables extends CommonController{
 
 	}
 
-	private static List<ListObject> toListObjects(Map<String, String> map){
+	private /*static*/ List<ListObject> toListObjects(Map<String, String> map){
 		List<ListObject> lo = new ArrayList<ListObject>();
 		for(String key : map.keySet()){
 			lo.add(new ListObject(key, map.get(key)));

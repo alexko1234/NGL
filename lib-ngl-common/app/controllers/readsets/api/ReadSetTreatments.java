@@ -37,7 +37,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-	public static Result list(String readSetCode){
+	public /*static*/ Result list(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet != null) {
 			return ok(Json.toJson(readSet.treatments));
@@ -47,7 +47,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-	public static Result get(String readSetCode, String treatmentCode){
+	public /*static*/ Result get(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
 		if (readSet != null) {
@@ -58,7 +58,7 @@ public class ReadSetTreatments extends ReadSetsController {
 	}
 	
 	@Permission(value={"reading"})
-	public static Result head(String readSetCode, String treatmentCode){
+	public /*static*/ Result head(String readSetCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
 			return ok();

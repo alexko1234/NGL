@@ -4,10 +4,10 @@ GET		/api/commons/states							@controllers.commons.api.States.list()
 GET		/api/commons/states-hierarchy				@controllers.commons.api.StatesHierarchy.list()
 GET		/api/commons/states/:code					@controllers.commons.api.States.get(code: java.lang.String)
 GET		/api/commons/users							@controllers.commons.api.Users.list()
-GET		/api/commons/roles							controllers.commons.api.Roles.list()
+GET		/api/commons/roles							@controllers.commons.api.Roles.list()
 PUT		/api/commons/users							@controllers.commons.api.Users.update(code)
 
-GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
+GET		/api/commons/types							@controllers.commons.api.CommonInfoTypes.list()
 
 #value of property definition
 GET		/api/values									@controllers.commons.api.Values.list()

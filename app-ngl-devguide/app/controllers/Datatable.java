@@ -13,7 +13,7 @@ import models.datatable.Tube;
 public class Datatable extends Controller{
 
 	
-	public static Result getExamples(){
+	public /*static*/ Result getExamples(){
 		List<Tube> tubes = new ArrayList<Tube>();
 		tubes.add(new Tube("test1","20","N","AX_32"));
 		tubes.add(new Tube("test2","40","IWP","AP_67"));
@@ -22,7 +22,7 @@ public class Datatable extends Controller{
 		return ok(Json.toJson(new DatatableResponse(tubes, tubes.size())));
 	}
 	
-	public static Result getExamplesPagination(){
+	public /*static*/ Result getExamplesPagination(){
 		List<Tube> tubes = new ArrayList<Tube>();
 		for(int i=0;i<100;i++){
 			tubes.add(new Tube("test"+i,""+(i*i+i+4),"N","AX_"+i));
