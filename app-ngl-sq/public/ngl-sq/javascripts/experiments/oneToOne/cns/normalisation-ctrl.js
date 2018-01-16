@@ -844,3 +844,4 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 
 		});		
 	}
+}]);
