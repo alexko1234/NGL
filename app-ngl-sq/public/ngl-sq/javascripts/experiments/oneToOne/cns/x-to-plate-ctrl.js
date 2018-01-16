@@ -312,6 +312,7 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
             
     };
 
+
     var updateATM = function(experiment){
         if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
             experiment.atomicTransfertMethods.forEach(function(atm){
@@ -324,37 +325,51 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
     
     
     var computeQtty = function(experiment){
-        experiment.atomicTransfertMethods.forEach(function(atm){
+    	experiment.atomicTransfertMethods.forEach(function(atm){
 
-            var getter = $parse("outputContainerUseds[0].quantity");
-            var outputQuantity = getter(atm);
+    		var getter = $parse("outputContainerUseds[0].quantity");
+    		var outputQuantity = getter(atm);
 
 
-            var compute = {
-                    inputConc : $parse("inputContainerUseds[0].concentration")(atm),
-                    outputConc : $parse("outputContainerUseds[0].concentration")(atm),
-                    outputQtty : $parse("outputContainerUseds[0].quantity")(atm),
-                    outputVol : $parse("outputContainerUseds[0].volume")(atm)
+    		var compute = {
+    				inputConc : $parse("inputContainerUseds[0].concentration")(atm),
+    				outputConc : $parse("outputContainerUseds[0].concentration")(atm),
+    				outputVol : $parse("outputContainerUseds[0].volume")(atm),
 
-            };
-            
-            if($parse("(outputConc.unit ===  inputConc.unit && outputQtty.value == undefined)")(compute)){
-                var result = $parse("outputVol.value  * outputConc.value ")(compute);
-                console.log("result = "+result);
-                if(angular.isNumber(result) && !isNaN(result)){
-                    outputQuantity.value = Math.round(result*10)/10;                
-                }else{
-                    outputQuantity.value = undefined;
-                }    
-                getter.assign(atm, outputQuantity);
-            }else{
-                outputQuantity.value = undefined;
-                getter.assign(atm,outputQuantity);    
-            
-            }
-        });
+    				isReady:function(){
+    					return (this.inputConc && this.outputConc && this.outputVol);
+    				}
+    		};
+    		if(compute.isReady()){
+    			if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
+    				var result = $parse("outputVol.value  * outputConc.value ")(compute);
+    				console.log("result = "+result);
+    				if(angular.isNumber(result) && !isNaN(result)){
+    					outputQuantity.value = Math.round(result*10)/10;   
+    					if($parse("outputConc.unit")(compute) == "nM"){
+    						outputQuantity.unit = "nMol";	
+    					}else if ($parse("outputConc.unit")(compute) == "ng/µl"){
+    						outputQuantity.unit = "ng";
+    					}else{
+    						console.log("Unité "+outputQuantity.unit+" non gérée!");
+    					}
+    				}else{
+    					outputQuantity.value = undefined;
+    					outputQuantity.unit = undefined;
+    				}    
+    				getter.assign(atm, outputQuantity);
+    			}else{
+    				console.log("not ready to compute outputQuantity"+outputQtty.value);
+    				outputQuantity.value = undefined;
+    				outputQuantity.unit = undefined;
+    				getter.assign(atm,outputQuantity);    
+    			}
 
-    };
+    		}else{
+    			console.log("not ready to compute outputQuantity");
+    		}
+    	});
+    }
     
     $scope.$on('save', function(e, callbackFunction) {    
         console.log("call event save");

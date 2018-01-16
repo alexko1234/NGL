@@ -322,6 +322,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		 computeQtty($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
@@ -334,6 +335,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
+		 computeQtty($scope.experiment);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
@@ -362,7 +364,55 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
 		})		
 	};
-	
+
+	var computeQtty = function(experiment){
+		experiment.atomicTransfertMethods.forEach(function(atm){
+
+			var getter = $parse("outputContainerUseds[0].quantity");
+			var outputQuantity = getter(atm);
+
+
+			var compute = {
+					inputConc : $parse("inputContainerUseds[0].concentration")(atm),
+					outputConc : $parse("outputContainerUseds[0].concentration")(atm),
+					outputVol : $parse("outputContainerUseds[0].volume")(atm),
+
+					isReady:function(){
+						return (this.inputConc && this.outputConc && this.outputVol);
+					}
+			};
+			if(compute.isReady()){
+				if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
+					var result = $parse("outputVol.value  * outputConc.value ")(compute);
+					console.log("result = "+result);
+					if(angular.isNumber(result) && !isNaN(result)){
+						outputQuantity.value = Math.round(result*10)/10;   
+						if($parse("outputConc.unit")(compute) == "nM"){
+							outputQuantity.unit = "nMol";	
+						}else if ($parse("outputConc.unit")(compute) == "ng/µl"){
+							outputQuantity.unit = "ng";
+						}else{
+							console.log("Unité "+outputQuantity.unit+" non gérée!");
+						}
+					}else{
+						outputQuantity.value = undefined;
+						outputQuantity.unit = undefined;
+					}    
+					getter.assign(atm, outputQuantity);
+				}else{
+					console.log("not ready to compute outputQuantity"+outputQtty.value);
+					outputQuantity.value = undefined;
+					outputQuantity.unit = undefined;
+					getter.assign(atm,outputQuantity);    
+				}
+
+			}else{
+				console.log("not ready to compute outputQuantity");
+			}
+		});
+	}
+
+
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
