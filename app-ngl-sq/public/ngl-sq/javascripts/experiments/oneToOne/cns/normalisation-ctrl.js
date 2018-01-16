@@ -457,6 +457,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			size : {copyInputContainer:true}
 	};
 	
+	atmService.convertInputPropertiesToDatatableColumn = function(property, pName){
+        var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":Messages("experiments.inputs")});
+        if(property.code=="maximumConcentration"){
+        //    column.property="(inputContainerUsed.maximumConcentration.value|number).concat(' '+inputContainerUsed.concentration.unit)";
+        }else{
+            
+        console.log("test "+property.code);
+        }
+        return column;
+    };
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	$scope.atmService = atmService;
 	
@@ -535,8 +546,11 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	
 	var refreshMaxConc = function(udtData){
 		
-		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration");
-		var maxConc = getter(udtData);
+		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration.value");
+		var maxConcValue = getter(udtData);
+		var getter2 = $parse("inputContainerUsed.experimentProperties.maximumConcentration.unit");
+		var maxConcUnit = getter2(udtData);
+		
 		
 		var compute = {
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
@@ -552,14 +566,16 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
 			console.log("refreshMaxConcfunction result"+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				maxConc.value = Math.round(result*10)/10;	
-				maxConc.unit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
-				console.log("refreshMaxConcfunction newMaxConc.unit "+maxConc.unit);
+				maxConcValue = Math.round(result*10)/10;	
+				maxConcUnit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
+				
 			}else{
-				maxConc.value =undefined;
-				maxConc.unit= undefined;
+				maxConcValue =undefined;
+				maxConcUnit= undefined;
 			}	
-				getter.assign(udtData, maxConc);
+				getter.assign(udtData, maxConcValue);
+				getter2.assign(udtData, maxConcUnit);
+				
 		}
 	};
 	
