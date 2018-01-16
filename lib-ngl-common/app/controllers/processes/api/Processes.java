@@ -245,7 +245,6 @@ public class Processes extends DocumentController<Process> {
 		List<Process> processes = saveOneElement(contextValidation, input, from);
 		if (!contextValidation.hasErrors())
 			return ok(Json.toJson(processes));
-		// return badRequest(filledForm.errors-AsJson());
 		return badRequest(errorsAsJson(contextValidation.getErrors()));
 	}
 
@@ -253,12 +252,6 @@ public class Processes extends DocumentController<Process> {
 		//the trace
 		input.traceInformation = new TraceInformation();
 		input.traceInformation.setTraceInformation(contextValidation.getUser());
-		if (null == input.state) {
-			input.state = new State();
-		}
-		input.state.code = "N";
-		input.state.user = contextValidation.getUser();
-		input.state.date = new Date();
 		
 		contextValidation.setCreationMode();
 		contextValidation.putObject(CommonValidationHelper.FIELD_PROCESS_CREATION_CONTEXT, CommonValidationHelper.VALUE_PROCESS_CREATION_CONTEXT_COMMON);
@@ -308,7 +301,7 @@ public class Processes extends DocumentController<Process> {
 				if(!contextValidation.hasErrors()){
 					return new DatatableBatchResponseElement(OK,  processes, element.index);
 				}else {
-					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
+					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(contextValidation.getErrors()), element.index);
 				}
 			}else{
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
@@ -347,7 +340,6 @@ public class Processes extends DocumentController<Process> {
 				workflows.applyPostValidateCurrentStateRules(ctxVal, input);
 				return ok(Json.toJson(input));
 			} else {
-				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}
 		} else {
@@ -370,7 +362,6 @@ public class Processes extends DocumentController<Process> {
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getObject(code)));
 		} else {
-			// return badRequest(filledForm.errors-AsJson());
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
@@ -394,7 +385,6 @@ public class Processes extends DocumentController<Process> {
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
 				} else {
-					//return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errors-AsJson(lang), element.index);
 					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index);
 				}
 			} else {

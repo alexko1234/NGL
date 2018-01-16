@@ -12,7 +12,7 @@ import views.html.processes.home;
 import views.html.processes.newProcesses;
 import views.html.processes.search;
 import views.html.processes.searchContainers;
-
+import views.html.processes.searchSamples;
 import javax.inject.Inject;
 
 import controllers.CommonController;
@@ -22,13 +22,16 @@ public class Processes extends CommonController{
 	
 	private final home home;
 	private final searchContainers searchContainers;
+	private final searchSamples searchSamples;
+	
 	private final search search;
 	private final newProcesses newProcesses;
 	
 	@Inject
-	public Processes(home home, searchContainers searchContainers, search search, newProcesses newProcesses) {
+	public Processes(home home, search search, newProcesses newProcesses, searchContainers searchContainers, searchSamples searchSamples) {
 		this.home = home;
 		this.searchContainers = searchContainers;
+		this.searchSamples = searchSamples;		
 		this.search = search;
 		this.newProcesses = newProcesses;
 	}
