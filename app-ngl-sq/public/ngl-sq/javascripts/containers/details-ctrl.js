@@ -62,7 +62,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			if(angular.isNumber(result) && !isNaN(result)){
 				var quantity = {};
 				quantity.value = Math.round(result*10)/10;
-				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+				quantity.unit = (concentration.unit === 'nM')?'fmol':'ng';
 				$scope.container.quantity = quantity;
 			}else {
 				$scope.container.quantity =  undefined;
