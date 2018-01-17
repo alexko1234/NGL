@@ -233,7 +233,6 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		checkControlConc($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -267,20 +266,17 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		$scope.atmService.data.setEdit();
 	});
 	
-	var checkControlConc = function(experiment){
-
-		experiment.atomicTransfertMethods.forEach(function(atm){
-			//Si CONC en IN est null alors conc out doit etre null			
-			if (atm.inputContainerUseds[0].concentration == undefined){				
-				atm.outputContainerUseds[0].concentration=undefined;				
-			}
-
-		});		
-	}
-	
 	//WARNING Old systme to compute better used  updatePropertyFromUDT function see normalization
 	var calculVolumeFromValue=function(value){
 		console.log("call calculVolumeFromValue");
+		if (value.inputContainerUsed.concentration === undefined 
+				|| value.inputContainerUsed.concentration === null
+				|| value.inputContainerUsed.concentration.value === undefined 
+				|| value.inputContainerUsed.concentration.value === null ){				
+			value.outputContainerUsed.concentration=undefined;				
+		}
+		
+		
 		if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties===null){
 			value.inputContainerUsed.experimentProperties={};
 		}
