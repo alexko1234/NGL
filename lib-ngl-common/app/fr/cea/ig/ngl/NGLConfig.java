@@ -1,22 +1,19 @@
-package fr.cea.ig.play;
+package fr.cea.ig.ngl;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-import fr.cea.ig.play.IGConfig;
+import fr.cea.ig.lfw.LFWConfig;
 
 /**
- * Provides named accessors on top of the config.
+ * NGL configuration typed access to NGL configuration definitions.
  * 
  * @author vrd
  *
  */
-@Deprecated
-@Singleton
 public class NGLConfig {
-
+	
 	/**
 	 * Undefined string when a string value is not found at a given path. 
 	 */
@@ -39,20 +36,29 @@ public class NGLConfig {
 	
 	public static final String NGL_RULES_PATH = "rules.key";
 	
-	public static final String NGL_BARCODE_PRINTING_KEY = "ngl.printing.cb";
+	public static final String NGL_BARCODE_PRINTING_PATH = "ngl.printing.cb";
 	
-	public static final String NGL_APPLICATION_VERSION_KEY = "application.version";
+	public static final String NGL_APPLICATION_VERSION_PATH = "application.version";
 	
-	public static final String NGL_APPLICATION_NAME_KEY = "application.name";
+	public static final String NGL_APPLICATION_NAME_PATH = "application.name";
 
+	public static final String NGL_BI_URL_PATH = "bi.url"; 
+
+	private static final String NGL_PROJECT_URL_PATH = "project.url";
+
+	private static final String NGL_SQ_URL_PATH = "sq.url";
+	
 	/**
 	 * Configuration to use.
 	 */
-	private final IGConfig config;
+	private final LFWConfig config;
 
-	
+	/**
+	 * DI constructor.
+	 * @param config config to use
+	 */
 	@Inject
-	public NGLConfig(IGConfig config) {
+	public NGLConfig(LFWConfig config) {
 		this.config = config;
 	}
 
@@ -84,11 +90,11 @@ public class NGLConfig {
 		
 	/**
 	 * Is the NGL bar code printing enabled ?
-	 * The configuration path is {@link #NGL_BARCODE_PRINTING_KEY}. 
+	 * The configuration path is {@link #NGL_BARCODE_PRINTING_PATH}. 
 	 * @return false if not configured, configured value otherwise
 	 */
 	public boolean isBarCodePrintingEnabled() {
-		return config.getBoolean(NGL_BARCODE_PRINTING_KEY, false);
+		return config.getBoolean(NGL_BARCODE_PRINTING_PATH, false);
 	}
 	
 	public String getString(String path) {
@@ -101,15 +107,19 @@ public class NGLConfig {
 	}
 	
 	/**
-	 * Application version string if defined in the configuration file at {@link #NGL_APPLICATION_VERSION_KEY}. 
+	 * Application version string if defined in the configuration file at {@link #NGL_APPLICATION_VERSION_PATH}. 
 	 * @return empty string if not defined in the configuration, the configured value otherwise
 	 */
 	public String getApplicationVersion() {
-		return config.getString(NGL_APPLICATION_VERSION_KEY,"");
+		return config.getString(NGL_APPLICATION_VERSION_PATH,"");
 	}
 	
+	/**
+	 * Application name string if defined in the configuration file at {@link #NGL_APPLICATION_NAME_PATH}.
+	 * @return empty string if not defined in the configuration, the configured value otherwise
+	 */
 	public String getApplicationName() {
-		return config.getString(NGL_APPLICATION_NAME_KEY,"");
+		return config.getString(NGL_APPLICATION_NAME_PATH,"");
 	}
 	
 	public List<String> getStringList(String path) {
@@ -117,15 +127,15 @@ public class NGLConfig {
 	}
 	
 	public String getSQUrl() {
-		return config.getString("sq.url");
+		return config.getString(NGL_SQ_URL_PATH);
 	}
 	
 	public String getBIUrl() {
-		return config.getString("bi.url");
+		return config.getString(NGL_BI_URL_PATH);
 	}
 	
 	public String getProjectUrl() {
-		return config.getString("project.url");
+		return config.getString(NGL_PROJECT_URL_PATH);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package fr.cea.ig.ngl;
+package fr.cea.ig.lfw.utils;
 
 import play.mvc.Result;
 import static play.mvc.Results.ok;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import jsmessages.JsMessages;
 
-public class Javascript {
+public class JavascriptGeneration {
 
 	// Build a javascript  map from codes to names
 	// replaces : jsCodes() & generateCodeLabel() of some controllers
@@ -58,7 +58,7 @@ public class Javascript {
 		 * @param value element to value function
 		 * @return      this to chain calls
 		 */
-		public <T> Codes add(Collection<T> c, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
+		public <T> Codes add(Iterable<T> c, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
 			for (T t : c) 
 				add(key.apply(t),name.apply(t),value.apply(t));
 			return this;
@@ -73,7 +73,7 @@ public class Javascript {
 		 * @param value element to value function
 		 * @return      this to chain calls
 		 */
-		public <S,T> Codes add(Collection<S> c, Function<S,Collection<T>> flat, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
+		public <S,T> Codes add(Iterable<S> c, Function<S,Collection<T>> flat, Function<T,String> key, Function<T,String> name, Function<T,String> value) {
 			for (S s : c)
 				for (T t : flat.apply(s)) 
 					add(key.apply(t),name.apply(t),value.apply(t));
@@ -129,28 +129,30 @@ public class Javascript {
 			sb    = new StringBuilder();
 			first = true; 
 		}
+		
 		public Permissions add(String s) {
 			optComma();
 			sb.append(s);
 			return this;
 		}
-		private void optComma() {
-			if (first)
-				first = false;
-			else
-				sb.append(',');
+		
+		public Permissions addAll(Iterable<String> c) {
+			for (String s : c)
+				add(s);
+			return this;
 		}
 		
-		public <T> Permissions map(Collection<T> c, Function<T,String> f) {
+		public <T> Permissions map(Iterable<T> c, Function<T,String> f) {
 			for (T t : c) 
 				add(f.apply(t));
 			return this;
 		}
 		
-		public Permissions addAll(Collection<String> c) {
-			for (String s : c)
-				add(s);
-			return this;
+		private void optComma() {
+			if (first)
+				first = false;
+			else
+				sb.append(',');
 		}
 		
 		public Result asCodeFunction() {
@@ -162,12 +164,13 @@ public class Javascript {
 			return ok(r.toString()).as("application/javascript");
 		}
 		
-		public static Result jsPermissions(Collection<String> s) {
+		public static Result jsPermissions(Iterable<String> s) {
 			return new Permissions()
 					.addAll(s)
 					.asCodeFunction();
 		}
-		public static <T> Result jsPermissions(Collection<T> s, Function<T,String> f) {
+		
+		public static <T> Result jsPermissions(Iterable<T> s, Function<T,String> f) {
 			return new Permissions()
 					.map(s,f)
 					.asCodeFunction();

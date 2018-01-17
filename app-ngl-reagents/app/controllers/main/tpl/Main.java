@@ -24,8 +24,8 @@ import views.html.home;
 //import controllers.CommonController;
 import controllers.NGLBaseController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.play.NGLContext;
-import fr.cea.ig.ngl.Javascript.Codes;
 
 // public class Main extends -CommonController {
 public class Main extends NGLBaseController {

@@ -1,36 +1,28 @@
-package fr.cea.ig.play;
-
-import com.typesafe.config.Config;
+package fr.cea.ig.lfw;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.typesafe.config.Config;
+
 /**
- * Config facade defining accessors with defaults.
+ * Wrapper around play configuration.
  * 
  * @author vrd
  *
  */
-@Deprecated
 @Singleton
-public class IGConfig {
+public class LFWConfig {
 	
-	/**
-	 * Underlying configuration.
-	 */
 	private final Config config;
 	
-	/**
-	 * Constructor.
-	 * @param config configuration to use
-	 */
 	@Inject
-	public IGConfig(Config config) {
-		this.config = config;
+	public LFWConfig(Config config) {
+		this.config = config;	
 	}
-
+	
 	/**
 	 * Underlying configuration instance.
 	 * @return underlying configuration instance
@@ -69,23 +61,7 @@ public class IGConfig {
 			throw new RuntimeException(path + " has no value in configuration");
 		return config.getString(path);
 	}
-	
-	// Silently fails, not good
-	/*
-	public String getString(String[] paths, String defaultValue) {
-		String result = null;
-		for (String path : paths) {
-			if (config.hasPath(path)) {
-				if (result == null) {
-					result = config.getString(path);
-				} else {
-					
-				}
-			}
-		}
-	}
-	*/
-	
+		
 	public String getString(String path, String defaultValue) {
 		if (!config.hasPath(path))
 			return defaultValue;
@@ -100,4 +76,5 @@ public class IGConfig {
 		}
 	}
 
+	
 }

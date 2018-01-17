@@ -35,11 +35,16 @@ import controllers.NGLBaseController;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authentication;
-import fr.cea.ig.authentication.Authentication;
-import fr.cea.ig.ngl.Javascript.Permissions;
+import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
+import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
+import fr.cea.ig.ngl.support.APIResultProcessor;
+import fr.cea.ig.ngl.support.NGLJavascript;
+import fr.cea.ig.ngl.support.api.PermissionAPIHolder;
+import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.play.NGLContext;
-// import fr.cea.ig.authentication.Authentication;
-import fr.cea.ig.ngl.Javascript.Codes;
+
 import javax.inject.Inject;
 
 // TODO: define only instance methods
@@ -49,9 +54,22 @@ import javax.inject.Inject;
 // @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 @fr.cea.ig.authentication.Authenticated
 @With(UserHistory.class)
-public class Main extends NGLBaseController {
+// public class Main extends NGLBaseController {
+public class Main extends NGLController
+		implements PermissionAPIHolder,
+		           ProjectAPIHolder,
+		           APIResultProcessor,
+		           NGLJavascript {
 
-	// final static JsMessages messages = JsMessages.create(play.Play.application());
+	private final home home;
+
+	@Inject
+	public Main(NGLApplication app, home home) { 
+		super(app);
+		this.home = home;
+	}
+	
+/*	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
 	//private static JsMessages messages;
 	private final JsMessages messages;
@@ -67,14 +85,16 @@ public class Main extends NGLBaseController {
 		messages  = jsMessagesFactory.all();
 		this.home = home;
 		//this.ctx  = ctx;
-	}
+	}*/
 
 	public Result home() {
 		return ok(home.render());
 	}
 
 	public Result jsPermissions() {
-		return Permissions.jsPermissions(Permission.find.findByUserLogin(Authentication.getUser()), x -> x.code);
+		// return Permissions.jsPermissions(Permission.find.findByUserLogin(Authentication.getUser()), x -> x.code);
+		// return Permissions.jsPermissions(getPermissionAPI().byUserLogin(Authentication.getUser()), x -> x.code);
+		return apiResult(() -> jsPermissions(getPermissionAPI().byUserLogin(Authentication.getUser()), x -> x.code));
 	}
 
 	/*
@@ -107,8 +127,8 @@ public class Main extends NGLBaseController {
 		return new Codes()
 				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
 				             x -> x.tableName, x -> x.code, x -> x.label)
-				.add(MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList(),
-						     x -> "project", x-> x.code, x -> x.name)
+				// .add(MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList(),
+				.add(getProjectAPI().all(), x -> "project", x-> x.code, x -> x.name)
 				.add(MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList(),
 						     x -> "valuation_criteria", x -> x.code, x -> x.name)
 				.add(MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList(),

@@ -83,7 +83,7 @@ object ApplicationBuild extends Build {
 	
 	val libDatatableVersion    = "2.0.0"    + distSuffix
 	val libFrameworkWebVersion = "2.0.0"    + distSuffix
-	val nglCommonVersion       = "2.1"    + distSuffix
+	val nglCommonVersion       = "2.1.0"    + distSuffix
 
 	// IG libraries
   // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"

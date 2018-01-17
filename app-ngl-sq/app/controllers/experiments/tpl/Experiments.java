@@ -5,6 +5,7 @@ package controllers.experiments.tpl;
 // import play.Routes;
 import play.routing.JavaScriptReverseRouter;
 
+import static fr.cea.ig.lfw.utils.FunCollections.first;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -24,7 +25,6 @@ import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 // import controllers.CommonController;
 import controllers.NGLBaseController;
-import static fr.cea.ig.ngl.FunCollections.first;
 // import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.reflect.Renderer;
