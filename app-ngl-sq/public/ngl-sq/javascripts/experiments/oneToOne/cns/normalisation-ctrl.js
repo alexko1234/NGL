@@ -845,12 +845,11 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			//Si CONC en IN est null alors conc out doit etre null			
 			if (atm.inputContainerUseds[0].concentration == undefined){				
-				atm.outputContainerUseds[0].concentration.value=undefined;
-				atm.outputContainerUseds[0].concentration.unit=undefined;
-
+				atm.outputContainerUseds[0].concentration=undefined;
+				
 				atm.inputContainerUseds[0].experimentProperties.bufferVolume.value =0;
 
-				if (atm.outputContainerUseds[0].volume.value  ){
+				if (atm.outputContainerUseds[0].volume && atm.outputContainerUseds[0].volume.value  ){
 					atm.inputContainerUseds[0].experimentProperties.inputVolume.value = atm.outputContainerUseds[0].volume.value;
 				}else {
 					atm.outputContainerUseds[0].volume.value = atm.inputContainerUseds[0].experimentProperties.inputVolume.value; 
