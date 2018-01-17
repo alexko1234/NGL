@@ -17,7 +17,9 @@ angular.module('tools', [])
 							outputVol : $parse("outputContainerUseds[0].volume")(atm),
 	
 							isReady:function(){
-								return (this.inputConc && this.outputConc && this.outputVol);
+								return (this.inputConc && this.inputConc.value
+										&& this.outputConc && this.outputConc.value
+										&& this.outputVol && this.outputVol.value);
 							}
 					};
 					if(compute.isReady()){
