@@ -1,5 +1,5 @@
-angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable',
-                                                       function($scope, $http,$parse,$filter,atmToSingleDatatable) {
+angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable', 'helpers',
+                                                       function($scope, $http,$parse,$filter,atmToSingleDatatable, helpers) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
@@ -296,10 +296,13 @@ angular.module('home').controller('CNSTubesToPlateCtrl',['$scope' ,'$http','$par
 		}		
 	};
 	
+	
+	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		helpers.computeQuantity($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});

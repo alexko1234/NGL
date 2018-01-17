@@ -457,6 +457,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			size : {copyInputContainer:true}
 	};
 	
+	atmService.convertInputPropertiesToDatatableColumn = function(property, pName){
+        var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":Messages("experiments.inputs")});
+        if(property.code=="maximumConcentration"){
+        //    column.property="(inputContainerUsed.maximumConcentration.value|number).concat(' '+inputContainerUsed.concentration.unit)";
+        }else{
+            
+        console.log("test "+property.code);
+        }
+        return column;
+    };
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	$scope.atmService = atmService;
 	
@@ -536,29 +547,35 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	var refreshMaxConc = function(udtData){
 		
 		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration.value");
-		var maxConc = getter(udtData);
+		var maxConcValue = getter(udtData);
 		var getter2 = $parse("inputContainerUsed.experimentProperties.maximumConcentration.unit");
 		var maxConcUnit = getter2(udtData);
 		
+		
 		var compute = {
 				inputConc : $parse("inputContainerUsed.concentration.value")(udtData),
+				inputConcUnit : $parse("inputContainerUsed.concentration.unit")(udtData),
 				inputVol : $parse("inputContainerUsed.volume.value")(udtData),
 				outputVol : $parse("outputContainerUsed.volume.value")(udtData),			
 				isReady:function(){
-					return (this.inputConc && this.inputVol && this.outputVol);
+					return (this.inputConc && this.inputVol && this.outputVol );
 				}
 		};
-		
+
 		if(compute.isReady()){
 			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
 			console.log("refreshMaxConcfunction result"+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				newMaxConcInput = Math.round(result*10)/10;					
+				maxConcValue = Math.round(result*10)/10;	
+				maxConcUnit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
+				
 			}else{
-				newMaxConcInput = undefined;
+				maxConcValue =undefined;
+				maxConcUnit= undefined;
 			}	
-			//getter.assign(udtData, newMaxConcInput);
-				getter.assign(udtData, newMaxConcInput);
+				getter.assign(udtData, maxConcValue);
+				getter2.assign(udtData, maxConcUnit);
+				
 		}
 	};
 	
@@ -785,7 +802,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				outputQuantity.value = Math.round(result*10)/10;	
-				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'nmol':'ng';
+				outputQuantity.unit = (compute.outputConcUnit === 'nM')?'fmol':'ng';
 			}else{
 				outputQuantity = undefined;
 			}	
@@ -828,24 +845,18 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 		experiment.atomicTransfertMethods.forEach(function(atm){
 			//Si CONC en IN est null alors conc out doit etre null			
 			if (atm.inputContainerUseds[0].concentration == undefined){				
-				atm.outputContainerUseds[0].concentration.value=undefined;
-				atm.outputContainerUseds[0].concentration.unit=undefined;
-
+				atm.outputContainerUseds[0].concentration=undefined;
+				
 				atm.inputContainerUseds[0].experimentProperties.bufferVolume.value =0;
 
-				if (atm.outputContainerUseds[0].volume.value && atm.inputContainerUseds[0].experimentProperties.inputVolume.value ){
-					atm.inputContainerUseds[0].experimentProperties.inputVolume.value = atm.outputContainerUseds[0].volume.value;
-				}else if (atm.outputContainerUseds[0].volume.value ){
+				if (atm.outputContainerUseds[0].volume && atm.outputContainerUseds[0].volume.value  ){
 					atm.inputContainerUseds[0].experimentProperties.inputVolume.value = atm.outputContainerUseds[0].volume.value;
 				}else {
 					atm.outputContainerUseds[0].volume.value = atm.inputContainerUseds[0].experimentProperties.inputVolume.value; 
 				}
 
-			};
+			}
 
 		});		
 	}
-	
-	
-	
 }]);

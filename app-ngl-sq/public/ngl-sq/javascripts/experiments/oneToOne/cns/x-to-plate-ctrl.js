@@ -1,5 +1,5 @@
-angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable',
-                                                       function($scope, $http,$parse,$filter,atmToSingleDatatable) {
+angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse', '$filter','atmToSingleDatatable', 'helpers',
+                                                       function($scope, $http,$parse,$filter,atmToSingleDatatable, helpers) {
     var datatableConfig = {
             name:$scope.experiment.typeCode.toUpperCase(),
             columns:[              
@@ -312,6 +312,7 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
             
     };
 
+
     var updateATM = function(experiment){
         if(experiment.instrument.outContainerSupportCategoryCode!=="tube"){
             experiment.atomicTransfertMethods.forEach(function(atm){
@@ -320,48 +321,13 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
             });
         }        
     };
-    
-    
-    
-    var computeQtty = function(experiment){
-        experiment.atomicTransfertMethods.forEach(function(atm){
-
-            var getter = $parse("outputContainerUseds[0].quantity");
-            var outputQuantity = getter(atm);
-
-
-            var compute = {
-                    inputConc : $parse("inputContainerUseds[0].concentration")(atm),
-                    outputConc : $parse("outputContainerUseds[0].concentration")(atm),
-                    outputQtty : $parse("outputContainerUseds[0].quantity")(atm),
-                    outputVol : $parse("outputContainerUseds[0].volume")(atm)
-
-            };
-            
-            if($parse("(outputConc.unit ===  inputConc.unit && outputQtty.value == undefined)")(compute)){
-                var result = $parse("outputVol.value  * outputConc.value ")(compute);
-                console.log("result = "+result);
-                if(angular.isNumber(result) && !isNaN(result)){
-                    outputQuantity.value = Math.round(result*10)/10;                
-                }else{
-                    outputQuantity.value = undefined;
-                }    
-                getter.assign(atm, outputQuantity);
-            }else{
-                outputQuantity.value = undefined;
-                getter.assign(atm,outputQuantity);    
-            
-            }
-        });
-
-    };
-    
+   
     $scope.$on('save', function(e, callbackFunction) {    
         console.log("call event save");
         $scope.atmService.data.save();
         $scope.atmService.viewToExperimentOneToOne($scope.experiment);
         updateATM($scope.experiment);
-        computeQtty($scope.experiment);
+        helpers.computeQuantity($scope.experiment);
         $scope.$emit('childSaved', callbackFunction);
     });
     
@@ -374,7 +340,6 @@ angular.module('home').controller('CNSXToPlateCtrl',['$scope' ,'$http','$parse',
         dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
         $scope.atmService.data.setConfig(dtConfig);
         $scope.atmService.refreshViewFromExperiment($scope.experiment);
-        computeQtty($scope.experiment);
         $scope.$emit('viewRefeshed');
     });
     
