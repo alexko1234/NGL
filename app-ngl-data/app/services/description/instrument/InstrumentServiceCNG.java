@@ -111,12 +111,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// 07/12/2017 NGL-1730 "cBot-MarieCurix-A et "cBot-MarieCurix-B
-		// 19/12/2017 NGL-1750 les Hi9, Hi10 et Hi11 auraient dus etre dédoublés en -A et -B => !! necessite reprise historique MongoDB
 		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
-				getInstruments(
-						//createInstrument("cBot-Hi9",   "cBot-interne-Hi9",      null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi10",  "cBot-interne-Hi10",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						//createInstrument("cBot-Hi11",  "cBot-interne-Hi11",     null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),	
+				getInstruments(	
 						createInstrument("cBot-Hi9-A",   "cBot-interne-Hi9-A",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-Hi9-B",   "cBot-interne-Hi9-B",    null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-Hi10-A",  "cBot-interne-Hi10-A",   null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -128,7 +124,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("cBot-MarieCurix-A","cBot-interne-MarieCurix-A",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("cBot-MarieCurix-B","cBot-interne-MarieCurix-B",null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube"}), 
-				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-4" }), 
+				getContainerSupportCategories(new String[]{"flowcell-4","flowcell-2","flowcell-1" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	
 		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getMiseqProperties(), 

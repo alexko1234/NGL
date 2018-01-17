@@ -397,7 +397,13 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		$scope.changeValueOnFlowcellDesign();
 	};
 
-	$scope.changeValueOnFlowcellDesign = function(){
+	/* ORIG...
+	 $scope.changeValueOnFlowcellDesign = function(){
+		$scope.atmService.data.updateDatatable();
+	};
+	*/
+	$scope.changeValueOnFlowcellDesign = function(test){
+		console.log('changeValueOnFlowcellDesign '+ test.name+ ':'+test.value);
 		$scope.atmService.data.updateDatatable();
 	};
 

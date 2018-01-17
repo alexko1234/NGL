@@ -3,6 +3,7 @@ package services.description.experiment;
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -978,7 +979,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
+		// test NGL-1767: ajout liste de volumes pour les differents types de sequencage..!!!
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, newValues("5","150", "310"), "5",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
 				MeasureUnit.find.findByCode("µL"),
@@ -992,6 +994,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null,
 				null, null, null, "single",23,true,"0.1N",null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 

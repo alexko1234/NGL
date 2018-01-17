@@ -1,10 +1,11 @@
 angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$parse', '$http','atmToDragNDrop','mainService',
                                                                function($scope, $parse, $http, atmToDragNDrop, mainService) {
 	
+	//surcharge default/tubes-to-flowcell-ctrl.js !!!
 	
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
-	// onglet feuille de calcul
+	// Pour le datatble dans l'onglet feuille de calcul
 	var columns = [  
 	             {
 		        	 "header":Messages("containers.table.support.number"),
@@ -112,7 +113,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		         }
 		         ];
 	
-	// 25/04/2017  si utilisation du janus alors il ne faut que des plaques...
+	// 25/04/2017  si utilisation du janus alors il ne faut aussi afficher la colonne de la plaque
 	if($scope.experiment.instrument.inContainerSupportCategoryCode !== "tube"){
 		columns.push(
 			 {
@@ -136,6 +137,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":"prep FC"});
 		
 	};
+	// ??? ca fait quoi ????
 	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property, pName){
 		if(property.code === "source"){
 			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":"lib normalisée"});
@@ -162,7 +164,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	
 
-	/* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2; 25/10/2017 renommage en importDataCbot */
+	/* 06/01/2017 FDS ajout pour l'import du fichier Cbot-V2 */
 	var importDataCbot = function(){
 		console.log('Import cBot file');
 		
@@ -299,16 +301,28 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	});	
 	
-    // ajout 24/04/2017 NGL-1325
+    // -4-ajout 24/04/2017 NGL-1325
 	$scope.$watch("experiment.experimentProperties.sequencingType.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
+			console.log('sequencing type changed to :'+ newValue);
 			checkFCsequencingType();
+			setFeuilleCalcul();// ajout 16/01/2018 NGL-1767 modification dynamique de la feuille de calcul
 		} 
 	});	
+	
+	// -5- ajout 16/01/2018: NGL-1767 modification dynamique de la feuille de calcul
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(newValue, OldValue){
+		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {	
+			setFeuilleCalcul();
+		} 
+	});	
+	
 	
 	function checkFCsequencingType (){
 		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
+		// ??? pattern pour NovaSeq6000 ???? reponse Illumina en attente
+		
 		$scope.messages.clear();
 		// !! peut etre non encore definie...
 		var fcBarcode=undefined;
@@ -338,7 +352,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
 				$scope.messages.showDetails = false;
 				$scope.messages.open();
-			}	
+			}		
 		} else {
 			console.log('checkFCsequencingType OK');
 			$scope.messages.clear();
@@ -369,5 +383,79 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	}
 	
+	// ajout 16/01/2018 : NGL-1767 modification dynamique de la feuille de calcul
+	function setFeuilleCalcul(){
+		console.log('setFeuilleCalcul');
+		
+		if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000' ) {
+			// et le cas flowcell-1 ????? existe pour MiSeq?????
+			if ( "experiment.instrument.outContainerSupportCategoryCode"==='flowcell-2'){
+				console.log('S2...NaoH=37/0.2N; TrisHCL=38/400; EPX=525; Phix=1' );
+			}
+			if ( "experiment.instrument.outContainerSupportCategoryCode"==='flowcell-4'){
+				console.log('S4...NaoH=77/0.2N; TrisHCL=78/400; EPX=1085; Phix=1');
+			}
+		} else {
+			// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
+			console.log('default...NaoH=5/0.1N; TrisHCL=5/200; EPX=35; Phix=3 ?');
+		}
+	}
+	
+
+	// TODO ???? 15/01/2018 faire les calculs en Javascript au lieu de Drools ????
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		if ( col.property === 'inputContainerUsed.experimentProperties.inputVolume2.value'){ 
+			console.log('Volume engagé modifié....');
+		    computeConcentration(value.data);
+		}
+	}
+	
+	//TEST
+	$scope.updatePropertyFromUDT = function(value, col){
+		console.log("update from property : "+col.property);
+		if ( col.property === 'inputContainerUsed.experimentProperties.finalVolume.value'){ 
+			console.log('Volume final modifié....');
+		    computeConcentration(value.data);
+		}
+	}
+	
+	// TODO ???? 15/01/2018 faire les calculs en Javascript au lieu de Drools ????
+	var computeConcentration = function(udtData){
+		
+		var getterFinalConcentration2=$parse("inputContainerUsed.finalConcentration2.value")(udtData);
+		
+		var compute = {
+				inputConc :  $parse("inputContainerUsed.concentration.value")(udtData), 
+				engagedVol :  $parse("inputContainerUsed.inputVolume2.value")(udtData), 
+				finalVol:  $parse("outputContainerUsed.finalVolume.value")(udtData),
+
+				isReady:function(){
+					// !! final volume doit imperativement etre != 0 sino div by 0
+					return ((this.finalVol) && ( this.inputConc ));
+				}
+		};
+		
+
+		if(compute.isReady()){
+			console.log("compute.isReady");
+			
+			var finalConcentration= compute.inputConc * compute. engagedVol / compute.finalVol;
+			
+			// arrondir...
+			//DROOLS: new PropertySingleValue(Math.round((convertPVToDouble($finalConcentration1)*convertPVToDouble($inputVolume2)/convertPVToDouble($finalVolume))*100.0)/100.0,"nM");
+			if(angular.isNumber(finalConcentration) && !isNaN(finalConcentration)){
+				finalConcentration = Math.round(finalConcentration*100.0)/100.0;				
+			}
+			
+			console.log("conc finale = "+finalConcentration);
+			getterFinalConcentration2.assign(udtData, finalConcentration);
+			
+		}else{
+			console.log("Impossible de calculer le volume final: valeurs manquantes");
+			getterFinalConcentration2.assign(udtData, undefined);
+			//getterFinalConcentration2.assign(udtData, 999);//DEBUG...
+		}
+	}
 	
 }]);
