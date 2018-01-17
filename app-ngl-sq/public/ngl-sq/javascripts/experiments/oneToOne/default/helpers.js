@@ -27,6 +27,7 @@ angular.module('tools', [])
 							var result = $parse("outputVol.value  * outputConc.value ")(compute);
 							console.log("result = "+result);
 							if(angular.isNumber(result) && !isNaN(result)){
+								outputQuantity = {};
 								outputQuantity.value = Math.round(result*10)/10;
 								if($parse("outputConc.unit")(compute) == "nM"){
 									outputQuantity.unit = "fmol";	
