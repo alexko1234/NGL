@@ -496,7 +496,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			}	
 
 			if(col.property === 'outputContainerUsed.volume.value'){
-				refreshMaxConc(value.data);
+				computeMaxConc(value.data);
 			}
 			
 			computeOutputQuantity(value.data);
@@ -544,12 +544,10 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 	};
 	*/
 	
-	var refreshMaxConc = function(udtData){
+	var computeMaxConc = function(udtData){
 		
-		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration.value");
-		var maxConcValue = getter(udtData);
-		var getter2 = $parse("inputContainerUsed.experimentProperties.maximumConcentration.unit");
-		var maxConcUnit = getter2(udtData);
+		var getter = $parse("inputContainerUsed.experimentProperties.maximumConcentration");
+		var maxConc = getter(udtData);
 		
 		
 		var compute = {
@@ -566,15 +564,17 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			var result = $parse("(inputConc * inputVol) / outputVol")(compute);
 			console.log("refreshMaxConcfunction result"+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				maxConcValue = Math.round(result*10)/10;	
-				maxConcUnit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
-				
+				maxConc = {};
+				maxConc.unit = (compute.inputConcUnit === 'nM')?'fmol':'ng';
+				if(result > compute.inputConc){
+					maxConc.value =  compute.inputConc;						
+				}else{
+					maxConc.value = Math.round(result*10)/10;						
+				}
 			}else{
-				maxConcValue =undefined;
-				maxConcUnit= undefined;
+				maxConc =undefined;				
 			}	
-				getter.assign(udtData, maxConcValue);
-				getter2.assign(udtData, maxConcUnit);
+			getter.assign(udtData, maxConc);				
 				
 		}
 	};
