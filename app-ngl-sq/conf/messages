@@ -516,7 +516,8 @@ experiments.input.error.only-tubes = Seuls des tubes peuvent entrer dans cette e
 experiments.input.error.only-tubes-or-strips = Seuls des tubes ou des strips peuvent entrer dans cette expérience
 experiments.input.error.only-plates = Seules des plaques peuvent entrer dans cette expérience
 experiments.input.error.only-1-plate= Une seule plaque peut entrer dans cette expérience
-experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les même
+experiments.input.error.must-be-same-out = Les categories de container en entrée et en sortie doivent être les mêmes
+experiments.output.error.must-have-inputConc = Impossible de noter une concentration en sortie si la concentration en entrée est nulle!
 experiments.input.error.maxContainers=Maximum {0} container(s) en entrée
 experiments.input.error.maxSupports=Maximum {0} support(s) en entrée
 

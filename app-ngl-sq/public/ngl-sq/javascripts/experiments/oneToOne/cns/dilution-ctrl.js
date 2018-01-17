@@ -457,18 +457,22 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 	var computeBufferVolume = function(udtData){
 		var getter = $parse("inputContainerUsed.experimentProperties.bufferVolume.value");
 		var bufferVolume = getter(udtData);
-		
+
 		var compute = {
 				dilFactor : (($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).indexOf("1/") ==0 ? ($parse("inputContainerUsed.experimentProperties.dilutionFactor.value")(udtData)).substring(2) : undefined ) ,
 				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),
 				isReady:function(){
 					return (this.inputVol && this.dilFactor);
 				}
-			};
-		
+		};
+
 		if(compute.isReady()){
-			var result = $parse("(inputVol * dilFactor) - inputVol")(compute);
-			console.log("result = "+result);
+			if ($parse("dilFactor")(compute) == 1){
+				var result = 0;
+			}else{
+				var result = $parse("(inputVol * dilFactor) - inputVol")(compute);
+			}
+			console.log("computeBufferVolume result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				bufferVolume = Math.round(result*10)/10;				
 			}else{
@@ -480,24 +484,24 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 			getter.assign(udtData, bufferVolume);
 			console.log("not ready to computeBufferVolume");
 		}
-		
+
 	}
 	//inputContainerUsed.experimentProperties.inputVolume.value + inputContainerUsed.experimentProperties.bufferVolume.value
 	var computeFinalVolume = function(udtData){
 		var getter = $parse("outputContainerUsed.volume.value");
 		var finalVolume = getter(udtData);
-		
+
 		var compute = {
 				inputVol : $parse("inputContainerUsed.experimentProperties.inputVolume.value")(udtData),			
-				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),			
+				bufferVol : $parse("inputContainerUsed.experimentProperties.bufferVolume.value")(udtData),	
+
 				isReady:function(){
-					return (this.inputVol && this.bufferVol);
+					return (this.inputVol && "this.bufferVol");
 				}
-			};
-		
+		};
+
 		if(compute.isReady()){
 			var result = $parse("(inputVol + bufferVol)")(compute);
-			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				finalVolume = Math.round(result*10)/10;				
 			}else{
@@ -526,7 +530,7 @@ angular.module('home').controller('DilutionCtrl',['$scope' ,'$http','$parse', 'a
 		
 		if(compute.isReady()){
 			var result = $parse("(inputVol * inputConc / finalVol)")(compute);
-			console.log("result = "+result);
+			console.log("finalConc result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				finalConc = Math.round(result*10)/10;				
 			}else{

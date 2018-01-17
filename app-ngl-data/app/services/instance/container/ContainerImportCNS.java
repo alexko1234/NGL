@@ -346,9 +346,6 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			
 		}
 		
-		if(qualityControlResults.size() == 0){
-			container.qualityControlResults = qualityControlResults;
-		}
 		
 		if(null != experimentTypeCode){
 			container.fromTransformationTypeCodes=new HashSet<String>();

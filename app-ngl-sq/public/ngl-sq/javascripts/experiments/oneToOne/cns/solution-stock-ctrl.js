@@ -269,6 +269,14 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	//WARNING Old systme to compute better used  updatePropertyFromUDT function see normalization
 	var calculVolumeFromValue=function(value){
 		console.log("call calculVolumeFromValue");
+		if (value.inputContainerUsed.concentration === undefined 
+				|| value.inputContainerUsed.concentration === null
+				|| value.inputContainerUsed.concentration.value === undefined 
+				|| value.inputContainerUsed.concentration.value === null ){				
+			value.outputContainerUsed.concentration=undefined;				
+		}
+		
+		
 		if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties===null){
 			value.inputContainerUsed.experimentProperties={};
 		}

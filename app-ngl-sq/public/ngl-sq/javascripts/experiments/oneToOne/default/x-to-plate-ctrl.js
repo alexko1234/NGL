@@ -1,5 +1,4 @@
-angular.module('home').controller('XToPlateCtrl',['$scope', 
-                                                               function($scope) {
+angular.module('home').controller('XToPlateCtrl',['$scope', function($scope) {
 	
 	
 	// FDS: renommer getOutputContainers car donne une liste de containers et pas de containerSupports, !! contient des doublons 

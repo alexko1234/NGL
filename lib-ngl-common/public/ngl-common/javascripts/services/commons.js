@@ -1483,14 +1483,30 @@ angular.module('commonsServices', []).
 			  if(pattern === null || pattern === undefined)return;
 			  return $parse(pattern)(obj);
 			  };
-		}]).filter('formatProjectListLabel',  ['$parse',function($parse){ //transform object to array
+		}]).filter('formatProjectListLabel',  ['$filter','$parse',
+			function($filter, $parse){ 
 	  		  return function (proj) {
 				  if(proj === null || proj === undefined)return;  
-				  if(proj.code !== proj.name)
-					  return $parse('code+\" \(\"+name+\"\)\"')(proj);
-				  else
-					  return $parse('code')(proj);
-				  
+				  var convert = function(proj){
+					  if(angular.isObject(proj)){
+						  if(proj.code !== proj.name)
+							  return $parse('code+\" \(\"+name+\"\)\"')(proj);
+						  else
+							  return $parse('code')(proj);
+					  } else if(angular.isString(proj)){
+						  var name = $filter("codes")(proj, "project");
+						  if(proj !== name)
+							  return proj+' ('+name+')';
+						  else
+							  return proj;
+					  } 
+				  };
+				  if(angular.isArray(proj)){
+					  return proj.map(function(p){return convert(p);});
+				  }else{
+					  return convert(proj);
+				  }
+				 
 	  		  };
-		}]);
+		}])
     	

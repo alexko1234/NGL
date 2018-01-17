@@ -1,5 +1,5 @@
-angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
-                                                       function($scope, $http,$parse,atmToSingleDatatable) {
+angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable', 'helpers',
+                                                       function($scope, $http,$parse,atmToSingleDatatable, helpers) {
 	var datatableConfig = {
 			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
@@ -322,6 +322,7 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		helpers.computeQuantity($scope.experiment);
 		updateATM($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
@@ -362,7 +363,9 @@ angular.module('home').controller('CNSPlatesToPlateCtrl',['$scope' ,'$http','$pa
 			value.data.outputContainerUsed.volume = value.data.inputContainerUsed.volume;
 		})		
 	};
+
 	
+
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 		$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 	});
