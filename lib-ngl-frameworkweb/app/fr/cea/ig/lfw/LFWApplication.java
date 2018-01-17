@@ -37,8 +37,20 @@ public class LFWApplication {
 	 */
 	private final ActorSystem actorSystem;
 	
+	/**
+	 * Configuration wrapper.
+	 */
 	private final LFWConfig config;
 	
+	/**
+	 * DI Constructor.
+	 * @param injector          injector
+	 * @param messagesApi       internationalization messages
+	 * @param jsMessagesFactory javascript messages
+	 * @param formFactory       form factory
+	 * @param actorSystem       actor system
+	 * @param config            configuration
+	 */
 	@Inject
 	public LFWApplication(Injector injector, 
 			              MessagesApi messagesApi, 
@@ -54,6 +66,10 @@ public class LFWApplication {
 		this.config            = config;
 	}
 	
+	/**
+	 * Subclass constructor.
+	 * @param app super class instance
+	 */
 	protected LFWApplication(LFWApplication app) {
 		this(app.injector(),
 			 app.messagesApi(),
