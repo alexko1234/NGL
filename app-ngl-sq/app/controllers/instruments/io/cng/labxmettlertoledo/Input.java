@@ -140,14 +140,15 @@ public class Input extends AbstractInput {
 			Logger.debug ("------  CREATION DES REAGENTS USED ------");
 
 			// 30/11/2017 avec 2 map distincts on peut ne creer que les reagent et pas les box !!
-			// 01/12/2017 oui mais certaines boîtes particulieres doivent etre crees qd même (la boîte de la flow cell , et la boîte du Manifold )
+			// 17/01/2018 retour a la creation de toutes les boites sinon celles qui n'ont pas de reactifs n'apparaissent plus.....
+			//
 			for (Map.Entry<String, ReagentUsed> pair : parsedBoxesMap.entrySet())
             {
 				//Logger.debug("parsedBOX... :"+ pair.getKey());
-				if ( (pair.getKey().equals("HiSeq X Flow Cell")) || (pair.getKey().equals("HiSeq 3000/4000 PE Flow Cell"))|| (pair.getKey().matches("(.*)Manifold(.*)")) ){
+				//if ( (pair.getKey().equals("HiSeq X Flow Cell")) || (pair.getKey().equals("HiSeq 3000/4000 PE Flow Cell"))|| (pair.getKey().matches("(.*)Manifold(.*)")) ){
 					Logger.debug(" création boîte seule: "+ pair.getKey());
 					experiment.reagents.add(pair.getValue());
-				}
+				//}
             }
 			
 			for (Map.Entry<String, ReagentUsed> pair : parsedReagentsMap.entrySet())

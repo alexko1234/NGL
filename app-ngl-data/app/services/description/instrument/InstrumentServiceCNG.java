@@ -199,7 +199,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("labGX",  "LABCHIP_GX 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ,
 						createInstrument("labGX2", "LABCHIP_GX 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))) ,
-				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),
+				getContainerSupportCategories(new String[]{"96-well-plate"}),
 				null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -207,15 +207,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		/** thermocyclers **/
 		//FDS ajout 03/04/2017 NGL-1225:  Mastercycler Nexus SX1 seul (input tubes ou plaques / output tubes ou  plaques)
 		//FDS 13/07/2017 "Mastercycler Nexus-SX1" et "Mastercycler Nexus" sont le meme type => fusionner !!!
-		//               essai: mettre le nom de labo dans le "path"
+		//               essai: mettre le nom de labo dans le "path"; 15/01/2018 LHD et LMPD ont fusionné!!
 		l.add(newInstrumentUsedType("Mastercycler Nexus-SX1", "mastercycler-nexus", InstrumentCategory.find.findByCode("thermocycler"), getMastercyclerNexusProperties(), 
 				getInstruments(
-						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus6", "Mastercycler 6 (Nexus SX1)", null, true, "LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus5", "Mastercycler 5 (Nexus SX1)", null, true, "ex-LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus6", "Mastercycler 6 (Nexus SX1)", null, true, "ex-LHD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						
-						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus8", "Mastercycler 8 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus SX1)", null, true, "LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+						createInstrument("mastercycler-nexus7", "Mastercycler 7 (Nexus SX1)", null, true, "ex-LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus8", "Mastercycler 8 (Nexus SX1)", null, true, "ex-LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("mastercycler-nexus9", "Mastercycler 9 (Nexus SX1)", null, true, "ex-LMPD", DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
