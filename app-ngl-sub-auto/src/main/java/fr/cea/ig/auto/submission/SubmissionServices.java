@@ -261,7 +261,7 @@ public class SubmissionServices implements ISubmissionServices{
 		sujet = "Probleme parsing fichier des AC : ";
 		message = "Pour la soumission " + submissionCode + ", le fichier des AC "+ ebiFileName + "\n";
 
-		if (ebiSubmissionCode==null || SRAFilesUtil.isNotNullValue(ebiSubmissionCode)) {
+		if (ebiSubmissionCode==null || !SRAFilesUtil.isNotNullValue(ebiSubmissionCode)) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
 			message += "- ne contient pas ebiSubmissionCode \n";
 			error = true;
@@ -272,8 +272,8 @@ public class SubmissionServices implements ISubmissionServices{
 			error = true;
 		}
 		// Verifier que le nombre d'ac recuperés dans le fichier est bien celui attendu pour l'objet submission:
-		if (studyCode== null || SRAFilesUtil.isNotNullValue(studyCode)) {
-			if (studyAc== null || SRAFilesUtil.isNotNullValue(studyAc)) {
+		if (studyCode== null || !SRAFilesUtil.isNotNullValue(studyCode)) {
+			if (studyAc== null || !SRAFilesUtil.isNotNullValue(studyAc)) {
 				//System.out.println("studyAc attendu non trouvé pour " + submission.studyCode);
 				message += "- ne contient pas de valeur pour le studyCode " + studyCode+"\n";
 			}
