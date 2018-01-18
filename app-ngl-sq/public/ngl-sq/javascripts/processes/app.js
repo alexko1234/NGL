@@ -11,6 +11,11 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 		controller : 'SearchSamplesCtrl'
 	});
 	
+	$routeProvider.when('/processes/assign-process-to-container/home', {
+		templateUrl : jsRoutes.controllers.processes.tpl.Processes.searchContainers().url,
+		controller : 'SearchContainersForProcessesAssignationCtrl'
+	});
+	
 	$routeProvider.when('/processes/state/home', {
 		templateUrl : jsRoutes.controllers.processes.tpl.Processes.search("home").url,
 		controller : 'SearchStateCtrl'
