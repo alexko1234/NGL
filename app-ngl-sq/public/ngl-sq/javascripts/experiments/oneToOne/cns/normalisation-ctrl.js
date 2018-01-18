@@ -569,7 +569,7 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 				if(result > compute.inputConc){
 					maxConc.value =  compute.inputConc;						
 				}else{
-					maxConc.value = Math.round(result*10)/10;						
+					maxConc.value = Math.round(result*100)/100;						
 				}
 			}else{
 				maxConc =undefined;				
