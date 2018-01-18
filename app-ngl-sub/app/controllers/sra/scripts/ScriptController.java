@@ -11,7 +11,7 @@ import play.mvc.Result;
 import sra.scripts.AbstractScript;
 
 public class ScriptController extends Controller {
-	public static final String LILI = "lili";
+	//public static final String LILI = "lili";
 	private final Injector injector;
 	
 	// pour dire à play d'utiliser ce constructeur
@@ -43,7 +43,6 @@ public class ScriptController extends Controller {
 			return notFound("not found class "+ e.getMessage());
 		}
 	}
-	
 	
 	public Result script_1() {
 		return ok("from script_1");

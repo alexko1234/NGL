@@ -249,8 +249,6 @@ public class SubmissionServices {
 
 		System.out.println("\ntaille de la map des userClone dans init = " + mapUserClones.size());
 		
-	
-		
 		
 		String user = contextValidation.getUser();
 		
@@ -695,6 +693,7 @@ public class SubmissionServices {
 		}
 
 		contextValidation.setCreationMode();
+			
 		// On ne sauvent que les study qui n'existent pas dans la base donc des ExternalStudy avec state.code='F-SUB'	
 		for (AbstractStudy absStudyElt: listAbstractStudies) {
 			if (! MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, "code", absStudyElt.code)){	
@@ -751,13 +750,17 @@ public class SubmissionServices {
 						DBUpdate.set("submissionState.code", "N").set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
 			}
 		}		
-
+	
 		// valider submission une fois les experiments et samples sauves, et sauver submission
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		submission.validate(contextValidation);
-		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
+		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){			
 			submission.validate(contextValidation);
+			System.out.println("\nDEBUG  displayErrors dans *********SubmissionServices::initPrimarySubmission :");
+			contextValidation.displayErrors(logger);
+			System.out.println("\nDEBUG  end displayErrors dans **********SubmissionServices::initPrimarySubmission :");
+		
 			MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
 			//System.out.println ("sauvegarde dans la base du submission " + submission.code);
 		}
@@ -765,9 +768,9 @@ public class SubmissionServices {
 		if (contextValidation.hasErrors()){
 			System.out.println("submission.validate produit des erreurs");
 			// rallBack avec clean sur exp et sample et mise à jour study
-			System.out.println("\ndisplayErrors dans SubmissionServices::createNewSubmission :");
+			System.out.println("\ndisplayErrors dans SubmissionServices::initPrimarySubmission :");
 			contextValidation.displayErrors(logger);
-			System.out.println("\n end displayErrors dans SubmissionServices::createNewSubmission :");
+			System.out.println("\n end displayErrors dans SubmissionServices::initPrimarySubmission :");
 			
 			// enlever les samples, experiments et submission qui ont ete crées par le service et remettre
 			// readSet.submissionState à NONE, et si studyCode utilisé par cette seule soumission remettre studyCode.state.code=N
@@ -776,11 +779,7 @@ public class SubmissionServices {
 			//throw new SraException("SubmissionServices::initPrimarySubmission::probleme validation  voir log: ");
 			submissionWorkflowsHelper.rollbackSubmission(submission, contextValidation);	
 			contextValidation.displayErrors(logger);
-			throw new SraException("SubmissionServices::initReleaseSubmission::probleme validation  voir log: ");
-			
-			
-			
-			
+			throw new SraException("SubmissionServices::initReleaseSubmission::probleme validation  voir log: ");			
 		} 	
 		System.out.println("Creation de la soumission " + submission.code);
 		return submission.code;
@@ -1505,7 +1504,6 @@ public class SubmissionServices {
 		// Pour chaque readSet, creer un objet run 
 		Date runDate = readSet.runSequencingStartDate;
 		Run run = new Run();
-		run.code = SraCodeHelper.getInstance().generateRunCode(readSet.code);
 		run.runDate = runDate;
 
 		//run.projectCode = projectCode;

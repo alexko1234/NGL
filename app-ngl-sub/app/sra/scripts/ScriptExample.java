@@ -6,11 +6,11 @@ public class ScriptExample extends AbstractScript {
 	
 	@Override
 	public void execute() {
-		print("toto");
-		print("titi");
+		println("toto");
+		println("titi");
 		if (true) throw new RuntimeException("crash");
-		print("tutu");
-		print("tata");
+		println("tutu");
+		println("tata");
 	}
 	
 	@Override

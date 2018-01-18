@@ -2,7 +2,7 @@ package sra.scripts;
 
 import play.mvc.Result;
 import play.mvc.Results;//.ok; // pour utiliser les methodes de controller
-import static controllers.sra.scripts.ScriptController.LILI;
+//import static controllers.sra.scripts.ScriptController.LILI;
 
 public  abstract class AbstractScript {
 	private final play.Logger.ALogger logger;
@@ -33,7 +33,7 @@ public  abstract class AbstractScript {
 		Debug, Info
 	}
 	
-	public void print(String arg) {
+	public void println(String arg) {
 		sb.append(arg);
 		sb.append('\n');
 		switch (logLevel()) {
@@ -44,10 +44,9 @@ public  abstract class AbstractScript {
 			logger.info(arg); 
 			break;	
 		}
-		logger.debug(arg);
 	}	
 	
-	public void printf(String format, Object... args ) {
+	public void printfln(String format, Object... args ) {
 		String arg = String.format(format, args);
 		sb.append(arg);
 		sb.append('\n');
@@ -59,14 +58,11 @@ public  abstract class AbstractScript {
 			logger.info(arg); 
 			break;	
 		}
-		logger.debug(arg);
 	}	
 		
 	public LogLevel logLevel() {
 		return LogLevel.Debug;
 	}	
-	
-
 	
 	// methode abstraite qui sera impementée dans les != script
 	public abstract void execute() throws Exception;

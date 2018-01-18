@@ -7,7 +7,13 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
+import javax.inject.Inject;
 
 import models.sra.submit.common.instance.Sample;
 import models.utils.InstanceConstants;
@@ -15,34 +21,59 @@ import models.utils.InstanceConstants;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import play.libs.ws.WSClient;
+import play.libs.ws.WSRequest;
+import play.libs.ws.WSResponse;
+import sra.scripts.AbstractScript.LogLevel;
+import sra.scripts.utils.CSVParsing;
+import sra.scripts.utils.DateTools;
+import sra.scripts.utils.EbiAPI;
+import sra.scripts.utils.Tools;
 import fr.cea.ig.MongoDBDAO;
 
 
 
 public class RepriseHistoSample_extId extends AbstractScript {
+
+	/* version 1 : on demande à play d'instancier la classe avec un objet WSClient et on instantiera 
+	un objet EbiAPI avec ws
+	private final WSClient ws;	
+	@Inject
+	public RepriseHistoSample_extId(WSClient ws) {
+		this.ws = ws;
+	}
+	*/
+	
+	
+	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
+	private final EbiAPI ebiAPI;	
+
+	@Inject
+	public RepriseHistoSample_extId(EbiAPI ebiAPI) {
+		this.ebiAPI = ebiAPI;
+	}
 	
 	@Override
 	public void execute() throws IOException, ParseException {
-		Map <String, String> mapMois = new HashMap<>();
-		mapMois.put("janv", "1");
-		mapMois.put("f�vr", "2");
-		mapMois.put("mars", "3");
-		mapMois.put("avr" , "4");
-		mapMois.put("mai" , "5");
-		mapMois.put("juin", "6");
-		mapMois.put("juil", "7");
-		mapMois.put("ao�t", "8");
-		mapMois.put("sept", "9");
-		mapMois.put("oct" ,"10");
-		mapMois.put("nov" ,"11");
-		mapMois.put("d�c" ,"12");
-		
 
-		File ebiFile = new File("/env/cns/home/sgas/repriseHistoExtId/repriseHistoSample.csv");
-		CSVParser csvParser = CSVParser.parse(ebiFile, Charset.forName("UTF-8"), CSVFormat.EXCEL.withDelimiter(';'));
+		List <Sample> dbSamples = MongoDBDAO.find(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, DBQuery.in("_type", "Sample")).toList();
+		Set <String> dbSampleAcs = new HashSet<>();
+
+		for (Sample dbSample : dbSamples){
+			//dbSampleCodes.add(dbSample.accession + "-" + dbSample.code);
+			if (StringUtils.isNotBlank(dbSample.accession)) {
+				dbSampleAcs.add(dbSample.accession);
+			}
+		}
+		Set <String> sampleAcs = new HashSet<>();		//Set <String> studyCodes = new HashSet<String>(); 
+		
+		File ebiFile = new File("/env/cns/home/sgas/repriseHistoExtId/repriseHistoSample.ori.csv");
+		//CSVParser csvParser = CSVParser.parse(ebiFile, Charset.forName("UTF-8"), CSVFormat.EXCEL.withDelimiter(';'));
+		CSVParser csvParser = CSVParsing.parse(ebiFile, ';');
 		boolean first = true;
 		int cp = 0;
 		for (CSVRecord  record : csvParser) {
@@ -59,60 +90,65 @@ public class RepriseHistoSample_extId extends AbstractScript {
 			String extId = record.get(1);
 			String code = record.get(3);
 			String oriDate = record.get(4);
-
-			String [] tmp = oriDate.split("-");
-			Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp[0]+ "/"+mapMois.get(tmp[1])+"/20"+tmp[2]);
+			
+			// Ignorer les samples TARA de Pesant 
+			if (code.matches("^TARA_[a-zA-Z0-9]{10,11}$")){
+				continue;
+			}
+			//sampleCodes.add(accession + "-" + code);
+			sampleAcs.add(accession);
+			//String [] tmp = oriDate.split("-");
+			//Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp[0]+ "/"+DateTools.monthOrdinal(tmp[1])+"/20"+tmp[2]);
+			Date date = DateTools.dmy("-", oriDate);
+			
 			//print(DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
 			//Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse("1/1/18");
-			printf("%s  |  %s  |  %s  |  %s", accession, extId, code, date);
+			printfln("%s  |  %s  |  %s  |  %s", accession, extId, code, date);
 
 			Date today = new Date();
-
-			// consideres dans la base comme externalSample ???? revoir reprise histo ???
-			
-			if (accession.equals("ERS506046")){
-			//	continue;
-			}
-			if (accession.equals("ERS905354")){
-				//continue;
-			}
-			if (accession.equals("ERS1092158")){
-				//continue;
-			}
-			
 			
 			Sample sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
 					Sample.class, DBQuery.and(DBQuery.is("accession", accession)));
 			
 			if (sample == null) {
-				printf("***************ERREUR pour le sample %d avec code=%s et accession =%s qui n'existe pas dans base", cp, code, accession);
+				printfln("***************ERREUR pour le sample %d avec code=%s et accession =%s qui n'existe pas dans base", cp, code, accession);
 				continue;
 			}
 			
 			if (sample._type.equals("ExternalSample")) {
-				printf("***************ERREUR pour le sample %d avec code=%s et accession =%s qui existe dans base comme ExternalSample", cp, code, accession);
+				printfln("***************ERREUR pour le sample %d avec code=%s et accession =%s qui existe dans base comme ExternalSample", cp, code, accession);
 				continue;
 			} 
 			
-			if (accession.equals("ERS506046")){
-				printf("************Dans base: accession=%s,code=%s,_type=%s,  ", sample.accession, sample.code,sample._type);
-		    }
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, 
 					DBQuery.is("accession", accession),
 					DBUpdate.set("externalId", extId).set("traceInformation.creationDate", date).set("traceInformation.modifyDate", today));
 			
 			if (sample != null) {
-				printf("update ok  " + cp);
+				printfln("update ok  " + cp);
 			}
-			
-			
+					
 		}
 		
-	}
+		// Controle coherence :
+		Set<String> absentFichier = Tools.subtract(dbSampleAcs, sampleAcs);
+		printfln("************* %d codes presents dans base et absents du fichier d'entree *****************",absentFichier.size());
+		for (String sampleAc : absentFichier) {
+			printfln("%s",sampleAc);
+		}
+
+		Set<String> absentBase = Tools.subtract(sampleAcs, dbSampleAcs);
+		printfln("************* %d codes presents dans fichier d'entree et absents dans base *****************",absentBase.size());
+		for (String sampleAc : absentBase) {
+			printfln("%s",sampleAc);
+		}
+		
 	
+	}
+		
 	@Override
 	public LogLevel logLevel() {
-		return LogLevel.Debug;
+		return LogLevel.Info;
 	}
 	
 }
