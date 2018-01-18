@@ -1,12 +1,14 @@
 package workflows.container;
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
-import static fr.cea.ig.play.IGGlobals.configuration;
+// import static fr.cea.ig.play.IGGlobals.akkaSystem;
+// import static fr.cea.ig.play.IGGlobals.configuration;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE;
 
 import java.util.Set;
+
+import javax.inject.Inject;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
@@ -15,44 +17,59 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
 // import play.Logger;
-import play.Play;
-import play.libs.Akka;
-import rules.services.RulesActor6;
+// import play.Play;
+// import play.libs.Akka;
+// import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
 import workflows.Workflows;
 import akka.actor.ActorRef;
-import akka.actor.Props;
+// import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
-@Service
+// @Service
 public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ContSupportWorkflows.class);
 	
-	@Autowired
-	ContWorkflows containerWorkflows;
+	// @Autowired
+	// ContWorkflows containerWorkflows;
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	/*private static ActorRef _rulesActor;
+	static ActorRef rulesActor() {
+		if (_rulesActor == null)
+			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+		return _rulesActor;
+	}*/
+	
+	private final String        rulesKey;
+	private final ActorRef      rulesActor;
+	private final ContWorkflows containerWorkflows;
+	
+	@Inject
+	public ContSupportWorkflows(NGLContext ctx, ContWorkflows containerWorkflows) {
+		rulesKey                = ctx.config().getRulesKey();
+		rulesActor              = ctx.rules6Actor();
+		this.containerWorkflows = containerWorkflows;
+	}
 	
 	@Override
-	public void applyPreStateRules(ContextValidation validation,
-			ContainerSupport exp, State nextState) {
-		// TODO Auto-generated method stub
-		
+	public void applyPreStateRules(ContextValidation validation, ContainerSupport exp, State nextState) {
 	}
 
 	@Override
 	public void applyPreValidateCurrentStateRules(ContextValidation validation, ContainerSupport object) {
-		// TODO Auto-generated method stub		
 	}
 	
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, ContainerSupport object) {
-		// TODO Auto-generated method stub		
 	}
 
 	@Override
@@ -90,24 +107,14 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		}
 	}
 	
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef _rulesActor;
-	static ActorRef rulesActor() {
-		if (_rulesActor == null)
-			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
-		return _rulesActor;
-	}
-	
-	public static void callWorkflowRules(ContextValidation validation, ContainerSupport containerSupport) {
+	public /*static*/ void callWorkflowRules(ContextValidation validation, ContainerSupport containerSupport) {
 		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
-		rulesActor().tell(new RulesMessage(configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
+		// rulesActor().tell(new RulesMessage(configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
+		rulesActor.tell(new RulesMessage(rulesKey, "workflow", containerSupport, validation),null);
 	}
 
 	@Override
-	public void applyErrorPostStateRules(ContextValidation validation,
-			ContainerSupport container, State nextState) {
-		// TODO Auto-generated method stub
+	public void applyErrorPostStateRules(ContextValidation validation, ContainerSupport container, State nextState) {
 		if(validation.hasErrors()){
 			logger.error("Problem on ContSupportWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
 		}
@@ -155,7 +162,7 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 
 	public State getNextStateFromContainerStates(String username, Set<String> containerStates) {
 		State nextStep = null;
-		logger.debug("States = "+containerStates);
+		logger.debug("States = " + containerStates);
 		if (containerStates.contains("IW-D")) {
 			nextStep = getNewState("IW-D", username);			
 		} else if(containerStates.contains("IU")) {
@@ -185,11 +192,8 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		return nextStep;
 	}
 	
-	
 	@Override
 	public void nextState(ContextValidation contextValidation, ContainerSupport object) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

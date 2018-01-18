@@ -1,7 +1,7 @@
 package controllers.sra.submissions.api;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+// import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.mongojack.DBQuery.Query;
 
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
-import controllers.sra.configurations.api.Configurations;
+// import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
@@ -38,7 +38,7 @@ import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 //import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -56,31 +56,59 @@ import views.components.datatable.DatatableResponse;
 import workflows.sra.submission.SubmissionWorkflows;
 
 public class Submissions extends DocumentController<Submission>{
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(Submissions.class);
+	
+	private final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
 
-	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
+	private Map<String, UserCloneType>      mapUserClones      = new HashMap<String, UserCloneType>();
 	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
-	private Map<String, UserSampleType> mapUserSamples = new HashMap<String, UserSampleType>();
+	private Map<String, UserSampleType>     mapUserSamples     = new HashMap<String, UserSampleType>();
 
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("accession","submissionDate", "xmlSubmission", "xmlStudys", "xmlSamples", "xmlExperiments", "xmlRuns");
-
-	@Inject
-	public Submissions(NGLContext ctx) {
-		super(ctx,InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
-	}
-
-	final static Form<Submission> submissionForm = form(Submission.class);
-	final static Form<File> pathForm = form(File.class);
+	// final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	// final static Form<Submission> submissionForm = form(Submission.class);
+	// final static Form<File> pathForm = form(File.class);
 	// declaration d'une instance submissionCreationForm qui permet de recuperer les
 	// données du formulaire initSubmission pour realiser la creation de la soumission => utilisee dans save()
-	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
+	// final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
-	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	final static Form<SubmissionsFileForm> submissionsACForm = form(SubmissionsFileForm.class);
-	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
-	final static Form<State> stateForm = form(State.class);
+	// final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
+	// final static Form<SubmissionsFileForm> submissionsACForm = form(SubmissionsFileForm.class);
+	// final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final static Form<State> stateForm = form(State.class);
 
+	private final Form<QueryFieldsForm>         updateForm;
+	private final Form<Submission>              submissionForm;
+	// private final Form<File>            pathForm;
+	// declaration d'une instance submissionCreationForm qui permet de recuperer les
+	// données du formulaire initSubmission pour realiser la creation de la soumission => utilisee dans save()
+	private final Form<SubmissionsCreationForm> submissionsCreationForm;
+	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
+	private final Form<SubmissionsSearchForm>   submissionsSearchForm;
+	private final Form<SubmissionsFileForm>     submissionsACForm; 
+	private final Form<State>                   stateForm;
+	private final SubmissionWorkflows           subWorkflows;
+	private final SubmissionServices            submissionServices;
+	private final ReleaseServices               releaseServices;
+	private final FileAcServices                fileAcServices;
+	
+	@Inject
+	public Submissions(NGLContext ctx, SubmissionWorkflows subWorkflows, 
+			           SubmissionServices submissionServices, 
+			           ReleaseServices    releaseServices,
+			           FileAcServices     fileAcServices) {
+		super(ctx,InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
+		updateForm              = ctx.form(QueryFieldsForm.class);
+		submissionForm          = ctx.form(Submission.class);
+		submissionsCreationForm = ctx.form(SubmissionsCreationForm.class);
+		submissionsSearchForm   = ctx.form(SubmissionsSearchForm.class);
+		submissionsACForm       = ctx.form(SubmissionsFileForm.class); 
+		stateForm               = ctx.form(State.class);
+		this.subWorkflows       = subWorkflows;
+		this.submissionServices = submissionServices;
+		this.releaseServices    = releaseServices;
+		this.fileAcServices     = fileAcServices;
+	}
 
 	// methode appelee avec url suivante :
 	//localhost:9000/api/sra/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=N
@@ -89,23 +117,20 @@ public class Submissions extends DocumentController<Submission>{
 	//	this.datatable.search({projCode:this.form.projCode, state:'N'});
 	//},
 
-	public Result list(){	
+	public Result list() {	
 		Form<SubmissionsSearchForm> submissionsSearchFilledForm = filledFormQueryString(submissionsSearchForm, SubmissionsSearchForm.class);
 		SubmissionsSearchForm submissionsSearchForm = submissionsSearchFilledForm.get();
 		//modif 		Logger.debug(submissionsSearchForm.state);
-
 		logger.debug(submissionsSearchForm.stateCode);
 		Query query = getQuery(submissionsSearchForm);
 		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchForm, query);				
 		List<Submission> submissionsList = results.toList();
-		if(submissionsSearchForm.datatable){
+		if (submissionsSearchForm.datatable) {
 			return ok(Json.toJson(new DatatableResponse<Submission>(submissionsList, submissionsList.size())));
-		}else{
+		} else {
 			return ok(Json.toJson(submissionsList));
 		}
-
 	}
-
 
 	private Query getQuery(SubmissionsSearchForm form) {
 
@@ -126,26 +151,24 @@ public class Submissions extends DocumentController<Submission>{
 		if (CollectionUtils.isNotEmpty(form.accessions)) { //all
 			queries.add(DBQuery.in("accession", form.accessions));
 		}	
-		if(CollectionUtils.isNotEmpty(form.accessions)){
+		if (CollectionUtils.isNotEmpty(form.accessions)) {
 			queries.add(DBQuery.in("accession", form.accessions));
-		}else if(StringUtils.isNotBlank(form.accessionRegex)){
+		} else if(StringUtils.isNotBlank(form.accessionRegex)) {
 			queries.add(DBQuery.regex("accession", Pattern.compile(form.accessionRegex)));
 		}
 		if (CollectionUtils.isNotEmpty(form.codes)) { //all
 			queries.add(DBQuery.in("code", form.codes));
 		}
-		if(CollectionUtils.isNotEmpty(form.codes)){
+		if (CollectionUtils.isNotEmpty(form.codes)) {
 			queries.add(DBQuery.in("code", form.codes));
-		}else if(StringUtils.isNotBlank(form.codeRegex)){
+		} else if(StringUtils.isNotBlank(form.codeRegex)) {
 			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
 		}
-		if(queries.size() > 0){
+		if (queries.size() > 0) {
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
-
-
 
 	public Result update(String code) {
 		//Get Submission from DB 
@@ -163,7 +186,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		Submission submissionInput = filledForm.get();
 
-		if(queryFieldsForm.fields == null){
+		if (queryFieldsForm.fields == null) {
 			if (code.equals(submissionInput.code)) {	
 				ctxVal.setUpdateMode();
 				ctxVal.getContextObjects().put("type","sra");
@@ -173,17 +196,17 @@ public class Submissions extends DocumentController<Submission>{
 					logger.info("Update submission state "+submissionInput.state.code);
 					MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
 					return ok(Json.toJson(submissionInput));
-				}else {
+				} else {
 					//return badRequest(filledForm.errors-AsJson());
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				//return badRequest("submission code are not the same");
 				ctxVal.addErrors("submission "+code, "submission code  " +code + " and submissionInput.code "+ submissionInput.code + "are not the same");
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
-		}else{ //update only some authorized properties
+		} else { //update only some authorized properties
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			
 			ctxVal.setUpdateMode();
@@ -202,8 +225,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 	}
 
-
-	public Result updateState(String code){
+	public Result updateState(String code) {
 		
 		//Get Submission from DB 
 		System.out.println("Dans Submissions.updateState, submission.code="+ code);
@@ -229,9 +251,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 	}
 
-
-	public Result createXml(String code)
-	{
+	public Result createXml(String code) {
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
 
@@ -239,8 +259,9 @@ public class Submissions extends DocumentController<Submission>{
 		// pouvoir afficher l'ensemble des erreurs.
 		//Form initialise avec l'objet submission car pas d'objet submission dans le body
 		//Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
-		Form<Submission> filledForm = /*Form.*/form(Submission.class);
-		filledForm.fill(submission);
+		// Form<Submission> filledForm = /*Form.*/form(Submission.class);
+		// filledForm.fill(submission);
+		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
 
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
@@ -262,8 +283,7 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 
-	public Result treatmentAc(String code)
-	{
+	public Result treatmentAc(String code) {
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
 		//	Form<File> filledForm = getFilledForm(pathForm, File.class);
@@ -278,7 +298,8 @@ public class Submissions extends DocumentController<Submission>{
 		File ebiFileAc =new File(submissionsACForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		try {
-			submission = FileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
+			// submission = FileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
+			submission = fileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
 			return badRequest("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
@@ -291,24 +312,23 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		return ok(Json.toJson(submission));
 	}
-	public Result treatmentRelease(String code)
-	{
+	
+	public Result treatmentRelease(String code)	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
 		//	Form<File> filledForm = getFilledForm(pathForm, File.class);
 		if (submission == null) {
-			return badRequest("Submission with code "+code, " not exist");
+			return badRequest("Submission with code " + code, " not exist");
 		}
 		Form<SubmissionsFileForm> submissionsFilledForm = filledFormQueryString(submissionsACForm, SubmissionsFileForm.class);
 		SubmissionsFileForm submissionsForm = submissionsFilledForm.get();
-
-
 		//Logger.debug("filledForm "+filledForm);
 		File retourEbiRelease =new File(submissionsForm.fileName);
 		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		ctxVal.putObject("fileEbi", retourEbiRelease);
 		try {
-			submission = ReleaseServices.traitementRetourRelease(ctxVal, code, retourEbiRelease); 
+			// submission = ReleaseServices.traitementRetourRelease(ctxVal, code, retourEbiRelease); 
+			submission = releaseServices.traitementRetourRelease(ctxVal, code, retourEbiRelease); 
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
 			return badRequest("Submission " + code + " et release file " +retourEbiRelease, e.getMessage());  // si solution filledForm.reject
@@ -322,12 +342,10 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submission));
 	}
 
-	private Submission getSubmission(String code)
-	{
+	private Submission getSubmission(String code) {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
 		return submission;
 	}
-
 
 	// methode appelée  depuis interface submissions.create-ctrl.js (submissions.create.scala.html)
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
@@ -351,17 +369,17 @@ public class Submissions extends DocumentController<Submission>{
 
 		String submissionCode;
 		try {
-			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileExperiments)){
-				submissionsCreationForm.base64UserFileExperiments="";
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileExperiments)) {
+				submissionsCreationForm.base64UserFileExperiments = "";
 			}
-			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileSamples)){
-				submissionsCreationForm.base64UserFileSamples="";
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileSamples)) {
+				submissionsCreationForm.base64UserFileSamples = "";
 			}
-			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileClonesToAc)){
-				submissionsCreationForm.base64UserFileClonesToAc="";
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileClonesToAc)) {
+				submissionsCreationForm.base64UserFileClonesToAc = "";
 			}
-			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileReadSet)){
-				submissionsCreationForm.base64UserFileReadSet="";
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileReadSet)) {
+				submissionsCreationForm.base64UserFileReadSet = "";
 			}
 			logger.debug("Read base64UserFileExperiments");
 			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
@@ -410,9 +428,7 @@ public class Submissions extends DocumentController<Submission>{
 
 			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
 			//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
-
-			SubmissionServices submissionServices = new SubmissionServices();
-
+			// SubmissionServices submissionServices = new SubmissionServices();
 			//submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			submissionCode = submissionServices.initPrimarySubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, submissionsCreationForm.acStudy,submissionsCreationForm.acSample, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			if (contextValidation.hasErrors()) {
@@ -430,9 +446,8 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 
-	public Result activate(String submissionCode) throws SraException, IOException
-	{
-		SubmissionServices submissionServices = new SubmissionServices();
+	public Result activate(String submissionCode) throws SraException, IOException {
+		// SubmissionServices submissionServices = new SubmissionServices();
 		Submission submission = null;
 
 		// affichage des erreurs via messages.addDetails qui passe par 

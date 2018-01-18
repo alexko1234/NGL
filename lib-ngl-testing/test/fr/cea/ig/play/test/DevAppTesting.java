@@ -73,6 +73,9 @@ public class DevAppTesting {
 	 */
 	private static final play.Logger.ALogger logger = play.Logger.of(DevAppTesting.class);
 	
+	public static final String PROP_NAME_LOGGER_FILE = "ngl.test.logger.file";
+	public static final String PROP_NAME_LOGGER_RESOURCE = "ngl.test.logger.resource"; 
+	
 	/**
 	 * Somewhat unique identifier per test set execution that can be used to create unique identifiers.
 	 */
@@ -157,6 +160,19 @@ public class DevAppTesting {
 	 * Application singleton instance.
 	 */
 	private static Application application;
+
+	private static void loggerSetup() {
+		if (System.getProperty(PROP_NAME_LOGGER_FILE) != null)
+			System.setProperty("logger.file", System.getProperty(PROP_NAME_LOGGER_FILE));
+		else if (System.getProperty(PROP_NAME_LOGGER_RESOURCE) != null)
+			System.setProperty("logger.resource", System.getProperty(PROP_NAME_LOGGER_RESOURCE));
+		else 
+			throw new RuntimeException(" set either '" + PROP_NAME_LOGGER_FILE + "' or '" + PROP_NAME_LOGGER_RESOURCE 
+					                   + "' by setting an environment variable or running sbt \"-D" + PROP_NAME_LOGGER_FILE 
+					                   + "=<absolutefilename>\" or \"-D" + PROP_NAME_LOGGER_RESOURCE + "=<name>\" that is"
+					                   + " looked for in the classpath");
+	}
+
 	
 	/*
 	 * DEV application singleton instance. This does not sets the play global application
@@ -176,16 +192,18 @@ public class DevAppTesting {
 		
 		try {
 			// File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
-			// String confFileName = resourceFileName(appConfFile);
-			String confFileName = appConfFile;
+			String confFileName = resourceFileName(appConfFile);
+			// String confFileName = appConfFile;
 			// String confFileName = "conf.play.frag";
 			logger .debug("using config file '" + confFileName + "'");
 			//logger.debug("config file name : " + confFileName + " " + resourceFileName(confFileName));
-			System.setProperty("config.resource", confFileName); // + ".frag")); // resourceFileName("conf/ngl-sq-test.conf"));
+			// System.setProperty("config.resource", confFileName); // + ".frag")); // resourceFileName("conf/ngl-sq-test.conf"));
+			System.setProperty("config.file", confFileName);
 			//System.setProperty("config.file", resourceFileName(confFileName));
 			//System.setProperty("config.file", unfragedConf.toString());
 			// System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
-			System.setProperty("logger.resource",logConfFile);
+			// System.setProperty("logger.resource", logConfFile);
+			loggerSetup();
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
 			// TODO: use play.Mode.TEST
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);

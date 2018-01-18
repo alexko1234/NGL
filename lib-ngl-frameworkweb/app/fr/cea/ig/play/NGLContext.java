@@ -12,12 +12,15 @@ import javax.inject.Singleton;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorRefFactory;
 import akka.actor.ActorSystem;
+import akka.actor.Props;
 import play.i18n.Lang;
 import play.i18n.MessagesApi;
 import play.inject.Injector;
 import play.libs.Json;
+import rules.services.RulesActor6;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
 // import play.Logger;
@@ -176,8 +179,9 @@ public class NGLContext {
 		return RulesServices6.getInstance().callRulesWithGettingFacts(getRulesKey(), ruleAnnotationName, facts);
 	}
 	
-	// TODO
-	// public ActorRef rules6Actor() {}
+	public ActorRef rules6Actor() {
+		return akkaSystem().actorOf(Props.create(RulesActor6.class));
+	}
 	
 	public ActorSystem akkaSystem() {
 		return this.actor;

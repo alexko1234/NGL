@@ -30,10 +30,10 @@ import workflows.run.RunWorkflows;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
-public class MigrationReadSetFileCNS  extends CommonController {
+public class MigrationReadSetFileCNS extends CommonController {
 
 	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
-	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class); // ngl-data
 	
 	
 	private static final String RUN_COLL_NAME_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK_VALUATION";

@@ -85,8 +85,8 @@ import fr.cea.ig.play.NGLContext;
 // Indirection so we can swap implementations.
 public class Containers extends Containers2 {
 	@Inject
-	public Containers(NGLContext ctx) {
-		super(ctx);
+	public Containers(NGLContext ctx, ContWorkflows workflows) {
+		super(ctx,workflows);
 	}
 	@Permission(value={"reading"})
 	public Result get(String code) {
@@ -141,16 +141,18 @@ class Containers2 extends DocumentController<Container> {
 	
 	// GA 31/07/2015 suppression des parametres "lenght"
 	private final /*static*/ Form<State> stateForm; // = form(State.class);
-	private final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
-		
+	// private final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
+	private final ContWorkflows workflows;
+	
 	@Inject
-	public Containers2(NGLContext ctx) {
+	public Containers2(NGLContext ctx, ContWorkflows workflows) {
 		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
-		updateForm = getNGLContext().form(QueryFieldsForm.class);
-		containerForm = getNGLContext().form(Container.class);
+		updateForm          = getNGLContext().form(QueryFieldsForm.class);
+		containerForm       = getNGLContext().form(Container.class);
 		containerSearchForm = getNGLContext().form(ContainersSearchForm.class);
-		batchElementForm = getNGLContext().form(ContainerBatchElement.class);
-		stateForm = getNGLContext().form(State.class);
+		batchElementForm    = getNGLContext().form(ContainerBatchElement.class);
+		stateForm           = getNGLContext().form(State.class);
+		this.workflows      = workflows;
 	}
 	
 	/*@Permission(value={"reading"})

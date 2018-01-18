@@ -13,18 +13,23 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
 import validation.ContextValidation;
 
+// instanciation : getBeanOfType(*Workflow*.class)
+
+// TODO: probably not a plural
 public abstract class Workflows<T> {
 	
-	private NGLContext ctx;
+	// private NGLContext ctx;
 	
 //	public Workflows(NGLContext ctx) {
 //		this.ctx = ctx;
 //	}
 	
-	@Autowired
-	public NGLContext getNGLContext() {
-		return this.ctx;
-	}
+	// @Autowired
+	// public NGLContext getNGLContext() {
+	//	return this.ctx;
+	//}
+	
+	
 	
 	public abstract void applyPreStateRules(ContextValidation validation, T exp, State nextState);
 	
@@ -60,7 +65,6 @@ public abstract class Workflows<T> {
 		return goBack;
 	}
 
-	
 	/*
 	 * Clone State without historical
 	 * @param state
@@ -68,17 +72,17 @@ public abstract class Workflows<T> {
 	 */
 	protected State cloneState(State state, String user) {
 		State nextState = new State();
-		nextState.code = state.code;
-		nextState.date = new Date();
-		nextState.user = user;
+		nextState.code  = state.code;
+		nextState.date  = new Date();
+		nextState.user  = user;
 		return nextState;
 	}
 	
 	protected static State getNewState(String stateCode, String user) {
 		State nextState = new State();
-		nextState.code = stateCode;
-		nextState.user = user;
-		nextState.date = new Date();
+		nextState.code  = stateCode;
+		nextState.user  = user;
+		nextState.date  = new Date();
 		return nextState;
 	}
 	
@@ -92,4 +96,5 @@ public abstract class Workflows<T> {
 		nextState.historical.add(new TransientState(nextState, nextState.historical.size()));		
 		return nextState;
 	}
+	
 }

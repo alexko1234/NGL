@@ -59,29 +59,28 @@ import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 
-
 /**
  * @author mhaquell
  *
  */
 @Repository
-public class LimsCNSDAO{
+public class LimsCNSDAO {
+
+	private static final play.Logger.ALogger logger = play.Logger.of(LimsCNSDAO.class);
+	
+	public    static final String LIMS_CODE                   = "limsCode";
+	private   static final String SAMPLE_ADPATER              = "isAdapters";
+	protected static final String PROJECT_CATEGORY_CODE       = "default";
+	protected static final String PROJECT_TYPE_CODE_FG        = "france-genomique";
+	protected static final String PROJECT_TYPE_CODE_DEFAULT   = "default-project";
+	protected static final String PROJECT_PROPERTIES_FG_GROUP = "fgGroup";
+	protected static final String NGSRG_CODE                  = "ngsrg";
+	protected static final String GLOBAL_CODE                 = "global";
+	protected static final String IMPORT_CATEGORY_CODE        = "sample-import";
+	protected static final String RUN_TYPE_CODE               = "ngsrg-illumina";
+	protected static final String READSET_DEFAULT_CODE        = "default-readset";
 
 	public JdbcTemplate jdbcTemplate;
-
-	public static final String LIMS_CODE="limsCode";
-	private static final String SAMPLE_ADPATER="isAdapters";
-	protected static final String PROJECT_CATEGORY_CODE = "default";
-	protected static final String PROJECT_TYPE_CODE_FG = "france-genomique";
-	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
-	protected static final String PROJECT_PROPERTIES_FG_GROUP="fgGroup";
-	protected static final String NGSRG_CODE="ngsrg";
-	protected static final String GLOBAL_CODE="global";
-	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	protected static final String RUN_TYPE_CODE = "ngsrg-illumina";
-
-	protected static final String READSET_DEFAULT_CODE = "default-readset";
-
 
 	@Autowired
 	@Qualifier("lims")
@@ -89,17 +88,19 @@ public class LimsCNSDAO{
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 
-
 	/**
 	 * Find Tube Lims who have flag 'tubinNGL=0' ( this flag is update to 1 when Tube exists in NGL database)
 	 * 
 	 * @param contextError
 	 * @return
 	 */
-	public List<Container> findContainersToCreate(String procedure,ContextValidation contextError, final String containerCategoryCode, final String containerStateCode, final String experimentTypeCode){
-
-		List<Container> results = this.jdbcTemplate.query(procedure,new Object[]{} 
-		,new RowMapper<Container>() {
+	public List<Container> findContainersToCreate(String procedure, 
+			                                      ContextValidation contextError, 
+			                                      final String containerCategoryCode, 
+			                                      final String containerStateCode, 
+			                                      final String experimentTypeCode) {
+		List<Container> results = this.jdbcTemplate.query(procedure,new Object[]{} , 
+		new RowMapper<Container>() {
 
 			@SuppressWarnings("rawtypes")
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -108,7 +109,8 @@ public class LimsCNSDAO{
 				try {
 					container = ContainerImportCNS.createContainerFromResultSet(rs, containerCategoryCode,containerStateCode,experimentTypeCode);
 				} catch (DAOException e) {
-					Logger.error("",e);
+					// TODO: fix silent error
+					logger.error("",e);
 				}
 				return container;
 			}
@@ -151,40 +153,38 @@ public class LimsCNSDAO{
 				}
 
 
-				if( sampleType==null ){
+				if (sampleType == null) {
 					contextError.addErrors("code", "error.codeNotExist", sampleTypeCode, sample.code);
 					return null;
 				}
 
-				Logger.debug("Sample Type :"+sampleTypeCode);
+				// Logger.debug("Sample Type : "+sampleTypeCode);
+				logger.debug("Sample Type : {}", sampleTypeCode);
 
-				sample.typeCode=sampleTypeCode;
-
-
-				sample.projectCodes=new HashSet<String>();
+				sample.typeCode        = sampleTypeCode;
+				sample.projectCodes    = new HashSet<String>();
 				sample.projectCodes.add(rs.getString("project"));
-
-				sample.name=rs.getString("name");
-				sample.referenceCollab=rs.getString("referenceCollab");
-				sample.taxonCode=rs.getString("taxonCode");
-				sample.comments=new ArrayList<Comment>();
+				sample.name            = rs.getString("name");
+				sample.referenceCollab = rs.getString("referenceCollab");
+				sample.taxonCode       = rs.getString("taxonCode");
+				sample.comments        = new ArrayList<Comment>();
 				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
-				sample.categoryCode=sampleType.category.code;
-
-				sample.properties=new HashMap<String, PropertyValue>();
+				sample.categoryCode    = sampleType.category.code;
+				sample.properties      = new HashMap<String, PropertyValue>();
 				MappingHelper.getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
 
 				//Logger.debug("Properties sample "+sample.properties.containsKey("taxonSize"));
 
-				boolean tara=false;
+				boolean tara = false;
 
-				if(rs.getInt("tara")==1){
-					tara=true;
+				if (rs.getInt("tara") == 1) {
+					tara = true;
 				}
 
-				if(tara){
+				if (tara) {
 
-					Logger.debug("Tara sample "+sample.code);
+					// Logger.debug("Tara sample "+sample.code);
+					logger.debug("Tara sample {}", sample.code);
 
 					TaraDAO  taraServices = Spring.getBeanOfType(TaraDAO.class);
 					if(sample.properties==null){ sample.properties=new HashMap<String, PropertyValue>();}

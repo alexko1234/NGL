@@ -119,8 +119,7 @@ object ApplicationBuild extends Build {
   ) ++ eclipseLinkingSettings
 
 	object BuildSettings {
-
-
+	  
 		// Probably poor scala style
     val tev0 = if (System.getProperty("ngl.test.conf.dir") != null)
 	        Seq(unmanagedResourceDirectories in Compile += file(System.getProperty("ngl.test.conf.dir")),

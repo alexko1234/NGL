@@ -56,8 +56,8 @@ public class UpdateReportingData extends AbstractImportData {
 	
 	@Inject
 	public UpdateReportingData(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
-			super("UpdateReportingData", durationFromStart, durationFromNextIteration, ctx);
-			procWorkflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
+		super("UpdateReportingData", durationFromStart, durationFromNextIteration, ctx);
+		procWorkflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class); // ngl-data
 	}
 
 	@Override

@@ -2,10 +2,12 @@ package workflows.analyses;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
 import com.mongodb.BasicDBObject;
 
@@ -18,18 +20,24 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import workflows.readset.ReadSetWorkflows;
 
-@Service
+// @Service
 public class AnalysisWorkflowsHelper {
 
-	@Autowired
-	ReadSetWorkflows readSetWorflows;
+	//@Autowired
+	// ReadSetWorkflows readSetWorflows;
 	
-	public void updateStateMasterReadSetCodes(Analysis analysis, ContextValidation validation, String nextStepCode)
-	{
-		for(String rsCode : analysis.masterReadSetCodes){
+	private final ReadSetWorkflows readSetWorflows;
+	
+	@Inject
+	public AnalysisWorkflowsHelper(ReadSetWorkflows readSetWorflows) {
+		this.readSetWorflows = readSetWorflows;
+	}
+	
+	public void updateStateMasterReadSetCodes(Analysis analysis, ContextValidation validation, String nextStepCode)	{
+		for (String rsCode : analysis.masterReadSetCodes) {
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 			State nextStep = cloneState(readSet.state, validation.getUser());
-			nextStep.code = nextStepCode;
+			nextStep.code = "IP-BA";
 			readSetWorflows.setState(validation, readSet, nextStep);
 		}
 	}
@@ -42,6 +50,7 @@ public class AnalysisWorkflowsHelper {
 			//if(valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)){
 			if((analysis.state.code.equals("IW-V") && !"IW-VBA".equals(readSet.state.code)) ||
 					(analysis.state.code.equals("F-V") && TBoolean.TRUE.equals(analysis.valuation.valid))){
+			if (valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)) {
 				readSet.bioinformaticValuation.valid = valid;
 				readSet.bioinformaticValuation.date = date;
 				readSet.bioinformaticValuation.user = user;
@@ -56,7 +65,6 @@ public class AnalysisWorkflowsHelper {
 			}
 		}
 	}
-	
 	
 	public BasicDBObject getReadSetKeys() {
 		BasicDBObject keys = new BasicDBObject();
@@ -76,4 +84,5 @@ public class AnalysisWorkflowsHelper {
 		nextState.user = user;
 		return nextState;
 	}
+	
 }

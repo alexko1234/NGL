@@ -1,9 +1,5 @@
 package controllers.analyses.api;
 
-//import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-//import static fr.cea.ig.play.IGGlobals.akkaSystem;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,8 +37,6 @@ import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.Play;
-import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
@@ -55,29 +49,29 @@ import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.analyses.AnalysisWorkflows;
 
-
-//@Controller
+// TODO: use packed construction of query
 public class Analyses extends DocumentController<Analysis> {
 
-	//final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
-	private final /*static*/ Form<Valuation> valuationForm; // = form(Valuation.class);
-	private final /*static*/ Form<State> stateForm; // = form(State.class);
-	private final /*static*/ Form<AnalysesBatchElement> batchElementForm; // = form(AnalysesBatchElement.class);
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	private final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
+
+	// final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
 	
-	final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private final Form<Valuation>            valuationForm; 
+	private final Form<State>                stateForm; 
+	private final Form<AnalysesBatchElement> batchElementForm; 
+	private final Form<QueryFieldsForm>      updateForm; 
+	private final AnalysisWorkflows          workflows;
+	private final ActorRef                   rulesActor;
 	
 	@Inject
-	public Analyses(NGLContext ctx) {
+	public Analyses(NGLContext ctx, AnalysisWorkflows workflows) {
 		super(ctx,InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);
-		this.valuationForm = getNGLContext().form(Valuation.class);
-		this.stateForm = getNGLContext().form(State.class);
+		this.valuationForm    = getNGLContext().form(Valuation.class);
+		this.stateForm        = getNGLContext().form(State.class);
 		this.batchElementForm = getNGLContext().form(AnalysesBatchElement.class);
-		this.updateForm = getNGLContext().form(QueryFieldsForm.class);
-		this.rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		this.updateForm       = getNGLContext().form(QueryFieldsForm.class);
+		this.rulesActor       = getNGLContext().rules6Actor(); // ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		this.workflows        = workflows;
 	}
 	
 	@Permission(value={"reading"})
@@ -87,11 +81,11 @@ public class Analyses extends DocumentController<Analysis> {
 		AnalysesSearchForm form = filledFormQueryString( AnalysesSearchForm.class);
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
-		if(form.datatable){			
+		if (form.datatable) {			
 			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);				
 			List<Analysis> list = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Analysis>(list, results.count())));
-		}else{
+		} else {
 			MongoDBResult<Analysis> results = mongoDBFinder(form, q, keys);							
 			List<Analysis> list = results.toList();
 			return ok(Json.toJson(list));
@@ -104,7 +98,7 @@ public class Analyses extends DocumentController<Analysis> {
 		
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
 			queries.add(DBQuery.is("state.code", form.stateCode));
-		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+		} else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
 			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
 		
@@ -117,13 +111,13 @@ public class Analyses extends DocumentController<Analysis> {
 		
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all
 			queries.add(DBQuery.in("projectCodes", form.projectCodes));
-		}else if (StringUtils.isNotBlank(form.projectCode)) { //all
+		} else if (StringUtils.isNotBlank(form.projectCode)) { //all
 			queries.add(DBQuery.in("projectCodes", form.projectCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all
 			queries.add(DBQuery.in("sampleCodes", form.sampleCodes));
-		}else if (StringUtils.isNotBlank(form.sampleCode)) { //all
+		} else if (StringUtils.isNotBlank(form.sampleCode)) { //all
 			queries.add(DBQuery.in("sampleCodes", form.sampleCode));
 		}
 		
@@ -142,7 +136,6 @@ public class Analyses extends DocumentController<Analysis> {
 		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.Analysis, "properties"));
 		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentProperties, Level.CODE.Analysis, "treatments"));
 		
-		
 		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
 			for(String field : form.existingFields){
 				queries.add(DBQuery.exists(field));
@@ -155,7 +148,7 @@ public class Analyses extends DocumentController<Analysis> {
 			}
 		}
 		
-		if(queries.size() > 0){
+		if (queries.size() > 0) {
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		
@@ -163,7 +156,7 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	@Permission(value={"writing"})
-	public Result save(){
+	public Result save() {
 		
 		Form<Analysis> filledForm = getMainFilledForm();
 		Analysis input = filledForm.get();
@@ -441,7 +434,9 @@ public class Analyses extends DocumentController<Analysis> {
 			return notFound();
 		}		
 		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode,objectInDB),null);
+		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode,objectInDB),null);
+		rulesActor.tell(new RulesMessage(getNGLContext().config().getRulesKey(),rulesCode,objectInDB),null);
 		return ok();
 	}
+	
 }

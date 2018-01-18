@@ -37,8 +37,8 @@ public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 		List<Container> containers=	limsServices.findContainersToCreate(sql,contextError, containerCategoryCode,null,experimentTypeCode);
 		List<Container> containerUpdated=new ArrayList<Container>();
 		for(Container containerUpdate:containers){
-			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,containerUpdate.code);
-			if(container==null){
+			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,containerUpdate.code);
+			if (container==null) {
 				contextError.addErrors("container.code", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG , containerUpdate.code);
 			}
 			else if(container.state.code!=containerUpdate.state.code){
@@ -51,7 +51,7 @@ public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 					//ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
 					contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 					contextValidation.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
-					Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, container, containerUpdate.state);
+					Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, container, containerUpdate.state); // ngl-data
 					contextValidation.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 					contextValidation.removeObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE);
 					

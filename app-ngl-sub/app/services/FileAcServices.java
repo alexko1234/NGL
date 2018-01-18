@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+// import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,71 +14,80 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+// import java.util.regex.Matcher;
+// import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 //import play.Logger;
-import play.Play;
-import play.api.modules.spring.Spring;
+// import play.Play;
+// import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import com.typesafe.config.ConfigFactory;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathExpressionException;
+// import javax.xml.xpath.XPathFactory;
+// import com.typesafe.config.ConfigFactory;
 
-import java.util.Date;
+// import java.util.Date;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+// import javax.xml.parsers.DocumentBuilder;
+// import javax.xml.parsers.DocumentBuilderFactory;
+// import javax.xml.parsers.ParserConfigurationException;
+// import javax.xml.xpath.XPath;
+// import javax.xml.xpath.XPathExpressionException;
+// import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.apache.commons.lang3.StringUtils;
+// import org.apache.commons.lang3.StringUtils;
 
 
 import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.common.instance.State;
-import models.laboratory.run.instance.ReadSet;
+// import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.util.SraException;
-import models.sra.submit.util.VariableSRA;
+// import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.ngl.NGLConfig;
 
 public class FileAcServices  {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(FileAcServices.class);
 
-	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
+	private final NGLConfig           config;
+	private final SubmissionWorkflows submissionWorkflows;
 	
-	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+	public FileAcServices(NGLConfig config, SubmissionWorkflows submissionWorkflows) {
+		this.config              = config;
+		this.submissionWorkflows = submissionWorkflows;
+	}
+	
+	public /*static*/ Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
-		if (submission == null){
+		if (submission == null) {
 			throw new SraException(" soumission " + submission.code + " impossible à recuperer dans base");
 		}
-		if (! ebiFileAc.exists()){
+		if (! ebiFileAc.exists()) {
 			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ ebiFileAc.getAbsolutePath());
 		}
 
@@ -95,22 +104,22 @@ public class FileAcServices  {
 		// test unitaires 
 		MailServices mailService = new MailServices();
 //		String expediteur = ConfigFactory.load().getString("accessionReporting.email.from"); 
-		String expediteur = Play.application().configuration().getString("accessionReporting.email.from"); 
-
-		String dest = Play.application().configuration().getString("accessionReporting.email.to");   
+		// String expediteur = Play.application().configuration().getString("accessionReporting.email.from");
+		String expediteur = config.getReleaseReportingEmailFrom();
+		// String dest = Play.application().configuration().getString("accessionReporting.email.to");
+		String dest = config.getReleaseReportingEmailTo();
 		System.out.println("destinataires = "+ dest);
-		String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
-		
+		// String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
+		String subjectSuccess = config.getReleaseReportingEmailSubjectSuccess();
 		//logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
-		
-		String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
+		// String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
+		String subjectError = config.getReleaseReportingEmailSubjectError(); 
 		Set<String> destinataires = new HashSet<String>();
 		
 		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
 
 		String sujet = null;
 
-		
 		Map<String, String> mapSamples = new HashMap<String, String>(); 
 		Map<String, String> mapExtIdSamples = new HashMap<String, String>(); 
 		Map<String, String> mapExperiments = new HashMap<String, String>(); 
@@ -164,15 +173,10 @@ public class FileAcServices  {
 			/*
 			 * Etape 5 : récupération des samples
 			 */
-			
-
-			
 			final NodeList racineNoeuds = racine.getChildNodes();
 			final int nbRacineNoeuds = racineNoeuds.getLength();
 			
-			
-			
-			if( racine.getAttribute("success").equalsIgnoreCase ("true")){
+			if ( racine.getAttribute("success").equalsIgnoreCase ("true")) {
 				ebiSuccess = true;
 			}
 			for (int i = 0; i<nbRacineNoeuds; i++) {
@@ -189,7 +193,7 @@ public class FileAcServices  {
 					System.out.println("alias : " + alias);
 					System.out.println("accession : " + accession);
 					
-					if(elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
+					if (elt.getTagName().equalsIgnoreCase("SUBMISSION")) {
 						ebiSubmissionCode = elt.getAttribute("alias");	
 						submissionAc = elt.getAttribute("accession");
 					} else if(elt.getTagName().equalsIgnoreCase("STUDY")) {

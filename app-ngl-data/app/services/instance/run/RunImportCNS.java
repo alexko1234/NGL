@@ -43,7 +43,7 @@ import workflows.run.RunWorkflows;
 
 public class RunImportCNS extends AbstractImportDataCNS{
 
-	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class); // ngl-data
 	
 	@Inject
 	public RunImportCNS(FiniteDuration durationFromStart,

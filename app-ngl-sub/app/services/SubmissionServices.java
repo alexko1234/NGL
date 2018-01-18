@@ -65,6 +65,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,22 +79,34 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 // import play.libs.F.Promise;
-import play.libs.ws.WS;
+// import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
 //import specs2.run;
 
 
 
 public class SubmissionServices {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionServices.class);
 
-	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
-	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final ConfigurationWorkflows configWorkflows  = Spring.getBeanOfType(ConfigurationWorkflows.class);
+	// final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// SubmissionWorkflowsHelper submissionWorkflowsHelper;
 
-	SubmissionWorkflowsHelper submissionWorkflowsHelper;
-
+	private final ConfigurationWorkflows    configWorkflows;
+	private final SubmissionWorkflows       submissionWorkflows;
+	private final SubmissionWorkflowsHelper submissionWorkflowsHelper;
+	
+	@Inject
+	public SubmissionServices(ConfigurationWorkflows configWorkflows, 
+			                  SubmissionWorkflows submissionWorkflows, 
+			                  SubmissionWorkflowsHelper submissionWorkflowsHelper) {
+		this.configWorkflows           = configWorkflows;
+		this.submissionWorkflows       = submissionWorkflows;
+		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
+	}
 	
 	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
 		try {

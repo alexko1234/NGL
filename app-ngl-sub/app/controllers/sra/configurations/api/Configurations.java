@@ -1,7 +1,7 @@
 package controllers.sra.configurations.api;
 
-//import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+// import static play.data.Form.form;
+// import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +16,13 @@ import models.sra.submit.sra.instance.*;
 import models.sra.submit.util.SraCodeHelper;
 import models.utils.InstanceConstants;
 //import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import controllers.DocumentController;
-import controllers.sra.experiments.api.Experiments;
-import controllers.sra.submissions.api.SubmissionsSearchForm;
+// import controllers.sra.experiments.api.Experiments;
+// import controllers.sra.submissions.api.SubmissionsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
@@ -33,25 +33,34 @@ import models.laboratory.common.instance.State;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
-import models.sra.submit.common.instance.Submission;
+// import models.sra.submit.common.instance.Submission;
 import models.sra.submit.util.SraException;
 import views.components.datatable.DatatableResponse;
-import workflows.sra.submission.ConfigurationWorkflows;
-
+//import workflows.sra.submission.ConfigurationWorkflows;
 
 public class Configurations extends DocumentController<Configuration> {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(Configurations.class);
 
-	final static Form<Configuration> configurationForm = form(Configuration.class);
+	// final static Form<Configuration> configurationForm = form(Configuration.class);
 	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
-	final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
+	// final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
+	// final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
+	// final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 
-	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
-
+	private final Form<Configuration> configurationForm;
+	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
+	private final Form<ConfigurationsSearchForm> configurationsSearchForm;
+	// private final Form<SubmissionsSearchForm> submissionsSearchForm;
+	// private final ConfigurationWorkflows configWorkflows;
+	
 	@Inject
-	public Configurations(NGLContext ctx) {
+	public Configurations(NGLContext ctx/*, ConfigurationWorkflows configWorkflows*/) {
 		super(ctx,InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class);
+		configurationForm        = ctx.form(Configuration.class);
+		configurationsSearchForm = ctx.form(ConfigurationsSearchForm.class);
+		// submissionsSearchForm    = ctx.form(SubmissionsSearchForm.class);
+		// this.configWorkflows     = configWorkflows;
 	}
 
 	

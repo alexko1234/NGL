@@ -44,10 +44,15 @@ public class NGLConfig {
 
 	public static final String NGL_BI_URL_PATH = "bi.url"; 
 
-	private static final String NGL_PROJECT_URL_PATH = "project.url";
+	public static final String NGL_PROJECT_URL_PATH = "project.url";
 
-	private static final String NGL_SQ_URL_PATH = "sq.url";
+	public static final String NGL_SQ_URL_PATH = "sq.url";
 	
+	public static final String RELEASE_REPORTING_EMAIL_FROM_PATH    = "releaseReporting.email.from"; 
+	public static final String RELEASE_REPORTING_EMAIL_TO_PATH      = "releaseReporting.email.to";
+	public static final String RELEASE_REPORTING_EMAIL_SUCCESS_PATH = "releaseReporting.email.subject.success";
+	public static final String RELEASE_REPORTING_EMAIL_ERROR_PATH   = "releaseReporting.email.subject.error";
+
 	/**
 	 * Configuration to use.
 	 */
@@ -136,6 +141,22 @@ public class NGLConfig {
 	
 	public String getProjectUrl() {
 		return config.getString(NGL_PROJECT_URL_PATH);
+	}
+	
+	// -- release reporting
+	public String getReleaseReportingEmailFrom() {
+		return config.getString(RELEASE_REPORTING_EMAIL_FROM_PATH);
+	}
+	public String getReleaseReportingEmailTo() {
+		return config.getString(RELEASE_REPORTING_EMAIL_TO_PATH);
+	}
+	
+	public String getReleaseReportingEmailSubjectSuccess() {
+		return config.getString(RELEASE_REPORTING_EMAIL_SUCCESS_PATH);
+	}
+	
+	public String getReleaseReportingEmailSubjectError() {
+		return config.getString(RELEASE_REPORTING_EMAIL_ERROR_PATH);
 	}
 	
 }
