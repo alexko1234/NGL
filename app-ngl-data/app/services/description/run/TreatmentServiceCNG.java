@@ -113,7 +113,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("Trimming Nanopore","trimming-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimming", 
 				getTrimmingNanoporePropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "34"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "34"));
 		
 		l.add(DescriptionFactory.newTreatmentType("First Base Report", "firstBaseReport", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "firstBaseReport",
 				getFirstBaseReportPropertyDefinitions(),
