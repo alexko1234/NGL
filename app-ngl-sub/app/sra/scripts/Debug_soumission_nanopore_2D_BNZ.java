@@ -1,5 +1,7 @@
 package sra.scripts;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,8 +11,11 @@ import org.apache.commons.lang.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import services.FileAcServices;
 import services.SubmissionServices;
+import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
+import mail.MailServiceException;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.ReadSet;
@@ -21,12 +26,35 @@ import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
 
 public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
-
+	
+	@Override
+	public void execute() throws IOException, SraException, MailServiceException {
+		//reloadAC();
+	}
+	
+	public void reloadAC() throws IOException, SraException, MailServiceException {
+		List<String> submissionCodes = new ArrayList<String>();
+		submissionCodes.add("CNS_BNZ_2CMG1195V");
+		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
+		submissionCodes.add("CNS_BNZ_2CLH1D04I");
+		
+		for (String submissionCode: submissionCodes) {
+			Submission submission = MongoDBDAO
+					.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, 
+							models.sra.submit.common.instance.Submission.class, submissionCode);
+			File fileEbi = new File("/env/cns/home/sgas/debug_soumission_nanopore",  "listAC_" + submission.code + ".txt");
+			String user = "william";
+			ContextValidation ctxVal = new ContextValidation(user);
+			submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
+		}	
+	}
+	
 	public Run createRunEntityForMinion2D(ReadSet readSet, String runCode) {
 		// On cree le run pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
@@ -88,8 +116,7 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 	
 	
 	
-	@Override
-	public void execute() throws Exception {
+	public void debugRun() throws Exception {
 		List<String> submissionCodes = new ArrayList<String>();
 		submissionCodes.add("CNS_BNZ_2CMG1195V");
 		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
