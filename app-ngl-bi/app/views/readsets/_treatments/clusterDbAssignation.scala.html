@@ -1,7 +1,7 @@
 @()
 <div class="row">
  <div class="col-md-6 col-lg-6">
- 	<table class="table table-condensed table-hover table-bordered">
+ 	<table class="table table-condensed table-hover table-bordered text-center">
  		<thead>
 			<tr>
  				<th>@Messages("treatments.assignation.assignationBilan.cluster")</th>
@@ -14,12 +14,12 @@
  		</thead>
  		<tbody>
  			<tr ng-repeat="value in readset.treatments[treatments.getTreatment().code].read1.assignationBilan.value">
- 				<td>>{{value.cluster}}</td>
+ 				<td>{{value.cluster}}</td>
  				<td>{{value.otu}}</td>
  				<td>{{value.abundance | number}}</td>
  				<td>{{value.taxonomy}}</td>
- 				<td>{{value.idPercent | number:2}} %</td>
- 				<td>{{value.matchLength | number:2}} %</td>
+ 				<td>{{value.idPercent | number:2}}</td>
+ 				<td>{{value.matchLength | number:2}}</td>
  			</tr>
  		</tbody>
 	 </table>

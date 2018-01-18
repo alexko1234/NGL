@@ -741,7 +741,7 @@ readsets.treatments.chromium.numberReads=Number of reads
 readsets.treatments.chromium.read1Q30BaseRatio=Q30 of read 1
 readsets.treatments.chromium.read2Q30BaseRatio=Q30 of read 2
 
-
+readsets.treatments.ClustersDbAssignation=Clusters Db Assignation
 readsets.files.fullname = Nom du fichier
 readsets.files.typeCode = Type de fichier
 readsets.files.usable = Utilisable
