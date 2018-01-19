@@ -624,6 +624,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 	var chartService = {
 			lists : lists,
 			treatmentType:undefined,
+			treatmentNames:undefined,
 			properties:[],
 			property:undefined,
 			
@@ -646,6 +647,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 				if(this.treatmentType!=undefined){
 					$http.get(jsRoutes.controllers.treatmenttypes.api.TreatmentTypes.get(this.treatmentType).url,{params:{levels:"Lane"}}).success(function(data) {
 						chartService.properties=data.propertiesDefinitions;
+						chartService.treatmentNames=data.names;
 						
 					});
 				};
@@ -666,7 +668,7 @@ factory('chartsLanesService', ['$http', '$q','$parse', '$window', '$filter', 'da
 			},
 			loadData:function() {
 				if(this.isData()){
-					statsConfigs = {header:this.treatmentType+' '+this.property, code:this.treatmentType+'.'+this.property,property:'lanes.treatments.'+this.treatmentType,value:this.property,treatment:this.treatmentType,label:getLabelProperty()};
+					statsConfigs = {header:this.treatmentType+' '+this.property, code:this.treatmentType+'.'+this.property,property:'lanes.treatments.'+this.treatmentNames,value:this.property,treatment:this.treatmentNames,label:getLabelProperty()};
 					computeExcludeData(this.property);
 					generateCharts(this.property);
 					this.getExcludeData();
