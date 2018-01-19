@@ -1,20 +1,23 @@
 package workflows.process;
 
 import java.util.ArrayList;
-import java.util.Date;
+// import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
+// import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -23,29 +26,48 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
+// import models.laboratory.container.instance.Content;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.ReadSet;
+// import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-import play.Logger;
-import play.Logger.ALogger;
+// import play.Logger;
+// import play.Logger.ALogger;
 import validation.ContextValidation;
-
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
 import static validation.common.instance.CommonValidationHelper.*;
 
-@Service
+// @Service
+@Singleton
 public class ProcWorkflowHelper {
-	private ALogger logger = Logger.of(ProcWorkflowHelper.class);
+	
+	/*private ALogger logger = Logger.of(ProcWorkflowHelper.class);
 	
 	@Autowired
 	ContWorkflows contWorkflows;
 	
 	@Autowired
-	ContentHelper contentHelper;
+	ContentHelper contentHelper;*/
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ProcWorkflowHelper.class);
+	
+	/*private final WorkflowsCatalog wc;
+	
+	// Not an injection constructor on purpose
+	public ProcWorkflowHelper(WorkflowsCatalog wc) {
+		this.wc = wc;
+	}*/
+
+	public final ContWorkflows contWorkflows;
+	public final ContentHelper contentHelper;
+	
+	@Inject
+	public ProcWorkflowHelper(ContWorkflows contWorkflows, ContentHelper contentHelper) {
+		this.contWorkflows = contWorkflows;
+		this.contentHelper = contentHelper;
+	}
 	
 	public void updateInputContainerToStartProcess(ContextValidation contextValidation, Process process) {
 		ProcessType processType = ProcessType.find.findByCode(process.typeCode);
@@ -76,13 +98,12 @@ public class ProcWorkflowHelper {
 		
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
 		State nextState = new State();
-		nextState.code=contWorkflows.getContainerStateFromExperimentCategory(processType.firstExperimentType.category.code);
-		nextState.user = contextValidation.getUser();
+		nextState.code  = contWorkflows.getContainerStateFromExperimentCategory(processType.firstExperimentType.category.code);
+		nextState.user  = contextValidation.getUser();
 		
 		contextValidation.putObject(FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 		contextValidation.putObject(FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
 		contWorkflows.setState(contextValidation, container, nextState);
-		
 	}
 
 	
@@ -122,7 +143,6 @@ public class ProcWorkflowHelper {
 			
 		}
 	}
-	
 	
 	/*
 	 * Find the tag assign during process or existing at the beginning of process

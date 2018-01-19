@@ -2,7 +2,7 @@ package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.*;
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+// import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,14 +12,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+// import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
+// import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.Level.CODE;
@@ -50,9 +51,9 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-import models.laboratory.project.instance.Project;
+// import models.laboratory.project.instance.Project;
 import models.laboratory.protocol.instance.Protocol;
-import models.laboratory.run.instance.ReadSet;
+// import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.sample.instance.tree.SampleLife;
@@ -66,37 +67,48 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
+// import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
-import play.Logger;
-import play.Logger.ALogger;
-import play.Play;
-import play.libs.Akka;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
+// import play.Logger;
+// import play.Logger.ALogger;
+// import play.Play;
+// import play.libs.Akka;
+// import rules.services.RulesActor6;
+// import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
 import workflows.container.ContentHelper;
-import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
-import akka.actor.ActorRef;
-import akka.actor.Props;
+// import workflows.container.ContSupportWorkflows;
+// import workflows.container.ContWorkflows;
+// import workflows.container.ContentHelper;
+// import workflows.process.ProcWorkflowHelper;
+// import workflows.process.ProcWorkflows;
+// import akka.actor.ActorRef;
+// import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
-@Service
+// @Service
+@Singleton
 public class ExpWorkflowsHelper {
-	private ALogger logger = Logger.of(ExpWorkflowsHelper.class);
 	
-	
-	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
-	private final String NEW_SAMPLE_CODES = "NEW_SAMPLE_CODES";
+	/* 
+		// private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private ActorRef _rulesActor;
+	private ActorRef rulesActor() {
+		if (_rulesActor == null)
+			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+		return _rulesActor;
+	}
+
 	@Autowired
 	private ContWorkflows containerWorkflows;
 	@Autowired
@@ -104,7 +116,31 @@ public class ExpWorkflowsHelper {
 	@Autowired
 	private ProcWorkflows processWorkflows;
 	@Autowired
-	ContentHelper contentHelper;
+	ContentHelper contentHelper;*/
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(ExpWorkflowsHelper.class);
+
+	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
+	private final String NEW_SAMPLE_CODES  = "NEW_SAMPLE_CODES";
+	
+	/*private final WorkflowsCatalog wc;
+	
+	// Not an injection constructor on purpose
+	public ExpWorkflowsHelper(WorkflowsCatalog wc) {
+		this.wc = wc;
+	}*/
+	private final ContWorkflows containerWorkflows;
+	private final ContSupportWorkflows containerSupportWorkflows;
+	private final ProcWorkflows processWorkflows;
+	// private final ContentHelper contentHelper;
+	
+	@Inject
+	public ExpWorkflowsHelper(ContWorkflows containerWorkflows, ContSupportWorkflows containerSupportWorkflows, ProcWorkflows processWorkflows/*, ContentHelper contentHelper*/) {
+		this.containerWorkflows        = containerWorkflows;
+		this.containerSupportWorkflows = containerSupportWorkflows;
+		this.processWorkflows          = processWorkflows;
+		// this.contentHelper             = contentHelper;
+	}
 	
 	public void updateXCodes(Experiment exp) {
 		Set<String> sampleCodes = new HashSet<String>();
@@ -128,7 +164,7 @@ public class ExpWorkflowsHelper {
 		});
 
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
-		if(experimentType.newSample){
+		if (experimentType.newSample) {
 			exp.atomicTransfertMethods.stream().map(atm -> atm.outputContainerUseds)
 			.flatMap(List::stream)
 			.forEach(ocu -> {
@@ -173,7 +209,7 @@ public class ExpWorkflowsHelper {
 		.filter(atm -> (atm.outputContainerUseds != null))
 		.map(atm -> atm.outputContainerUseds)
 		.flatMap(List::stream)
-		.forEach(outputContainer ->{
+		.forEach(outputContainer -> {
 			outputContainerCodes.add(outputContainer.code);
 			outputContainerSupportCodes.add(outputContainer.locationOnContainerSupport.code);
 
@@ -253,8 +289,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	public void rollbackOnContainers(ContextValidation ctxVal,
-			State containerNextState, String expCode, Set<String> removeContainerCodes) {
+	public void rollbackOnContainers(ContextValidation ctxVal, State containerNextState, String expCode, Set<String> removeContainerCodes) {
 		Set<String> removeContainerSupportCodes = new TreeSet<String>();
 		Set<String> removeProcessCodes = new TreeSet<String>();
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
@@ -267,7 +302,7 @@ public class ExpWorkflowsHelper {
 
 		MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
 		.forEach(c -> {
-			containerSupportWorkflows
+			containerSupportWorkflows // containerSupportWorkflows
 			.setStateFromContainers(ctxVal, c);
 		});
 
@@ -290,10 +325,6 @@ public class ExpWorkflowsHelper {
 		return newContainersCodes;
 	}
 
-
-
-
-
 	private Set<String> getRemoveContainerCodes(Experiment expFromDB, Experiment expFromUser) {
 		List<String> containerCodesFromDB = ExperimentHelper.getAllInputContainers(expFromDB).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		List<String> containerCodesFromUser = ExperimentHelper.getAllInputContainers(expFromUser).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
@@ -307,6 +338,7 @@ public class ExpWorkflowsHelper {
 
 		return removeContainersCodes;
 	}
+	
 	/*
 	 * Update ouput container code but not generate if null
 	 * Used when user change plate line or column
@@ -323,12 +355,11 @@ public class ExpWorkflowsHelper {
 	 */
 	public void updateATMContainerContents(Experiment exp) {
 		exp.atomicTransfertMethods.forEach(atm -> {
-			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+			if (ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)) {
 				updateInputContainerUsedContents(exp, atm);
-			}else{
+			} else {
 				updateOutputContainerUsedContents(exp, atm);					
 			}
-			
 		});					
 	}
 	
@@ -356,7 +387,6 @@ public class ExpWorkflowsHelper {
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));
 	}
 
-
 	private void updateOutputContainerUsed(Experiment exp, AtomicTransfertMethod atm, ContainerSupportCategory outputCsc, String supportCode, boolean justContainerCode) {
 		if(atm.outputContainerUseds != null){
 			atm.updateOutputCodeIfNeeded(outputCsc, supportCode);
@@ -365,7 +395,6 @@ public class ExpWorkflowsHelper {
 			}
 		}		
 	}
-
 
 	private void updateOutputContainerUsedContents(Experiment exp, AtomicTransfertMethod atm) {
 		if(atm.outputContainerUseds != null){
@@ -1186,14 +1215,6 @@ public class ExpWorkflowsHelper {
 		}
 
 	}
-	// private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private ActorRef _rulesActor;
-	private ActorRef rulesActor() {
-		if (_rulesActor == null)
-			// _rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-			_rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
-		return _rulesActor;
-	}
 
 	public void callWorkflowRules(ContextValidation validation, Experiment exp) {
 		ArrayList<Object> facts = new ArrayList<Object>();
@@ -1204,8 +1225,8 @@ public class ExpWorkflowsHelper {
 			if(atomic.viewIndex == null)atomic.viewIndex = i+1; //used to have the position in the list
 			facts.add(atomic);
 		}
+		// rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 		
-		rulesActor().tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", facts),null);
 	}
 
 	/*

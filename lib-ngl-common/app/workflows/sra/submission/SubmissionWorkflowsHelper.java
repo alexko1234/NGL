@@ -8,19 +8,24 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
+
+import com.google.inject.Provider;
 
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.common.instance.State;
+// import models.laboratory.common.instance.State;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.AbstractStudy;
@@ -36,7 +41,7 @@ import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import play.Logger;
 import validation.ContextValidation;
-import workflows.readset.ReadSetWorkflows;
+// import workflows.readset.ReadSetWorkflows;
 import workflows.sra.experiment.ExperimentWorkflows;
 import workflows.sra.sample.SampleWorkflows;
 import workflows.sra.study.StudyWorkflows;
@@ -45,22 +50,37 @@ import workflows.sra.study.StudyWorkflows;
 
 
 
-@Service
+// @Service
+@Singleton
 public class SubmissionWorkflowsHelper {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionWorkflowsHelper.class);
 
-	@Autowired
+	/*@Autowired
 	StudyWorkflows studyWorkflows;
 	@Autowired
 	SampleWorkflows sampleWorkflows;
 	@Autowired
 	ExperimentWorkflows experimentWorkflows;
 	@Autowired
-	ReadSetWorkflows readSetWorkflows;
+	ReadSetWorkflows readSetWorkflows;*/
 
+	private final Provider<StudyWorkflows>      studyWorkflows;
+	private final SampleWorkflows     sampleWorkflows;
+	private final ExperimentWorkflows experimentWorkflows;
+	// private final ReadSetWorkflows    readSetWorkflows;
+	
+	@Inject
+	public SubmissionWorkflowsHelper(Provider<StudyWorkflows>      studyWorkflows, 
+					                 SampleWorkflows     sampleWorkflows,
+			                         ExperimentWorkflows experimentWorkflows) {
+		this.studyWorkflows      = studyWorkflows;
+		this.sampleWorkflows     = sampleWorkflows;
+		this.experimentWorkflows = experimentWorkflows;
+		// this.readSetWorkflows    = readSetWorkflows;
+	}
 
-	public void updateSubmissionRelease(Submission submission)
-	{	
+	public void updateSubmissionRelease(Submission submission) {	
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 		Calendar calendar = Calendar.getInstance();
 		Date date  = calendar.getTime();		
@@ -255,25 +275,24 @@ public class SubmissionWorkflowsHelper {
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submission.code);
 	}
 
-	public void updateSubmissionChildObject(Submission submission, ContextValidation validation)
-	{
+	public void updateSubmissionChildObject(Submission submission, ContextValidation validation) {
 		Logger.debug("dans applySuccessPostStateRules submission=" + submission.code + " avec state.code='"+submission.state.code+"'");
 
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
 			// Recuperer object study pour mettre historique des state traceInformation à jour:
-			studyWorkflows.setState(validation, study, submission.state);
+			studyWorkflows.get().setState(validation, study, submission.state);
 			Logger.debug("mise à jour du study avec state.code=" + study.state.code);
 		}
 		//Normalement une soumission pour release doit concerner uniquement un study, donc pas de test pour status F-SUB-R		
-		if (submission.sampleCodes != null){
+		if (submission.sampleCodes != null) {
 			for (int i = 0; i < submission.sampleCodes.size() ; i++) {
 				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, submission.sampleCodes.get(i));
 				sampleWorkflows.setState(validation, sample, submission.state);
 			}
 		}
 
-		if (submission.experimentCodes != null){
+		if (submission.experimentCodes != null) {
 			for (int i = 0; i < submission.experimentCodes.size() ; i++) {
 
 				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, submission.experimentCodes.get(i));

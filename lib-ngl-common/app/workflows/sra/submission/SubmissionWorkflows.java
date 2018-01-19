@@ -1,27 +1,39 @@
 package workflows.sra.submission;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.util.SraException;
+// import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 //import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
 
-@Service
-public class SubmissionWorkflows extends Workflows<Submission>{
+// @Service
+@Singleton
+public class SubmissionWorkflows extends Workflows<Submission> {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionWorkflows.class);
 
-	@Autowired
-	SubmissionWorkflowsHelper submissionWorkflowsHelper;
+	/*@Autowired
+	SubmissionWorkflowsHelper submissionWorkflowsHelper;*/
+	
+	private final SubmissionWorkflowsHelper submissionWorkflowsHelper;
+	
+	@Inject
+	public SubmissionWorkflows(SubmissionWorkflowsHelper submissionWorkflowsHelper) {
+		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
+	}
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,

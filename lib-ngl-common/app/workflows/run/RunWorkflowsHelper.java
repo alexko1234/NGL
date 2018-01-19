@@ -1,23 +1,28 @@
 package workflows.run;
 
-import static fr.cea.ig.play.IGGlobals.akkaSystem;
+// import static fr.cea.ig.play.IGGlobals.akkaSystem;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
 import com.mongodb.BasicDBObject;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
+// import akka.actor.ActorRef;
+// import akka.actor.ActorRef;
+// import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+// import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.Lane;
@@ -25,33 +30,51 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import play.Logger;
-import play.Play;
-import play.libs.Akka;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
+// import play.Play;
+// import play.libs.Akka;
+// import rules.services.RulesActor6;
+// import rules.services.RulesMessage;
 import validation.ContextValidation;
 import workflows.readset.ReadSetWorkflows;
 
-@Service
+// @Service
+@Singleton
 public class RunWorkflowsHelper {
 
-	@Autowired
+	/*@Autowired
 	ReadSetWorkflows readSetWorkflows;
 
 	//private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private static ActorRef rulesActor = akkaSystem().actorOf(Props.create(RulesActor6.class));*/
+	
+	/*private final WorkflowsCatalog wc;
+	
+	// Not an injection constructor on purpose
+	public RunWorkflowsHelper(WorkflowsCatalog wc) {
+		this.wc = wc;
+	}*/
+	
+	// private final ActorRef rulesActor;
+	// private final String rulesKey;
+	private final ReadSetWorkflows readSetWorkflows;
+	
+	@Inject
+	public RunWorkflowsHelper(/*NGLContext ctx,*/ ReadSetWorkflows readSetWorkflows) {
+		// rulesActor = ctx.rules6Actor();
+		// rulesKey   = ctx.getRulesKey();
+		this.readSetWorkflows = readSetWorkflows;
+	}
 
-	public void updateDispatchRun(Run run)
-	{
+	public void updateDispatchRun(Run run) {
 		//update dispatch
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 				DBQuery.is("code", run.code), DBUpdate.set("dispatch", Boolean.TRUE));
 	}
 
-	public void updateReadSetLane(Run run, ContextValidation contextValidation, String rules, boolean bioinformaticValuation)
-	{
+	public void updateReadSetLane(Run run, ContextValidation contextValidation, String rules, boolean bioinformaticValuation) {
+		// ReadSetWorkflows readSetWorkflows = wc.readSetWorkflows();
 		//Get readSet from lane with VALID = FALSE 
-		if(null != run.lanes){
+		if (null != run.lanes) {
 			for(Lane lane : run.lanes){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)),getReadSetKeys()).toList();
@@ -76,9 +99,8 @@ public class RunWorkflowsHelper {
 		}
 	}
 
-	public void invalidateReadSetLane(Run run, ContextValidation contextValidation, String rules, boolean bioinformaticValuation)
-	{
-		if(null != run.lanes){
+	public void invalidateReadSetLane(Run run, ContextValidation contextValidation, String rules, boolean bioinformaticValuation) {
+		if (null != run.lanes) {
 			for(Lane lane : run.lanes){
 				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)), getReadSetKeys()).toList();
@@ -92,8 +114,8 @@ public class RunWorkflowsHelper {
 		}
 	}
 
-	private void invalidateReadSet(ReadSet readSet, ContextValidation contextValidation, String rules, boolean bioinformaticValuation)
-	{
+	private void invalidateReadSet(ReadSet readSet, ContextValidation contextValidation, String rules, boolean bioinformaticValuation) {
+		// ReadSetWorkflows readSetWorkflows = wc.readSetWorkflows();
 		readSet.productionValuation.valid = TBoolean.FALSE;
 		readSet.productionValuation.date = new Date();
 		readSet.productionValuation.user = contextValidation.getUser();
@@ -121,7 +143,8 @@ public class RunWorkflowsHelper {
 		State nextState = cloneState(readSet.state, contextValidation.getUser());
 		nextState.code = "F-VQC";
 		readSetWorkflows.setState(contextValidation, readSet, nextState);
-		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), rules, readSet),null);
+		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), rules, readSet),null);
+		// wc.rulesActor().tell(new RulesMessage(wc.rulesKey(), rules, readSet),null);
 	}
 
 	/**
@@ -172,4 +195,5 @@ public class RunWorkflowsHelper {
 		}
 		return true;
 	}
+	
 }

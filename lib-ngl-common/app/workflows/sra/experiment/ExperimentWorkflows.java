@@ -2,7 +2,7 @@ package workflows.sra.experiment;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.stereotype.Service;
+// import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
@@ -14,38 +14,32 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
 
-@Service
-public class ExperimentWorkflows extends Workflows<Experiment>{
+import javax.inject.Singleton;
+
+// @Service
+@Singleton
+public class ExperimentWorkflows extends Workflows<Experiment> {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(ExperimentWorkflows.class);
 
 	@Override
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void applyPreValidateCurrentStateRules(ContextValidation validation, Experiment object) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Experiment object) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Experiment exp) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -63,7 +57,7 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 		} else {
 			applyPreStateRules(contextValidation, experiment, nextState);
 			//submission.validate(contextValidation);
-			if(!contextValidation.hasErrors()){
+			if (!contextValidation.hasErrors()) {
 				// Gerer l'historique des states :
 				experiment.state = updateHistoricalNextState(experiment.state, nextState);	
 				// sauver le state dans la base avec traceInformation
@@ -72,7 +66,7 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 						DBUpdate.set("state", experiment.state).set("traceInformation", experiment.traceInformation));
 				applySuccessPostStateRules(contextValidation, experiment);
 				nextState(contextValidation, experiment);		
-			}else{
+			} else {
 				applyErrorPostStateRules(contextValidation, experiment, nextState);	
 			}
 		}
@@ -80,8 +74,6 @@ public class ExperimentWorkflows extends Workflows<Experiment>{
 
 	@Override
 	public void nextState(ContextValidation contextValidation, Experiment object) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

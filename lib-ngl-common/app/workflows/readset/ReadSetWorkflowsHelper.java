@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -26,8 +27,10 @@ import models.utils.InstanceHelpers;
 // import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
+//import workflows.WorkflowsCatalog;
 
 // @Service
+@Singleton
 public class ReadSetWorkflowsHelper {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ReadSetWorkflowsHelper.class);
@@ -38,6 +41,13 @@ public class ReadSetWorkflowsHelper {
 	public ReadSetWorkflowsHelper(NGLContext ctx) {
 		rulesKey = ctx.getRulesKey();
 	}
+	
+	/*private final String rulesKey;
+	
+	// Not an injection constructor on purpose
+	public ReadSetWorkflowsHelper(WorkflowsCatalog wc) {
+		rulesKey = wc.getNGLContext().getRulesKey();
+	}*/
 	
 	public void updateContainer(ReadSet readSet) {
 		//insert sample container properties at the end of the ngsrg

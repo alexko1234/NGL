@@ -4,12 +4,19 @@ package workflows.analyses;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+// import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.stereotype.Service;
 
 import akka.actor.ActorRef;
+// import akka.actor.Props;
+// import akka.actor.ActorRef;
 // import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.play.NGLContext;
@@ -27,6 +34,7 @@ import validation.run.instance.AnalysisValidationHelper;
 import workflows.Workflows;
 
 // @Service
+@Singleton
 public class AnalysisWorkflows extends Workflows<Analysis> {
 
 	
@@ -49,6 +57,15 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 		rulesKey                     = ctx.getRulesKey();
 	}
 	
+	// private final WorkflowsCatalog wc;
+	
+	// Not an injection constructor on purpose
+	/*public AnalysisWorkflows(WorkflowsCatalog wc) { 
+		// super(wc.getNGLContext());
+		// this.wc = wc;
+		super(wc);
+	}*/
+	
 	@Override
 	public void applyPreStateRules(ContextValidation validation, Analysis exp, State nextState) { 
 	}
@@ -63,6 +80,7 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Analysis analysis) {
+		// AnalysisWorkflowsHelper analysisWorkflowsHelper = wc.analysisWorkflowsHelper();
 		if ("IP-BA".equals(analysis.state.code)) {
 			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "IP-BA");
 		} else if("F-BA".equals(analysis.state.code)) {
@@ -70,7 +88,6 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFBA, analysis),null);
 			rulesActor.tell(new RulesMessage(rulesKey,ruleFBA, analysis),null);
 			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "F-BA");
-										
 		} else if("IW-V".equals(analysis.state.code)) {
 			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "IW-VBA");
 			analysisWorkflowsHelper.updateBioinformaticValuationMasterReadSetCodes(analysis, validation, TBoolean.UNSET, null, null);	

@@ -3,6 +3,7 @@ package workflows.analyses;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -21,24 +22,32 @@ import validation.ContextValidation;
 import workflows.readset.ReadSetWorkflows;
 
 // @Service
+@Singleton
 public class AnalysisWorkflowsHelper {
 
 	//@Autowired
 	// ReadSetWorkflows readSetWorflows;
 	
-	private final ReadSetWorkflows readSetWorflows;
+	private final ReadSetWorkflows readSetWorkflows;
 	
 	@Inject
-	public AnalysisWorkflowsHelper(ReadSetWorkflows readSetWorflows) {
-		this.readSetWorflows = readSetWorflows;
+	public AnalysisWorkflowsHelper(ReadSetWorkflows readSetWorkflows) {
+		this.readSetWorkflows = readSetWorkflows;
 	}
+	
+	/*private final WorkflowsCatalog wc;
+	
+	// Not an injection constructor on purpose
+	public AnalysisWorkflowsHelper(WorkflowsCatalog wc) {
+		this.wc = wc;
+	}*/
 	
 	public void updateStateMasterReadSetCodes(Analysis analysis, ContextValidation validation, String nextStepCode)	{
 		for (String rsCode : analysis.masterReadSetCodes) {
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, rsCode, getReadSetKeys());
 			State nextStep = cloneState(readSet.state, validation.getUser());
 			nextStep.code = "IP-BA";
-			readSetWorflows.setState(validation, readSet, nextStep);
+			readSetWorkflows.setState(validation, readSet, nextStep);
 		}
 	}
 	

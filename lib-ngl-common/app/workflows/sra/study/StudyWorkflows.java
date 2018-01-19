@@ -1,9 +1,12 @@
 package workflows.sra.study;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
@@ -14,43 +17,46 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
-@Service
-public class StudyWorkflows extends Workflows<Study>{
+// @Service
+
+@Singleton
+public class StudyWorkflows extends Workflows<Study> {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(StudyWorkflows.class);
 
-	@Autowired
-	StudyWorkflowsHelper studyWorkflowsHelper;
+	/*@Autowired
+	StudyWorkflowsHelper studyWorkflowsHelper;*/
+	
+	private final StudyWorkflowsHelper studyWorkflowsHelper;
+	
+	@Inject
+	public StudyWorkflows(StudyWorkflowsHelper studyWorkflowsHelper) {
+		this.studyWorkflowsHelper = studyWorkflowsHelper;
+	}
 
 	@Override
-	public void applyPreStateRules(ContextValidation validation,
-			Study study, State nextState) {
+	public void applyPreStateRules(ContextValidation validation, Study study, State nextState) {
 		logger.debug("apply pre state rules");
 		updateTraceInformation(study.traceInformation, nextState); 
 		if(nextState.code.equals("IW-SUB-R")){
 			studyWorkflowsHelper.createSubmissionEntityforRelease(study, validation);
 		}
-
 	}
 
 	@Override
 	public void applyPreValidateCurrentStateRules(ContextValidation validation, Study study) {
-		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void applyPostValidateCurrentStateRules(ContextValidation validation, Study study) {
-		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation, Study study) {
-
 	}
 
 	@Override
-	public void applyErrorPostStateRules(ContextValidation validation,
-			Study study, State nextState) {
-
+	public void applyErrorPostStateRules(ContextValidation validation, Study study, State nextState) {
 	}
 
 	@Override
@@ -93,11 +99,6 @@ public class StudyWorkflows extends Workflows<Study>{
 
 	@Override
 	public void nextState(ContextValidation contextValidation, Study study) {
-		// TODO Auto-generated method stub
-
 	}
-
-
-
 
 }

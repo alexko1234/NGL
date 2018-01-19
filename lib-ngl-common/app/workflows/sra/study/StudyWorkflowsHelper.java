@@ -2,6 +2,9 @@ package workflows.sra.study;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -19,15 +22,23 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
-@Service
+// @Service
+@Singleton
 public class StudyWorkflowsHelper {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(StudyWorkflowsHelper.class);
 
-	@Autowired
-	SubmissionWorkflows submissionWorkflows;
+	/*@Autowired
+	SubmissionWorkflows submissionWorkflows;*/
 
-	public void createSubmissionEntityforRelease(Study study, ContextValidation validation)
-	{
+	private final SubmissionWorkflows submissionWorkflows;
+	
+	@Inject
+	public StudyWorkflowsHelper(SubmissionWorkflows submissionWorkflows) {
+		this.submissionWorkflows = submissionWorkflows;
+	}
+	
+	public void createSubmissionEntityforRelease(Study study, ContextValidation validation)	{
 		try {
 			Submission submission = null;
 			Date courantDate = new java.util.Date();
@@ -80,4 +91,5 @@ public class StudyWorkflowsHelper {
 		}
 
 	}
+	
 }

@@ -5,6 +5,7 @@ package workflows.readset;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -38,7 +39,8 @@ import validation.run.instance.RunValidationHelper;
 import workflows.Workflows;
 
 // @Service
-public class ReadSetWorkflows extends Workflows<ReadSet>{
+@Singleton
+public class ReadSetWorkflows extends Workflows<ReadSet> {
 
 	// @Autowired
 	// ReadSetWorkflowsHelper readSetWorkflowsHelper;
@@ -70,6 +72,16 @@ public class ReadSetWorkflows extends Workflows<ReadSet>{
 		rulesActor                  = ctx.rules6Actor();
 		rulesKey                    = ctx.getRulesKey();
 	}
+	
+	// private final WorkflowsCatalog wc;
+	
+	// Not an injection constructor on purpose
+	/*public ReadSetWorkflows(WorkflowsCatalog wc) {
+		// super(wc.getNGLContext());
+		// this.wc = wc;
+		super(wc);
+	}*/
+	
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation, ReadSet readSet, State nextState) {

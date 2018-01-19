@@ -3,11 +3,14 @@ package workflows;
 import java.util.Date;
 import java.util.HashSet;
 
-import javax.inject.Inject;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
+import akka.actor.ActorRef;
 import fr.cea.ig.play.NGLContext;
+
+// import javax.inject.Inject;
+
+// import org.springframework.beans.factory.annotation.Autowired;
+
+// import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
@@ -29,8 +32,6 @@ public abstract class Workflows<T> {
 	//	return this.ctx;
 	//}
 	
-	
-	
 	public abstract void applyPreStateRules(ContextValidation validation, T exp, State nextState);
 	
 	//public abstract void applyCurrentStateRules(ContextValidation validation, T object);
@@ -47,8 +48,7 @@ public abstract class Workflows<T> {
 	
 	public abstract void nextState(ContextValidation contextValidation, T object);
 	
-	protected TraceInformation updateTraceInformation(
-			TraceInformation traceInformation, State nextState) {		
+	protected TraceInformation updateTraceInformation(TraceInformation traceInformation, State nextState) {		
 		traceInformation.modifyDate = nextState.date;
 		traceInformation.modifyUser = nextState.user;		
 		return traceInformation;
