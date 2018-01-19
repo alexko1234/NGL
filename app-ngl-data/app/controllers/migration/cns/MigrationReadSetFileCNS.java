@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.State;
@@ -13,31 +15,39 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.util.DataMappingCNS;
-import models.util.Workflows;
+// import models.util.Workflows;
 import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import play.mvc.Result;
-import services.instance.run.UpdateReadSetCNS;
+// import services.instance.run.UpdateReadSetCNS;
 import validation.ContextValidation;
-import workflows.readset.ReadSetWorkflows;
+// import workflows.readset.ReadSetWorkflows;
 import workflows.run.RunWorkflows;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 public class MigrationReadSetFileCNS extends CommonController {
 
-	protected static LimsCNSDAO  limsServices = Spring.getBeanOfType(LimsCNSDAO.class);
-	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class); // ngl-data
+	private static final play.Logger.ALogger logger = play.Logger.of(MigrationReadSetFileCNS.class);
 	
+	private static final String RUN_COLL_NAME_BCK     = InstanceConstants.RUN_ILLUMINA_COLL_NAME     + "_BCK_VALUATION";
+	private static final String READSET_COLL_NAME_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME + "_BCK_VALUATION";
+
+	protected static LimsCNSDAO  limsServices = play.api.modules.spring.Spring.getBeanOfType(LimsCNSDAO.class);
 	
-	private static final String RUN_COLL_NAME_BCK = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BCK_VALUATION";
-	private static final String READSET_COLL_NAME_BCK = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_VALUATION";
+	// final static RunWorkflows workflows = Spring.get BeanOfType(RunWorkflows.class); 
+	private final RunWorkflows workflows;
+
+	@Inject
+	public MigrationReadSetFileCNS(RunWorkflows workflows) {
+		this.workflows = workflows;
+	}
 
 	/*	public static Result updateFileReadSet(String readSetCode){
 		ContextValidation ctxVal=new ContextValidation();
@@ -77,28 +87,28 @@ public class MigrationReadSetFileCNS extends CommonController {
 	}
 	 */
 
-	public static Result migration(){
+	public Result migration(){
 
 		ContextValidation ctxVal=new ContextValidation(Constants.NGL_DATA_USER);
 		List<Run> containersCollBck = MongoDBDAO.find(RUN_COLL_NAME_BCK, Run.class).toList();
 		if(containersCollBck.size() == 0){
 
-			Logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File starts");
+			logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File starts");
 			backupCollections();
 
 			List<Run> runs=MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList();
-			Logger.info("Nb Run : "+runs.size());
+			logger.info("Nb Run : "+runs.size());
 			int i = 0;
 			for(Run run:runs){
 				i++;
 				updateRunPiste(run,ctxVal);
 				//UpdateReadSetCNS.updateReadSet(run, ctxVal);
 				if((i % 100) == 0){
-					Logger.info("Nb Run Traité : "+i);
+					logger.info("Nb Run Traité : "+i);
 				}
 			}
 
-			Logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File finish");
+			logger.info(">>>>>>>>>>> Update Run/Lane/ReadSet/File finish");
 			if(!ctxVal.hasErrors()){
 				return ok("Update Run/Piste/ReadSet/Files ok");
 			}else {
@@ -109,24 +119,21 @@ public class MigrationReadSetFileCNS extends CommonController {
 			return badRequest("Migration deja faite !");
 		}
 	}
-
-
+	
 	private static void backupCollections() {
-		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" start");
+		logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" start");
 		MongoDBDAO.save(READSET_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class).toList());
 		MongoDBDAO.save(RUN_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" end");
+		logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" end");
 	}
 
-
-	public static void updateRunPiste(Run run,ContextValidation contextValidation){
-		class RunPisteValuation{
+	public void updateRunPiste(Run run,ContextValidation contextValidation){
+		class RunPisteValuation {
 			public String runCode;
 			public Integer laneNumero;			
 			public Valuation valuationRun;
 			public Valuation valudationLane;
 			public String stateCode;
-			
 		}
 
 		String sql="select runCode=r.runhnom, laneNumero=p.pistnum " +
@@ -156,7 +163,6 @@ public class MigrationReadSetFileCNS extends CommonController {
 				runPisteValuation.valudationLane.valid=TBoolean.valueOf(rs.getString("validationValidPiste"));
 				runPisteValuation.valudationLane.user="lims";
 				runPisteValuation.valudationLane.date=rs.getDate("validationDatePiste");
-
 				return runPisteValuation;
 			}
 		});

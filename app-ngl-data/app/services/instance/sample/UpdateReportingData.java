@@ -28,6 +28,7 @@ import controllers.migration.OneToVoidContainer;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
+// import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
@@ -44,70 +45,73 @@ import models.laboratory.sample.instance.reporting.SampleProcessesStatistics;
 import models.laboratory.sample.instance.reporting.SampleReadSet;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportData;
 import workflows.process.ProcWorkflowHelper;
 
 public class UpdateReportingData extends AbstractImportData {
-	private ProcWorkflowHelper procWorkflowHelper;
+	
+	private static final play.Logger.ALogger logger = play.Logger.of(UpdateReportingData.class);
+	
+	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
+	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<String, Integer>(); 
+
+	private final ProcWorkflowHelper procWorkflowHelper;
 	
 	@Inject
-	public UpdateReportingData(FiniteDuration durationFromStart,FiniteDuration durationFromNextIteration, NGLContext ctx) {
+	public UpdateReportingData(FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super("UpdateReportingData", durationFromStart, durationFromNextIteration, ctx);
-		procWorkflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class); // ngl-data
+		procWorkflowHelper = ctx.injector().instanceOf(ProcWorkflowHelper.class); // Spring.get BeanOfType(ProcWorkflowHelper.class);
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		Logger.debug("Start reporting synchro");
+		logger.debug("Start reporting synchro");
 		Integer skip = 0;
 		Date date = new Date();
-			MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
-			Integer nbResult = result.count(); 
-			while(skip < nbResult){
-				try{
-					
-					long t1 = System.currentTimeMillis();
-					DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
+		MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
+		Integer nbResult = result.count(); 
+		while(skip < nbResult) {
+			try {
+				long t1 = System.currentTimeMillis();
+				DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
 						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(2000)
 						.cursor;
-					
-					cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
-							try{
-								updateProcesses(sample);
-								Logger.debug("update sample "+sample.code);
-								if(sample.processes != null && sample.processes.size() > 0){
-									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
-								}else{
-									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
-											DBUpdate.unset("processes").unset("processesStatistics").set("processesUpdatedDate", date));
-								}
-							}catch(Throwable e){
-								logger.error("Sample : "+sample.code+" - "+e,e);
-								if(null != e.getMessage())
-									contextError.addErrors(sample.code, e.getMessage());
-								else
-									contextError.addErrors(sample.code, "null");
-							}
-						});
-					cursor.close();
-					skip = skip+2000;
-					long t2 = System.currentTimeMillis();
-					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
-				}catch(Throwable e){
-					logger.error("Error : "+e,e);
-					if(null != e.getMessage())
-						contextError.addErrors("Error", e.getMessage());
-					else
-						contextError.addErrors("Error", "null");
-				}
+
+				cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
+					try{
+						updateProcesses(sample);
+						logger.debug("update sample "+sample.code);
+						if(sample.processes != null && sample.processes.size() > 0){
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+									DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
+						}else{
+							MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
+									DBUpdate.unset("processes").unset("processesStatistics").set("processesUpdatedDate", date));
+						}
+					}catch(Throwable e){
+						logger.error("Sample : "+sample.code+" - "+e,e);
+						if(null != e.getMessage())
+							contextError.addErrors(sample.code, e.getMessage());
+						else
+							contextError.addErrors(sample.code, "null");
+					}
+				});
+				cursor.close();
+				skip = skip+2000;
+				long t2 = System.currentTimeMillis();
+				logger.debug("time "+skip+" - "+((t2-t1)/1000));
+			} catch(Throwable e) { // TODO: do not ctach throwable
+				logger.error("Error : "+e,e);
+				if(null != e.getMessage())
+					contextError.addErrors("Error", e.getMessage());
+				else
+					contextError.addErrors("Error", "null");
 			}
-		
-		
+		}
 	}
 
 	private void updateProcesses(Sample sample) {
@@ -125,8 +129,6 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		computeStatistics(sample);
 	}
-
-	
 
 	private void computeStatistics(Sample sample) {
 		if(null != sample.processes){
@@ -183,8 +185,6 @@ public class UpdateReportingData extends AbstractImportData {
 		
 		return sampleProcess;
 	}
-	private Map<String, List<String>> transformationCodesByProcessTypeCode = new HashMap<String, List<String>>();
-	private Map<String, Integer> nbExpPositionInProcessType = new HashMap<String, Integer>(); 
 			
 	private List<String> getTransformationCodesForProcessTypeCode(Process process) {
 		List<String> transformationCodes;
@@ -201,9 +201,6 @@ public class UpdateReportingData extends AbstractImportData {
 		return transformationCodes;
 	}
 
-
-	
-
 	private List<SampleExperiment> updateExperiments(Process process) {		
 		List<SampleExperiment> sampleExperiments = new ArrayList<SampleExperiment>();
 		MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes))
@@ -214,7 +211,6 @@ public class UpdateReportingData extends AbstractImportData {
 		//List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.in("code", process.experimentCodes)).toList();
 		//return experiments.parallelStream().map(exp -> convertToSampleExperiments(process, exp)).flatMap(List::stream).collect(Collectors.toList());		
 	}
-
 	
 	//map key = expCode-processCode
 	private List<SampleExperiment> convertToSampleExperiments(Process process, Experiment experiment) {
@@ -322,7 +318,6 @@ public class UpdateReportingData extends AbstractImportData {
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
 	}
 	
-
 	private List<SampleReadSet> getSampleReadSets(Sample sample, Process process) {
 		List<SampleReadSet> sampleReadSets = new ArrayList<SampleReadSet>();
 		Set<String> tags = procWorkflowHelper.getTagAssignFromProcessContainers(process);
@@ -413,9 +408,9 @@ public class UpdateReportingData extends AbstractImportData {
 			
 			return sampleProcess;
 		} catch (ParseException e) {
-			Logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			return null;
 		}
-		
 	}
+	
 }

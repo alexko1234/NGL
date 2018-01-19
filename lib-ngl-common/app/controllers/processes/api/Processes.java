@@ -34,8 +34,8 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ProcessHelper;
 import models.utils.instance.SampleHelper;
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.i18n.Lang;
@@ -46,28 +46,30 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
-import workflows.process.ProcWorkflowHelper;
+// import workflows.process.ProcWorkflowHelper;
 import workflows.process.ProcWorkflows;
 
 public class Processes extends DocumentController<Process> {
 
-	private static final Logger.ALogger logger = Logger.of(Processes.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(Processes.class);
 	
-	private final /*static*/ Form<State> stateForm;// = form(State.class);
-	private final /*static*/ Form<ProcessesSearchForm> processesSearchForm;// = form(ProcessesSearchForm.class);
-	private final /*static*/ Form<ProcessesBatchElement> batchElementForm;// = form(ProcessesBatchElement.class);
-	
-	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
-	final static ProcWorkflowHelper workflowHelper = Spring.getBeanOfType(ProcWorkflowHelper.class);
-	
+	private final Form<State>                 stateForm;// = form(State.class);
+	// private final /*static*/ Form<ProcessesSearchForm> processesSearchForm;// = form(ProcessesSearchForm.class);
+	private final Form<ProcessesBatchElement> batchElementForm;// = form(ProcessesBatchElement.class);
+	// final static ProcWorkflows workflows = Spring.get BeanOfType(ProcWorkflows.class);
+	// final static ProcWorkflowHelper workflowHelper = Spring.get BeanOfType(ProcWorkflowHelper.class);
+	private final ProcWorkflows               workflows;
+	// private final ProcWorkflowHelper workflowHelper;
 	
 	@Inject
-	public Processes(NGLContext ctx) {
+	public Processes(NGLContext ctx, ProcWorkflows workflows /*, ProcWorkflowHelper workflowHelper*/) {
 		super(ctx,InstanceConstants.PROCESS_COLL_NAME, Process.class);		
-		defaultKeys =  Arrays.asList("*");
-		stateForm = ctx.form(State.class);
-		processesSearchForm = ctx.form(ProcessesSearchForm.class);
-		batchElementForm = ctx.form(ProcessesBatchElement.class);
+		defaultKeys         =  Arrays.asList("*");
+		stateForm           = ctx.form(State.class);
+		// processesSearchForm = ctx.form(ProcessesSearchForm.class);
+		batchElementForm    = ctx.form(ProcessesBatchElement.class);
+		this.workflows      = workflows;
+		// this.workflowHelper = workflowHelper;
 	}
 
 	@Permission(value={"reading"})
@@ -340,7 +342,7 @@ public class Processes extends DocumentController<Process> {
 			if (null != input.traceInformation) {
 				input.traceInformation = getUpdateTraceInformation(input.traceInformation);
 			} else {
-				Logger.error("traceInformation is null !!");
+				logger.error("traceInformation is null !!");
 			}
 			
 			if (!objectInDB.state.code.equals(input.state.code)) {

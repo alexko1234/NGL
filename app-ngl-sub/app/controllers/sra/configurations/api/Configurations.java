@@ -46,10 +46,9 @@ public class Configurations extends DocumentController<Configuration> {
 	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
 	// final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
 	// final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	// final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
+	// final ConfigurationWorkflows configWorkflows = Spring.get BeanOfType(ConfigurationWorkflows.class);
 
-	private final Form<Configuration> configurationForm;
-	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
+	private final Form<Configuration>            configurationForm;
 	private final Form<ConfigurationsSearchForm> configurationsSearchForm;
 	// private final Form<SubmissionsSearchForm> submissionsSearchForm;
 	// private final ConfigurationWorkflows configWorkflows;

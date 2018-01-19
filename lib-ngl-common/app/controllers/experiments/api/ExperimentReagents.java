@@ -5,11 +5,11 @@ package controllers.experiments.api;
 import fr.cea.ig.util.Streamer;
 //import static fr.cea.ig.util.Streamer.IStreamer.write;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+// import java.io.IOException;
+// import java.io.OutputStream;
+// import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+// import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,15 +26,16 @@ import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.DBQuery;
 import org.mongojack.JacksonDBCollection;
 
-import play.data.Form;
+// import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
+import workflows.experiment.ExpWorkflows;
 
 import com.google.common.collect.Iterators;
-import com.mongodb.AggregationOutput;
+// import com.mongodb.AggregationOutput;
 import com.mongodb.DBObject;
 
-import akka.actor.ActorRef;
+// import akka.actor.ActorRef;
 import akka.stream.javadsl.Source;
 import akka.util.ByteString;
 import controllers.authorisation.Permission;
@@ -52,18 +53,18 @@ import fr.cea.ig.play.NGLContext;
  * error 15992: 'exception: disallowed field type Array in object expression (at 'reagents')' on server mongouat.genoscope.cns.fr:27018. 
  * The full response is { "errmsg" : "exception: disallowed field type Array in object expression (at 'reagents')", "code" : 15992, "ok" : 0.0 }
  */
-public class ExperimentReagents extends Experiments{
+public class ExperimentReagents extends Experiments {
 	
+	// private final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
 	
-	final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
 	@Inject
-	public ExperimentReagents(NGLContext ctx) {
-		super(ctx);	
-		experimentSearchForm = ctx.form(ExperimentSearchForm.class);
+	public ExperimentReagents(NGLContext ctx, ExpWorkflows workflows) {
+		super(ctx,workflows);	
+		// experimentSearchForm = ctx.form(ExperimentSearchForm.class);
 	}
 	
 	@Permission(value={"reading"})
-	public Result list(){
+	public Result list() {
 		
 		ExperimentSearchForm experimentsSearch = filledFormQueryString(ExperimentSearchForm.class);
 		DBQuery.Query query = getQuery(experimentsSearch);

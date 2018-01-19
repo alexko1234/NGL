@@ -26,11 +26,10 @@ import org.mongojack.DBUpdate;
 import com.mongodb.BasicDBObject;
 
 import akka.actor.ActorRef;
-import akka.actor.Props;
+// import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
@@ -46,18 +45,17 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import play.Logger;
-import play.Play;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.Play;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
-import play.libs.Akka;
+// import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.With;
-import rules.services.RulesActor6;
+// import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
@@ -71,34 +69,39 @@ import fr.cea.ig.play.NGLContext;
 // TODO: cleanup
 
 public class ReadSets extends ReadSetsController {
-	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
 	
-	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private static final play.Logger.ALogger logger = play.Logger.of(ReadSets.class);
 	
-	private final /*static*/ Form<ReadSet> readSetForm; // = form(ReadSet.class);
-	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
-	private final /*static*/ Form<ReadSetValuation> valuationForm; // = form(ReadSetValuation.class);
-	private final /*static*/ Form<State> stateForm; // = form(State.class);
-
-	private final /*static*/ Form<ReadSetBatchElement> batchElementForm; // = form(ReadSetBatchElement.class);
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location","properties");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
+	private final Form<ReadSet>             readSetForm;      // = form(ReadSet.class);
+	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
+	private final Form<ReadSetValuation>    valuationForm;    // = form(ReadSetValuation.class);
+	private final Form<State>               stateForm;        // = form(State.class);
+	private final Form<ReadSetBatchElement> batchElementForm; // = form(ReadSetBatchElement.class);
+	private final Form<QueryFieldsForm>     updateForm;       // = form(QueryFieldsForm.class);
+	// final static ReadSetWorkflows workflows = Spring.get BeanOfType(ReadSetWorkflows.class);
+	private final ReadSetWorkflows          workflows;
+	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	private final ActorRef                  rulesActor;       // = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private final String                    rulesKey;
+	
 	@Inject
-	public ReadSets(NGLContext ctx) {
+	public ReadSets(NGLContext ctx, ReadSetWorkflows workflows) {
 		// super(ctx);
 		readSetForm      = ctx.form(ReadSet.class);
 		valuationForm    = ctx.form(ReadSetValuation.class);
 		stateForm        = ctx.form(State.class);
 		batchElementForm = ctx.form(ReadSetBatchElement.class);
 		updateForm       = ctx.form(QueryFieldsForm.class);
-		rulesActor       = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		rulesActor       = ctx.rules6Actor(); // ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		rulesKey         = ctx.config().getRulesKey();
+		this.workflows   = workflows;
 	}
 	
 	@Permission(value={"reading"})
-	public /*static*/ Result list() {
+	public Result list() {
 		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
 		//ReadSetsSearchForm form = filledForm.get();
 
@@ -135,7 +138,7 @@ public class ReadSets extends ReadSetsController {
 		}
 	}
 
-	private /*static*/ List<ListObject> toListObjects(List<ReadSet> readSets){
+	private List<ListObject> toListObjects(List<ReadSet> readSets){
 		List<ListObject> jo = new ArrayList<ListObject>();
 		for(ReadSet r: readSets){
 			jo.add(new ListObject(r.code, r.code));
@@ -143,7 +146,7 @@ public class ReadSets extends ReadSetsController {
 		return jo;
 	}
 
-	private /*static*/ DatatableForm updateForm(ReadSetsSearchForm form) {
+	private DatatableForm updateForm(ReadSetsSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
@@ -151,7 +154,7 @@ public class ReadSets extends ReadSetsController {
 		return form;
 	}
 
-	private /*static*/ Query getQuery(ReadSetsSearchForm form) {
+	private Query getQuery(ReadSetsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
 
@@ -324,7 +327,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"reading"})
-	public /*static*/ Result get(String readSetCode) {
+	public Result get(String readSetCode) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		ReadSet readSet =  getReadSet(readSetCode, form.includes.toArray(new String[0]));		
 		if(readSet != null) {
@@ -336,7 +339,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"reading"})
-	public /*static*/ Result head(String readSetCode) {
+	public Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					
 		}else{
@@ -345,7 +348,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result save(){
+	public Result save(){
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
@@ -424,15 +427,15 @@ public class ReadSets extends ReadSetsController {
 		readSetInput.runTypeCode = run.typeCode;
 	}
 
+
 	@Permission(value={"writing"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	public /*static*/ Result update(String readSetCode){
+	public Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
 			return badRequest("ReadSet with code "+readSetCode+" does not exist");
 		}
-
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 
@@ -444,7 +447,7 @@ public class ReadSets extends ReadSetsController {
 				if(null != readSetInput.traceInformation){
 					readSetInput.traceInformation.setTraceInformation(getCurrentUser());
 				}else{
-					Logger.error("traceInformation is null !!");
+					logger.error("traceInformation is null !!");
 				}
 
 				if(!readSet.state.code.equals(readSetInput.state.code)){
@@ -511,7 +514,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"}) 
-	public /*static*/ Result delete(String readSetCode) { 
+	public Result delete(String readSetCode) { 
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
 			return badRequest("Readset with code "+readSetCode+" does not exist !");
@@ -541,8 +544,9 @@ public class ReadSets extends ReadSetsController {
 		return ok();
 	}
 
+
 	@Permission(value={"writing"})
-	public /*static*/ Result deleteByRunCode(String runCode) {
+	public Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
 			return badRequest();
@@ -562,9 +566,9 @@ public class ReadSets extends ReadSetsController {
 
 		return ok();
 	}
-	
+
 	@Permission(value={"writing"})
-	public /*static*/ Result state(String code){
+	public Result state(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
@@ -584,7 +588,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result stateBatch(){
+	public Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 		final String user = getCurrentUser();
@@ -615,7 +619,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result valuation(String code){
+	public Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
@@ -641,7 +645,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result valuationBatch(){
+	public Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 		final String user = getCurrentUser();
@@ -677,7 +681,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result properties(String code){
+	public Result properties(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
@@ -715,7 +719,7 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result propertiesBatch(){
+	public Result propertiesBatch() {
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
 
@@ -749,8 +753,7 @@ public class ReadSets extends ReadSetsController {
 		return ok(Json.toJson(response));
 	}
 
-
-	private /*static*/ void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
+	private void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
 		if (productionVal.valid != readSet.productionValuation.valid) {
 			productionVal.date = new Date();
 			productionVal.user = ctxVal.getUser();
@@ -763,9 +766,7 @@ public class ReadSets extends ReadSetsController {
 		}
 	}
 
-
-
-	private /*static*/ String findRegExpFromStringList(Set<String> searchList) {
+	private String findRegExpFromStringList(Set<String> searchList) {
 		String regex = ".*("; 
 		for (String itemList : searchList) {
 			regex += itemList + "|"; 
@@ -776,15 +777,15 @@ public class ReadSets extends ReadSetsController {
 	}
 
 	@Permission(value={"writing"})
-	public /*static*/ Result applyRules(String code, String rulesCode){
+	public Result applyRules(String code, String rulesCode){
 		ReadSet readSet = getReadSet(code);
-		if(readSet != null){
+		if (readSet != null) {
 			//Send run fact			
 			// Outside of an actor and if no reply is needed the second argument can be null
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
-		}else
+			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
+			rulesActor.tell(new RulesMessage(rulesKey,rulesCode, readSet),null);
+		} else
 			return badRequest();
-
 		return ok();
 	}
 

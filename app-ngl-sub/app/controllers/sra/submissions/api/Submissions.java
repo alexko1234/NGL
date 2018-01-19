@@ -74,16 +74,13 @@ public class Submissions extends DocumentController<Submission>{
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	// final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
 	// final static Form<SubmissionsFileForm> submissionsACForm = form(SubmissionsFileForm.class);
-	// final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final SubmissionWorkflows subWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	// final static Form<State> stateForm = form(State.class);
 
 	private final Form<QueryFieldsForm>         updateForm;
 	private final Form<Submission>              submissionForm;
 	// private final Form<File>            pathForm;
-	// declaration d'une instance submissionCreationForm qui permet de recuperer les
-	// données du formulaire initSubmission pour realiser la creation de la soumission => utilisee dans save()
 	private final Form<SubmissionsCreationForm> submissionsCreationForm;
-	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	private final Form<SubmissionsSearchForm>   submissionsSearchForm;
 	private final Form<SubmissionsFileForm>     submissionsACForm; 
 	private final Form<State>                   stateForm;

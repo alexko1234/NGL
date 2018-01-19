@@ -71,7 +71,7 @@ public class ReleaseServices  {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ReleaseServices.class);
 
-	// final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final static SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	
 	private final SubmissionWorkflows submissionWorkflows;
 	private final NGLConfig           config;

@@ -21,35 +21,33 @@ import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import validation.ContextValidation;
 
-public abstract class AbstractImportData implements Runnable{
+public abstract class AbstractImportData implements Runnable {
 
-	public ContextValidation contextError;
-	protected final String name;
-	protected ALogger logger;
-
+	public    final ContextValidation   contextError;
+	protected final String              name;
+	protected final play.Logger.ALogger logger;
+	protected final NGLContext          ctx;
+	
 	public abstract void runImport() throws SQLException, DAOException, MongoException, RulesException;
 
 	@Inject
-	public AbstractImportData(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx){
-		this.contextError=new ContextValidation(Constants.NGL_DATA_USER);
-		this.name=name;
-		logger=Logger.of(this.getClass().getName());
-		
+	public AbstractImportData(String name, FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx) {
+		this.contextError = new ContextValidation(Constants.NGL_DATA_USER);
+		this.name         = name;
+		this.ctx          = ctx;
+		logger            = Logger.of(this.getClass().getName());
 		logger.info(name+" start in "+durationFromStart.toMinutes()+" minutes and other iterations every "+durationFromNextIteration.toMinutes()+" minutes");
 		
 		//Akka.system()
-		ctx.akkaSystem()
-		.scheduler().schedule(durationFromStart,durationFromNextIteration
-				, this, 
-				// Akka.system()
-				ctx.akkaSystem()
-				.dispatcher()
-				);
-				 
+		ctx.akkaSystem().scheduler().schedule(durationFromStart,
+				                              durationFromNextIteration, 
+				                              this, 
+				                              // Akka.system()
+				                              ctx.akkaSystem().dispatcher());
 	}
 
 	public void run() {
-		boolean error=false;
+		boolean error = false;
 
 		MDC.put("name", name);
 		contextError.clear();

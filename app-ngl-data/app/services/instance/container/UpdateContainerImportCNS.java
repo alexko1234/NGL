@@ -15,8 +15,8 @@ import fr.cea.ig.play.NGLContext;
 import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
@@ -25,15 +25,13 @@ import validation.utils.ValidationConstants;
 import workflows.container.ContWorkflows;
 
 public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
-
+	
 	@Inject
-	public UpdateContainerImportCNS(String name,FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+	public UpdateContainerImportCNS(String name,FiniteDuration durationFromStart, FiniteDuration durationFromNextIteration, NGLContext ctx) {
 		super(name,durationFromStart, durationFromNextIteration, ctx);
 	}
 	
-	
-	public static void updateContainer(String sql,ContextValidation contextError,String containerCategoryCode,String experimentTypeCode) throws SQLException {
+	public void updateContainer(String sql,ContextValidation contextError,String containerCategoryCode,String experimentTypeCode) throws SQLException {
 		List<Container> containers=	limsServices.findContainersToCreate(sql,contextError, containerCategoryCode,null,experimentTypeCode);
 		List<Container> containerUpdated=new ArrayList<Container>();
 		for(Container containerUpdate:containers){
@@ -46,27 +44,25 @@ public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
 				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.processCodes)){
 				//	contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
-					Logger.warn("Le container "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
-				}else {
+					logger.warn("Le container "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
+				} else {
 					//ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
 					contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
 					contextValidation.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
-					Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, container, containerUpdate.state); // ngl-data
+					// Spring.get BeanOfType(ContWorkflows.class).setState(contextValidation, container, containerUpdate.state);
+					ctx.injector().instanceOf(ContWorkflows.class).setState(contextValidation, container, containerUpdate.state);
 					contextValidation.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 					contextValidation.removeObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE);
-					
 				}
-				
-				if(!contextValidation.hasErrors()){
+				if (!contextValidation.hasErrors()) {
 					containerUpdated.add(container);
-				} else { contextError.errors.putAll(contextValidation.errors);
+				} else { 
+					contextError.errors.putAll(contextValidation.errors);
 				}
 			}
-			
-			if(container.valuation==null || container.valuation.valid!=containerUpdate.valuation.valid){
+			if (container.valuation==null || container.valuation.valid!=containerUpdate.valuation.valid) {
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class, DBQuery.is("code", container.code),DBUpdate.set("valuation.valid", containerUpdate.valuation.valid));
 			}
-			
 			limsServices.updateMaterielmanipLims(containerUpdated, contextError);
 		}
 	}

@@ -19,7 +19,7 @@ import controllers.authorisation.Permission;
 import controllers.history.UserHistory;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.Run;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -27,35 +27,37 @@ import play.mvc.With;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.run.RunWorkflows;
-
+import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 
 public class State extends RunsController {
-    private final /*static*/ Form<models.laboratory.common.instance.State> stateForm;// = form(models.laboratory.common.instance.State.class);
-    private final /*static*/ Form<HistoricalStateSearchForm> historicalForm;// = form(HistoricalStateSearchForm.class);
-    private final /*static*/ Form<RunBatchElement> batchElementForm;// = form(RunBatchElement.class);
-    
-    final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
+    private final Form<models.laboratory.common.instance.State> stateForm;        // = form(models.laboratory.common.instance.State.class);
+    private final Form<HistoricalStateSearchForm>               historicalForm;   // = form(HistoricalStateSearchForm.class);
+    private final Form<RunBatchElement>                         batchElementForm; // = form(RunBatchElement.class);
+    // final static RunWorkflows workflows = IGGlobals.instanceOf(RunWorkflows.class); // Spring.get BeanOfType(RunWorkflows.class);
+    private final RunWorkflows workflows;
 	
     @Inject
-    public State(NGLContext ctx) {
-    	stateForm = ctx.form(models.laboratory.common.instance.State.class);
-    	historicalForm = ctx.form(HistoricalStateSearchForm.class);
+    public State(NGLContext ctx, RunWorkflows workflows) {
+    	stateForm        = ctx.form(models.laboratory.common.instance.State.class);
+    	historicalForm   = ctx.form(HistoricalStateSearchForm.class);
     	batchElementForm = ctx.form(RunBatchElement.class);
+    	this.workflows   = workflows;
 	}
     
     @Permission(value={"reading"})
-    public /*static*/ Result get(String code) {
-	Run runValue = getRun(code, "state");
-		if (runValue != null) {
-		    return ok(Json.toJson(runValue.state));
-		} else {
-		    return notFound();
-		}
+    public Result get(String code) {
+    	Run runValue = getRun(code, "state");
+    	if (runValue != null) {
+    		return ok(Json.toJson(runValue.state));
+    	} else {
+    		return notFound();
+    	}
     }
 
     @Permission(value={"writing"})	// @Permission(value={"workflow_run_lane"})
-    public /*static*/ Result update(String code) {
+    public Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
 		    return badRequest();
@@ -76,7 +78,7 @@ public class State extends RunsController {
     }
     
     @Permission(value={"writing"})
-    public /*static*/ Result updateBatch() {
+    public Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -104,7 +106,7 @@ public class State extends RunsController {
     }
     
     @Permission(value={"reading"})
-    public /*static*/ Result historical(String code) {
+    public Result historical(String code) {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {
 		    Form<HistoricalStateSearchForm> inputForm = filledFormQueryString(historicalForm, HistoricalStateSearchForm.class);

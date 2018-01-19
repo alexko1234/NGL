@@ -21,7 +21,7 @@ import services.instance.sample.UpdateSamplePropertiesCNS;
 public class ImportDataCNG {
 	
 	@Inject
-	public ImportDataCNG(NGLContext ctx){
+	public ImportDataCNG(NGLContext ctx) {
 		// 1er parametre=delai avant 1er declenchement, 2eme parametre=delai pour repetition
 		// decaler les demarragesr pour eviter que les logs s'entrecroisent !!!
 		
@@ -46,4 +46,5 @@ public class ImportDataCNG {
 		new UpdateReportingData(ImportDataUtil.getDurationInMillinsBefore(20, 0),Duration.create(1,TimeUnit.DAYS), ctx);
 		
 	}
+	
 }

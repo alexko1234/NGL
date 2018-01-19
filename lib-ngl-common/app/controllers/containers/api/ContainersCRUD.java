@@ -9,9 +9,9 @@ import static validation.container.instance.ContainerValidationHelper.validateVo
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
+// import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -24,43 +24,43 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import com.mongodb.BasicDBObject;
+// import com.mongodb.BasicDBObject;
 
 import controllers.AbstractCRUDAPIController;
-import controllers.DocumentController;
+// import controllers.DocumentController;
 import controllers.ListForm;
 import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
+// import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.mongo.MongoStreamer;
-import fr.cea.ig.play.IGBodyParsers;
+// import fr.cea.ig.MongoDBResult;
+// import fr.cea.ig.mongo.MongoStreamer;
+// import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
+// import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.ListObject;
+// import models.utils.InstanceHelpers;
+// import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
-import play.mvc.BodyParser;
+// import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
-import views.components.datatable.DatatableForm;
+// import views.components.datatable.DatatableForm;
 import workflows.container.ContWorkflows;
 
 public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
@@ -80,24 +80,23 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 	private static final List<String> authorizedUpdateFields = 
 			Arrays.asList("valuation","state","comments","volume","quantity","size","concentration");
 	
-	// -- Move to instance fields
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
-	private final /*static*/ Form<Container> containerForm; // = form(Container.class);
-	private final /*static*/ Form<ContainersSearchForm> containerSearchForm; // = form(ContainersSearchForm.class);
-	private final /*static*/ Form<ContainerBatchElement> batchElementForm; // = form(ContainerBatchElement.class);
-	
-	// GA 31/07/2015 suppression des parametres "lenght"
-	private final /*static*/ Form<State> stateForm; // = form(State.class);
-	private final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
+	// private final Form<QueryFieldsForm>       updateForm; // = form(QueryFieldsForm.class);
+	// private final Form<Container>             containerForm; // = form(Container.class);
+	// private final Form<ContainersSearchForm>  containerSearchForm; // = form(ContainersSearchForm.class);
+	private final Form<ContainerBatchElement> batchElementForm; // = form(ContainerBatchElement.class);
+	private final Form<State>                 stateForm; // = form(State.class);
+	// private final static ContWorkflows workflows = Spring.get BeanOfType(ContWorkflows.class);
+	private final ContWorkflows               workflows;
 		
 	@Inject
-	public ContainersCRUD(NGLContext ctx) {
+	public ContainersCRUD(NGLContext ctx, ContWorkflows workflows) {
 		super(ctx,InstanceConstants.CONTAINER_COLL_NAME, Container.class, defaultKeys);
-		updateForm = getNGLContext().form(QueryFieldsForm.class);
-		containerForm = getNGLContext().form(Container.class);
-		containerSearchForm = getNGLContext().form(ContainersSearchForm.class);
-		batchElementForm = getNGLContext().form(ContainerBatchElement.class);
-		stateForm = getNGLContext().form(State.class);
+		// updateForm          = ctx.form(QueryFieldsForm.class);
+		// containerForm       = ctx.form(Container.class);
+		// containerSearchForm = ctx.form(ContainersSearchForm.class);
+		batchElementForm    = ctx.form(ContainerBatchElement.class);
+		stateForm           = ctx.form(State.class);
+		this.workflows      = workflows;
 	}
 
 	@Permission(value={"reading"})
@@ -467,7 +466,7 @@ public class ContainersCRUD extends AbstractCRUDAPIController<Container> {
 				
 			
 			}else{
-				Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
+				logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
 				return null;
 			}
 		//used in experiment creation	

@@ -109,6 +109,10 @@ public class IGGlobals {
 		return assertInitialized("injector",injector);
 	}
 	
+	public static <T> T instanceOf(Class<T> c) {
+		return injector().instanceOf(c);
+	}
+	
 	/**
 	 * Default synchronized cache instance.
 	 * @return synchronized cache instance

@@ -91,8 +91,8 @@ public class SubmissionServices {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionServices.class);
 
-	// final ConfigurationWorkflows configWorkflows  = Spring.getBeanOfType(ConfigurationWorkflows.class);
-	// final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final ConfigurationWorkflows configWorkflows  = Spring.get BeanOfType(ConfigurationWorkflows.class);
+	// final SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 	// SubmissionWorkflowsHelper submissionWorkflowsHelper;
 
 	private final ConfigurationWorkflows    configWorkflows;

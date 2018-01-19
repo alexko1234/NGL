@@ -10,7 +10,7 @@ import static fr.cea.ig.play.IGGlobals.form;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+// import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,19 +19,19 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.Comment;
-import models.laboratory.common.instance.PropertyValue;
+// import models.laboratory.common.instance.Comment;
+// import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
+// import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.instance.AtomicTransfertMethod;
+// import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.instrument.instance.InstrumentUsed;
-import models.laboratory.reagent.instance.ReagentUsed;
+// import models.laboratory.instrument.instance.InstrumentUsed;
+// import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
+// import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 
@@ -43,7 +43,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 // import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -70,28 +70,26 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
-	private final /*static*/ Form<State> stateForm; // = form(State.class);
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
-	private final Form<Experiment> experimentForm; // = form(Experiment.class);
-	
-	private final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
-	
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 	final static List<String> authorizedUpdateFields = Arrays.asList("status", "reagents");
+	public static final String calculationsRules = "calculations";
 	
-	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
-	
-	public static final String calculationsRules ="calculations";
+	private final Form<State>           stateForm; // = form(State.class);
+	private final Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class);
+	// private final Form<Experiment> experimentForm; // = form(Experiment.class);
+	// private final Form<ExperimentSearchForm> experimentSearchForm; // = form(ExperimentSearchForm.class);
+	// final ExpWorkflows workflows = Spring.get BeanOfType(ExpWorkflows.class);
+	private final ExpWorkflows          workflows;
 	
 	@Inject
-	public Experiments(NGLContext ctx) {
+	public Experiments(NGLContext ctx, ExpWorkflows workflows) {
 		super(ctx,InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, defaultKeys);
-		stateForm = ctx.form(State.class);
-		updateForm = ctx.form(QueryFieldsForm.class);
-		experimentForm = ctx.form(Experiment.class);
-		experimentSearchForm = ctx.form(ExperimentSearchForm.class);
+		stateForm            = ctx.form(State.class);
+		updateForm           = ctx.form(QueryFieldsForm.class);
+		// experimentForm       = ctx.form(Experiment.class);
+		// experimentSearchForm = ctx.form(ExperimentSearchForm.class);
+		this.workflows       = workflows;
 	}
-	
 	
 	@Permission(value={"reading"})
 	public Result list() {
@@ -605,4 +603,5 @@ public class Experiments extends DocumentController<Experiment> {
 		
 		
 	}
+	
 }

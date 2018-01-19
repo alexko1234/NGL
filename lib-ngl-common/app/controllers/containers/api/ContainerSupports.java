@@ -18,8 +18,8 @@ import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.StorageHistory;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
+// import models.laboratory.run.instance.ReadSet;
+// import models.laboratory.run.instance.Run;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -27,36 +27,36 @@ import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.BooleanUtils;
+// import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 // import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.mvc.With;
+// import play.mvc.With;
 // import scala.collection.generic.BitOperations.Int;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.run.instance.ReadSetValidationHelper;
+// import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
 
-import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
+// import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.DocumentController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
+// import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
@@ -67,31 +67,27 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ContainerSupports.class);
 	
-	private final /*static*/ Form<ContainerSupportsSearchForm> supportForm; // = form(ContainerSupportsSearchForm.class);
-	
-	private final /*static*/ Form<ContainerSupportsUpdateForm> containerSupportUpdateForm; // = form(ContainerSupportsUpdateForm.class);
-
-	private final /*static*/ Form<ContainerSupport> containerSupportForm; // = form(ContainerSupport.class);
-	
-	private final /*static*/ Form<QueryFieldsForm> updateForm; // = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
-	
 	private final static List<String> authorizedUpdateFields = Arrays.asList("storageCode"); //liste des champs qui peuvent etre mis a jour
-	
-	private final /*static*/ Form<ContainerSupportBatchElement> batchElementForm; // = form(ContainerSupportBatchElement.class);
-	
-	private final /*static*/ Form<State> stateForm; // = form(State.class);
-	
-	private final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);
+
+	// private final Form<ContainerSupportsSearchForm>  supportForm; // = form(ContainerSupportsSearchForm.class);
+	// private final Form<ContainerSupportsUpdateForm>  containerSupportUpdateForm; // = form(ContainerSupportsUpdateForm.class);
+	private final Form<ContainerSupport>             containerSupportForm; // = form(ContainerSupport.class);
+	private final Form<QueryFieldsForm>              updateForm; // = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
+	private final Form<ContainerSupportBatchElement> batchElementForm; // = form(ContainerSupportBatchElement.class);
+	private final Form<State>                        stateForm; // = form(State.class);
+	// private final static ContSupportWorkflows workflows = Spring.get BeanOfType(ContSupportWorkflows.class);
+	private final  ContSupportWorkflows              workflows;
 	
 	@Inject
-	public ContainerSupports(NGLContext ctx) {
+	public ContainerSupports(NGLContext ctx,  ContSupportWorkflows workflows) {
 		super(ctx, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class);
-		supportForm = ctx.form(ContainerSupportsSearchForm.class);
-		containerSupportUpdateForm = ctx.form(ContainerSupportsUpdateForm.class);
-		containerSupportForm = ctx.form(ContainerSupport.class);
-		updateForm = ctx.form(QueryFieldsForm.class);
-		batchElementForm = ctx.form(ContainerSupportBatchElement.class);
-		stateForm = ctx.form(State.class);
+		// supportForm                = ctx.form(ContainerSupportsSearchForm.class);
+		// containerSupportUpdateForm = ctx.form(ContainerSupportsUpdateForm.class);
+		containerSupportForm       = ctx.form(ContainerSupport.class);
+		updateForm                 = ctx.form(QueryFieldsForm.class);
+		batchElementForm           = ctx.form(ContainerSupportBatchElement.class);
+		stateForm                  = ctx.form(State.class);
+		this.workflows             = workflows;
 	}
 	
 	/*@Permission(value={"reading"})
@@ -105,7 +101,6 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	@Permission(value={"reading"})
 	public Result get(String code) { return super.get(code); } 
 	
-
 	/*@Permission(value={"reading"})
 	public static Result head(String code) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code)){			
@@ -114,6 +109,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 			return notFound();
 		}	
 	}*/
+	
 	@Permission(value={"reading"})
 	public Result head(String code) { return super.head(code); }
 	
@@ -155,7 +151,6 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		return ok("{}");
 	}
 
-	
 	@Permission(value={"writing"})	
 	public Result updateState(String code){
 		ContainerSupport support = getSupport(code);
@@ -183,7 +178,7 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		// return MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		return getObject(code);
 	}
-	
+		
 	@Permission(value={"writing"})
 	public Result updateStateBatch(){
 		List<Form<ContainerSupportBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerSupportBatchElement.class);

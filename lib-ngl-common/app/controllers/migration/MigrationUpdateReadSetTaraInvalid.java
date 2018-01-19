@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -20,8 +22,8 @@ import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
-import play.Logger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import validation.ContextValidation;
 import workflows.readset.ReadSetWorkflows;
@@ -34,10 +36,19 @@ import workflows.readset.ReadSetWorkflows;
  */
 public class MigrationUpdateReadSetTaraInvalid extends CommonController {
 	
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
-	final static ReadSetWorkflows workflows = Spring.getBeanOfType(ReadSetWorkflows.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(MigrationUpdateReadSetTaraInvalid.class);
 	
-	public static Result migration() throws IOException, ParseException{
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+	
+	// final static ReadSetWorkflows workflows = Spring.get BeanOfType(ReadSetWorkflows.class);
+	private final ReadSetWorkflows workflows;
+	
+	@Inject
+	public MigrationUpdateReadSetTaraInvalid(ReadSetWorkflows workflows) {
+		this.workflows = workflows;
+	}
+	
+	public Result migration() throws IOException, ParseException{
 		
 		MigrationForm form = filledFormQueryString(MigrationForm.class);
 		List<ReadSet> readSets = getReadSetToUpdate(form.file);
@@ -74,8 +85,7 @@ public class MigrationUpdateReadSetTaraInvalid extends CommonController {
 
 	}
 	
-	private static List<ReadSet> getReadSetToUpdate(String file) throws IOException, ParseException
-	{
+	private static List<ReadSet> getReadSetToUpdate(String file) throws IOException, ParseException	{
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = df.parse("01/01/2016");
 
@@ -86,37 +96,32 @@ public class MigrationUpdateReadSetTaraInvalid extends CommonController {
 		int nb=0;
 		while ((line = reader.readLine()) != null) {
 			String sampleCode = line;
-			Logger.debug("Sample code#"+sampleCode+"#");
+			logger.debug("Sample code#"+sampleCode+"#");
 			//Get readSet 
 			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 										DBQuery.is("sampleCode", sampleCode).is("state.code", "UA").lessThan("runSequencingStartDate", date)).toList();
-			Logger.debug("Size after "+readSets.size());
+			logger.debug("Size after "+readSets.size());
 			readsetsToUpdate.addAll(readSets);
 			for(ReadSet readSet : readSets){
-				Logger.debug("ReadSet "+readSet.code);
-				Logger.debug("Date "+readSet.runSequencingStartDate);
+				logger.debug("ReadSet "+readSet.code);
+				logger.debug("Date "+readSet.runSequencingStartDate);
 			}
 			nb++;
 		}
 		reader.close();
-		Logger.debug("Nb Sample "+nb);
-		Logger.debug("Nb readsets to update "+readsetsToUpdate.size());
+		logger.debug("Nb Sample "+nb);
+		logger.debug("Nb readsets to update "+readsetsToUpdate.size());
 		return readsetsToUpdate;
 	}
 
 	
 	
-	private static void backUpReadSets(List<ReadSet> readSets)
-	{
+	private static void backUpReadSets(List<ReadSet> readSets) {
 		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_SUPSQ2036_"+sdf.format(new java.util.Date());
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");
+		logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");
 
 		MongoDBDAO.save(backupName, readSets);
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" end");
-
+		logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" end");
 	}
 	
-	
-	
-
 }

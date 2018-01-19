@@ -30,25 +30,31 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import play.Logger;
-import play.Logger.ALogger;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.Logger.ALogger;
+// import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import validation.ContextValidation;
 import workflows.run.RunWorkflows;
 
 /**
  * Create new run and readset for nanopore from file (codeRun,typeRun,flowCellCode,project,sample)
+ * 
  * @author ejacoby
  *
  */
-public class MigrationCreateRunNanopore extends CommonController{
+public class MigrationCreateRunNanopore extends CommonController {
 
-	static ALogger logger=Logger.of(MigrationCreateRunNanopore.class);
-	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(MigrationCreateRunNanopore.class);
 	
-	public static Result migration()
-	{
+	// final static RunWorkflows workflows = Spring.get BeanOfType(RunWorkflows.class);
+	private final RunWorkflows workflows;
+	
+	public MigrationCreateRunNanopore(RunWorkflows workflows) {
+		this.workflows = workflows;
+	}
+	
+	public Result migration() {
 		//Get File
 		MigrationForm form = filledFormQueryString(MigrationForm.class);
 
@@ -61,19 +67,19 @@ public class MigrationCreateRunNanopore extends CommonController{
 			//Read header
 			String line = reader.readLine();
 			while ((line = reader.readLine()) != null) {
-				Logger.debug("Line "+line);
+				logger.debug("Line "+line);
 				String[] tabLine = line.split(";");
 				String runCode = tabLine[0];
 				String runType = tabLine[1];
 				String flowCellCode = tabLine[2];
 				String projectCode = tabLine[3];
 				String sampleCode = tabLine[4];
-				Logger.debug("Code sample "+sampleCode);
+				logger.debug("Code sample "+sampleCode);
 				ContextValidation ctxVal = new ContextValidation("ngl-bi");
 				ctxVal.setCreationMode();
 				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleCode);
-				if(sample!=null){
-					Logger.debug("Sample "+sample);
+				if (sample!=null) {
+					logger.debug("Sample "+sample);
 					//Create containerSupport (FlowCell)
 					ContainerSupport containerSupport = new ContainerSupport();
 					containerSupport.code=flowCellCode;
@@ -118,7 +124,7 @@ public class MigrationCreateRunNanopore extends CommonController{
 						MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, containerSupport);
 						//Insert container in database
 						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
-					}else{
+					} else {
 						ctxVal.displayErrors(logger);
 						return badRequest("Validation errors");
 					}
@@ -127,7 +133,7 @@ public class MigrationCreateRunNanopore extends CommonController{
 					Run run=new Run();
 					//Date runStartDate = DateUtils.addHours(convertRunCodeToDate(runCode),-24);
 					Date runStartDate = convertRunCodeToDate(runCode);
-					Logger.debug("Run start date "+runStartDate);
+					logger.debug("Run start date "+runStartDate);
 					run.sequencingStartDate=runStartDate;
 					run.state=new State("N","ngl-bi");
 
@@ -191,7 +197,7 @@ public class MigrationCreateRunNanopore extends CommonController{
 						MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class
 								,DBQuery.is("code",run.code)
 								,DBUpdate.addToSet("sampleCodes", content.sampleCode).addToSet("projectCodes",content.projectCode));
-					}else{
+					} else {
 						ctxVal.displayErrors(logger);
 						return badRequest("Validation errors");
 					}
@@ -208,32 +214,29 @@ public class MigrationCreateRunNanopore extends CommonController{
 			return badRequest(e.getMessage());
 		} catch (IOException e) {
 			return badRequest(e.getMessage());
-		}catch (ParseException e) {
+		} catch (ParseException e) {
 			return badRequest(e.getMessage());
-		}finally{
+		} finally {
 			try {
 				reader.close();
 			} catch (IOException e) {
 				return badRequest(e.getMessage());
 			}
 		}
-
 		return ok();
 	}
 
-	private static Date convertRunCodeToDate(String runCode) throws ParseException
-	{
+	private static Date convertRunCodeToDate(String runCode) throws ParseException {
 		DateFormat df = new SimpleDateFormat("yyMMdd-HHmmss");
 		String dateFromRunCode = runCode.split("_")[0]+"-000000";
 		return df.parse(dateFromRunCode);
 	}
 
-	private static void removeFromDateBase(String file) throws IOException
-	{
+	private static void removeFromDateBase(String file) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(new File(file)));
 		String line = reader.readLine();
 		while ((line = reader.readLine()) != null) {
-			Logger.debug("Remove "+line);
+			logger.debug("Remove "+line);
 			String[] tabLine = line.split(";");
 			String runCode = tabLine[0];
 			String flowCellCode = tabLine[2];
@@ -249,4 +252,5 @@ public class MigrationCreateRunNanopore extends CommonController{
 		}
 		reader.close();
 	}
+	
 }

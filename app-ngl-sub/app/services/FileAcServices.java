@@ -69,7 +69,7 @@ public class FileAcServices  {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(FileAcServices.class);
 
-	// final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	// final static SubmissionWorkflows submissionWorkflows = Spring.get BeanOfType(SubmissionWorkflows.class);
 
 	private final NGLConfig           config;
 	private final SubmissionWorkflows submissionWorkflows;

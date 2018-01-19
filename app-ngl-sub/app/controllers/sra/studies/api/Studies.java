@@ -49,7 +49,7 @@ public class Studies extends DocumentController<AbstractStudy> {
 
 	// final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	// final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
-	// final StudyWorkflows studyWorkflows = Spring.getBeanOfType(StudyWorkflows.class);
+	// final StudyWorkflows studyWorkflows = Spring.get BeanOfType(StudyWorkflows.class);
 	// final static Form<State> stateForm = form(State.class);
 	
 	private final Form<AbstractStudy>     studyForm;

@@ -54,7 +54,7 @@ public class Analyses extends DocumentController<Analysis> {
 
 	private final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 
-	// final static AnalysisWorkflows workflows = Spring.getBeanOfType(AnalysisWorkflows.class);
+	// final static AnalysisWorkflows workflows = Spring.get BeanOfType(AnalysisWorkflows.class);
 	
 	private final Form<Valuation>            valuationForm; 
 	private final Form<State>                stateForm; 

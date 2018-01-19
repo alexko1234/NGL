@@ -41,11 +41,11 @@ import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.Play;
-import play.api.modules.spring.Spring;
+// import play.Logger;
+// import play.Play;
+// import play.api.modules.spring.Spring;
 import play.data.Form;
-import play.libs.Akka;
+// import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.With;
@@ -55,6 +55,7 @@ import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
 import workflows.run.RunWorkflows;
+// import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 
 
@@ -64,28 +65,35 @@ import fr.cea.ig.play.NGLContext;
  */
 public class Runs extends RunsController {
 
+	private static final play.Logger.ALogger logger = play.Logger.of(Runs.class);
 	
-	//final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
-	private final /*static*/ Form<Run> runForm;// = form(Run.class);
-	private final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
-	private final /*static*/ Form<Valuation> valuationForm;// = form(Valuation.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "sequencingStartDate", "state", "valuation");
-
-	final static RunWorkflows workflows = Spring.getBeanOfType(RunWorkflows.class);
+	
+	//final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
+	private final Form<Run>             runForm;       // = form(Run.class);
+	private final Form<QueryFieldsForm> updateForm;    // = form(QueryFieldsForm.class);
+	private final Form<Valuation>       valuationForm; // = form(Valuation.class);
+	private final ActorRef              rulesActor;
+	private final String                rulesKey;
+	private final RunWorkflows          workflows;
+	
+	// final static RunWorkflows workflows = IGGlobals.instanceOf(RunWorkflows.class); // Spring.get BeanOfType(RunWorkflows.class);
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	// private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
 	
 	@Inject
-	public Runs(NGLContext ctx) {
-		runForm = ctx.form(Run.class);
-		updateForm = ctx.form(QueryFieldsForm.class);
-		valuationForm = ctx.form(Valuation.class);
-		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+	public Runs(NGLContext ctx, RunWorkflows workflows) {
+		runForm        = ctx.form(Run.class);
+		updateForm     = ctx.form(QueryFieldsForm.class);
+		valuationForm  = ctx.form(Valuation.class);
+		rulesActor     = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		rulesKey       = ctx.config().getRulesKey();
+		this.workflows = workflows;
 	}
 	
 	@Permission(value={"reading"})
-	public /*static*/ Result list(){
+	public Result list(){
 
 		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
 		//RunsSearchForm form = filledForm.get();
@@ -338,8 +346,8 @@ public class Runs extends RunsController {
 			if (code.equals(runInput.code)) {
 				if(null != runInput.traceInformation){
 					runInput.traceInformation.setTraceInformation(getCurrentUser());
-				}else{
-					Logger.error("traceInformation is null !!");
+				} else {
+					logger.error("traceInformation is null !!");
 				}
 				
 				if(!run.state.code.equals(runInput.state.code)){
@@ -431,13 +439,13 @@ public class Runs extends RunsController {
 	@Permission(value={"writing"})
 	public /*static*/ Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
-		if(run!=null){
+		if (run != null) {
 			//Send run fact			
 			// Outside of an actor and if no reply is needed the second argument can be null
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, run),null);
-		}else
+			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, run),null);
+			rulesActor.tell(new RulesMessage(rulesKey,rulesCode, run),null);
+		} else
 			return badRequest();
-		
 		return ok();
 	}
 	
