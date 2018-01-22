@@ -146,7 +146,8 @@ object ApplicationBuild extends Build {
 			publishMavenStyle   := true,
 			// We keep the static route generator but this should be removed
 			// TODO: use dynamic route generator
-			routesGenerator     := StaticRoutesGenerator,
+			//routesGenerator     := StaticRoutesGenerator,
+			routesGenerator     := InjectedRoutesGenerator,
 			// jackson 2.8 series is problematic so we fall back on 2.7
 			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-core"            % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.core"     % "jackson-databind"        % "2.7.3",
