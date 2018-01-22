@@ -12,6 +12,7 @@ import services.instance.project.ProjectImportCNG;
 import services.instance.sample.UpdateReportingData;
 import services.instance.sample.UpdateSampleNCBITaxonCNG;
 import services.instance.sample.UpdateSamplePropertiesCNS;
+import services.ncbi.TaxonomyServices;
 
 /**
  * @author dnoisett
@@ -38,7 +39,7 @@ public class ImportDataCNG {
 		new ContainerImportCNG(ImportDataUtil.getDurationForNextHour(30),Duration.create(10,TimeUnit.MINUTES), ctx);
 		
 		//Mise a jour des info du NCBI pour les samples qui n'en ont pas
-		new UpdateSampleNCBITaxonCNG(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS), ctx);
+		new UpdateSampleNCBITaxonCNG(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS), ctx, new TaxonomyServices(ctx));
 		 
 		//11/04/2017 ajouter la propagation des modifications apportées aux samples...
 		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx);

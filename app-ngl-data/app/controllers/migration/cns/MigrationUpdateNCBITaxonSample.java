@@ -10,13 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.run.instance.ReadSet;
@@ -27,11 +31,19 @@ import play.mvc.Result;
 import services.instance.sample.UpdateSampleNCBITaxonCNS;
 import services.ncbi.TaxonomyServices;
 
-public class MigrationUpdateNCBITaxonSample extends CommonController{
+public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> { //CommonController{
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 
-	public static Result migration(String fileName) throws IOException{
+private TaxonomyServices taxonomyServices;
+	
+	@Inject
+	public MigrationUpdateNCBITaxonSample(NGLContext ctx, String collectionName, TaxonomyServices taxonomyServices) {
+		super(ctx, collectionName, Sample.class);
+		this.taxonomyServices = taxonomyServices;
+	}
+	
+	public /*static*/ Result migration(String fileName) throws IOException{
 
 		Logger.info("Migration sample start");
 		//backupSample();
@@ -63,8 +75,8 @@ public class MigrationUpdateNCBITaxonSample extends CommonController{
 					String ncbiScientificName=null;
 					String ncbiLineage=null;
 					if(!taxonCodeScientificName.containsKey(newTaxonCode) || !taxonCodeLineageName.containsKey(newTaxonCode)){
-						ncbiScientificName = TaxonomyServices.getScientificName(newTaxonCode);
-						ncbiLineage=TaxonomyServices.getLineage(newTaxonCode);
+						ncbiScientificName = taxonomyServices.getScientificName(newTaxonCode);
+						ncbiLineage=taxonomyServices.getLineage(newTaxonCode);
 						if(ncbiScientificName!=null && ncbiLineage!=null){
 							taxonCodeScientificName.put(newTaxonCode, ncbiScientificName);
 							taxonCodeLineageName.put(newTaxonCode, ncbiLineage);

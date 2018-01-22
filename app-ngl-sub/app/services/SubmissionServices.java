@@ -1,6 +1,6 @@
 package services;
 
-import static fr.cea.ig.play.IGGlobals.ws;
+//import static fr.cea.ig.play.IGGlobals.ws;
 
 
 import java.text.DateFormat;
@@ -51,6 +51,7 @@ import models.sra.submit.util.SraParameter;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,14 +99,16 @@ public class SubmissionServices {
 	private final ConfigurationWorkflows    configWorkflows;
 	private final SubmissionWorkflows       submissionWorkflows;
 	private final SubmissionWorkflowsHelper submissionWorkflowsHelper;
+	private final NGLContext ctx;
 	
 	@Inject
 	public SubmissionServices(ConfigurationWorkflows configWorkflows, 
 			                  SubmissionWorkflows submissionWorkflows, 
-			                  SubmissionWorkflowsHelper submissionWorkflowsHelper) {
+			                  SubmissionWorkflowsHelper submissionWorkflowsHelper, NGLContext ctx) {
 		this.configWorkflows           = configWorkflows;
 		this.submissionWorkflows       = submissionWorkflows;
 		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
+		this.ctx = ctx;
 	}
 	
 	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
@@ -1048,7 +1051,7 @@ public class SubmissionServices {
 			ExecutionException,
 			TimeoutException {
 		//Promise<WSResponse> homePage = WS.url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
-		CompletionStage<WSResponse> homePage = ws().url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
+		CompletionStage<WSResponse> homePage = ctx.ws().url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
 		// Promise<Document> xml = homePage.map(response -> {
 		CompletionStage<Document> xml = homePage.thenApplyAsync(response -> {
 			try {

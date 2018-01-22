@@ -1,7 +1,7 @@
 package controllers.plates.io;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,13 +38,14 @@ import javax.inject.Inject;
 // TODO: extends DocumentController
 public class Plates extends TPLCommonController {
 	
-	final static Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
+	final /*static*/ Form<PropertyFileValue> fileForm;// = form(PropertyFileValue.class);
 	
 	private final NGLContext ctx;
 	
 	@Inject
 	public Plates(NGLContext ctx) {
 		this.ctx = ctx;	
+		fileForm = ctx.form(PropertyFileValue.class);
 	}
 	
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)

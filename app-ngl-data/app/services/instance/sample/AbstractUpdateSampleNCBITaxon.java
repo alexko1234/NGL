@@ -40,10 +40,13 @@ import fr.cea.ig.play.NGLContext;
 
 public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 
+	private TaxonomyServices taxonomyServices;
+	
 	@Inject
 	public AbstractUpdateSampleNCBITaxon(String name, FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration, NGLContext ctx) {
+			FiniteDuration durationFromNextIteration, NGLContext ctx, TaxonomyServices taxonomyServices) {
 		super(name, durationFromStart, durationFromNextIteration, ctx);
+		this.taxonomyServices = taxonomyServices;
 	}
 
 	public void run() {
@@ -79,7 +82,7 @@ public abstract class AbstractUpdateSampleNCBITaxon extends AbstractImportData{
 		// List<Promise<NCBITaxon>> promises = samplesByTaxon.keySet()
 		List<CompletionStage<NCBITaxon>> promises = samplesByTaxon.keySet()
 			.stream()
-			.map(taxonCode -> TaxonomyServices.getNCBITaxon(taxonCode))
+			.map(taxonCode -> taxonomyServices.getNCBITaxon(taxonCode))
 			.collect(Collectors.toList());
 		
 		

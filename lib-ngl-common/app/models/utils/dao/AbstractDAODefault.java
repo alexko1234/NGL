@@ -4,6 +4,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import models.utils.ListObject;
 
 import org.springframework.dao.DataAccessException;
@@ -14,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 
+import fr.cea.ig.play.NGLContext;
 import play.Logger;
 
 
@@ -29,6 +32,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T> {
 	protected String sqlCommon;
 	protected boolean usedInstitute = false;
 	
+	@Inject
 	protected AbstractDAODefault(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
 		super(tableName, entityClass,useGeneratedKey);		
 	}

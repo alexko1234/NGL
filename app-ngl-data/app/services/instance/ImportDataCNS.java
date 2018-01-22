@@ -24,6 +24,7 @@ import services.instance.sample.UpdateReportingData;
 import services.instance.sample.UpdateSampleCNS;
 import services.instance.sample.UpdateSampleNCBITaxonCNS;
 import services.instance.sample.UpdateSamplePropertiesCNS;
+import services.ncbi.TaxonomyServices;
 
 public class ImportDataCNS{
 
@@ -59,7 +60,7 @@ public class ImportDataCNS{
 		*/
 		
 		new UpdateSamplePropertiesCNS(ImportDataUtil.getDurationForNextHour(30),Duration.create(6,TimeUnit.HOURS), ctx);
-		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx);
+		new UpdateSampleNCBITaxonCNS(ImportDataUtil.getDurationForNextHour(45),Duration.create(6,TimeUnit.HOURS), ctx, new TaxonomyServices(ctx));
 		
 		new RunExtImportCNS(ImportDataUtil.getDurationInMillinsBefore(12, 30),Duration.create(12,TimeUnit.HOURS), ctx);
 		

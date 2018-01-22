@@ -3,11 +3,15 @@ package controllers.migration;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import controllers.CommonController;
+import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import services.ncbi.TaxonomyServices;
@@ -20,10 +24,19 @@ import services.instance.sample.UpdateSampleNCBITaxonCNS;
  * @author galbini
  *
  */
-public class MigrationUpdateNCBITaxonSample extends CommonController {
+public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> { //CommonController {
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+	private TaxonomyServices taxonomyServices;
+	
+	@Inject
+	public MigrationUpdateNCBITaxonSample(NGLContext ctx, String collectionName, TaxonomyServices taxonomyServices) {
+		super(ctx, collectionName, Sample.class);
+		this.taxonomyServices = taxonomyServices;
+	}
 
-	public static Result migration(String code, Boolean onlyNull){
+
+
+	public /*static*/ Result migration(String code, Boolean onlyNull){
 
 		Logger.info("Migration sample start");
 		//backupSample(code);
@@ -51,15 +64,15 @@ public class MigrationUpdateNCBITaxonSample extends CommonController {
 
 
 
-	private static void migreSample(Sample sample) {
+	private /*static*/ void migreSample(Sample sample) {
 		String ncbiScientificName=null;
 		String ncbiLineage=null;
 		if(play.Play.application().configuration().getString("institute").equals("CNS")){
-			ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
-			ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
+			ncbiScientificName=taxonomyServices.getScientificName(sample.taxonCode);
+			ncbiLineage=taxonomyServices.getLineage(sample.taxonCode);
 		}else{
-			ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
-			ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
+			ncbiScientificName=taxonomyServices.getScientificName(sample.taxonCode);
+			ncbiLineage=taxonomyServices.getLineage(sample.taxonCode);
 		}
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
 				DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage));

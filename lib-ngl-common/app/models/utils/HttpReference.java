@@ -1,13 +1,16 @@
 package models.utils;
 
-import static fr.cea.ig.play.IGGlobals.ws;
+//import static fr.cea.ig.play.IGGlobals.ws;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.inject.Inject;
+
 import ch.qos.logback.core.util.TimeUtil;
+import fr.cea.ig.play.NGLContext;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,14 +28,20 @@ public class HttpReference<T> implements IFetch<T> {
 
 	//String url 
 	public String code;
+	
+	private final NGLContext ctx;
 
-	public HttpReference(Class<T> className) {
+	@Inject
+	public HttpReference(Class<T> className, NGLContext ctx) {
 		this.className = className;
+		this.ctx = ctx;
 	}
 
-	public HttpReference(Class<T> className, String code) {
+	@Inject
+	public HttpReference(Class<T> className, String code, NGLContext ctx) {
 		this.className = className;
 		this.code = code;
+		this.ctx = ctx;
 	}
 
 	@Override
@@ -41,7 +50,7 @@ public class HttpReference<T> implements IFetch<T> {
 		// execute GET external URL
 		// WSResponse reponse = WS.url(code).get().get(10, TimeUnit.SECONDS);
 		// WSResponse reponse = WS.url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
-		WSResponse reponse = ws().url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
+		WSResponse reponse = ctx.ws().url(code).get().toCompletableFuture().get(10, TimeUnit.SECONDS);
 		//if (reponse.getStatus()!=play.mvc.Http.Status.OK) throw new Exception  
 				
 			// TODO: Should probably be better to use the play object mapper

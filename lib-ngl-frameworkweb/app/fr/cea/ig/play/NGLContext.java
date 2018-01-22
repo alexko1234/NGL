@@ -20,9 +20,11 @@ import play.i18n.Lang;
 import play.i18n.MessagesApi;
 import play.inject.Injector;
 import play.libs.Json;
+import play.libs.ws.WSClient;
 import rules.services.RulesActor6;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
+import play.cache.SyncCacheApi;
 // import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
@@ -80,6 +82,9 @@ public class NGLContext {
 	
 	private final JsMessagesFactory jsMessagesFactory;
 	
+	private final WSClient wsclient;
+	private final SyncCacheApi syncCacheApi;
+	
 	/*
 	// TODO: remove static NGL context access 
 	private static NGLContext nglContext;
@@ -97,13 +102,17 @@ public class NGLContext {
 					  MessagesApi messagesApi,
 			          FormFactory formFactory,
 			          ActorSystem actor,
-			          JsMessagesFactory jsMessagesFactory) {
+			          JsMessagesFactory jsMessagesFactory,
+			          WSClient wsclient,
+			          SyncCacheApi syncCacheApi) {
 		this.injector    = injector;
 		this.config      = config;
 		this.messagesApi = messagesApi;
 		this.formFactory = formFactory;
 		this.actor       = actor;
 		this.jsMessagesFactory = jsMessagesFactory;
+		this.wsclient = wsclient;
+		this.syncCacheApi = syncCacheApi;
 	}
 		
 	public NGLConfig config() { 
@@ -189,6 +198,18 @@ public class NGLContext {
 	
 	public Injector injector() {
 		return injector;
+	}
+	
+	public WSClient ws() {
+		return wsclient;
+	}
+	
+	/**
+	 * Default synchronized cache instance.
+	 * @return synchronized cache instance
+	 */
+	public SyncCacheApi cache() {
+		 return syncCacheApi;
 	}
 	
 	public JsMessages jsMessages() {

@@ -16,8 +16,8 @@ public class UpdateSampleNCBITaxonCNG extends AbstractUpdateSampleNCBITaxon{
 
 	@Inject
 	public UpdateSampleNCBITaxonCNG(FiniteDuration durationFromStart,
-			FiniteDuration durationFromNextIteration, NGLContext ctx) {
-		super("UpdateSampleNCBI", durationFromStart, durationFromNextIteration, ctx);
+			FiniteDuration durationFromNextIteration, NGLContext ctx, TaxonomyServices taxonomyServices) {
+		super("UpdateSampleNCBI", durationFromStart, durationFromNextIteration, ctx, taxonomyServices);
 
 	}
 

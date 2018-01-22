@@ -2,6 +2,7 @@ package models.utils.dao;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
 // import models.laboratory.common.description.State;
@@ -17,6 +18,8 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
+import fr.cea.ig.play.NGLContext;
 
 // import play.Logger;
 // import play.cache.Cache;
@@ -48,7 +51,9 @@ public abstract class AbstractDAO<T> {
 	//Use automatic key id generation 
 	//False for type because id provided by commonInfoType
 	protected boolean useGeneratedKey;
+	//private final NGLContext ctx;
 
+	@Inject
 	protected AbstractDAO(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
 		this.tableName       = tableName;
 		this.entityClass     = entityClass;
