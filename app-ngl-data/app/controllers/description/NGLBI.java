@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
@@ -23,11 +25,17 @@ import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
 import controllers.CommonController;
+import controllers.NGLBaseController;
+import fr.cea.ig.play.NGLContext;
 
 
 
-public class NGLBI extends CommonController {
-	public static Result save(){
+public class NGLBI extends NGLBaseController { //CommonController {
+	@Inject
+	public NGLBI(NGLContext ctx) {
+		super(ctx);
+	}
+	public /*static*/ Result save(){
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			//InstituteService.main(errors);

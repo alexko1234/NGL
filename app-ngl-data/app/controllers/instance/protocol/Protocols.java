@@ -8,13 +8,23 @@ import play.mvc.Result;
 import services.instance.protocol.ProtocolServiceCNG;
 import services.instance.protocol.ProtocolServiceCNS;
 import validation.ContextValidation;
-import controllers.CommonController;
 
-public class Protocols extends CommonController {
+import javax.inject.Inject;
+
+import controllers.CommonController;
+import controllers.NGLBaseController;
+import fr.cea.ig.play.NGLContext;
+
+public class Protocols extends NGLBaseController { //CommonController {
 	
 	public static ALogger logger= Logger.of("Protocols");
 		
-	public static Result save(){
+	@Inject
+	public Protocols(NGLContext ctx) {
+		super(ctx);
+	}
+	
+	public /*static*/ Result save(){
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {

@@ -7,11 +7,20 @@ import play.mvc.Result;
 
 import services.instance.resolution.ResolutionService;
 import validation.ContextValidation;
-import controllers.CommonController;
 
-public class Resolutions extends CommonController {
+import javax.inject.Inject;
+
+import controllers.CommonController;
+import controllers.NGLBaseController;
+import fr.cea.ig.play.NGLContext;
+
+public class Resolutions extends NGLBaseController { //CommonController {
+	@Inject
+	public Resolutions(NGLContext ctx) {
+		super(ctx);
+	}
 	
-	public static Result save(){
+	public /*static*/ Result save(){
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {
