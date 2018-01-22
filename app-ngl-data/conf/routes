@@ -1,5 +1,5 @@
 
-->  / nglcommon.Routes  
+#->  / nglcommon.Routes  
 
 # Home page
 GET     /                           			controllers.Application.index()
