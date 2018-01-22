@@ -65,11 +65,11 @@ public class AnalysisWorkflows extends Workflows<Analysis>{
 			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "F-BA");
 										
 		}else if("IW-V".equals(analysis.state.code)){
-			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "IW-VBA");
 			analysisWorkflowsHelper.updateBioinformaticValuationMasterReadSetCodes(analysis, validation, TBoolean.UNSET, null, null);	
+			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "IW-VBA");
 		}else if("F-V".equals(analysis.state.code)){
-			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "F-VBA");
 			analysisWorkflowsHelper.updateBioinformaticValuationMasterReadSetCodes(analysis, validation,  TBoolean.TRUE, validation.getUser(), new Date());	
+			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "F-VBA");
 		}
 	
 	}

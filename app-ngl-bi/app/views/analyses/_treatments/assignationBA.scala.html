@@ -1,0 +1,36 @@
+@()
+<div ng-repeat="(key,value) in analysis.treatments[treatments.getTreatment().code].read1.assignationBilan.value | groupBy: 'controlName'" class="row">
+
+ <div class="col-md-6 col-lg-6">
+ <div class="panel panel-default">
+	<div class="panel-heading"><strong>{{key}}</strong></div>
+ 	<table class="table table-condensed table-hover table-bordered">
+ 		<thead>
+ 			<tr>
+			</tr>
+			<tr>
+ 				<th>@Messages("treatments.assignation.assignationBilan.cluster")</th>
+				<th>@Messages("treatments.assignation.assignationBilan.otu")</th>
+				<th>@Messages("treatments.assignation.assignationBilan.abundance")</th>
+				<th>@Messages("treatments.assignation.assignationBilan.taxonomy")</th>
+				<th>@Messages("treatments.assignation.assignationBilan.idPercent")</th>
+				<th>@Messages("treatments.assignation.assignationBilan.matchLength")</th>
+			</tr>
+ 		</thead>
+ 		<tbody>
+ 			<tr ng-repeat="assign in value">
+ 				<td>>{{assign.cluster}}</td>
+ 				<td>{{assign.otu}}</td>
+ 				<td>{{assign.abundance | number}}</td>
+ 				<td>{{assign.taxonomy}}</td>
+ 				<td>{{assign.idPercent | number:2}} %</td>
+ 				<td>{{assign.matchLength | number:2}} %</td>
+ 			</tr>
+ 		</tbody>
+	 </table>
+ </div>
+ </div>
+ 
+ 
+</div>
+
