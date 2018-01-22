@@ -1,7 +1,7 @@
 package controllers.sra.samples.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,14 +24,16 @@ import validation.ContextValidation;
 public class SamplesInternal extends DocumentController<Sample>{
 
 
-	final static Form<Sample> sampleForm = form(Sample.class);
+	final /*static*/ Form<Sample> sampleForm;// = form(Sample.class);
 
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId");
 
 	@Inject
 	public SamplesInternal(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class);
+		sampleForm = ctx.form(Sample.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
 	public Result get(String code) {

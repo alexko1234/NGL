@@ -1,7 +1,7 @@
 package controllers.sra.experiments.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,15 +34,18 @@ import views.components.datatable.DatatableResponse;
 public class Experiments extends DocumentController<Experiment> {
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 
-	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
-	final static Form<Experiment> experimentForm = form(Experiment.class);
+	final /*static*/ Form<ExperimentsSearchForm> experimentsSearchForm;// = form(ExperimentsSearchForm.class);
+	final /*static*/ Form<Experiment> experimentForm;// = form(Experiment.class);
 
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final /*static*/ Form<QueryFieldsForm> updateForm ;//= form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession");
 
 	@Inject
 	public Experiments(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+		experimentsSearchForm = ctx.form(ExperimentsSearchForm.class);
+		experimentForm = ctx.form(Experiment.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
 	public Result get(String code) {

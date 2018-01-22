@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 
 // import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 
 import models.laboratory.common.instance.TraceInformation;

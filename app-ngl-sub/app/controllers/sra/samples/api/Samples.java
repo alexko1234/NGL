@@ -1,45 +1,54 @@
 package controllers.sra.samples.api;
 
-import static fr.cea.ig.play.IGGlobals.form;
-import javax.inject.Inject;
+//import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
+
 import controllers.DocumentController;
+import controllers.sra.configurations.api.Configurations;
 import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.NGLContext;
 import models.sra.submit.common.instance.AbstractSample;
 import models.utils.InstanceConstants;
+
+//import com.gargoylesoftware.htmlunit.javascript.host.Console;
+
+//import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
-public class Samples extends DocumentController<AbstractSample> {
+public class Samples extends DocumentController<AbstractSample>{
 	private static final play.Logger.ALogger logger = play.Logger.of(Samples.class);
-	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
-	final static Form<AbstractSample> sampleForm = form(AbstractSample.class);
 
-	
+
+	final /*static*/ Form<SamplesSearchForm> samplesSearchForm;// = form(SamplesSearchForm.class);
+	final /*static*/ Form<AbstractSample> sampleForm ;//= form(AbstractSample.class);
+
 	@Inject
 	public Samples(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
+		samplesSearchForm = ctx.form(SamplesSearchForm.class);
+		sampleForm = ctx.form(AbstractSample.class);
 	}
 
-	
-	public Result get(String code) {
+	public Result get(String code)
+	{
 		return ok(Json.toJson(getSample(code)));
 	}
 
 	
 	public Result list() {	
+		/*
 		Form<SamplesSearchForm> samplesSearchFilledForm = filledFormQueryString(samplesSearchForm, SamplesSearchForm.class);
 		SamplesSearchForm samplesSearchForm = samplesSearchFilledForm.get();
 		//Logger.debug(samplesSearchForm.state);
@@ -51,6 +60,17 @@ public class Samples extends DocumentController<AbstractSample> {
 		}else{
 			return ok(Json.toJson(samplesList));
 		}
+	*/
+		SamplesSearchForm form = filledFormQueryString(SamplesSearchForm.class);
+		Query query = getQuery(form);
+		//MongoDBResult<AbstractSample> results = mongoDBFinder(form, query);							
+		//List<AbstractSample> list = results.toList();
+		List<AbstractSample> list = MongoDBDAO.find(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, query).toList();
+		if(form.datatable){
+			return ok(Json.toJson(new DatatableResponse<AbstractSample>(list, list.size())));
+		}else{
+			return ok(Json.toJson(list));
+			}
 	}	
 	
 	
@@ -90,8 +110,8 @@ public class Samples extends DocumentController<AbstractSample> {
 		}
 	}
 
-	
-	private AbstractSample getSample(String code) {
+	private AbstractSample getSample(String code)
+	{
 		AbstractSample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, code);
 		return sample;
 	}
@@ -126,10 +146,9 @@ public class Samples extends DocumentController<AbstractSample> {
 		} else if(StringUtils.isNotBlank(form.externalIdRegex)){
 			queries.add(DBQuery.regex("external", Pattern.compile(form.externalIdRegex)));
 		}
-		if(queries.size() > 0) {
+		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}
-		
 }

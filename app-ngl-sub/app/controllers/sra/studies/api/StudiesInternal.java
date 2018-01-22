@@ -1,7 +1,7 @@
 package controllers.sra.studies.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,13 +45,15 @@ import workflows.sra.study.StudyWorkflows;
 public class StudiesInternal extends DocumentController<Study> {
 	private static final play.Logger.ALogger logger = play.Logger.of(StudiesInternal.class);
 
-	final static Form<Study> studyForm = form(Study.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final /*static*/ Form<Study> studyForm;// = form(Study.class);
+	final /*static*/ Form<QueryFieldsForm> updateForm;// = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("accession","externalId","firstSubmissionDate","releaseDate");
 	
 	@Inject
 	public StudiesInternal(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_STUDY_COLL_NAME, Study.class);
+		studyForm = ctx.form(Study.class);
+		updateForm = ctx.form(QueryFieldsForm.class);
 	}
 
 	public Result update(String code) {

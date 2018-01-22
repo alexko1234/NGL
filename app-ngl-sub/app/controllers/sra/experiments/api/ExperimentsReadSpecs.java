@@ -1,7 +1,7 @@
 package controllers.sra.experiments.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +27,12 @@ import play.mvc.Result;
 
 public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 
-	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
+	final /*static*/ Form<ExperimentsSearchForm> experimentsSearchForm;// = form(ExperimentsSearchForm.class);
 	
 	@Inject
 	public ExperimentsReadSpecs(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+		experimentsSearchForm = ctx.form(ExperimentsSearchForm.class);
 	}
 
 	public Result list()

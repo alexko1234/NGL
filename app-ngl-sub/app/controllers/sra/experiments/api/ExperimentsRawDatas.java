@@ -1,7 +1,7 @@
 package controllers.sra.experiments.api;
 
 //import static play.data.Form.form;
-import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +29,14 @@ import fr.cea.ig.play.NGLContext;
 
 public class ExperimentsRawDatas extends DocumentController<Experiment> {
 
-	final static Form<ExperimentsSearchForm> experimentsSearchForm = form(ExperimentsSearchForm.class);
-	final static Form<RawData> rawDataForm = form(RawData.class);
+	final /*static*/ Form<ExperimentsSearchForm> experimentsSearchForm;// = form(ExperimentsSearchForm.class);
+	final /*static*/ Form<RawData> rawDataForm;// = form(RawData.class);
 	
 	@Inject
 	public ExperimentsRawDatas(NGLContext ctx) {
 		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
+		experimentsSearchForm = ctx.form(ExperimentsSearchForm.class);
+		rawDataForm = ctx.form(RawData.class);
 	}
 
 	public Result list()
