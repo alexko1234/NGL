@@ -14,7 +14,6 @@ import fr.cea.ig.MongoDBDAO;
 
 public class RunsController extends CommonController {
 
-	
     protected static Run getRun(String code) {
     	Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		return run;

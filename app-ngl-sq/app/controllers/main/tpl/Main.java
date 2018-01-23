@@ -1,24 +1,24 @@
 package controllers.main.tpl;
 
-import java.util.List;
+//import java.util.List;
+//
+//import static org.mongojack.DBQuery.*;
+//import org.mongojack.DBQuery;
 
-import static org.mongojack.DBQuery.*;
-import org.mongojack.DBQuery;
-
-import jsmessages.JsMessages;
-import models.administration.authorisation.Permission;
-import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.dao.CodeLabelDAO;
-import models.laboratory.protocol.instance.Protocol;
-import models.laboratory.reagent.description.AbstractCatalog;
-import models.laboratory.reagent.description.BoxCatalog;
-import models.laboratory.reagent.description.KitCatalog;
-import models.laboratory.reagent.description.ReagentCatalog;
-import models.laboratory.resolutions.instance.ResolutionConfiguration;
-import models.laboratory.valuation.instance.ValuationCriteria;
-import models.laboratory.project.instance.Project;
-import models.utils.InstanceConstants;
-import play.Play;
+//import jsmessages.JsMessages;
+//import models.administration.authorisation.Permission;
+//import models.laboratory.common.description.CodeLabel;
+//import models.laboratory.common.description.dao.CodeLabelDAO;
+//import models.laboratory.protocol.instance.Protocol;
+//import models.laboratory.reagent.description.AbstractCatalog;
+//import models.laboratory.reagent.description.BoxCatalog;
+//import models.laboratory.reagent.description.KitCatalog;
+//import models.laboratory.reagent.description.ReagentCatalog;
+//import models.laboratory.resolutions.instance.ResolutionConfiguration;
+//import models.laboratory.valuation.instance.ValuationCriteria;
+//import models.laboratory.project.instance.Project;
+//import models.utils.InstanceConstants;
+// import play.Play;
 // import play.Routes;
 import play.routing.JavaScriptReverseRouter;
 
@@ -37,10 +37,15 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
-import fr.cea.ig.ngl.support.APIResultProcessor;
+// import fr.cea.ig.ngl.support.APIResultProcessor;
 import fr.cea.ig.ngl.support.NGLJavascript;
+import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.PermissionAPIHolder;
 import fr.cea.ig.ngl.support.api.ProjectAPIHolder;
+import fr.cea.ig.ngl.support.api.ProtocolAPIHolder;
+import fr.cea.ig.ngl.support.api.ReagentCatalogAPIHolder;
+import fr.cea.ig.ngl.support.api.ResolutionConfigurationAPIHolder;
+import fr.cea.ig.ngl.support.api.ValuationCriteriaAPIHolder;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.play.NGLContext;
@@ -56,9 +61,14 @@ import javax.inject.Inject;
 @With(UserHistory.class)
 // public class Main extends NGLBaseController {
 public class Main extends NGLController
-		implements PermissionAPIHolder,
+		implements CodeLabelAPIHolder,
+		           PermissionAPIHolder,
 		           ProjectAPIHolder,
-		           APIResultProcessor,
+		           ProtocolAPIHolder,
+		           ReagentCatalogAPIHolder,
+		           ResolutionConfigurationAPIHolder,
+		           ValuationCriteriaAPIHolder,
+		           // APIResultProcessor,
 		           NGLJavascript {
 
 	private final home home;
@@ -91,11 +101,13 @@ public class Main extends NGLController
 		return ok(home.render());
 	}
 
-	public Result jsPermissions() {
+	/*public Result jsPermissions() {
 		// return Permissions.jsPermissions(Permission.find.findByUserLogin(Authentication.getUser()), x -> x.code);
 		// return Permissions.jsPermissions(getPermissionAPI().byUserLogin(Authentication.getUser()), x -> x.code);
-		return apiResult(() -> jsPermissions(getPermissionAPI().byUserLogin(Authentication.getUser()), x -> x.code));
-	}
+		String user = Authentication.getUser();
+		return result(() -> jsPermissions(getPermissionAPI().byUserLogin(user), x -> x.code),
+					  "could not get permissions for " + user);
+	}*/
 
 	/*
 	 * jsPermissions() method
@@ -124,25 +136,28 @@ public class Main extends NGLController
 	//          x -> "reagentKit", x -> x.code, x -> x.name);
 
 	public Result jsCodes() {
-		return new Codes()
-				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
-				             x -> x.tableName, x -> x.code, x -> x.label)
+		return result(() -> {
+			return new Codes()
+				//.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), x -> x.tableName, x -> x.code, x -> x.label)
+				.add(getCodeLabelAPI().all(), x -> x.tableName, x -> x.code, x -> x.label)
 				// .add(MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList(),
-				.add(getProjectAPI().all(), x -> "project", x-> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList(),
-						     x -> "valuation_criteria", x -> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList(),
-						         x -> x.resolutions,
-						         x -> "resolution", x-> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(),
-						     x -> "protocol", x -> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
-						     x -> "reagentKit", x -> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
-						     x -> "reagentBox", x -> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
-							 x -> "reagentReagent", x -> x.code, x -> x.name)
+				.add(getProjectAPI().all(),   x -> "project",   x -> x.code, x -> x.name)
+		// .add(MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList(), x -> "valuation_criteria", x -> x.code, x -> x.name)
+				.add(getValuationCriteriaAPI().all(),            x -> "valuation_criteria", x -> x.code, x -> x.name)
+		// .add(MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList(),
+				.add(getResolutionConfigurationAPI().all(),
+				         x -> x.resolutions,
+				         x -> "resolution", x-> x.code, x -> x.name)
+		// .add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(), x -> "protocol", x -> x.code, x -> x.name)
+				.add(getProtocolAPI().all(),                      x -> "protocol",       x -> x.code, x -> x.name)
+		// .add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
+				.add(getReagentCatalogAPI().getKitCatalogs(),     x -> "reagentKit",     x -> x.code, x -> x.name)
+		// .add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
+				.add(getReagentCatalogAPI().getBoxCatalogs(),     x -> "reagentBox",     x -> x.code, x -> x.name)
+		// .add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
+				.add(getReagentCatalogAPI().getReagentCatalogs(), x -> "reagentReagent", x -> x.code, x -> x.name)
 				.asCodeFunction();
+		}, "error while bulding jscodes");
 	}
 
 	/*

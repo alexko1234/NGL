@@ -70,8 +70,8 @@ public abstract class VariableSRA {
 	public static final Map<String, String> mapStrategySample =  new HashMap<String, String>() {
 		{
 			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
-			put("strategy_sample_taxon", "strategy_sample_taxon"); // si sample specifique par code_projet et taxon
-			put("strategy_sample_clone", "strategy_sample_clone"); // si sample specifique par code_projet et clone
+			put("strategy_sample_taxon",    "strategy_sample_taxon");    // si sample specifique par code_projet et taxon
+			put("strategy_sample_clone",    "strategy_sample_clone");    // si sample specifique par code_projet et clone
 		}
 	};
 	

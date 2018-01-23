@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import fr.cea.ig.ngl.dao.ProjectDAO;
 import models.laboratory.project.instance.Project;
+import models.utils.dao.DAOException;
 
 @Singleton
 public class ProjectAPI {
@@ -16,7 +17,7 @@ public class ProjectAPI {
 		this.dao = dao;
 	}
 	
-	public Iterable<Project> all() {
+	public Iterable<Project> all() throws DAOException, APIException {
 		return dao.all();
 	}
 

@@ -117,7 +117,7 @@ public abstract class CommonController extends Controller {
 	 * @return
 	 */
 	protected static <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
-		Map<String, String[]> queryString =request().queryString();
+		Map<String, String[]> queryString = request().queryString();
 		Map<String, Object> transformMap = new HashMap<String, Object>();
 		for(String key :queryString.keySet()){
 			try {

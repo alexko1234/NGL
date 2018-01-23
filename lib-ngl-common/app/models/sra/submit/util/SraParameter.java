@@ -11,10 +11,20 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 public class SraParameter extends DBObject {
+	
 	private static final play.Logger.ALogger logger = play.Logger.of(SraParameter.class);
+	
 	public String type;
-	public String code;
+	// public String code;
 	public String value;
+	
+	public SraParameter() { }
+	
+	public SraParameter(String code, String type, String value) {
+		this.code = code;
+		this.type = type;
+		this.value = value;
+	}
 	
 	public static Map <String, String> getParameter(String type) {
 		Map<String, String> map = new HashMap<String, String>();

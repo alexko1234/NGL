@@ -16,7 +16,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
 import validation.ContextValidation;
 
-// instanciation : getBeanOfType(*Workflow*.class)
+// instanciation search : getBeanOfType(*Workflow*.class)
 
 // TODO: probably not a plural
 public abstract class Workflows<T> {
