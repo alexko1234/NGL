@@ -12,9 +12,16 @@ import org.junit.Test;
 import services.ncbi.NCBITaxon;
 import services.ncbi.TaxonomyServices;
 import utils.AbstractTests;
+import workflows.container.ContSupportWorkflows;
 
 public class TaxonomyServicesTest extends AbstractTests {
 
+	private TaxonomyServices taxonomyServices() {
+		// Spring.get BeanOfType(ContSupportWorkflows.class); 
+		return app.injector().instanceOf(TaxonomyServices.class);
+	}
+	
+	
 	/**
 	 * Test with taxonId =1358
 	 * scientific name : Lactococcus lactis
@@ -22,27 +29,31 @@ public class TaxonomyServicesTest extends AbstractTests {
 	 * @throws XPathExpressionException
 	 */
 	public void shouldGetTaxonomyInfo() throws XPathExpressionException	{
-		String scientificName = TaxonomyServices.getScientificName("1358");
+		TaxonomyServices taxoServices = taxonomyServices();
+		String scientificName = taxoServices.getScientificName("1358");
 		Assert.assertNotNull(scientificName);
 		Assert.assertEquals("Lactococcus lactis", scientificName);
-		String lineage = TaxonomyServices.getLineage("1358");
+		String lineage = taxoServices.getLineage("1358");
 		Assert.assertNotNull(lineage);
 		Assert.assertEquals("cellular organisms; Bacteria; Terrabacteria group; Firmicutes; Bacilli; Lactobacillales; Streptococcaceae; Lactococcus", lineage);
 	}
 
 	public void shouldNoTaxonomyInfo() {
-		String scientificName = TaxonomyServices.getScientificName("135");
+		TaxonomyServices taxoServices = taxonomyServices();
+		String scientificName = taxoServices.getScientificName("135");
 		Assert.assertNull(scientificName);
-		String lineage = TaxonomyServices.getLineage("135");
+		String lineage = taxoServices.getLineage("135");
 		Assert.assertNull(lineage);
 	}
 
 	public void shouldNoTaxonomyInfoTaxonCodeNull()	{
-		Assert.assertNull(TaxonomyServices.getScientificName(null));
+		TaxonomyServices taxoServices = taxonomyServices();
+		Assert.assertNull(taxoServices.getScientificName(null));
 	}
 	
 	private void taxonTest(String key, Consumer<NCBITaxon> assertion) throws InterruptedException,ExecutionException {
-		NCBITaxon taxon = TaxonomyServices.getNCBITaxon(key).toCompletableFuture().get();
+		TaxonomyServices taxoServices = taxonomyServices();
+		NCBITaxon taxon = taxoServices.getNCBITaxon(key).toCompletableFuture().get();
 		assertion.accept(taxon);
 	}
 	
