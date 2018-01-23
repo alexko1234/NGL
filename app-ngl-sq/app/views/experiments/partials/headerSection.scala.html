@@ -1,3 +1,5 @@
+@this(config: fr.cea.ig.ngl.NGLConfig)
+
 @()
 
 @import play.mvc.Http.Context
@@ -25,8 +27,7 @@
 					</div>
 					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-disabled="button.isDisabled()" ng-bind="button.label"></button>
 				 	
-				 	@* TODO: use NGLConfig *@
-				 	@if(play.Play.application().configuration().getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
+				 	@if(config.getBoolean("ngl.printing.cb", java.lang.Boolean.FALSE)){
 					<button class="btn btn-default" ng-click="openPrintTagsPage()" ng-if="isInProgressState() || isFinishState()" title="@Messages("button.tag.printing")"><i class="fa fa-tags" ></i></button>
 					}
 				
