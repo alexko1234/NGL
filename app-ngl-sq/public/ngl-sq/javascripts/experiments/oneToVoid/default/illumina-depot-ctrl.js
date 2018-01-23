@@ -184,4 +184,60 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			}
 		}
 		
+		//22/01/2018 NGL-1768 22/01/2018: importer le fichier XML du NovaSeq 6000
+		var importNOVASEQ6000XMLfile = function(){
+			console.log('Import NOVASEQ6000 XML file');
+			
+			$scope.messages.clear();
+			// !! TODO creer une nouvelle route pour instrument
+			$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.NVSQ6000file)
+			.success(function(data, status, headers, config) {
+				$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
+
+				// data est l'experience retournée par input.java
+				$scope.experiment.instrumentProperties= data.instrumentProperties;
+				
+				// et reagents ....
+				$scope.experiment.reagents=data.reagents;
+				
+				// reinit select File...
+				// 22/01/2018 pas effet de bord avec le fichier Mettler ?????
+				$scope.NVSQ6000file = undefined;
+				angular.element('#importNOVASEQ6000XMLfile')[0].value = null;
+				
+				//refresh  reagents !!!
+				$scope.$emit('askRefreshReagents');
+				
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.clazz = "alert alert-danger";
+				$scope.messages.text = Messages('experiments.msg.import.error');
+				$scope.messages.setDetails(data);
+				$scope.messages.showDetails = true;
+				$scope.messages.open();	
+		
+				// reinit select File..
+				$scope.NVSQ6000file = undefined;
+				// il faut aussi réinitaliser le bouton d'import
+				angular.element('#importNOVASEQ6000XMLfile')[0].value = null;
+			});		
+		};
+		
+		
+		$scope.buttonNOVASEQ6000XMLfile = {
+				isShow:function(){
+
+					// console.log('progressState:'+$scope.isInProgressState());
+					// console.log('finishState:'+$scope.isFinishState() );
+					console.log('editMode:'+$scope.isEditMode() );// isEditMode est toujours false l'action d'activation du bouton edition n'est pas vue ici... !!!
+					
+					//return ( ($scope.isInProgressState() || $scope.isInFinishState() ) && $scope.isEditMode() ) ;
+					return ( $scope.isInProgressState() || $scope.isFinishState() );
+					},
+				isFileSet:function(){
+					return ($scope.NVSQ6000file === undefined)?"disabled":"";
+				},
+				click:importNOVASEQ6000XMLfile	
+			};
+		
 }]);

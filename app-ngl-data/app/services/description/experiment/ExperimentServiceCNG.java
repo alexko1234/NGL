@@ -1032,9 +1032,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single",28,false, "50",null));
 		
 		// NGL-1325 ajout propriété sequencingType de niveau Experiment, optionnelle
-		// NGL-1730 ajout NovaSeq 6000
+		// NGL-1730 ajout NovaSeq 6000;  NGL1767: subdiviser en NovaSeq 6000 / S2 + NovaSeq 6000 / S4 ( attention si changement de labels=> sont utilisés dans javascript)
 		propertyDefinitions.add(newPropertiesDefinition("Type de séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
-				DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000"),null,null,null, 
+				DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000 / S2","NovaSeq 6000 / S4"),null,null,null, 
 				"single",10, true, null,null));	
 		
 		return propertyDefinitions;
