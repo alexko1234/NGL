@@ -7,7 +7,7 @@ import java.util.List;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import validation.ContextValidation;
-import controllers.instruments.io.common.novaseq.tpl.txt.sampleSheet_1;
+import controllers.instruments.io.common.novaseq.tpl.txt.*;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
 import controllers.instruments.io.utils.OutputHelper;
@@ -21,6 +21,10 @@ public abstract class NovaSeqOutput extends AbstractOutput {
 		TagModel tagModel = OutputHelper.getTagModel(containers);
 		String content = OutputHelper.format(sampleSheet_1.render(experiment,containers,tagModel).body());
 		String filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+containers.get(0).support.code+".csv";
+		
+		System.out.println("instrument code= "+ experiment.instrument.code );
+		System.out.println("instrument path= "+  OutputHelper.getInstrumentPath(experiment.instrument.code));
+		
 		File file = new File(filename, content);
 		OutputHelper.writeFile(file);
 		return file;

@@ -41,25 +41,34 @@ import controllers.instruments.io.utils.InputHelper;
 
 public class NovaSeqInput extends AbstractInput {
 	
-	
-	
-	/* COPIE CBOT ...... A MODIFIER !!!!!!!!!!!!!!!!!! */
-	
-	
-	
-   /* FDS 06/01/207 Description du fichier a traiter: XML généré par Cbot II:
-    <?xml version="1.0" encoding="utf-16"?>
-    <RunData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    ....
-    <ProtocolName>C:\Illumina\cBot\bin\Recipes\XXXXXXXXXXXXXXXXX </ProtocolName>
-    <ExperimentType>PairedEnd</ExperimentType>
-    <FlowCellID>FCBARCODE</FlowCellID>
-    <RunFolderName>161004_CBOT-C_0003</RunFolderName>
-    <TemplateID>STRIPBARCODE</TemplateID>
-    <ReagentID>XXXXXXXXXX3</ReagentID>
-    ....
-
-	*/
+	/* NGL-1769: Dépôt NovaSeq : import fichier xml
+      Description du fichier a traiter: XML:
+      
+<?xml version="1.0"?>
+<RunParameters xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Surface>Both</Surface>
+  <ReadType>PairedEnd</ReadType>
+  <Side>A</Side>
+  <Read1NumberOfCycles>151</Read1NumberOfCycles>
+  <Read2NumberOfCycles>151</Read2NumberOfCycles>
+  <IndexRead1NumberOfCycles>8</IndexRead1NumberOfCycles>
+  <IndexRead2NumberOfCycles>8</IndexRead2NumberOfCycles>
+  <PlannedRead1Cycles>151</PlannedRead1Cycles>
+  <PlannedRead2Cycles>151</PlannedRead2Cycles>
+  <PlannedIndex1ReadCycles>8</PlannedIndex1ReadCycles>
+  <PlannedIndex2ReadCycles>8</PlannedIndex2ReadCycles>
+  <RunNumber>7</RunNumber>
+  <RtaVersion>v3.3.3</RtaVersion>
+  <RecipeVersion>1.2.0</RecipeVersion>
+  <ExperimentName>Test_Formation_S2</ExperimentName>
+  <RfidsInfo>
+    <FlowCellSerialBarcode>H5VJ2DMXX</FlowCellSerialBarcode>
+    <FlowCellPartNumber>A</FlowCellPartNumber>
+    <FlowCellLotNumber>20209948</FlowCellLotNumber>
+    ...
+    ...
+    
+	*/	
 	
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
@@ -69,11 +78,9 @@ public class NovaSeqInput extends AbstractInput {
 	     
 	     try {
 	    	 InputStream inputStream = new ByteArrayInputStream(pfv.value);
-	    	 // le fichier produit par Illumina n'est PAS en UTF-16 malgré l'entete <?xml version="1.0" encoding="utf-16"?>
-	    	 // mais en UTF-8 !!! il faut donc remettre la valeur correcte
 	    	 InputSource is = new InputSource(inputStream);
 	    	 is.setEncoding("UTF-8");
-	    	 //System.out.println("nom du fichier >>>" + pfv.fullname );
+	    	 System.out.println("nom du fichier >>>" + pfv.fullname );
 	 		 
 	         Document xml = builder.parse(is);
 	         
@@ -85,111 +92,100 @@ public class NovaSeqInput extends AbstractInput {
 	         XPathFactory xpf = XPathFactory.newInstance();
 	         XPath xpath = xpf.newXPath();
 	         
-	         // barcode de Flowcell
-	         String expression="FlowCellID";
+	         
+	         /* -1- verifier identique entre fichhier XML et infos NGL
+
+	         <FlowCellSerialBarcode>
+	         <LibraryTubeSerialBarcode>
+	         <Side>
+	         <FlowCellMode>
+	         */
+	         
+	         /* -2- reagents a inserer ???
+
+	         <FlowCellLotNumber>20209948
+	         <LibraryTubeSerialBarcode>NV0017846-LIB
+	         <LibraryTubeLotNumber>1000001046
+	         <SbsSerialBarcode>NV2061137-RGSBS
+	         <SbsLotNumber>20200578
+	         <ClusterSerialBarcode>NV2049937-RGCPE
+	         <ClusterLotNumber>20191106
+	         <BufferSerialBarcode>NV2065139-BUFFR
+	         <BufferLotNumber>20207676
+	         */
+	         
+	         String expression=null;
+	         
+	         // position sur sequenceur: NIVEAU 1
+	         expression="Side";
+	         String side = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, side);     
+	         
+	         // node RfidsInfo
+	         expression="RfidsInfo";
+	         String info = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, info);  
+	         
+	         // NIVEAU 2
+	         // barcode de Flowcell  NIVEAU 2=><RfidsInfo>
+	         expression="RfidsInfo/FlowCellSerialBarcode";
 	         String flowcellId = (String)xpath.evaluate(expression, root);  
 	         checkMandatoryXMLTag (contextValidation, expression, flowcellId );
  
-	         // barcode de la plaque de reactifs
-	         expression="ReagentID";
-	         String reagentId = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, reagentId );
+	         // barcode du tube NIVEAU 2=><RfidsInfo>
+	         expression="RfidsInfo/LibraryTubeSerialBarcode";
+	         String tubeId = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, tubeId );
 	       
-	         // barcode du strip
-	         expression="TemplateID";
-	         String stripId = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, stripId);            
-	         
-	         // nom du rum
-	         expression="RunFolderName";
-	         String runFolder = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, runFolder );
-	         
-	         // nom du Protocol
-	         expression="ProtocolName";
-	         String protocol = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, protocol );
-	         
-	         // pour commentaire
-	         expression="RecipeVersion";
-	         String recipeVersion = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, recipeVersion );
-	         
-	         // pour commentaire
-	         expression="ReagentVersion";
-	         String reagentVersion = (String)xpath.evaluate(expression, root);
-	         checkMandatoryXMLTag (contextValidation, expression, reagentVersion );
-	         
+	      
+	         // flowcell mode NIVEAU 2=><RfidsInfo>
+	         expression="RfidsInfo/FlowCellMode";
+	         String fcMode = (String)xpath.evaluate(expression, root);
+	         checkMandatoryXMLTag (contextValidation, expression, fcMode );
+
 	         //--------------------verifications   ----------------------
 	         
-	         //-1- vérifier s'il s'agit d'un fichier produit par la cbot choisie
-		     // runFolder est de la forme :  DATE_CBOT_NUM
-	         if ( runFolder.length() > 1 ) {
-	        	 String[] runf = runFolder.split("_");  
-	        	 String cbot = null;
-		      
-	        	 // le nom de la cBot est le 2eme element de runFolder
-	        	 // dans NGL les noms de cbot n'ont pas "-",=> le supprimer
-	        	 if ( (runf.length == 3 ) && ( runf[1].charAt(4) == '-' ) ){
-	        		 //System.out.println("(1) cbot:" +runf[1]);
-	        		 
-	        		 StringBuilder sb = new StringBuilder(runf[1]);
-	        		 sb.deleteCharAt(4);
-	        		 cbot = sb.toString();
-	        		 //System.out.println("(2) cbot:" + cbot);
-	        		 
-	        		 if (experiment.instrument.typeCode.equals("cBotV2"))
-	        		 {
-	        			// l'instrument est une cbot seule
-	        			 if ( ! cbot.toUpperCase().equals(experiment.instrument.code.toUpperCase()) ) {
-	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas à la cBot sélectionnée");
-	        			 }
-	        		 } else if (experiment.instrument.typeCode.equals("janus-and-cBotV2")) {
-	        			 
-	        			 //l'instrument code  est 'janus-and-cbotX' 
-	        			 String[] janusAndCbot=experiment.instrument.code.split("-");
-	        			 String realCbot=janusAndCbot[2];
-	        			 //System.out.println("realcbot:" + realCbot);
-	        			 if ( ! cbot.toUpperCase().equals(realCbot.toUpperCase()) ) {
-	        				 contextValidation.addErrors("Erreurs fichier", "Le fichier ne correspond pas à la cBot sélectionnée");
-	        			 }
-	        		 }
-	        		 
-	        	 } else {
-	        		 contextValidation.addErrors("Erreurs fichier", "'RunFolderName' incorrect");
-	        	 }   
-	         }
-	         
-	         //-2- s'il existe, verifier le barcode Flowcell 
-	         if (flowcellId.length() > 0 ) {
-	        	 if ( ! experiment.instrumentProperties.get("containerSupportCode").value.equals(flowcellId))  {
-	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier ne correspond pas à celui qui est déclaré");
-	        	 }
+	         //-1- s'il existe, verifier le barcode Flowcell 
+	         if ( (flowcellId.length() > 0) && (! experiment.inputContainerSupportCodes.contains(flowcellId))) {
+	        		 contextValidation.addErrors("Erreurs fichier", "Le barcode flowcell du fichier '"+flowcellId+"' ne correspond pas à celui de l'expérience.");
 			 }
 	         
-	         //-3- s'il existe, vérifier le barcode Strip 
-	         // NGL-1141 le barcode Strip de l'experience n'est plus obligatoire et peut etre manquant
-	         if ( null == experiment.instrumentProperties.get("stripCode").value ) {
-        		 contextValidation.addErrors("Erreurs fichier", "Veuillez entrer un barcode de strip avant d'importer le fichier");
+	         //-2- si elle existe, verifier la position
+	         if ( (side.length() > 0) && (! experiment.instrumentProperties.get("position").value.equals(side))) {
+	        		 contextValidation.addErrors("Erreurs fichier", "La position '"+side+"' du fichier ne correspond pas à celle de l'expérience.");
+			 }
+
+	         // n'est visible qu'une fois sauvegardé !!!!
+	         //contextValidation.addErrors("TEST","novaseqLoadingTube="+  experiment.instrumentProperties.get("novaseqLoadingTube").value.toString() );
+	         
+	         //-3- s'il existe, vérifier le tubeId
+	         // pas obligatoire et peut etre manquant  
+	         if ( null == experiment.instrumentProperties.get("novaseqLoadingTube")) {
+        		 contextValidation.addErrors("Erreurs expérience", "Veuillez renseigner 'Tube chargement (RFID)' avant d'importer le fichier.");
         		 
-	         } else if ( (stripId.length() > 0 ) && ( ! experiment.instrumentProperties.get("stripCode").value.equals(stripId)) ){
-				 contextValidation.addErrors("Erreurs fichier", "Le barcode strip du fichier ne correspond pas à celui qui est déclaré");
+	         } else if ( (tubeId.length() > 0 ) && ( ! experiment.instrumentProperties.get("novaseqLoadingTube").value.equals(tubeId)) ){
+				 contextValidation.addErrors("Erreurs fichier", "Le tube de chargement '"+tubeId+"' du fichier ne correspond pas à celui de l'expérience.");
 	         }
+	         
+	         //-4- s'il existe, vérifier FlowCellMode
+	         // pas obligatoire et peut etre manquant
+	         if ( null == experiment.instrumentProperties.get("novaseqFlowcellMode")) {
+        		 contextValidation.addErrors("Erreurs expérience", "Veuillez renseigner 'type de flowcell' avant d'importer le fichier.");
+        		 
+	         } else if ( (fcMode.length() > 0 ) && ( ! experiment.instrumentProperties.get("novaseqFlowcellMode").value.equals(fcMode)) ){
+				 contextValidation.addErrors("Erreurs fichier", "Le type de flowcell '"+ fcMode+"' du fichier ne correspond pas à celui de l'expérience."+ experiment.instrumentProperties.get("novaseqFlowcellMode").value);
+	         }
+	        
 		      
 		     if (contextValidation.hasErrors()){
 		    	  return experiment;
 		     }      
 
-		     // récupérer le nom du fichier importé
-		     experiment.instrumentProperties.put("cbotFile", new PropertySingleValue(pfv.fullname)); 
+		     // récupérer le nom du fichier importé..... faut-il le faire ???
+		     ////experiment.instrumentProperties.put("cbotFile", new PropertySingleValue(pfv.fullname)); 
 		      
-		     /* infos illumina 27/01/2017 :
-		     	L’identifiant d’une plaque cBot de clustering pour FC HiSeq4000 se termine par – PC6
-		     	L’identifiant d’une plaque cBot de clustering pour FC HiSeqX se termine par – PC2
-		     	L’identifiant d’une plaque cBot de rehyb pour une FC HiSeq 4000 se termine par -RH6
-		     	L’identifiant d’une plaque cBot de rehyb pour une FC HiSeqX se termine par -RH2
-		     */
-		     
+	         /* code  a reutiliser ??????
+	        
 		     ReagentUsed reagent=new ReagentUsed();    
 		     String reag[] = reagentId.split("-");
 		     if ( reag.length != 2 ){
@@ -234,6 +230,7 @@ public class NovaSeqInput extends AbstractInput {
 		     
 		     reagent.description="Recipe version: "+ recipeVersion+"; Reagent version: " + reagentVersion;
 		     experiment.reagents.add(reagent);
+		     */
 		     
 	      } catch (SAXException e) {
 	    	  contextValidation.addErrors("Erreurs fichier", "filchier XML incorrect (structure,encodage,...)");
