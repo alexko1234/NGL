@@ -1,4 +1,6 @@
 #migration
+GET		/migrationSampleOnContainer						controllers.admin.supports.api.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
+
 #GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
 #GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
 #GET		/synchro-run-ngl-lims/:code					controllers.migration.SynchroRunNGLToDBLims.synchro(code: java.lang.String)
