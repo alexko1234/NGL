@@ -27,6 +27,7 @@ import org.mongojack.DBUpdate;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
+import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -74,6 +75,7 @@ public class FileAcServices  {
 	private final NGLConfig           config;
 	private final SubmissionWorkflows submissionWorkflows;
 	
+	@Inject
 	public FileAcServices(NGLConfig config, SubmissionWorkflows submissionWorkflows) {
 		this.config              = config;
 		this.submissionWorkflows = submissionWorkflows;

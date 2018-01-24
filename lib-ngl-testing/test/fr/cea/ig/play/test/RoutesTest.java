@@ -80,7 +80,7 @@ public class RoutesTest {
 				return;
 			}
 			File file = new File(resource.toURI());
-			BufferedReader r = new BufferedReader(new FileReader(file));
+			try (BufferedReader r = new BufferedReader(new FileReader(file))) {
 			String l;
 			Pattern pat = Pattern.compile("(\\S+)\\s+(\\S+)\\s+\\S+(\\([^\\)]*\\))\\s*");
 			Pattern blanks = Pattern.compile("\\s*");
@@ -103,6 +103,7 @@ public class RoutesTest {
 				} else {
 					throw new RuntimeException("unmacthed line in " + name + " " + l);
 				}
+			}
 			}
 		}
 	}

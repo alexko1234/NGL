@@ -23,8 +23,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,6 +35,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 
 import play.Application;
+import play.Configuration;
 import play.Environment;
 import play.inject.guice.GuiceApplicationBuilder;
 import play.inject.ApplicationLifecycle;
@@ -161,19 +165,36 @@ public class DevAppTesting {
 	 */
 	private static Application application;
 
-	private static void loggerSetup() {
+	private static void propsDump() {
+		Properties p = System.getProperties();
+		Enumeration keys = p.keys();
+		while (keys.hasMoreElements()) {
+		    String key = (String)keys.nextElement();
+		    String value = (String)p.get(key);
+		    if (key.startsWith("ngl") || key.startsWith("logger") || key.startsWith("NGL"))
+		    	// System.out.println("------------ " + key + ": " + value);
+		    	logger.info("test VM option {}={}", key, value);
+		    else 
+		    	; // System.out.println(key + ": " + value);
+		}		
+	}
+	
+	/*private static void loggerSetup() {
 		if (System.getProperty(PROP_NAME_LOGGER_FILE) != null)
 			System.setProperty("logger.file", System.getProperty(PROP_NAME_LOGGER_FILE));
 		else if (System.getProperty(PROP_NAME_LOGGER_RESOURCE) != null)
 			System.setProperty("logger.resource", System.getProperty(PROP_NAME_LOGGER_RESOURCE));
+		else if (System.getProperty("logger.file") != null)
+			;
+		else if (System.getProperty("logger.file") != null)
+			;
 		else 
 			throw new RuntimeException(" set either '" + PROP_NAME_LOGGER_FILE + "' or '" + PROP_NAME_LOGGER_RESOURCE 
 					                   + "' by setting an environment variable or running sbt \"-D" + PROP_NAME_LOGGER_FILE 
 					                   + "=<absolutefilename>\" or \"-D" + PROP_NAME_LOGGER_RESOURCE + "=<name>\" that is"
 					                   + " looked for in the classpath");
-	}
+	}*/
 
-	
 	/*
 	 * DEV application singleton instance. This does not sets the play global application
 	 * instance. Actual configuration should be done using an application specifc tag that
@@ -184,13 +205,13 @@ public class DevAppTesting {
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
 	// TODO: change to use the devappF version that use file configuration and not resource.
-	public static Application devapp(String appConfFile, String logConfFile) {
+	public static Application devapp(String appConfFile) { //, String logConfFile) {
 		if (application != null) {
 			logger.warn("returning already application");
 			return application;
 		}
-		
 		try {
+			propsDump();
 			// File unfragedConf = FragmentedConfiguration.file(appConfFile + ".frag");
 			String confFileName = resourceFileName(appConfFile);
 			// String confFileName = appConfFile;
@@ -203,13 +224,24 @@ public class DevAppTesting {
 			//System.setProperty("config.file", unfragedConf.toString());
 			// System.setProperty("logger.file", resourceFileName(logConfFile)); // resourceFileName("conf/logger.xml"));
 			// System.setProperty("logger.resource", logConfFile);
-			loggerSetup();
+			// loggerSetup();
 			System.setProperty("play.server.netty.maxInitialLineLength", "16384");
 			// TODO: use play.Mode.TEST
 			Environment env = new Environment(/*new File("path/to/app"),*//* classLoader,*/ play.Mode.DEV);
-
-			GuiceApplicationBuilder applicationBuilder = new GuiceApplicationBuilder().in(env);
+			// Map<String,Object> config = new HashMap<String,Object>();
+			// config.put("config.file", confFileName);
+			// config.put("play.server.netty.maxInitialLineLength", "16384");
+			// Configuration conf = new Configuration(config);
+			
+			GuiceApplicationBuilder applicationBuilder = 
+					new GuiceApplicationBuilder()
+					// .configure("config.file", confFileName)
+					.in(env); //.configure(config);
+			// applicationBuilder = applicationBuilder.configure("config.file", confFileName);
+			// applicationBuilder = applicationBuilder.configure("play.server.netty.maxInitialLineLength", "16384");
+			
 			application = applicationBuilder.build();
+			// System.out.println(application.config().toString());
 			// Register an aplication lifecycle cleaner.
 			application.injector().instanceOf(Cleaner.class);
 			return application; //Builder.build();
@@ -220,7 +252,7 @@ public class DevAppTesting {
 	
 	// Locate the configuration through the resources but use it with 'config.file'
 	// so the configuration file includes are consistent with the usual -Dconfig.file
-	public static Application devappF(String appConfFile, String logConfFile) {
+	/*public static Application devappF(String appConfFile, String logConfFile) {
 		if (application != null) {
 			logger.warn("returning already application");
 			return application;
@@ -240,7 +272,7 @@ public class DevAppTesting {
 		} catch (Exception e) {
 			throw new RuntimeException("application build init failed",e);
 		}
-	}
+	}*/
 
 	static class Cleaner {
 		@Inject

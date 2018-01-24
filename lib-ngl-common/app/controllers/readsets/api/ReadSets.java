@@ -55,6 +55,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.With;
 // import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -100,6 +101,7 @@ public class ReadSets extends ReadSetsController {
 		this.workflows   = workflows;
 	}
 	
+	@With({fr.cea.ig.authentication.Authenticate.class})
 	@Permission(value={"reading"})
 	public Result list() {
 		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);

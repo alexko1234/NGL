@@ -1,3 +1,5 @@
+// Class to test has been removed
+
 package fr.cea.ig.util;
 
 import static org.junit.Assert.assertEquals;

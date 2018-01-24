@@ -27,7 +27,7 @@ public interface NGLJavascript extends LFWJavascript, NGLApplicationHolder, Exec
 		return ok(sb.toString()).as("application/javascript");
 	}
 
-	default Result jsPrintTag(){
+	default Result jsPrintTag() {
 		boolean tag = nglConfig().isBarCodePrintingEnabled();		
 		String js = "PrintTag={}; PrintTag.isActive =(function(){return " + tag + ";});";
 		return ok(js).as("application/javascript");

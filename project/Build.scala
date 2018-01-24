@@ -11,6 +11,12 @@
 //     infrastructure will locate the test configuration through the
 //     classpath.
 //
+//   ngl.test.logger.file
+//   ngl.test.logger.ressource
+//   logger.file
+//   logger.resource
+//     those definitions are used for the test logger configuration
+// 
 
 import sbt._
 import Keys._
@@ -47,6 +53,23 @@ object ApplicationBuild extends Build {
 	// It is enabled using sbt command line option -Dembedded.auth=true .
 	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
 	val eclipseLinking = System.getProperty("eclipse.linking") == "true"
+
+	// Workaround for missing properties in test vms. Build the test child
+	// VM option for the logger.
+	val tjl =
+	  if (System.getProperty("ngl.test.logger.file") != null)
+	    Seq("-Dlogger.file=" + System.getProperty("ngl.test.logger.file"))
+	  else if (System.getProperty("ngl.test.logger.resource") != null)
+	    Seq("-Dlogger.resource=" + System.getProperty("ngl.test.logger.resource"))
+	  else if (System.getProperty("logger.file") != null)
+	    Seq("-Dlogger.file=" + System.getProperty("logger.file"))
+	  else if (System.getProperty("logger.resource") != null)
+	    Seq("-Dlogger.resource=" + System.getProperty("logger.resource"))
+	  else
+	    Seq()
+	    
+	// val testJavaOptions = tj0 ++ tjl ++ Seq("-Dngl.in=true"/*,"-bad.stuf=zen"*/)
+	val testJavaOptions = tjl;
 	
 	// Disable paralell test execution (hoped to fixed test failure but didn't work)
 	// parallelExecution in Global := false
@@ -86,9 +109,8 @@ object ApplicationBuild extends Build {
 	val nglCommonVersion       = "2.1.0"    + distSuffix
 
 	// IG libraries
-  // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.3-SNAPSHOT"
-  // val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-1.5.4-SNAPSHOT"
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.4-SNAPSHOT"
+
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.5"
 	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions
@@ -122,14 +144,14 @@ object ApplicationBuild extends Build {
 	  
 		// Probably poor scala style
     val tev0 = if (System.getProperty("ngl.test.conf.dir") != null)
-	        Seq(unmanagedResourceDirectories in Compile += file(System.getProperty("ngl.test.conf.dir")),
-	            dependencyClasspath in Compile += file(System.getProperty("ngl.test.conf.dir")),
+	        Seq(// unmanagedResourceDirectories in Compile += file(System.getProperty("ngl.test.conf.dir")),
+	            // dependencyClasspath in Compile += file(System.getProperty("ngl.test.conf.dir")),
 	            dependencyClasspath in Test    += file(System.getProperty("ngl.test.conf.dir")))
 	      else
 	        Seq()
 	  val tev1 = if (System.getProperty("NGL_CONF_TEST_DIR") != null)
-	        Seq(dependencyClasspath in Test    += file(System.getProperty("NGL_CONF_TEST_DIR")),
-	            dependencyClasspath in Compile += file(System.getProperty("NGL_CONF_TEST_DIR")))
+	        Seq(//dependencyClasspath in Compile += file(System.getProperty("NGL_CONF_TEST_DIR"),
+	            dependencyClasspath in Test    += file(System.getProperty("NGL_CONF_TEST_DIR")))
 	      else
 	        Seq()
 	  
@@ -155,8 +177,12 @@ object ApplicationBuild extends Build {
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8"   % "2.7.3",
 			dependencyOverrides += "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.7.3",
 			javacOptions in (Compile,doc) ++= Seq("-notimestamp", "-linksource", "-quiet"),
+			javaOptions in Test ++= testJavaOptions,
+			fork := true,
 			// Remove scala files from the doc process so javadoc is used. 
 			sources in (Compile, doc) <<= sources in (Compile, doc) map { _.filterNot(_.getName endsWith ".scala") },
+			unmanagedResourceDirectories in Test += baseDirectory.value / "test",
+
 			// sources in doc in Compile := Seq(),
 			// Remove javadoc jar creation when packaging (building dist)
 			mappings in (Compile, packageDoc) := Seq(),

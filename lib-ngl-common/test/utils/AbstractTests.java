@@ -1,5 +1,7 @@
 package utils;
 
+import java.io.File;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -48,7 +50,7 @@ public abstract class AbstractTests {
 	 * @return
 	 */
 	private static Application getFakeApplication() {
-		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf","logger.xml");
+		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-common.test.conf");
 	}
 	
 	/**
