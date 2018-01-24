@@ -84,7 +84,7 @@ public class Heavy {
 	}
 	
 	//
-	@Test
+	// @Test
 	public void runInBrowser() throws IOException {
 		// CompleteSQTestServer ts = new CompleteSQTestServer();
 		// ts.start();

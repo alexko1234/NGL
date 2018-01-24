@@ -1,5 +1,6 @@
 package fr.cea.ig.play.test;
 
+import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -105,7 +106,7 @@ public class JsonFacade {
 	
 	public JsonNode jsonNode() { return data; }
 	
-	public static JsonFacade getJsonFacade(String resource) {
+	public static JsonFacade getJsonFacade(String resource) throws IOException {
 		return new JsonFacade(JsonHelper.getJson(resource));
 	}
 	

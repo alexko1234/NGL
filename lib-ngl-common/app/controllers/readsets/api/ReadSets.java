@@ -74,7 +74,7 @@ public class ReadSets extends ReadSetsController {
 	private static final play.Logger.ALogger logger = play.Logger.of(ReadSets.class);
 	
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location","properties");
-	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
+	final static List<String> defaultKeys            =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
 	private final Form<ReadSet>             readSetForm;      // = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
@@ -104,27 +104,25 @@ public class ReadSets extends ReadSetsController {
 	@With({fr.cea.ig.authentication.Authenticate.class})
 	@Permission(value={"reading"})
 	public Result list() {
-		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
-		//ReadSetsSearchForm form = filledForm.get();
-
+		// Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
+		// ReadSetsSearchForm form = filledForm.get();
 		ReadSetsSearchForm form = filledFormQueryString(ReadSetsSearchForm.class);
-		//Logger.debug("form = "+form);
-
+		// Logger.debug("form = "+form);
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
 
-		if(form.datatable){			
+		if (form.datatable) {			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			// return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");
 			// return ok(MongoStreamer.streamUDT(results)).as("application/json");
 			return MongoStreamer.okStreamUDT(results);
-		}else if(form.count){
+		} else if(form.count) {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);							
 			int count = results.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
-		}else if(form.list){
+		} else if(form.list) {
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);

@@ -6,6 +6,7 @@ import static fr.cea.ig.play.test.DevAppTesting.newCode;
 import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
 import static play.mvc.Http.Status.OK;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,14 +34,14 @@ public class TestSamples extends AbstractSQServerTest {
 
 	
 	@Test
-	public void testCreation_00() {
+	public void testCreation_00() throws IOException {
 		JsonNode sample_0 = create_00(newCode());
 		cr(ws,samplesUrl,sample_0);
 		rurNeqTraceInfo(ws,samplesUrl,sample_0);
 	}
 
 	@Test
-	public void testTemplateFail() {
+	public void testTemplateFail() throws IOException {
 		// Template data has the id and the creation date that will
 		// make the creation fail. We leave the id that fails.
 		Sample sample = from(res_00);
@@ -48,7 +49,7 @@ public class TestSamples extends AbstractSQServerTest {
 	}
 	
 	@Test
-	public void testTraceInfoFail() {
+	public void testTraceInfoFail() throws IOException {
 		// Template data has the id and the creation date that will
 		// make the creation fail.
 		Sample sample = from(res_00);
@@ -57,7 +58,7 @@ public class TestSamples extends AbstractSQServerTest {
 	}
 	
 	@Test
-	public void testFresh() {
+	public void testFresh() throws IOException {
 		Sample sample = fresh(from(res_00));
 		WSHelper.postObject(ws,samplesUrl,sample,OK);
 	}
@@ -65,7 +66,7 @@ public class TestSamples extends AbstractSQServerTest {
 	// We would expect this to fail as there is no taxon code defined.
 	// Could be correct though.
 	@Test
-	public void testNoTaxon() {
+	public void testNoTaxon() throws IOException {
 		Sample sample = fresh(from(res_00));
 		sample.taxonCode = null;
 		// WSHelper.postObject(ws,samplesUrl,sample,BAD_REQUEST);

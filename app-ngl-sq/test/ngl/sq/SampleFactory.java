@@ -5,6 +5,7 @@ import static ngl.sq.SampleFactory.from;
 import static ngl.sq.SampleFactory.samplesUrl;
 import static play.mvc.Http.Status.OK;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,7 +40,7 @@ public class SampleFactory extends DBObjectFactory {
 	 * @param  code
 	 * @return creation ready json node
 	 */
-	public static JsonNode create_00(String code) {
+	public static JsonNode create_00(String code) throws IOException {
 		return apply(JsonHelper.getJson("data/sample_00"),
 				s -> { 
 					s._id              = null;
@@ -56,11 +57,11 @@ public class SampleFactory extends DBObjectFactory {
 		return s;
 	}
 	
-	public static Sample from(String resourceName) {
+	public static Sample from(String resourceName) throws IOException {
 		return from(resourceName,Sample.class);
 	}
 	
-	public static Sample freshInstance(WSClient ws, String resourceName) {
+	public static Sample freshInstance(WSClient ws, String resourceName) throws IOException {
 		Sample sample = fresh(from(resourceName));
 		WSResponse r = WSHelper.postObject(ws,samplesUrl,sample,OK);
 		return Json.fromJson(Json.parse(r.getBody()), Sample.class);

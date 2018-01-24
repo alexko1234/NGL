@@ -4,6 +4,7 @@ import org.junit.Test;
 import static play.mvc.Http.Status.BAD_REQUEST;
 import static play.mvc.Http.Status.NOT_FOUND;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class TestContainers extends AbstractSQServerTest {
 	private static final String containersUrl = "/api/containers";
 	
 	@Test
-	public void testCreation() {
+	public void testCreation() throws IOException {
 		// Need to create a new sample, or fetch one
 		Sample sample = SampleFactory.freshInstance(ws, SampleFactory.res_00);
 		Container container = ContainerFactory.freshInstance(ws,ContainerFactory.res_00,sample);
@@ -41,7 +42,7 @@ public class TestContainers extends AbstractSQServerTest {
 	}
 
 	@Test
-	public void testNoStateTransition() {
+	public void testNoStateTransition() throws IOException {
 		Sample sample = SampleFactory.freshInstance(ws, SampleFactory.res_00);
 		Container container = ContainerFactory.freshInstance(ws,ContainerFactory.res_00,sample);
 		container = WSHelper.getObject(ws,containersUrl + "/" + container.getCode(),Container.class);

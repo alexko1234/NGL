@@ -1,5 +1,6 @@
 package fr.cea.ig.play.test;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,12 +37,12 @@ public class DBObjectFactory {
 	 * @param modification modification to apply to object
 	 * @return             JSON representation of the modified object
 	 */
-	public static <T> JsonNode apply(String resourceName, Class<T> clazz, Consumer<T> modification) {
+	public static <T> JsonNode apply(String resourceName, Class<T> clazz, Consumer<T> modification) throws IOException {
 		return apply(JsonHelper.getJson(resourceName),clazz,modification);
 	}
 	
 	// TODO: comment
-	public static <T> T from(String resourceName, Class<T> clazz) {
+	public static <T> T from(String resourceName, Class<T> clazz) throws IOException {
 		return Json.fromJson(JsonHelper.getJson(resourceName),clazz);
 	}
 	

@@ -1,5 +1,8 @@
 package fr.cea.ig.play.test;
 
+import java.io.IOException;
+import java.net.URL;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -85,10 +88,12 @@ public class JsonHelper {
 	 * @return     parsed JSON resource content 
 	 */
 	// TODO: allow optional .json suffix in resource
-	public static JsonNode getJson(String name) {
-		String rname = name + ".json";
-		logger.debug("loading json from " + DevAppTesting.class.getClassLoader().getResource(rname));
-		return Json.parse(DevAppTesting.class.getClassLoader().getResourceAsStream(rname));
+	public static JsonNode getJson(String name) throws IOException {
+		// We lost the test/resources dir from the classpath...
+		String rname = "resources/" + name + ".json";
+		URL uname = DevAppTesting.class.getClassLoader().getResource(rname);
+		logger.debug("loading json {} from {}", rname, uname);
+		return Json.parse(uname.openStream());
 	}
 	
 }

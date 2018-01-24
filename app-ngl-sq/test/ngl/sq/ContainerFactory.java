@@ -6,6 +6,7 @@ import static fr.cea.ig.play.test.JsonHelper.remove;
 import static fr.cea.ig.play.test.JsonHelper.set;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class ContainerFactory extends DBObjectFactory {
 	public static String res_00 = "data/Container_1AIF37ID7_UAT";
 	
 	// Modify a prototype to be linked with the sample. 
-	public static JsonNode create_00(String code, JsonNode sample) {
+	public static JsonNode create_00(String code, JsonNode sample) throws IOException {
 		JsonFacade s = new JsonFacade(sample);
 		JsonFacade n = JsonFacade
 				.getJsonFacade(res_00)
@@ -59,12 +60,12 @@ public class ContainerFactory extends DBObjectFactory {
 		return n.jsonNode();
 	}
 
-	public static Container from(String resourceName) {
+	public static Container from(String resourceName) throws IOException {
 		return from(resourceName,Container.class);
 	}
 
 	// Sample must have been persisted
-	public static Container freshInstance(WSClient c, String resourceName, Sample sample) {
+	public static Container freshInstance(WSClient c, String resourceName, Sample sample) throws IOException {
 		Container container = from(resourceName);
 		container._id = null;
 		// Keep creation date as this does not go through trace stamping

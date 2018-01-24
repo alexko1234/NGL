@@ -93,7 +93,7 @@ public class NGLBaseModule extends play.api.inject.Module {
 	public Seq<Binding<?>> bindings(Environment environment, Configuration configuration) {
 		List<Binding<?>> bindings = nglBindings(environment,configuration);
 		for (Binding<?> b : bindings)
-			logger.info("binding {}",b);
+			logger.debug("binding {}",b);
 		// Possibly something better to do from a list...
 		return JavaConverters.asScalaIteratorConverter(bindings.iterator()).asScala().toSeq();
 	}

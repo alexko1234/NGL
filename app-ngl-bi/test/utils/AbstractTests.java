@@ -48,7 +48,8 @@ public abstract class AbstractTests {
 	 * @return
 	 */
 	private static Application getFakeApplication(){
-		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-bi-test.conf","logger.xml");
+		// return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-bi-test.conf","logger.xml");
+		return ngl.bi.Global.devapp();
 	}
 	
 	/**
