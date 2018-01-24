@@ -25,6 +25,7 @@ import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
@@ -47,6 +48,7 @@ import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
+import play.mvc.With;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -81,7 +83,6 @@ public class Runs extends RunsController {
 		valuationForm = ctx.form(Valuation.class);
 		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
-	
 	
 	@Permission(value={"reading"})
 	public /*static*/ Result list(){
@@ -255,7 +256,6 @@ public class Runs extends RunsController {
 		return query;
 	}
 
-	
 	@Permission(value={"reading"})
 	public /*static*/ Result get(String code) {
 		
@@ -278,7 +278,6 @@ public class Runs extends RunsController {
 		}
 	}
 
-	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
@@ -387,7 +386,6 @@ public class Runs extends RunsController {
 		}
 	}
 
-
 	@Permission(value={"writing"})
 	public /*static*/ Result delete(String code) {
 		Run run = getRun(code);
@@ -400,7 +398,6 @@ public class Runs extends RunsController {
 		return ok();
 	}
 
-	
 	
 	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code){
@@ -430,7 +427,7 @@ public class Runs extends RunsController {
 			return badRequest(NGLContext._errorsAsJson(ctxVal.getErrors()));
 		}
 	}
-
+	
 	@Permission(value={"writing"})
 	public /*static*/ Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);

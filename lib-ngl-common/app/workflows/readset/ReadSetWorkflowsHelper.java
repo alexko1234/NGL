@@ -75,8 +75,8 @@ public class ReadSetWorkflowsHelper {
 	public void createSampleReadSetExternal(ReadSet readSet, ContextValidation contextValidation, String rules)
 	{
 		//Create sample if doesn't exist (for external data)
-		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
-		if(sample == null && contextValidation.getObject("external")!=null && (Boolean)contextValidation.getObject("external")){
+		//Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
+		if(contextValidation.getObject("external")!=null && (Boolean)contextValidation.getObject("external")){
 			//Call rules
 			ArrayList<Object> facts = new ArrayList<Object>();
 			facts.add(readSet);

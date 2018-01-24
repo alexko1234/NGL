@@ -30,6 +30,7 @@ import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
@@ -55,6 +56,7 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.With;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -93,7 +95,6 @@ public class ReadSets extends ReadSetsController{
 		updateForm = ctx.form(QueryFieldsForm.class);
 		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
 	}
-	
 	
 	@Permission(value={"reading"})
 	public /*static*/ Result list() {
@@ -422,7 +423,6 @@ public class ReadSets extends ReadSetsController{
 		readSetInput.runTypeCode = run.typeCode;
 	}
 
-
 	@Permission(value={"writing"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
@@ -540,7 +540,6 @@ public class ReadSets extends ReadSetsController{
 		return ok();
 	}
 
-
 	@Permission(value={"writing"})
 	public /*static*/ Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
@@ -562,7 +561,7 @@ public class ReadSets extends ReadSetsController{
 
 		return ok();
 	}
-
+	
 	@Permission(value={"writing"})
 	public /*static*/ Result state(String code){
 		ReadSet readSet = getReadSet(code);

@@ -156,7 +156,6 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 	}
 
 	
-
 	@Permission(value={"writing"})	
 	public Result updateState(String code){
 		ContainerSupport support = getSupport(code);
@@ -184,7 +183,6 @@ public class ContainerSupports extends DocumentController<ContainerSupport> {
 		// return MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		return getObject(code);
 	}
-	
 	
 	@Permission(value={"writing"})
 	public Result updateStateBatch(){

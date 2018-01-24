@@ -13,6 +13,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
@@ -20,7 +21,7 @@ import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.mvc.Result;
-
+import play.mvc.With;
 import fr.cea.ig.mongo.MongoStreamer;
 
 /**
@@ -35,7 +36,7 @@ public class ReadSets extends CommonController {
 	 * @param archive default 2
 	 * @return
 	 */
-	 
+	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"reading"})
 	public static Result list(){
 
@@ -95,6 +96,7 @@ public class ReadSets extends CommonController {
 		return archive;
 	}
 
+	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})	//@Permission(value={"archiving"})
 	public static Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
@@ -119,7 +121,8 @@ public class ReadSets extends CommonController {
 			return badRequest();
 		}
 	}
-
+	
+	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 	@Permission(value={"writing"})
 	public static Result delete(Integer i){
 		

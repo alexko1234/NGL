@@ -55,6 +55,7 @@ import play.modules.jongo.MongoDBPlugin;
 import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.mvc.With;
 // import play.mvc.Results.StringChunks;
 // import play.mvc.Results.Chunks.Out;
 import validation.ContextValidation;
@@ -72,6 +73,7 @@ import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
@@ -182,7 +184,6 @@ class Containers2 extends DocumentController<Container> {
 		return  MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",containerCode));
 	}
 
-	
 	@Permission(value={"reading"})
 	public Result list() throws DAOException{
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
@@ -221,7 +222,6 @@ class Containers2 extends DocumentController<Container> {
 		}
 	}
 
-	
 	@Permission(value={"writing"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
@@ -334,7 +334,7 @@ class Containers2 extends DocumentController<Container> {
 			return badRequest(errorsAsJson(ctxVal.getErrors()));
 		}
 	}
-
+	
 	@Permission(value={"writing"})
 	public Result updateStateBatch() {
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);

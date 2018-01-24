@@ -22,12 +22,13 @@ import play.data.Form;
 
 import play.libs.Json;
 import play.mvc.Result;
+import play.mvc.With;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 //import controllers.CommonController;
 import controllers.authorisation.Permission;
-
+import controllers.history.UserHistory;
 import fr.cea.ig.play.NGLContext;
 
 public class Lanes extends RunsController{
@@ -106,7 +107,6 @@ public class Lanes extends RunsController{
 		}		
 	}
 
-	
 	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result update(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
@@ -159,7 +159,6 @@ public class Lanes extends RunsController{
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", code)));
 		return ok();
 	}
-	
 	
 	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code, Integer laneNumber){

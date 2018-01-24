@@ -20,6 +20,7 @@ import org.mongojack.DBUpdate;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
+import play.mvc.With;
 import validation.ContextValidation;
 import validation.run.instance.FileValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
@@ -28,7 +29,7 @@ import fr.cea.ig.MongoDBDAO;
 import controllers.CommonController;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-
+import controllers.history.UserHistory;
 import fr.cea.ig.play.NGLContext;
 
 public class Files extends ReadSetsController {

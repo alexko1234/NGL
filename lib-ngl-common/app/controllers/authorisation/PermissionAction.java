@@ -32,15 +32,27 @@ public class PermissionAction extends Action<Permission> {
 	 */
 	private final IAuthorizator authorizator;
 	
+	/**
+	 * Configuration.
+	 */
+	private final Authentication.Configuration authConfiguration;
+	
 	@Inject
-	public PermissionAction(IAuthorizator authorizator) {
+	public PermissionAction(IAuthorizator authorizator, Authentication.Configuration authConfiguration) {
 		this.authorizator = authorizator;
+		this.authConfiguration = authConfiguration;
 	}
 	
 	@Override
 	public CompletionStage<Result> call(final play.mvc.Http.Context context) {
 		if (configuration.value().length == 0) 
 			throw new RuntimeException("badly configured permission control with no values");
+		
+		String userAgent = context.request().getHeader("User-Agent");
+		String agentByPass = authConfiguration.agentByPass(userAgent);
+		if (agentByPass != null && authorizator.authorize(agentByPass, configuration.value()))
+			return delegate.call(context);
+		
 		if (!Authentication.isAuthenticatedSession(context.session()))
 			return CompletableFuture.supplyAsync(() -> unauthorized("not authenticated"));
 		String username = Authentication.getUser(context.session());

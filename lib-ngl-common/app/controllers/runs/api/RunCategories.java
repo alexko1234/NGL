@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import controllers.APICommonController;
 //import controllers.CommonController;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.run.description.RunCategory;
 import models.utils.ListObject;
@@ -19,6 +20,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
+import play.mvc.With;
 import views.components.datatable.DatatableResponse;
 
 public class RunCategories extends APICommonController<RunCategoriesSearchForm> { //CommonController {

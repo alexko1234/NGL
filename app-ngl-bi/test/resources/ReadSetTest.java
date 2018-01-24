@@ -1,11 +1,15 @@
 package resources;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static play.mvc.Http.Status.OK;
+import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.fakeRequest;
 
 import java.util.Date;
 import java.util.List;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -27,13 +31,17 @@ import ngl.bi.AbstractBIServerTest;
 import play.Logger;
 import play.libs.Json;
 import play.libs.ws.WSResponse;
+import play.mvc.Result;
+import utils.RunMockHelper;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ReadSetTest extends AbstractBIServerTest{
 
 	static ReadSet readSet;
+	static ReadSet readSetExt;
 	static List<ReadSet> readSets;
 	static String jsonReadSet;
+	static String jsonReadSetExt;
 	static Run run;
 
 	@BeforeClass
@@ -54,6 +62,10 @@ public class ReadSetTest extends AbstractBIServerTest{
 		
 		readSet._id=null;
 		jsonReadSet = Json.toJson(readSet).toString();
+		
+		readSetExt = RunMockHelper.newReadSet("rdCode");
+		readSetExt.runCode = run.code;
+		jsonReadSetExt = Json.toJson(readSetExt).toString();
 		
 		//get run
 		run = MongoDBDAO.findByCode("ngl_bi.RunIllumina_dataWF", Run.class, run.code);
@@ -107,7 +119,38 @@ public class ReadSetTest extends AbstractBIServerTest{
 		Logger.debug("ReadSet "+readSet.code);
 		assertThat(readSet).isNotNull();
 	}
+	
+	@Test
+	public void test1saveExt()
+	{
+		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
+		Assert.assertNull(sample);
+		
+		
+		readSetExt.sampleCode="BFB_AABA";
+		readSetExt.projectCode="BFB";
+		readSetExt.sampleOnContainer=RunMockHelper.newSampleOnContainer(readSetExt.sampleCode);
+		
+		WSHelper.post(ws, "/api/readsets", jsonReadSetExt, 200);
+		readSetExt = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetExt.code);
+		Logger.debug("ReadSet "+readSetExt.code);
+		assertThat(readSetExt).isNotNull();
+		
+		//Check sample created
+		sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
+		Assert.assertNotNull(sample);
+		
+		//Check sampleOnContainer created
+		readSetExt = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "rdCode");
+		Logger.debug("Sample on container "+readSetExt.sampleOnContainer);
+		Assert.assertNotNull(readSetExt.sampleOnContainer);
+		Assert.assertNotNull(readSetExt.sampleOnContainer.referenceCollab);
+		Assert.assertNotNull(readSetExt.sampleOnContainer.sampleCategoryCode);
 
+		
+	}
+
+	
 	@Test
 	public void test2list()
 	{
@@ -193,6 +236,4 @@ public class ReadSetTest extends AbstractBIServerTest{
 		List<ReadSet> readSetDB = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,DBQuery.is("runCode", run.code)).toList();
 		assertThat(readSetDB.size()==0);
 	}
-	
-	
 }

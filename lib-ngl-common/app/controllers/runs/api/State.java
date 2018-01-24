@@ -16,12 +16,14 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.Run;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
+import play.mvc.With;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.run.RunWorkflows;

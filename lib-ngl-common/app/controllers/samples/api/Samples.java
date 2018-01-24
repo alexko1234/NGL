@@ -40,6 +40,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
+import play.mvc.With;
 // import play.mvc.Results;
 import validation.ContextValidation;
 // import views.components.datatable.DatatableForm;
@@ -53,6 +54,7 @@ import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 // import controllers.containers.api.ContainerBatchElement;
 // import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
@@ -123,7 +125,6 @@ class Samples2 extends DocumentController<Sample> {
 		// sampleSearchForm = ctx.form(SamplesSearchForm.class);
 		//batchElementForm = ctx.form(SampleBatchElement.class);
 	}
-	
 	@Permission(value={"reading"})
 	public Result list() {
 		SamplesSearchForm samplesSearch = filledFormQueryString(SamplesSearchForm.class);
@@ -273,7 +274,6 @@ class Samples2 extends DocumentController<Sample> {
 		});
 	}
 	*/
-	
 	@Permission(value={"writing"})
 	public Result save() throws DAOException {
 		Form<Sample> filledForm = getMainFilledForm();
@@ -384,7 +384,6 @@ class Samples2 extends DocumentController<Sample> {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
-		}
 		return form;
 	}*/
 	
