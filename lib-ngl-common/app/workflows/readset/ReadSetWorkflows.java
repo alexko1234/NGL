@@ -73,16 +73,6 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 		rulesKey                    = ctx.getRulesKey();
 	}
 	
-	// private final WorkflowsCatalog wc;
-	
-	// Not an injection constructor on purpose
-	/*public ReadSetWorkflows(WorkflowsCatalog wc) {
-		// super(wc.getNGLContext());
-		// this.wc = wc;
-		super(wc);
-	}*/
-	
-	
 	@Override
 	public void applyPreStateRules(ContextValidation validation, ReadSet readSet, State nextState) {
 		if ("N".equals(readSet.state.code)) {

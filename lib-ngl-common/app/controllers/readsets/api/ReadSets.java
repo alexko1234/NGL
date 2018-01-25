@@ -74,7 +74,7 @@ public class ReadSets extends ReadSetsController {
 	private static final play.Logger.ALogger logger = play.Logger.of(ReadSets.class);
 	
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location","properties");
-	final static List<String> defaultKeys            =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
+	final static List<String> defaultKeys            = Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
 	private final Form<ReadSet>             readSetForm;      // = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);

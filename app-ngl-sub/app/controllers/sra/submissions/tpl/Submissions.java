@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
-import fr.cea.ig.authorization.AuthorizedRead;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.NGLContext;
 
@@ -40,54 +40,54 @@ public class Submissions extends NGLBaseController {
 		this.details      = details;
 		this.activate     = activate;
 		this.consultation = consultation;	
-		this.validation = validation;	
+		this.validation   = validation;	
 	}
 	
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result create() {
 		return ok(create.render());
 	}
 	
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 	
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result details() {
 		return ok(details.render());
 	}
 	
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result activate()	{
 		return ok(activate.render());
 	}	
 	
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result consultation()	{
 		return ok(consultation.render());
 	}
 
 	@Authenticated
 	@Historized
-	@AuthorizedRead 
+	@Authorized.Read 
 	public Result validation()	{
 		return ok(validation.render());
 	}
