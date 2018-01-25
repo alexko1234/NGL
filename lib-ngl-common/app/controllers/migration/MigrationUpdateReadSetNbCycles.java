@@ -21,6 +21,7 @@ import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import play.mvc.Result;
+import rules.services.LazyRules6Actor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import akka.actor.ActorRef;
@@ -43,11 +44,13 @@ import fr.cea.ig.play.NGLContext;
 public class MigrationUpdateReadSetNbCycles extends DocumentController<ReadSet> { //CommonController {
 	
 	//private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	// private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private final LazyRules6Actor rulesActor;
 	
 	public MigrationUpdateReadSetNbCycles(NGLContext ctx) {
 		super(ctx, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);
-		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		// rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		rulesActor = ctx.rules6Actor();
 	}
 	
 	public /*static*/ Result migration(){
@@ -63,7 +66,8 @@ public class MigrationUpdateReadSetNbCycles extends DocumentController<ReadSet> 
 		
 		while(cursor.hasNext()){
 			ReadSet rs = cursor.next();
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),"F_RG_1", rs),null);
+			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),"F_RG_1", rs),null);
+			rulesActor.tellMessage("F_RG_1", rs);
 		}
 		
 		return ok("Migration Finish");

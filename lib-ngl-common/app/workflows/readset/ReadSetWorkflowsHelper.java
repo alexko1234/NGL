@@ -35,11 +35,13 @@ public class ReadSetWorkflowsHelper {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(ReadSetWorkflowsHelper.class);
 	
-	private final String rulesKey;
+	// private final String rulesKey;
+	private final NGLContext ctx;
 	
 	@Inject
 	public ReadSetWorkflowsHelper(NGLContext ctx) {
-		rulesKey = ctx.getRulesKey();
+		this.ctx = ctx;
+		// rulesKey = ctx.getRulesKey();
 	}
 	
 	/*private final String rulesKey;
@@ -100,7 +102,8 @@ public class ReadSetWorkflowsHelper {
 			facts.add(readSet);
 			facts.add(contextValidation);
 			// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rules, facts);
-			RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, rules, facts);
+			// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, rules, facts);
+			ctx.callRulesWithGettingFacts(rules, facts);
 		}
 	}
 	

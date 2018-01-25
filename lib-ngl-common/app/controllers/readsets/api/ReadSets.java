@@ -23,6 +23,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
+import com.google.inject.Provider;
 import com.mongodb.BasicDBObject;
 
 import akka.actor.ActorRef;
@@ -56,6 +57,7 @@ import play.mvc.BodyParser;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.With;
+import rules.services.LazyRules6Actor;
 // import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -76,20 +78,21 @@ public class ReadSets extends ReadSetsController {
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path","location","properties");
 	final static List<String> defaultKeys            = Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties","location");
 
-	private final Form<ReadSet>             readSetForm;      // = form(ReadSet.class);
+	private final Form<ReadSet>              readSetForm;      // = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
-	private final Form<ReadSetValuation>    valuationForm;    // = form(ReadSetValuation.class);
-	private final Form<State>               stateForm;        // = form(State.class);
-	private final Form<ReadSetBatchElement> batchElementForm; // = form(ReadSetBatchElement.class);
-	private final Form<QueryFieldsForm>     updateForm;       // = form(QueryFieldsForm.class);
+	private final Form<ReadSetValuation>     valuationForm;    // = form(ReadSetValuation.class);
+	private final Form<State>                stateForm;        // = form(State.class);
+	private final Form<ReadSetBatchElement>  batchElementForm; // = form(ReadSetBatchElement.class);
+	private final Form<QueryFieldsForm>      updateForm;       // = form(QueryFieldsForm.class);
 	// final static ReadSetWorkflows workflows = Spring.get BeanOfType(ReadSetWorkflows.class);
-	private final ReadSetWorkflows          workflows;
+	private final Provider<ReadSetWorkflows> workflows;
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private final ActorRef                  rulesActor;       // = akkaSystem().actorOf(Props.create(RulesActor6.class));
-	private final String                    rulesKey;
+	// private final ActorRef                   rulesActor;       // = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	// private final String                     rulesKey;
+	private final LazyRules6Actor rulesActor;
 	
 	@Inject
-	public ReadSets(NGLContext ctx, ReadSetWorkflows workflows) {
+	public ReadSets(NGLContext ctx, Provider<ReadSetWorkflows> workflows) {
 		// super(ctx);
 		readSetForm      = ctx.form(ReadSet.class);
 		valuationForm    = ctx.form(ReadSetValuation.class);
@@ -97,8 +100,9 @@ public class ReadSets extends ReadSetsController {
 		batchElementForm = ctx.form(ReadSetBatchElement.class);
 		updateForm       = ctx.form(QueryFieldsForm.class);
 		rulesActor       = ctx.rules6Actor(); // ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
-		rulesKey         = ctx.config().getRulesKey();
+		// rulesKey         = ctx.config().getRulesKey();
 		this.workflows   = workflows;
+		// this.rulesActor  = ctx.rule
 	}
 	
 	@With({fr.cea.ig.authentication.Authenticate.class})
@@ -389,7 +393,7 @@ public class ReadSets extends ReadSetsController {
 			ctxVal.putObject("external", false);
 
 		//Apply rules before validation
-		workflows.applyPreStateRules(ctxVal, readSetInput, readSetInput.state);
+		workflows.get().applyPreStateRules(ctxVal, readSetInput, readSetInput.state);
 		
 		ctxVal.setCreationMode();
 		readSetInput.validate(ctxVal);	
@@ -578,7 +582,7 @@ public class ReadSets extends ReadSetsController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		workflows.setState(ctxVal, readSet, state);
+		workflows.get().setState(ctxVal, readSet, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));
 		} else {
@@ -604,7 +608,7 @@ public class ReadSets extends ReadSetsController {
 						state.date = new Date();
 						state.user = user;
 						ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-						workflows.setState(ctxVal, readSet, state);
+						workflows.get().setState(ctxVal, readSet, state);
 						if (!ctxVal.hasErrors()) {
 							return new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index);
 						}else {
@@ -636,7 +640,7 @@ public class ReadSets extends ReadSetsController {
 					.set("bioinformaticValuation", valuations.bioinformaticValuation)
 					.set("traceInformation", getUpdateTraceInformation(readSet)));			
 			readSet = getReadSet(code);
-			workflows.nextState(ctxVal, readSet);
+			workflows.get().nextState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
 		} else {
 			// return badRequest(filledForm.errors-AsJson());
@@ -666,7 +670,7 @@ public class ReadSets extends ReadSetsController {
 									.set("bioinformaticValuation", element.data.bioinformaticValuation)
 									.set("traceInformation", getUpdateTraceInformation(readSet,user)));							
 							readSet = getReadSet(readSet.code);
-							workflows.nextState(ctxVal, readSet);
+							workflows.get().nextState(ctxVal, readSet);
 							return new DatatableBatchResponseElement(OK, readSet, element.index);
 						}else {
 							return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
@@ -783,7 +787,8 @@ public class ReadSets extends ReadSetsController {
 			//Send run fact			
 			// Outside of an actor and if no reply is needed the second argument can be null
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
-			rulesActor.tell(new RulesMessage(rulesKey,rulesCode, readSet),null);
+			// rulesActor.tell(new RulesMessage(rulesKey, rulesCode, readSet),null);
+			rulesActor.tellMessage(rulesCode, readSet);
 		} else
 			return badRequest();
 		return ok();

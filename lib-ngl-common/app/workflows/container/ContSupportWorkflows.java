@@ -24,6 +24,7 @@ import org.mongojack.DBUpdate;
 // import org.springframework.stereotype.Service;
 
 import akka.actor.ActorRef;
+import rules.services.LazyRules6Actor;
 // import play.Logger;
 // import play.Play;
 // import play.libs.Akka;
@@ -54,13 +55,14 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		return _rulesActor;
 	}*/
 	
-	private final String        rulesKey;
-	private final ActorRef      rulesActor;
+	// private final String        rulesKey;
+	// private final ActorRef      rulesActor;
 	private final ContWorkflows containerWorkflows;
-	
+	private final LazyRules6Actor      rulesActor;
+	 
 	@Inject
 	public ContSupportWorkflows(NGLContext ctx, ContWorkflows containerWorkflows) {
-		rulesKey                = ctx.config().getRulesKey();
+		// rulesKey                = ctx.config().getRulesKey();
 		rulesActor              = ctx.rules6Actor();
 		this.containerWorkflows = containerWorkflows;
 	}
@@ -126,7 +128,8 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
 		// rulesActor().tell(new RulesMessage(configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
 		// rulesActor.tell(new RulesMessage(rulesKey, "workflow", containerSupport, validation),null);
-		rulesActor.tell(new RulesMessage(rulesKey, "workflow", containerSupport, validation),null);
+		// rulesActor.tell(new RulesMessage(rulesKey, "workflow", containerSupport, validation),null);
+		rulesActor.tellMessage("workflow", containerSupport, validation);
 	}
 
 	@Override

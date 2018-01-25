@@ -19,6 +19,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import play.Logger;
+import rules.services.LazyRules6Actor;
 // import play.Play;
 // import play.libs.Akka;
 // import rules.services.RulesActor6;
@@ -51,15 +52,15 @@ public class RunWorkflows extends Workflows<Run> {
 		super(wc);
 	}*/
 	
-	private final ActorRef rulesActor;
-	private final String   rulesKey;
-	
+	// private final ActorRef rulesActor;
+	// private final String   rulesKey;
+	private final LazyRules6Actor rulesActor;
 	private final RunWorkflowsHelper runWorkflowsHelper;
 	
 	@Inject
 	public RunWorkflows(NGLContext ctx, RunWorkflowsHelper runWorkflowsHelper) {
 		rulesActor = ctx.rules6Actor();
-		rulesKey   = ctx.getRulesKey();
+		// rulesKey   = ctx.getRulesKey();
 		this.runWorkflowsHelper = runWorkflowsHelper;
 	}
 	
@@ -80,15 +81,18 @@ public class RunWorkflows extends Workflows<Run> {
 		// RunWorkflowsHelper runWorkflowsHelper = wc.runWorkflowsHelper();
 		if ("IP-S".equals(run.state.code)) {
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleIPS, run),null);
-			rulesActor.tell(new RulesMessage(rulesKey, ruleIPS, run),null);
+			// rulesActor.tell(new RulesMessage(rulesKey, ruleIPS, run),null);
+			rulesActor.tellMessage(ruleIPS, run);
 		} else if("F-RG".equals(run.state.code)) {
 			runWorkflowsHelper.updateDispatchRun(run);
 			runWorkflowsHelper.updateReadSetLane(run, validation, ruleFRG,true);
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, run),null);
-			rulesActor.tell(new RulesMessage(rulesKey,ruleFRG, run),null);
+			// rulesActor.tell(new RulesMessage(rulesKey,ruleFRG, run),null);
+			rulesActor.tellMessage(ruleFRG, run);
 		} else if("F-V".equals(run.state.code)) {
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFV, run),null);
-			rulesActor.tell(new RulesMessage(rulesKey, ruleFV, run),null);
+			// rulesActor.tell(new RulesMessage(rulesKey, ruleFV, run),null);
+			rulesActor.tellMessage(ruleFV, run);
 			runWorkflowsHelper.invalidateReadSetLane(run, validation, ruleFV, false);
 		}	
 	}

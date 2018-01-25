@@ -25,6 +25,7 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.Analysis;
 import models.utils.InstanceConstants;
 import play.Logger;
+import rules.services.LazyRules6Actor;
 // import play.Play;
 // import play.libs.Akka;
 // import rules.services.RulesActor6;
@@ -47,14 +48,15 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 	private static final String ruleFBA="F_BA_1";
 
 	private final AnalysisWorkflowsHelper analysisWorkflowsHelper;
-	private final ActorRef                rulesActor;
-	private final String                  rulesKey;
-	
+	// private final ActorRef                rulesActor;
+	// private final String                  rulesKey;
+	private final LazyRules6Actor         rulesActor;
 	@Inject
 	public AnalysisWorkflows(NGLContext ctx, AnalysisWorkflowsHelper analysisWorkflowsHelper) {
 		this.analysisWorkflowsHelper = analysisWorkflowsHelper;
+		// rulesActor                   = ctx.rules6Actor();
+		// rulesKey                     = ctx.getRulesKey();
 		rulesActor                   = ctx.rules6Actor();
-		rulesKey                     = ctx.getRulesKey();
 	}
 	
 	// private final WorkflowsCatalog wc;
@@ -86,7 +88,8 @@ public class AnalysisWorkflows extends Workflows<Analysis> {
 		} else if("F-BA".equals(analysis.state.code)) {
 			//Call rules F-BA
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFBA, analysis),null);
-			rulesActor.tell(new RulesMessage(rulesKey,ruleFBA, analysis),null);
+			// rulesActor.tell(new RulesMessage(rulesKey,ruleFBA, analysis),null);
+			rulesActor.tellMessage(ruleFBA, analysis);
 			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "F-BA");
 		} else if("IW-V".equals(analysis.state.code)) {
 			analysisWorkflowsHelper.updateStateMasterReadSetCodes(analysis, validation, "IW-VBA");

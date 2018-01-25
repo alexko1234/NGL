@@ -26,6 +26,7 @@ import models.utils.instance.SampleHelper;
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
+import rules.services.LazyRules6Actor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import services.io.reception.Mapping;
@@ -39,7 +40,8 @@ import fr.cea.ig.play.NGLContext;
 public class SampleMapping extends Mapping<Sample> {
 	
 	// private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	// private /*static*/ ActorRef rulesActor;// = akkaSystem().actorOf(Props.create(RulesActor6.class));
+	private final LazyRules6Actor rulesActor;
 	
 	/*
 	 * 
@@ -55,7 +57,8 @@ public class SampleMapping extends Mapping<Sample> {
 						 ContextValidation contextValidation,
 						 NGLContext ctx) {
 		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
-		rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		// rulesActor = ctx.akkaSystem().actorOf(Props.create(RulesActor6.class));
+		rulesActor = ctx.rules6Actor();
 	}
 	
 	/*

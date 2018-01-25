@@ -25,6 +25,7 @@ import org.mongojack.DBUpdate;
 import com.google.inject.Provider;
 
 import akka.actor.ActorRef;
+import rules.services.LazyRules6Actor;
 // import play.Logger;
 // import play.Play;
 // import play.libs.Akka;
@@ -60,15 +61,16 @@ public class ContWorkflows extends Workflows<Container> {
 		return _rulesActor;
 	}*/
 
-	private final ActorRef             rulesActor;
-	private final String               rulesKey;
+	// private final ActorRef             rulesActor;
+	// private final String               rulesKey;
+	private final LazyRules6Actor rulesActor;
 	private final Provider<ContSupportWorkflows> contSupportWorkflows;
 	private final ProcWorkflows        procSupportWorkflows;
 	
 	@Inject
 	public ContWorkflows(NGLContext ctx, Provider<ContSupportWorkflows> contSupportWorkflows, ProcWorkflows procSupportWorkflows) {
 		rulesActor                = ctx.rules6Actor();
-		rulesKey                  = ctx.getRulesKey();
+		// rulesKey                  = ctx.getRulesKey();
 		this.contSupportWorkflows = contSupportWorkflows;
 		this.procSupportWorkflows = procSupportWorkflows;
 	}
@@ -164,7 +166,8 @@ public class ContWorkflows extends Workflows<Container> {
 	}*/
 	
 	public void callWorkflowRules(ContextValidation validation, Container container) {
-		rulesActor.tell(new RulesMessage(rulesKey, "workflow", container, validation),null);
+		// rulesActor.tell(new RulesMessage(rulesKey, "workflow", container, validation),null);
+		rulesActor.tellMessage("workflow", container, validation);
 	}
 	
 	@Override

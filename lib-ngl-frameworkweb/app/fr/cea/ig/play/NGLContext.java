@@ -21,6 +21,7 @@ import play.i18n.MessagesApi;
 import play.inject.Injector;
 import play.libs.Json;
 import play.libs.ws.WSClient;
+import rules.services.LazyRules6Actor;
 import rules.services.RulesActor6;
 import rules.services.RulesServices6;
 import play.i18n.Messages;
@@ -85,6 +86,8 @@ public class NGLContext {
 	private final WSClient wsclient;
 	private final SyncCacheApi syncCacheApi;
 	
+	private final LazyRules6Actor rules6Actor;
+	
 	/*
 	// TODO: remove static NGL context access 
 	private static NGLContext nglContext;
@@ -104,15 +107,17 @@ public class NGLContext {
 			          ActorSystem actor,
 			          JsMessagesFactory jsMessagesFactory,
 			          WSClient wsclient,
-			          SyncCacheApi syncCacheApi) {
-		this.injector    = injector;
-		this.config      = config;
-		this.messagesApi = messagesApi;
-		this.formFactory = formFactory;
-		this.actor       = actor;
+			          SyncCacheApi syncCacheApi,
+			          LazyRules6Actor rules6Actor) {
+		this.injector     = injector;
+		this.config       = config;
+		this.messagesApi  = messagesApi;
+		this.formFactory  = formFactory;
+		this.actor        = actor;
 		this.jsMessagesFactory = jsMessagesFactory;
-		this.wsclient = wsclient;
+		this.wsclient     = wsclient;
 		this.syncCacheApi = syncCacheApi;
+		this.rules6Actor  = rules6Actor; 
 	}
 		
 	public NGLConfig config() { 
@@ -180,18 +185,27 @@ public class NGLContext {
 		return config().getInstitute();
 	}
 	
-	public String getRulesKey() {
-		return config.getRulesKey();
-	}
-	
 	public List<Object> rulesServices6(String ruleAnnotationName, List<Object> facts) { 
 		return RulesServices6.getInstance().callRulesWithGettingFacts(getRulesKey(), ruleAnnotationName, facts);
 	}
 	
-	public ActorRef rules6Actor() {
-		return akkaSystem().actorOf(Props.create(RulesActor6.class));
+	// Reexport with name matching the original call
+	public List<Object> callRulesWithGettingFacts(String ruleAnnotationName, List<Object> facts) { 
+		return rulesServices6(ruleAnnotationName, facts); 
 	}
 	
+	public LazyRules6Actor rules6Actor() {
+		return rules6Actor;
+	}
+	
+	public String getRulesKey() {
+		return config.getRulesKey();
+	}
+	
+//	public ActorRef rules6Actor() {
+//		return akkaSystem().actorOf(Props.create(RulesActor6.class));
+//	}
+		
 	public ActorSystem akkaSystem() {
 		return this.actor;
 	}

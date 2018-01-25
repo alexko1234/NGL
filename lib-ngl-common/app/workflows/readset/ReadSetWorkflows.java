@@ -26,6 +26,7 @@ import models.laboratory.run.instance.Run;
 // import models.laboratory.run.instance.SampleOnContainer;
 // import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+import rules.services.LazyRules6Actor;
 // import models.utils.InstanceHelpers;
 // import play.Logger;
 // import play.Logger;
@@ -63,14 +64,17 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 	private static final String ruleN    = "N_1";
 	
 	private final ReadSetWorkflowsHelper readSetWorkflowsHelper;
-	private final ActorRef               rulesActor;
-	private final String                 rulesKey;
-	
+	// private final ActorRef               rulesActor;
+	// private final String                 rulesKey;
+	private final LazyRules6Actor rulesActor;
+	private final NGLContext ctx;
 	@Inject
 	public ReadSetWorkflows(NGLContext ctx, ReadSetWorkflowsHelper readSetWorkflowsHelper) {
+		this.ctx                    = ctx;
 		this.readSetWorkflowsHelper = readSetWorkflowsHelper;
+		// rulesActor                  = ctx.rules6Actor();
+		// rulesKey                    = ctx.getRulesKey();
 		rulesActor                  = ctx.rules6Actor();
-		rulesKey                    = ctx.getRulesKey();
 	}
 	
 	@Override
@@ -95,23 +99,27 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 		} else if("F-RG".equals(readSet.state.code)) {
 			readSetWorkflowsHelper.updateDispatch(readSet);
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, readSet),null);
-			rulesActor.tell(new RulesMessage(rulesKey,ruleFRG, readSet),null);
+			// rulesActor.tell(new RulesMessage(rulesKey,ruleFRG, readSet),null);
+			rulesActor.tellMessage(ruleFRG, readSet);
 		} else if("F-QC".equals(readSet.state.code)) {			
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFQC, readSet),null);
-			rulesActor.tell(new RulesMessage(rulesKey,ruleFQC, readSet),null);
+			// rulesActor.tell(new RulesMessage(rulesKey,ruleFQC, readSet),null);
+			rulesActor.tellMessage(ruleFQC, readSet);
 		} else if("F-VQC".equals(readSet.state.code)) {
 			if (TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)) {
 				readSetWorkflowsHelper.updateBioinformaticValuation(readSet, readSet.productionValuation.valid, readSet.productionValuation.user, readSet.productionValuation.date);
 			}
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFVQC, readSet),null);
-			rulesActor.tell(new RulesMessage(rulesKey, ruleFVQC, readSet),null);
+			// rulesActor.tell(new RulesMessage(rulesKey, ruleFVQC, readSet),null);
+			rulesActor.tellMessage(ruleFVQC, readSet);
 		} else if("IW-BA".equals(readSet.state.code)) {
 			readSetWorkflowsHelper.updateBioinformaticValuation(readSet, TBoolean.UNSET, null, null);
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code)) {
 			readSetWorkflowsHelper.updateFiles(readSet, validation);
 			//if change valuation when final step
 			// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleAUA, readSet),null);
-			rulesActor.tell(new RulesMessage(rulesKey, ruleAUA, readSet),null);
+			// rulesActor.tell(new RulesMessage(rulesKey, ruleAUA, readSet),null);
+			rulesActor.tellMessage(ruleAUA, readSet);
 		}
 	}
 
@@ -171,7 +179,8 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			facts.add(project);
 			facts.add(readSet);
 			// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleIWBA, facts);
-			RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleIWBA, facts);
+			// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleIWBA, facts);
+			ctx.callRulesWithGettingFacts(ruleIWBA, facts);
 		} else if("F-BA".equals(readSet.state.code)) {
 			nextStep.code = "IW-VBA";
 		} else if("IW-VBA".equals(readSet.state.code)) {
@@ -195,7 +204,8 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 				facts.add(project);
 				facts.add(readSet);
 				// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleA, facts);
-				RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleA, facts);
+				// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleA, facts);
+				ctx.callRulesWithGettingFacts(ruleA, facts);
 			} else { //FALSE or UNSET
 				nextStep.code = "UA";
 			}			
@@ -205,7 +215,8 @@ public class ReadSetWorkflows extends Workflows<ReadSet> {
 			facts.add(nextStep);
 			facts.add(project);
 			// RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleFTF, facts);
-			RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleFTF, facts);
+			// RulesServices6.getInstance().callRulesWithGettingFacts(rulesKey, ruleFTF, facts);
+			ctx.callRulesWithGettingFacts(ruleFTF, facts);
 		}
 		setState(contextValidation, readSet, nextStep);
 	}

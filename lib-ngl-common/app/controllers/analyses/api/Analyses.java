@@ -41,6 +41,7 @@ import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
+import rules.services.LazyRules6Actor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -61,7 +62,7 @@ public class Analyses extends DocumentController<Analysis> {
 	private final Form<AnalysesBatchElement> batchElementForm; 
 	private final Form<QueryFieldsForm>      updateForm; 
 	private final AnalysisWorkflows          workflows;
-	private final ActorRef                   rulesActor;
+	private final LazyRules6Actor            rulesActor;
 	
 	@Inject
 	public Analyses(NGLContext ctx, AnalysisWorkflows workflows) {
@@ -435,7 +436,8 @@ public class Analyses extends DocumentController<Analysis> {
 		}		
 		// Outside of an actor and if no reply is needed the second argument can be null
 		// rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode,objectInDB),null);
-		rulesActor.tell(new RulesMessage(getNGLContext().config().getRulesKey(),rulesCode,objectInDB),null);
+		// rulesActor.tell(new RulesMessage(getNGLContext().config().getRulesKey(),rulesCode,objectInDB),null);
+		rulesActor.tellMessage(rulesCode,objectInDB);
 		return ok();
 	}
 	
