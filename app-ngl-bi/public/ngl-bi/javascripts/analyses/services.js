@@ -1,7 +1,7 @@
  "use strict";
  
  angular.module('ngl-bi.AnalysesServices', []).
-	factory('analysisSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+	factory('analysisSearchService', ['$http', '$filter', 'mainService', 'lists', 'datatable', function($http, $filter, mainService, lists, datatable){
 		
 		var getColumns = function(){
 			var columns = [];
