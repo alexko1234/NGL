@@ -104,13 +104,12 @@ object ApplicationBuild extends Build {
 	val nglPlatesVersion       = "2.0.0"  + distSuffix
 	val nglDevGuideVersion     = "2.0.0"  + distSuffix
 	
-	val libDatatableVersion    = "2.0.0"    + distSuffix
-	val libFrameworkWebVersion = "2.0.0"    + distSuffix
-	val nglCommonVersion       = "2.1.0"    + distSuffix
+	val libDatatableVersion    = "2.0.0"  + distSuffix
+	val libFrameworkWebVersion = "2.0.0"  + distSuffix
+	val nglCommonVersion       = "2.1.0"  + distSuffix
 
 	// IG libraries
-
-  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.5"
+  val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.6"
 	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions

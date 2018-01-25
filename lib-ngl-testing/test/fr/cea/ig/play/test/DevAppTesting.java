@@ -11,7 +11,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 //import java.util.regex.Pattern;
-
+import java.util.function.Function;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -205,7 +205,8 @@ public class DevAppTesting {
 	 */
 	// TODO: provide support for other project by supporting a project name (e.g. "sq").
 	// TODO: change to use the devappF version that use file configuration and not resource.
-	public static Application devapp(String appConfFile) { //, String logConfFile) {
+	@SafeVarargs
+	public static Application devapp(String appConfFile, Function<GuiceApplicationBuilder,GuiceApplicationBuilder>... mods) { //, String logConfFile) {
 		if (application != null) {
 			logger.warn("returning already application");
 			return application;
@@ -237,6 +238,8 @@ public class DevAppTesting {
 					new GuiceApplicationBuilder()
 					// .configure("config.file", confFileName)
 					.in(env); //.configure(config);
+			for (Function<GuiceApplicationBuilder,GuiceApplicationBuilder> mod : mods)
+				applicationBuilder = mod.apply(applicationBuilder);
 			// applicationBuilder = applicationBuilder.configure("config.file", confFileName);
 			// applicationBuilder = applicationBuilder.configure("play.server.netty.maxInitialLineLength", "16384");
 			

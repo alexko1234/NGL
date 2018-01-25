@@ -15,8 +15,17 @@ import org.junit.Test;
 import utils.AbstractTests;
 import workflows.container.ContSupportWorkflows;
 
+/**
+ * This belong to some subproject and the test should actually define
+ * rules.key and rules.kbasename that should be set on a per test basis.
+ * The simpler way is to have this test moved to the proper subproject.
+
+ * @author vrd
+ *
+ */
 public class ContainerSupportWorkflowTests extends AbstractTests {
 
+	
 	private ContSupportWorkflows workflows() {
 		// Spring.get BeanOfType(ContSupportWorkflows.class); 
 		return app.injector().instanceOf(ContSupportWorkflows.class);

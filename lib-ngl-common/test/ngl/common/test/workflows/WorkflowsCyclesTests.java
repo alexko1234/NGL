@@ -1,9 +1,16 @@
-package workflows;
+package ngl.common.test.workflows;
 
 import org.junit.Test;
 
 import utils.AbstractTests;
 
+/**
+ * This does not test anything else than the fact that the workflows
+ * implementations can be injected.
+ * 
+ * @author vrd
+ *
+ */
 public class WorkflowsCyclesTests extends AbstractTests {
 
 	private void instanciate(Class<?> c) {

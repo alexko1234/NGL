@@ -60,7 +60,7 @@ public class PermissionAction extends Action<Permission> {
 		if (authorizator.authorize(username, configuration.value()))
 			return delegate.call(context);
 		else
-			return CompletableFuture.supplyAsync(() -> unauthorized());
+			return CompletableFuture.supplyAsync(() -> forbidden());
 	}
 	
 }

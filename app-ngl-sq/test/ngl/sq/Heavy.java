@@ -5,6 +5,10 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import fr.cea.ig.authentication.IAuthenticator;
+import fr.cea.ig.authorization.IAuthorizator;
+import fr.cea.ig.ngl.test.TestAuthConfig;
+
 import static fr.cea.ig.play.test.DevAppTesting.newCode;
 import static fr.cea.ig.play.test.DevAppTesting.cr;
 import static fr.cea.ig.play.test.DevAppTesting.rurNeqTraceInfo;
@@ -23,16 +27,20 @@ import static play.test.Helpers.NOT_FOUND;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.sample.instance.Sample;
+import play.Application;
 import play.test.TestServer;
 
 public class Heavy {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(Heavy.class);
+	
 	@Test
 	public void test01() throws Exception {
-		
-	    testInServer(devapp(),
+		Application app = devapp(TestAuthConfig.asNobody);
+	    testInServer(app,
 	    		ws -> {	    	
 
+	    			logger.info("auth {} {}",app.injector().instanceOf(IAuthenticator.class),app.injector().instanceOf(IAuthorizator.class));
 	    			// Assuming that we have a json response from server that that the get/put
 	    			// urls are properly defined, we provide a json alteration function that is
 	    			// compared to the get after the put. The other way around is to assert that modified values
@@ -84,20 +92,5 @@ public class Heavy {
 	}
 	
 	//
-	// @Test
-	public void runInBrowser() throws IOException {
-		// CompleteSQTestServer ts = new CompleteSQTestServer();
-		// ts.start();
-		TestServer server = new TestServer(3333,devapp());
-		play.test.Helpers.running(server, play.test.Helpers.HTMLUNIT, browser -> {
-		// play.test.Helpers.running(server, play.test.Helpers.FIREFOX, browser -> {
-	        browser.goTo("/");
-	        // assertEquals("Welcome to Play!", browser.$("#title").text());
-	        // browser.$("a").click();
-	        // assertEquals("login", browser.url());
-	        // ts.stop();
-	    });
-	    
-	}
 	
 }

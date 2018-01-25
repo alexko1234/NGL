@@ -1,7 +1,9 @@
 package rules.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 // import org.drools.runtime.StatefulKnowledgeSession;
@@ -16,19 +18,21 @@ import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
-import play.Logger;
+// import play.Logger;
 // import play.Play;
 import play.Application;
 
-import javax.inject.Inject;
+// import javax.inject.Inject;
 
 public class RulesServices6 {
 	
 	/**
 	 * Logger.
 	 */
-	private static final Logger.ALogger logger = Logger.of(RulesServices6.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(RulesServices6.class);
 
+	private static final Map<String,RulesServices6> instances = new HashMap<>();
+	
 	/**
 	 * Singleton ref.
 	 */
@@ -51,8 +55,15 @@ public class RulesServices6 {
 	
  
 	public static void initSingleton(Application app) {
-		logger.debug("initializaing singleton");
-		SingletonHolder.instance = new RulesServices6(app);
+		logger.debug("initializing singleton");
+		String kbasename = app.configuration().getString("rules.kbasename");
+		SingletonHolder.instance = instances.get(kbasename);
+		if (SingletonHolder.instance == null) {
+			SingletonHolder.instance = new RulesServices6(app);
+			instances.put(kbasename, SingletonHolder.instance);
+		} else {
+			logger.debug("reusing instance for {} : {}", kbasename, SingletonHolder.instance);
+		}
 		logger.debug("singleton initialized");
 	}
 	

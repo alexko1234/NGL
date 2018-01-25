@@ -116,7 +116,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}
 	
-	@Test
+	// @Test
 	public void validationResolutionNullFinishTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");

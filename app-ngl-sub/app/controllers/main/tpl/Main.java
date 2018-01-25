@@ -48,7 +48,7 @@ public class Main extends Controller {
 	public Result jsCodes() {
 		return new Codes()
 				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), 
-						     x -> x.tableName, x -> x.code, x -> x.label)
+						x -> x.tableName, x -> x.code, x -> x.label)
 				.valuationCodes()
 				.statusCodes()
 				.add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(),
