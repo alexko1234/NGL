@@ -10,6 +10,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import views.html.processes.home;
 import views.html.processes.newProcesses;
+import views.html.processes.assignProcesses;
 import views.html.processes.search;
 import views.html.processes.searchContainers;
 import views.html.processes.searchSamples;
@@ -26,21 +27,23 @@ public class Processes extends CommonController{
 	
 	private final search search;
 	private final newProcesses newProcesses;
+	private final assignProcesses assignProcesses;
 	
 	@Inject
-	public Processes(home home, search search, newProcesses newProcesses, searchContainers searchContainers, searchSamples searchSamples) {
+	public Processes(home home, search search, newProcesses newProcesses, searchContainers searchContainers, searchSamples searchSamples,assignProcesses assignProcesses) {
 		this.home = home;
 		this.searchContainers = searchContainers;
 		this.searchSamples = searchSamples;		
 		this.search = search;
 		this.newProcesses = newProcesses;
+		this.assignProcesses = assignProcesses;
 	}
 	
-	public /*static*/ Result home(String code){
+	public Result home(String code){
 		return ok(home.render(code));
 	}
 
-	public /*static*/ Result searchContainers(){
+	public Result searchContainers(){
 		return ok(searchContainers.render());
 	}
 
@@ -52,17 +55,22 @@ public class Processes extends CommonController{
 		return ok(search.render());
 	}
 
-	public /*static*/ Result newProcesses(String processTypeCode){
+	public Result newProcesses(String processTypeCode){
 		return ok(newProcesses.render());
 	}
 
-	public /*static*/ Result javascriptRoutes() {
+	public Result assignProcesses(String processTypeCode){
+		return ok(assignProcesses.render());
+	}
+	
+	public Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
 				// Routes.javascriptRouter("jsRoutes",
 			JavaScriptReverseRouter.create("jsRoutes",
 						// Routes
-						controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
+						controllers.processes.tpl.routes.javascript.Processes.newProcesses(),
+						controllers.processes.tpl.routes.javascript.Processes.assignProcesses(),  
 						controllers.processes.tpl.routes.javascript.Processes.search(),
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
 						controllers.processes.tpl.routes.javascript.Processes.searchSamples(),

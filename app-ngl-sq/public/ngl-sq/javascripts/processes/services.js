@@ -1,7 +1,8 @@
 "use strict";
 
-angular.module('ngl-sq.processesServices', []).factory('processesSearchService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 
-                                                                                   function($http, $parse, $filter, mainService, lists, datatable) {
+angular.module('ngl-sq.processesServices', [])
+.factory('processesSearchService', [ '$http', '$parse', '$filter', 'mainService', 'lists', 'datatable', 'propertyDefHelpers',
+                                          function($http, $parse, $filter, mainService, lists, datatable, propertyDefHelpers) {
 	var isInit = false;
 
 	var initListService = function() {
@@ -275,17 +276,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		extractDate: function(value){
 			return value.split(/(\d+_\d+)/)[1];
 		},
-		getPropertyColumnType : function(type) {
-			if (type === "java.lang.String") {
-				return "text";
-			} else if (type === "java.lang.Double") {
-				return "number";
-			} else if (type === "java.util.Date") {
-				return "date";
-			}
-
-			return type;
-		},
+		
 		initCommonPropertiesDefinitions : function(typeCodes){
 			if(angular.isArray(typeCodes)){
 				var processTypes = typeCodes.map(function(typeCode){
@@ -317,9 +308,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 		},
 		setColumns : function() {
-			var columns = [];
 			
-			var getPropertyColumnType = this.getPropertyColumnType;
 			var datatable = this.datatable;
 			var columnsDefault = this.columnsDefault;
 
@@ -328,66 +317,10 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 			}
 			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
-				angular.forEach(this.commonPropertiesDefinitions, function(propertyDefinition) {
-					
-					var getDisplayUnitFromProperty = function(propertyDefinition){
-						var unit = $parse("displayMeasureValue.value")(propertyDefinition);
-						if(undefined !== unit && null !== unit) return " ("+unit+")";
-						else return "";
-					};
-					var getPropertyColumnType = function(type){
-						if(type === "java.lang.String"){
-							return "text";
-						}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
-							return "number";
-						}else if(type === "java.util.Date"){
-							return "date";
-						}else if(type ==="java.io.File"){
-							return "file";
-						}else if(type ==="java.awt.Image"){
-							return "img";
-						}else if(type ==="java.lang.Boolean"){
-							return "boolean";	
-						}else{
-							throw 'not manage : '+type;
-						}
-
-						return type;
-					};
-					
-					var column = {};
-					column.watch=true;
-					column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
-					column.required=propertyDefinition.required;
-					    				
-					column.property = "properties."+propertyDefinition.code+".value";
-					column.edit = (mainService.getHomePage() === 'state')?false:propertyDefinition.editable;
-					column.type = getPropertyColumnType(propertyDefinition.valueType);
-					column.choiceInList = propertyDefinition.choiceInList;
-					column.position = (5+(propertyDefinition.displayOrder/1000));
-					column.defaultValues = propertyDefinition.defaultValue;
-					column.format = propertyDefinition.displayFormat;
-					column.order=true;
-					
-					if(column.choiceInList){
-						if(propertyDefinition.possibleValues.length > 100){
-							column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
-						}else{
-							column.listStyle = "bt-select";
-						}
-						column.possibleValues = propertyDefinition.possibleValues; 
-						column.filter = "codes:'value."+propertyDefinition.code+"'";    					
-					}
-					
-					if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
-						column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
-								"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
-					}
-					
-					column.groupMethod = "collect:true"; //par defaut pour toutes les propriétés
-					
-					columns.push(column);
+				var columns = this.commonPropertiesDefinitions.map(function(propertyDefinition) {
+					return propertyDefHelpers.getUDTColumn(propertyDefinition);					
 				});
+				
 				columns = columnsDefault.concat(columns);
 				datatable.setColumnsConfig(columns);
 					
@@ -535,16 +468,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
 				allFilters = this.commonPropertiesDefinitions.map(function(pDef){
-					var html = null;
-					if(pDef.choiceInList){
-						html = "<div class='form-control' multiple=true bt-select ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" bt-options='possibleValues.code as possibleValues.name for possibleValues in searchService.lists.getValues({propertyDefinitionCode:\""+pDef.code+"\"},\""+pDef.code+"\")'></div>";
-					}else{
-						html = "<input type='text' class='form-control' ng-model='searchService.form[\"properties["+pDef.code+"]\"]' placeholder=\""+pDef.name+"\" title=\""+pDef.name+"\">"; 				             
-					}						
-					return {
-						html:html,
-						position:pDef.displayOrder
-					};
+					return propertyDefHelpers.getHtmlFilter(pDef, 'searchService');
 				});				
 			} 
 			if (angular.isDefined(allFilters)) {
@@ -562,9 +486,6 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			
 		},	
 		getAddProcessFiltersToForm : function() {
-			if (this.additionalProcessFilters !== undefined && this.additionalProcessFilters.length === 0) {
-				this.initAdditionalProcessFilters();
-			}
 			return this.additionalProcessFilters;
 		},
 		
@@ -673,33 +594,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	};
 
 	return searchService;
-}]).factory('processesNewService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'datatable', 'messages',
-    function($q, $http, $parse, $filter, mainService, datatable,messages) {
-
-	var getDisplayUnitFromProperty = function(propertyDefinition){
-		var unit = $parse("displayMeasureValue.value")(propertyDefinition);
-		if(undefined !== unit && null !== unit) return " ("+unit+")";
-		else return "";
-	};
-	var getPropertyColumnType = function(type){
-		if(type === "java.lang.String"){
-			return "text";
-		}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
-			return "number";
-		}else if(type === "java.util.Date"){
-			return "date";
-		}else if(type ==="java.io.File"){
-			return "file";
-		}else if(type ==="java.awt.Image"){
-			return "img";
-		}else if(type ==="java.lang.Boolean"){
-			return "boolean";	
-		}else{
-			throw 'not manage : '+type;
-		}
-
-		return type;
-	};
+}]).factory('processesNewService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'datatable', 'messages', 'propertyDefHelpers',
+    function($q, $http, $parse, $filter, mainService, datatable,messages,propertyDefHelpers) {
 
 	var	getEditDatatableConfig = function(newService){
 		var editDatatableConfig = {
@@ -883,39 +779,10 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			processPropertyColumns :[],
 			computeProcessColumns : function(properties){
 				this.processPropertyColumns = [];
-				if(properties){
-					properties.forEach(function(propertyDefinition){
-						
-						var column = {};
-						column.watch=true;
-						column.header = propertyDefinition.name + getDisplayUnitFromProperty(propertyDefinition);
-						column.required=propertyDefinition.required;
-						    				
-						column.property = "properties."+propertyDefinition.code+".value";
-						column.edit = propertyDefinition.editable;
-						column.type = getPropertyColumnType(propertyDefinition.valueType);
-						column.choiceInList = propertyDefinition.choiceInList;
-						column.position = (9+(propertyDefinition.displayOrder/1000));
-						column.defaultValues = propertyDefinition.defaultValue;
-						column.format = propertyDefinition.displayFormat;
-						
-						if(column.choiceInList){
-							if(propertyDefinition.possibleValues.length > 100){
-								column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" udt-change="updatePropertyFromUDT(value,col)"/>';        					
-							}else{
-								column.listStyle = "bt-select";
-							}
-							column.possibleValues = propertyDefinition.possibleValues; 
-							column.filter = "codes:'value."+propertyDefinition.code+"'";    					
-						}
-						
-						if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
-							column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
-									"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
-						}
-						
-						this.processPropertyColumns.push(column);					
-					},this);
+				if(properties){										
+					this.processPropertyColumns = properties.map(function(propertyDefinition){
+						return propertyDefHelpers.getUDTColumn(propertyDefinition);
+						});					
 				}
 				
 			},
@@ -1472,5 +1339,273 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 	newService = $.extend(true,{},newService,processesNewService);
 
 	return newService;
+
+}]).factory('assignToContainerService', [ '$q', '$http', '$parse', '$filter', 'mainService', 'messages', 'lists', 'datatable', 'propertyDefHelpers',
+    function($q, $http, $parse, $filter, mainService, messages, lists, datatable, propertyDefHelpers) {
+	
+	var getDefaultColumns = function(view) {
+		var columns = [];
+
+		columns.push({
+			"header":Messages("processes.table.supportCode"),
+			"property":"support.code",
+			"order":true,
+			"hide":true,
+			"position":1,
+			"type":"text"
+		});
+
+		columns.push({
+			"header":Messages("processes.table.line"),
+			"property":"support.line",
+			"order":true,
+			"hide":true,
+			"position":2,
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("processes.table.columns"),
+			"property":"support.column*1",
+			"order":true,
+			"hide":true,
+			"position":3,
+			"type":"number"
+		});			
+
+		columns.push({
+			"header":Messages("processes.table.projectCode"),
+			"property":"projectCodes",
+			"order":true,
+			"hide":true,
+			"position":4,
+			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("processes.table.sampleCode"),
+			"property":"sampleCodes",
+			"order":true,
+			"hide":true,
+			"position":5,
+			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+			"type":"text"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.sampleTypes"),
+			"property":"contents",
+			"order":false,
+			"hide":false,
+			"position":5.01,
+			"type":"text",
+			"filter":"getArray:'sampleTypeCode' | unique | codes:\"type\"",
+			"groupMethod":"collect"
+		});
+
+		columns.push({
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":5.05,
+			"type":"number"
+		});
+		columns.push({
+			"header":Messages("containers.table.stateCode"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"position":6,
+			"filter": "codes:'state'",
+			"type":"text"
+		});
+		columns.push({
+			"header" : Messages("processes.table.comments"),
+			"property" : "comments[0].comment",
+			"position" : 500,
+			"order" : false,
+			"edit" : true,
+			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
+			"hide" : true,
+			"type" : "text"
+		});
+		return columns;
+	};
+
+	var	getDatatableConfig = function(service){
+		var datatableConfig = {
+				 columns: [],
+		         pagination:{
+		        	 active:false
+		         },		
+		         search:{
+		        	 active:false
+		         },
+		         order:{
+		        	 mode:'local',
+		        	 active:true
+		         },
+		         edit:{  		
+		        	 active:true,
+		        	 columnMode:true,
+		        	 byDefault : true,
+		        	 showButton:false
+		         },
+		         save:{
+		        	 active: true,
+		        	 withoutEdit:true,
+		        	 showButton : true,
+		        	 mode:"local",
+		        	 changeClass : false,
+		        	 callback : function(datatable){
+		        		 service.udtSaveCallback(datatable);
+		        	 }
+		         },
+		         remove:{
+		        	 active:true,
+		        	 mode:'local',
+		        	 withEdit:true,
+		        	 callback : function(datatable){
+		        		 service.udtRemoveCallback(datatable);
+		        	 }
+		         },
+		         lines:{
+		        	trClass:function(data,line){
+		        		return service.udtTrClass(data,line);
+		        	}
+		         },
+		         messages:{
+		        	 active:false,
+		        	 transformKey: function(key, args) {
+			             return Messages(key, args);
+		        	 }
+		         },
+		         cancel:{
+		        	 active:false
+		         }
+		};
+		return datatableConfig;
+	}
+	
+	
+	var assignService = {
+			getDatatableConfig:getDatatableConfig,
+			getDefaultColumns:getDefaultColumns,
+			form :{},
+			lists:lists,
+			messages:messages(),
+			additionalProcessFilters : undefined,
+			additionalProcessColumns : undefined,
+			processType : undefined,
+			isProcessFiltered : false,
+			selectedSampleCodes : [],
+			initProcessType : function(processTypeCode) {
+				var promise = $q.when(this);
+				if(processTypeCode){
+					promise = $http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{service:this})
+						.then(function(result){
+							var service = result.config.service;
+							service.processType = result.data;
+							service.initProcessAttributes(service.processType.propertiesDefinitions);
+							return service;
+					});				
+				}		
+				return promise;
+			},
+			
+			initProcessAttributes : function(propertiesDefinitions) {
+				this.additionalProcessFilters = [];
+				this.additionalProcessColumns = [];
+				this.availableProcesses = [];
+				var formFilters = [];
+				var allFilters = undefined;
+				var nbElementByColumn = undefined;
+				this.isProcessFiltered = false;	
+				//filters
+				if(angular.isArray(propertiesDefinitions) && propertiesDefinitions.length > 0){
+					allFilters = propertiesDefinitions.map(function(pDef){
+						return propertyDefHelpers.getHtmlFilter(pDef,"assignService");
+					});				
+				 
+					if (angular.isDefined(allFilters)) {
+						nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+						for (var i = 0; i < 5 && allFilters.length > 0; i++) {
+							formFilters.push(allFilters.splice(0, nbElementByColumn));
+						}
+						//complete to 5 five element to have a great design 
+						while (formFilters.length < 5) {
+							formFilters.push([]);
+						}
+						this.isProcessFiltered = true;					
+					}
+					this.additionalProcessFilters = formFilters;
+					
+					
+					this.additionalProcessColumns =  propertiesDefinitions.map(function(pDef){
+						return propertyDefHelpers.getUDTColumn(pDef);
+					});
+						
+				}
+				
+			},	
+			getAddProcessFiltersToForm : function() {
+				return this.additionalProcessFilters;
+			},
+			computeData : function(){
+				
+				var containerCodes = [];
+				containerCodes = containerCodes.concat(mainService.getBasket().get());
+
+				if(containerCodes.length > 0){
+					var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+					var queries = [];
+					for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+						var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+						queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
+					}
+
+					return $q.all(queries).then(function(results) {
+						var allData = [];
+						results.forEach(function(result){
+							allData = allData.concat(result.data);
+						});
+						var allSampleCodes = []
+						allData.forEach(function(data){
+							allSampleCodes = allSampleCodes.concat(data.sampleCodes);
+							if(data.treeOfLife)allSampleCodes = allSampleCodes.concat(data.treeOfLife.paths[0].split(','));							
+						});
+						allSampleCodes = Array.from(new Set(allSampleCodes));
+						return allSampleCodes;
+					});		
+				}
+			},
+			searchProcesses : function(){
+				this.form.stateCode = 'IW-C';
+				this.form.sampleCodes = this.selectedSampleCodes;
+				$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:this.form,service:this})
+					.then(function(result){
+						var service = result.config.service;
+						service.availableProcesses = result.data;
+					});
+			},
+			/**
+			 * initialise the service
+			 */
+			init : function(processTypeCode) {
+				this.initProcessType(processTypeCode).then(function(service){
+					if(service.processType){
+						service.computeData().then(function(allSampleCodes){
+							service.selectedSampleCodes = allSampleCodes;
+							service.searchProcesses();
+							service.datatable = datatable(service.getDatatableConfig(service));
+							service.datatable.setColumnsConfig(service.getDefaultColumns().concat(service.additionalProcessColumns));							
+						});
+					}
+				});
+			}
+	}
+
+	
+	return assignService;
 
 }]);

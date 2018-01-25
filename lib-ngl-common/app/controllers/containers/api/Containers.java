@@ -512,44 +512,6 @@ class Containers2 extends DocumentController<Container> {
 		//used in experiment creation	
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
-			//TODO GA Prendre la précédente dans chacun des processus et pas celle de l'expérience
-			/*
-			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-			if(CollectionUtils.isNotEmpty(previous)){
-				for(ExperimentType e:previous){
-					listePrevious.add(e.code);
-				}
-
-				if(CollectionUtils.isNotEmpty(listePrevious)){
-					queryElts.add(DBQuery.or(DBQuery.in("fromTransformationTypeCodes", listePrevious)));
-				}
-			
-			//NextExperimentTypeCode appartient au processType des containers
-				List<String> listProcessType=new ArrayList<String>();
-				List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-				if(CollectionUtils.isNotEmpty(processTypes)){
-					for(ProcessType processType:processTypes){
-						listProcessType.add(processType.code);
-						
-						//TODO GA NEW CODE TO ASSOCIATE expType and processType 
-						List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
-						Logger.debug("NB Previous exp : "+previousExpType.size());
-					}
-				}
-				//TODO Erreur quand pas de processus pour un type d'expérience
-				
-				if(CollectionUtils.isNotEmpty(listProcessType)){
-					queryElts.add(DBQuery.in("processTypeCodes", listProcessType));
-				}
-				
-				
-				
-			}else{
-				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
-			}
-			queryElts.add(DBQuery.nor(DBQuery.notExists("processCodes"),DBQuery.size("processCodes", 0)));
-			*/
-			
 			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();
 			List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(processTypes)){

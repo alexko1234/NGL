@@ -1,9 +1,13 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$http','basket','mainService','tabService','containersSearchService', 
-    function($scope, $filter,$http,basket, mainService, tabService, containersSearchService) {
+angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$http','$parse','$location','basket','mainService','tabService','containersSearchService', 
+    function($scope, $filter,$http,$parse,$location,basket, mainService, tabService, containersSearchService) {
 
+	
+	var isAssign = ($location.path() === "/processes/assign-to-container/home");
+	
+	
 	var datatableConfig = {
 			
 	     search:{
@@ -78,7 +82,10 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 	
 	$scope.search = function(){		
 		if(this.containersSearchForm.$valid  || $scope.searchService.form.createUser){
-			$scope.searchService.form.stateCode = 'IW-P'
+			$scope.searchService.form.stateCode = 'IW-P';
+			if(isAssign){
+				$parse("form['existingFields[contents.1]']").assign($scope.searchService,false); //not pool on assign
+			}
 			$scope.searchService.search();
 		}else{
 			enableValidation = true;
@@ -106,137 +113,13 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 		}
 	};
 	
-	if(angular.isUndefined($scope.getHomePage())){
+	if(angular.isUndefined($scope.getHomePage()) && !isAssign){
 		mainService.setHomePage('new');
 		tabService.addTabs({label:Messages('processes.tabs.create.new-from-containers'),href:jsRoutes.controllers.processes.tpl.Processes.home("new-from-containers").url,remove:false});
 		tabService.activeTab(0);
-	}
-
-	if(angular.isUndefined($scope.getBasket())){
-		$scope.basket = basket();			
-		mainService.setBasket($scope.basket);
-	}else{
-		$scope.basket = mainService.getBasket();
-	}
-	
-	$scope.searchService = containersSearchService;
-	$scope.searchService.init(null, datatableConfig);
-	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true},'transformation');
-	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-search"]});
-	
-	var enableValidation = false;
-	$scope.getHasErrorClass = function(formName, property){
-		if( enableValidation
-			&& this[formName] 
-			&& this[formName][property] 
-			&& this[formName][property].$error 
-			&& this[formName][property].$error.required){
-			return 'has-error';
-		}else{
-			return undefined;
-		}
-	}
-}]);
-
-angular.module('home').controller('SearchContainersForProcessesAssignationCtrl', ['$scope','$filter','$http','basket','mainService','tabService','containersSearchService', 
-    function($scope, $filter,$http,basket, mainService, tabService, containersSearchService) {
-
-	var datatableConfig = {
-			
-	     search:{
-	    	 url:jsRoutes.controllers.containers.api.Containers.list()
-	     },
-	     group:{
-			active:false
-		},
-	     pagination:{
-			mode:'local'
-	 	 },
-	 	 hide:{
-	 		 active:true
-	 	 },
-	 	 order:{
-	 		active:true,
-	 		by:'traceInformation.creationDate',
-	 		reverse : true,
-			mode:'local'
-		 }
-	};
-
-
-	$scope.changeProcessCategory = function(){
-		$scope.searchService.form.nextProcessTypeCode = undefined;
-		$scope.searchService.lists.clear("processTypes");
-
-		if($scope.searchService.form.processCategory !== undefined && $scope.searchService.form.processCategory !== null){
-			$scope.searchService.lists.refresh.processTypes({"categoryCode":$scope.searchService.form.processCategory,isActive:true});
-		}
-	};
-
-	$scope.changeProcessType = function(){
-		$scope.removeTab(1);
-		$scope.basket.reset();
-	};
-	
-	$scope.selectDefaultFromExperimentType = function(){
-		var selectionList = {};	
-		$scope.searchService.form.fromTransformationTypeCodes=[];
-			
-		if($scope.searchService.form.nextProcessTypeCode){
-			
-			selectionList = angular.copy($scope.searchService.lists.get('transformation',true));
-			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.searchService.form.nextProcessTypeCode).url)
-			.success(function(data, status, headers, config) {
-				
-				data = data.filter(function(exp){
-					return !exp.code.startsWith("ext");
-				});
-				
-				data.unshift({name: "None", code: "none"});				
-				$scope.defaultFirstExperimentTypes = data;
-			});
-		}else{
-			$scope.defaultFirstExperimentTypes = [];
-		}		
-	};
-
-	$scope.reset = function(){
-		$scope.searchService.resetForm();		
-	};
-	
-	$scope.search = function(){		
-		if(this.containersSearchForm.$valid  || $scope.searchService.form.createUser){
-			$scope.searchService.form.stateCode = 'IW-P'
-			$scope.searchService.search();
-		}else{
-			enableValidation = true;
-			console.log("searchForm invalid !!")				
-		}
-	};
-	
-	$scope.addToBasket  = function(containers){
-		containers.forEach(function(container){
-			var codes = [];
-			if(container.group){
-				codes = codes.concat($scope.searchService.datatable.getGroupColumnValue(container, "code"));				
-			}else if($scope.basket.get().indexOf(container.code) === -1){
-				codes[0] = container.code;												
-			}	
-			
-			codes.forEach(function(code){
-				if($scope.basket.get().indexOf(code) === -1){
-					$scope.basket.add(code);	
-				}	
-			});
-		});	
-		if(($scope.searchService.form.nextProcessTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
-		}
-	};
-	
-	if(angular.isUndefined($scope.getHomePage())){
+	}else if(angular.isUndefined($scope.getHomePage()) && isAssign){
 		mainService.setHomePage('new');
-		tabService.addTabs({label:Messages('processes.tabs.create.assign-process-to-container'),href:jsRoutes.controllers.processes.tpl.Processes.home("assign-process-to-container").url,remove:false});
+		tabService.addTabs({label:Messages('processes.tabs.assign-to-container'),href:jsRoutes.controllers.processes.tpl.Processes.home("assign-to-container").url,remove:false});
 		tabService.activeTab(0);
 	}
 
@@ -376,8 +259,8 @@ angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','bask
 			}
 		}
 }]);
-angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams', 'mainService','tabService','processesNewFromSamplesService', 
-	function($scope,$routeParams,mainService,tabService,processesNewService) {
+angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams','processesNewFromSamplesService', 
+	function($scope,$routeParams,processesNewService) {
 	
 	if($routeParams.processTypeCode){
 		$scope.newService = processesNewService;
@@ -385,12 +268,21 @@ angular.module('home').controller('NewFromSamplesCtrl', ['$scope','$routeParams'
 	}
 	
 }]);
-angular.module('home').controller('NewFromContainersCtrl', ['$scope','$routeParams', 'mainService','tabService','processesNewFromContainersService', 
-	function($scope,$routeParams,mainService,tabService,processesNewService) {
+angular.module('home').controller('NewFromContainersCtrl', ['$scope','$routeParams','processesNewFromContainersService', 
+	function($scope,$routeParams,processesNewService) {
 	
 	if($routeParams.processTypeCode){
 		$scope.newService = processesNewService;
 		$scope.newService.init($routeParams.processTypeCode);
+	}
+	
+}]);
+angular.module('home').controller('AssignToContainerCtrl', ['$scope','$routeParams','assignToContainerService', 
+	function($scope,$routeParams,assignService) {
+	
+	if($routeParams.processTypeCode){
+		$scope.assignService = assignService;
+		$scope.assignService.init($routeParams.processTypeCode);
 	}
 	
 }]);

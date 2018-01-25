@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices','basketServices','ui.bootstrap','ngl-sq.processesServices','ngl-sq.samplesServices','ngl-sq.containersServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices','basketServices','ui.bootstrap','propertyDefServices','ngl-sq.processesServices','ngl-sq.samplesServices','ngl-sq.containersServices'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/processes/new-from-containers/home', {
 		templateUrl : jsRoutes.controllers.processes.tpl.Processes.searchContainers().url,
 		controller : 'SearchContainersCtrl'
@@ -11,9 +11,9 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 		controller : 'SearchSamplesCtrl'
 	});
 	
-	$routeProvider.when('/processes/assign-process-to-container/home', {
+	$routeProvider.when('/processes/assign-to-container/home', {
 		templateUrl : jsRoutes.controllers.processes.tpl.Processes.searchContainers().url,
-		controller : 'SearchContainersForProcessesAssignationCtrl'
+		controller : 'SearchContainersCtrl'
 	});
 	
 	$routeProvider.when('/processes/state/home', {
@@ -32,6 +32,12 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 		templateUrl : function(params){return jsRoutes.controllers.processes.tpl.Processes.newProcesses(params.processTypeCode).url},
 		controller : 'NewFromSamplesCtrl'
 	});
+	
+	$routeProvider.when('/processes/assign-to-container/:processTypeCode', {
+		templateUrl : function(params){return jsRoutes.controllers.processes.tpl.Processes.assignProcesses(params.processTypeCode).url},
+		controller : 'AssignToContainerCtrl'
+	});
+	
 	$routeProvider.when('/processes/search/home', {
 		templateUrl : function(params){return jsRoutes.controllers.processes.tpl.Processes.search("home").url},
 		controller : 'SearchCtrl'
