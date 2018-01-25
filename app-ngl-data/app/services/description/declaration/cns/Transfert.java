@@ -49,7 +49,7 @@ public class Transfert extends AbstractDeclaration {
 		
 		l.add(newExperimentType("Normalisation","normalisation",null,10400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
-				getInstrumentUsedTypes("biomek-fx","hand"),"OneToOne", 
+				getInstrumentUsedTypes("biomek-fx","brand-lhs","hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Dilution","dilution",null,10450,

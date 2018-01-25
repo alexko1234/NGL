@@ -35,7 +35,7 @@ public class QualityControl extends AbstractDeclaration {
 		
 		l.add(newExperimentType("Dosage fluo (éval échantillons à réception)","reception-fluo-quantification", null,20050,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometriqueEval(), 
-				getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
+				getInstrumentUsedTypes("qubit","fluoroskan","brand-lhs"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 		
 		l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,

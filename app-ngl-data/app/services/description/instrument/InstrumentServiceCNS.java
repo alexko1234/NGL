@@ -132,6 +132,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		
+		l.add(newInstrumentUsedType("Brand LHS", "brand-lhs", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
+				getInstruments(
+						createInstrument("CELESTE", "celeste", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ), 
+						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
 		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), getTecanProperties(), 
 				getInstruments(
 						createInstrument("wolverine", "Wolverine", null, true, "/env/cns/proj/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
