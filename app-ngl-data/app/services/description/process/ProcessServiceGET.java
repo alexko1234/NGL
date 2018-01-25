@@ -123,7 +123,7 @@ public class ProcessServiceGET extends AbstractProcessService {
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"),"150", "single",300));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type d'analyse","analyseType"
-						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, getAnalyseType(),null,"single",301));
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, true, getAnalyseType(),null,"single",301));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Espèce", "species"
 						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,"single",302));
