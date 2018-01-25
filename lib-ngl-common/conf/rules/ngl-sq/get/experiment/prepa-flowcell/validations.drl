@@ -6,8 +6,8 @@ rule "Code Flowcell without bad chars"
 	salience 900
 	no-loop
     when
-    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell",$instrumentProperties:instrumentProperties)
-    $containerSupportCode: PropertyValue($code:value, $code matches ".*[^a-zA-Z0-9].*") from $instrumentProperties.get("containerSupportCode")
+    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode == "IP", $instrumentProperties:instrumentProperties)
+    $containerSupportCode: PropertyValue($code:value, $code matches ".*[^A-Z0-9].*") from $instrumentProperties.get("containerSupportCode")
     $contextValidation:ContextValidation()
     then
     Logger.debug("Code Flowcell without bad chars");
