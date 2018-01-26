@@ -821,6 +821,7 @@ analyses.treatments.contigFilterBA = Contig Filter
 analyses.treatments.scaffoldingBA = Scaffolding
 analyses.treatments.assemblyFilterBA = Assembly Filter
 analyses.treatments.gapClosingBA = Gap Closing
+analyses.treatments.ampliconAssignationBA = Clusters Db Assignation Vs Controls
 analyses.files.path  = Chemin
 analyses.files.fullname= Nom du fichier
 analyses.files.typeCode	= Type de fichier

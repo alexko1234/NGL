@@ -190,6 +190,9 @@
 		return b;
 	}
 	
+	$scope.sorterFunc = function(trt){
+	    return -parseInt(trt.abundance);
+	};
 	
 	var init = function(){
 		$scope.messages = messages();
