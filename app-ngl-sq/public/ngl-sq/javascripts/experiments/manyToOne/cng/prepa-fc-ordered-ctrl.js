@@ -312,7 +312,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			console.log('sequencing type changed to :'+ newValue);
 			// 18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
-			// 18/01/2018 subdiviser en 2... EN COURS
+			// 18/01/2018 subdiviser en 2... EN COURS.. labels Novaseq pas definitifs: voir Julie...
 		    if (((newValue === 'NovaSeq 6000 / S2')||(newValue === 'NovaSeq 6000 / S4'))   && ( $scope.experiment.instrument.code !== undefined )) {
 		    	// attention maintenir a jour !!!!
 		    	var NovaSeq6000Regexp=/MarieCurix/;
@@ -331,23 +331,29 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	});	
 	
 	function checkFCpattern (){	
-		// null ou undefined ??
-		if (undefined===$scope.experiment.experimentProperties.sequencingType.value || undefined===$scope.experiment.instrumentProperties.containerSupportCode.value ){
-			console.log('pas de test possible');
+		// en mode 'a sauvegarder'  experimentProperties n'est pas encore defini
+		if (undefined===$scope.experiment.experimentProperties|| undefined===$scope.experiment.instrumentProperties.containerSupportCode ){
+			console.log('pas encore de test possible');
 			return;
 		}
 		
+		//if (undefined===$scope.experiment.experimentProperties.sequencingType.value || undefined===$scope.experiment.instrumentProperties.containerSupportCode.value ){
+		//	console.log('pas de test possible');
+		//	return;
+		//}
+		
 		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
-		var Nv6000S2fcRegexp= /^[A-Za-z0-9]*S2$/; /// ??? pattern pour NovaSeq6000 S2 ???? reponse Illumina en attente
-		var Nv6000S4fcRegexp= /^[A-Za-z0-9]*S4$/; /// ??? pattern pour NovaSeq6000 S4 ???? reponse Illumina en attente
+		// var Nv6000S1fcRegexp= /^[A-Za-z0-9]*???XX$/; // pas encore dispo chez Illumina
+		var Nv6000S2fcRegexp= /^[A-Za-z0-9]*DMXX$/; // info Illumina 25/01/2018
+		var Nv6000S4fcRegexp= /^[A-Za-z0-9]*DSXX$/; // info Illumina 25/01/2018
 		
 		$scope.messages.clear();
 		fcBarcode=$scope.experiment.instrumentProperties.containerSupportCode.value;
 		seqType=$scope.experiment.experimentProperties.sequencingType.value;
 		//console.log('check FC pattern: FC='+ fcBarcode + 'sequencing type='+seqType );
 		
-		// ! fcBarcode.test ( ) fonctionne pas => utiliser match!!!
+		// !! labels NovaSeq pas definitifs: voir Julie...
 		if ((seqType === 'Hiseq 4000') && ( null===fcBarcode.match(H4000fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)";
@@ -360,12 +366,12 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.messages.open();
 		} else if ((seqType === 'NovaSeq 6000 / S2') && (null===fcBarcode.match(Nv6000S2fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*S2)";
+			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
 		} else if ((seqType === 'NovaSeq 6000 / S4') && (null===fcBarcode.match(Nv6000S4fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*S4)";
+			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*DSXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();		
 		} else {
@@ -402,36 +408,43 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	function setFeuilleCalcul(){
 		console.log('setFeuilleCalcul...');
 		
-		if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
-			console.log('S2...engag=150; NaoH=37/0.2N; TrisHCL=38/400; EPX=525');
-			updateAllInputContainerUsedsPropertyValue("inputVolume2","150");
-			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");	
-			updateAllInputContainerUsedsPropertyValue("NaOHVolume","37");
-			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
-			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","38");
-			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","525");		
-		} else if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
-			console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
-			updateAllInputContainerUsedsPropertyValue("inputVolume2","310");
-			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");
-			updateAllInputContainerUsedsPropertyValue("NaOHVolume","77");
-			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
-			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","78");
-			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","1085");		
-		} else {
-			// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
-			console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35');
-			updateAllInputContainerUsedsPropertyValue("inputVolume2","5");
-			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.1N");
-			updateAllInputContainerUsedsPropertyValue("NaOHVolume","5");
-			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","200000000");	
-			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","5");
-			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");
-		}
-		
-		// ne faire l'update du datatable qu'apres les 6 appels a  updateAllInputContainerUsedsPropertyValue !!!
-		$scope.atmService.data.updateDatatable();
+		// !! la feuille de calcul peut ne pas encore etre prete
+		// !! labels NovaSeq pas definitifs: voir Julie...
+		if ($scope.atmService.data.datatable.allResult) { 
+			if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
+				console.log('S2...engag=150; NaoH=37/0.2N; TrisHCL=38/400; EPX=525');
+				updateAllInputContainerUsedsPropertyValue("inputVolume2","150");
+				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");	
+				updateAllInputContainerUsedsPropertyValue("NaOHVolume","37");
+				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
+				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","38");
+				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","525");	
+				
+			} else if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
+				console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
+				updateAllInputContainerUsedsPropertyValue("inputVolume2","310");
+				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");
+				updateAllInputContainerUsedsPropertyValue("NaOHVolume","77");
+				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
+				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","78");
+				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","1085");		
+			} else {
+				// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
+				console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35');
+				updateAllInputContainerUsedsPropertyValue("inputVolume2","5");
+				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.1N");
+				updateAllInputContainerUsedsPropertyValue("NaOHVolume","5");
+				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","200000000");	
+				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","5");
+				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");
+			}
 			
+			// ne faire l'update du datatable qu'apres les 6 appels a  updateAllInputContainerUsedsPropertyValue !!!
+			$scope.atmService.data.updateDatatable();
+		} else {
+			//debug
+			console.log('f de calcul pas prete...');
+		}	
 	}
 	
 	// copié d'après  $scope.updateAllOutputContainerProperty   dans tubes-to-flowcell-ctrl.js
@@ -453,17 +466,17 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	};
 	
 	// 15/01/2018 faire les calculs en Javascript au lieu de Drools ????
-	// surchager celle de tubes-to-flowcell-ctrl.js pour declencher les calculs
+	// surcharger celle de tubes-to-flowcell-ctrl.js pour declencher les calculs
 	// utilisateur modifie une cellule "volume final" ( changeValueOnFlowcellDesign est appelle depuis le scala.html )
 	$scope.changeValueOnFlowcellDesign = function(i){
 		//i=atm.line; 
 		console.log('% depot ou  % phix  ou Volume final modifié:  atm.line: '+ i );
 		$scope.atmService.data.updateDatatable(); // ca c'est qui est fait dans tubes-to-flowcell-ctrl.js: met a jour TOUT le udt !!!	
 		
-		//PB  est atm.line  ne correspond pas forcement a l'index de l'atm !!!!!
+		//PB  est atm.line  ne correspond pas forcement a l'index i de l'atm !!!!!
 		console.log ( "apres update : new final vol="+ $scope.atmService.data.atm[i-1].outputContainerUseds[0].experimentProperties.finalVolume.value);
 		
-		//test 1 recalculer la concentration finale pour LA ligne changee    MARCHE PAS
+		//test 1 recalculer la concentration finale pour LA ligne changee    MARCHE PAS !!!!!!!
 		//computeConcentrationAtm($scope.atmService.data.atm[i-1], i-1));	
 		
 		//test : recalculer toutes les lignes....MARCHE PAS NON PLUS.. quel parametre passer a computeConcentration ???
@@ -520,6 +533,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		console.log("computeConcentration atm....");
 		
 		var getterFinalConcentration2=$parse("inputContainerUseds[0].experimentProperties.finalConcentration2.value");
+		var test=$parse("atmService.data.datatable.allResult[i].inputContainerUsed.concentration.value");
 			
 		var compute = {
 				inputConc : $scope.atmService.data.datatable.allResult[i].inputContainerUsed.concentration.value,

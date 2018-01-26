@@ -51,10 +51,7 @@ angular.module('home').controller('IlluminaDepotCNGCtrl',['$scope', '$parse','$h
 	$scope.buttonMettler = {
 			isShow:function(){
 
-				// console.log('progressState:'+$scope.isInProgressState());
-				// console.log('finishState:'+$scope.isFinishState() );
-				console.log('editMode:'+$scope.isEditMode() );// isEditMode est toujours false l'action d'activation du bouton edition n'est pas vue ici... !!!
-				
+				//console.log('editMode:'+$scope.isEditMode() );// isEditMode est toujours false l'action d'activation du bouton edition n'est pas vue ici... !!!
 				//return ( ($scope.isInProgressState() || $scope.isInFinishState() ) && $scope.isEditMode() ) ;
 				return ( $scope.isInProgressState() || $scope.isFinishState() );
 				},

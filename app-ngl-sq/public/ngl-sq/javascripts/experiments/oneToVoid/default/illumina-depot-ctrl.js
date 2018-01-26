@@ -187,21 +187,24 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		//22/01/2018 NGL-1768 22/01/2018: importer le fichier XML du NovaSeq 6000
 		var importNOVASEQ6000XMLfile = function(){
 			console.log('Import NOVASEQ6000 XML file');
+			var testdate=$parse("experimentProperties.runStartDate.value")($scope.experiment);
+			var testfctype=$parse("instrumentProperties.novaseqFlowcellMode.value")($scope.experiment);
+			
+			console.log('type flowcell experiement='+ testfctype);
 			
 			$scope.messages.clear();
-			// !! TODO creer une nouvelle route pour instrument
+			
 			$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
 			.success(function(data, status, headers, config) {
 				$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
 
 				// data est l'experience retournée par input.java
-				$scope.experiment.instrumentProperties= data.instrumentProperties;
+				// POURQUOI ICI ....$scope.experiment.instrumentProperties= data.instrumentProperties;
 				
 				// et reagents ....
 				$scope.experiment.reagents=data.reagents;
 				
 				// reinit select File...
-				// 22/01/2018 pas effet de bord avec le fichier Mettler ?????
 				$scope.file = undefined;
 				angular.element('#NOVASEQ6000XMLfile')[0].value = null;
 				
@@ -226,11 +229,8 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		
 		$scope.buttonNOVASEQ6000XMLfile = {
 				isShow:function(){
-
-					console.log('editMode:'+$scope.isEditMode() );
-					console.log('isInProgressState:'+ $scope.isInProgressState() );
-					
-					return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() );
+					//return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() );
+					return ( $scope.isInProgressState() || $scope.isFinishState() );
 					},
 				isFileSet:function(){
 					return ($scope.file === undefined)?"disabled":"";
