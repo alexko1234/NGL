@@ -13,7 +13,9 @@ angular.module('home').controller('IlluminaDepotCNGCtrl',['$scope', '$parse','$h
 			$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
 
 			// data est l'experience retournée par input.java
-			$scope.experiment.instrumentProperties= data.instrumentProperties;
+			
+			// aucune propriete d'instrument mise a jour par cet import !!!
+			//$scope.experiment.instrumentProperties= data.instrumentProperties;
 			
 			// et reagents ....
 			$scope.experiment.reagents=data.reagents;

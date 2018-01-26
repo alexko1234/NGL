@@ -186,12 +186,8 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		
 		//22/01/2018 NGL-1768 22/01/2018: importer le fichier XML du NovaSeq 6000
 		var importNOVASEQ6000XMLfile = function(){
-			console.log('Import NOVASEQ6000 XML file');
-			var testdate=$parse("experimentProperties.runStartDate.value")($scope.experiment);
-			var testfctype=$parse("instrumentProperties.novaseqFlowcellMode.value")($scope.experiment);
-			
-			console.log('type flowcell experiement='+ testfctype);
-			
+			console.log('Import NOVASEQ6000 RunParameters XML file');
+
 			$scope.messages.clear();
 			
 			$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
@@ -199,7 +195,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 				$scope.messages.setSuccess(Messages('experiments.msg.import.success'));
 
 				// data est l'experience retournée par input.java
-				// POURQUOI ICI ....$scope.experiment.instrumentProperties= data.instrumentProperties;
+				// PAS BESOIN ICI ....$scope.experiment.instrumentProperties= data.instrumentProperties;
 				
 				// et reagents ....
 				$scope.experiment.reagents=data.reagents;
@@ -225,12 +221,11 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 				angular.element('#NOVASEQ6000XMLfile')[0].value = null;
 			});		
 		};
-		
-		
+			
 		$scope.buttonNOVASEQ6000XMLfile = {
 				isShow:function(){
-					//return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() );
-					return ( $scope.isInProgressState() || $scope.isFinishState() );
+					return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() );
+					//return ( $scope.isInProgressState() || $scope.isFinishState() );
 					},
 				isFileSet:function(){
 					return ($scope.file === undefined)?"disabled":"";

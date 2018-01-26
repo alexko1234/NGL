@@ -292,11 +292,9 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 
 			// 18/12/2017 NGL-1754: restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est sequencage choisi est NovaSeq 6000
 			$scope.messages.clear();
-			var NovaSeq6000Regexp=/MarieCurix/;
-			// 17/01/2018 il y a 2 sequencingType !! TODO noms exacts a definir...
-			if ((($scope.experiment.experimentProperties.sequencingType.value === "NovaSeq 6000 / S2")||
-				 ($scope.experiment.experimentProperties.sequencingType.value === "NovaSeq 6000 / S4")) &&
-				 (null===$scope.experiment.instrument.code.match(NovaSeq6000Regexp))){
+			
+			// 17/01/2018 il y a 2 sequencingType (voir 3 si la S1 sort un jour)
+			if ( $scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) && (null===$scope.experiment.instrument.code.match(/MarieCurix/))){
 				$scope.messages.clazz = "alert alert-warning";
 				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
 				$scope.messages.showDetails = false;
@@ -307,13 +305,13 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	});	
 	
-    // -4-ajout 
+    // -4- sequencingType
 	$scope.$watch("experiment.experimentProperties.sequencingType.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			console.log('sequencing type changed to :'+ newValue);
-			// 18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
-			// 18/01/2018 subdiviser en 2... EN COURS.. labels Novaseq pas definitifs: voir Julie...
-		    if (((newValue === 'NovaSeq 6000 / S2')||(newValue === 'NovaSeq 6000 / S4'))   && ( $scope.experiment.instrument.code !== undefined )) {
+			// 18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
+			// 18/01/2018 plusieurs (2 ou 3) sequencing type NovaSeq 6000 possibles
+			if (newValue.match(/NovaSeq 6000/) && ( $scope.experiment.instrument.code !== undefined )) {
 		    	// attention maintenir a jour !!!!
 		    	var NovaSeq6000Regexp=/MarieCurix/;
 		    	if ( null===$scope.experiment.instrument.code.match(NovaSeq6000Regexp) ){
@@ -359,21 +357,26 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
+			
 		} else if ((seqType === 'Hiseq X') && ( null===fcBarcode.match(HXfcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq X' (*ALXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
+			
 		} else if ((seqType === 'NovaSeq 6000 / S2') && (null===fcBarcode.match(Nv6000S2fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)";
 			$scope.messages.showDetails = false;
 			$scope.messages.open();
+			
 		} else if ((seqType === 'NovaSeq 6000 / S4') && (null===fcBarcode.match(Nv6000S4fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*DSXX)";
 			$scope.messages.showDetails = false;
-			$scope.messages.open();		
+			$scope.messages.open();	
+			
+		// TODO un jour 'NovaSeq 6000 / S1' ??
 		} else {
 			//console.log('checkFCpattern OK !!!');
 			$scope.messages.clear();
@@ -413,6 +416,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		if ($scope.atmService.data.datatable.allResult) { 
 			if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
 				console.log('S2...engag=150; NaoH=37/0.2N; TrisHCL=38/400; EPX=525');
+				
 				updateAllInputContainerUsedsPropertyValue("inputVolume2","150");
 				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");	
 				updateAllInputContainerUsedsPropertyValue("NaOHVolume","37");
@@ -422,31 +426,36 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 				
 			} else if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
 				console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
+				
 				updateAllInputContainerUsedsPropertyValue("inputVolume2","310");
 				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");
 				updateAllInputContainerUsedsPropertyValue("NaOHVolume","77");
 				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
 				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","78");
-				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","1085");		
+				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","1085");	
+				
 			} else {
 				// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
 				console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35');
+				
 				updateAllInputContainerUsedsPropertyValue("inputVolume2","5");
 				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.1N");
 				updateAllInputContainerUsedsPropertyValue("NaOHVolume","5");
 				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","200000000");	
 				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","5");
 				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");
+				
 			}
 			
 			// ne faire l'update du datatable qu'apres les 6 appels a  updateAllInputContainerUsedsPropertyValue !!!
 			$scope.atmService.data.updateDatatable();
 		} else {
 			//debug
-			console.log('f de calcul pas prete...');
+			console.log('feuille de calcul pas prete !!');
 		}	
 	}
 	
+	// ajout 16/01/2018 : NGL-1767 modification dynamique de la feuille de calcul
 	// copié d'après  $scope.updateAllOutputContainerProperty   dans tubes-to-flowcell-ctrl.js
 	// function locale, ne pas la mettre dans $scope
 	updateAllInputContainerUsedsPropertyValue = function(propertyCode, value){
