@@ -45,49 +45,49 @@ public class Submissions extends NGLBaseController {
 	
 	@Authenticated
 	@Historized
-	@Authorized.Read 
+	// @Authorized.Read 
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
 	@Authenticated
 	@Historized
-	@Authorized.Read 
-	public Result create() {
-		return ok(create.render());
-	}
-	
-	@Authenticated
-	@Historized
-	@Authorized.Read 
+	// @Authorized.Read 
 	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 	
 	@Authenticated
 	@Historized
-	@Authorized.Read 
-	public Result details() {
-		return ok(details.render());
-	}
-	
-	@Authenticated
-	@Historized
-	@Authorized.Read 
+	// @Authorized.Read 
 	public Result activate()	{
 		return ok(activate.render());
 	}	
 	
-	@Authenticated
-	@Historized
-	@Authorized.Read 
+	// @Authenticated
+	// @Historized
+	// @Authorized.Read 
 	public Result consultation()	{
 		return ok(consultation.render());
 	}
 
-	@Authenticated
-	@Historized
-	@Authorized.Read 
+	// @Authenticated
+	// @Historized
+	// @Authorized.Read 
+	public Result create() {
+		return ok(create.render());
+	}
+	
+	// @Authenticated
+	// @Historized
+	// @Authorized.Read 
+	public Result details() {
+		return ok(details.render());
+	}
+	
+	// @Authenticated
+	// @Historized
+	// @Authorized.Read 
 	public Result validation()	{
 		return ok(validation.render());
 	}

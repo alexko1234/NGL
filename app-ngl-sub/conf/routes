@@ -13,11 +13,11 @@ GET		/sra/scripts/run/:clazz							controllers.sra.scripts.ScriptController.run(
 #------------
 GET		/sra/submissions/:homeCode/home					controllers.sra.submissions.tpl.Submissions.home(homeCode : java.lang.String)
 GET		/sra/submissions/:code							controllers.sra.submissions.tpl.Submissions.get(code : java.lang.String)
-GET		/tpl/sra/submissions/create						controllers.sra.submissions.tpl.Submissions.create()
 GET		/tpl/sra/submissions/activate					controllers.sra.submissions.tpl.Submissions.activate()
 GET		/tpl/sra/submissions/consultation				controllers.sra.submissions.tpl.Submissions.consultation()
-GET		/tpl/sra/submissions/validation				    controllers.sra.submissions.tpl.Submissions.validation()
+GET		/tpl/sra/submissions/create						controllers.sra.submissions.tpl.Submissions.create()
 GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submissions.details()
+GET		/tpl/sra/submissions/validation				    controllers.sra.submissions.tpl.Submissions.validation()
 GET		/tpl/sra/submissions/js-routes					controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
 PUT		/api/sra/submissions/:submissionCode/activate	controllers.sra.submissions.api.Submissions.activate(submissionCode : java.lang.String)
 

@@ -22,6 +22,7 @@ import play.Application;
 // GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submissions.details()
 // GET		/tpl/sra/submissions/js-routes					controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
 
+// No authorization in ngl-sub, those tests are disabled.
 public class TestSubmissionsRoutes {
 
 	// Test that the url is acessible for at least the given
@@ -71,11 +72,11 @@ public class TestSubmissionsRoutes {
 	// GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submissions.details()
 	// GET		/tpl/sra/submissions/validation				    controllers.sra.submissions.tpl.Submissions.validation()
 
-	@Test public void testAuth_home_consultation() { authURL(Identity.Read,"/sra/submissions/consultation/home"); }
-	@Test public void testAuth_tpl_activate     () { authURL(Identity.Read,"/tpl/sra/submissions/activate");      }
-	@Test public void testAuth_tpl_consultation () { authURL(Identity.Read,"/tpl/sra/submissions/consultation");  }
-	@Test public void testAuth_tpl_create       () { authURL(Identity.Read,"/tpl/sra/submissions/create");        }
-	@Test public void testAuth_tpl_details      () { authURL(Identity.Read,"/tpl/sra/submissions/details");       }
-	@Test public void testAuth_tpl_validation   () { authURL(Identity.Read,"/tpl/sra/submissions/validation");    }
+	// @Test public void testAuth_home_consultation() { authURL(Identity.Read,"/sra/submissions/consultation/home"); }
+	// @Test public void testAuth_tpl_activate     () { authURL(Identity.Read,"/tpl/sra/submissions/activate");      }
+	// @Test public void testAuth_tpl_consultation () { authURL(Identity.Read,"/tpl/sra/submissions/consultation");  }
+	// @Test public void testAuth_tpl_create       () { authURL(Identity.Read,"/tpl/sra/submissions/create");        }
+	// @Test public void testAuth_tpl_details      () { authURL(Identity.Read,"/tpl/sra/submissions/details");       }
+	// @Test public void testAuth_tpl_validation   () { authURL(Identity.Read,"/tpl/sra/submissions/validation");    }
 	
 }
