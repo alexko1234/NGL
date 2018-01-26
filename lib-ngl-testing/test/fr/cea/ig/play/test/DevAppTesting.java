@@ -207,6 +207,10 @@ public class DevAppTesting {
 	// TODO: change to use the devappF version that use file configuration and not resource.
 	@SafeVarargs
 	public static Application devapp(String appConfFile, Function<GuiceApplicationBuilder,GuiceApplicationBuilder>... mods) { //, String logConfFile) {
+		return devapp(appConfFile,Arrays.asList(mods));
+	}
+	
+	public static Application devapp(String appConfFile, List<Function<GuiceApplicationBuilder,GuiceApplicationBuilder>> mods) {
 		if (application != null) {
 			logger.warn("returning already application");
 			return application;
