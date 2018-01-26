@@ -172,11 +172,13 @@ public class Experiments extends DocumentController<Experiment> {
 			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
 		}
 		if(CollectionUtils.isNotEmpty(form.accessions)) {
+			for (String ac: form.accessions) {
+				logger.debug("accession=" + ac);
+			}
 			queries.add(DBQuery.in("accession", form.accessions));
 		} else if(StringUtils.isNotBlank(form.accessionRegex)){
 			queries.add(DBQuery.regex("accession", Pattern.compile(form.accessionRegex)));
 		}
-		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
