@@ -6,6 +6,7 @@ import static fr.cea.ig.play.IGGlobals.form;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -26,6 +27,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 
 // TODO: remove System.out.print
 
@@ -43,29 +45,40 @@ public class Experiments extends DocumentController<Experiment> {
 		super(ctx,InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class);
 	}
 
-	public Result get(String code)
-	{
+	public Result get(String code) {
 		Experiment exp  = MongoDBDAO.findOne(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, 
 				DBQuery.is("code", code));
 		if (exp != null) {
 			return ok(Json.toJson(exp));
-		} else{
+		} else {
 			return notFound();
 		}	
 	}
 
-	public Result list()
-	{
-		ExperimentsSearchForm form = filledFormQueryString(ExperimentsSearchForm.class);
+	/*public Result get(String code) {
+		return ok(Json.toJson(getSample(code)));
+	}
+*/
+
+	
+	
+	public Result list() {
+		Form<ExperimentsSearchForm> experimentssSearchFilledForm = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
+		ExperimentsSearchForm form = experimentssSearchFilledForm.get();
 		Query query = getQuery(form);
 		MongoDBResult<Experiment> results = mongoDBFinder(form, query);							
 		List<Experiment> list = results.toList();
-		return ok(Json.toJson(list));
+		if(form.datatable){
+			return ok(Json.toJson(new DatatableResponse<Experiment>(list, list.size())));
+		} else{
+			return ok(Json.toJson(list));
+		}
 	}
 
+
 	// Met a jour l'experiment dont le code est indiqué avec les valeurs presentes dans l'experiment recuperé du formulaire (userExperiment)
-	public Result update(String code)
-	{
+	public Result update(String code) {
+		
 		Form<Experiment> filledForm = getFilledForm(experimentForm, Experiment.class);
 		Experiment userExperiment = filledForm.get();
 
@@ -98,7 +111,7 @@ public class Experiments extends DocumentController<Experiment> {
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, userExperiment);
 					return ok(Json.toJson(userExperiment));
-				}else {
+				} else {
 					System.out.println("contextValidation.errors pour experiment :"  +userExperiment.code);
 					ctxVal.displayErrors(logger);
 					// System.out.println(filledForm.errors-AsJson());
@@ -106,24 +119,24 @@ public class Experiments extends DocumentController<Experiment> {
 					System.out.println(errorsAsJson(ctxVal.getErrors()));
 					return badRequest(errorsAsJson(ctxVal.getErrors()));
 				}
-			}else{
+			} else {
 				filledForm.reject("experiment code " + code + " and userExperiment.code " + userExperiment.code , " are not the same");
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}	
-		}else{
+		} else {
 			ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
 
-			if(!ctxVal.hasErrors()){
+			if (!ctxVal.hasErrors()) {
 				updateObject(DBQuery.and(DBQuery.is("code", code)), 
 						getBuilder(userExperiment, queryFieldsForm.fields).set("traceInformation", getUpdateTraceInformation(experiment.traceInformation)));
 
 				return ok(Json.toJson(getObject(code)));
-			}else{
+			} else {
 				// return badRequest(filledForm.errors-AsJson());
 				return badRequest(errorsAsJson(ctxVal.getErrors()));
 			}		
@@ -142,20 +155,28 @@ public class Experiments extends DocumentController<Experiment> {
 	private Query getQuery(ExperimentsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-
-		if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
-			queries.add(DBQuery.in("code", form.listExperimentCodes));
-		}	
-		if (StringUtils.isNotBlank(form.experimentCode)) { //all
-			queries.add(DBQuery.in("code", form.experimentCode));
-		}
-
-		// ajout pour interface release study :
 		if (StringUtils.isNotBlank(form.studyCode)) { //all
 			queries.add(DBQuery.in("studyCode", form.studyCode));
 		}
-
-		// end ajout .
+		if (CollectionUtils.isNotEmpty(form.projCodes)) { //
+			queries.add(DBQuery.in("projectCode", form.projCodes)); 
+		}
+		if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCodes));
+		} else if (StringUtils.isNotBlank(form.stateCode)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCode));
+		}
+		if(CollectionUtils.isNotEmpty(form.codes)) {
+			queries.add(DBQuery.in("code", form.codes));
+		} else if(StringUtils.isNotBlank(form.codeRegex)) {
+			queries.add(DBQuery.regex("code", Pattern.compile(form.codeRegex)));
+		}
+		if(CollectionUtils.isNotEmpty(form.accessions)) {
+			queries.add(DBQuery.in("accession", form.accessions));
+		} else if(StringUtils.isNotBlank(form.accessionRegex)){
+			queries.add(DBQuery.regex("accession", Pattern.compile(form.accessionRegex)));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

@@ -34,15 +34,11 @@ public class SamplesInternal extends DocumentController<Sample>{
 		super(ctx,InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class);
 	}
 
-	public Result get(String code)
-	{
+	public Result get(String code) {
 		return ok(Json.toJson(getSample(code)));
 	}
 
-	
-
-	public Result update(String code)
-	{
+	public Result update(String code) {
 		//Get Submission from DB 
 		Sample sample = getSample(code);
 		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
@@ -54,7 +50,7 @@ public class SamplesInternal extends DocumentController<Sample>{
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
 			return badRequest(filledForm.errorsAsJson( )); // legit
 		}
-		System.out.println(" ok je suis dans Samples.update\n");
+		System.out.println(" ok je suis dans SamplesInternal.update\n");
 		Sample sampleInput = filledForm.get();
 
 		if(queryFieldsForm.fields != null){
@@ -77,11 +73,11 @@ public class SamplesInternal extends DocumentController<Sample>{
 		return ok(Json.toJson(getObject(code)));
 	}
 
-	private Sample getSample(String code)
-	{
+	private Sample getSample(String code) {
 		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, code);
 		return sample;
 	}
+
 
 
 	

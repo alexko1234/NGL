@@ -71,11 +71,10 @@ GET		/api/sra/studies							@controllers.sra.studies.api.Studies.list()
 POST	/api/sra/studies							@controllers.sra.studies.api.Studies.save()
 GET		/tpl/sra/studies/create					    @controllers.sra.studies.tpl.Studies.create()
 ###release fait dans menu details mais si on fait un menu release dedié alors prevoir url:
-#GET		/tpl/sra/studies/release					controllers.sra.studies.tpl.Studies.release()
+#GET	/tpl/sra/studies/release				    @controllers.sra.studies.tpl.Studies.release()
 GET		/tpl/sra/studies/js-routes				   	@controllers.sra.studies.tpl.Studies.javascriptRoutes()
 GET		/tpl/sra/studies/details				    @controllers.sra.studies.tpl.Studies.details()
 
-# methode get du controlleur api qui est heritée d'un parent de DocumentController
 GET		/api/sra/studies/:code			        	@controllers.sra.studies.api.Studies.get(code: java.lang.String)
 GET		/sra/studies/:code			            	@controllers.sra.studies.tpl.Studies.get(code: java.lang.String)
 
@@ -91,13 +90,24 @@ PUT		/sra/studies/:code/state				    @controllers.sra.studies.api.Studies.update
 #--------
 # Samples
 #--------
+GET		/sra/samples/:homeCode/home					@controllers.sra.samples.tpl.Samples.home(homeCode: java.lang.String)
+GET		/sra/samples/:code							@controllers.sra.samples.tpl.Samples.get(code: java.lang.String)
 GET		/api/sra/samples							@controllers.sra.samples.api.Samples.list()
 GET		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.get(code: java.lang.String)
 PUT		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.update(code: java.lang.String)
 PUT		/api/sra/samples/internal/:code				@controllers.sra.samples.api.SamplesInternal.update(code: java.lang.String)
+GET		/tpl/sra/samples/js-routes				   	@controllers.sra.samples.tpl.Samples.javascriptRoutes()
+GET		/tpl/sra/samples/consultation	        	@controllers.sra.samples.tpl.Samples.consultation()
+#http://localhost:9000/api/sra/samples?codeRegex=sample_BCM_4932_OS_564&datatable=true&paginationMode=local ok
+#http://localhost:9000/api/sra/samples?accessionRegex=ERS1082367&datatable=true&paginationMode=local ok 
+#http://localhost:9000/api/sra/studies?projCodes=ARC&datatable=true&paginationMode=local ok
+#http://localhost:9000/api/sra/samples?projCodes=AXY&datatable=true&paginationMode=local  ok
+
 #-------------
 # Experiments
 #-------------
+GET		/sra/experiments/:homeCode/home				@controllers.sra.experiments.tpl.Experiments.home(homeCode: java.lang.String)
+GET		/sra/experiments/:code						@controllers.sra.experiments.tpl.Experiments.get(code: java.lang.String)
 GET		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.list()
 GET		/api/sra/experiments/rawDatas				@controllers.sra.experiments.api.ExperimentsRawDatas.list()
 GET		/api/sra/experiments/readSpecs				@controllers.sra.experiments.api.ExperimentsReadSpecs.list()
@@ -105,6 +115,8 @@ GET		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments
 PUT		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
 GET 	/api/sra/experiments/run/:code				@controllers.sra.experiments.api.ExperimentsRuns.get(code: java.lang.String)
 PUT		/api/sra/experiments/run/:code				@controllers.sra.experiments.api.ExperimentsRuns.update(code: java.lang.String)
+GET		/tpl/sra/experiments/js-routes				@controllers.sra.experiments.tpl.Experiments.javascriptRoutes()
+GET		/tpl/sra/experiments/consultation	        @controllers.sra.experiments.tpl.Experiments.consultation()
 
 #-------------------
 # ExperimentsRawData
@@ -118,9 +130,6 @@ GET		/api/sra/experiments/:code/rawDatas/:relatifName	@controllers.sra.experimen
 #-----------------
 
 
-
-
-#readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 #--------
 GET    	/api/readsets	                 			@controllers.readsets.api.ReadSets.list()
 

@@ -15,20 +15,25 @@
 		}													
 	}	
 	@columnSearchForm{
-		@formGroup{
-			<bt-input  class="form-control"  input-ng-model="consultationService.form.accessionRegex" textarea-ng-model="consultationService.form.accessions" placeholder='@Messages("consultation.placeholder.studyAccessions")' ></bt-input>									
-		}
-	}
-	@columnSearchForm{
 		@formGroup{			
 			<bt-input  class="form-control"  input-ng-model="consultationService.form.codeRegex" textarea-ng-model="consultationService.form.codes" placeholder='@Messages("consultation.placeholder.studyCodes")' ></bt-input>									
 		}
 	}
 	@columnSearchForm{
-	
+		@formGroup{
+			<bt-input  class="form-control"  input-ng-model="consultationService.form.accessionRegex" textarea-ng-model="consultationService.form.accessions" placeholder='@Messages("consultation.placeholder.studyAccessions")' ></bt-input>									
+		}
 	}
 	@columnSearchForm{
+		@formGroup{
+			<bt-input  class="form-control"  input-ng-model="consultationService.form.externalIdRegex" textarea-ng-model="consultationService.form.accessions" placeholder='@Messages("consultation.placeholder.studyExternalIds")' ></bt-input>									
+		}
+	}
+
+	@columnSearchForm{
+	}
 	
+	@columnSearchForm{
 	}
 	
 	
@@ -54,7 +59,6 @@
 		}													
 	}
 }
-
 
 
 	

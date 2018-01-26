@@ -61,10 +61,10 @@ public class ExperimentsReadSpecs extends DocumentController<Experiment> {
 			}
 		}
 		
-		if(StringUtils.isNotBlank(form.experimentCode)){
-			queries.add(DBQuery.is("code", form.experimentCode));
-		}else if (CollectionUtils.isNotEmpty(form.listExperimentCodes)) { //all
-			queries.add(DBQuery.in("code", form.listExperimentCodes));
+		if(StringUtils.isNotBlank(form.code)){
+			queries.add(DBQuery.is("code", form.code));
+		}else if (CollectionUtils.isNotEmpty(form.codes)) { //all
+			queries.add(DBQuery.in("code", form.codes));
 		}
 		
 		// ajout pour interface release study :

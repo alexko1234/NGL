@@ -237,6 +237,12 @@ angular.module('commonsServices', []).
     				sraStudies : function(params, key){
     					load(jsRoutes.controllers.sra.studies.api.Studies.list().url,params,(key)?key:'sraStudies');    				
     				},
+    				sraSamples : function(params, key){
+    					load(jsRoutes.controllers.sra.samples.api.Samples.list().url,params,(key)?key:'sraSamples');    				
+    				},
+    				sraExperiments : function(params, key){
+    					load(jsRoutes.controllers.sra.experiments.api.Experiments.list().url,params,(key)?key:'sraExperiments');    				
+    				},
     				sraConfigurations : function(params, key){
     					load(jsRoutes.controllers.sra.configurations.api.Configurations.list().url,params,(key)?key:'sraConfigurations');    				
     				},

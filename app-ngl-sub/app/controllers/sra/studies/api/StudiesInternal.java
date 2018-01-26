@@ -42,7 +42,7 @@ import views.components.datatable.DatatableResponse;
 import workflows.sra.study.StudyWorkflows;
 
 
-public class StudiesInternal extends DocumentController<Study>{
+public class StudiesInternal extends DocumentController<Study> {
 	private static final play.Logger.ALogger logger = play.Logger.of(StudiesInternal.class);
 
 	final static Form<Study> studyForm = form(Study.class);

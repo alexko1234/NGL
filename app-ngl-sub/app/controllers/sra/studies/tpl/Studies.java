@@ -68,6 +68,8 @@ public class Studies extends CommonController {
   	    				controllers.sra.studies.api.routes.javascript.Studies.update(),
   	    				controllers.sra.studies.api.routes.javascript.Studies.release(),
   	    				controllers.sra.studies.api.routes.javascript.Studies.updateState(),
+  	    				controllers.sra.samples.api.routes.javascript.Samples.list(),
+  	    				controllers.sra.samples.api.routes.javascript.Samples.get(),
   	    				controllers.sra.experiments.api.routes.javascript.Experiments.list(),
   	    				controllers.sra.experiments.api.routes.javascript.Experiments.get()
   	    				)

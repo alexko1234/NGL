@@ -615,7 +615,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				var queries = [];
 				for (var i = 0; i < 6 && $scope.submission.refSampleCodes.length > 0; i++) {
 					var subSampleCodes = $scope.submission.refSampleCodes.splice(0, nbElementByBatch);
-					queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:subSampleCodes}}) );
+					//queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:subSampleCodes}}) );
+					queries.push( $http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {codes:subSampleCodes}}) );
 				}
 				$q.all(queries).then(function(results) {
 					var allData = [];
@@ -635,7 +636,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			}
 
 			//Get samples
-			/*$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			//$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			/*$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {codes:$scope.submission.refSampleCodes}}).success(function(data)
 					{
 					$scope.samples = data;
 

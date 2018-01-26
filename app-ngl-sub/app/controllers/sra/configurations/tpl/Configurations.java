@@ -3,7 +3,6 @@ package controllers.sra.configurations.tpl;
 import javax.inject.Inject;
 
 import controllers.CommonController;
-// import play.Routes;
 import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.configurations.home;

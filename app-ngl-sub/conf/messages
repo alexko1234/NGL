@@ -8,12 +8,15 @@ studies.menu.release = Release
 studies.page.title=Study
 study.create.success= Sauvegarde du study reussie
 studies.msg.save.success=Study crée
-create.placeholder.studiesTitle= * Title du study
+create.placeholder.studiesTitle= * Titre du study
 create.placeholder.projectCodes= * Choisir au moins un code projet
 release.placeholder.projectCodes= * Choisir au moins un code projet
 consultation.placeholder.projectCodes= Choisir un code projet
-consultation.placeholder.studyAccessions= Pattern AC study ou liste ACs
-consultation.placeholder.studyCodes= Pattern code study ou liste codes
+consultation.placeholder.studyCodes= Pattern code study ou liste codes 
+consultation.placeholder.studyAccessions= Pattern numéros d'accession study (ERP...) ou liste numéros d'accession
+consultation.placeholder.studyExternalIds=Pattern identifiants PRJEB ou liste identifiants PRJEB
+
+
 create.placeholder.abstract= * Donner un Abstract
 create.placeholder.description= * Donner une description
 create.placeholder.existingStudyType= * Choisir un type de study
@@ -123,17 +126,25 @@ rawData.relatifName=Nom du fichier
 #SAMPLE 
 sample.code=Code
 sample.accession=Numéros d'accession
+sample.externalId=identifiant de type SAME
 sample.projectCode=Code projet
+sample.anonymizedName=Nom anonyme
 sample.state=Etat
-sample.title=Title
-sample.description=Description
+sample.state.code=Etat
+sample.title=Titre
+sample.description=Déscription
 sample.clone=Clone
-sample.taxonId= * Taxon Id
-#EBI label
-sample.commonName=Common Name
-sample.scientificName= * Scientific Name
-sample.anonymizedName=Anonymized Name
+
+sample.taxonId= * identifiant du taxon
+sample.commonName=Nom commun
+sample.scientificName=* Nom scientifique
 sample.classification=Classification
+samples.menu=Sample
+samples.menu.consultation=Recherche
+samples.page.title=Sample
+consultation.placeholder.sampleCodes= Pattern code sample ou liste codes 
+consultation.placeholder.sampleAccessions= Pattern numéros d'accession sample (ERS...) ou liste numéros d'accession
+consultation.placeholder.sampleExternalIds=Pattern identifiants SAME ou liste identifiants SAME
 
 
 #EXPERIMENT
@@ -157,6 +168,11 @@ experiment.typePlatform= * Type Platform
 experiment.instrumentModel= * Instrument_Model
 experiment.lastBaseCoord=Last Base Coordonée
 experiment.spotLength=SpotLength
+experiments.menu=Experiment
+experiments.menu.consultation=Recherche
+experiments.page.title=Experiments
+consultation.placeholder.experimentCodes= Pattern code experiment ou liste codes 
+consultation.placeholder.experimentAccessions= Pattern numéros d'accession experiment (ERS...) ou liste numéros d'accession
 
 documentation.menu=Aide
 documentation.page.title=Documentation
