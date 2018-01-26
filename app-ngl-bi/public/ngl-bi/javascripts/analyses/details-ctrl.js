@@ -92,6 +92,11 @@
 		$scope.sorterFunc = function(trt){
 		    return -parseInt(trt.abundance);
 		};
+		
+		$scope.getList = function(str){
+			return str.split(";"); 
+		}
+		
 	    var init = function(){
 		 	$scope.messages = messages();
 			$scope.lists = lists;
