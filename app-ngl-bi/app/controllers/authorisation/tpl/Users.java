@@ -2,29 +2,37 @@ package controllers.authorisation.tpl;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+//import controllers.NGLBaseController;
 //import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+//import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.authorisation.users.*;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+//import fr.cea.ig.play.NGLContext;
 
-import fr.cea.ig.play.NGLContext;
 /**
  * 
  * @author michieli
  *
  */
-public class Users extends NGLBaseController {
+public class Users extends NGLController implements NGLJavascript { // NGLBaseController {
 	
 	private final home home;
 	private final search search;
 	
 	@Inject
-	public Users(NGLContext ctx, home home, search search) {
-		super(ctx);
+	public Users(NGLApplication app, home home, search search) {
+		super(app);
 		this.home = home;
 		this.search= search;
 	}
+	
+	@Authenticated
+	@Historized
 	public Result home(String homecode){
 		return ok(home.render(homecode));
 	}

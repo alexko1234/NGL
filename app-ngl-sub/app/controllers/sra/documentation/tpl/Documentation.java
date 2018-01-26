@@ -20,6 +20,7 @@ public class Documentation extends Controller {
 		this.home = home;
 	}
 	
+	// No annotation for documentation
 	public Result home() {
 		return ok(home.render());
 	}

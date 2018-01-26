@@ -2,6 +2,7 @@ package fr.cea.ig.ngl;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.lfw.LFWController;
 // import fr.cea.ig.ngl.dao.DAOEntityNotFoundException;
 // import fr.cea.ig.ngl.daoapi.APIException;

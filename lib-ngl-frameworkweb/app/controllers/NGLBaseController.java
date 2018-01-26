@@ -23,7 +23,7 @@ import play.routing.JavaScriptReverseRouter;
  * @author vrd
  *
  */
-public class NGLBaseController extends Controller {
+class NGLBaseController extends Controller {
 	
 	/**
 	 * NGL context.

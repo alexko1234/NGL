@@ -1,7 +1,7 @@
 package controllers.containers.tpl;
 
 // import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+//import play.routing.JavaScriptReverseRouter;
 
 
 import play.mvc.Result;
@@ -12,7 +12,12 @@ import views.html.containerSupports.search;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+// import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
 
 // import controllers.CommonController;
@@ -20,40 +25,47 @@ import fr.cea.ig.play.NGLContext;
 // TODO: cleanup and comment
 
 // public class ContainerSupports extends -CommonController{
-public class ContainerSupports extends NGLBaseController {
+public class ContainerSupports extends NGLController implements NGLJavascript { // NGLBaseController {
 	
 	private final home        home;
 	private final details     details;
 	private final homeScanner homeScanner;
 	
 	@Inject
-	public ContainerSupports(NGLContext ctx, home home, details details, homeScanner homeScanner) {
-		super(ctx);
+	public ContainerSupports(NGLApplication app, home home, details details, homeScanner homeScanner) {
+		super(app);
 		this.home        = home;
 		this.details     = details;
 		this.homeScanner = homeScanner;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String code) {		
 		return ok(home.render(code));		
 	}
 	
+	// No annotation for tpl
 	public Result homeScanner() {		
 		return ok(homeScanner.render());		
 	}
 	
+	// No annotation for tpl
 	public Result search() {
 		return ok(search.render());
 	}
 	
+	// No annotation for tpl
 	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 	
+	// No annotation for tpl
 	public Result details() {
 		return ok(details.render());
 	}
 	
+	// No annotation for tpl
 	public Result javascriptRoutes() {
   	    return jsRoutes(controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    				controllers.containers.tpl.routes.javascript.ContainerSupports.home(),

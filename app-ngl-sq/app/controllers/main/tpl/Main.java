@@ -20,7 +20,7 @@ package controllers.main.tpl;
 //import models.utils.InstanceConstants;
 // import play.Play;
 // import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+// import play.routing.JavaScriptReverseRouter;
 
 import play.api.modules.spring.Spring;
 import play.libs.Scala;
@@ -29,12 +29,14 @@ import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.With;
 import views.html.home;
-import controllers.NGLBaseController;
+// import controllers.NGLBaseController;
 // import controllers.APICommonController;
 // import controllers.CommonController;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authentication.Authentication;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
 // import fr.cea.ig.ngl.support.APIResultProcessor;
@@ -57,8 +59,8 @@ import javax.inject.Inject;
 // public class Main extends CommonController {
 // public class Main extends APICommonController {
 // @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-@fr.cea.ig.authentication.Authenticated
-@With(UserHistory.class)
+// @fr.cea.ig.authentication.Authenticated
+// @With(UserHistory.class)
 // public class Main extends NGLBaseController {
 public class Main extends NGLController
 		implements CodeLabelAPIHolder,
@@ -97,6 +99,8 @@ public class Main extends NGLController
 		//this.ctx  = ctx;
 	}*/
 
+	@Authenticated
+	@Historized
 	public Result home() {
 		return ok(home.render());
 	}

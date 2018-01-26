@@ -1,15 +1,20 @@
 package controllers.admin.supports.tpl;
 
 //import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+//import play.routing.JavaScriptReverseRouter;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.With;
 import views.html.admin.supports.*;
 import controllers.APICommonController;
 //import controllers.CommonController;
-import controllers.NGLBaseController;
+//import controllers.NGLBaseController;
 import controllers.history.UserHistory;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 
 import javax.inject.Inject;
@@ -18,22 +23,25 @@ import javax.inject.Inject;
 
 // public class Supports extends -CommonController {
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
-public class Supports extends NGLBaseController {
+public class Supports extends NGLController implements NGLJavascript { // NGLBaseController {
 
 	private final home              home;
 	private final searchSwitchIndex searchSwitchIndex;
 	
 	@Inject
-	public Supports(NGLContext ctx, home home, searchSwitchIndex searchSwitchIndex) {
-		super(ctx);
+	public Supports(NGLApplication app, home home, searchSwitchIndex searchSwitchIndex) {
+		super(app);
 		this.home              = home;
 		this.searchSwitchIndex = searchSwitchIndex;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String code) {
 		return ok(home.render(code));
 	}
 	
+	// No annotation for tpl
 	public Result search(String code) {
 		if ("switch-index".equals(code)) {
 			return ok(searchSwitchIndex.render());
@@ -44,6 +52,7 @@ public class Supports extends NGLBaseController {
 		}
 	}
 
+	// No annotation for tpl
 	public Result javascriptRoutes() {
 		return jsRoutes(controllers.projects.api.routes.javascript.Projects.list(),
 						controllers.samples.api.routes.javascript.Samples.list(),

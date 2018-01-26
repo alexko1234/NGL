@@ -22,13 +22,18 @@ import play.libs.Scala;
 import play.mvc.Result;
 import views.html.home;
 //import controllers.CommonController;
-import controllers.NGLBaseController;
+// import controllers.NGLBaseController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 
 // public class Main extends -CommonController {
-public class Main extends NGLBaseController {
+public class Main extends NGLController implements NGLJavascript { // NGLBaseController {
 
 	private static final Logger.ALogger logger = Logger.of(Main.class);
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
@@ -38,14 +43,16 @@ public class Main extends NGLBaseController {
 	private final home home;
 
 	@Inject
-	public Main(NGLContext ctx, /*jsmessages.JsMessagesFactory jsMessagesFactory,*/ home home) {
-		super(ctx);
+	public Main(NGLApplication app, /*jsmessages.JsMessagesFactory jsMessagesFactory,*/ home home) {
+		super(app);
 		// logger.debug("injecting " + jsMessagesFactory);
 		// messages = jsMessagesFactory.all();
 		this.home = home;
 		logger.info("injected");
 	}
 
+	@Authenticated
+	@Historized
 	public Result home() {
 		return ok(home.render());
 	}

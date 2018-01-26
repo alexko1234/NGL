@@ -12,7 +12,12 @@ import views.html.samples.search;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+//import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 // import controllers.CommonController;
 import play.routing.JavaScriptReverseRouter;
@@ -20,20 +25,22 @@ import play.routing.JavaScriptReverseRouter;
 
 // TODO: clean, comment*
 // public class Samples extends -CommonController{
-public class Samples extends NGLBaseController {
+public class Samples extends NGLController implements NGLJavascript  { // NGLBaseController {
 
 	private final home home;
 	private final search search;
 	private final details details;
 	
 	@Inject
-	public Samples(NGLContext ctx, home home, search search, details details) {
-		super(ctx);
+	public Samples(NGLApplication app, home home, search search, details details) {
+		super(app);
 		this.home = home;
 		this.search = search;
 		this.details = details;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String code) {
 		return ok(home.render(code));
 	}

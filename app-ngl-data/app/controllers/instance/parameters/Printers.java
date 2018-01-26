@@ -4,37 +4,39 @@ import models.Constants;
 import play.Logger;
 import play.Logger.ALogger;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import services.instance.parameter.PrinterCNS;
-import services.instance.protocol.ProtocolServiceCNG;
-import services.instance.protocol.ProtocolServiceCNS;
+//import services.instance.protocol.ProtocolServiceCNG;
+//import services.instance.protocol.ProtocolServiceCNS;
 import validation.ContextValidation;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 
-import controllers.CommonController;
-import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
+//import controllers.CommonController;
+//import controllers.NGLBaseController;
+// import fr.cea.ig.play.NGLContext;
 
-public class Printers extends NGLBaseController { //CommonController {
+public class Printers extends Controller { // extends NGLBaseController { //CommonController {
 	
-	public static ALogger logger= Logger.of("Printers");
+	public static ALogger logger = Logger.of("Printers");
 		
-	@Inject
-	public Printers(NGLContext ctx) {
-		super(ctx);
-	}
-	public /*static*/ Result save(){
+//	@Inject
+//	public Printers(NGLContext ctx) {
+//		super(ctx);
+//	}
+	
+	public Result save(){
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {
-			if (play.Play.application().configuration().getString("institute").equals("CNS")){
+			if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 				PrinterCNS.main(ctx);
-			}else if(play.Play.application().configuration().getString("institute").equals("CNG")){
+			} else if(play.Play.application().configuration().getString("institute").equals("CNG")) {
 				
-			}else if(play.Play.application().configuration().getString("institute").equals("TEST")){
+			} else if(play.Play.application().configuration().getString("institute").equals("TEST")) {
 				
-			}else{
+			} else {
 				Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
 			}
 			
@@ -49,5 +51,6 @@ public class Printers extends NGLBaseController { //CommonController {
 			return internalServerError(e.getMessage());
 		}	
 	}
+	
 }
 

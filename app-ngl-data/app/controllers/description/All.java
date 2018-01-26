@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import services.description.common.InstituteService;
 import services.description.common.LevelService;
@@ -24,19 +25,21 @@ import services.description.run.RunService;
 import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
-import controllers.APICommonController;
-import controllers.CommonController;
-import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
+// import controllers.APICommonController;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+// import controllers.CommonController;
+// import controllers.NGLBaseController;
+// import fr.cea.ig.play.NGLContext;
 
-
-
-public class All extends NGLBaseController { //CommonController {
-	@Inject
-	public All(NGLContext ctx) {
-		super(ctx);
-	}
-	public /*static*/ Result save(){
+public class All extends Controller { // NGLController { // NGLBaseController { //CommonController {
+	
+//	@Inject
+//	public All(NGLApplication app) {
+//		super(app);
+//	}
+	
+	public Result save() {
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			InstituteService.main(errors);
@@ -64,4 +67,5 @@ public class All extends NGLBaseController { //CommonController {
 			return internalServerError(e.getMessage());
 		}				
 	}
+	
 }

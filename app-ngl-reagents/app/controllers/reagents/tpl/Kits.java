@@ -2,8 +2,13 @@ package controllers.reagents.tpl;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+// import controllers.NGLBaseController;
+// import fr.cea.ig.play.NGLContext;
 // import controllers.CommonController;
 // import play.Routes;
 import play.mvc.Result;
@@ -14,20 +19,22 @@ import views.html.declarations.kitsSearch;
 import play.routing.JavaScriptReverseRouter;
 
 // public class Kits extends -CommonController {
-public class Kits extends NGLBaseController {
+public class Kits extends NGLController implements NGLJavascript { // NGLBaseController {
 	
 	private final home         home;
 	private final kitsSearch   kitsSearch;
 	private final kitsCreation kitsCreation;
 	
 	@Inject
-	public Kits(NGLContext ctx, home home, kitsSearch kitsSearch, kitsCreation kitsCreation) {
-		super(ctx);
+	public Kits(NGLApplication app, home home, kitsSearch kitsSearch, kitsCreation kitsCreation) {
+		super(app);
 		this.home         = home;
 		this.kitsSearch   = kitsSearch;
 		this.kitsCreation = kitsCreation;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String code) {
 		return ok(home.render(code+".kits"));
 	}

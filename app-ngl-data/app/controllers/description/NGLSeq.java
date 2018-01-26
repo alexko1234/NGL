@@ -9,33 +9,36 @@ import javax.inject.Inject;
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
-import services.description.common.InstituteService;
-import services.description.common.LevelService;
+// import services.description.common.InstituteService;
+// import services.description.common.LevelService;
 import services.description.common.MeasureService;
-import services.description.common.ObjectTypeService;
-import services.description.common.StateService;
+// import services.description.common.ObjectTypeService;
+// import services.description.common.StateService;
 import services.description.container.ContainerService;
 import services.description.experiment.ExperimentService;
 import services.description.instrument.InstrumentService;
 import services.description.process.ProcessService;
-import services.description.project.ProjectService;
-import services.description.run.RunService;
-import services.description.run.TreatmentService;
+// import services.description.project.ProjectService;
+// import services.description.run.RunService;
+// import services.description.run.TreatmentService;
 import services.description.sample.ImportService;
 import services.description.sample.SampleService;
-import controllers.CommonController;
-import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+//import controllers.CommonController;
+// import controllers.NGLBaseController;
+// import fr.cea.ig.play.NGLContext;
 
-
-
-public class NGLSeq extends NGLBaseController { //CommonController {
-	@Inject
-	public NGLSeq(NGLContext ctx) {
-		super(ctx);
-	}
-	public /*static*/ Result save(){
+public class NGLSeq extends Controller { // NGLController { // NGLBaseController { //CommonController {
+	
+//	@Inject
+//	public NGLSeq(NGLApplication app) {
+//		super(app);
+//	}
+	
+	public Result save() {
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			//InstituteService.main(errors);
@@ -64,4 +67,5 @@ public class NGLSeq extends NGLBaseController { //CommonController {
 			return internalServerError(e.getMessage());
 		}				
 	}
+	
 }

@@ -19,12 +19,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import play.data.DynamicForm;
 import play.data.Form;
-import play.data.validation.ValidationError;
+// import play.data.validation.ValidationError;
 import play.libs.Json;
-import play.mvc.Controller;
-import play.mvc.Result;
-import play.mvc.Http.Context;
-import play.routing.JavaScriptReverseRouter;
+// import play.mvc.Controller;
+// import play.mvc.Result;
+// import play.mvc.Http.Context;
+// import play.routing.JavaScriptReverseRouter;
 import play.mvc.With;
 import controllers.history.UserHistory;
 import fr.cea.ig.play.NGLContext;
@@ -51,7 +51,7 @@ public abstract class APICommonController<T> extends NGLBaseController {
 	}
 
 	public final NGLContext getNGLContext(){
-		return this.ctx;
+		return ctx;
 	}
 	/*
 	 * Filled the main form
@@ -148,7 +148,7 @@ public abstract class APICommonController<T> extends NGLBaseController {
 					if(isNotEmpty(queryString.get(key))){
 						Object value = queryString.get(key);
 						if(wrapper.isWritableProperty(key)){
-							Class c = wrapper.getPropertyType(key);
+							Class<?> c = wrapper.getPropertyType(key);
 							//TODO used conversion spring system
 							if(null != c && Date.class.isAssignableFrom(c)){
 								//wrapper.setPropertyValue(key, new Date(Long.valueOf(value[0])));

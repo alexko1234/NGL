@@ -2,9 +2,14 @@ package controllers.projects.tpl;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+// import controllers.NGLBaseController;
 //import controllers.CommonController;
 import controllers.projects.tpl.routes.javascript;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 //import play.Routes;
 import play.routing.JavaScriptReverseRouter;
@@ -18,24 +23,29 @@ import views.html.umbrellaprojects.*;
  *
  */
 // public class UmbrellaProjects extends CommonController {
-public class UmbrellaProjects extends NGLBaseController {
+public class UmbrellaProjects extends NGLController implements NGLJavascript { // extends NGLBaseController {
 	
 	private home home;
 	
 	@Inject
-	public UmbrellaProjects(NGLContext ctx, home home) {
-		super(ctx);
+	public UmbrellaProjects(NGLApplication app, home home) {
+		super(app);
 		this.home = home;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
+	@Authenticated
+	@Historized
 	public Result get(String code) {
 		return ok(home.render("search")); 
 	}
 	
+	// No annotation for tpl
 	public Result search(String type) {
 		if (!"add".equals(type)) {
 			return ok(search.render(Boolean.TRUE));
@@ -44,10 +54,12 @@ public class UmbrellaProjects extends NGLBaseController {
 		}
 	}
 
+	// No annotation for tpl
 	public Result details(String typeForm) {
 		return ok(details.render(typeForm));
 	}
 	
+	// No annotation for tpl
 	public Result javascriptRoutes() {
   	    return jsRoutes(controllers.projects.tpl.routes.javascript.UmbrellaProjects.home(),  
   	    				controllers.projects.tpl.routes.javascript.UmbrellaProjects.get(), 

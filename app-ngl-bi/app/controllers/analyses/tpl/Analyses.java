@@ -11,9 +11,15 @@ import views.html.analyses.treatments;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 
-import fr.cea.ig.play.NGLContext;
+// import controllers.NGLBaseController;
+
+// import fr.cea.ig.play.NGLContext;
 
 /**
  * Controller around Run object
@@ -22,7 +28,7 @@ import fr.cea.ig.play.NGLContext;
  *
  */
 // public class Analyses extends CommonController {
-public class Analyses extends NGLBaseController {
+public class Analyses extends NGLController implements NGLJavascript { // NGLBaseController {
 	
 	private final home home;
 	private final search search;
@@ -30,18 +36,22 @@ public class Analyses extends NGLBaseController {
 	private final treatments treatments;
 	
 	@Inject
-	public Analyses(NGLContext ctx, home home, search search, details details, treatments treatments) {
-		super(ctx);
+	public Analyses(NGLApplication app, home home, search search, details details, treatments treatments) {
+		super(app);
 		this.home = home; 
 		this.search = search;
 		this.details = details;
 		this.treatments= treatments;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
+	@Authenticated
+	@Historized
 	public Result get(String code) {
 		return ok(home.render("search")); 
 	}

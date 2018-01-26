@@ -4,7 +4,7 @@ package controllers.processes.tpl;
 //import models.utils.dao.DAOException;
 //import play.Logger;
 //import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+// import play.routing.JavaScriptReverseRouter;
 
 //import play.libs.Json;
 import play.mvc.Result;
@@ -15,13 +15,18 @@ import views.html.processes.searchContainers;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+// import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
 
 // import controllers.CommonController;
 
 // public class Processes extends -CommonController{
-public class Processes extends NGLBaseController {
+public class Processes extends NGLController implements NGLJavascript { // NGLBaseController {
 	
 	private final home home;
 	private final searchContainers searchContainers;
@@ -29,14 +34,16 @@ public class Processes extends NGLBaseController {
 	private final newProcesses newProcesses;
 	
 	@Inject
-	public Processes(NGLContext ctx, home home, searchContainers searchContainers, search search, newProcesses newProcesses) {
-		super(ctx);
+	public Processes(NGLApplication app, home home, searchContainers searchContainers, search search, newProcesses newProcesses) {
+		super(app);
 		this.home = home;
 		this.searchContainers = searchContainers;
 		this.search = search;
 		this.newProcesses = newProcesses;
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String code) {
 		return ok(home.render(code));
 	}

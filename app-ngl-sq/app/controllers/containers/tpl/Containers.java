@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+//import play.routing.JavaScriptReverseRouter;
 
 import play.i18n.Messages;
 import play.mvc.Result;
@@ -16,13 +16,18 @@ import views.html.container.*;
 // import controllers.CommonController;
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+// import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
 
 // TODO: clean, comment
 
 // public class Containers extends -CommonController {
-public class Containers extends NGLBaseController {
+public class Containers extends NGLController implements NGLJavascript { // NGLBaseController {
 
 	private final home        home;
 	private final search      search;
@@ -30,16 +35,24 @@ public class Containers extends NGLBaseController {
 	private final details     details;
 	
 	@Inject
-	public Containers(NGLContext ctx, home home, search search, newFromFile newFromFile, details details) {
-		super(ctx);
+	public Containers(NGLApplication app, home home, search search, newFromFile newFromFile, details details) {
+		super(app);
 		this.home        = home;
 		this.search      = search;
 		this.newFromFile = newFromFile;
 		this.details     = details;
 	}
 	
+	@Authenticated
+	@Historized
     public Result home(String code) {
         return ok(home.render(code));
+    }
+
+	@Authenticated
+	@Historized
+    public Result get(String code) {
+        return ok(home.render("search"));
     }
 
     public Result search() {
@@ -48,10 +61,6 @@ public class Containers extends NGLBaseController {
 
     public Result newFromFile() {
         return ok(newFromFile.render());
-    }
-
-    public Result get(String code) {
-        return ok(home.render("search"));
     }
 
     public Result details() {

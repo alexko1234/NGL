@@ -3,7 +3,7 @@ package controllers.experiments.tpl;
 // import static play.data.Form.form;
 //import static fr.cea.ig.play.IGGlobals.form;
 // import play.Routes;
-import play.routing.JavaScriptReverseRouter;
+// import play.routing.JavaScriptReverseRouter;
 
 import static fr.cea.ig.lfw.utils.FunCollections.first;
 
@@ -24,7 +24,13 @@ import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
 // import controllers.CommonController;
-import controllers.NGLBaseController;
+//import controllers.NGLBaseController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLForms;
+import fr.cea.ig.ngl.support.NGLJavascript;
 // import fr.cea.ig.play.IGGlobals;
 import fr.cea.ig.play.NGLContext;
 import fr.cea.ig.reflect.Renderer;
@@ -36,7 +42,7 @@ import javax.inject.Inject;
 
 // @Singleton
 // public class Experiments extends CommonController {
-public class Experiments extends NGLBaseController {
+public class Experiments extends NGLController implements NGLJavascript, NGLForms { // NGLBaseController {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
@@ -60,9 +66,9 @@ public class Experiments extends NGLBaseController {
 	*/
 	
 	@Inject
-	public Experiments(NGLContext ctx, home home, details details, search search, searchContainers searchContainers) {
-		super(ctx);
-		experimentForm        = ctx.form(Experiment.class);
+	public Experiments(NGLApplication app, home home, details details, search search, searchContainers searchContainers) {
+		super(app);
+		experimentForm        = form(Experiment.class);
 		this.home             = home;
 		this.details          = details;
 		this.search           = search;
@@ -70,6 +76,8 @@ public class Experiments extends NGLBaseController {
 		logger.debug("created injected instance " + this);
 	}
 	
+	@Authenticated
+	@Historized
 	public Result home(String code) {
 		return ok(home.render(code));
 	}
@@ -175,7 +183,7 @@ public class Experiments extends NGLBaseController {
 		String className = "views.html.experiments." + atomicType.toLowerCase() + "." + institute.toLowerCase() + "." + keyWord.toLowerCase();
 		logger.info("class name {}",className);
 		try {
-			return Optional.of(ok(Renderer.create(ctx.injector(), className).apply())); 
+			return Optional.of(ok(Renderer.create(getInjector(), className).apply())); 
 		} catch(Exception e) {
 			return Optional.empty();
 		}		

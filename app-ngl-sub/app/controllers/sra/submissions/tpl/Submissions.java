@@ -13,17 +13,20 @@ import views.html.submissions.validation;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+//import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 
 // import controllers.CommonController;
 
 
 //public class Submissions extends -CommonController {
-public class Submissions extends NGLBaseController {
+public class Submissions extends NGLController implements NGLJavascript  { // NGLBaseController {
 	
 	private final home         home;
 	private final create       create;
@@ -33,8 +36,8 @@ public class Submissions extends NGLBaseController {
 	private final validation   validation;
 	
 	@Inject
-	public Submissions(NGLContext ctx, home home, create create, details details, activate activate, consultation consultation, validation validation) {
-		super(ctx);
+	public Submissions(NGLApplication app, home home, create create, details details, activate activate, consultation consultation, validation validation) {
+		super(app);
 		this.home         = home;
 		this.create       = create;
 		this.details      = details;
@@ -67,6 +70,7 @@ public class Submissions extends NGLBaseController {
 	// @Authenticated
 	// @Historized
 	// @Authorized.Read 
+	// No annotation for tpl 
 	public Result consultation()	{
 		return ok(consultation.render());
 	}
@@ -74,6 +78,7 @@ public class Submissions extends NGLBaseController {
 	// @Authenticated
 	// @Historized
 	// @Authorized.Read 
+	// No annotation for tpl 
 	public Result create() {
 		return ok(create.render());
 	}
@@ -81,6 +86,7 @@ public class Submissions extends NGLBaseController {
 	// @Authenticated
 	// @Historized
 	// @Authorized.Read 
+	// No annotation for tpl 
 	public Result details() {
 		return ok(details.render());
 	}
@@ -88,10 +94,12 @@ public class Submissions extends NGLBaseController {
 	// @Authenticated
 	// @Historized
 	// @Authorized.Read 
+	// No annotation for tpl 
 	public Result validation()	{
 		return ok(validation.render());
 	}
 	
+	// No annotation for tpl 
 	public Result javascriptRoutes() {
 		return jsRoutes(controllers.sra.submissions.tpl.routes.javascript.Submissions.home(),
 						controllers.projects.api.routes.javascript.Projects.list(),

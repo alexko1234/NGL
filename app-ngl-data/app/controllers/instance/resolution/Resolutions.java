@@ -3,24 +3,26 @@ package controllers.instance.resolution;
 import models.Constants;
 import play.Logger;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 
 import services.instance.resolution.ResolutionService;
 import validation.ContextValidation;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 
-import controllers.CommonController;
-import controllers.NGLBaseController;
-import fr.cea.ig.play.NGLContext;
+//import controllers.CommonController;
+//import controllers.NGLBaseController;
+//import fr.cea.ig.play.NGLContext;
 
-public class Resolutions extends NGLBaseController { //CommonController {
-	@Inject
-	public Resolutions(NGLContext ctx) {
-		super(ctx);
-	}
+public class Resolutions extends Controller { // NGLBaseController { //CommonController {
 	
-	public /*static*/ Result save(){
+//	@Inject
+//	public Resolutions(NGLContext ctx) {
+//		super(ctx);
+//	}
+	
+	public Result save(){
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
 		try {
@@ -35,6 +37,7 @@ public class Resolutions extends NGLBaseController { //CommonController {
 			return internalServerError(e.getMessage());
 		}	
 	}
+	
 }
 
 
