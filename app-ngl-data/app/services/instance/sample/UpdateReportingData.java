@@ -58,7 +58,7 @@ public class UpdateReportingData extends AbstractImportData {
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		Logger.debug("Start reporting synchro");
+		logger.debug("Start reporting synchro");
 		Integer skip = 0;
 		Date date = new Date();
 			MongoDBResult<Sample> result = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);
@@ -68,13 +68,13 @@ public class UpdateReportingData extends AbstractImportData {
 					
 					long t1 = System.currentTimeMillis();
 					DBCursor<Sample> cursor = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class)
-						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(2000)
+						.sort("traceInformation.creationDate", Sort.DESC).skip(skip).limit(1000)
 						.cursor;
 					
 					cursor.setOptions(Bytes.QUERYOPTION_NOTIMEOUT).forEach(sample -> {
 							try{
 								updateProcesses(sample);
-								Logger.debug("update sample "+sample.code);
+								logger.debug("update sample "+sample.code);
 								if(sample.processes != null && sample.processes.size() > 0){
 									MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", sample.code), 
 											DBUpdate.set("processes", sample.processes).set("processesStatistics", sample.processesStatistics).set("processesUpdatedDate", date));
@@ -91,9 +91,9 @@ public class UpdateReportingData extends AbstractImportData {
 							}
 						});
 					cursor.close();
-					skip = skip+2000;
+					skip = skip+1000;
 					long t2 = System.currentTimeMillis();
-					Logger.debug("time "+skip+" - "+((t2-t1)/1000));
+					logger.debug("time "+skip+" - "+((t2-t1)/1000));
 				}catch(Throwable e){
 					logger.error("Error : "+e,e);
 					if(null != e.getMessage())
@@ -409,7 +409,7 @@ public class UpdateReportingData extends AbstractImportData {
 			
 			return sampleProcess;
 		} catch (ParseException e) {
-			Logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(),e);
 			return null;
 		}
 		
