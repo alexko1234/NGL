@@ -443,12 +443,13 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 				updateAllInputContainerUsedsPropertyValue("NaOHVolume","5");
 				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","200000000");	
 				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","5");
-				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");
-				
+				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");	
 			}
 			
 			// ne faire l'update du datatable qu'apres les 6 appels a  updateAllInputContainerUsedsPropertyValue !!!
+			//console.log ("mise a jour du datatable");
 			$scope.atmService.data.updateDatatable();
+			
 		} else {
 			//debug
 			console.log('feuille de calcul pas prete !!');
@@ -462,34 +463,37 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
 			var atm = $scope.atmService.data.atm[i];
 			
-			$parse("inputContainerUseds[0].experimentProperties."+propertyCode+".value").assign(atm, value);
+			//!! boucler aussi sur TOUS les inputContainerUsed
+			for ( var j=0; j < $scope.atmService.data.atm[i].inputContainerUseds.length; j++ ){
+				$parse("inputContainerUseds["+j+"].experimentProperties."+propertyCode+".value").assign(atm, value);
 			
-			// si la colonne mise a jour est le volume engagé il faut relancer le calcul de concentration finale
-			if (propertyCode ==='inputVolume2'){
-				// !!!!! il manque "inputContainer.concentration dans l'atm !!!!
-				computeConcentrationAtm(atm, i);		
+			    // si la colonne mise a jour est le volume engagé il faut relancer le calcul de concentration finale
+				if (propertyCode ==='inputVolume2'){
+					computeConcentrationAtm(atm, j);	
+				}
 			}
 		}
-		/// NON faire l'updateDatatable dans l'appelant sinon executee 6 fois de suite !!!
-		/// $scope.atmService.data.updateDatatable();
+		//$scope.atmService.data.updateDatatable();   // NON faire l'updateDatatable dans l'appelant sinon executee 6 fois de suite !!!
 	};
 	
-	// 15/01/2018 faire les calculs en Javascript au lieu de Drools ????
+	
+	
+	//--------- 15/01/2018 faire les calculs en Javascript au lieu de Drools----------
+	
 	// surcharger celle de tubes-to-flowcell-ctrl.js pour declencher les calculs
 	// utilisateur modifie une cellule "volume final" ( changeValueOnFlowcellDesign est appelle depuis le scala.html )
-	$scope.changeValueOnFlowcellDesign = function(i){
-		//i=atm.line; 
-		console.log('% depot ou  % phix  ou Volume final modifié:  atm.line: '+ i );
+	$scope.changeValueOnFlowcellDesign = function(l){
+		//l=atm.line; 
+		console.log('% depot ou  % phix  ou Volume final modifié:  atm.line: '+ l );
 		$scope.atmService.data.updateDatatable(); // ca c'est qui est fait dans tubes-to-flowcell-ctrl.js: met a jour TOUT le udt !!!	
 		
-		//PB  est atm.line  ne correspond pas forcement a l'index i de l'atm !!!!!
-		console.log ( "apres update : new final vol="+ $scope.atmService.data.atm[i-1].outputContainerUseds[0].experimentProperties.finalVolume.value);
+		//???  atm.line  ne correspond pas forcement a l'index  de l'atm 
+		console.log ( "apres update : new final vol="+ $scope.atmService.data.atm[l-1].outputContainerUseds[0].experimentProperties.finalVolume.value);
 		
-		//test 1 recalculer la concentration finale pour LA ligne changee    MARCHE PAS !!!!!!!
-		//computeConcentrationAtm($scope.atmService.data.atm[i-1], i-1));	
-		
-		//test : recalculer toutes les lignes....MARCHE PAS NON PLUS.. quel parametre passer a computeConcentration ???
-       //computeConcentration($scope.atmService);
+		//test recalculer la concentration finale pour tous les inputContainerUsed de l'atm [l-1] ???
+		for ( var j=0; j < $scope.atmService.data.atm[l-1].inputContainerUseds.length; j++ ){
+				computeConcentrationAtm($scope.atmService.data.atm[l-1], j);	
+		}
 	};
 	
 
@@ -536,18 +540,17 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	}
 	
-	// version pour les cas on modifie seulement 1 atm
-	// PB on a pas inputContainer.concentration dans l'atm !!!!, passer par  datatable.allResult[i], faut i en parametre
-	var computeConcentrationAtm = function(atm, i){
-		console.log("computeConcentration atm....");
+	// version pour les cas on modifie seulement 1 atm, 1 inputContainerUsed
+	// traiter tous les inputContainerUsed, faut j en parametre
+	var computeConcentrationAtm = function(atm, j){
+		///console.log("computeConcentration atm..."+i+"..inputContainerUsed.."+j);
 		
-		var getterFinalConcentration2=$parse("inputContainerUseds[0].experimentProperties.finalConcentration2.value");
-		var test=$parse("atmService.data.datatable.allResult[i].inputContainerUsed.concentration.value");
+		var getterFinalConcentration2=$parse("inputContainerUseds["+ j +"].experimentProperties.finalConcentration2.value");
 			
 		var compute = {
-				inputConc : $scope.atmService.data.datatable.allResult[i].inputContainerUsed.concentration.value,
-				engagedVol: $parse("inputContainerUseds[0].experimentProperties.inputVolume2.value")(atm), 
+				inputConc : $parse("inputContainerUseds["+ j +"].concentration.value")(atm),
 				finalVol:   $parse("outputContainerUseds[0].experimentProperties.finalVolume.value")(atm),
+				engagedVol: $parse("inputContainerUseds["+ j +"].experimentProperties.inputVolume2.value")(atm), 
 
 				isReady:function(){
 					// !! final volume doit imperativement etre != 0 sinon div by 0
