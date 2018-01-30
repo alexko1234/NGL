@@ -16,6 +16,7 @@ import views.html.processes.searchContainers;
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -23,9 +24,9 @@ import fr.cea.ig.ngl.support.NGLJavascript;
 // import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
 
-// import controllers.CommonController;
+// import controllers.CommonController;              // done
+// public class Processes extends -CommonController{ // done
 
-// public class Processes extends -CommonController{
 public class Processes extends NGLController implements NGLJavascript { // NGLBaseController {
 	
 	private final home home;
@@ -44,22 +45,27 @@ public class Processes extends NGLController implements NGLJavascript { // NGLBa
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code));
 	}
 
+	// tpl
 	public Result searchContainers() {
 		return ok(searchContainers.render());
 	}
 
+	// tpl
 	public Result search(String processTypeCode) {
 		return ok(search.render());
 	}
 
+	// tpl
 	public Result newProcesses(String processTypeCode) {
 		return ok(newProcesses.render());
 	}
 
+	// tpl
 	public Result javascriptRoutes() {
 		return jsRoutes(controllers.processes.tpl.routes.javascript.Processes.newProcesses(),  
 						controllers.processes.tpl.routes.javascript.Processes.search(),

@@ -143,10 +143,12 @@ public class WSHelper {
 	public static WSResponse postObject(WSClient ws, String url, Object object, int status) {
 		return assertResponseStatus("POST " + url, postObject(ws,url,object), status);
 	}
+	
 	public static WSResponse assertResponseStatus(String message, WSResponse response, int status) {
 		assertEquals(message + " " + response.getBody(), status, response.getStatus());
 		return response;
 	}
+	
 	/**
 	 * Short for http delete with some payload.
 	 * @param ws      web client to use

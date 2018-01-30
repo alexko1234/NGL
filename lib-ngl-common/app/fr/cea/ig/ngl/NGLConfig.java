@@ -89,6 +89,15 @@ public class NGLConfig {
 		return config.getString(NGL_INSTITUTE_PATH);
 	}
 	
+	public boolean isCNSInstitute() {
+		return "CNS".equals(getInstitute());
+	}
+	
+	public boolean isCNGInstitute() {
+		return "CNG".equals(getInstitute());
+	}
+	
+	
 	public String getRulesKey() {
 		return config.getString(NGL_RULES_PATH);
 	}

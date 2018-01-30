@@ -18,7 +18,8 @@ import javax.inject.Inject;
 // import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-// import controllers.CommonController;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
 // import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.lfw.support.LFWForms;
 import fr.cea.ig.lfw.support.LFWRequestParsing;
@@ -40,8 +41,11 @@ import models.sra.submit.util.VariableSRA;
 // import play.mvc.Controller;
 import play.mvc.Result;
 
+// import controllers.CommonController;              // done
+// public class Variables extends CommonController { // done
+
 public class Variables extends NGLController 
-					implements LFWRequestParsing, SraParameterAPIHolder, Executor { // CommonController {
+					implements LFWRequestParsing, SraParameterAPIHolder, Executor { 
 
 	// private static final play.Logger.ALogger logger = play.Logger.of(Variables.class);
 	
@@ -54,6 +58,8 @@ public class Variables extends NGLController
 		// form = form(VariablesSearchForm.class);
 	}
 	
+	@Authenticated
+	@Historized
 	public Result list() {
 		// Form<VariablesSearchForm> filledForm = filledFormQueryString(form, VariablesSearchForm.class);
 		// Form<VariablesSearchForm> filledForm = filledFormQueryString(VariablesSearchForm.class);
@@ -63,6 +69,8 @@ public class Variables extends NGLController
 		return list(variableSearch);
 	}
 
+	@Authenticated
+	@Historized
 	public Result get(String type, String code) {
 		logger.debug("Get {}  code {}", type, code);
 		if (type.equalsIgnoreCase("strategySample")) {

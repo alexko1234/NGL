@@ -78,40 +78,71 @@ import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.IGBodyParsers;
 import fr.cea.ig.play.NGLContext;
 
 // Indirection so we can swap implementations.
 public class Containers extends Containers2 {
+	
 	@Inject
 	public Containers(NGLContext ctx, ContWorkflows workflows) {
 		super(ctx,workflows);
 	}
-	@Permission(value={"reading"})
+	
+	// @Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result get(String code) {
 		return super.get(code);
 	}
-	@Permission(value={"reading"})
+	
+	// @Permission(value={"reading"})
+	
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result head(String code) {
 		return super.head(code);
 	}
-	@Permission(value={"reading"})
+	
+	
+	// @Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result list() throws DAOException {
 		return super.list();
 	}
-	@Permission(value={"writing"})
+	
+	// @Permission(value={"writing"})
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result update(String code) {
 		return super.update(code);
 	}
-	@Permission(value={"writing"})
+		
+	// @Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result updateState(String code) {
 		return super.updateState(code);
 	}
-	@Permission(value={"writing"})
+	
+	// @Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result updateStateBatch() {
 		return super.updateStateBatch();
 	}
+	
 }
 
 class Containers2 extends DocumentController<Container> {

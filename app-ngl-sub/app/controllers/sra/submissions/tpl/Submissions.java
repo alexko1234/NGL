@@ -22,10 +22,9 @@ import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 
-// import controllers.CommonController;
+// import controllers.CommonController;                  // done
+//public class Submissions extends -CommonController {   // done
 
-
-//public class Submissions extends -CommonController {
 public class Submissions extends NGLController implements NGLJavascript  { // NGLBaseController {
 	
 	private final home         home;

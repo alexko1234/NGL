@@ -84,7 +84,7 @@ public class JavascriptGeneration {
 		 * Add valuation codes.
 		 * @return this to chain calls.
 		 */
-		public Codes valuationCodes() {
+		public Codes addValuationCodes() {
 			return add("valuation", "TRUE",  "Oui")
 				  .add("valuation", "FALSE", "Non")
 				  .add("valuation", "UNSET", "---");
@@ -94,7 +94,7 @@ public class JavascriptGeneration {
 		 * Add status codes.
 		 * @return this to chain calls
 		 */
-		public Codes statusCodes() {
+		public Codes addStatusCodes() {
 			return add("status",    "TRUE",  "OK" )
 				  .add("status",    "FALSE", "KO" )
 				  .add("status",    "UNSET", "---");

@@ -25,45 +25,11 @@ import play.Application;
 // No authorization in ngl-sub, those tests are disabled.
 public class TestSubmissionsRoutes {
 
-	// Test that the url is acessible for at least the given
-	// permission.
-	
-	// Could define maps for constants.
-	
-	private static Identity worsen(Identity i) {
-		switch (i) {
-		case Nobody:    return Identity.Nobody;
-		case Read:      return Identity.Nobody;
-		case ReadWrite: return Identity.Read;
-		case Write:     return Identity.Read;
-		case Admin:     return Identity.ReadWrite;
-		default:		throw new RuntimeException("no worsening defined for " + i);
-		}
-	}
-	
-	private static Application devapp(Identity i) {
-		switch (i) {
-		case Nobody:    return ngl.sub.Global.devapp(TestAuthConfig.asNobody);
-		case Read:      return ngl.sub.Global.devapp(TestAuthConfig.asRead);
-		case Write:     return ngl.sub.Global.devapp(TestAuthConfig.asWrite);
-		case ReadWrite: return ngl.sub.Global.devapp(TestAuthConfig.asReadWrite);
-		case Admin:     return ngl.sub.Global.devapp(TestAuthConfig.asAdmin);
-		default:        throw new RuntimeException("no auth config defined for " + i);
-		}
-	}
-	
-	private static void checkURL(Identity i, String url, int status) {
-	    testInServer(devapp(i),
-	    		ws -> {	    	
-	    			WSHelper.get(ws,url,status);
-	    		});
-	}
-	
-	private static void authURL(Identity i, String url) {
+	/*private static void authURL(Identity i, String url) {
 		Identity j = worsen(i);
 	    checkURL(i,url,OK);
 	    checkURL(j,url,FORBIDDEN);
-	}
+	}*/
 	
 	// Authorization tests
 	// GET		/tpl/sra/submissions/activate					controllers.sra.submissions.tpl.Submissions.activate()

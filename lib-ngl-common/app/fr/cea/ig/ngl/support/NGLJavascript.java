@@ -2,6 +2,7 @@ package fr.cea.ig.ngl.support;
 
 import static play.mvc.Results.ok;
 
+import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authentication.Authentication;
 // import fr.cea.ig.authentication.Authentication;
 import fr.cea.ig.lfw.support.LFWJavascript;
@@ -33,6 +34,8 @@ public interface NGLJavascript extends LFWJavascript, NGLApplicationHolder, Exec
 		return ok(js).as("application/javascript");
 	}
 
+	
+	@Authenticated
 	default Result jsPermissions() {
 		// return Permissions.jsPermissions(Permission.find.findByUserLogin(Authentication.getUser()), x -> x.code);
 		// return Permissions.jsPermissions(getPermissionAPI().byUserLogin(Authentication.getUser()), x -> x.code);

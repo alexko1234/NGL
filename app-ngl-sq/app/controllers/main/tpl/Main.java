@@ -62,6 +62,7 @@ import javax.inject.Inject;
 // @fr.cea.ig.authentication.Authenticated
 // @With(UserHistory.class)
 // public class Main extends NGLBaseController {
+
 public class Main extends NGLController
 		implements CodeLabelAPIHolder,
 		           PermissionAPIHolder,
@@ -70,7 +71,6 @@ public class Main extends NGLController
 		           ReagentCatalogAPIHolder,
 		           ResolutionConfigurationAPIHolder,
 		           ValuationCriteriaAPIHolder,
-		           // APIResultProcessor,
 		           NGLJavascript {
 
 	private final home home;
@@ -145,13 +145,13 @@ public class Main extends NGLController
 				//.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), x -> x.tableName, x -> x.code, x -> x.label)
 				.add(getCodeLabelAPI().all(), x -> x.tableName, x -> x.code, x -> x.label)
 				// .add(MongoDBDAO.find(InstanceConstants.PROJECT_COLL_NAME, Project.class).toList(),
-				.add(getProjectAPI().all(),   x -> "project",   x -> x.code, x -> x.name)
+				.add(getProjectAPI().all(),   x -> "project",  x -> x.code, x -> x.name)
 		// .add(MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList(), x -> "valuation_criteria", x -> x.code, x -> x.name)
-				.add(getValuationCriteriaAPI().all(),            x -> "valuation_criteria", x -> x.code, x -> x.name)
+				.add(getValuationCriteriaAPI().all(), x -> "valuation_criteria", x -> x.code, x -> x.name)
 		// .add(MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).toList(),
 				.add(getResolutionConfigurationAPI().all(),
 				         x -> x.resolutions,
-				         x -> "resolution", x-> x.code, x -> x.name)
+				         x -> "resolution", x -> x.code, x -> x.name)
 		// .add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(), x -> "protocol", x -> x.code, x -> x.name)
 				.add(getProtocolAPI().all(),                      x -> "protocol",       x -> x.code, x -> x.name)
 		// .add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),

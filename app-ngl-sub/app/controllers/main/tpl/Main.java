@@ -10,7 +10,15 @@ import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
 //import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.Executor;
+import fr.cea.ig.ngl.support.NGLJavascript;
+import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
+import fr.cea.ig.ngl.support.api.ProtocolAPIHolder;
 //import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -23,37 +31,51 @@ import views.html.home ;
 
 
 // public class Main extends -CommonController {
-public class Main extends Controller {
+public class Main extends NGLController
+               implements CodeLabelAPIHolder,
+                          ProtocolAPIHolder,
+                          NGLJavascript,
+                          Executor { // Controller {
 
 	//final static JsMessages messages = JsMessages.create(play.Play.application());	
-	private final JsMessages messages;
+	// private final JsMessages messages;
 	private final home home;
 	
+//	@Inject
+//	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
+//		messages = jsMessagesFactory.all();
+//		this.home = home;
+//	}
+
 	@Inject
-	public Main(jsmessages.JsMessagesFactory jsMessagesFactory, home home) {
-		messages = jsMessagesFactory.all();
+	public Main(NGLApplication app, home home) {
+		super(app);
 		this.home = home;
 	}
-
+	
+	@Authenticated
+	@Historized
 	public Result home() {
 		return ok(home.render());
 	}
-
-	public Result jsMessages() {
+	
+	/*public Result jsMessages() {
 		// return ok(messages.generate("Messages")).as("application/javascript");
 		// return ok(messages.all(Scala.Option("Messages"))).as("application/javascript");
-		return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
-	}
+		// return ok(messages.apply(Scala.Option("Messages"), jsmessages.japi.Helper.messagesFromCurrentHttpContext()));
+	}*/
 	
 	public Result jsCodes() {
-		return new Codes()
-				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), 
-						x -> x.tableName, x -> x.code, x -> x.label)
-				.valuationCodes()
-				.statusCodes()
-				.add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(),
-						     x -> "protocol", x -> x.code, x -> x.name)
-				.asCodeFunction();
+		return result(
+				() -> new Codes()
+					// .add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(), x -> x.tableName, x -> x.code, x -> x.label)
+					.add(getCodeLabelAPI().all(), x -> x.tableName, x -> x.code, x -> x.label)
+					.addValuationCodes()
+					.addStatusCodes()
+					// .add(MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList(), x -> "protocol", x -> x.code, x -> x.name)
+					.add(getProtocolAPI().all(), x -> "protocol", x -> x.code, x -> x.name)
+					.asCodeFunction(),
+				"error while building codes");
 	}
 	
 	/*

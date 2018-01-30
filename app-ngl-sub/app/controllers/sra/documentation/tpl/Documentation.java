@@ -7,9 +7,8 @@ import views.html.documentation.home;
 
 import javax.inject.Inject;
 
-// import controllers.CommonController;
-
-// public class Documentation extends -CommonController{
+// import controllers.CommonController;                   // done
+// public class Documentation extends -CommonController{  // done
 
 public class Documentation extends Controller {
 	

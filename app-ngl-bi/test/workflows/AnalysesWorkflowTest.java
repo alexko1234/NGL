@@ -23,7 +23,7 @@ import play.mvc.Result;
 import utils.AbstractTests;
 import utils.RunMockHelper;
 
-public class AnalysesWorkflowTest extends AbstractTests{
+public class AnalysesWorkflowTest extends AbstractTests {
 
 	static Analysis analysis;
 

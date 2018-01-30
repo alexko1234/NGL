@@ -100,7 +100,7 @@ public class Main extends NGLController implements NGLJavascript { // NGLBaseCon
 		return new Codes()
 				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
 						     x -> x.tableName,       x -> x.code, x -> x.label)
-				.valuationCodes()
+				.addValuationCodes()
 				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
 						     x -> "kitCatalogs",     x -> x.code, x -> x.name)
 				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),

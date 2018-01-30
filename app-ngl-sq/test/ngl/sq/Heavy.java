@@ -34,7 +34,7 @@ public class Heavy {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Heavy.class);
 	
-	@Test
+	// @Test
 	public void test01() throws Exception {
 		Application app = devapp(TestAuthConfig.asNobody);
 	    testInServer(app,

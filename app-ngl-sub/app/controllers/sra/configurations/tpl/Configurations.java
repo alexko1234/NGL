@@ -5,7 +5,6 @@ import javax.inject.Inject;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
-// import controllers.CommonController;
 //import controllers.NGLBaseController;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
@@ -18,7 +17,9 @@ import views.html.configurations.create;
 import views.html.configurations.consultation;
 //import views.html.configurations.details;
 
-// public class Configurations extends -CommonController {
+//import controllers.CommonController;                     // done
+// public class Configurations extends -CommonController { // done
+
 public class Configurations extends NGLController implements NGLJavascript  { // extends NGLBaseController {
 	
 	private home home;

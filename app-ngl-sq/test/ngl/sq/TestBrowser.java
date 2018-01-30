@@ -11,7 +11,7 @@ import play.test.TestServer;
 
 public class TestBrowser {
 	
-	@Test
+	// @Test
 	public void runInBrowser() throws IOException {
 		// CompleteSQTestServer ts = new CompleteSQTestServer();
 		// ts.start();

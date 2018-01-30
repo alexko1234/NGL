@@ -58,6 +58,9 @@ import controllers.history.UserHistory;
 // import controllers.containers.api.ContainerBatchElement;
 // import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.authorization.Authorized;
 //import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.play.IGBodyParsers;
@@ -72,23 +75,37 @@ import fr.cea.ig.play.NGLContext;
 
 public class Samples extends Samples2 {
 // public class Samples extends SamplesCRUD {
+	
 	@Inject
 	public Samples(NGLContext ctx) {
 		super(ctx);
 	}
-	@Permission(value={"reading"})
+	
+	// @Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result list() {
 		return super.list();
 	}
-	@Permission(value={"writing"})
+	
+	// @Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write		
 	public Result save() throws DAOException {
 		return super.save();
 	}
+	
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
-	@Permission(value={"writing"})
+	// @Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write	
 	public Result update(String code) throws DAOException {
 		return super.update(code);
 	}
+	
 }
 
 // Standard NGL implementation

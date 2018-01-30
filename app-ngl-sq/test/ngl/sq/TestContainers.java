@@ -57,13 +57,17 @@ public class TestContainers extends AbstractSQServerTest {
 
 	@Test
 	public void testMinimalCreation() {
+		logger.debug("** categories and states");
 		for (ContainerCategory c : ContainerCategory.find.findAll())
-			logger.info("container category " + c.code);
+			logger.debug("container category " + c.code);
 		for (ContainerSupportCategory c : ContainerSupportCategory.find.findAll())
-			logger.info("support category   " + c.code);
+			logger.debug("support category   " + c.code);
 		for (models.laboratory.common.description.State s : models.laboratory.common.description.State.find.findAll())
-			logger.info("state              " + s.code);
+			logger.debug("state              " + s.code);
+		logger.debug("**");	
+		
 		Sample sample = SampleFactory.createSample(ws);
+		logger.debug("created sample {}",sample.code);
 		
 		ContainerSupport support = new ContainerSupport();
 		support.code = DevAppTesting.newCode();

@@ -54,13 +54,14 @@ public class PermissionAction extends Action<Permission> {
 			return delegate.call(context);
 		
 		if (!Authentication.isAuthenticatedSession(context.session()))
-			return CompletableFuture.supplyAsync(() -> unauthorized("not authenticated"));
+			// return CompletableFuture.supplyAsync(() -> unauthorized("not authenticated"));
+			return CompletableFuture.supplyAsync(() -> forbidden("not authenticated"));
 		String username = Authentication.getUser(context.session());
 		// We run the authorizator implementation.
 		if (authorizator.authorize(username, configuration.value()))
 			return delegate.call(context);
 		else
-			return CompletableFuture.supplyAsync(() -> forbidden());
+			return CompletableFuture.supplyAsync(() -> forbidden("not enough rights"));
 	}
 	
 }

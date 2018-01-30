@@ -29,6 +29,10 @@ public class NGLController extends LFWController implements NGLApplicationHolder
 		return app; 
 	}
 	
+	public NGLConfig getConfig() {
+		return app.nglConfig();
+	}
+	
 	/*public Result result(APIExecution toRun, String msg) {
 		try {
 			return toRun.run();

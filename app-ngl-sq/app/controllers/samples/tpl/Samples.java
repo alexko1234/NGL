@@ -14,17 +14,20 @@ import javax.inject.Inject;
 
 //import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
-// import controllers.CommonController;
 import play.routing.JavaScriptReverseRouter;
 
 
-// TODO: clean, comment*
-// public class Samples extends -CommonController{
+// TODO: clean, comment
+
+//import controllers.CommonController;             // done
+// public class Samples extends -CommonController{ // done
+
 public class Samples extends NGLController implements NGLJavascript  { // NGLBaseController {
 
 	private final home home;
@@ -41,22 +44,29 @@ public class Samples extends NGLController implements NGLJavascript  { // NGLBas
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code));
 	}
 
-	public Result search() {
-		return ok(search.render());
-	}
-
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 
+	// tpl
+	public Result search() {
+		return ok(search.render());
+	}
+
+	// tpl
 	public Result details() {
 		return ok(details.render());
 	}
 
+	// tpl
 	public Result javascriptRoutes() {
 		return jsRoutes(controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
