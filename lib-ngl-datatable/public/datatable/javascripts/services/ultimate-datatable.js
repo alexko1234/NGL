@@ -3147,6 +3147,14 @@ directive("udtCell", function(){
                                     	scope.cellValue = newValue;
                                      }
                             	});                           
+		    			}else if(column.url != undefined || column.url != null){
+		    				var url = $parse(column.url)(value.data);
+		    				var watchValue = "udtTable.urlCache['"+url+"']."+column.property+filter+formatter;
+		    				scope.$watch(watchValue, function(newValue, oldValue) {
+                                if ( newValue !== oldValue ) {
+                                	scope.cellValue = newValue;
+                                 }
+                        	});                           
 		    			}
 		    			return currentScope.udtTable.getFinalValue(column, value);			    		
 	    			};
