@@ -8,6 +8,12 @@ angular.module('home', ['ngRoute', 'commonsServices', 'ultimateDataTableServices
 		controller : 'ConsultationCtrl'
 	});	
 
+	$routeProvider.when('/sra/experiments/:code', {
+		// url qui va appeler controler java de type tpl
+		templateUrl : '/tpl/sra/experiments/details',
+		controller : 'DetailsCtrl'
+	});
+    		
 	// configure html5 to get links working with bookmarked
 	$locationProvider.html5Mode({enabled: true, requireBase: false});
 });

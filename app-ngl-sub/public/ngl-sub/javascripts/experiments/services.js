@@ -153,7 +153,7 @@ angular.module('ngl-sub.ExperimentsServices', []).
 					  order:true,
 					  edit:false,
 					  choiceInList:false
-				     });	        
+				     });			     	        
 		return columns;
 	};
 	

@@ -40,12 +40,12 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 			exportCSV:{
 				active:false
 			},
-			/*show:{                   // bouton pour epingler si on passe par details-ctrl.js 
+			show:{                   // bouton pour epingler si on passe par details-ctrl.js 
 				active:true,
 				add :function(line){
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.sra.experiments.tpl.Experiments.get(line.code).url,remove:true});
 				}
-			},*/
+			},
 			save : {
 				active:true,
 				showButton : true,

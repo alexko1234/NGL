@@ -1,24 +1,26 @@
 package controllers.sra.experiments.tpl;
 
 import javax.inject.Inject;
+
 import controllers.CommonController;
+import controllers.routes;
 import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 import views.html.experiments.home;
 import views.html.experiments.consultation;
-//import views.html.experiments.details;
+import views.html.experiments.details;
 
 public class Experiments extends CommonController {
 
 	private final home home;
 	private final consultation consultation;
-	//private final details details;
+	private final details details;
 
 	@Inject
-	public Experiments(home home, consultation consultation) {
+	public Experiments(home home, consultation consultation, details details) {
 		this.home         = home; 
 		this.consultation = consultation;
-
+		this.details      = details;
 	}
 
 	public Result home(String homecode) {
@@ -33,10 +35,10 @@ public class Experiments extends CommonController {
 		return ok(home.render("search"));
 	}
 
-	/*public Result details() {
+	public Result details() {
 		return ok(details.render());
 	}	
-*/
+
 	public Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 	    return ok(  	    		

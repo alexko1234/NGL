@@ -117,6 +117,7 @@ GET 	/api/sra/experiments/run/:code				controllers.sra.experiments.api.Experimen
 PUT		/api/sra/experiments/run/:code				controllers.sra.experiments.api.ExperimentsRuns.update(code: java.lang.String)
 GET		/tpl/sra/experiments/js-routes				controllers.sra.experiments.tpl.Experiments.javascriptRoutes()
 GET		/tpl/sra/experiments/consultation	        controllers.sra.experiments.tpl.Experiments.consultation()
+GET		/tpl/sra/experiments/details			    controllers.sra.experiments.tpl.Experiments.details()
 
 #-------------------
 # ExperimentsRawData

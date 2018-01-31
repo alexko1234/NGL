@@ -154,7 +154,7 @@ experiment.projectCode=Code projet
 experiment.state=Etat
 experiment.sampleCode=Code Sample
 experiment.studyCode=Code Study
-experiment.title=Title
+experiment.title=Titre
 #EBI label
 experiment.librarySelection= * Library_Selection
 experiment.libraryStrategy= * Library_Strategy
