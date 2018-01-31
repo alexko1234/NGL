@@ -3150,9 +3150,9 @@ directive("udtCell", function(){
 		    			}else if(column.url != undefined || column.url != null){
 		    				var url = $parse(column.url)(value.data);
 		    				var watchValue = "udtTable.urlCache['"+url+"']."+column.property+filter+formatter;
-		    				scope.$watch(watchValue, function(newValue, oldValue) {
+		    				scope.$watch("udtTable.urlCache['"+url+"']", function(newValue, oldValue) {
                                 if ( newValue !== oldValue ) {
-                                	scope.cellValue = newValue;
+                                	scope.cellValue = currentScope.udtTable.getFinalValue(column, value);
                                  }
                         	});                           
 		    			}
