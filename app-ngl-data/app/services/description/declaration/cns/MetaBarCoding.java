@@ -324,7 +324,7 @@ public class MetaBarCoding extends AbstractDeclaration {
 				false, null, null, "img",16,true,null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("DNA polymerase", "dnaPolymerase", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null, 
-				DescriptionFactory.newValues("taq Phusion","FastStart Taq"), null, null, null,"single", 1, false, "taq Phusion",null));
+				DescriptionFactory.newValues("taq Phusion","FastStart Taq","Advantage 2"), null, null, null,"single", 1, false, "taq Phusion",null));
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content,Level.CODE.Sample), String.class, true, null, 
 				DescriptionFactory.newValues("Fuhrman primer","V9 primer", "16S primer + Fuhrman primer", "ITS2 primer", "ITSintfor2 / ITS-Reverse", "SYM_VAR_5.8S2 / SYM_VAR_REV", 
 						"ITSD / ITS2REV","CP23S primers","18S_V4 primer", "COI primer m1COIintF / jgHCO2198", "Sneed2015 27F / 519Rmodbio",
