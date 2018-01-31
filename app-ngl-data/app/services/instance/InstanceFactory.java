@@ -90,7 +90,7 @@ public class InstanceFactory {
 		barcodePosition.labelCommand = labelCommand;
 		barcodePosition.barcodeCommand = barcodeCommand;
 		barcodePosition.barcodeBottom = barcodeBottom;
-		barcodePosition.is2d = is2d;
+		barcodePosition.twoDimension = is2d;
 		return barcodePosition;
 	}
 
