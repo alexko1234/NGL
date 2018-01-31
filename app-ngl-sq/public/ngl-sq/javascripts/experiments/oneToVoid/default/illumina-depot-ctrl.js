@@ -224,8 +224,8 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			
 		$scope.buttonNOVASEQ6000XMLfile = {
 				isShow:function(){
-					return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() );
-					//return ( $scope.isInProgressState() || $scope.isFinishState() );
+					//return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() ); // MARCHE pas, editMode pas vu...
+					return ( $scope.isInProgressState() || $scope.isFinishState() );
 					},
 				isFileSet:function(){
 					return ($scope.file === undefined)?"disabled":"";

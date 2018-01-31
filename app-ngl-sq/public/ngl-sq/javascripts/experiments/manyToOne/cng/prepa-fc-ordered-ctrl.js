@@ -255,14 +255,12 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	};
 	
 	// 25/10/2017 FDS ajout pour l'import du fichier Mettler; 08/11/2017 renommage button2=>buttonMettler
-	// 31/01//2018  pas pour les novaseq ???
-	
+	// 31/01//2018  pas de fichier Mettler pour les novaseq 
 	$scope.buttonMettler = {
 			isShow:function(){
 				// visible meme si terminé, mais seulement en mode edition
-				// return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); MARCHE PAS !!!!
-				// return ( $scope.isInProgressState()||$scope.isFinishState() );
-				return ( ( $scope.isInProgressState()||$scope.isFinishState()) &&  (null != $scope.experiment.instrument.code.match(/Mariecurix/)) );
+				//return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); // MARCHE PAS: editMode pas vu ici
+				return ( ( $scope.isInProgressState()||$scope.isFinishState()) &&  (null===$scope.experiment.instrument.code.match(/MarieCurix/)) );
 				},
 			isFileSet:function(){
 				return ($scope.file === undefined)?"disabled":"";
