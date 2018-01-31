@@ -10,7 +10,7 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 // addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.9")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.11")
 
 // bytecode enhancement has been pulled out of core play 
 addSbtPlugin("com.typesafe.sbt" % "sbt-play-enhancer" % "1.2.2")
@@ -27,7 +27,7 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 // https://github.com/sbt/sbt-mocha
 // SBT plugin for running mocha JavaScript unit tests on node
 // addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
-addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.0")
+addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.1.2")
 // Twirl support maybe needed.
 // addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.4")
 
