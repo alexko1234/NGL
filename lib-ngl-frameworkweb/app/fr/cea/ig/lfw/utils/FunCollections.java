@@ -90,6 +90,7 @@ public class FunCollections {
 	}
 	
 	static class IntercalatingIterator<A> implements Iterator<A> {
+		
 		private final Iterator<A> src;
 		private final A element;
 		private boolean intercalate;
@@ -115,13 +116,16 @@ public class FunCollections {
 				return src.next();
 			}
 		}
+		
 	}
 	
 	static class SurroundingIterator<A> implements Iterator<A> {
+		
 		private final Iterator<A> src;
 		private final A before;
 		private final A after;
 		private boolean first,last;
+		
 		public SurroundingIterator(Iterator<A> src, A before, A after) {
 			this.src    = src;
 			this.before = before;
@@ -129,11 +133,13 @@ public class FunCollections {
 			first       = true; // insert first
 			last        = true; // insert last
 		}
+		
 		@Override
 		public boolean hasNext() {
 			if (first) return true;
 			return src.hasNext() || last;
 		}
+		
 		@Override
 		public A next() {
 			if (first) {
@@ -145,8 +151,7 @@ public class FunCollections {
 			last = false;
 			return after;
 		}
-		
-		
+
 	}
 	
 	public static <A,B> Iterator<B> imap(Iterator<A> i, Function<A,B> f) {

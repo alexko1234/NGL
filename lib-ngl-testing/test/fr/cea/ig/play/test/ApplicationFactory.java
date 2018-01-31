@@ -5,6 +5,7 @@ import play.inject.Bindings;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 //import java.util.function.Consumer;
 import java.util.function.Function;
@@ -88,6 +89,20 @@ public class ApplicationFactory {
 	
 	public void ws(Consumer<WSClient> c) {
 		DevAppTesting.testInServer(this.createApplication(), c);
+	}
+	
+	public void run(Consumer<Application> c) {
+		Application a = createApplication();
+		try {
+			c.accept(a);
+		} finally {
+			a.asScala().stop();			
+		}
+	}
+	
+	public void runWs(BiConsumer<Application,WSClient> c)  {
+		final Application a = createApplication();
+		DevAppTesting.testInServer(a,ws -> c.accept(a,ws));
 	}
 	
 }

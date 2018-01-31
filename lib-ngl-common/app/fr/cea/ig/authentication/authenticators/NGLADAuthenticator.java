@@ -39,5 +39,4 @@ public class NGLADAuthenticator extends ADAuthenticator {
 		return views.html.nglLoginPassForm.render(message);
 	}
 
-	
 }

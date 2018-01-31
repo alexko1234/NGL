@@ -13,6 +13,7 @@ import views.html.containerSupports.search;
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -41,6 +42,7 @@ public class ContainerSupports extends NGLController implements NGLJavascript { 
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {		
 		return ok(home.render(code));		
 	}

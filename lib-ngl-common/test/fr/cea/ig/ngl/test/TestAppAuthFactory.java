@@ -63,8 +63,7 @@ public class TestAppAuthFactory extends ApplicationFactory {
 	public TestAppAuthFactory asWorse(Identity i) {
 		return as(worsen(i));
 	}
-	
-	
+
 	// Test that the url is acessible for at least the given
 	// permission.
 	
