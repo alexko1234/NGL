@@ -2,6 +2,7 @@ package fr.cea.ig.authorization.authorizators;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -107,4 +108,9 @@ public class ConfiguredAuthorizator implements IAuthorizator {
 		return delegate.authorize(login, perms);
 	}
 
+	@Override
+	public Set<String> getPermissions(String login) {
+		return delegate.getPermissions(login); 
+	}
+	
 }

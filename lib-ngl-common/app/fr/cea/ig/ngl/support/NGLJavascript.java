@@ -40,8 +40,9 @@ public interface NGLJavascript extends LFWJavascript, NGLApplicationHolder, Exec
 		// return Permissions.jsPermissions(Permission.find.findByUserLogin(Authentication.getUser()), x -> x.code);
 		// return Permissions.jsPermissions(getPermissionAPI().byUserLogin(Authentication.getUser()), x -> x.code);
 		String user = Authentication.getUser();
-		return result(() -> jsPermissions(getPermissionAPI().byUserLogin(user), x -> x.code),
-					  "could not get permissions for " + user);
+		// return result(() -> jsPermissions(getPermissionAPI().byUserLogin(user), x -> x.code),
+		// 			  "could not get permissions for " + user);
+		return jsPermissions(getNGLApplication().authorizator().getPermissions(user));
 	}
 
 }

@@ -22,6 +22,10 @@ import play.routing.JavaScriptReverseRouter;
 
 public interface LFWJavascript extends LFWApplicationHolder {
 
+	default Result jsPermissions(Iterable<String> i) {
+		return jsPermissions(i, x -> x);
+	}
+	
 	default <T> Result jsPermissions(Iterable<T> i, Function<T,String> f) {
 		return JavascriptGeneration.Permissions.jsPermissions(i,f);
 	}

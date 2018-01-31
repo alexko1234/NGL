@@ -63,4 +63,9 @@ public class FixedAuthorizator implements IAuthorizator {
 		return authorized;
 	}
 
+	@Override
+	public Set<String> getPermissions(String login) {
+		return authorizations;
+	}
+	
 }

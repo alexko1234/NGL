@@ -15,12 +15,12 @@ public class NeverAuthorizator implements IAuthorizator {
 
 	// Implicit DI no arg constructor
 	
-	/**
-	 * Never authorized.
-	 */
-	@Override
-	public boolean authorize(String login, String[] perms) {
-		return false;
-	}
+//	/**
+//	 * Never authorized.
+//	 */
+//	@Override
+//	public boolean authorize(String login, String[] perms) {
+//		return false;
+//	}
 
 }

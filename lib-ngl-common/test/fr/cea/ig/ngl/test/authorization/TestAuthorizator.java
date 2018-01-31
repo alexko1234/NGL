@@ -22,6 +22,8 @@ public class TestAuthorizator implements IAuthorizator {
 	
 	private static final Map<Identity,Set<String>> rights;
 	
+	private static final Set<String> noPermissions;
+	
 	private static Set<String> set(Permission... rs) {
 		HashSet<String> s = new HashSet<>();
 		for (Permission r : rs)
@@ -30,8 +32,9 @@ public class TestAuthorizator implements IAuthorizator {
 	}
 	
 	static {
+		noPermissions = set();
 		rights = new HashMap<>();
-		rights.put(Identity.Nobody,    set());
+		rights.put(Identity.Nobody,    noPermissions);
 		rights.put(Identity.Read,      set(Permission.Read));
 		rights.put(Identity.Write,     set(Permission.Write));
 		rights.put(Identity.ReadWrite, set(Permission.Read,Permission.Write));
@@ -56,4 +59,15 @@ public class TestAuthorizator implements IAuthorizator {
 		return true;
 	}
 
+	@Override
+	public Set<String> getPermissions(String login) {
+		Identity id = Identity.valueOf(login);
+		if (id == null) 
+			return noPermissions;
+		Set<String> idRights = rights.get(id);
+		if (idRights == null)
+			return noPermissions;
+		return idRights;
+	}
+	
 }

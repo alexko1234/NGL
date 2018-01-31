@@ -9,8 +9,14 @@ import javax.inject.Singleton;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import models.administration.authorisation.Permission;
 import controllers.authorisation.PermissionHelper;
 import fr.cea.ig.authorization.IAuthorizator;
+import fr.cea.ig.ngl.daoapi.APIException;
+import fr.cea.ig.ngl.daoapi.PermissionAPI;
 import fr.cea.ig.play.IGConfig;
 import models.administration.authorisation.User;
 import models.administration.authorisation.description.dao.UserDAO;
@@ -21,6 +27,7 @@ import models.administration.authorisation.description.dao.UserDAO;
 // import play.mvc.Http.Context;
 // import play.mvc.Result;
 // import static play.mvc.Results.unauthorized;
+import models.utils.dao.DAOException;
 
 /**
  * IAuhtorization implementation on top of UserDAO.
@@ -96,6 +103,11 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 */
 	private final UserDAO userDAO;
 	
+	/**
+	 * Permission API.
+	 */
+	private final PermissionAPI permissionAPI;
+	
 	// At this point the system may not support application
 	// checks. Implementation in the UserDOA is incorrect.
 	private static final boolean enableApplicationCheck = false; 
@@ -105,7 +117,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * @param config configuration to use
 	 */
 	@Inject
-	public UserDAOAuthorizator(IGConfig config) {
+	public UserDAOAuthorizator(IGConfig config, PermissionAPI permissionAPI) {
 		// userDAO         = Spring.getBeanOfType(UserDAO.class);
 		userDAO      = (UserDAO)new User.UserFinder().getInstance();
 		userCreation = config.getBoolean(CONF_USER_CREATION_PATH, false);
@@ -113,7 +125,8 @@ public class UserDAOAuthorizator implements IAuthorizator {
 			roleAtCreation = config.getString(CONF_USER_ROLE_PATH,null);
 		else
 			roleAtCreation = null;
-		applicationName = config.getString(CONF_APPLICATION_NAME_PATH,null); 
+		applicationName = config.getString(CONF_APPLICATION_NAME_PATH,null);
+		this.permissionAPI = permissionAPI;
 	}
 	
 	/**
@@ -162,6 +175,22 @@ public class UserDAOAuthorizator implements IAuthorizator {
 		return true;
 	}
 
+	@Override
+	public Set<String> getPermissions(String login) {
+		Set<String> permissions = new HashSet<>();
+		if (isBlank(login))                               return permissions;
+		if (!isDeclaredUser(login))                       return permissions;
+		if (!isActiveUser(login))                         return permissions;
+		if (!canAccessApplication(applicationName,login)) return permissions;
+		try {
+			for (Permission p : permissionAPI.byUserLogin(login)) 
+				permissions.add(p.code);
+		} catch (DAOException | APIException e) {
+			logger.error("permission access failed for " + login,e);
+		} 
+		return permissions;
+	}
+	
 	// ---------------- UserDAO indirection -------------------------------
 	
 	/**
