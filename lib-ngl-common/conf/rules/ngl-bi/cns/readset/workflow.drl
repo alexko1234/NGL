@@ -140,6 +140,9 @@ rule "Find Fungi for taxonomy treatment"
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.is("code", $readset.code),
 					DBUpdate.set("treatments.taxonomy.pairs.keywordBilan", pol));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("code", $readset.code),
+					DBUpdate.set("treatments.taxonomy.read1.keywordBilan", pol));
 		}
 		
 		if(krona!=null){
