@@ -1,5 +1,6 @@
 @this()
 @()
+@import views.html.helper._
 <div class="row">
 <div class="col-md-12 col-lg-12">
 <div ng-class="assignService.messages.clazz" ng-show="assignService.messages.text !== undefined">
@@ -25,8 +26,22 @@
 					<div class="form-group" ng-repeat="filter in processFilters">
 						<div udt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
 					</div>
-				</div>									
+				</div>	
+				@columnSearchForm{
+					@formGroup{
+					<div class="btn-toolbar">
+						<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="assignService.searchProcesses()" class="btn btn-primary" >
+							<i class="fa fa-search"></i>
+						</button>
+						<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="assignService.reset()"  class="btn btn-default">
+							<i class="fa fa-undo"></i>
+						</button>
+													 	
+					</div>	
+					}				
+				}								
 			</div>
+			
 		</form>	
 	</div>
 

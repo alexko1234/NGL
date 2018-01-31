@@ -76,6 +76,7 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.searchSamples(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
 						controllers.processes.api.routes.javascript.Processes.update(),
+						controllers.processes.api.routes.javascript.Processes.updateBatch(),
 						controllers.processes.api.routes.javascript.Processes.save(),
 						controllers.processes.api.routes.javascript.Processes.saveBatch(),
 						controllers.processes.api.routes.javascript.Processes.delete(),

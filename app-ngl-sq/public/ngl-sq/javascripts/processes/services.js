@@ -318,7 +318,7 @@ angular.module('ngl-sq.processesServices', [])
 			}
 			if(angular.isArray(this.commonPropertiesDefinitions) && this.commonPropertiesDefinitions.length > 0){
 				var columns = this.commonPropertiesDefinitions.map(function(propertyDefinition) {
-					return propertyDefHelpers.getUDTColumn(propertyDefinition);					
+					return propertyDefHelpers.getProcessUDTColumn(propertyDefinition);					
 				});
 				
 				columns = columnsDefault.concat(columns);
@@ -781,7 +781,7 @@ angular.module('ngl-sq.processesServices', [])
 				this.processPropertyColumns = [];
 				if(properties){										
 					this.processPropertyColumns = properties.map(function(propertyDefinition){
-						return propertyDefHelpers.getUDTColumn(propertyDefinition);
+						return propertyDefHelpers.getProcessUDTColumn(propertyDefinition);
 						});					
 				}
 				
@@ -1396,12 +1396,23 @@ angular.module('ngl-sq.processesServices', [])
 			"property":"contents",
 			"order":false,
 			"hide":false,
-			"position":5.01,
+			"position":5.001,
 			"type":"text",
 			"filter":"getArray:'sampleTypeCode' | unique | codes:\"type\"",
 			"groupMethod":"collect"
 		});
-
+		
+		columns.push({
+			"header":Messages("processes.table.availableProcesses"),
+			"property":"processCode",
+			"order":true,
+			"edit":true,
+			"required":true,
+			"editTemplate":"<div class='form-control' bt-select  bt-options='opt.code as opt.code for opt in assignService.getProcesses(value.data)' #ng-model udt-change='assignService.selectProcess(value.data)' auto-select></div>",
+			"position":5.002,
+			"type":"text"
+		});
+		/*
 		columns.push({
 			"header":Messages("containers.table.contents.length"),
 			"property":"contents.length",
@@ -1410,6 +1421,7 @@ angular.module('ngl-sq.processesServices', [])
 			"position":5.05,
 			"type":"number"
 		});
+		*/
 		columns.push({
 			"header":Messages("containers.table.stateCode"),
 			"property":"state.code",
@@ -1424,7 +1436,7 @@ angular.module('ngl-sq.processesServices', [])
 			"property" : "comments[0].comment",
 			"position" : 500,
 			"order" : false,
-			"edit" : true,
+			"edit" : false,
 			"editTemplate":"<textarea class='form-control' #ng-model rows='3'></textarea>",
 			"hide" : true,
 			"type" : "text"
@@ -1447,7 +1459,7 @@ angular.module('ngl-sq.processesServices', [])
 		         },
 		         edit:{  		
 		        	 active:true,
-		        	 columnMode:true,
+		        	 columnMode:false,
 		        	 byDefault : true,
 		        	 showButton:false
 		         },
@@ -1499,6 +1511,71 @@ angular.module('ngl-sq.processesServices', [])
 			processType : undefined,
 			isProcessFiltered : false,
 			selectedSampleCodes : [],
+			containerData : {},
+			
+			//containerSampleCodes : {},
+			//containerProcesses : {},
+			
+			udtSaveCallback : function(datatable){
+				this.messages.clear();
+				var data = datatable.getData();
+				var allProcesses = [];
+				data.forEach(function(container, index){
+					var selectedProcess = $filter('filter')(this.containerData[container.code].processes, {code:container.processCode},true)[0];
+					selectedProcess.inputContainerCode = container.code;
+					selectedProcess.inputContainerSupportCode = container.support.code;
+					allProcesses.push({data:selectedProcess, index:index});				
+				},this);
+				
+				var nbElementByBatch = Math.ceil(allProcesses.length / 6);
+				var queries = [];
+		        for (var i = 0; i < 6 && allProcesses.length > 0; i++) {
+		        	var subsetOfProcesses = allProcesses.splice(0, nbElementByBatch);
+		        	queries.push($http.put(jsRoutes.controllers.processes.api.Processes.updateBatch().url, subsetOfProcesses,{subsetOfProcesses:subsetOfProcesses}));
+		        }
+				var $that = this;
+				$q.all(queries).then(function(results) {
+					
+					results.forEach(function(result){
+						if (result.status !== 200) {
+							console.log("Batch in error");					
+			            } else {
+			            	result.data.forEach(function(data){
+			            		
+			            		if (data.status === 200) {
+			            			$that.containerData[data.data.inputContainerCode].trClass = "success";			            			
+			            		}else{
+			            			var process = $filter('filter')(result.config.subsetOfProcesses,{index:data.index}, true)[0];
+			            			$that.containerData[process.data.inputContainerCode].trClass = "danger";
+			            			$that.containerData[process.data.inputContainerCode].onError = true;
+			            			$that.containerData[process.data.inputContainerCode].errors = {};
+			            			$that.containerData[process.data.inputContainerCode].errors[process.data.inputContainerCode] = data.data;
+			            			atLeastOneError = true;
+			            		}	 
+			            		           		
+			            	});	            	
+			            }
+					});
+					
+				},function(result){
+					$that.messages.setError("save");				
+				});
+				
+			},
+			udtRemoveCallback : function(datatable){
+				mainService.getBasket().reset();
+				datatable.getData().forEach(function(elt){
+					mainService.getBasket().add(elt.code);
+				});
+				this.computeData();	        		 
+			},
+			udtTrClass:function(data, line){
+        		if(this.containerData[data.code]){	        			
+        			return this.containerData[data.code].trClass	        			
+        		}else{
+        			return '';
+        		}	        		
+        	}, 
 			initProcessType : function(processTypeCode) {
 				var promise = $q.when(this);
 				if(processTypeCode){
@@ -1516,7 +1593,6 @@ angular.module('ngl-sq.processesServices', [])
 			initProcessAttributes : function(propertiesDefinitions) {
 				this.additionalProcessFilters = [];
 				this.additionalProcessColumns = [];
-				this.availableProcesses = [];
 				var formFilters = [];
 				var allFilters = undefined;
 				var nbElementByColumn = undefined;
@@ -1542,7 +1618,9 @@ angular.module('ngl-sq.processesServices', [])
 					
 					
 					this.additionalProcessColumns =  propertiesDefinitions.map(function(pDef){
-						return propertyDefHelpers.getUDTColumn(pDef);
+						var column = propertyDefHelpers.getProcessUDTColumn(pDef);
+						column.edit = false;
+						return column;
 					});
 						
 				}
@@ -1552,6 +1630,7 @@ angular.module('ngl-sq.processesServices', [])
 				return this.additionalProcessFilters;
 			},
 			computeData : function(){
+				this.containerData = {};
 				
 				var containerCodes = [];
 				containerCodes = containerCodes.concat(mainService.getBasket().get());
@@ -1563,30 +1642,71 @@ angular.module('ngl-sq.processesServices', [])
 						var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
 						queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}}) );
 					}
-
+					var insideService = this;
 					return $q.all(queries).then(function(results) {
 						var allData = [];
 						results.forEach(function(result){
 							allData = allData.concat(result.data);
 						});
-						var allSampleCodes = []
-						allData.forEach(function(data){
-							allSampleCodes = allSampleCodes.concat(data.sampleCodes);
-							if(data.treeOfLife)allSampleCodes = allSampleCodes.concat(data.treeOfLife.paths[0].split(','));							
-						});
-						allSampleCodes = Array.from(new Set(allSampleCodes));
-						return allSampleCodes;
+						
+						insideService.setSelectedSampleCodes(allData);
+						insideService.searchProcesses();
+						
+						return allData;
 					});		
 				}
 			},
+			reset : function(){
+				this.form = {};
+			},
+			/**
+			 * Search processes and assign it to each container.
+			 * The assignation is based on the sampleCode of the processes
+			 */
 			searchProcesses : function(){
 				this.form.stateCode = 'IW-C';
 				this.form.sampleCodes = this.selectedSampleCodes;
 				$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:this.form,service:this})
 					.then(function(result){
 						var service = result.config.service;
-						service.availableProcesses = result.data;
+						result.data.forEach(function(process){
+							process.sampleCodes.forEach(function(sampleCode){
+								Object.keys(this.containerData)
+									.forEach(function(containerCode){
+										if(!this.containerData[containerCode].processes)this.containerData[containerCode].processes = [];
+										if(this.containerData[containerCode].sampleCodes.indexOf(sampleCode) > -1)
+											this.containerData[containerCode].processes.push(process);
+								}, this);								
+							},this);
+						}, service);
+						
 					});
+			},
+			setSelectedSampleCodes : function(selectedContainers){
+				var allSampleCodes = [];
+				this.selectedSampleCodes = [];
+				 
+				selectedContainers.forEach(function(container){
+					var containerSampleCodes = container.sampleCodes;
+					if(container.treeOfLife)containerSampleCodes = containerSampleCodes.concat(container.treeOfLife.paths[0].split(','));		
+					allSampleCodes = allSampleCodes.concat(containerSampleCodes);
+					if(!this.containerData[container.code])this.containerData[container.code] = {};
+					this.containerData[container.code].sampleCodes = containerSampleCodes;					 
+				},this);
+				allSampleCodes = Array.from(new Set(allSampleCodes));
+				this.selectedSampleCodes = allSampleCodes;
+			},
+			getProcesses : function(container){
+				if(container)return this.containerData[container.code].processes;
+				return null;
+			},
+			selectProcess : function(container){
+				var selectedProcess = $filter('filter')(this.containerData[container.code].processes, {code:container.processCode},true)[0];
+				if(selectedProcess)
+					container.properties = selectedProcess.properties;
+				else
+					container.properties = null;
+				
 			},
 			/**
 			 * initialise the service
@@ -1594,11 +1714,11 @@ angular.module('ngl-sq.processesServices', [])
 			init : function(processTypeCode) {
 				this.initProcessType(processTypeCode).then(function(service){
 					if(service.processType){
-						service.computeData().then(function(allSampleCodes){
-							service.selectedSampleCodes = allSampleCodes;
-							service.searchProcesses();
+						service.computeData().then(function(selectedContainers){
+							
 							service.datatable = datatable(service.getDatatableConfig(service));
-							service.datatable.setColumnsConfig(service.getDefaultColumns().concat(service.additionalProcessColumns));							
+							service.datatable.setColumnsConfig(service.getDefaultColumns().concat(service.additionalProcessColumns));		
+							service.datatable.setData(selectedContainers);
 						});
 					}
 				});

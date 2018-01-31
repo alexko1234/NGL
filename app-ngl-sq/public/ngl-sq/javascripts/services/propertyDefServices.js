@@ -28,7 +28,7 @@ angular.module('propertyDefServices', [])
 				return type;
 			},
 			
-			getUDTColumn : function(propertyDefinition){
+			getProcessUDTColumn : function(propertyDefinition){
 				var column = {};
 				column.watch=true;
 				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);

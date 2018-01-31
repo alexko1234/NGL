@@ -90,7 +90,12 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 			if(null != c && !"IW-P".equals(c.state.code)){
 				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
 			}
-		}else if(!"IW-C".equals(stateCode)){
+		}else if("IW-C".equals(stateCode) && contextValidation.isUpdateMode() && containerCode != null){
+			Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);
+			if(null != c && !"IW-P".equals(c.state.code)){
+				contextValidation.addErrors("inputContainerCode", ValidationConstants.ERROR_BADSTATE_MSG, c.state.code);
+			}
+		} else if(!"IW-C".equals(stateCode)){
 			Container c = BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME, true);			
 		}
 	}

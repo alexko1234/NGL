@@ -338,6 +338,8 @@ processes.table.sampleOnInputContainer.volume = Volume
 processes.table.sampleOnInputContainer.concentration = Concentration
 processes.table.sampleOnInputContainer.unit.volume = Unité de volume
 processes.table.sampleOnInputContainer.unit.concentration = Unité de concentration
+processes.table.availableProcesses = Sélectionnez un processus ?
+
 
 processes.select.processType = Type processus
 processes.select.processCategory = Catégorie processus

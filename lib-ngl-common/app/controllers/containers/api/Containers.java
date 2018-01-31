@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -418,13 +419,25 @@ class Containers2 extends DocumentController<Container> {
 		if(StringUtils.isNotBlank(containersSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
 		}
-
+		/* ?? used to assign container on process
+		if(containersSearch.sampleCodesFromIWCProcess
+				&& StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){
+			Set<String> sampleCodes = new TreeSet<String>();
+			
+			List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+					DBQuery.is("state.code", "IW-C").is("typeCode", containersSearch.nextProcessTypeCode)).toList();
+			for(Process p : processes){
+				sampleCodes.addAll(p.sampleCodes);
+			}
+			queryElts.add(DBQuery.in("sampleCodes", sampleCodes));
+			
+		}else */
+		
 		if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.sampleCode)){
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 		}
-
 		
 		if(CollectionUtils.isNotEmpty(containersSearch.supportCodes)){
 			queryElts.add(DBQuery.in("support.code", containersSearch.supportCodes));
@@ -480,7 +493,6 @@ class Containers2 extends DocumentController<Container> {
 					
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
 			if(processType != null){
-				//List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
 				
 				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(processType.firstExperimentType.code, processType.code);
 				

@@ -348,6 +348,45 @@ public class Processes extends DocumentController<Process> {
 	}
 	
 	@Permission(value={"writing"})
+	public Result updateBatch(){
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
+		final String user = getCurrentUser();
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+		.map(filledForm -> {
+			ProcessesBatchElement element = filledForm.get();
+			Process input = element.data;
+			Process process = getObject(input.code);
+			if (null != process) {
+				if (null != input.traceInformation) {
+					input.traceInformation = getUpdateTraceInformation(input.traceInformation);
+				} else {
+					Logger.error("traceInformation is null !!");
+				}
+				
+				if (!process.state.code.equals(input.state.code)) {
+					return new DatatableBatchResponseElement(BAD_REQUEST, "you cannot change the state code. Please used the state url ! ", element.index);					
+				}
+				
+				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors()); 
+				ctxVal.setUpdateMode();
+				workflows.applyPreValidateCurrentStateRules(ctxVal, input);
+				input.validate(ctxVal);			
+				if (!ctxVal.hasErrors()) {
+					updateObject(input);
+					workflows.applyPostValidateCurrentStateRules(ctxVal, input);
+					return new DatatableBatchResponseElement(OK,  getObject(process.code), element.index);
+				} else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, errorsAsJson(ctxVal.getErrors()), element.index);
+				}
+			} else {
+				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+			}
+		}).collect(Collectors.toList());
+		
+		return ok(Json.toJson(response));
+	}
+	
+	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Process objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -371,7 +410,6 @@ public class Processes extends DocumentController<Process> {
 	public Result updateStateBatch(){
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
-		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 		.map(filledForm -> {
 			ProcessesBatchElement element = filledForm.get();
