@@ -16,6 +16,7 @@ rule "prepa-fc-ordered"
     	Logger.debug("Experiment prepa-fc-ordered");
     end
 
+/* 31/01/2018 le calcul est fait dans le controleur javascript.
 rule "prepa-fc-ordered concentration final"
 	@nglSQ( calculations )
 	dialect "java"
@@ -41,3 +42,4 @@ rule "prepa-fc-ordered concentration final"
    		$experimentProperties.put("finalConcentration2",value);   		
    		update($experiment);
    	end
+*/

@@ -255,11 +255,14 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	};
 	
 	// 25/10/2017 FDS ajout pour l'import du fichier Mettler; 08/11/2017 renommage button2=>buttonMettler
+	// 31/01//2018  pas pour les novaseq ???
+	
 	$scope.buttonMettler = {
 			isShow:function(){
 				// visible meme si terminé, mais seulement en mode edition
-				//return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); MARCHE PAS !!!!
-				return ( $scope.isInProgressState()||$scope.isFinishState() );
+				// return ( ($scope.isInProgressState()||$scope.isFinishState()) && $scope.isEditMode() ); MARCHE PAS !!!!
+				// return ( $scope.isInProgressState()||$scope.isFinishState() );
+				return ( ( $scope.isInProgressState()||$scope.isFinishState()) &&  (null != $scope.experiment.instrument.code.match(/Mariecurix/)) );
 				},
 			isFileSet:function(){
 				return ($scope.file === undefined)?"disabled":"";
@@ -284,17 +287,18 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	});	
 	
-	//-3- code cBot
+	//-3- code instrument
 	$scope.$watch("experiment.instrument.code" , function(newValue, OldValue){
 		if ( newValue !== OldValue ) {
 			// reset du fichier Cbot
 			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; }
-
-			// 18/12/2017 NGL-1754: restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est sequencage choisi est NovaSeq 6000
 			$scope.messages.clear();
 			
-			// 17/01/2018 il y a 2 sequencingType (voir 3 si la S1 sort un jour)
-			if ( $scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) && (null===$scope.experiment.instrument.code.match(/MarieCurix/))){
+			// 18/12/2017 NGL-1754: restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est sequencage choisi est NovaSeq 6000
+			//                      attention match() a tenir a jour dans l'avenir si d'autres novaseq arrivent...
+			// 17/01/2018 il y a 2 sequencingType (voir 3 si la S1 sort un jour => utiliser match () )
+			if ( $scope.experiment.experimentProperties.sequencingType && $scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) 
+					&& (null===$scope.experiment.instrument.code.match(/MarieCurix/))){
 				$scope.messages.clazz = "alert alert-warning";
 				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
 				$scope.messages.showDetails = false;
@@ -334,11 +338,6 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			console.log('pas encore de test possible');
 			return;
 		}
-		
-		//if (undefined===$scope.experiment.experimentProperties.sequencingType.value || undefined===$scope.experiment.instrumentProperties.containerSupportCode.value ){
-		//	console.log('pas de test possible');
-		//	return;
-		//}
 		
 		var H4000fcRegexp= /^[A-Za-z0-9]*BBXX$/;
 		var HXfcRegexp= /^[A-Za-z0-9]*ALXX$/;
@@ -407,104 +406,122 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	}
 	
-	// ajout 16/01/2018 : NGL-1767 modification dynamique de la feuille de calcul
+	//------------ 16/01/2018 : NGL-1767 modification dynamique de la feuille de calcul en fonction du mode de sequencage-------
+	//                          remplacer les calculs drools par calculs javascript
+	
+	// !! labels NovaSeq pas definitifs: voir Julie...
 	function setFeuilleCalcul(){
 		console.log('setFeuilleCalcul...');
-		
-		// !! la feuille de calcul peut ne pas encore etre prete
-		// !! labels NovaSeq pas definitifs: voir Julie...
-		if ($scope.atmService.data.datatable.allResult) { 
-			if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
-				console.log('S2...engag=150; NaoH=37/0.2N; TrisHCL=38/400; EPX=525');
-				
-				updateAllInputContainerUsedsPropertyValue("inputVolume2","150");
-				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");	
-				updateAllInputContainerUsedsPropertyValue("NaOHVolume","37");
-				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
-				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","38");
-				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","525");	
-				
-			} else if ( $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
-				console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
-				
-				updateAllInputContainerUsedsPropertyValue("inputVolume2","310");
-				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");
-				updateAllInputContainerUsedsPropertyValue("NaOHVolume","77");
-				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
-				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","78");
-				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","1085");	
-				
-			} else {
-				// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
-				console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35');
-				
-				updateAllInputContainerUsedsPropertyValue("inputVolume2","5");
-				updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.1N");
-				updateAllInputContainerUsedsPropertyValue("NaOHVolume","5");
-				updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","200000000");	
-				updateAllInputContainerUsedsPropertyValue("trisHCLVolume","5");
-				updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");
-				
-			}
+	
+		// attention l'appel depuis $watch...sequencingType.value  ne marche pas quand l'utilisateur n'a pas encore fait le design de la flowcell
+		if ( $scope.experiment.experimentProperties.sequencingType && $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
+			console.log('S2...engag=150; NaoH=37/0.2N; TrisHCL=38/400; EPX=525');
 			
-			// ne faire l'update du datatable qu'apres les 6 appels a  updateAllInputContainerUsedsPropertyValue !!!
-			$scope.atmService.data.updateDatatable();
+			updateAllInputContainerUsedsPropertyValue("inputVolume2","150");
+			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");	
+			updateAllInputContainerUsedsPropertyValue("NaOHVolume","37");
+			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
+			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","38");
+			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","525");	
+			
+		} else if ( $scope.experiment.experimentProperties.sequencingType &&  $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
+			console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
+			
+			updateAllInputContainerUsedsPropertyValue("inputVolume2","310");
+			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");
+			updateAllInputContainerUsedsPropertyValue("NaOHVolume","77");
+			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
+			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","78");
+			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","1085");	
+			
 		} else {
-			//debug
-			console.log('feuille de calcul pas prete !!');
-		}	
+			// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
+			console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35');
+			
+			updateAllInputContainerUsedsPropertyValue("inputVolume2","5");
+			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.1N");
+			updateAllInputContainerUsedsPropertyValue("NaOHVolume","5");
+			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","200000000");	
+			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","5");
+			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","35");	
+		}
+		
+		// ne faire l'update du datatable qu'apres les 6 appels a  updateAllInputContainerUsedsPropertyValue !!!
+		console.log ("mise a jour du datatable(2)");
+		$scope.atmService.data.updateDatatable();
 	}
 	
-	// ajout 16/01/2018 : NGL-1767 modification dynamique de la feuille de calcul
 	// copié d'après  $scope.updateAllOutputContainerProperty   dans tubes-to-flowcell-ctrl.js
 	// function locale, ne pas la mettre dans $scope
 	updateAllInputContainerUsedsPropertyValue = function(propertyCode, value){
+		
 		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
 			var atm = $scope.atmService.data.atm[i];
 			
-			$parse("inputContainerUseds[0].experimentProperties."+propertyCode+".value").assign(atm, value);
-			
-			// si la colonne mise a jour est le volume engagé il faut relancer le calcul de concentration finale
-			if (propertyCode ==='inputVolume2'){
-				// !!!!! il manque "inputContainer.concentration dans l'atm !!!!
-				computeConcentrationAtm(atm, i);		
+			//!! boucler aussi sur TOUS les inputContainerUsed
+			for ( var j=0; j < $scope.atmService.data.atm[i].inputContainerUseds.length; j++ ){
+				$parse("inputContainerUseds["+j+"].experimentProperties."+propertyCode+".value").assign(atm, value);
+			    // si la colonne mise a jour est le volume engagé il faut recalculer la concentration finale
+				if (propertyCode ==='inputVolume2'){
+					computeConcentrationAtm(atm, i, j);	
+				}
 			}
 		}
-		/// NON faire l'updateDatatable dans l'appelant sinon executee 6 fois de suite !!!
-		/// $scope.atmService.data.updateDatatable();
+		//$scope.atmService.data.updateDatatable();   // NON faire l'updateDatatable dans la fonction appelante sinon update execute 6 fois de suite !!!
 	};
 	
-	// 15/01/2018 faire les calculs en Javascript au lieu de Drools ????
+	
+	// surcharger celle de tubes-to-flowcell-ctrl.js  pour qu'elle appelle la changeValueOnFlowcellDesign locale qui utilise un parametre	
+	$scope.updateAllOutputContainerProperty = function(property){
+		var value = $scope.outputContainerValues[property.code];
+		var setter = $parse("outputContainerUseds[0].experimentProperties."+property.code+".value").assign;
+		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
+			var atm = $scope.atmService.data.atm[i];
+			if(atm.inputContainerUseds.length > 0){
+				setter(atm, value);
+				// dans la boucle et non hors comme dans l'originale
+				$scope.changeValueOnFlowcellDesign(i+1);
+			}			
+		}
+	};
+	
 	// surcharger celle de tubes-to-flowcell-ctrl.js pour declencher les calculs
 	// utilisateur modifie une cellule "volume final" ( changeValueOnFlowcellDesign est appelle depuis le scala.html )
-	$scope.changeValueOnFlowcellDesign = function(i){
-		//i=atm.line; 
-		console.log('% depot ou  % phix  ou Volume final modifié:  atm.line: '+ i );
-		$scope.atmService.data.updateDatatable(); // ca c'est qui est fait dans tubes-to-flowcell-ctrl.js: met a jour TOUT le udt !!!	
+	$scope.changeValueOnFlowcellDesign = function(l){ //l=atm.line si appel depuis scala.html
+	
+		//console.log('% depot ou  % phix  ou Volume final modifié:  atm.line: '+ l );
 		
-		//PB  est atm.line  ne correspond pas forcement a l'index i de l'atm !!!!!
-		console.log ( "apres update : new final vol="+ $scope.atmService.data.atm[i-1].outputContainerUseds[0].experimentProperties.finalVolume.value);
+		//!! il faut  appeler setFeuilleCalcul() ici  car le premier appel sur le $watch..sequencingType.value  ne marche pas quand 
+		//le design de la flowcell n'est pas encore fait
+		setFeuilleCalcul();
 		
-		//test 1 recalculer la concentration finale pour LA ligne changee    MARCHE PAS !!!!!!!
-		//computeConcentrationAtm($scope.atmService.data.atm[i-1], i-1));	
+		//console.log("update datatable (3)";
+		//$scope.atmService.data.updateDatatable();// OK ici
 		
-		//test : recalculer toutes les lignes....MARCHE PAS NON PLUS.. quel parametre passer a computeConcentration ???
-       //computeConcentration($scope.atmService);
+		//???  atm.line  correspond  forcement a l'index  de l'atm  ???
+		//console.log ( "apres update : new final vol="+ $scope.atmService.data.atm[l-1].outputContainerUseds[0].experimentProperties.finalVolume.value);
+		
+		// recalculer la concentration finale pour tous les inputContainerUsed de l'atm [l-1] 
+		// calcul efectuee meme si la la propriete changee est % depot ou  % phix qui n'interviennent pas dans calcul!!!
+		for ( var j=0; j < $scope.atmService.data.atm[l-1].inputContainerUseds.length; j++ ){
+				computeConcentrationAtm($scope.atmService.data.atm[l-1], l-1, j);	
+		}
+		
+		console.log("update datatable (4)");
+		$scope.atmService.data.updateDatatable(); // test plutot la ???
 	};
 	
 
-	// 15/01/2018 faire les calculs en Javascript au lieu de Drools
 	// utilisateur modifie une cellule "volume engagé"
 	$scope.updatePropertyFromUDT = function(value, col){
-		console.log("update from property : "+col.property);
 		if ( col.property === 'inputContainerUsed.experimentProperties.inputVolume2.value'){ 
-			console.log('Volume engagé modifié....');
+			console.log('propriete volume engagé modifiée....');
 			// value.data ne contient qu'une seule ligne
+			// recalculer la concentration finale 
 		    computeConcentration(value.data);
 		}
 	}
 	
-	// 15/01/2018 faire les calculs en Javascript au lieu de Drools
 	var computeConcentration = function(udtData){	
 		console.log("computeConcentration (udtData)....");
 		var getterFinalConcentration2=$parse("inputContainerUsed.experimentProperties.finalConcentration2.value");
@@ -536,18 +553,15 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 	}
 	
-	// version pour les cas on modifie seulement 1 atm
-	// PB on a pas inputContainer.concentration dans l'atm !!!!, passer par  datatable.allResult[i], faut i en parametre
-	var computeConcentrationAtm = function(atm, i){
-		console.log("computeConcentration atm....");
-		
-		var getterFinalConcentration2=$parse("inputContainerUseds[0].experimentProperties.finalConcentration2.value");
-		var test=$parse("atmService.data.datatable.allResult[i].inputContainerUsed.concentration.value");
+	// version pour les cas on modifie seulement 1 atm, 1 inputContainerUsed
+	var computeConcentrationAtm = function(atm, i, j){
+		console.log("computeConcentration atm.."+ i +".inputContainerUsed:"+j);
+		var getterFinalConcentration2=$parse("inputContainerUseds["+ j +"].experimentProperties.finalConcentration2.value");
 			
 		var compute = {
-				inputConc : $scope.atmService.data.datatable.allResult[i].inputContainerUsed.concentration.value,
-				engagedVol: $parse("inputContainerUseds[0].experimentProperties.inputVolume2.value")(atm), 
-				finalVol:   $parse("outputContainerUseds[0].experimentProperties.finalVolume.value")(atm),
+				inputConc : $parse("inputContainerUseds["+ j +"].concentration.value")(atm),
+				engagedVol: $parse("inputContainerUseds["+ j +"].experimentProperties.inputVolume2.value")(atm), 
+				finalVol:   $parse("outputContainerUseds[0].experimentProperties.finalVolume.value")(atm),	
 
 				isReady:function(){
 					// !! final volume doit imperativement etre != 0 sinon div by 0
