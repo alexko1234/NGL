@@ -16,6 +16,7 @@ import fr.cea.ig.ngl.test.authentication.Identity;
  * @author vrd
  *
  */
+@Singleton
 public class TestAuthorizator implements IAuthorizator {
 
 	private static final play.Logger.ALogger logger = play.Logger.of(TestAuthorizator.class);

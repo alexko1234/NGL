@@ -36,7 +36,7 @@ public class IO extends TPLCommonController {
 
 	@Inject
 	public IO(NGLContext context) {
-		this.context = context;
+		this.context  = context;
 		this.fileForm = context.form(PropertyFileValue.class);
 	}
 	

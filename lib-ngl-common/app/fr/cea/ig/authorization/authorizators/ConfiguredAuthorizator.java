@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.play.IGConfig;
@@ -19,6 +20,7 @@ import play.api.inject.Injector;
  * @author vrd
  *
  */
+@Singleton
 public class ConfiguredAuthorizator implements IAuthorizator {
 
 	/**
@@ -92,6 +94,7 @@ public class ConfiguredAuthorizator implements IAuthorizator {
 		} else {
 			Object delegateAuthorizator = injector.instanceOf(delegateClass);
 			if (delegateAuthorizator instanceof IAuthorizator) {
+				logger.debug("using delegate {}",delegateAuthorizator);
 				delegate = (IAuthorizator)delegateAuthorizator;
 			} else { 
 				logger.error("{} does not implement {}",delegateClass.getName(),IAuthorizator.class.getName());

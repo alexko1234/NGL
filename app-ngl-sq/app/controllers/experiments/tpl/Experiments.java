@@ -23,9 +23,9 @@ import views.html.experiments.home;
 import views.html.experiments.listContainers;
 import views.html.experiments.search;
 import views.html.experiments.searchContainers;
-// import controllers.CommonController;
 //import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -41,14 +41,17 @@ import javax.inject.Inject;
 // TODO: cleanup, comment
 
 // @Singleton
+//import controllers.CommonController;
 // public class Experiments extends CommonController {
-public class Experiments extends NGLController implements NGLJavascript, NGLForms { // NGLBaseController {
+
+public class Experiments extends NGLController 
+                        implements NGLJavascript, NGLForms { // NGLBaseController {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(Experiments.class);
 	
-	private final home home;
-	private final details details;
-	private final search search;
+	private final home             home;
+	private final details          details;
+	private final search           search;
 	private final searchContainers searchContainers;
 	private final Form<Experiment> experimentForm;
 	
@@ -78,32 +81,41 @@ public class Experiments extends NGLController implements NGLJavascript, NGLForm
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code));
 	}
 	
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result get(String code) {
 		return ok(home.render("search"));
 	}
 	
 	// public static Result _get(String code) { return ok(code); }
 	
+	// tpl
 	public Result details() {
 		return ok(details.render(getCurrentUser()));
 	}
 	
+	// tpl
 	public Result search(String experimentType) {
 		return ok(search.render());
 	}
 	
+	// tpl
 	public Result searchContainers() {
 		return ok(searchContainers.render());
 	}
 	
+	// tpl
 	public Result listContainers() {
 		return ok(listContainers.render());
 	}
 	
+	// tpl
 	public Result graph() {
 		return ok(graph.render());
 	}
@@ -169,16 +181,16 @@ public class Experiments extends NGLController implements NGLJavascript, NGLForm
 				     () -> render(atomicType, outputCategoryCode_, null,           institute ),
 				     () -> render(atomicType, outputCategoryCode_, null,           "common"  ),
 				     () -> render(atomicType, outputCategoryCode_, null,           "defaults"))
-				.orElse(badRequest("Not implemented"));
+				.orElse(badRequest("Not implemented " + atomicType + "/" + outputCategoryCode + "/" + experimentType + "/" + institute));
 	}
 	
 	private Optional<Result> render(String atomicType, String outputCategoryCode, String experimentType, String institute) {
 		String keyWord = null;
 		//We use the experimentType in priority
 		if (experimentType != null && !experimentType.equals("")) {
-			keyWord = experimentType.replaceAll("-", "");     //Scala template can't have a '-' in their name;
+			keyWord = experimentType.replaceAll("-", "");     // Scala template can't have a '-' in their name;
 		} else {
-			keyWord = outputCategoryCode.replaceAll("-", ""); //Scala template can't have a '-' in their name
+			keyWord = outputCategoryCode.replaceAll("-", ""); // Scala template can't have a '-' in their name
 		}
 		String className = "views.html.experiments." + atomicType.toLowerCase() + "." + institute.toLowerCase() + "." + keyWord.toLowerCase();
 		logger.info("class name {}",className);

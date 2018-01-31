@@ -29,17 +29,14 @@ import play.mvc.Http.Context;
 import play.mvc.Result;
 import play.mvc.With;
 import views.html.home;
-// import controllers.NGLBaseController;
-// import controllers.APICommonController;
-// import controllers.CommonController;
 import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
 import fr.cea.ig.authentication.Authentication;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Permissions;
-// import fr.cea.ig.ngl.support.APIResultProcessor;
 import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.PermissionAPIHolder;
@@ -54,10 +51,8 @@ import fr.cea.ig.play.NGLContext;
 
 import javax.inject.Inject;
 
-// TODO: define only instance methods
+// public class Main extends CommonController { // done
 
-// public class Main extends CommonController {
-// public class Main extends APICommonController {
 // @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 // @fr.cea.ig.authentication.Authenticated
 // @With(UserHistory.class)
@@ -101,6 +96,7 @@ public class Main extends NGLController
 
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home() {
 		return ok(home.render());
 	}

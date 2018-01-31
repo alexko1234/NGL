@@ -132,7 +132,9 @@ public class JavascriptGeneration {
 		
 		public Permissions add(String s) {
 			optComma();
-			sb.append(s);
+			sb.append('"')
+			  .append(s)
+			  .append('"');
 			return this;
 		}
 		

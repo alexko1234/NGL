@@ -103,7 +103,7 @@ public class Main extends NGLController
 				patchTara(codes);
 			return codes.asCodeFunction();
 		},
-		"error while genertating codes");
+		"error while generating codes");
 	}
 	
 	private static void patchTara(Codes codes) {
