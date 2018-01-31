@@ -6,8 +6,17 @@ import static play.mvc.Results.ok;
 import java.util.Collection;
 import java.util.function.Function;
 
-import jsmessages.JsMessages;
+// import jsmessages.JsMessages;
 
+/**
+ * Javascript generation support.
+ * <p>
+ * The generation could make a good use of some intercalate
+ * function.  
+ * 
+ * @author vrd
+ *
+ */
 public class JavascriptGeneration {
 
 	// Build a javascript  map from codes to names
