@@ -11,10 +11,6 @@ import controllers.plates.tpl.routes.javascript;
 import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
-import views.components.datatable.DatatableHelpers;
-
 import views.html.plates.home;
 import views.html.plates.searchManips;
 import views.html.plates.fromFile;

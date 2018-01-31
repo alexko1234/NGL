@@ -8,9 +8,6 @@ import java.util.List;
 
 import play.i18n.Messages;
 import play.mvc.Result;
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
-import views.components.datatable.DatatableHelpers;
 import views.html.container.*;
 
 import javax.inject.Inject;
