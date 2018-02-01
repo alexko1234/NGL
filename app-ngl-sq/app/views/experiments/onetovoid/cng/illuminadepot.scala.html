@@ -1,10 +1,7 @@
-@this(ctx : fr.cea.ig.play.NGLContext)
 @()
-@CNG = @{ "CNG" == ctx.config().getInstitute() }
-
 <div class="col-md-12 col-lg-12" ng-controller="IlluminaDepotCtrl">
 
- 	@if(CNG){
+ 	<!--  code pourrait aller dans un partial utilisable cng/cng -->
  	<!-- pour l'instant restreindre au CNRGH, le Novaseq6000 CNS pas encore arrivé -->
     <!-- NGL-1769: import fichier XML pour NOVASEQ6000 -->
 	<div class="col-md-12 col-lg-offset-7" ng-show="('NOVASEQ6000' === experiment.instrument.typeCode)">
@@ -29,7 +26,7 @@
 	       </div>  
 	  </form>
 	</div>
-	}
+	
     
 	<div class="row">
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>
