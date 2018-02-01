@@ -47,7 +47,9 @@ public class ContainerSupports extends NGLController implements NGLJavascript { 
 		return ok(home.render(code));		
 	}
 	
-	// No annotation for tpl
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result homeScanner() {		
 		return ok(homeScanner.render());		
 	}

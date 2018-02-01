@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Singleton;
+
 import fr.cea.ig.authorization.IAuthorizator;
 import fr.cea.ig.authorization.Permission;
 import fr.cea.ig.ngl.test.authentication.Identity;

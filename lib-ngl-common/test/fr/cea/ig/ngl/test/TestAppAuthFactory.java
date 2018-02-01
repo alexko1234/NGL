@@ -85,6 +85,14 @@ public class TestAppAuthFactory extends ApplicationFactory {
 		asWorse(i).ws(ws -> WSHelper.get(ws,url,Status.FORBIDDEN));
 	}
 	
+	public void authNobody(String url) {
+		as(Identity.Nobody).ws(ws -> WSHelper.get(ws,url,Status.OK));
+	}
+
+//	public void noAuth(String url)  {
+//		throw new RuntimeException("WIP");
+//	}
+	
 //	private static Application devapp(Identity i) {
 //		switch (i) {
 //		case Nobody:    return ngl.sub.Global.devapp(TestAuthConfig.asNobody);
