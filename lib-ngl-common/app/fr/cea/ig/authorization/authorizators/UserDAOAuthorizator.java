@@ -210,7 +210,10 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * @param role  user role
 	 */
 	public void declareUser(String login, String role) {
-		userDAO.declareUser(login, role);
+		synchronized (UserDAOAuthorizator.class) {
+			if (!isDeclaredUser(login))
+				userDAO.declareUser(login, role);
+		}
 	}
 	
 	/**
