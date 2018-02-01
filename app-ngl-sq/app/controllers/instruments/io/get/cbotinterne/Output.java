@@ -31,8 +31,8 @@ public class Output extends AbstractOutput {
 		
 		content = '\ufeff' + OutputHelper.format(sampleSheet_cbot_int.render(experiment,containers).body());
 		//set file name
-		filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+(new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + OutputHelper.getOutputContainerUsedCode(experiment.atomicTransfertMethods.get(0)) + ".csv";
-		
+		filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+(new SimpleDateFormat("yyyyMMdd")).format(new Date()) + "_" + experiment.instrument.code + "_" + CsvHelper.checkName(OutputHelper.getOutputContainerUsedCode(experiment.atomicTransfertMethods.get(0))) + ".csv";
+		Logger.debug("Output filename : " + OutputHelper.getOutputContainerUsedCode(experiment.atomicTransfertMethods.get(0)));
 		File file = new File(filename, content);
 		OutputHelper.writeFile(file);
 		return file;
