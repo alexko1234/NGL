@@ -29,6 +29,8 @@ import models.administration.authorisation.description.dao.UserDAO;
 // import static play.mvc.Results.unauthorized;
 import models.utils.dao.DAOException;
 
+// TODO: use a UserAPI object
+
 /**
  * IAuhtorization implementation on top of UserDAO.
  * <p>

@@ -1,41 +1,50 @@
 package controllers.main.tpl;
 
-import java.util.List;
+// import java.util.List;
 
 import javax.inject.Inject;
 
-import jsmessages.JsMessages;
-import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.dao.CodeLabelDAO;
-import models.laboratory.reagent.description.BoxCatalog;
-import models.laboratory.reagent.description.KitCatalog;
-import models.laboratory.reagent.description.ReagentCatalog;
-import models.utils.InstanceConstants;
+// import jsmessages.JsMessages;
+// import models.laboratory.common.description.CodeLabel;
+// import models.laboratory.common.description.dao.CodeLabelDAO;
+// import models.laboratory.reagent.description.BoxCatalog;
+// import models.laboratory.reagent.description.KitCatalog;
+// import models.laboratory.reagent.description.ReagentCatalog;
+// import models.utils.InstanceConstants;
 
-import org.mongojack.DBQuery;
+// import org.mongojack.DBQuery;
 
-import play.Logger;
+// import play.Logger;
 // import play.Routes;
-import play.routing.JavaScriptReverseRouter;
-import play.api.modules.spring.Spring;
-import play.libs.Scala;
+// import play.routing.JavaScriptReverseRouter;
+// import play.api.modules.spring.Spring;
+// import play.libs.Scala;
 import play.mvc.Result;
 import views.html.home;
 //import controllers.CommonController;
 // import controllers.NGLBaseController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.lfw.utils.JavascriptGeneration.Codes;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.Executor;
 import fr.cea.ig.ngl.support.NGLJavascript;
-import fr.cea.ig.play.NGLContext;
+import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
+import fr.cea.ig.ngl.support.api.ReagentCatalogAPIHolder;
+// import fr.cea.ig.play.NGLContext;
 
 // public class Main extends -CommonController {
-public class Main extends NGLController implements NGLJavascript { // NGLBaseController {
+public class Main extends NGLController 
+                 implements NGLJavascript,
+                            Executor,
+                            CodeLabelAPIHolder,
+                            ReagentCatalogAPIHolder { // NGLBaseController {
 
-	private static final Logger.ALogger logger = Logger.of(Main.class);
+	private static final play.Logger.ALogger logger = play.Logger.of(Main.class);
+	
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 
 	// private static JsMessages messages;
@@ -53,6 +62,7 @@ public class Main extends NGLController implements NGLJavascript { // NGLBaseCon
 
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home() {
 		return ok(home.render());
 	}
@@ -97,23 +107,33 @@ public class Main extends NGLController implements NGLJavascript { // NGLBaseCon
 */
 	
 	public Result jsCodes() {
-		return new Codes()
-				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
-						     x -> x.tableName,       x -> x.code, x -> x.label)
+		return result(() -> new Codes()
+				.add(getCodeLabelAPI().all(),                     x -> x.tableName,       x -> x.code, x -> x.label)
 				.addValuationCodes()
-				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
-						     x -> "kitCatalogs",     x -> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
-						     x -> "boxCatalogs",     x -> x.code, x -> x.name)
-				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
-						     x -> "reagentCatalogs", x -> x.code, x -> x.name)
-				.asCodeFunction();
+				.add(getReagentCatalogAPI().getKitCatalogs(),     x -> "kitCatalogs",     x -> x.code, x -> x.name)
+				.add(getReagentCatalogAPI().getBoxCatalogs(),     x -> "boxCatalogs",     x -> x.code, x -> x.name)
+				.add(getReagentCatalogAPI().getReagentCatalogs(), x -> "reagentCatalogs", x -> x.code, x -> x.name)
+				.asCodeFunction(),
+				"error when building codes");
 	}
 	
+//	public Result jsCodes() {
+//		return new Codes()
+//				.add(Spring.getBeanOfType(CodeLabelDAO.class).findAll(),
+//						     x -> x.tableName,       x -> x.code, x -> x.label)
+//				.addValuationCodes()
+//				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category", "Kit")).toList(),
+//						     x -> "kitCatalogs",     x -> x.code, x -> x.name)
+//				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category", "Box")).toList(),
+//						     x -> "boxCatalogs",     x -> x.code, x -> x.name)
+//				.add(MongoDBDAO.find(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent")).toList(),
+//						     x -> "reagentCatalogs", x -> x.code, x -> x.name)
+//				.asCodeFunction();
+//	}
 	
-	public Result javascriptRoutes() {
-		return jsRoutes();
-	}
+//	public Result javascriptRoutes() {
+//		return jsRoutes();
+//	}
 	
 	/*
 	public static Result javascriptRoutes() {

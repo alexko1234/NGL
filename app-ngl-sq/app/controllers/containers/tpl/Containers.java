@@ -13,7 +13,6 @@ import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
 import views.html.container.*;
 
-// import controllers.CommonController;
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
@@ -27,6 +26,7 @@ import fr.cea.ig.play.NGLContext;
 
 // TODO: clean, comment
 
+//import controllers.CommonController;
 // public class Containers extends -CommonController {
 public class Containers extends NGLController implements NGLJavascript { // NGLBaseController {
 
@@ -58,18 +58,22 @@ public class Containers extends NGLController implements NGLJavascript { // NGLB
         return ok(home.render("search"));
     }
 
+	// tpl
     public Result search() {
         return ok(search.render());
     }
 
+    // tpl
     public Result newFromFile() {
         return ok(newFromFile.render());
     }
 
+    // tpl
     public Result details() {
         return ok(details.render());
     }
 
+    // tpl
     public Result javascriptRoutes() {
         return jsRoutes(controllers.projects.api.routes.javascript.Projects.list(),
                 		controllers.containers.tpl.routes.javascript.Containers.get(),

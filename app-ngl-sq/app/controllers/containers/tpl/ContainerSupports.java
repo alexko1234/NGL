@@ -3,7 +3,6 @@ package controllers.containers.tpl;
 // import play.Routes;
 //import play.routing.JavaScriptReverseRouter;
 
-
 import play.mvc.Result;
 import views.html.containerSupports.details;
 import views.html.containerSupports.home;
@@ -21,10 +20,9 @@ import fr.cea.ig.ngl.support.NGLJavascript;
 // import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
 
-// import controllers.CommonController;
-
 // TODO: cleanup and comment
 
+//import controllers.CommonController;
 // public class ContainerSupports extends -CommonController{
 public class ContainerSupports extends NGLController implements NGLJavascript { // NGLBaseController {
 	

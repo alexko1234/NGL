@@ -2,8 +2,10 @@ package controllers.reagents.tpl;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
 import play.mvc.Controller;
-// import controllers.CommonController;
 //import play.Routes;
 import play.mvc.Result;
 import views.html.declarations.home;
@@ -11,6 +13,7 @@ import views.html.declarations.kitsCreation;
 import views.html.declarations.ordersCreation;
 import views.html.declarations.kitsSearch;
 
+//import controllers.CommonController;
 public class Orders extends Controller { // -CommonController {
 	
 	private final home           home;
@@ -24,8 +27,11 @@ public class Orders extends Controller { // -CommonController {
 		this.ordersCreation = ordersCreation;
 	}
 	
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result home(String code) {
-		return ok(home.render(code+".order"));
+		return ok(home.render(code + ".order"));
 	}
 	
 	public Result search() {

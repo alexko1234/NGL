@@ -2,15 +2,15 @@ package controllers.admin.supports.tpl;
 
 //import play.Routes;
 //import play.routing.JavaScriptReverseRouter;
-import play.mvc.Controller;
+// import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.With;
+// import play.mvc.With;
 import views.html.admin.supports.*;
-import controllers.APICommonController;
-//import controllers.CommonController;
+// import controllers.APICommonController;
 //import controllers.NGLBaseController;
-import controllers.history.UserHistory;
+// import controllers.history.UserHistory;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -21,8 +21,9 @@ import javax.inject.Inject;
 
 // TODO: cleanup and comment
 
+//import controllers.CommonController;
 // public class Supports extends -CommonController {
-@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+// @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public class Supports extends NGLController implements NGLJavascript { // NGLBaseController {
 
 	private final home              home;
@@ -37,6 +38,7 @@ public class Supports extends NGLController implements NGLJavascript { // NGLBas
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code));
 	}

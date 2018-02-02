@@ -85,7 +85,6 @@ public class Samples extends NGLController implements NGLJavascript  { // NGLBas
 						controllers.samples.tpl.routes.javascript.Samples.details(),
 						controllers.samples.tpl.routes.javascript.Samples.home(),
 
-
 						controllers.containers.api.routes.javascript.Containers.get(),
 
 						controllers.experiments.api.routes.javascript.Experiments.list(),

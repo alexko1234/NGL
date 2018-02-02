@@ -21,9 +21,9 @@ GET	   	/kits/:homecode/home								controllers.reagents.tpl.Kits.home(homecode:
 GET		/tpl/reagent-declarations/js-routes					controllers.reagents.tpl.Kits.javascriptRoutes()
 GET		/tpl/kits/creation									controllers.reagents.tpl.Kits.createOrEdit()
 GET		/tpl/kits/search									controllers.reagents.tpl.Kits.search()
-GET	   	/orders/:homecode/home								controllers.reagents.tpl.Orders.home(homecode: java.lang.String)
 
 #Orders TPL
+GET	   	/orders/:homecode/home								controllers.reagents.tpl.Orders.home(homecode: java.lang.String)
 GET 	/orders/:code										controllers.reagents.tpl.Orders.get(code: java.lang.String)
 GET		/tpl/orders/creation								controllers.reagents.tpl.Orders.createOrEdit()
 

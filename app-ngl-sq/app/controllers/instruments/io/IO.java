@@ -32,7 +32,7 @@ import javax.inject.Inject;
 public class IO extends TPLCommonController {
 	
 	private final Form<PropertyFileValue> fileForm ; //= form(PropertyFileValue.class);
-	private NGLContext context;
+	private final NGLContext context;
 
 	@Inject
 	public IO(NGLContext context) {

@@ -7,6 +7,10 @@ import views.html.declarations.boxesSearch;
 
 import javax.inject.Inject;
 
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+
 // import controllers.CommonController;
 
 
@@ -22,6 +26,9 @@ public class Boxes extends Controller {
 		this.boxesSearch = boxesSearch;
 	}
 	
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code+".boxes"));
 	}

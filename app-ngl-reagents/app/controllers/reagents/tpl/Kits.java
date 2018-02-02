@@ -3,13 +3,13 @@ package controllers.reagents.tpl;
 import javax.inject.Inject;
 
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
 import fr.cea.ig.ngl.support.NGLJavascript;
 // import controllers.NGLBaseController;
 // import fr.cea.ig.play.NGLContext;
-// import controllers.CommonController;
 // import play.Routes;
 import play.mvc.Result;
 import views.html.declarations.home;
@@ -18,6 +18,7 @@ import views.html.declarations.ordersCreation;
 import views.html.declarations.kitsSearch;
 import play.routing.JavaScriptReverseRouter;
 
+//import controllers.CommonController;
 // public class Kits extends -CommonController {
 public class Kits extends NGLController implements NGLJavascript { // NGLBaseController {
 	
@@ -35,8 +36,9 @@ public class Kits extends NGLController implements NGLJavascript { // NGLBaseCon
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {
-		return ok(home.render(code+".kits"));
+		return ok(home.render(code + ".kits"));
 	}
 	
 	public Result search() {
