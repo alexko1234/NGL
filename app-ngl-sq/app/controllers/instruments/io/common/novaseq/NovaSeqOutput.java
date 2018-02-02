@@ -1,6 +1,6 @@
 package controllers.instruments.io.common.novaseq;
 
-// COPIE HISEQ!!! A ADAPTER !!!!
+// 02/02/2018 NGL-1770
 
 import java.util.List;
 
@@ -19,7 +19,14 @@ public abstract class NovaSeqOutput extends AbstractOutput {
 	public File generateFile(Experiment experiment, ContextValidation contextValidation) {
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
 		TagModel tagModel = OutputHelper.getTagModel(containers);
-		String content = OutputHelper.format(sampleSheet_1.render(experiment,containers,tagModel).body());
+		String content = OutputHelper.format(sampleSheet_1.render(experiment,containers).body()); 
+		
+		if(!"DUAL-INDEX".equals(tagModel.tagType)){
+			content = OutputHelper.format(sampleSheet_1.render(experiment,containers).body());			
+		}else{
+			content = OutputHelper.format(sampleSheet_2.render(experiment,containers).body());	
+		}
+		
 		String filename = OutputHelper.getInstrumentPath(experiment.instrument.code)+containers.get(0).support.code+".csv";
 		
 		System.out.println("instrument code= "+ experiment.instrument.code );
