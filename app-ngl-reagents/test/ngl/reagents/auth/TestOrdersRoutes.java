@@ -9,7 +9,7 @@ public class TestOrdersRoutes {
 	
 	@Test
 	public void testHome() {
-		Global.af.authURL(Identity.Read,"/orders/creation/home");
+		Global.af.authURL(Identity.Read,"/orders/spongebob/home");
 	}
 	
 	@Test

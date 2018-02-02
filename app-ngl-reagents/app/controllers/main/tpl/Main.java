@@ -21,7 +21,6 @@ import javax.inject.Inject;
 // import play.libs.Scala;
 import play.mvc.Result;
 import views.html.home;
-//import controllers.CommonController;
 // import controllers.NGLBaseController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.authentication.Authenticated;
@@ -36,6 +35,7 @@ import fr.cea.ig.ngl.support.api.CodeLabelAPIHolder;
 import fr.cea.ig.ngl.support.api.ReagentCatalogAPIHolder;
 // import fr.cea.ig.play.NGLContext;
 
+//import controllers.CommonController;
 // public class Main extends -CommonController {
 public class Main extends NGLController 
                  implements NGLJavascript,

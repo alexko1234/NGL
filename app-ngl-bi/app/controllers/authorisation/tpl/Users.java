@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import play.mvc.Result;
 import views.html.authorisation.users.*;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -19,7 +20,8 @@ import fr.cea.ig.ngl.support.NGLJavascript;
  * @author michieli
  *
  */
-public class Users extends NGLController implements NGLJavascript { // NGLBaseController {
+public class Users extends NGLController 
+                  implements NGLJavascript { // NGLBaseController {
 	
 	private final home home;
 	private final search search;
@@ -33,6 +35,7 @@ public class Users extends NGLController implements NGLJavascript { // NGLBaseCo
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String homecode){
 		return ok(home.render(homecode));
 	}

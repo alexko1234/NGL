@@ -9,8 +9,12 @@ import views.html.archives.search;
 
 import javax.inject.Inject;
 
-import controllers.CommonController;
-
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import fr.cea.ig.play.NGLContext;
 
 /**
@@ -18,18 +22,24 @@ import fr.cea.ig.play.NGLContext;
  * @author galbini
  *
  */
-public class ReadSets extends CommonController {
+// import controllers.CommonController;
+// public class ReadSets extends CommonController {
+public class ReadSets extends NGLController
+                     implements NGLJavascript {
 
 	private final home home;
 	private final search search;
 	
 	@Inject
-	public ReadSets(/*NGLContext ctx,*/ home home, search search) {
-		// super(ctx);
+	public ReadSets(NGLApplication app, home home, search search) {
+		super(app);
 		this.home   = home;
 		this.search = search;
 	}
 	
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}

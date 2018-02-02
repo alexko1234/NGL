@@ -4,6 +4,7 @@ import javax.inject.Inject;
 
 //import controllers.NGLBaseController;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -30,6 +31,7 @@ public class BoxCatalogs extends NGLController implements NGLJavascript { // NGL
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read
 	public Result home(String code) {
 		return ok(home.render(code));
 	}

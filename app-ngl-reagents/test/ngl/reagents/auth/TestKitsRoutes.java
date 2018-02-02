@@ -9,7 +9,7 @@ public class TestKitsRoutes {
 	
 	@Test
 	public void testHome() {
-		Global.af.authURL(Identity.Read,"/kits/search/home");
+		Global.af.authURL(Identity.Read,"/kits/spongebob/home");
 	}	
 	
 	@Test

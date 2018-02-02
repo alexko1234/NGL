@@ -14,7 +14,7 @@ public class TestContainerSupportsRoutes {
 
 	@Test
 	public void testSearchHome() {
-		Global.af.authURL(Identity.Read,"/supports/search/home");
+		Global.af.authURL(Identity.Read,"/supports/spongebob/home");
 	}
 	
 	@Test

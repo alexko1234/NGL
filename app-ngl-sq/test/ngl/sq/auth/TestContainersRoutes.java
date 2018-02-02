@@ -10,7 +10,7 @@ public class TestContainersRoutes {
 
 	@Test
 	public void testHome() {
-		Global.af.authURL(Identity.Read,"/containers/search/home");
+		Global.af.authURL(Identity.Read,"/containers/spongebob/home");
 	}
 
 	@Test

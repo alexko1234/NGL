@@ -9,7 +9,7 @@ public class TestKitCatalogsRoutes {
 
 	@Test
 	public void testHome() {
-		Global.af.authURL(Identity.Read,"/kit-catalogs/search/home");
+		Global.af.authURL(Identity.Read,"/kit-catalogs/spongebob/home");
 	}	
 	
 	// TODO: check route name as there is a mismatch

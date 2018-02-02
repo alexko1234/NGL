@@ -9,7 +9,7 @@ public class TestExperimentsRoutes {
 
 	@Test
 	public void testHome() {
-		Global.af.authURL(Identity.Read,"/experiments/search/home");
+		Global.af.authURL(Identity.Read,"/experiments/spongebob/home");
 	}
 	
 	@Test
@@ -32,6 +32,16 @@ public class TestExperimentsRoutes {
 		Global.af.authNobody("/tpl/experiments/list-containers");
 	}
 	
+	@Test
+	public void testTplTemplate() {
+		Global.af.authNobody("/tpl/experiments/get-template/sponge/bob/sponge/bob");
+	}
+	
+	@Test
+	public void testTplSearch() {
+		Global.af.authNobody("/tpl/experiments/search/spongebob");
+	}
+
 	@Test
 	public void testJsRoutes() {
 		Global.af.authNobody("/tpl/experiments/js-routes");
