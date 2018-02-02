@@ -3,31 +3,4 @@
 	<div class="row">
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>
 	</div>	
-
-XXXXXXXXXXXXXXXXXXX
-	<!-- NGL-1769: import fichier XML pour NOVASEQ6000 -->
-	<!--  pour l'instant restreindre au CNRGH , le Novaseq6000 CNS pas encore arrivé -->
-	<div class="col-md-12 col-lg-offset-7" ng-show="('NOVASEQ6000' === experiment.instrument.typeCode)"> 
-	  <form class="form-horizontal" role="form">
-	   <div class="row margin-bottom-7">
-	        <div class="form-group col-lg-6"  ng-show="buttonXML.isShow()">
-	             <div class="col-lg-6">
-	             <label for="importXMLfile" class="control-label">Fichier XML</label>
-	             <div class="input-group" style="width:100%">
-	                <input class="form-control input-sm" type="file" 
-	                                                     base64-file="file" 
-	                                                     id="importXMLfilet" />
-	                <span class="input-group-btn">									 
-	                     <button class="btn btn-primary" ng-click="buttonXML.click()" 
-	                                                     ng-disabled="buttonXML.isFileSet()" 
-	                                                     title="@Messages("button.import.file")"><i class="fa fa-upload"></i> 
-	                     </button>     
-	                </span> 
-	            </div> 
-	            </div>    				  
-	         </div>              			
-	       </div>  
-	  </form>
-	</div>
-
 </div>

@@ -255,7 +255,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	};
 	
 	// 25/10/2017 FDS ajout pour l'import du fichier Mettler; 08/11/2017 renommage button2=>buttonMettler
-	// 31/01//2018  pas de fichier Mettler pour les novaseq 
+	// 31/01//2018  pas de fichier Mettler pour les cbot interne des novaseq 
 	$scope.buttonMettler = {
 			isShow:function(){
 				// visible meme si terminé, mais seulement en mode edition
@@ -326,6 +326,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		    
 			checkFCpattern();
 			// ajout 16/01/2018 NGL-1767 modification dynamique de la feuille de calcul
+			// !! marche pas si le design Flowcell n'as pas encore ete fait...
 			setFeuilleCalcul();
 		} 
 	});	
@@ -412,7 +413,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		console.log('setFeuilleCalcul...');
 	
 		// attention l'appel depuis $watch...sequencingType.value  ne marche pas quand l'utilisateur n'a pas encore fait le design de la flowcell
-		if ( $scope.experiment.experimentProperties.sequencingType && $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
+		if ( $scope.experiment.experimentProperties && $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
 			console.log('S2...engag=150; NaoH=37/0.2N; TrisHCL=38/400; EPX=525');
 			
 			updateAllInputContainerUsedsPropertyValue("inputVolume2","150");
@@ -422,7 +423,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","38");
 			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","525");	
 			
-		} else if ( $scope.experiment.experimentProperties.sequencingType &&  $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
+		} else if ( $scope.experiment.experimentProperties &&  $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
 			console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
 			
 			updateAllInputContainerUsedsPropertyValue("inputVolume2","310");

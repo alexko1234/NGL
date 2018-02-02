@@ -134,7 +134,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		});
 		
 		$scope.$on('refresh', function(e) {
-			console.log("call event refresh on one-to-void");		
+			console.log("call event refresh on one-to-void (default)");	// OK sort	
 			var dtConfig = $scope.atmService.data.getConfig();
 			$scope.atmService.data.setConfig(dtConfig);
 			
@@ -143,12 +143,12 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		});
 		
 		$scope.$on('cancel', function(e) {
-			console.log("call event cancel");
+			console.log("call event cancel on one-to-void (default)"); // OK sort
 			$scope.atmService.data.cancel();						
 		});
 		
 		$scope.$on('activeEditMode', function(e) {
-			console.log("call event activeEditMode");
+			console.log("call event activeEditMode on one-to-void (default)");// PB ne sort jamais si experience a etat Finished!!!
 			$scope.atmService.data.selectAll(true);
 			$scope.atmService.data.setEdit();
 		});
@@ -224,7 +224,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			
 		$scope.buttonNOVASEQ6000XMLfile = {
 				isShow:function(){
-					//return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() ); // MARCHE pas, editMode pas vu...
+					//return (( $scope.isInProgressState() || $scope.isFinishState() ) &&  $scope.isEditMode() ); // MARCHE pas, editMode pas vu voir plus haut
 					return ( $scope.isInProgressState() || $scope.isFinishState() );
 					},
 				isFileSet:function(){
