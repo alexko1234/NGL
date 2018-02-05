@@ -1,21 +1,20 @@
 
-import static org.junit.Assert.assertEquals;
+// import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import static fr.cea.ig.play.test.DevAppTesting.*;
-
-import play.Application;
+import static ngl.projects.Global.af;
+// import play.Application;
 
 public class Heavy {
 	
-	// Should be in some global. 
-	public static Application devapp() { 
-		return fr.cea.ig.play.test.DevAppTesting.devapp("ngl-projects.test.conf");
-	}
 
 	@Test
 	public void test01() throws Exception {
-	    testInServer(devapp(),
-	    		ws -> {	    	
+//	    testInServer(ngl.projects.Global.devapp(),
+//	    		ws -> {	    	
+//	    	      checkRoutes(ws);
+//	    		});
+	    af.ws(ws -> {	    	
 	    	      checkRoutes(ws);
 	    		});
 	}	

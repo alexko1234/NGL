@@ -6,6 +6,7 @@ import javax.inject.Inject;
 //import controllers.CommonController;
 import controllers.projects.tpl.routes.javascript;
 import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
 import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.ngl.NGLApplication;
 import fr.cea.ig.ngl.NGLController;
@@ -23,7 +24,8 @@ import views.html.umbrellaprojects.*;
  *
  */
 // public class UmbrellaProjects extends CommonController {
-public class UmbrellaProjects extends NGLController implements NGLJavascript { // extends NGLBaseController {
+public class UmbrellaProjects extends NGLController 
+                             implements NGLJavascript { // extends NGLBaseController {
 	
 	private home home;
 	
@@ -35,12 +37,11 @@ public class UmbrellaProjects extends NGLController implements NGLJavascript { /
 	
 	@Authenticated
 	@Historized
+	@Authorized.Read	
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}
 	
-	@Authenticated
-	@Historized
 	public Result get(String code) {
 		return ok(home.render("search")); 
 	}
