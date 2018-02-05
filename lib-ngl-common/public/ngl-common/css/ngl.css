@@ -92,4 +92,7 @@ input[type="checkbox"] {
   color:red;
 }
 
+.form-group.content .control-label::first-letter {
+  text-decoration: underline;
+}
 

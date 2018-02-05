@@ -183,16 +183,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	var containerNodes = undefined;
 	$scope.initGraph = function(){
 		$scope.setActiveTab('treeoflife');
+		$scope.messages.clear();
 		if(!containerNodes){
 			initTreeOfLife($scope.container);
 		}
 	}
-	
+	$scope.treeLoadInProgress = false;
 	var initCytoscape = function(graphElements){
 		var asynchGraph = function() {
 			 return $q(function(resolve, reject) {
 				 setTimeout(function() {
-				 	 var cy = 
+					 var cy = 
 						cytoscape({
 					          container: document.getElementById('graph'),
 					          boxSelectionEnabled: false,
@@ -265,6 +266,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				 		$scope.$apply(function(scope){
 				 			$window.open(jsRoutes.controllers.experiments.tpl.Experiments.get(data.fromExperimentCode).url, 'experiments');
 				 		});
+				 	});
+				 	cy.ready(function(evt){
+				 		console.log('ready');	
+				 		$scope.treeLoadInProgress = false;	
+				 		$scope.$digest();
 				 	});
 				});	
 			 }, 1);
@@ -341,8 +347,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	
 	var initTreeOfLife = function(currentContainer){
 		//extract parent container codes
+		$scope.treeLoadInProgress = true;
 		var codes = {parentContainerCodes : []};	
+		var treeOfLifePathRegex = '^,'+currentContainer.code;
+		
 		if(!angular.isUndefined(currentContainer.treeOfLife) && (currentContainer.treeOfLife !== null)){
+			if(currentContainer.treeOfLife.paths && currentContainer.treeOfLife.paths.length > 0){
+				treeOfLifePathRegex = '^'+currentContainer.treeOfLife.paths[0]+','+currentContainer.code;
+			}
 			angular.forEach(currentContainer.treeOfLife.paths, function(path){
 				path = path.substring(1);
 				this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
@@ -353,12 +365,22 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		if(codes.parentContainerCodes.length > 0){ // Case no paths
 			var nbElementByBatch = Math.ceil(codes.parentContainerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
             var queries = [];
-            for (var i = 0; i < 6 && codes.parentContainerCodes.length > 0; i++) {
-                var subContainerCodes = codes.parentContainerCodes.splice(0, nbElementByBatch);
-                promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:subContainerCodes}}));                
-            }			
+            if(nbElementByBatch < 500){
+	            for (var i = 0; i < 6 && codes.parentContainerCodes.length > 0; i++) {
+	                var subContainerCodes = codes.parentContainerCodes.splice(0, nbElementByBatch);
+	                promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:subContainerCodes}}));                
+	            }			
+            }else{
+            	for (var i = 0; codes.parentContainerCodes.length > 0; i++) {
+	                var subContainerCodes = codes.parentContainerCodes.splice(0, 500);
+	                promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:subContainerCodes}}));                
+	            }
+            }
 		}
-		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
+		//promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
+		
+		
+		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:treeOfLifePathRegex}}));
 		
 		
 		$q.all(promises).then(function(results){
@@ -371,10 +393,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 
 			angular.forEach(results, function(result){
-				angular.forEach(result.data, function(container){
-					this[container.code] = newNode(container);
-				}, this)
-			}, containerNodes)
+					angular.forEach(result.data, function(container){
+							this[container.code] = newNode(container);
+						}, this);
+			}, containerNodes);
 
 			
 			var updateParentNodes = function(currentContainerNode, containerNodes){
@@ -436,6 +458,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			var graphElements =  computeGraphElements(containerNodes);
 			initCytoscape(graphElements);
+			
+		}, function(results){
+			$scope.treeLoadInProgress = false;	
+			$scope.messages.setError("get");
 		});
 		
 		
