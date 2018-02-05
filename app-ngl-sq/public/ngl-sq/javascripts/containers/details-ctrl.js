@@ -203,7 +203,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					            name: 'breadthfirst',
 					            directed:true,
 					            padding:5,
-					            spacingFactor:0.5,					           
+					            spacingFactor:0.8,					           
 					          },
 					          style: cytoscape.stylesheet()
 						          .selector('node')
@@ -225,17 +225,18 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						            })
 						          .selector('edge')
 						            .css({
-						              'opacity': 0.666,
-						              'width': '3',
-						              'label': 'data(label)',
-						              'color': '#000',
-						              'font-size':11,
-						              'font-weight': 'bold',
-						              'target-arrow-shape': 'triangle',
-						              'source-arrow-shape': 'circle',
-						              'line-color': 'data(faveColor)',
-						              'source-arrow-color': 'data(faveColor)',
-						              'target-arrow-color': 'data(faveColor)'
+						            	'curve-style': 'bezier',
+						            	'opacity': 0.666,
+						                'width': '3',
+						                'label': 'data(label)',
+						                'color': '#000',
+						                'font-size':11,
+						                'font-weight': 'bold',
+						                'target-arrow-shape': 'triangle',
+						                'source-arrow-shape': 'circle',
+						                'line-color': 'data(faveColor)',
+						                'source-arrow-color': 'data(faveColor)',
+						                'target-arrow-color': 'data(faveColor)'
 						            })
 						            /*
 						          .selector('edge.questionable')
@@ -362,6 +363,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		}
 
 		var promises = [];
+		//promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
+		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:treeOfLifePathRegex}}));
+		
 		if(codes.parentContainerCodes.length > 0){ // Case no paths
 			var nbElementByBatch = Math.ceil(codes.parentContainerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
             var queries = [];
@@ -377,10 +381,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	            }
             }
 		}
-		//promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:','+currentContainer.code+'$|,'+currentContainer.code+','}}));
-		
-		
-		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:treeOfLifePathRegex}}));
 		
 		
 		$q.all(promises).then(function(results){
