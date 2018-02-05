@@ -105,7 +105,7 @@ status.TRUE = OK
 status.FALSE = KO
 status.UNSET = ---
 
-bt-select.here = Taper ici !
+bt-select.here = texte ou regexp entre //
 
 search.placeholder.reporting.configuration = Sélect. colonnes config.
 search.placeholder.regexColumn = Recherche colonne
