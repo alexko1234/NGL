@@ -2,8 +2,12 @@ package controllers.barcodes.tpl;
 
 import javax.inject.Inject;
 
-import controllers.CommonController;
-
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
 import play.routing.JavaScriptReverseRouter;
 import play.mvc.Result;
 
@@ -11,19 +15,27 @@ import views.html.barcodes.home;
 import views.html.barcodes.create;
 import views.html.barcodes.search;
 
-public class Barcodes extends CommonController {
+//import controllers.CommonController;
+//public class Barcodes extends CommonController {
+
+public class Barcodes extends NGLController
+                     implements NGLJavascript {
 	
-	private home home;
+	private home   home;
 	private create create;
 	private search search;
 	
 	@Inject
-	public Barcodes(home home, create create, search search) {
-		this.home = home;
+	public Barcodes(NGLApplication app, home home, create create, search search) {
+		super (app);
+		this.home   = home;
 		this.create = create;
 		this.search = search;
 	}
 	
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result home(String homecode) {
 		return ok(home.render(homecode));
 	}

@@ -4,18 +4,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.Logger;
+// import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
-import controllers.CommonController;
 
-public class Levels extends CommonController {
+// import controllers.CommonController;
+public class Levels extends Controller { // CommonController {
 	
+	private static final play.Logger.ALogger logger = play.Logger.of(Levels.class);
 	
-	public static Result save(){
+	public static Result save() {
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			LevelService.main(errors);			
@@ -25,8 +27,9 @@ public class Levels extends CommonController {
 				return ok();
 			}
 		} catch (Exception e) {
-			Logger.error(e.getMessage(), e);
+			logger.error(e.getMessage(), e);
 			return internalServerError(e.getMessage());
 		}				
 	}
+	
 }

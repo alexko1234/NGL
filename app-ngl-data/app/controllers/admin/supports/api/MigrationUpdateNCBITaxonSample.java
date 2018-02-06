@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import controllers.CommonController;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.ngl.NGLConfig;
@@ -25,6 +24,7 @@ import services.instance.sample.UpdateSampleNCBITaxonCNS;
  * @author galbini
  *
  */
+// import controllers.CommonController;
 public class MigrationUpdateNCBITaxonSample extends DocumentController<Sample> { //CommonController {
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	private TaxonomyServices taxonomyServices;

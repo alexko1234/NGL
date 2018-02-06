@@ -26,9 +26,9 @@ import views.html.home ;
 // import controllers.CommonController;
 // public class Main extends CommonController {
 public class Main extends NGLController
-                        implements NGLJavascript,
-                                   Executor,
-                                   CodeLabelAPIHolder {
+                 implements NGLJavascript,
+                            Executor,
+                            CodeLabelAPIHolder {
 
 	// final static JsMessages messages = JsMessages.create(play.Play.application());
 	// private static JsMessages messages;
