@@ -134,7 +134,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ3000", "NOVASEQ"), 
+				getInstrumentUsedTypes("MISEQ","HISEQ3000", "NOVASEQ6000"), 
 				"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 

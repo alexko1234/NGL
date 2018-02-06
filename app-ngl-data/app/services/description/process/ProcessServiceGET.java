@@ -93,9 +93,9 @@ public class ProcessServiceGET extends AbstractProcessService {
 						getPET("illumina-depot",1)),
 						
 				//getExperimentTypes("prepa-flowcell").get(0), 
-				getExperimentTypes("prepa-fc-ordered").get(0), 
-				getExperimentTypes("illumina-depot").get(0),
-				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
+				getExperimentTypes("prepa-fc-ordered").get(0), 		//first experiment type
+				getExperimentTypes("illumina-depot").get(0),		//last  experiment type
+				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void  experiment type
 				
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 		
@@ -138,7 +138,7 @@ public class ProcessServiceGET extends AbstractProcessService {
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"),"150", "single",300));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type d'analyse","analyseType"
-						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container, Level.CODE.Content),String.class, true, getAnalyseType(),null,"single",301));
+						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, true, getAnalyseType(),null,"single",301));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Espèce", "species"
 						, LevelService.getLevels(Level.CODE.Process, Level.CODE.Container),String.class, false,"single",302));
@@ -230,7 +230,7 @@ public class ProcessServiceGET extends AbstractProcessService {
 //		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
 		values.add(DescriptionFactory.newValue("Hiseq 3000", "Hiseq 3000"));
-		values.add(DescriptionFactory.newValue("NovaSeq", "NovaSeq"));
+		values.add(DescriptionFactory.newValue("NovaSeq 6000", "NovaSeq 6000"));
 		return values;	
 	}
 	

@@ -188,9 +188,9 @@ public class InstrumentServiceGET extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
 		/* NovaSeq*/
-        l.add(newInstrumentUsedType("NovaSeq", "NOVASEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaSeqProperties(), 
+        l.add(newInstrumentUsedType("NovaSeq 6000", "NOVASEQ6000", InstrumentCategory.find.findByCode("illumina-sequencer"), getNovaSeqProperties(), 
                 getInstruments(
-                 createInstrument("NOVASEQ","NovaSeq",  null, true,"/save/devcrgs/src/NGL_Feuille_route/NOVASEQ", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
+                 createInstrument("NOVASEQ6000","NovaSeq6000_A00318",  null, true,"/save/devcrgs/src/NGL_Feuille_route/NOVASEQ6000", DescriptionFactory.getInstitutes(Constants.CODE.GET))),
                  getContainerSupportCategories(new String[]{"flowcell-2-s1","flowcell-2-s2","flowcell-4-s4"}), null , 
                 DescriptionFactory.getInstitutes(Constants.CODE.GET)));
 
