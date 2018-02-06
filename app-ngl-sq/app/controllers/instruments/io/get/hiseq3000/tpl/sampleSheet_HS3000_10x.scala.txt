@@ -14,12 +14,12 @@ IEMFileVersion,4
 [Data]
 Lane,Sample_ID,index,Sample_Project
 @for(c <- containers.sortWith(_.support.line < _.support.line)){
-	@for(co <- c.contents.toList.sortWith(OutputHelper.getContentProperty(_,"Nom_echantillon_collaborateur")<OutputHelper.getContentProperty(_,"Nom_echantillon_collaborateur"))) {
+	@for(co <- c.contents.toList.sortWith(CsvHelper.contentName(_)<CsvHelper.contentName(_))) {
 		@if(CsvHelper.catch10x(co)){
 			@**Lane**@
 			@(c.support.line),@**
 			Sample id
-			**@@if(CsvHelper.checkName(OutputHelper.getContentProperty(co,"Nom_echantillon_collaborateur"))){@(CsvHelper.checkName(OutputHelper.getContentProperty(co,"Nom_echantillon_collaborateur")))}else{@(CsvHelper.checkName(OutputHelper.getContentProperty(co,"Nom_pool_sequencage")))},@**
+			**@@(CsvHelper.contentName(co)),@**
 			index
 			**@@if(OutputHelper.getContentProperty(co,"tag").split("10X_").length > 1){@(OutputHelper.getContentProperty(co,"tag").split("10X_")(1))}else{@(OutputHelper.getContentProperty(co,"tag"))},@**
 			project

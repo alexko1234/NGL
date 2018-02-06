@@ -665,7 +665,7 @@ public class ExperimentServiceGET extends AbstractExperimentService {
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",29,false));
 		propertyDefinitions.add(newPropertiesDefinition("Volume HT1 depot/PhiX", "HT1VolumeDepoPhiX", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",30,false));
-		propertyDefinitions.add(newPropertiesDefinition("Volume à remplasser", "volReplace", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
+		propertyDefinitions.add(newPropertiesDefinition("Volume à remplacer", "volReplace", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",31,false));
 
 		

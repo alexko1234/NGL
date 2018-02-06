@@ -1,6 +1,7 @@
 package controllers.instruments.io.get.novaseq;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class Output extends AbstractOutput {
 	public File generateFile(Experiment experiment, ContextValidation contextValidation) {
 		String ftype = null;
 		String content = null;
+//		List<Content> contents = new ArrayList<>();
 		
 		//get var type from url ?
 		ftype = (String)contextValidation.getObject("fType");		
@@ -33,6 +35,7 @@ public class Output extends AbstractOutput {
 		//get container
 		List<Container> containers = OutputHelper.getInputContainersFromExperiment(experiment);
 		Logger.debug("Output- containers : "+ containers.size());
+
 		//get tag type
 		TagModel tagModel = CsvHelper.getTagModel(containers);
 		Logger.debug("Output- tagModel : "+ tagModel.tagType);
@@ -43,7 +46,9 @@ public class Output extends AbstractOutput {
 		} 
 		
 		if ("IEM".equals(ftype)){
-				content = OutputHelper.format(sampleSheet_NovaSeq_IEM.render(experiment,containers,tagModel).body());	
+			List<String> contentDoubleName = CsvHelper.contentDubleName(containers);
+			Logger.debug("nom echantillon repeté - " + contentDoubleName.size());
+				content = OutputHelper.format(sampleSheet_NovaSeq_IEM.render(experiment,containers,contentDoubleName,tagModel).body());	
 		}
 		
 		if ("jFlow".equals(ftype)){

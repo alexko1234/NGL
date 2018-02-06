@@ -48,7 +48,9 @@ public class Output extends AbstractOutput {
 		} 
 		
 		if ("IEM".equals(ftype)){
-				content = OutputHelper.format(sampleSheet_miseq_IEM.render(experiment,containers,tagModel).body());	
+			List<String> contentDoubleName = CsvHelper.contentDubleName(containers);
+			Logger.debug("nom echantillon repeté - " + contentDoubleName.size());
+				content = OutputHelper.format(sampleSheet_miseq_IEM.render(experiment,containers,contentDoubleName,tagModel).body());	
 		}
 		
 		if ("jFlow".equals(ftype)){

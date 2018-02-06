@@ -41,7 +41,7 @@
 		***@5 min à T° ambiante;@***
 		***@@(OutputHelper.getExperimentProperty(c,"HT1Volume"));
 		;
-		;Volume dépôt(µL);Volume HT1(µL);Volume à remplasser(µL);
+		;Volume dépôt(µL);Volume HT1(µL);Volume à remplacer(µL);
 		@for((key,cp) <- c.contents.groupBy(_.projectCode)){@***
 		***@@if(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage")!=""){@***
 				***@@(OutputHelper.getContentProperty(cp.head,"Nom_pool_sequencage"))}else{@(cp.head.referenceCollab)}};@***
