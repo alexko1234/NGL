@@ -1,4 +1,5 @@
 package sra.scripts;
+import static sra.scripts.utils.Iterables.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +11,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 
@@ -33,12 +36,16 @@ import sra.scripts.utils.CSVParsing;
 import sra.scripts.utils.DateTools;
 import sra.scripts.utils.EbiAPI;
 import sra.scripts.utils.Tools;
+import sra.scripts.utils.ZenIterable;
+import sra.scripts.utils.iteration.CSVIterable;
+import sra.scripts.utils.iteration.FileLineIterable;
+import sra.scripts.utils.iteration.FileLineIterator;
+import sra.scripts.utils.iteration.MappingIterable;
 import fr.cea.ig.MongoDBDAO;
 
 
 
 public class RepriseHistoSample_extId extends AbstractScript {
-
 	/* version 1 : on demande à play d'instancier la classe avec un objet WSClient et on instantiera 
 	un objet EbiAPI avec ws
 	private final WSClient ws;	
@@ -47,8 +54,6 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		this.ws = ws;
 	}
 	*/
-	
-	
 	// version 2 : On demande à play d'instancier la classe avec un objet EbiAPI
 	private final EbiAPI ebiAPI;	
 
@@ -56,6 +61,76 @@ public class RepriseHistoSample_extId extends AbstractScript {
 	public RepriseHistoSample_extId(EbiAPI ebiAPI) {
 		this.ebiAPI = ebiAPI;
 	}
+	
+	/**
+	 * Classe permettant de stoquer des informations lié au sample
+	 * @author sgas
+	 *
+	 */
+	private static class SampleInfos {
+		private final String accession;
+		private final String externalId;
+		private final String optionalCode;
+		private final Date   optionalCreationDate;
+
+		/**
+		 * 
+		 * @param accession     numeros de la forme ERS...
+		 * @param externalId    identifiant de la forme SAME...
+		 * @param code          code de la forme sample_codeProjet....
+		 * @param creationDate  date de creation
+		 */
+		private SampleInfos(String accession, String externalId, String code, Date creationDate) {
+			this.accession 	          = accession;
+			this.externalId           = externalId;
+			this.optionalCode         = code;
+			this.optionalCreationDate = creationDate;
+		}
+		
+		/**
+		 * 
+		 * @param accession     numeros de la forme ERS...
+		 * @param externalId    identifiant de la forme SAME...
+		 */
+		private SampleInfos(String accession, String externalId) {
+			this(accession, externalId, null, null);
+		}
+		public String getAccession()    {return accession;}
+		public String getExternalId()   {return externalId;}
+		public String getCode()         {return optionalCode;}
+//		public Date getCreationDate() {return optionalCreationDate;}
+		public Optional<Date> getCreationDate() {
+			if (optionalCreationDate==null)
+				return Optional.empty();
+			return Optional.of(optionalCreationDate);
+		}
+	
+	}
+	
+	public Boolean updateDB(SampleInfos sampleInfos) {	
+		//sampleCodes.add(accession + "-" + code);
+		Date today = new Date();
+		final String collectionName = InstanceConstants.SRA_SAMPLE_COLL_NAME;
+		final Class<Sample> elementType = Sample.class;
+		DBQuery.Query q = DBQuery.is("accession", sampleInfos.accession);
+		
+		Sample sample = MongoDBDAO.findOne(collectionName, elementType, q);
+
+		if (sample == null) {
+			printfln("***************ERREUR pour le sample avec code=%s et accession =%s qui n'existe pas dans base", sampleInfos.optionalCode, sampleInfos.accession);
+		} else if (sample._type.equals("ExternalSample")) {
+			printfln("***************ERREUR pour le sample avec code=%s et accession =%s qui existe dans base comme ExternalSample", sampleInfos.optionalCode, sampleInfos.accession);
+		} else {
+			DBUpdate.Builder u = DBUpdate.set("externalId", sampleInfos.externalId).set("traceInformation.modifyDate", today);
+
+			if (sampleInfos.optionalCreationDate != null) 
+				u = u.set("traceInformation.creationDate", sampleInfos.optionalCreationDate);
+			MongoDBDAO.update(collectionName, elementType, q, u);
+			return (true);
+		}
+		return (false);
+	}	
+
 	
 	@Override
 	public void execute() throws IOException, ParseException {
@@ -69,66 +144,100 @@ public class RepriseHistoSample_extId extends AbstractScript {
 				dbSampleAcs.add(dbSample.accession);
 			}
 		}
-		Set <String> sampleAcs = new HashSet<>();		//Set <String> studyCodes = new HashSet<String>(); 
 		
+		Set <String> sampleAcs = new HashSet<>();		//Set <String> studyCodes = new HashSet<String>(); 
+	
+		Function<List<String>, SampleInfos> function_1 =
+				new Function<List<String>, SampleInfos>() {
+					//boolean first = true;
+					@Override
+					public SampleInfos apply(List<String> record) {
+						String accession = record.get(0);
+						String extId = record.get(1);
+						String code = record.get(3);
+						String oriDate = record.get(4);
+						Date date = DateTools.dmy("-", oriDate);
+						SampleInfos sampleInfos = new SampleInfos(accession, extId, code, date);
+						return sampleInfos;
+					}
+		};
+		
+		// Parsing fichier 1
 		File ebiFile = new File("/env/cns/home/sgas/repriseHistoExtId/repriseHistoSample.ori.csv");
-		//CSVParser csvParser = CSVParser.parse(ebiFile, Charset.forName("UTF-8"), CSVFormat.EXCEL.withDelimiter(';'));
-		CSVParser csvParser = CSVParsing.parse(ebiFile, ';');
-		boolean first = true;
-		int cp = 0;
-		for (CSVRecord  record : csvParser) {
-			if (first){
-				first = false;
+		ZenIterable <List<String>> ebi_1 = new CSVIterable(ebiFile,';');
+		//Iterable <SampleInfos> sampleInfos = new MappingIterable<List<String>, SampleInfos>(lili_1, function_1);
+		//Function <List<String>, Boolean> taraFilter = new Function <List<String>, Boolean>(){
+		Function <SampleInfos, Boolean> taraFilter = new Function <SampleInfos, Boolean>() {
+			@Override
+			public Boolean apply(SampleInfos sampleInfo) {
+				// Ignorer les samples TARA de Pesant
+				if (sampleInfo.optionalCode != null) {
+					return !sampleInfo.optionalCode.matches("^TARA_[a-zA-Z0-9]{10,11}$");
+				} else {
+					return true;
+				}
+			}	
+		};
+		
+		Function <SampleInfos, Boolean> taraFilter_lambda = 
+				sampleInfo -> sampleInfo.optionalCode == null || !sampleInfo.optionalCode.matches("^TARA_[a-zA-Z0-9]{10,11}$");
+				
+//		Iterable <List<String>> titi_A = ebi_1;
+//		Iterable <List<String>> titi_B = skip  (titi_A, 1);
+//		Iterable <SampleInfos>  titi_C = map   (titi_B, function_1);
+//		Iterable <SampleInfos>  titi_D = filter(titi_C, taraFilter);
+//		Iterable <SampleInfos> sampleInfos_1 = titi_D;
+				
+				
+		ZenIterable <SampleInfos> sampleInfos_1 = ebi_1.skip(1).map(function_1).filter(taraFilter);
+		// si on part d'un Iterable :
+		//ZenIterable <SampleInfos> sampleInfos_1 = skip(ebi_1,1).map(function_1).filter(taraFilter);
+		//ZenIterable <SampleInfos> sampleInfos_1 = zen(ebi_1).skip(1).map(function_1).filter(taraFilter);
+		int cp = 0;				
+		for (SampleInfos sampleInfo : sampleInfos_1) {
+			if (sampleInfo == null) {
 				continue;
 			}
+			sampleAcs.add(sampleInfo.accession);
 			cp++;
-			// marche ssi pas de % dans args:
-			//printf(csvRecord.get(0) + "  " + csvRecord.get(1) + "  " + csvRecord.get(4));
-			// facon correcte d'ecrire
-			//printf("%s  |  %s  |  %s  |  %s\n", record.get(0), record.get(1), record.get(3), record.get(4));
-			String accession = record.get(0);
-			String extId = record.get(1);
-			String code = record.get(3);
-			String oriDate = record.get(4);
-			
-			// Ignorer les samples TARA de Pesant 
-			if (code.matches("^TARA_[a-zA-Z0-9]{10,11}$")){
-				continue;
-			}
-			//sampleCodes.add(accession + "-" + code);
-			sampleAcs.add(accession);
-			//String [] tmp = oriDate.split("-");
-			//Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp[0]+ "/"+DateTools.monthOrdinal(tmp[1])+"/20"+tmp[2]);
-			Date date = DateTools.dmy("-", oriDate);
-			
-			//print(DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()));
-			//Date date = DateFormat.getDateInstance(DateFormat.SHORT).parse("1/1/18");
-			printfln("%s  |  %s  |  %s  |  %s", accession, extId, code, date);
-
-			Date today = new Date();
-			
-			Sample sample = MongoDBDAO.findOne(InstanceConstants.SRA_SAMPLE_COLL_NAME,
-					Sample.class, DBQuery.and(DBQuery.is("accession", accession)));
-			
-			if (sample == null) {
-				printfln("***************ERREUR pour le sample %d avec code=%s et accession =%s qui n'existe pas dans base", cp, code, accession);
-				continue;
-			}
-			
-			if (sample._type.equals("ExternalSample")) {
-				printfln("***************ERREUR pour le sample %d avec code=%s et accession =%s qui existe dans base comme ExternalSample", cp, code, accession);
-				continue;
-			} 
-			
-			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, 
-					DBQuery.is("accession", accession),
-					DBUpdate.set("externalId", extId).set("traceInformation.creationDate", date).set("traceInformation.modifyDate", today));
-			
-			if (sample != null) {
-				printfln("update ok  " + cp);
-			}
-					
+			updateDB(sampleInfo);
 		}
+	
+		
+		//----------------------------------------------------
+		// Parsing fichier 2
+		File ebiFile2 = new File("/env/cns/home/sgas/repriseHistoExtId/ebi_2_repriseHistoSample.txt");
+		
+		FileLineIterable fileLineIterable = new FileLineIterable(ebiFile2);
+		ZenIterable <List<String>> ebi_2 = fileLineIterable;
+		
+		Function<List<String>, SampleInfos> function_2 =
+				new Function<List<String>, SampleInfos>() {
+					boolean first = true;
+					@Override
+					public SampleInfos apply(List<String> record) {
+						String accession = record.get(0);
+						String extId     = record.get(1);
+						SampleInfos sampleInfos = new SampleInfos(accession, extId);
+						return sampleInfos;
+					}
+		};
+		
+		//Iterable <SampleInfos> sampleInfo_2 = new MappingIterable<List<String>, SampleInfos>(ebi_2, function_2);
+//		Iterable <SampleInfos> sampleInfo_2 = map(ebi_2, function_2);		
+//		for (SampleInfos sampleInfo: sampleInfo_2) {
+		//for (SampleInfos sampleInfo: map(ebi_2, function_2)) {
+		for (SampleInfos sampleInfo: ebi_2.map(function_2)) {
+			if (sampleInfo == null) {
+				continue;
+			}
+			sampleAcs.add(sampleInfo.accession);
+			printfln("%s  |  %s  ", sampleInfo.externalId, sampleInfo.accession);
+			cp++;
+			updateDB(sampleInfo);
+		}
+		
+		
 		
 		// Controle coherence :
 		Set<String> absentFichier = Tools.subtract(dbSampleAcs, sampleAcs);
