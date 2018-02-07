@@ -6,10 +6,11 @@
 
 @*** FDS: déclarations de variables avec le mot clé 'var', toutes sur une seule ligne 
   fichier pour 1 seul index=> chemistry=Amplicon
+  pour les lignes vides: utiliser "#"
 ***@
 
 @import java.lang.String; var i7_index_name=""; var i7_index_seq=""; var i5_index_name=""; var i5_index_seq=""; 
-@import java.lang.String; var sample_id=""; var description="";
+@import java.lang.String; var sample_id=""; var description=""; 
 
 [Header]\u000D\u000A
 IEMFileVersion,5\u000D\u000A
@@ -21,15 +22,15 @@ Assay,\u000D\u000A
 Index Adapters,\u000D\u000A
 Description,@(containers{0}.support.code)\u000D\u000A
 Chemistry,Amplicon\u000D\u000A
-- \u000D\u000A
+#\u000D\u000A
 [Reads]\u000D\u000A
 @experiment.instrumentProperties.get("nbCyclesRead1").value\u000D\u000A
 @experiment.instrumentProperties.get("nbCyclesRead2").value\u000D\u000A
-- \u000D\u000A
+#\u000D\u000A
 [Settings]\u000D\u000A
 Adapter\u000D\u000A
 AdapterRead2\u000D\u000A
-- \u000D\u000A
+#\u000D\u000A
 [Data]\u000D\u000A
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description\u000D\u000A
 @for(c <- containers.sortWith(_.code<_.code)){ 
