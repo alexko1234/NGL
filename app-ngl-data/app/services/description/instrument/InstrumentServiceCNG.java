@@ -633,7 +633,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		//NGL-1768: nouvelle propriétés
 		propertyDefinitions.add(newPropertiesDefinition("Tube chargement (RFID)", "novaseqLoadingTube", LevelService.getLevels(Level.CODE.Instrument),String.class, false, "single",600));
-		propertyDefinitions.add(newPropertiesDefinition("Type flowcell", "novaseqFlowcellMode", LevelService.getLevels(Level.CODE.Instrument),String.class, false,DescriptionFactory.newValues("S2"), "single",700));
+		propertyDefinitions.add(newPropertiesDefinition("Type flowcell", "novaseqFlowcellMode", LevelService.getLevels(Level.CODE.Instrument),String.class, false,DescriptionFactory.newValues("S2","S4"), "single",700));
 		
 		return propertyDefinitions;
 	}

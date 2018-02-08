@@ -1,4 +1,4 @@
-@(experiment: models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container]))
+@(experiment: models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container])
 
 @import controllers.instruments.io.utils._;
 @import java.text.SimpleDateFormat
