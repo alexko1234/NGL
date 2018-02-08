@@ -45,19 +45,17 @@ public class RunIllumina extends AbstractDeclaration {
 
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNS(),
-				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
+				getInstrumentUsedTypes("cBot","cBot-interne"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1300, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrdered(),
-				getInstrumentUsedTypes("cBot"), "ManyToOne", 
+				getInstrumentUsedTypes("cBot","cbot-onboard-novaseq","novaseq-xp-fc-dock"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-
 
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","HISEQ4000"), "OneToVoid", 
+				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","HISEQ4000","NOVASEQ6000"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,-1,
@@ -101,6 +99,18 @@ public class RunIllumina extends AbstractDeclaration {
 						getExperimentTypes("prepa-flowcell").get(0),getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-illumina-run").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", 
+				ProcessCategory.find.findByCode("sequencing"),62 , 
+				getIlluminaDepotProperties(), 
+				Arrays.asList(getPET("ext-to-illumina-run",-1),
+						getPET("solution-stock",-1), 
+						getPET("prepa-flowcell",0),
+						getPET("prepa-fc-ordered",0),
+						getPET("illumina-depot",1)), 
+						getExperimentTypes("prepa-flowcell").get(0),getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-illumina-run").get(0), 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
 		l.add(DescriptionFactory.newProcessType("STK, FC, dépôt Illumina", "norm-fc-depot-illumina", 
 				ProcessCategory.find.findByCode("sequencing"), 63,
 				getIlluminaDepotProperties(), 
@@ -116,6 +126,25 @@ public class RunIllumina extends AbstractDeclaration {
 						getPET("illumina-depot",2)), 
 						getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
+		
+		/* ??? CNG
+		 * l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt (4000 / X5 / NovaSeq)", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("sequencing"),
+				20,
+				null,  // pas de propriétés ??
+				Arrays.asList(
+						getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
+						getPET("prep-pcr-free",-1), 
+						getPET("pcr-and-purification",-1), 
+						getPET("pcr-and-indexing",-1), 
+						getPET("lib-normalization",0), 
+						getPET("normalization-and-pooling",0),
+						getPET("prepa-fc-ordered",1), 
+						getPET("illumina-depot",2) ),           
+				getExperimentTypes("lib-normalization").get(0),            //first experiment type
+				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
+				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
+				*/
 		
 		
 		return l;
@@ -341,6 +370,7 @@ public class RunIllumina extends AbstractDeclaration {
 		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
 		values.add(DescriptionFactory.newValue("Hiseq 4000", "Hiseq 4000"));
+		values.add(DescriptionFactory.newValue("NovaSeq 6000", "NovaSeq 6000"));
 		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;	
 	}
