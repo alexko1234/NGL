@@ -21,11 +21,12 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
+import workflows.sra.submission.TransitionObject;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
 // objet qui decrit ce qu'on soumet à l'EBI à l'instant t.
-public class Submission extends DBObject implements IValidation {
+public class Submission extends DBObject implements IValidation, TransitionObject {
 
 	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = CNS_projectCode_date_num
 	//public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
@@ -208,6 +209,21 @@ public class Submission extends DBObject implements IValidation {
 			contextValidation.addErrors("submission non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("submission");
+	}
+	
+	@Override
+	public State getState() {
+		return state;
+	}
+
+	@Override
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	@Override
+	public TraceInformation getTraceInformation() {
+		return traceInformation;
 	}
 
 }
