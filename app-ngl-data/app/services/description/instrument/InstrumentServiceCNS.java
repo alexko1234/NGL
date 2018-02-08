@@ -112,7 +112,19 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-
+		l.add(newInstrumentUsedType("cBot-interne-NovaSeq", "cbot-onboard-novaseq", InstrumentCategory.find.findByCode("cbot"), getCBotOnBoardNovaSeqProperties(), 
+				getInstruments(
+						createInstrument("cBot Jarvis A", "cBot-Jarvis-A", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("cBot Jarvis B", "cBot-Jarvis-B", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("NovaSeq Xp Flow Cell Dock", "novaseq-xp-fc-dock", InstrumentCategory.find.findByCode("cbot"), getCBotOnBoardNovaSeqProperties(), 
+				getInstruments(
+						createInstrument("NovaSeq Xp Flow Cell Dock 1", "novaseq-xp-fc-dock-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		
 		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
 				getInstrumentOpgen(),
@@ -135,7 +147,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("Brand LHS", "brand-lhs", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
-						createInstrument("CELESTE", "celeste", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ), 
+						createInstrument("celeste", "CELESTE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ), 
 						getContainerSupportCategories(new String[]{"96-well-plate","tube"}),getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -211,7 +223,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getInstrumentNovaseq6000(),
 				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
 				null, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
 		
 		l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
 				getThermocyclerInstruments(),
@@ -224,6 +236,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("cBot4", "cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))), 
+				
 				getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -470,8 +483,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
 		
 		//NGL-1768: nouvelle propriétés
-		propertyDefinitions.add(newPropertiesDefinition("Tube chargement (RFID)", "novaseqLoadingTube", LevelService.getLevels(Level.CODE.Instrument),String.class, false, "single",600));
-		propertyDefinitions.add(newPropertiesDefinition("Type flowcell", "novaseqFlowcellMode", LevelService.getLevels(Level.CODE.Instrument),String.class, false,DescriptionFactory.newValues("S2"), "single",700));
+	//	propertyDefinitions.add(newPropertiesDefinition("Tube chargement (RFID)", "novaseqLoadingTube", LevelService.getLevels(Level.CODE.Instrument),String.class, false, "single",600));
+		//propertyDefinitions.add(newPropertiesDefinition("Type flowcell", "novaseqFlowcellMode", LevelService.getLevels(Level.CODE.Instrument),String.class, false,DescriptionFactory.newValues("S1","S2","S4"), "single",700));
 		
 		return propertyDefinitions;
 	}
@@ -625,6 +638,18 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         return propertyDefinitions;
 	}
 	
+	
+	private static List<PropertyDefinition> getCBotOnBoardNovaSeqProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
+				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
+		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
+				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("S1","S2","S3","S4"),"single"));
+		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+				"2"),"Pas de piste contrôle (auto-calibrage)","single"));
+		return propertyDefinitions;
+	}
 	
 	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -816,7 +841,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<Instrument> getInstrumentNovaseq6000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		
-		instruments.add( createInstrument("??MARIECURIX", "??MARIECURIX", "V1", true, "????/env/ig/atelier/illumina/cng/MARIECURIX/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		instruments.add( createInstrument("JARVIS", "JARVIS", "V1", true, "/env/ig/atelier/illumina/cns/JARVIS/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+	
 		return instruments;
 	}
 	

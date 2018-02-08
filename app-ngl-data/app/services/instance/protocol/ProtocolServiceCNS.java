@@ -59,6 +59,9 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("hiseq_4000_system_guide","Illumina Hiseq 4000 system guide","path8","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered", "illumina-depot")));
 		
+		//NovaSeq
+		lp.add(newProtocol("Illumina NovaSeq 6000 system guide","Illumina NovaSeq 6000 system guide","path8","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));	
+
 		
 		//Nanopore
 		lp.add(newProtocol("R9-1D-ligation","R9-1D ligation","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-final-ligation"),
