@@ -328,6 +328,9 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			// ajout 16/01/2018 NGL-1767 modification dynamique de la feuille de calcul
 			// !! marche pas si le design Flowcell n'as pas encore ete fait...
 			setFeuilleCalcul();
+			
+			//TEST  ajout 08/02/2018
+			setVolumeFinal();
 		} 
 	});	
 	
@@ -408,7 +411,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	//------------ 16/01/2018 : NGL-1767 modification dynamique de la feuille de calcul en fonction du mode de sequencage-------
 	//                          remplacer les calculs drools par calculs javascript
 	
-	// !! labels NovaSeq pas definitifs: voir Julie...
+	// !! ne pas mettre le volume Final ici.. sinon pb d'appels en boucle
 	function setFeuilleCalcul(){
 		console.log('setFeuilleCalcul...');
 	
@@ -422,9 +425,9 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			updateAllInputContainerUsedsPropertyValue("trisHCLConcentration","400000000");	
 			updateAllInputContainerUsedsPropertyValue("trisHCLVolume","38");
 			updateAllInputContainerUsedsPropertyValue("masterEPXVolume","525");	
-			
+				
 		} else if ( $scope.experiment.experimentProperties &&  $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
-			console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085');
+			console.log('S4...engag=310; NaoH=77/0.2N; TrisHCL=78/400; EPX=1085....volume final=1550');
 			
 			updateAllInputContainerUsedsPropertyValue("inputVolume2","310");
 			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.2N");
@@ -435,7 +438,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			
 		} else {
 			// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
-			console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35');
+			console.log('default...engag=5; NaoH=5/0.1N; TrisHCL=5/200; EPX=35....volume final=50');
 			
 			updateAllInputContainerUsedsPropertyValue("inputVolume2","5");
 			updateAllInputContainerUsedsPropertyValue("NaOHConcentration","0.1N");
@@ -450,6 +453,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		$scope.atmService.data.updateDatatable();
 	}
 	
+	
 	// copié d'après  $scope.updateAllOutputContainerProperty   dans tubes-to-flowcell-ctrl.js
 	// function locale, ne pas la mettre dans $scope
 	updateAllInputContainerUsedsPropertyValue = function(propertyCode, value){
@@ -457,9 +461,10 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
 			var atm = $scope.atmService.data.atm[i];
 			
-			//!! boucler aussi sur TOUS les inputContainerUsed
+			// boucler sur TOUS les inputContainerUsed
 			for ( var j=0; j < $scope.atmService.data.atm[i].inputContainerUseds.length; j++ ){
 				$parse("inputContainerUseds["+j+"].experimentProperties."+propertyCode+".value").assign(atm, value);
+				
 			    // si la colonne mise a jour est le volume engagé il faut recalculer la concentration finale
 				if (propertyCode ==='inputVolume2'){
 					computeConcentrationAtm(atm, i, j);	
@@ -469,6 +474,43 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		//$scope.atmService.data.updateDatatable();   // NON faire l'updateDatatable dans la fonction appelante sinon update execute 6 fois de suite !!!
 	};
 	
+	// 08/02/2018 Demande de faire aussi un final volume dependant du type de sequencage choisi...
+	// impossible d'ajouter la mise a jour du volume final dans setFeuilleCalcul car appels en boucle....
+	function setVolumeFinal(){
+		console.log('setVolumeFinal...');
+		if ( $scope.experiment.experimentProperties && $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
+			console.log('S2...volume final=750');
+			updateAllOutputContainerUsedsPropertyValue("finalVolume","750");	
+			
+		} else if ( $scope.experiment.experimentProperties &&  $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
+			console.log('S4...volume final=1550');
+			updateAllOutputContainerUsedsPropertyValue("finalVolume","1550");
+			
+		} else {
+			// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
+			console.log('default...volume final=50');
+			updateAllOutputContainerUsedsPropertyValue("finalVolume","50");	
+		}
+	}
+	
+	// 08/02/2018
+	updateAllOutputContainerUsedsPropertyValue = function(propertyCode, value){
+		
+		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
+			var atm = $scope.atmService.data.atm[i];
+			
+			// boucler sur TOUS les outputContainerUsed
+			for ( var j=0; j < $scope.atmService.data.atm[i].outputContainerUseds.length; j++ ){
+				$parse("outputContainerUseds["+j+"].experimentProperties."+propertyCode+".value").assign(atm, value);
+				console.log ("mise a jour du volume final="+ value);
+				
+			    // si la colonne mise a jour est le volume final  il faut recalculer la concentration finale
+				if (propertyCode ==='finalVolume'){
+					computeConcentrationAtm(atm, i, j);	
+				}
+			}
+		}
+	}
 	
 	// surcharger celle de tubes-to-flowcell-ctrl.js  pour qu'elle appelle la changeValueOnFlowcellDesign locale qui utilise un parametre	
 	$scope.updateAllOutputContainerProperty = function(property){
@@ -490,15 +532,10 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 		//console.log('% depot ou  % phix  ou Volume final modifié:  atm.line: '+ l );
 		
-		//!! il faut  appeler setFeuilleCalcul() ici  car le premier appel sur le $watch..sequencingType.value  ne marche pas quand 
-		//le design de la flowcell n'est pas encore fait
-		setFeuilleCalcul();
-		
-		//console.log("update datatable (3)";
-		//$scope.atmService.data.updateDatatable();// OK ici
-		
-		//???  atm.line  correspond  forcement a l'index  de l'atm  ???
-		//console.log ( "apres update : new final vol="+ $scope.atmService.data.atm[l-1].outputContainerUseds[0].experimentProperties.finalVolume.value);
+		//!! il faut  appeler setFeuilleCalcul() ici car le premier appel sur le $watch..sequencingType.value ne marche pas quand 
+		// le design de la flowcell n'est pas encore fait
+		// oui mais si si ce n'est pas le premier appel alors il peut ecraser des valeur que l'utilisateur a defini en editant le datatable !!
+		setFeuilleCalcul(); 
 		
 		// recalculer la concentration finale pour tous les inputContainerUsed de l'atm [l-1] 
 		// calcul efectuee meme si la la propriete changee est % depot ou  % phix qui n'interviennent pas dans calcul!!!
@@ -507,7 +544,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		}
 		
 		console.log("update datatable (4)");
-		$scope.atmService.data.updateDatatable(); // test plutot la ???
+		$scope.atmService.data.updateDatatable(); 
 	};
 	
 
@@ -539,11 +576,13 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		
 		if(compute.isReady()){
 			var finalConcentration= compute.inputConc * compute.engagedVol / compute.finalVol;
+			console.log("conc finale avant arrondi = "+finalConcentration);
 			// arrondir...
 			if(angular.isNumber(finalConcentration) && !isNaN(finalConcentration)){
-				finalConcentration = Math.round(finalConcentration*100.0)/100.0;	
+				// pas suffisant pour les conc en PicoMolaire: finalConcentration = Math.round(finalConcentration*100.0)/100.0;	
+				finalConcentration = Math.round(finalConcentration*10000.0)/10000.0;
 			}
-			console.log("conc finale = "+finalConcentration);
+			console.log("conc finale apres arrondi= "+finalConcentration);
 			getterFinalConcentration2.assign(udtData, finalConcentration);
 			
 		}else{
@@ -571,17 +610,18 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		
 		if(compute.isReady()){
 			var finalConcentration = compute.inputConc * compute.engagedVol / compute.finalVol;
+			console.log("conc finale avant arrondi = "+finalConcentration);
 			// arrondir...
 			if(angular.isNumber(finalConcentration) && !isNaN(finalConcentration)){
-				finalConcentration = Math.round(finalConcentration*100.0)/100.0;	
+				// pas suffisant pour les conc en PicoMolaire: finalConcentration = Math.round(finalConcentration*100.0)/100.0;	
+				finalConcentration = Math.round(finalConcentration*10000.0)/10000.0;	
 			}
 			
-			console.log("conc finale = "+finalConcentration);
+			console.log("conc finale apres arrondi= "+finalConcentration);
 			getterFinalConcentration2.assign(atm, finalConcentration);
 		} else {
 			console.log("Impossible de calculer la concentration finale: valeurs manquantes");
 			getterFinalConcentration2.assign(atm, undefined);
 		}
 	}
-	
 }]);
