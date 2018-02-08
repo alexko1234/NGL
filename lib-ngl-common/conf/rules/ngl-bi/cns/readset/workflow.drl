@@ -99,7 +99,7 @@ rule "Set state to In Waiting Transfert CCRT from Avalaible readSet"
 	no-loop
 	when
 		$nextState : State(code=="A")
-		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
+		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null, !StringUtils.isBlank(bioinformaticParameters.fgGroup))
 		$readSet : ReadSet(location==null || (location!=null && location!="CCRT"))
 	then
 		Logger.debug("Update state code "+$readSet.code+" to IW-TF");	
@@ -216,7 +216,7 @@ rule "Set state to Avalaible from Finished Transfert CCRT"
 	no-loop
 	when
 		$nextState : State(code=="F-TF")
-		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
+		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null, !StringUtils.isBlank(bioinformaticParameters.fgGroup))
 	then
 		Logger.debug("State F-TF to A");
 		$nextState.code="A";
