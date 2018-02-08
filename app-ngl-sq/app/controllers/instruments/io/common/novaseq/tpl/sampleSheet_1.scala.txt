@@ -38,9 +38,9 @@ Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,
 	
 		@{sample_id=c.support.line +"_"+ co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag")}
 		
-		@i7_index_name=@{OutputHelper.getSupplierName(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")),"illumina")}
+		@{i7_index_name=OutputHelper.getSupplierName(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")),"illumina")}
 		
-		@i7_index_seq=@{OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")))}
+		@{i7_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")))}
 		
 		@{description=OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage}
 		
