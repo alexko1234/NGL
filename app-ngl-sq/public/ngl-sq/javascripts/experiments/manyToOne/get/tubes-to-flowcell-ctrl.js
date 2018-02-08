@@ -219,11 +219,20 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 	};	
 		
 	/*
+	 * processProperties dans experimentProperties
+	 */
+//	var processToExperiment = function(experiment){
+//		console.log("processToExperiment " + JSON.stringify());
+//	}
+//	processToExperiment($scope.experiment);
+	
+	
+	/*
 	 * affiche processProperties
 	 */
 	var setColomns = function(experiment){
 		if(experiment.state.code === "N"){
-			console.log("experiment.state.code " + experiment.state.code);
+			console.log("setColomns experiment.state.code " + experiment.state.code);
 			datatableConfig.columns.push({
 			   	 "header":Messages("containers.table.sampleAnalyseTypes"),
 			   	 "property":"inputContainerUsed.contents[0].processProperties.analyseType.value",
@@ -272,7 +281,7 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 	}
 	
 	setColomns($scope.experiment);
-	   
+	
 	$scope.dragInProgress=function(value){
 		$scope.dragIt=value;
 	};
@@ -284,6 +293,99 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 			return "";
 		}
 	}
+
+	
+	/*
+	 * préremplir valeurs par defaut
+	 */
+	var defaultValue = function(){
+		console.log("defaultValue experiment " + JSON.stringify($scope.experiment));
+		if($scope.experiment.atomicTransfertMethods == false && $scope.experiment.instrument.typeCode == "cBot-interne-novaseq"){
+			for (var col = 0; col < $scope.experimentType.propertiesDefinitions.length; col++) {
+				if($scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-4-s4"){
+					switch($scope.experimentType.propertiesDefinitions[col].code){
+						case "finalVolume1":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],30);
+							break;
+						case "finalVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],30);
+							break;
+						case "phixConcentration":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.25);
+							break;
+						case "echPhix":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],31.1);
+							break;
+						case "NaOHVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],7);
+							break;
+						case "NaOHConcentration":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.2);
+							break;
+						case "trisHCLVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],8);
+							break;
+						case "trisHCLConcentration":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],400000000);
+							break;
+						case "masterEPXVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],105);
+							break;
+					}
+				}else if ($scope.experiment.instrument.outContainerSupportCategoryCode == "flowcell-2-s1"){
+					switch($scope.experimentType.propertiesDefinitions[col].code){
+						case "finalVolume1":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],18);
+							break;
+						case "finalVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],18);
+							break;
+						case "phixConcentration":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.25);
+							break;
+						case "echPhix":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],18.7);
+							break;
+						case "NaOHVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],4);
+							break;
+						case "NaOHConcentration":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],0.2);
+							break;
+						case "trisHCLVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],5);
+							break;
+						case "trisHCLConcentration":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],400000000);
+							break;
+						case "masterEPXVolume":
+							console.log("defaultValue experimentType " + JSON.stringify($scope.experimentType.propertiesDefinitions[col].code));
+							$parse('defaultValue').assign($scope.experimentType.propertiesDefinitions[col],63);
+							break;
+					}
+				}
+			}
+		}
+	}
+	
+	defaultValue();
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tubes-to-flowcell");
@@ -295,7 +397,7 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 	});
 
 	var copyFlowcellCodeToDT = function(datatable){
-		
+		console.log("copyFlowcellCodeToDT");
 		var dataMain = datatable.getData();
 		//copy flowcell code to output code
 		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
@@ -317,6 +419,7 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 	
 	
 	var validateProcessProperties = function(experiment) {
+		console.log("validateProcessProperties");
 		if(experiment.state.code === "N"){
 			for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
 				var atm = experiment.atomicTransfertMethods[j];
@@ -363,7 +466,6 @@ angular.module('home').controller('GETTubesToFlowcellCtrl',['$scope', '$parse', 
 					}
 					atm.outputContainerUseds[0].concentration.value = Math.round(concentration);
 					atm.outputContainerUseds[0].concentration.unit = "pM";
-//					atm.outputContainerUseds[0].concentration.value = concentration;
 					
 				}
 			}
