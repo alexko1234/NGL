@@ -121,7 +121,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("NovaSeq Xp Flow Cell Dock", "novaseq-xp-fc-dock", InstrumentCategory.find.findByCode("cbot"), getCBotOnBoardNovaSeqProperties(), 
 				getInstruments(
-						createInstrument("NovaSeq Xp Flow Cell Dock 1", "novaseq-xp-fc-dock-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						createInstrument( "novaseq-xp-fc-dock-1", "NovaSeq Xp Flow Cell Dock 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 						getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
