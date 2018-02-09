@@ -646,8 +646,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("S1","S2","S3","S4"),"single"));
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-				"2"),"Pas de piste contrôle (auto-calibrage)","single"));
+		
 		return propertyDefinitions;
 	}
 	
