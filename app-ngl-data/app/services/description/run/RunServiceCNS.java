@@ -59,7 +59,8 @@ public class RunServiceCNS extends AbstractRunService {
 		l.add(DescriptionFactory.newRunType("MiSeq","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes( Constants.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("GA IIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("HiSeq 4000","RHS4000", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
+		l.add(DescriptionFactory.newRunType("NovaSeq 6000","RNVS6000", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		l.add(DescriptionFactory.newRunType("Argus","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newRunType("MinIon","RMINION", 1, RunCategory.find.findByCode("nanopore"), getRunNanoporePropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
