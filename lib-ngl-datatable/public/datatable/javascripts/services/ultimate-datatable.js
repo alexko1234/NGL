@@ -220,7 +220,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 infiniteScroll :{
                 	active: true,
                 	defaultLimitTo : 20,
-                	stepLimitTo : 15,
+                	stepLimitTo : 20,
                 	currentLimitTo : undefined
                 },                
                 callbackEndDisplayResult : function(){},
@@ -254,12 +254,16 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             /**
              * Reset the displayLimit
              */
-            resetScrollCurrentLimitTo : function(){
+            resetScrollCurrentLimitTo : function(maxLimitTo){
             	if(this.config.infiniteScroll.active)
             		this.config.infiniteScroll.currentLimitTo = this.config.infiniteScroll.defaultLimitTo;
+            		this.config.infiniteScroll.maxLimitTo = maxLimitTo;
+            		if(this.config.infiniteScroll.currentLimitTo > this.config.infiniteScroll.maxLimitTo){
+            			this.config.infiniteScroll.currentLimitTo = this.config.infiniteScroll.maxLimitTo
+            		}
             },
             addScrollCurrentLimitTo : function(){
-            	if(this.config.infiniteScroll.active)
+            	if(this.config.infiniteScroll.active && this.config.infiniteScroll.currentLimitTo < this.config.infiniteScroll.maxLimitTo)
             		this.config.infiniteScroll.currentLimitTo = this.config.infiniteScroll.currentLimitTo + this.config.infiniteScroll.stepLimitTo;
             },
             getScrollCurrentLimitTo : function(){
@@ -804,8 +808,6 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Based on pagination configuration
              */
             computeDisplayResult: function() {
-            	this.resetScrollCurrentLimitTo();
-                
             	var time = 100;
                 if (this.computeDisplayResultTimeOut !== undefined) {
                     $timeout.cancel(this.computeDisplayResultTimeOut);
@@ -868,6 +870,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             that.displayResult = displayResultTmp;
                             that.computeRowSpans();
                         }
+                        that.resetScrollCurrentLimitTo(that.displayResult.length);
                         
                     	if (that.config.edit.byDefault) {
                             that.setEdit();                           
