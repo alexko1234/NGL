@@ -82,26 +82,6 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http'
 	var loadData = function()
 	{
 		//loadData();
-		var form = {};
-		form.includes = [];
-		form.includes.push("default");
-		form.includes.push("runSequencingStartDate");
-		form.includes.push("typeCode");
-		form.typeCode=$routeParams.typeCode;
-		//For rsillumina
-		form.includes.push("treatments.ngsrg.default.nbBases");
-		//for rsnanopore
-		form.includes.push("treatments.ngsrg.default.1DReverse");
-		form.includes.push("treatments.ngsrg.default.1DForward");
-		form.includes.push("treatments.readQuality.default.1DReverse");
-		form.includes.push("treatments.readQuality.default.1DForward");
-		form.limit = 100000;
-
-		/*$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
-			var dataByYear = $scope.balanceSheetsGeneralService.computeDataByYear(data,$routeParams.typeCode);
-			mainService.put($routeParams.typeCode+'-general',dataByYear);
-			calculateData(dataByYear);
-		});*/
 		
 		var actualYear = new Date().getFullYear();
 		$scope.startYear = 2008;
