@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http', 'mainService', 'tabService', 'datatable', 'balanceSheetsGeneralSrv', '$routeParams',
-                                                               function($scope, $http, mainService, tabService, datatable, balanceSheetsGeneralSrv, $routeParams){
+angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http', '$q', 'mainService', 'tabService', 'datatable', 'balanceSheetsGeneralSrv', '$routeParams',
+                                                               function($scope, $http, $q, mainService, tabService, datatable, balanceSheetsGeneralSrv, $routeParams){
 
 	var configYearlyDT = {
 			name:'yearlyDT',
@@ -97,11 +97,50 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', '$http'
 		form.includes.push("treatments.readQuality.default.1DForward");
 		form.limit = 100000;
 
-		$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
+		/*$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 			var dataByYear = $scope.balanceSheetsGeneralService.computeDataByYear(data,$routeParams.typeCode);
 			mainService.put($routeParams.typeCode+'-general',dataByYear);
 			calculateData(dataByYear);
-		});
+		});*/
+		
+		var actualYear = new Date().getFullYear();
+		$scope.startYear = 2008;
+		if($routeParams.typeCode=='rsnanopore'){
+			$scope.startYear=2014;
+		}
+		$scope.dataByYear = [];
+		 var queries = [];
+		 for (var i = $scope.startYear; i <= actualYear; i++){
+			 $scope.dataByYear[i-$scope.startYear] = {
+					 nbBases : 0,
+					 year : i
+			 };
+			 var formQuery = {};
+			 formQuery.includes = [];
+			 formQuery.includes.push("default");
+			 formQuery.includes.push("runSequencingStartDate");
+			 formQuery.includes.push("typeCode");
+			 formQuery.typeCode=$routeParams.typeCode;
+			//For rsillumina
+			 formQuery.includes.push("treatments.ngsrg.default.nbBases");
+			//for rsnanopore
+			 formQuery.includes.push("treatments.ngsrg.default.1DReverse");
+			 formQuery.includes.push("treatments.ngsrg.default.1DForward");
+			 formQuery.includes.push("treatments.readQuality.default.1DReverse");
+			 formQuery.includes.push("treatments.readQuality.default.1DForward");
+			 formQuery.limit = 100000;
+			 formQuery.fromDate = moment("01/01/"+i, Messages("date.format").toUpperCase()).valueOf();
+			 formQuery.toDate = moment("31/12/"+i, Messages("date.format").toUpperCase()).valueOf();
+			 queries.push( $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : formQuery}) );
+		 }
+		 
+		 $q.all(queries).then(function(results) {
+				results.forEach(function(result){
+					$scope.dataByYear = $scope.balanceSheetsGeneralService.computeDataByYear(result.data,$scope.startYear,$scope.dataByYear);
+				});
+				mainService.put($routeParams.typeCode+'-general',$scope.dataByYear);
+				calculateData($scope.dataByYear);
+         });		
 	}
 
 	var calculateData = function(dataByYear)

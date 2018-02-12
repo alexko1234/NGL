@@ -7,8 +7,8 @@ factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse
 	 
 		var balanceSheetsGeneralService = {
 		
-			computeDataByYear : function(data,typeCode){
-				var actualYear = new Date().getFullYear();
+			computeDataByYear : function(data,startYear,dataByYear){
+			/*	var actualYear = new Date().getFullYear();
 				var startYear = 2008;
 				if(typeCode=='rsnanopore'){
 					startYear=2014;
@@ -19,7 +19,7 @@ factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse
 							 nbBases : 0,
 							 year : i
 					 };
-				 }
+				 }*/
 						 
 				 // Calculating our bases for each year
 				 for(var i = 0; i < data.length; i++){
