@@ -121,7 +121,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("NovaSeq Xp Flow Cell Dock", "novaseq-xp-fc-dock", InstrumentCategory.find.findByCode("cbot"), getCBotOnBoardNovaSeqProperties(), 
 				getInstruments(
-						createInstrument("NovaSeq Xp Flow Cell Dock 1", "novaseq-xp-fc-dock-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+						createInstrument( "novaseq-xp-fc-dock-1", "NovaSeq Xp Flow Cell Dock 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 						getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-4"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -646,8 +646,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
 				, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,DescriptionFactory.newValues("S1","S2","S3","S4"),"single"));
 		propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-				"2"),"Pas de piste contrôle (auto-calibrage)","single"));
+		
 		return propertyDefinitions;
 	}
 	
