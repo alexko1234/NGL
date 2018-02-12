@@ -221,53 +221,82 @@ public class NovaSeqInput extends AbstractInput {
          <BufferLotNumber>20207676
          */
     	 
-    	 // PB on n'a pas le nom des reagents => harcoder relation balise<-->nom reactif
-    	 Map<String,String> reagentTagMap = new HashMap<String,String>(0); 
+    	 // PB on n'a pas le nom des reagents => harcoder relation balise<-->nom reactif/nom boite    	 
+    	 Map<String,String[]> reagentTagMap = new HashMap<String,String[]>(0); 
     	 
-    	 // A MODIFIER QUAND LE KIT SERA DEFINI PAR LA PROD
-    	 reagentTagMap.put("FlowCell","FLOWCELL");
-    	 reagentTagMap.put("LibraryTube","LIBRARY TUBE");
-    	 reagentTagMap.put("Sbs","SBS");
-    	 reagentTagMap.put("Cluster","CLUSTER");
-    	 reagentTagMap.put("Buffer","BUFFER");
-    	 
-    	 String kitName="KIT NOVASEQ 6000"; 
-    	 String boxName="BOX NOVASEQ 6000";
-    	 
-    	 //REM: l'association a l'expérience de dépot n'est pas vérifiée...elle est implicite
-    	 KitCatalog kit= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category","Kit").and(DBQuery.is("name",kitName ).and(DBQuery.is("active",true))));
-    	 if ( null == kit ){
-    		 contextValidation.addErrors("Erreurs catalogue", kitName+": pas de kit actif de ce nom dans le catalogue");
-    		 return;
-    	 }
-    	 BoxCatalog box= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category","Box").and(DBQuery.is("name",boxName ).and(DBQuery.is("active",true))));
-    	 if ( null == box ){
-    		 contextValidation.addErrors("Erreurs catalogue", boxName+": pas de boîte active de ce nom dans le catalogue");
-    		 return;
-    	 }
+    	 // 12/02/2018 !!! 
+    	 // il y a 1 boite pour chaque reactif, le nom des reactif n'est pas assez specifique=> trouver d'abord le code de la boite
+    	 // et ensuite trouver le reactif qui appartient a cette boite
+    	 // il y a un kit par type de flowcell !!!==> utiliser la balise "RfidsInfo/FlowCellMode"
+    	 String kitName=null;
     	 
     	 try {
-	    	 for (Map.Entry<String, String> pair : reagentTagMap.entrySet() ) {
-		         //Logger.debug(">>>>"+ pair.getKey() + "|"+ pair.getValue() ); 
+		     String expression="RfidsInfo/FlowCellMode";
+		     String fcMode = (String)xpath.evaluate(expression, root);
+		     
+		     if ("S2".equals(fcMode)) {
+		    	 kitName="NOVASEQ XP 2-lane Kit";
+		    	 //String boxName="BOX NOVASEQ 6000";
+		    			 
+		       	 //                 TAG name                   reagent name  box name
+		    	 reagentTagMap.put("FlowCell",   new String[]{"FlowCell",   "S2 Flow Cell"}); 
+		    	 reagentTagMap.put("LibraryTube",new String[]{"LibraryTube","NovaSeq 5000/6000 Library tube"});
+		    	 reagentTagMap.put("Sbs",        new String[]{"Sbs",        "S1/S2 SBS Cartdridge 300 cycles"});
+		    	 reagentTagMap.put("Cluster",    new String[]{"Cluster",    "S2 Cluster Cartridge"});
+		    	 reagentTagMap.put("Buffer",     new String[]{"Buffer" ,    "S1/S2 Buffer Cartridge"});
+		    	 
+		     // TODO } else if  ("S4".equals(fcMode)) { }
+		     // TODO } else if  ("S1".equals(fcMode)) {	}
+		    	 
+		     } else {
+		    	 contextValidation.addErrors("Erreurs fichier", "FlowCell mode '"+fcMode+"' non géré.");
+		    	 return;
+		     }    	 
+	    	 
+	    	 //REM: l'association a l'expérience de dépot n'est pas vérifiée...elle est implicite
+	    	 KitCatalog kit= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class, DBQuery.is("category","Kit").and(DBQuery.is("name",kitName ).and(DBQuery.is("active",true))));
+	    	 if ( null == kit ){
+	    		 contextValidation.addErrors("Erreurs catalogue", "Pas de kit actif nommé '"+kitName+"' dans le catalogue");
+	    		 return;
+	    	 }
+    	
+	    	 // 12/02/2018 pair.getValue()  est maintenant un tableau de String
+	    	 for (Map.Entry<String, String[]> pair : reagentTagMap.entrySet() ) {
+	    		 
+	             Logger.debug(">>>>"+ pair.getKey() + "|"+ pair.getValue()[0] +"/"+  pair.getValue()[1] ); 
+	             
+	    		 // vérifier si la boite existe
+	    		 String boxName=pair.getValue()[1];
+	    		 
+		    	 BoxCatalog box= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category","Box").and(DBQuery.is("name",boxName ).and(DBQuery.is("active",true))));
+		    	 if ( null == box ){
+		    		 contextValidation.addErrors("Erreurs catalogue", "Pas de boîte active nommée '"+boxName+"' dans le catalogue");
+		    		 return;
+		    	 } 
+	    		 
 		    	 ReagentUsed reagent=new ReagentUsed(); 
 	    		 
 	    		 String XMLtag1="RfidsInfo/"+pair.getKey()+"SerialBarcode";
-	    		 //Logger.debug("XMLtag:"+XMLtag1); 
+	    		 Logger.debug("XMLtag:"+XMLtag1); 
 	    		 String serialBarcode = (String)xpath.evaluate(XMLtag1, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag1, serialBarcode );
 	    		 
 	    		 String XMLtag2="RfidsInfo/"+pair.getKey()+"LotNumber";
-	      		 //Logger.debug("XMLtag:"+XMLtag2);
+	      		 Logger.debug("XMLtag:"+XMLtag2);
 	    		 String lotNumber = (String)xpath.evaluate(XMLtag2, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag2, lotNumber );
 	    		 
-	    		 //Logger.debug("création reagent used: "+ pair.getValue());
-	    		 ReagentCatalog reag= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").and(DBQuery.is("name", pair.getValue())));
-	    		 //Logger.debug("code="+ reag.code);
-	    		 if ( null == reag ){
-	        		 contextValidation.addErrors("Erreurs catalogue", pair.getValue() +": pas de réactif de ce nom dans le catalogue");
-	        	 }else {
+	    		 String reagName=pair.getValue()[0];
+	    		 Logger.debug("création reagent used: "+ reagName);
 	    		 
+	    		 // 12/02/2018 ajouter la contrainte sur la boite parent
+	    		 ReagentCatalog reag= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").
+	    				 and(DBQuery.is("name", reagName)).and(DBQuery.is("boxCatalogCode", box.code ))); 		 
+	    		 if ( null == reag ){
+	        		 contextValidation.addErrors("Erreurs catalogue", "Pas de réactif nommé '"+reagName +"' dans le catalogue");
+	        	 } else {
+		    		 Logger.debug("code="+ reag.code);
+	        		 
 		    		 reagent.kitCatalogCode=kit.code;       // code NGL du kit parent
 		    		 reagent.boxCatalogCode=box.code;       // code NGL de la boîte parent
 		    		 reagent.reagentCatalogCode=reag.code;  // code NGL du reactif
@@ -277,6 +306,7 @@ public class NovaSeqInput extends AbstractInput {
 	
 					 experiment.reagents.add(reagent); 
 	        	 }
+	    		 
 	    	 }
 	     } catch (XPathExpressionException e) {
 		    	 contextValidation.addErrors("Erreurs interne", e.getMessage());
