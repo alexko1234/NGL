@@ -654,14 +654,16 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				var queries = [];
 				for (var i = 0; i < 6 && $scope.submission.experimentCodes.length > 0; i++) {
 					var subExperimentCodes = $scope.submission.experimentCodes.splice(0, nbElementByBatch);
-					queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:subExperimentCodes}}) );
+					//queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, { params : { listExperimentCodes : subExperimentCodes } }) );
+					queries.push( $http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, { params : { codes : subExperimentCodes } }) );
 				}
 				$q.all(queries).then(function(results) {
 					var allData = [];
 					results.forEach(function(result){
 						allData = allData.concat(result.data);
 					});
-
+                    console.log("XXXXXXXXXXXXXXXXXXXXXx");
+                    
 					$scope.experiments = allData;
 					//Init datatable
 					$scope.experimentDT = datatable(experimentsDTConfig);

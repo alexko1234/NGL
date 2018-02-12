@@ -645,32 +645,32 @@ public class SubmissionServices {
 			
 			// surcharger l'experiment avec valeurs de l'utilisateur si mapUserExperiments exist
 			
-			UserExperimentType userExperiment = mapUserExperiments.get(experiment.code);
-			if (userExperiment != null) {
-								
-				if (StringUtils.isNotBlank(userExperiment.getLibrarySource())){
-					experiment.librarySource = userExperiment.getLibrarySource();
-				}
-				if (StringUtils.isNotBlank(userExperiment.getLibraryStrategy())){
-					experiment.libraryStrategy = userExperiment.getLibraryStrategy();
-				}
-				if (StringUtils.isNotBlank(userExperiment.getLibrarySelection())){
-					experiment.librarySelection = userExperiment.getLibrarySelection();
-				}
-				if (StringUtils.isNotBlank(userExperiment.getLibraryProtocol())){
-					experiment.libraryConstructionProtocol = userExperiment.getLibraryProtocol();
-				}
-				if (StringUtils.isNotBlank(userExperiment.getLibraryName())){
-					experiment.libraryName = userExperiment.getLibraryName();
-				}
-				if (StringUtils.isNotBlank(userExperiment.getNominalLength())){
-					experiment.libraryLayoutNominalLength = new Integer(userExperiment.getNominalLength());
-				}
-				if (StringUtils.isNotBlank(userExperiment.getTitle())){
-					experiment.title = userExperiment.getTitle();
-				}
-			}
-					
+//			UserExperimentType userExperiment = mapUserExperiments.get(experiment.code);
+//			if (userExperiment != null) {
+//								
+//				if (StringUtils.isNotBlank(userExperiment.getLibrarySource())){
+//					experiment.librarySource = userExperiment.getLibrarySource();
+//				}
+//				if (StringUtils.isNotBlank(userExperiment.getLibraryStrategy())){
+//					experiment.libraryStrategy = userExperiment.getLibraryStrategy();
+//				}
+//				if (StringUtils.isNotBlank(userExperiment.getLibrarySelection())){
+//					experiment.librarySelection = userExperiment.getLibrarySelection();
+//				}
+//				if (StringUtils.isNotBlank(userExperiment.getLibraryProtocol())){
+//					experiment.libraryConstructionProtocol = userExperiment.getLibraryProtocol();
+//				}
+//				if (StringUtils.isNotBlank(userExperiment.getLibraryName())){
+//					experiment.libraryName = userExperiment.getLibraryName();
+//				}
+//				if (StringUtils.isNotBlank(userExperiment.getNominalLength())){
+//					experiment.libraryLayoutNominalLength = new Integer(userExperiment.getNominalLength());
+//				}
+//				if (StringUtils.isNotBlank(userExperiment.getTitle())){
+//					experiment.title = userExperiment.getTitle();
+//				}
+//			}
+//					
 			
 			// Ajouter l'experiment avec le statut forcement à 'N' à l'objet submission :
 			// Mise à jour de l'objet submission avec les experiments à soumettre :
@@ -681,7 +681,7 @@ public class SubmissionServices {
 					submission.experimentCodes.add(experiment.code);
 					//System.out.println ("Ajout dans submission du expCode : " + experiment.code);
 					if(experiment.run != null) {
-						//System.out.println ("Ajout dans submission du runCode : " + experiment.run.code);
+						System.out.println ("Ajout dans submission du runCode TOROTOTO: " + experiment.run.code);
 						submission.runCodes.add(experiment.run.code);
 					}// end if
 				}// end if
@@ -757,7 +757,7 @@ public class SubmissionServices {
 		submission.validate(contextValidation);
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){			
 			submission.validate(contextValidation);
-			System.out.println("\nDEBUG  displayErrors dans *********SubmissionServices::initPrimarySubmission :");
+			System.out.println("\nDEBUG  displayErrors dans **444*******SubmissionServices::initPrimarySubmission :");
 			contextValidation.displayErrors(logger);
 			System.out.println("\nDEBUG  end displayErrors dans **********SubmissionServices::initPrimarySubmission :");
 		
@@ -1394,7 +1394,8 @@ public class SubmissionServices {
 		}
 		experiment.libraryConstructionProtocol = VariableSRA.defaultLibraryConstructionProtocol;
 		experiment.run = createRunEntity(readSet);
-		
+		experiment.run.expCode=experiment.code;
+
 		// Renseigner l'objet experiment pour lastBaseCoord : Recuperer les lanes associées au
 		// run associé au readSet et recuperer le lane contenant le readSet.code. C'est dans les
 		// traitement de cette lane que se trouve l'information:
@@ -1504,6 +1505,7 @@ public class SubmissionServices {
 		// Pour chaque readSet, creer un objet run 
 		Date runDate = readSet.runSequencingStartDate;
 		Run run = new Run();
+		run.code = SraCodeHelper.getInstance().generateRunCode(readSet.code);
 		run.runDate = runDate;
 
 		//run.projectCode = projectCode;

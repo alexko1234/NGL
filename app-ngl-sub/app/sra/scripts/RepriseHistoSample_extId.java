@@ -195,14 +195,20 @@ public class RepriseHistoSample_extId extends AbstractScript {
 		//ZenIterable <SampleInfos> sampleInfos_1 = zen(ebi_1).skip(1).map(function_1).filter(taraFilter);
 		int cp = 0;				
 		for (SampleInfos sampleInfo : sampleInfos_1) {
-			if (sampleInfo == null) {
-				continue;
-			}
+//			if (sampleInfo == null) {
+//				continue;
+//			}
 			sampleAcs.add(sampleInfo.accession);
 			cp++;
 			updateDB(sampleInfo);
 		}
-	
+		sampleInfos_1.each(sampleInfo -> {
+			sampleAcs.add(sampleInfo.accession);
+			//cp++; on ne peut pas utiliser var locale si elles ne sont pas finales car var definit 
+			// dans methode qui peut ne plus etre visible ici si thread
+			updateDB(sampleInfo);
+		});
+
 		
 		//----------------------------------------------------
 		// Parsing fichier 2

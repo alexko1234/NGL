@@ -89,7 +89,21 @@ public class Submission extends DBObject implements IValidation, TransitionObjec
 		String st_my_date = dateFormat.format(courantDate);	
 		this.creationDate = courantDate;
 	}
+	
+	@Override
+	public State getState() {
+		return state;
+	}
 
+	@Override
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	@Override
+	public TraceInformation getTraceInformation() {
+		return traceInformation;
+	}
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("submission");
@@ -114,9 +128,9 @@ public class Submission extends DBObject implements IValidation, TransitionObjec
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 		if (StringUtils.isNotBlank(this.state.code)){
 			if(this.state.code.equalsIgnoreCase("IW-SUB") 
-					||this.state.code.equalsIgnoreCase("IW-SUB-R")
-					||this.state.code.equalsIgnoreCase("IP-SUB")
-					||this.state.code.equalsIgnoreCase("IP-SUB-R")
+					|| this.state.code.equalsIgnoreCase("IW-SUB-R")
+					|| this.state.code.equalsIgnoreCase("IP-SUB")
+					|| this.state.code.equalsIgnoreCase("IP-SUB-R")
 					|| this.state.code.equalsIgnoreCase("F-SUB")) {
 				ValidationHelper.required(contextValidation, this.submissionDirectory , "submissionDirectory");
 				ValidationHelper.required(contextValidation, this.creationDate , "creationDate");
@@ -211,19 +225,6 @@ public class Submission extends DBObject implements IValidation, TransitionObjec
 		contextValidation.removeKeyFromRootKeyName("submission");
 	}
 	
-	@Override
-	public State getState() {
-		return state;
-	}
 
-	@Override
-	public void setState(State state) {
-		this.state = state;
-	}
-
-	@Override
-	public TraceInformation getTraceInformation() {
-		return traceInformation;
-	}
 
 }

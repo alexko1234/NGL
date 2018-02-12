@@ -63,6 +63,7 @@ public class Experiments extends DocumentController<Experiment> {
 	
 	
 	public Result list() {
+		//if (true){return ok(Json.toJson(new ArrayList<Experiment>()));}
 		Form<ExperimentsSearchForm> experimentssSearchFilledForm = filledFormQueryString(experimentsSearchForm, ExperimentsSearchForm.class);
 		ExperimentsSearchForm form = experimentssSearchFilledForm.get();
 		Query query = getQuery(form);
