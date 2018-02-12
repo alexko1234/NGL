@@ -28,8 +28,8 @@ Chemistry,Default\u000D\u000A
 @experiment.instrumentProperties.get("nbCyclesRead2").value\u000D\u000A
 #\u000D\u000A
 [Settings]\u000D\u000A
-Adapter\u000D\u000A
-AdapterRead2\u000D\u000A
+Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA\u000D\u000A
+AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT\u000D\u000A
 #\u000D\u000A
 [Data]\u000D\u000A
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description\u000D\u000A
