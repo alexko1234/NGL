@@ -24,7 +24,7 @@ public class EbiAPI {
 	 * Verifie si lobjet dont le numeros d'accession est indiqué existe sur le serveur de l'EBI
 	 * @param type : type d'objet : projects, studies, samples, experiments, runs ou submission
 	 * @param ac   : numeros d'accession
-	 * @return  true si l'AC existe à l'EBI, false sinon 
+	 * @return     : true si l'AC existe à l'EBI, false sinon 
 	 */	
 	protected boolean ebiExists(String ac, String type) {
 		String url = String.format("https://www.ebi.ac.uk/ena/submit/drop-box/%s/%s?format=xml", type, ac);
@@ -45,8 +45,8 @@ public class EbiAPI {
 	 * @param   bioProjectId  : identifiant du project
 	 * @return  true si l'AC existe à l'EBI, false sinon 
 	 */
-	public boolean ebiProjectExists(String projectId) {
-		return ebiExists(projectId, "projects");
+	public boolean ebiProjectExists(String bioProjectId) {
+		return ebiExists(bioProjectId, "projects");
 	}
 	
 	/**

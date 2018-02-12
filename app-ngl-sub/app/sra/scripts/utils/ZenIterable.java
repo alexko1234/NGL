@@ -3,13 +3,12 @@ package sra.scripts.utils;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
+/*
  * Interface qui permet d'utiliser un iterable de <A> avec les methodes skip, map et filter
  * en les chainant (fluent java)
  * 
  * @author sgas
  *
- * @param <A>  ZenIterable de <A>
  */
 public interface ZenIterable <A> extends Iterable <A> {
 	
