@@ -59,18 +59,19 @@ public class AnalysisWorkflowsHelper {
 			//if(valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)){
 			if((analysis.state.code.equals("IW-V") && !"IW-VBA".equals(readSet.state.code)) ||
 					(analysis.state.code.equals("F-V") && TBoolean.TRUE.equals(analysis.valuation.valid))){
-			if (valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)) {
-				readSet.bioinformaticValuation.valid = valid;
-				readSet.bioinformaticValuation.date = date;
-				readSet.bioinformaticValuation.user = user;
-
-				readSet.traceInformation.modifyDate = new Date();
-				readSet.traceInformation.modifyUser = validation.getUser();
-
-
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-						DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
-
+				if (valid.equals(TBoolean.UNSET) && !"IW-VBA".equals(readSet.state.code)) {
+					readSet.bioinformaticValuation.valid = valid;
+					readSet.bioinformaticValuation.date = date;
+					readSet.bioinformaticValuation.user = user;
+	
+					readSet.traceInformation.modifyDate = new Date();
+					readSet.traceInformation.modifyUser = validation.getUser();
+	
+	
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+							DBQuery.is("code", rsCode), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation).set("traceInformation", readSet.traceInformation));
+	
+				}
 			}
 		}
 	}

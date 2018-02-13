@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -33,6 +35,16 @@ import models.utils.InstanceConstants;
 
 public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 	
+	private FileAcServices fileAcServices;
+	private SubmissionServices submissionServices;
+	
+	@Inject
+	public Debug_soumission_nanopore_2D_BNZ(FileAcServices fileAcServices, SubmissionServices submissionServices) {
+		super();
+		this.fileAcServices = fileAcServices;
+		this.submissionServices = submissionServices;
+	}
+	
 	@Override
 	public void execute() throws IOException, SraException, MailServiceException {
 		//reloadAC();
@@ -51,7 +63,7 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 			File fileEbi = new File("/env/cns/home/sgas/debug_soumission_nanopore",  "listAC_" + submission.code + ".txt");
 			String user = "william";
 			ContextValidation ctxVal = new ContextValidation(user);
-			submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
+			submission = this.fileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
 		}	
 	}
 	
@@ -121,7 +133,7 @@ public class Debug_soumission_nanopore_2D_BNZ extends AbstractScript {
 		submissionCodes.add("CNS_BNZ_2CMG1195V");
 		submissionCodes.add("CNS_BNZ_2CLH1PNRK");
 		submissionCodes.add("CNS_BNZ_2CLH1D04I");
-		SubmissionServices submissionServices = new SubmissionServices();
+		//SubmissionServices submissionServices = new SubmissionServices();
 		String stateCode = "IP-SUB";
 		
 		for (String submissionCode:submissionCodes) {
