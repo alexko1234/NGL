@@ -126,13 +126,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 	var sampleNodes = undefined;
 	$scope.initGraph = function(){
+		$scope.messages.clear();
 		$scope.setActiveTab('treeoflife');
 		if(!sampleNodes){	
 			initTreeOfLife($scope.sample);			
 
 		}
 	}
-
+	$scope.treeLoadInProgress = false;
 	var initCytoscape = function(graphElements){
 		var asynchGraph = function() {
 			return $q(function(resolve, reject) {
@@ -148,7 +149,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 								name: 'breadthfirst',
 								directed:true,
 								padding:5,
-								spacingFactor:0.5,					           
+								spacingFactor:0.8,					           
 							},
 							style: cytoscape.stylesheet()
 							.selector('node')
@@ -170,6 +171,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							})
 							.selector('edge')
 							.css({
+								'curve-style': 'bezier',
 								'opacity': 0.666,
 								'width': '3',
 								'label': 'data(label)',
@@ -206,7 +208,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							$window.open(jsRoutes.controllers.experiments.tpl.Experiments.get(data.fromExperimentCode).url, 'experiments');
 						});
 					});
-
+					cy.ready(function(evt){
+				 		console.log('ready');	
+				 		$scope.treeLoadInProgress = false;	
+				 		$scope.$digest();
+				 	});
 				});	
 			}, 1);
 		};
@@ -281,14 +287,20 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 
 	var initTreeOfLife = function(currentSample){
+		$scope.treeLoadInProgress = true;
 		//extract parent sample codes
+		var treeOfLifePathRegex = '^,'+currentSample.code;
+		
 		var codes = {parentSampleCodes : []};	//For the moment just 1 parent
 		if(!angular.isUndefined(currentSample.life) && (currentSample.life !== null)){
-
+			treeOfLifePathRegex = '^'+currentSample.life.path+','+currentSample.code;
 			codes.parentSampleCodes = codes.parentSampleCodes.concat(currentSample.life.path.split(",")); //path commence par 1 ,
 		}
 
 		var promises = [];
+		//promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url,{params : {treeOfLifePathRegex:','+currentSample.code+'$|,'+currentSample.code+','}}));
+		promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url,{params : {treeOfLifePathRegex:treeOfLifePathRegex}}));
+		
 		if(codes.parentSampleCodes.length > 0){ // Case no paths
 			var nbElementByBatch = Math.ceil(codes.parentSampleCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
 			var queries = [];
@@ -301,8 +313,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				}
 			}			
 		}
-			promises.push($http.get(jsRoutes.controllers.samples.api.Samples.list().url,{params : {treeOfLifePathRegex:','+currentSample.code+'$|,'+currentSample.code+','}}));
-	
+		
 		$q.all(promises).then(function(results){
 			sampleNodes = {};
 			var newNode = function(sample){
@@ -378,6 +389,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 
 			var graphElements =  computeGraphElements(sampleNodes);
 			initCytoscape(graphElements);
+		}, function(results){
+			$scope.treeLoadInProgress = false;	
+			$scope.messages.setError("get");
 		});
 
 

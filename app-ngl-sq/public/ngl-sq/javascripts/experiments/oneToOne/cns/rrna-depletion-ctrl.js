@@ -253,7 +253,7 @@ angular.module('home').controller('rRNADepletionCtrl',['$scope', '$parse', 'atmT
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				inputQuantity.value = Math.round(result*10)/10;	
-				inputQuantity.unit = (compute.intputConcUnit === 'nM')?'nmol':'ng';
+				inputQuantity.unit = (compute.intputConcUnit === 'nM')?'fmol':'ng';
 			}else{
 				inputQuantity = undefined;
 			}	

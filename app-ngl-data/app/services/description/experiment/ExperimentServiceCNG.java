@@ -3,6 +3,7 @@ package services.description.experiment;
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
+import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
 import java.util.ArrayList;
@@ -978,6 +979,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
+		// test NGL-1767: ajout liste de volumes pour les differents types de sequencage ?? 01/02/2018 Non laisser un champ a saisie libre et pas de valeur par defaut
+		//propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, newValues("5","150", "310"), "5",
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
@@ -992,6 +995,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null,
 				null, null, null, "single",23,true,"0.1N",null));
+		
 		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5",
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), 
 				MeasureUnit.find.findByCode("µL"), 
@@ -1029,9 +1033,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"single",28,false, "50",null));
 		
 		// NGL-1325 ajout propriété sequencingType de niveau Experiment, optionnelle
-		// NGL-1730 ajout NovaSeq 6000
+		// NGL-1730 ajout NovaSeq 6000;  NGL1767: subdiviser en NovaSeq 6000 / S2 + NovaSeq 6000 / S4 ( attention si changement de labels=> sont utilisés dans javascript)
 		propertyDefinitions.add(newPropertiesDefinition("Type de séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Experiment), String.class, false, null,
-				DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000"),null,null,null, 
+				DescriptionFactory.newValues("Hiseq 4000","Hiseq X","NovaSeq 6000 / S2","NovaSeq 6000 / S4"),null,null,null, 
 				"single",10, true, null,null));	
 		
 		return propertyDefinitions;

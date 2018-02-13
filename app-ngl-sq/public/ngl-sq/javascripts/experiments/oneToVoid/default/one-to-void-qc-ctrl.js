@@ -382,7 +382,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','$filter
 			if(angular.isNumber(result) && !isNaN(result)){
 				quantity = {};
 				quantity.value = Math.round(result*10)/10;
-				quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+				quantity.unit = (concentration.unit === 'nM')?'fmol':'ng';
 				return quantity;
 			}
 		}

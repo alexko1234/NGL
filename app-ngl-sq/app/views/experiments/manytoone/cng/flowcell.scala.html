@@ -250,8 +250,8 @@
 									<input class="form-control input-sm" type="text" 
 										 title="{{property.name}}"
 										 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
-										 ng-change="changeValueOnFlowcellDesign(property)"
-										 udt-html-filter="number" />		
+										 ng-change="changeValueOnFlowcellDesign(atm.line)"
+										 udt-html-filter="number" />	
 							
 								</div>
 							</div>			
@@ -273,7 +273,7 @@
 </div>
 
 <!-- FDS 25/10/2017 NGL-1326 ajout bouton import fichier Mettler/LabX
-     FDS 04/12/2017 trop collee a la div du dessus; pas trouve autre solution que <br/> !!!
+     FDS 04/12/2017 trop collee a la div du dessus; pas trouve autre solution que <br/> !!! oui mais pas alignee a droite !!
 -->.
                                               
 <div class="col-md-12 col-lg-12"> 

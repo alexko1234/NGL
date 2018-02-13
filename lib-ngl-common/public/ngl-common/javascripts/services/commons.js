@@ -904,7 +904,7 @@ angular.module('commonsServices', []).
 	      		      var optionsConfig = parseBtsOptions(btOptions);
 	      		      var items = [];
 	      		      var groupByLabels = {};
-	      		      var filterValue;
+	      		      var filterValueRegex;
 	      		      var ngFocus = attr.ngFocus;
 	      		      var ngModelValue = attr.ngModel;
 	      		      function parseBtsOptions(input){
@@ -939,7 +939,11 @@ angular.module('commonsServices', []).
 	      		   
 	      		     scope.filter = filter; 
 	      		     scope.setFilterValue = function(value){
-	      		    	filterValue = value
+	      		    	 if(value.match(/^\/.+\/.{0,1}/)){
+	      		    		filterValueRegex = new RegExp(value.split("/")[1], value.split("/")[2]);
+	      		    	 }else{
+	      		    		filterValueRegex = new RegExp(value, "i");
+	      		    	 }	      		    	 
 	      		     };
 	      		     
 	      		     scope.isTextarea = function(){
@@ -999,13 +1003,15 @@ angular.module('commonsServices', []).
 	      		    			filter[pName] = filterValue;
 	      		    		}
 	      		    		*/
+	      		    		/*
 	      		    		if(filterValue){
 	      		    			filterValue=filterValue.toLowerCase();
 	      		    		}
+	      		    		*/
 	      		    		var functionFilter = function(value, index, array){
-	      		    			if(filterValue){
-	      		    				var label = scope.itemLabel(value).toLowerCase();
-	      		    				var result = label.match(filterValue);
+	      		    			if(filterValueRegex){
+	      		    				var label = scope.itemLabel(value);
+	      		    				var result = label.match(filterValueRegex);
 	      		    				if(null == result)return false;	      		    				
 	      		    			}
 	      		    			return true;	      		    			

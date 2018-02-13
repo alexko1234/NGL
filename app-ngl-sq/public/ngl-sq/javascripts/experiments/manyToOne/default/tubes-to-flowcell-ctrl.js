@@ -397,11 +397,10 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		$scope.changeValueOnFlowcellDesign();
 	};
 
-	$scope.changeValueOnFlowcellDesign = function(){
+	 $scope.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();
 	};
-
-
+	
 	//init atmService
 	var atmService = atmToDragNDrop($scope, laneCount, datatableConfig);
 	//defined new atomictransfertMethod

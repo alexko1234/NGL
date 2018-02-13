@@ -75,9 +75,11 @@ public class OutputHelper {
 		
 	}
 	
+	// FDS 07/02/2018 il faut dans certains cas des lignes vides dans le fichier de sortie 
+	// => rajout d'un traitement spécifique pour "#" seul sur une ligne
 	public static String format(String content){
 		if(content != null){
-			return content.trim().replaceAll("(?m)^\\s{1,}", "").replaceAll("\n{2,}", "\n");
+			return content.trim().replaceAll("(?m)^\\s{1,}", "").replaceAll("\n{2,}", "\n").replaceAll("(?m)^#$","");
 		}
 		return "";
 	}

@@ -411,7 +411,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					if(angular.isNumber(result) && !isNaN(result)){
 						var quantity = {};
 						quantity.value = Math.round(result*10)/10;
-						quantity.unit = (concentration.unit === 'nM')?'nmol':'ng';
+						quantity.unit = (concentration.unit === 'nM')?'fmol':'ng';
 						container.quantity = quantity;
 					}else {
 						container.quantity =  undefined;
