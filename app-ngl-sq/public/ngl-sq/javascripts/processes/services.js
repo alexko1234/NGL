@@ -1788,20 +1788,18 @@ angular.module('ngl-sq.processesServices', [])
 					else if(processExperimentTypes.get(key)[0] > -1 )return '#6FB1FC';
 					else return '#F5A45D';
 				}
-				
-				for(var key in graphNodes){
-					if(processExperimentTypes === undefined || processExperimentTypes.get(key) !== undefined){
-						var currentNode = graphNodes[key];
-						var currentExperimentType = graphNodes[key].experimentType;
-						if(currentExperimentType.category.code === 'transformation'){
-							currentExperimentType.id = currentExperimentType.code;
-							currentExperimentType.label = currentExperimentType.name;
-							currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
-							currentExperimentType.faveShape="ellipse";
-							
-							graphElements.push({"data":currentExperimentType,"group":"nodes"});
-						}
+				for(var [key, value] of processExperimentTypes.entries()){
+					var currentNode = graphNodes[key];
+					var currentExperimentType = graphNodes[key].experimentType;
+					if(currentExperimentType.category.code === 'transformation'){
+						currentExperimentType.id = currentExperimentType.code;
+						currentExperimentType.label = currentExperimentType.name;
+						currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
+						currentExperimentType.faveShape="ellipse";
+						
+						graphElements.push({"data":currentExperimentType,"group":"nodes"});
 					}
+					
 				}
 				//edges
 				
@@ -1814,30 +1812,28 @@ angular.module('ngl-sq.processesServices', [])
 					//return (processExperimentTypes.get(keyChild) - processExperimentTypes.get(keyParent) === 1);			
 				}
 				
-				for(var key in graphNodes){
-					if(processExperimentTypes === undefined || processExperimentTypes.get(key) !== undefined){
-						var currentNode = graphNodes[key];
-						var currentExperimentType = graphNodes[key].experimentType;
-						if(currentExperimentType.category.code === 'transformation'){
-							angular.forEach(currentNode.childNodes, function(childNode){
-								var childExperimentType = childNode;
-								if(childExperimentType.category.code === 'transformation' 
-									&& (processExperimentTypes === undefined 
-											|| (processExperimentTypes.get(childExperimentType.code) !== undefined && isDiffPositionIsOne(processExperimentTypes, key, childExperimentType.code)))){
-									var currentExperimentType = this;
-									var edge = {
-											"id":currentExperimentType.code+"-"+childExperimentType.code,
-											"source":currentExperimentType.code,
-											"target":childExperimentType.code
-											
-									}
-									var faveColor = getFaveColor(processExperimentTypes, key);
-									edge.faveColor=faveColor;
-									graphElements.push({"data":edge,"group":"edges"})	
+				for(var [key, value] of processExperimentTypes.entries()){
+					var currentNode = graphNodes[key];
+					var currentExperimentType = graphNodes[key].experimentType;
+					if(currentExperimentType.category.code === 'transformation'){
+						angular.forEach(currentNode.childNodes, function(childNode){
+							var childExperimentType = childNode;
+							if(childExperimentType.category.code === 'transformation' 
+								&& (processExperimentTypes.get(childExperimentType.code) !== undefined && isDiffPositionIsOne(processExperimentTypes, key, childExperimentType.code))){
+								var currentExperimentType = this;
+								var edge = {
+										"id":currentExperimentType.code+"-"+childExperimentType.code,
+										"source":currentExperimentType.code,
+										"target":childExperimentType.code
+										
 								}
-							},currentExperimentType)
-						}
+								var faveColor = getFaveColor(processExperimentTypes, key);
+								edge.faveColor=faveColor;
+								graphElements.push({"data":edge,"group":"edges"})	
+							}
+						},currentExperimentType)
 					}
+					
 				}
 				
 				return graphElements;

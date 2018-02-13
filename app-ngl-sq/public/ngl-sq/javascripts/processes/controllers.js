@@ -52,6 +52,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 	$scope.changeProcessType = function(){
 		$scope.removeTab(1);
 		$scope.basket.reset();
+		$scope.searchService.datatable.setData([]);
 		$scope.processGraphService.changeProcessType($scope.searchService.form.nextProcessTypeCode);
 	};
 	
@@ -153,8 +154,8 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 	}
 }]);
 
-angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','basket','mainService','tabService','samplesSearchService', 
-    function($scope, $filter,basket, mainService, tabService, samplesSearchService) {
+angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','basket','mainService','tabService','samplesSearchService',  'processGraphService',
+    function($scope, $filter,basket, mainService, tabService, samplesSearchService, processGraphService) {
 	var datatableConfig = {
 			group:{active:true},
 			search:{
@@ -219,6 +220,8 @@ angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','bask
 		$scope.changeProcessType = function(){
 			$scope.removeTab(1);
 			$scope.basket.reset();
+			$scope.searchService.datatable.setData([]);
+			$scope.processGraphService.changeProcessType($scope.processForm.nextProcessTypeCode);
 		};
 		
 		$scope.addToBasket  = function(samples){
@@ -241,6 +244,10 @@ angular.module('home').controller('SearchSamplesCtrl', ['$scope','$filter','bask
 		
 		$scope.searchService.lists.refresh.processCategories();
 		$scope.processForm = {};
+		
+		$scope.processGraphService = processGraphService;
+		$scope.processGraphService.init(document);
+		
 		
 		if(angular.isUndefined(mainService.getBasket())){
 			$scope.basket = basket();			
