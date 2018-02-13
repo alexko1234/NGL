@@ -281,6 +281,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	$scope.$watch("experiment.instrumentProperties.containerSupportCode.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			if ( $scope.experiment.instrumentProperties.cbotFile ) { $scope.experiment.instrumentProperties.cbotFile.value = undefined; } 
+			$scope.messages.clear();
 		    checkFCpattern();// ajout 24/04/2017 NGL-1325
 		}
 	});	
@@ -303,8 +304,17 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 					$scope.messages.showDetails = false;
 					$scope.messages.open();
 				} 
-				// 13/02 NON LAISSER !!$scope.experiment.experimentProperties.sequencingType.value=undefined; 
+				// 13/02/2018 ajouter la verification inverse PAS VUE !!!!
+				if ( (null===$scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) ) && (null != $scope.experiment.instrument.code.match(/MarieCurix/))){
+					$scope.messages.clazz = "alert alert-warning";
+					$scope.messages.text = "Le type de séquencage choisi n'est pas NovaSeq 6000 / *";
+					$scope.messages.showDetails = false;
+					$scope.messages.open();
+				} 
 			}
+			
+			//13/02/2018 ajouter la verification FC 	
+			checkFCpattern();
 		}
 	});	
 	
@@ -328,6 +338,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			}
 		    
 			checkFCpattern();
+			
 			// ajout 16/01/2018 NGL-1767 modification dynamique de la feuille de calcul
 			// !! marche pas si le design Flowcell n'as pas encore ete fait...
 			setFeuilleCalcul();
@@ -353,36 +364,49 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		seqType=$scope.experiment.experimentProperties.sequencingType.value;
 		//console.log('check FC pattern: FC='+ fcBarcode + 'sequencing type='+seqType );
 		
-		// !! labels NovaSeq pas definitifs: voir Julie...
+		// 13/02/2018 essayer d'afficher plusieurs messages...  PROBLEMES!!!!!!!!!!!!!!!!!!!!!!!!
+		// voir switch-index-ctrl.js      ....probleme avec this.XXX.push !!!
+		//var data = { "Type de séquencage":[]}  /// marche si on n'utilise pas push...
+		var data = { sq:[]}
+		
+		if ( $scope.messages.text!= undefined) {
+			data.sq.push( $scope.messages.text);
+		}
+		
 		if ((seqType === 'Hiseq 4000') && ( null===fcBarcode.match(H4000fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)";
-			$scope.messages.showDetails = false;
+			$scope.messages.text = "Alertes";
+			data.sq.push("Code Flowcell n'est pas du type 'Hiseq 4000' (*BBXX)");
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
 			$scope.messages.open();
 			
 		} else if ((seqType === 'Hiseq X') && ( null===fcBarcode.match(HXfcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'Hiseq X' (*ALXX)";
-			$scope.messages.showDetails = false;
+			$scope.messages.text = "Alertes";
+			data.sq.push("Code Flowcell n'est pas du type 'Hiseq X' (*ALXX)");
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
 			$scope.messages.open();
 			
 		} else if ((seqType === 'NovaSeq 6000 / S2') && (null===fcBarcode.match(Nv6000S2fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)";
-			$scope.messages.showDetails = false;
+			$scope.messages.text = "Alertes";
+			///var data = { "Type de séquencage": [ previousMessg, "Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)"]};
+			data.sq.push("Code Flowcell n'est pas du type 'NovaSeq 6000 / S2' (*DMXX)");
+			$scope.messages.setDetails(data);
+			$scope.messages.showDetails = true;
+
 			$scope.messages.open();
 			
 		} else if ((seqType === 'NovaSeq 6000 / S4') && (null===fcBarcode.match(Nv6000S4fcRegexp))) {
 			$scope.messages.clazz = "alert alert-warning";
-			$scope.messages.text = "Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*DSXX)";
+			data.sq.push("Code Flowcell n'est pas du type 'NovaSeq 6000 / S4' (*DSXX)");
 			$scope.messages.showDetails = false;
 			$scope.messages.open();	
-			
-		// TODO un jour 'NovaSeq 6000 / S1' ??
-		} else {
-			//console.log('checkFCpattern OK !!!');
-			$scope.messages.clear();
-		}	
+
+		} 
+		//else if ((seqType === 'NovaSeq 6000 / S1') && (null===fcBarcode.match(Nv6000S1fcRegexp))) { ]
 	}
 	
 	// ajout 25/04/2017 NGL-1287: les supports d'entree ne doivent etre QUE des plaques pour le Janus
