@@ -4,8 +4,8 @@
 @import java.text.SimpleDateFormat
 @import java.util.Locale
 
-@*** FDS: déclarations de variables avec le mot clé 'var', toutes sur une seule ligne 
-  fichier pour 1 seul index=> chemistry=Amplicon
+@*** déclarations de variables avec le mot clé 'var'
+  fichier pour index dual => chemistry=Amplicon
   pour les lignes vides: utiliser "#"
 ***@
 
@@ -39,14 +39,16 @@ Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,ind
 		
 		@{sample_id=c.support.line +"_"+ co.sampleCode+"_"+OutputHelper.getContentProperty(co,"libProcessTypeCode")+"_"+OutputHelper.getContentProperty(co,"tag")}
 		
+		@*** 13/02/2018ATTENTION tous les noms d'index dual ne suivent pas la nomenclature Illumina <index1>-<index2>=> ne pas splitter, ne pas mettre les noms dans la FDR
 		@{i7_index_name=OutputHelper.getContentProperty(co,"tag").split("-")(0)}
 		@{i5_index_name=OutputHelper.getContentProperty(co,"tag").split("-")(1)}
+		***@
 
 		@{i7_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")(0)}
 		@{i5_index_seq=OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))).split("-")(1)}
 	
 		@{description=OutputHelper.getContentProperty(co,"tag")+"_"+co.percentage}
 	
-		@sample_id,,,,@i7_index_name,@i7_index_seq,@i5_index_name,@i5_index_seq,@co.projectCode,@description\u000D\u000A
+		@sample_id,,,,,@i7_index_seq,,@i5_index_seq,@co.projectCode,@description\u000D\u000A
 	}
 } 
