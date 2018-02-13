@@ -99,17 +99,6 @@ public class RunIllumina extends AbstractDeclaration {
 						getExperimentTypes("prepa-flowcell").get(0),getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-illumina-run").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", 
-				ProcessCategory.find.findByCode("sequencing"),62 , 
-				getIlluminaDepotProperties(), 
-				Arrays.asList(getPET("ext-to-illumina-run",-1),
-						getPET("solution-stock",-1), 
-						getPET("prepa-flowcell",0),
-						getPET("prepa-fc-ordered",0),
-						getPET("illumina-depot",1)), 
-						getExperimentTypes("prepa-flowcell").get(0),getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-illumina-run").get(0), 
-						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
 		
 		l.add(DescriptionFactory.newProcessType("STK, FC, dépôt Illumina", "norm-fc-depot-illumina", 
 				ProcessCategory.find.findByCode("sequencing"), 63,
@@ -126,26 +115,6 @@ public class RunIllumina extends AbstractDeclaration {
 						getPET("illumina-depot",2)), 
 						getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
-		
-		/* ??? CNG
-		 * l.add(DescriptionFactory.newProcessType("Norm(+pooling),FC ordonnée, dépôt (4000 / X5 / NovaSeq)", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("sequencing"),
-				20,
-				null,  // pas de propriétés ??
-				Arrays.asList(
-						getPET("ext-to-norm-fc-ordered-depot",-1), //ordered list of experiment type in process type
-						getPET("prep-pcr-free",-1), 
-						getPET("pcr-and-purification",-1), 
-						getPET("pcr-and-indexing",-1), 
-						getPET("lib-normalization",0), 
-						getPET("normalization-and-pooling",0),
-						getPET("prepa-fc-ordered",1), 
-						getPET("illumina-depot",2) ),           
-				getExperimentTypes("lib-normalization").get(0),            //first experiment type
-				getExperimentTypes("illumina-depot").get(0),               //last  experiment type
-				getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0), //void  experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
-				*/
-		
 		
 		return l;
 	}
