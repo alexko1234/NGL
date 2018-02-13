@@ -295,15 +295,16 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			// 18/12/2017 NGL-1754: restreindre instrument a MarieCurix-A  ou MarieCurix-B quand le type de sequencage choisi est sequencage choisi est NovaSeq 6000
 			//                      attention match() a tenir a jour dans l'avenir si d'autres novaseq arrivent...
 			// 17/01/2018 il y a 2 sequencingType (voir 3 si la S1 sort un jour => utiliser match () )
-			if ( $scope.experiment.experimentProperties.sequencingType && $scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) 
-					&& (null===$scope.experiment.instrument.code.match(/MarieCurix/))){
-				$scope.messages.clazz = "alert alert-warning";
-				$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
-				$scope.messages.showDetails = false;
-				$scope.messages.open();
-			} 
-			// 17/01/2018 reset sequencingType 
-			$scope.experiment.experimentProperties.sequencingType.value=undefined; 
+			if ( $scope.experiment.experimentProperties.sequencingType ) {
+				
+				if ( (null!=$scope.experiment.experimentProperties.sequencingType.value.match(/NovaSeq 6000/) ) && (null===$scope.experiment.instrument.code.match(/MarieCurix/))){
+					$scope.messages.clazz = "alert alert-warning";
+					$scope.messages.text = "L'instrument choisi n'est pas un NovaSeq 6000";
+					$scope.messages.showDetails = false;
+					$scope.messages.open();
+				} 
+				// 13/02 NON LAISSER !!$scope.experiment.experimentProperties.sequencingType.value=undefined; 
+			}
 		}
 	});	
 	
@@ -311,6 +312,8 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	$scope.$watch("experiment.experimentProperties.sequencingType.value", function(newValue, OldValue){
 		if ((newValue) && (newValue !== null ) && ( newValue !== OldValue ))  {
 			console.log('sequencing type changed to :'+ newValue);
+			$scope.messages.clear();
+			
 			// 18/12/2017 NGL-1754 : restreindre instrument a MarieCurix-A ou MarieCurix-B quand le type de sequencage choisi est NovaSeq 6000
 			// 18/01/2018 plusieurs (2 ou 3) sequencing type NovaSeq 6000 possibles
 			if (newValue.match(/NovaSeq 6000/) && ( $scope.experiment.instrument.code !== undefined )) {
@@ -329,7 +332,6 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			// !! marche pas si le design Flowcell n'as pas encore ete fait...
 			setFeuilleCalcul();
 			
-			//TEST  ajout 08/02/2018
 			setVolumeFinal();
 		} 
 	});	
@@ -347,7 +349,6 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		var Nv6000S2fcRegexp= /^[A-Za-z0-9]*DMXX$/; // info Illumina 25/01/2018
 		var Nv6000S4fcRegexp= /^[A-Za-z0-9]*DSXX$/; // info Illumina 25/01/2018
 		
-		$scope.messages.clear();
 		fcBarcode=$scope.experiment.instrumentProperties.containerSupportCode.value;
 		seqType=$scope.experiment.experimentProperties.sequencingType.value;
 		//console.log('check FC pattern: FC='+ fcBarcode + 'sequencing type='+seqType );
@@ -479,16 +480,16 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	function setVolumeFinal(){
 		console.log('setVolumeFinal...');
 		if ( $scope.experiment.experimentProperties && $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S2' ) {
-			console.log('S2...volume final=750');
+			//console.log('S2...volume final=750');
 			updateAllOutputContainerUsedsPropertyValue("finalVolume","750");	
 			
 		} else if ( $scope.experiment.experimentProperties &&  $scope.experiment.experimentProperties.sequencingType.value ==='NovaSeq 6000 / S4' ) {
-			console.log('S4...volume final=1550');
+			//console.log('S4...volume final=1550');
 			updateAllOutputContainerUsedsPropertyValue("finalVolume","1550");
 			
 		} else {
 			// Hiseq-4000 ou Hiseq-X: remettre les valeurs par defaut..
-			console.log('default...volume final=50');
+			//console.log('default...volume final=50');
 			updateAllOutputContainerUsedsPropertyValue("finalVolume","50");	
 		}
 	}
@@ -502,7 +503,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 			// boucler sur TOUS les outputContainerUsed
 			for ( var j=0; j < $scope.atmService.data.atm[i].outputContainerUseds.length; j++ ){
 				$parse("outputContainerUseds["+j+"].experimentProperties."+propertyCode+".value").assign(atm, value);
-				console.log ("mise a jour du volume final="+ value);
+				//console.log ("mise a jour du volume final="+ value);
 				
 			    // si la colonne mise a jour est le volume final  il faut recalculer la concentration finale
 				if (propertyCode ==='finalVolume'){
@@ -569,7 +570,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 
 				isReady:function(){
 					// !! final volume doit imperativement etre != 0 sinon div by 0
-					console.log('inputConc='+ this.inputConc +'  engagedVol='+ this.engagedVol +'  finalVol='+ this.finalVol);
+					//console.log('inputConc='+ this.inputConc +'  engagedVol='+ this.engagedVol +'  finalVol='+ this.finalVol);
 					return (this.finalVol && this.engagedVol);
 				}
 		};
@@ -582,7 +583,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 				// pas suffisant pour les conc en PicoMolaire: finalConcentration = Math.round(finalConcentration*100.0)/100.0;	
 				finalConcentration = Math.round(finalConcentration*10000.0)/10000.0;
 			}
-			console.log("conc finale apres arrondi= "+finalConcentration);
+			//console.log("conc finale apres arrondi= "+finalConcentration);
 			getterFinalConcentration2.assign(udtData, finalConcentration);
 			
 		}else{
@@ -593,7 +594,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	// version pour les cas on modifie seulement 1 atm, 1 inputContainerUsed
 	var computeConcentrationAtm = function(atm, i, j){
-		console.log("computeConcentration atm.."+ i +".inputContainerUsed:"+j);
+		//console.log("computeConcentration atm.."+ i +".inputContainerUsed:"+j);
 		var getterFinalConcentration2=$parse("inputContainerUseds["+ j +"].experimentProperties.finalConcentration2.value");
 			
 		var compute = {
@@ -603,21 +604,21 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 
 				isReady:function(){
 					// !! final volume doit imperativement etre != 0 sinon div by 0
-					console.log('inputConc='+ this.inputConc +'  engagedVol='+ this.engagedVol +'  finalVol='+ this.finalVol);
+					//console.log('inputConc='+ this.inputConc +'  engagedVol='+ this.engagedVol +'  finalVol='+ this.finalVol);
 					return (this.finalVol && this.engagedVol );
 				}
 		};
 		
 		if(compute.isReady()){
 			var finalConcentration = compute.inputConc * compute.engagedVol / compute.finalVol;
-			console.log("conc finale avant arrondi = "+finalConcentration);
+			//console.log("conc finale avant arrondi = "+finalConcentration);
 			// arrondir...
 			if(angular.isNumber(finalConcentration) && !isNaN(finalConcentration)){
 				// pas suffisant pour les conc en PicoMolaire: finalConcentration = Math.round(finalConcentration*100.0)/100.0;	
 				finalConcentration = Math.round(finalConcentration*10000.0)/10000.0;	
 			}
 			
-			console.log("conc finale apres arrondi= "+finalConcentration);
+			//console.log("conc finale apres arrondi= "+finalConcentration);
 			getterFinalConcentration2.assign(atm, finalConcentration);
 		} else {
 			console.log("Impossible de calculer la concentration finale: valeurs manquantes");
