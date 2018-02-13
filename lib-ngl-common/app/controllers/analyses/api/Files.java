@@ -4,28 +4,28 @@
 //import static fr.cea.ig.play.IGGlobals.form;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import org.springframework.stereotype.Controller;
-
-import models.laboratory.common.instance.State;
-import models.laboratory.run.instance.Analysis;
-import models.laboratory.run.instance.File;
-import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
+
+import controllers.QueryFieldsForm;
+import controllers.SubDocumentController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.play.NGLContext;
+import models.laboratory.run.instance.Analysis;
+import models.laboratory.run.instance.File;
+import models.utils.InstanceConstants;
 import play.data.Form;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.run.instance.FileValidationHelper;
-import controllers.QueryFieldsForm;
-import controllers.SubDocumentController;
-import controllers.authorisation.Permission;
-import fr.cea.ig.play.NGLContext;
 
 // @Controller
 public class Files extends SubDocumentController<Analysis, File> {
@@ -58,7 +58,11 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return objectInDB.files;
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_files"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_files"})
 	public Result save(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -85,7 +89,11 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_files"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_files"})
 	public Result update(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -144,7 +152,11 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 	}
 
-	@Permission(value={"writing"})	//@Permission(value={"delete_files"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"delete_files"})
 	public Result delete(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -156,7 +168,10 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return ok();
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

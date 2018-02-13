@@ -34,7 +34,7 @@ public class TestExperimentsRoutes {
 	
 	@Test
 	public void testTplTemplate() {
-		Global.af.authNobody("/tpl/experiments/get-template/sponge/bob/sponge/bob");
+		Global.af.authNobody("/tpl/experiments/get-template/onetoone/fragmentation/transformation/null");
 	}
 	
 	@Test

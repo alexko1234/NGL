@@ -31,10 +31,14 @@ import akka.actor.ActorRef;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.history.UserHistory;
 import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.authorization.Authorized;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -105,8 +109,11 @@ public class ReadSets extends ReadSetsController {
 		// this.rulesActor  = ctx.rule
 	}
 	
-	@With({fr.cea.ig.authentication.Authenticate.class})
-	@Permission(value={"reading"})
+//	@With({fr.cea.ig.authentication.Authenticate.class})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result list() {
 		// Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
 		// ReadSetsSearchForm form = filledForm.get();
@@ -330,7 +337,11 @@ public class ReadSets extends ReadSetsController {
 		return query;
 	}
 
-	@Permission(value={"reading"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result get(String readSetCode) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		ReadSet readSet =  getReadSet(readSetCode, form.includes.toArray(new String[0]));		
@@ -342,7 +353,11 @@ public class ReadSets extends ReadSetsController {
 		}		
 	}
 
-	@Permission(value={"reading"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					
@@ -351,7 +366,11 @@ public class ReadSets extends ReadSetsController {
 		}	
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result save(){
 
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
@@ -432,7 +451,11 @@ public class ReadSets extends ReadSetsController {
 	}
 
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String readSetCode){
@@ -517,7 +540,11 @@ public class ReadSets extends ReadSetsController {
 		}
 	}
 
-	@Permission(value={"writing"}) 
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"}) 
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result delete(String readSetCode) { 
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
@@ -549,7 +576,11 @@ public class ReadSets extends ReadSetsController {
 	}
 
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
@@ -571,7 +602,11 @@ public class ReadSets extends ReadSetsController {
 		return ok();
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result state(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -591,7 +626,11 @@ public class ReadSets extends ReadSetsController {
 		}
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
@@ -622,7 +661,11 @@ public class ReadSets extends ReadSetsController {
 		return ok(Json.toJson(response));
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -648,7 +691,11 @@ public class ReadSets extends ReadSetsController {
 		}
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
@@ -684,7 +731,11 @@ public class ReadSets extends ReadSetsController {
 		return ok(Json.toJson(response));
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result properties(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -722,7 +773,11 @@ public class ReadSets extends ReadSetsController {
 		}
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 
@@ -780,7 +835,11 @@ public class ReadSets extends ReadSetsController {
 		return regex;
 	}
 
-	@Permission(value={"writing"})
+//	@With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result applyRules(String code, String rulesCode){
 		ReadSet readSet = getReadSet(code);
 		if (readSet != null) {

@@ -16,19 +16,19 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.Run;
 // import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import play.mvc.With;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import workflows.run.RunWorkflows;
-import fr.cea.ig.play.IGGlobals;
-import fr.cea.ig.play.NGLContext;
 
 public class State extends RunsController {
 	
@@ -46,7 +46,10 @@ public class State extends RunsController {
     	this.workflows   = workflows;
 	}
     
-    @Permission(value={"reading"})
+//    @Permission(value={"reading"})
+    @Authenticated
+    @Historized
+    @Authorized.Read
     public Result get(String code) {
     	Run runValue = getRun(code, "state");
     	if (runValue != null) {
@@ -56,7 +59,11 @@ public class State extends RunsController {
     	}
     }
 
-    @Permission(value={"writing"})	// @Permission(value={"workflow_run_lane"})
+//    @Permission(value={"writing"})
+    @Authenticated
+    @Historized
+    @Authorized.Write
+    // @Permission(value={"workflow_run_lane"})
     public Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -77,7 +84,10 @@ public class State extends RunsController {
 		}
     }
     
-    @Permission(value={"writing"})
+//    @Permission(value={"writing"})
+    @Authenticated
+    @Historized
+    @Authorized.Write
     public Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
@@ -105,7 +115,10 @@ public class State extends RunsController {
 		return ok(Json.toJson(response));
     }
     
-    @Permission(value={"reading"})
+//    @Permission(value={"reading"})
+    @Authenticated
+    @Historized
+    @Authorized.Read
     public Result historical(String code) {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {

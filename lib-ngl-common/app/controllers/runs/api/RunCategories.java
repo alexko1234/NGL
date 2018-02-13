@@ -8,9 +8,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import controllers.APICommonController;
-//import controllers.CommonController;
-import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.run.description.RunCategory;
 import models.utils.ListObject;
@@ -20,7 +20,6 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
-import play.mvc.With;
 import views.components.datatable.DatatableResponse;
 
 public class RunCategories extends APICommonController<RunCategoriesSearchForm> { //CommonController {
@@ -33,7 +32,10 @@ public class RunCategories extends APICommonController<RunCategoriesSearchForm> 
 		runCategoriesForm = ctx.form(RunCategoriesSearchForm.class);
 	}
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public /*static*/ Result list(){
 		Form<RunCategoriesSearchForm> runCategoryFilledForm = filledFormQueryString(runCategoriesForm,RunCategoriesSearchForm.class);
 		RunCategoriesSearchForm runCategoriesSearch = runCategoryFilledForm.get();

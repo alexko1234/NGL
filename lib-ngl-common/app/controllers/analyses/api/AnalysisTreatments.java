@@ -4,23 +4,28 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+
+import controllers.SubDocumentController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.play.IGBodyParsers;
+import fr.cea.ig.play.NGLContext;
+
 //import org.springframework.stereotype.Controller;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
 import play.data.Form;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
-import controllers.SubDocumentController;
-import controllers.authorisation.Permission;
-import fr.cea.ig.play.IGBodyParsers;
-import fr.cea.ig.play.NGLContext;
 
 // TODO: cleanup
 
@@ -45,7 +50,11 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	}
 	
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result save(String parentCode){
@@ -77,7 +86,11 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}		
 	}
 
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_treatments"})
 	// @BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	@BodyParser.Of(value = IGBodyParsers.Json5MB.class)
 	public Result update(String parentCode, String code){
@@ -109,7 +122,11 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"delete_treatments"})
 	public Result delete(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {
@@ -121,7 +138,10 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		return ok();		
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public  Result deleteAll(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

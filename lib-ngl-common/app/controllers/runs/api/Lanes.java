@@ -5,15 +5,22 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import models.laboratory.common.instance.TraceInformation;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+//import controllers.CommonController;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import play.Logger;
 import play.data.Form;
 
@@ -22,14 +29,8 @@ import play.data.Form;
 
 import play.libs.Json;
 import play.mvc.Result;
-import play.mvc.With;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
-import fr.cea.ig.MongoDBDAO;
-//import controllers.CommonController;
-import controllers.authorisation.Permission;
-import controllers.history.UserHistory;
-import fr.cea.ig.play.NGLContext;
 
 public class Lanes extends RunsController{
 	
@@ -44,7 +45,10 @@ public class Lanes extends RunsController{
 		valuationForm = ctx.form(Valuation.class);
 	}
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public /*static*/ Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null || run.lanes == null){
@@ -53,7 +57,10 @@ public class Lanes extends RunsController{
 		return ok(Json.toJson(run.lanes));		
 	}
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public /*static*/ Result get(String code, Integer laneNumber) {
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -69,7 +76,10 @@ public class Lanes extends RunsController{
 		return notFound();
 	}
 
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public /*static*/ Result head(String code, Integer laneNumber){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)))){			
@@ -79,7 +89,11 @@ public class Lanes extends RunsController{
 		}
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result save(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
@@ -107,7 +121,11 @@ public class Lanes extends RunsController{
 		}		
 	}
 
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result update(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -135,7 +153,10 @@ public class Lanes extends RunsController{
 		}
 	}
 	
-	@Permission(value={"writing"})	
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public /*static*/ Result delete(String code, Integer laneNumber) { 
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -149,7 +170,10 @@ public class Lanes extends RunsController{
 	
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public /*static*/ Result deleteByRunCode(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if (run==null) {
@@ -160,7 +184,11 @@ public class Lanes extends RunsController{
 		return ok();
 	}
 	
-	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){

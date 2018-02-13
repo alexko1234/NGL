@@ -1,10 +1,5 @@
 package controllers.runs.api;
 
-// import static play.data.Form.form;
-//import static fr.cea.ig.play.IGGlobals.form;
-//import static fr.cea.ig.play.IGGlobals.akkaSystem;
-import fr.cea.ig.mongo.MongoStreamer;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,8 +15,6 @@ import org.mongojack.DBUpdate;
 
 import com.mongodb.BasicDBObject;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
@@ -29,6 +22,15 @@ import fr.cea.ig.MongoDBDAO;
 // import fr.cea.ig.MongoDBDatatableResponseChunks;
 // import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
+// import static play.data.Form.form;
+//import static fr.cea.ig.play.IGGlobals.form;
+//import static fr.cea.ig.play.IGGlobals.akkaSystem;
+import fr.cea.ig.mongo.MongoStreamer;
+// import fr.cea.ig.play.IGGlobals;
+import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -47,16 +49,11 @@ import play.data.Form;
 // import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
-import play.mvc.With;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
 import workflows.run.RunWorkflows;
-// import fr.cea.ig.play.IGGlobals;
-import fr.cea.ig.play.NGLContext;
 
 
 /**
@@ -94,7 +91,10 @@ public class Runs extends RunsController {
 		this.workflows = workflows;
 	}
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result list(){
 
 		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
@@ -267,7 +267,10 @@ public class Runs extends RunsController {
 	}
 
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public /*static*/ Result get(String code) {
 		
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
@@ -280,7 +283,10 @@ public class Runs extends RunsController {
 		}
 	}
 
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public /*static*/ Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
@@ -290,7 +296,11 @@ public class Runs extends RunsController {
 	}
 
 	
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runInput = filledForm.get();
@@ -334,7 +344,11 @@ public class Runs extends RunsController {
 		}
 	}
 
-	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"creation_update_run_lane"})
 	public /*static*/ Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -399,7 +413,10 @@ public class Runs extends RunsController {
 	}
 
 
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public /*static*/ Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -413,7 +430,11 @@ public class Runs extends RunsController {
 
 	
 	
-	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
+//	@Permission(value={"writing"})	
+	@Authenticated
+	@Historized
+	@Authorized.Write
+	//@Permission(value={"valuation_run_lane"})
 	public /*static*/ Result valuation(String code){
 		Run run = getRun(code);
 		if(run == null){
@@ -442,7 +463,10 @@ public class Runs extends RunsController {
 		}
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public /*static*/ Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if (run != null) {

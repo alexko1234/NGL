@@ -14,18 +14,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
-import org.springframework.stereotype.Controller;
 
 import com.mongodb.BasicDBObject;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import fr.cea.ig.authentication.Authenticated;
+import fr.cea.ig.authorization.Authorized;
+import fr.cea.ig.lfw.Historized;
 import fr.cea.ig.play.NGLContext;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -38,12 +38,9 @@ import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
-import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
 import rules.services.LazyRules6Actor;
-import rules.services.RulesActor6;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
@@ -75,7 +72,10 @@ public class Analyses extends DocumentController<Analysis> {
 		this.workflows        = workflows;
 	}
 	
-	@Permission(value={"reading"})
+//	@Permission(value={"reading"})
+	@Authenticated
+	@Historized
+	@Authorized.Read
 	public Result list() {
 		//Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
 		//AnalysesSearchForm form = filledForm.get();
@@ -156,7 +156,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return query;
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result save() {
 		
 		Form<Analysis> filledForm = getMainFilledForm();
@@ -203,7 +206,10 @@ public class Analyses extends DocumentController<Analysis> {
 		
 	}
 
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result update(String code){
 		Analysis objectInDB =  getObject(code);
 		if(objectInDB == null) {
@@ -266,7 +272,10 @@ public class Analyses extends DocumentController<Analysis> {
 	}
 	
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result state(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -286,7 +295,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result stateBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -314,7 +326,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return ok(Json.toJson(response));
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result valuation(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -341,7 +356,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}
 	}
 
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result valuationBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -374,7 +392,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return ok(Json.toJson(response));
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result properties(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -399,7 +420,10 @@ public class Analyses extends DocumentController<Analysis> {
 		}		
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result propertiesBatch() {
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -428,7 +452,10 @@ public class Analyses extends DocumentController<Analysis> {
 		return ok(Json.toJson(response));
 	}
 	
-	@Permission(value={"writing"})
+//	@Permission(value={"writing"})
+	@Authenticated
+	@Historized
+	@Authorized.Write
 	public Result applyRules(String code, String rulesCode)	{
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
