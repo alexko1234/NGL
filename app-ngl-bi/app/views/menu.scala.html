@@ -67,8 +67,8 @@
 				</li>
 					
 				@ddmenu(nav, "balance","balanceSheets.menu") {
-				  @ddentry(nav, "balanceSheets.illumina", BalanceSheets.home("rsillumina","general"), "balanceSheets.menu.illumina")
-				  @ddentry(nav, "balanceSheets.nanopore", BalanceSheets.home("rsnanopore","general"), "balanceSheets.menu.nanopore")
+				  @ddentry(nav, "balanceSheets.illumina", BalanceSheets.home("rsillumina",new Date().format("yyyy")), "balanceSheets.menu.illumina")
+				  @ddentry(nav, "balanceSheets.nanopore", BalanceSheets.home("rsnanopore",new Date().format("yyyy")), "balanceSheets.menu.nanopore")
 				}
 							
 				<li class="@("active".when(nav.startsWith("help")))">
