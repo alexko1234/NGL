@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +52,8 @@ class DoubleKeyMap < K1, K2, V > {
 	}
 }
 
-@Service
+//@Service
+@Singleton
 public class OtherSubmissionWorkflows extends TransitionWorkflows<Submission> {
 	
 	private static final play.Logger.ALogger logger = play.Logger.of(SubmissionWorkflows.class);
@@ -82,8 +86,14 @@ public class OtherSubmissionWorkflows extends TransitionWorkflows<Submission> {
 //		}	
 //	}
 //	
-	@Autowired
-	SubmissionWorkflowsHelper submissionWorkflowsHelper;
+	//@Autowired
+	private SubmissionWorkflowsHelper submissionWorkflowsHelper;
+	
+	@Inject
+	public OtherSubmissionWorkflows(SubmissionWorkflowsHelper submissionWorkflowsHelper) {
+		super();
+		this.submissionWorkflowsHelper = submissionWorkflowsHelper;
+	}
 	
 	public interface APSR {
 		void run (SubmissionWorkflows self, ContextValidation validation, Submission submission);
