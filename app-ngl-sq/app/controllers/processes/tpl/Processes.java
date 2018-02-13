@@ -107,7 +107,8 @@ public class Processes extends CommonController{
 			      		controllers.commons.api.routes.javascript.Parameters.list(),
 			      		controllers.resolutions.api.routes.javascript.Resolutions.list(),
 			      		controllers.containers.api.routes.javascript.ContainerCategories.list(),
-		                
+			      		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.get(),
+		  	    		
 						controllers.protocols.api.routes.javascript.Protocols.list()
 						)	  	      
 				);

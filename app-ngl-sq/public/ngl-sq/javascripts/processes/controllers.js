@@ -1,8 +1,8 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$http','$parse','$location','basket','mainService','tabService','containersSearchService', 
-    function($scope, $filter,$http,$parse,$location,basket, mainService, tabService, containersSearchService) {
+angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$http','$parse','$location','basket','mainService','tabService','containersSearchService', 'processGraphService',
+    function($scope, $filter,$http,$parse,$location,basket, mainService, tabService, containersSearchService,processGraphService) {
 
 	
 	var isAssign = ($location.path() === "/processes/assign-to-container/home");
@@ -52,6 +52,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 	$scope.changeProcessType = function(){
 		$scope.removeTab(1);
 		$scope.basket.reset();
+		$scope.processGraphService.changeProcessType($scope.searchService.form.nextProcessTypeCode);
 	};
 	
 	$scope.selectDefaultFromExperimentType = function(){
@@ -134,6 +135,9 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$filter','$
 	$scope.searchService.init(null, datatableConfig);
 	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true},'transformation');
 	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-search"]});
+	
+	$scope.processGraphService = processGraphService;
+	$scope.processGraphService.init(document);
 	
 	var enableValidation = false;
 	$scope.getHasErrorClass = function(formName, property){

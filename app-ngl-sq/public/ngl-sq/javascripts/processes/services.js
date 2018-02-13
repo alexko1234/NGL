@@ -1728,4 +1728,205 @@ angular.module('ngl-sq.processesServices', [])
 	
 	return assignService;
 
+}]).factory('processGraphService', [ '$q', '$http', '$parse', '$filter',  'messages', 'lists', 
+    function($q, $http, $parse, $filter, messages, lists) {
+	
+	var newNode = function(experimentNode){
+		return  {experimentType:experimentNode.experimentType, parentNodes:(experimentNode.previousExperimentTypes)?experimentNode.previousExperimentTypes:[], childNodes:[]};
+	};
+	
+	var graphNodes = {};
+	var service = {
+			experimentTypes : undefined,
+			document : undefined,
+			
+			changeProcessType : function(processTypeCode){
+				
+				$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url,{service:this}).then(function(result){
+					var nodeQueries = [];	
+					var processExperimentTypes = new Map();
+					var $this = result.config.service;
+					result.data.experimentTypes.forEach(function(experimentType){
+						if(this.get(experimentType.experimentTypeCode) === undefined){
+							this.set(experimentType.experimentTypeCode, [experimentType.positionInProcess]);
+						}else{
+							this.get(experimentType.experimentTypeCode).push(experimentType.positionInProcess);
+						}
+						nodeQueries.push($http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.get(experimentType.experimentTypeCode).url)
+								.then(function(result){
+									if(!graphNodes[result.data.experimentType.code])
+										graphNodes[result.data.experimentType.code] = newNode(result.data);
+									return result.data;
+								})								
+						);
+							
+						
+						
+					},processExperimentTypes);
+					$q.all(nodeQueries).then(function(expNodes){
+						expNodes.forEach(function(experimentNode){
+							graphNodes[experimentNode.experimentType.code].parentNodes.forEach(function(parent){
+								if(graphNodes[parent.code])
+									graphNodes[parent.code].childNodes.push(this);
+							}, experimentNode.experimentType) 
+						});
+						var graphElements  = $this.computeGraphElements(processExperimentTypes);
+						$this.initCytoscape(graphElements);
+					});
+					
+					
+					
+				})
+			
+			},
+			computeGraphElements : function(processExperimentTypes){
+				//nodes
+				var graphElements = [];
+				
+				var getFaveColor = function(processExperimentTypes, key){
+					if(processExperimentTypes === undefined)return '#6FB1FC';
+					else if(processExperimentTypes.get(key)[0] > -1 )return '#6FB1FC';
+					else return '#F5A45D';
+				}
+				
+				for(var key in graphNodes){
+					if(processExperimentTypes === undefined || processExperimentTypes.get(key) !== undefined){
+						var currentNode = graphNodes[key];
+						var currentExperimentType = graphNodes[key].experimentType;
+						if(currentExperimentType.category.code === 'transformation'){
+							currentExperimentType.id = currentExperimentType.code;
+							currentExperimentType.label = currentExperimentType.name;
+							currentExperimentType.faveColor = getFaveColor(processExperimentTypes, key);
+							currentExperimentType.faveShape="ellipse";
+							
+							graphElements.push({"data":currentExperimentType,"group":"nodes"});
+						}
+					}
+				}
+				//edges
+				
+				var isDiffPositionIsOne = function(processExperimentTypes, keyParent, keyChild){
+					return processExperimentTypes.get(keyParent).some(function(parentPos){
+						return processExperimentTypes.get(keyChild).some(function(childPos){
+								return (childPos - parentPos === 1);
+						});
+					});
+					//return (processExperimentTypes.get(keyChild) - processExperimentTypes.get(keyParent) === 1);			
+				}
+				
+				for(var key in graphNodes){
+					if(processExperimentTypes === undefined || processExperimentTypes.get(key) !== undefined){
+						var currentNode = graphNodes[key];
+						var currentExperimentType = graphNodes[key].experimentType;
+						if(currentExperimentType.category.code === 'transformation'){
+							angular.forEach(currentNode.childNodes, function(childNode){
+								var childExperimentType = childNode;
+								if(childExperimentType.category.code === 'transformation' 
+									&& (processExperimentTypes === undefined 
+											|| (processExperimentTypes.get(childExperimentType.code) !== undefined && isDiffPositionIsOne(processExperimentTypes, key, childExperimentType.code)))){
+									var currentExperimentType = this;
+									var edge = {
+											"id":currentExperimentType.code+"-"+childExperimentType.code,
+											"source":currentExperimentType.code,
+											"target":childExperimentType.code
+											
+									}
+									var faveColor = getFaveColor(processExperimentTypes, key);
+									edge.faveColor=faveColor;
+									graphElements.push({"data":edge,"group":"edges"})	
+								}
+							},currentExperimentType)
+						}
+					}
+				}
+				
+				return graphElements;
+			},			
+			initCytoscape : function(graphElements){
+				
+				var asynchGraph = function(document) {
+					 return $q(function(resolve, reject) {
+						 setTimeout(function() {
+						 	 var cy = 
+								cytoscape({
+							          container: document.getElementById('graph'),
+							          boxSelectionEnabled: false,
+							          autounselectify: true,
+							          
+							          layout: {
+							            name: 'breadthfirst',
+							            directed:true,
+							            padding:5,
+							            spacingFactor:0.5,					           
+							          },
+							          style: cytoscape.stylesheet()
+								          .selector('node')
+								            .css({
+								              'shape': 'data(faveShape)',
+								              'width': '150',
+								              'label': 'data(label)',
+								              'text-valign': 'center',
+								              //'text-outline-width': 2,
+								              //'text-outline-color': 'data(faveColor)',
+								              'background-color': 'data(faveColor)',
+								              'color': '#fff',
+								              'font-size':11,  
+								            })
+								          .selector(':selected')
+								            .css({
+								              'border-width': 3,
+								              'border-color': '#333'
+								            })
+								          .selector('edge')
+								            .css({
+								              'opacity': 0.666,
+								              'width': '3',
+								              'label': 'data(label)',
+								              'color': '#000',
+								              'font-size':11,
+								              'font-weight': 'bold',
+								              'target-arrow-shape': 'triangle',
+								              'source-arrow-shape': 'circle',
+								              'line-color': 'data(faveColor)',
+								              'source-arrow-color': 'data(faveColor)',
+								              'target-arrow-color': 'data(faveColor)'
+								            })
+								            /*
+								          .selector('edge.questionable')
+								            .css({
+								              'line-style': 'dotted',
+								              'target-arrow-shape': 'diamond'
+								            })
+								            */
+								          .selector('.faded')
+								            .css({
+								              'opacity': 0.25,
+								              'text-opacity': 0
+								            })
+								            ,
+								           
+							        
+							          elements : graphElements
+							      
+							        });				 	
+						});	
+					 }, 1);
+				};
+				asynchGraph(this.document);
+			},
+			init : function(document){
+				this.document = document;
+				$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,{service:this}).then(function(result){
+					var experimentTypes = {};
+					result.data.forEach(function(expType){
+						experimentTypes[expType.code] = expType;
+					})
+					result.config.service.experimentTypes = experimentTypes;
+				})				
+			}
+			
+	};
+	
+	return service;
+		
 }]);
