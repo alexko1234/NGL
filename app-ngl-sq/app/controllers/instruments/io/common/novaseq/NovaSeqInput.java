@@ -235,12 +235,12 @@ public class NovaSeqInput extends AbstractInput {
 		     String fcMode = (String)xpath.evaluate(expression, root);
 		     
 		     if ("S2".equals(fcMode)) {
-		    	 kitName="NOVASEQ XP 2-lane Kit";
+		    	 kitName="NovaSeq 6000 S2 Rgt kit (300c)";
 		    	 //String boxName="BOX NOVASEQ 6000";
 		    			 
 		       	 //                 TAG name                   reagent name  box name
 		    	 reagentTagMap.put("FlowCell",   new String[]{"FlowCell",   "S2 Flow Cell"}); 
-		    	 reagentTagMap.put("LibraryTube",new String[]{"LibraryTube","NovaSeq 5000/6000 Library tube"});
+		    	 reagentTagMap.put("LibraryTube",new String[]{"LibraryTube","NovaSeq 5000/6000 Library Tube"});
 		    	 reagentTagMap.put("Sbs",        new String[]{"Sbs",        "S1/S2 SBS Cartdridge 300 cycles"});
 		    	 reagentTagMap.put("Cluster",    new String[]{"Cluster",    "S2 Cluster Cartridge"});
 		    	 reagentTagMap.put("Buffer",     new String[]{"Buffer" ,    "S1/S2 Buffer Cartridge"});
@@ -263,31 +263,31 @@ public class NovaSeqInput extends AbstractInput {
 	    	 // 12/02/2018 pair.getValue()  est maintenant un tableau de String
 	    	 for (Map.Entry<String, String[]> pair : reagentTagMap.entrySet() ) {
 	    		 
-	             Logger.debug(">>>>"+ pair.getKey() + "|"+ pair.getValue()[0] +"/"+  pair.getValue()[1] ); 
+	             //Logger.debug(">>>>"+ pair.getKey() + "|"+ pair.getValue()[0] +"/"+  pair.getValue()[1] ); 
 	             
-	    		 // vérifier si la boite existe
+	    		 // vérifier si la boite existe; ajouter contrainte sur kit parent !!
 	    		 String boxName=pair.getValue()[1];
 	    		 
-		    	 BoxCatalog box= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category","Box").and(DBQuery.is("name",boxName ).and(DBQuery.is("active",true))));
+		    	 BoxCatalog box= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, BoxCatalog.class, DBQuery.is("category","Box").and(DBQuery.is("name",boxName ).and(DBQuery.is("active",true)).and(DBQuery.is("kitCatalogCode", kit.code ))));
 		    	 if ( null == box ){
-		    		 contextValidation.addErrors("Erreurs catalogue", "Pas de boîte active nommée '"+boxName+"' dans le catalogue");
+		    		 contextValidation.addErrors("Erreurs catalogue", "Pas de boîte active nommée '"+boxName+"' dans le kit '"+kitName +"'");
 		    		 return;
 		    	 } 
 	    		 
 		    	 ReagentUsed reagent=new ReagentUsed(); 
 	    		 
 	    		 String XMLtag1="RfidsInfo/"+pair.getKey()+"SerialBarcode";
-	    		 Logger.debug("XMLtag:"+XMLtag1); 
+	    		 //Logger.debug("XMLtag:"+XMLtag1); 
 	    		 String serialBarcode = (String)xpath.evaluate(XMLtag1, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag1, serialBarcode );
 	    		 
 	    		 String XMLtag2="RfidsInfo/"+pair.getKey()+"LotNumber";
-	      		 Logger.debug("XMLtag:"+XMLtag2);
+	      		 //Logger.debug("XMLtag:"+XMLtag2);
 	    		 String lotNumber = (String)xpath.evaluate(XMLtag2, root);
 	    		 checkMandatoryXMLTag (contextValidation, XMLtag2, lotNumber );
 	    		 
 	    		 String reagName=pair.getValue()[0];
-	    		 Logger.debug("création reagent used: "+ reagName);
+	    		 //Logger.debug("création reagent used: "+ reagName);
 	    		 
 	    		 // 12/02/2018 ajouter la contrainte sur la boite parent
 	    		 ReagentCatalog reag= MongoDBDAO.findOne(InstanceConstants.REAGENT_CATALOG_COLL_NAME, ReagentCatalog.class, DBQuery.is("category", "Reagent").
