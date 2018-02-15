@@ -103,7 +103,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	/**
 	 * User DAO.
 	 */
-	private final UserDAO userDAO;
+	//private final UserDAO userDAO;
 	
 	/**
 	 * Permission API.
@@ -120,8 +120,9 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 */
 	@Inject
 	public UserDAOAuthorizator(IGConfig config, PermissionAPI permissionAPI) {
+		logger.error("init UserDAOAuthorizator");
 		// userDAO         = Spring.getBeanOfType(UserDAO.class);
-		userDAO      = (UserDAO)new User.UserFinder().getInstance();
+		//userDAO      = ((UserDAO)new User.UserFinder().getInstance());
 		userCreation = config.getBoolean(CONF_USER_CREATION_PATH, false);
 		if (userCreation)
 			roleAtCreation = config.getString(CONF_USER_ROLE_PATH,null);
@@ -201,7 +202,11 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * @return      true is the user exists
 	 */
 	public boolean isDeclaredUser(String login) {
-		return userDAO.isDeclaredUser(login);
+		return getUserDAO().isDeclaredUser(login);
+	}
+
+	private UserDAO getUserDAO() {
+		return (UserDAO)new User.UserFinder().getInstance();
 	}
 	
 	/**
@@ -210,7 +215,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 * @return      true if the user is active 
 	 */
 	public boolean isActiveUser(String login) {
-		return userDAO.isUserActive(login);		
+		return getUserDAO().isUserActive(login);		
 	}
 	
 	/**
@@ -221,7 +226,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 */
 	public boolean canAccessApplication(String login, String app) {
 		if (enableApplicationCheck)
-			return userDAO.canAccessApplication(login, app);
+			return getUserDAO().canAccessApplication(login, app);
 		return true;
 	}
 	
@@ -243,7 +248,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	public void declareUser(String login, String role) {
 		synchronized (UserDAOAuthorizator.class) {
 			if (!isDeclaredUser(login))
-				userDAO.declareUser(login, role);
+				getUserDAO().declareUser(login, role);
 		}
 	}
 	
@@ -254,7 +259,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
 	 */
 	public void grantApplicationAccess(String login, String application) {
 		if (enableApplicationCheck)
-			userDAO.grantApplicationAccess(login, application);
+			getUserDAO().grantApplicationAccess(login, application);
 	}
 	
 }
