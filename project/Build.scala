@@ -111,7 +111,8 @@ object ApplicationBuild extends Build {
 
 	// IG libraries
   val ceaAuth     = "fr.cea.ig.modules"   %% "authentication"     % "2.6-2.0.7"
-	val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
+	// val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-1.4.2-SNAPSHOT"
+  val ceaSpring   = "fr.cea.ig"           %% "play-spring-module" % "2.6-2.0.0-SNAPSHOT"
 	val ceaMongo    = "fr.cea.ig"           %% "mongodbplugin"      % "2.6-1.7.4-SNAPSHOT"
   // External libraries versions
 	val postgresql  = "org.postgresql"       % "postgresql"         % "9.4-1206-jdbc41"  

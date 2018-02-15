@@ -62,7 +62,8 @@ public class NGLBaseModule extends play.api.inject.Module {
 		bs.addAll(nglCustomBindings(environment,configuration));
 		// Bind spring as the last thing as it may access uninitialized
 		// things otherwise.
-		bs.add(bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly());
+		//bs.add(bind(play.api.modules.spring.SpringPlugin.class       ).toSelf().eagerly());
+		bs.add(bind(play.api.modules.spring.SpringComponent.class       ).toSelf().eagerly());
 		// Bind authorization to configured, user DAO access requires that 
 		// we bind this eagerly after the spring plugin. This still fails 
 		// as the Spring plugin initialization is not complete despite
