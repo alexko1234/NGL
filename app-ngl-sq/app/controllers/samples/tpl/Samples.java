@@ -12,7 +12,10 @@ import views.html.samples.search;
 
 import javax.inject.Inject;
 
-import controllers.NGLBaseController;
+import fr.cea.ig.ngl.NGLApplication;
+import fr.cea.ig.ngl.NGLController;
+import fr.cea.ig.ngl.support.NGLJavascript;
+// import controllers.NGLBaseController;
 import fr.cea.ig.play.NGLContext;
 // import controllers.CommonController;
 import play.routing.JavaScriptReverseRouter;
@@ -29,9 +32,17 @@ public class Samples extends NGLController
 	private final search search;
 	private final details details;
 	
+//	@Inject
+//	public Samples(NGLContext ctx, home home, search search, details details) {
+//		super(ctx);
+//		this.home = home;
+//		this.search = search;
+//		this.details = details;
+//	}
+
 	@Inject
-	public Samples(NGLContext ctx, home home, search search, details details) {
-		super(ctx);
+	public Samples(NGLApplication app, home home, search search, details details) {
+		super(app);
 		this.home = home;
 		this.search = search;
 		this.details = details;

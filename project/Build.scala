@@ -52,6 +52,7 @@ object ApplicationBuild extends Build {
 	// of a linked authentication library instead of the published one.
 	// It is enabled using sbt command line option -Dembedded.auth=true .
 	val embeddedAuth   = System.getProperty("embedded.auth")   == "true"
+	val embeddedSpring = System.getProperty("embedded.spring") == "true"
 	val eclipseLinking = System.getProperty("eclipse.linking") == "true"
 
 	// Workaround for missing properties in test vms. Build the test child
@@ -223,7 +224,8 @@ object ApplicationBuild extends Build {
 		  javaCore,
 		  javaJdbc, 
 		  javaWs,
-		  ceaSpring,
+		  // ceaSpring,
+		  
 		  jsMessages,
 		  commonsLang,
 			fest,
@@ -317,13 +319,20 @@ object ApplicationBuild extends Build {
       javaCore,
 		  ws,
 		  javaJdbc,
-		  ceaSpring,
+		  // ceaSpring,
   		"org.springframework.security"  % "spring-security-web"    % springSecVersion,
 		  "org.springframework.security"  % "spring-security-ldap"   % springSecVersion,
       "org.springframework.security"  % "spring-security-config" % springSecVersion,
   		"org.springframework"           % "spring-aop"             % springVersion
     )
-    
+  
+    val springPluginDependencies = Seq(
+      "org.springframework"    %    "spring-context"    %    springVersion,
+      "org.springframework"    %    "spring-core"       %    springVersion,
+      "org.springframework"    %    "spring-beans"      %    springVersion,
+		  "cglib"                  %    "cglib-nodep"       %    "3.1"
+    )
+
   }
 
   // Allow the use of embbeded auth sources instead of the lib.
@@ -334,20 +343,38 @@ object ApplicationBuild extends Build {
       Project("auth",file("authentication"),settings = buildSettings)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
-      // routesGenerator     := InjectedRoutesGenerator, // does not work
-      libraryDependencies ++= authenticationDependencies,
-      version              := "2.0.0-SNAPSHOT",
-      resolvers            := nexus
-    )
+          libraryDependencies ++= authenticationDependencies,
+          version              := "0.0.1-SNAPSHOT",
+          resolvers            := nexus
+        )
     else
       Project("auth",file("dependency-authentication"),settings = buildSettings)
         .enablePlugins(play.sbt.PlayJava)
         .settings(
       libraryDependencies  += ceaAuth,
-      version              := "0.1-SNAPSHOT",
+      version              := "0.0.1-SNAPSHOT",
       resolvers            := nexus
     )
   
+  val springPlugin =
+    if (embeddedSpring)
+       Project("springplugin",file("playSpringModule"),settings = buildSettings)
+        .enablePlugins(play.sbt.PlayJava)
+        .settings(
+          libraryDependencies ++= springPluginDependencies,
+          version              := "0.0.1-SNAPSHOT",
+          resolvers            := nexus
+        )
+    else
+      Project("springplugin",file("dependency-springplugin"),settings = buildSettings)
+        .enablePlugins(play.sbt.PlayJava)
+        .settings(
+      libraryDependencies  += ceaSpring,
+      version              := "0.0.1-SNAPSHOT",
+      resolvers            := nexus
+    )
+    
+    
   val nglPlayMigration =  Project("ngl-play-migration",file("lib-ngl-play-migration"),settings = buildSettings)
       .enablePlugins(play.sbt.PlayJava)
       .settings(
@@ -398,7 +425,7 @@ object ApplicationBuild extends Build {
       val assets: java.io.File = (PlayKeys.playPackageAssets in Compile).value
       artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
     }
-  ).dependsOn(ngldatatable,authentication)
+  ).dependsOn(ngldatatable,authentication,springPlugin)
   
   val nglcommon = Project(appName + "-common", file("lib-ngl-common"), settings = buildSettings).enablePlugins(play.sbt.PlayJava).settings(
     // version                    := appVersion,

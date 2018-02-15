@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 /**
  * Collection of functional-ish static methods.
- * Should provide Iterable -> Iterable stuff, not lists.
+ * Should provide Iterable {@literal -> } Iterable stuff, not lists.
  *  
  * @author vrd
  *

@@ -14,7 +14,7 @@ public class CodeAndNameList extends ArrayList<CodeAndName> {
 
 	/**
 	 * Default list sorting using {@link #sortByCodeInc()}.
-	 * @return
+	 * @return sorted list
 	 */
 	public CodeAndNameList sort() {
 		return sortByCodeInc();
