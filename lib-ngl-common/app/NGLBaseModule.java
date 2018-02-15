@@ -126,6 +126,8 @@ class ConfigChecker {
 	public void checkIncludes() {
 		try {
 			String configFile = System.getProperty("config.file");
+			// This should not happen except if configuration resource is used but this is
+			// not NGL strategy.
 			if (configFile == null)
 				throw new IOException("config file is not defined");
 			logger.debug("*****************************************************");
@@ -141,7 +143,8 @@ class ConfigChecker {
 	
 	private static Pattern includePat = Pattern .compile("include\\s+\"(\\S+)\"\\s*");
 	
-	// Recursively check includes, could loop forever if the 
+	// Recursively check includes, could loop forever if there is a loop
+	// in the includes. This then will lock application start and quite fill the log.
 	public void include(File f) throws IOException {
 		logger.debug("checking '{}'",f);
 		if (!f.isFile())
