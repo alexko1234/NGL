@@ -122,9 +122,6 @@ public class UserDAOAuthorizator implements IAuthorizator {
      */
     @Inject
     public UserDAOAuthorizator(IGConfig config, Provider<PermissionAPI> permissionAPI) {
-        logger.error("init UserDAOAuthorizator");
-        // userDAO         = Spring.getBeanOfType(UserDAO.class);
-        //userDAO      = ((UserDAO)new User.UserFinder().getInstance());
         userCreation = config.getBoolean(CONF_USER_CREATION_PATH, false);
         if (userCreation)
             roleAtCreation = config.getString(CONF_USER_ROLE_PATH,null);
@@ -148,18 +145,19 @@ public class UserDAOAuthorizator implements IAuthorizator {
             logger.warn("blank login {}",login);
             return false;
         }
-        if (!isDeclaredUser(login)) {
+        PermissionAPI permissionAPI = this.permissionAPI.get();
+        if (!permissionAPI.isDeclaredUser(login)) {
             if (userCreation) {
-                declareUser(login,roleAtCreation);
+            	permissionAPI.declareUser(login,roleAtCreation);
             } else {
                 return false;
             }
         }
-        if (!isActiveUser(login))
+        if (!permissionAPI.isActiveUser(login))
             return false;
         if (!canAccessApplication(applicationName,login)) {
             if (userCreation) {
-                grantApplicationAccess(login,applicationName);
+            	grantApplicationAccess(login,applicationName);
             } else {
                 return false;
             }
@@ -174,7 +172,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
         for (String perm : perms) {
             if (perm == null)
                 throw new RuntimeException("badly configured null permission");
-            if (!hasPermission(login,perm))
+            if (!permissionAPI.hasPermission(login,perm))
                 return false; 
         }
         return true;
@@ -183,43 +181,19 @@ public class UserDAOAuthorizator implements IAuthorizator {
     @Override
     public Set<String> getPermissions(String login) {
         Set<String> permissions = new HashSet<>();
+        PermissionAPI permissionAPI = this.permissionAPI.get();
         if (isBlank(login))                               return permissions;
-        if (!isDeclaredUser(login))                       return permissions;
-        if (!isActiveUser(login))                         return permissions;
+        if (!permissionAPI.isDeclaredUser(login))                       return permissions;
+        if (!permissionAPI.isActiveUser(login))                         return permissions;
         if (!canAccessApplication(applicationName,login)) return permissions;
         try {
-            for (Permission p : permissionAPI.get().byUserLogin(login)) 
+            for (Permission p : permissionAPI.byUserLogin(login)) 
                 permissions.add(p.code);
         } catch (DAOException | APIException e) {
             logger.error("permission access failed for " + login,e);
         } 
         return permissions;
     }
-
-    // ---------------- UserDAO indirection -------------------------------
-
-    /**
-     * Does the user exist ?
-     * @param login user login
-     * @return      true is the user exists
-     */
-    public boolean isDeclaredUser(String login) {
-        return getUserDAO().isDeclaredUser(login);
-    }
-
-    private UserDAO getUserDAO() {
-        return (UserDAO)new User.UserFinder().getInstance();
-    }
-
-    /**
-     * Is the user active ?
-     * @param login user login
-     * @return      true if the user is active 
-     */
-    public boolean isActiveUser(String login) {
-        return getUserDAO().isUserActive(login);		
-    }
-
     /**
      * Can the user access the given application by name .
      * @param login user login
@@ -228,32 +202,9 @@ public class UserDAOAuthorizator implements IAuthorizator {
      */
     public boolean canAccessApplication(String login, String app) {
         if (enableApplicationCheck)
-            return getUserDAO().canAccessApplication(login, app);
+            return this.permissionAPI.get().canAccessApplication(login, app);
         return true;
     }
-
-    /**
-     * Does the user have a given permission ?
-     * @param login      user login
-     * @param permission permission to check
-     * @return           true if the user has the requested permission
-     */
-    public boolean hasPermission(String login, String permission) {
-        return PermissionHelper.checkPermission(login, permission);
-    }
-
-    /**
-     * Declare user in database.
-     * @param login user login
-     * @param role  user role
-     */
-    public void declareUser(String login, String role) {
-        synchronized (UserDAOAuthorizator.class) {
-            if (!isDeclaredUser(login))
-                getUserDAO().declareUser(login, role);
-        }
-    }
-
     /**
      * Grant application access to a user.
      * @param login       user login
@@ -261,7 +212,7 @@ public class UserDAOAuthorizator implements IAuthorizator {
      */
     public void grantApplicationAccess(String login, String application) {
         if (enableApplicationCheck)
-            getUserDAO().grantApplicationAccess(login, application);
+        	this.permissionAPI.get().grantApplicationAccess(login, application);
     }
-
+   
 }
