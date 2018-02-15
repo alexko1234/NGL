@@ -51,9 +51,15 @@ rule "Set ReadSet properties to Analysis"
 			ReadSetProperties readSetProperties = new ReadSetProperties();
 			readSetProperties.code = $masterReadSetCode;
 			readSetProperties.properties.put("sampleOnContainerTaxonSize", readSet.sampleOnContainer.properties.get("taxonSize"));
-			readSetProperties.properties.put("globalDefaultUsefulBases", readSet.treatments.get("global").results.get("default").get("usefulBases"));
-			readSetProperties.properties.put("contaminationColiPairsRemovedReadsPercent", readSet.treatments.get("contaminationColi").results.get("pairs").get("removedReadsPercent"));
-			readSetProperties.properties.put("duplicatesRawPairsEstimateDuplicatedReadsPercent", readSet.treatments.get("duplicatesRaw").results.get("pairs").get("estimateDuplicatedReadsPercent"));
+			if(readSet.treatments.get("global")!=null){
+				readSetProperties.properties.put("globalDefaultUsefulBases", readSet.treatments.get("global").results.get("default").get("usefulBases"));
+			}
+			if(readSet.treatments.get("contaminationColi")!=null){
+				readSetProperties.properties.put("contaminationColiPairsRemovedReadsPercent", readSet.treatments.get("contaminationColi").results.get("pairs").get("removedReadsPercent"));
+			}
+			if(readSet.treatments.get("duplicatesRaw")!=null){
+				readSetProperties.properties.put("duplicatesRawPairsEstimateDuplicatedReadsPercent", readSet.treatments.get("duplicatesRaw").results.get("pairs").get("estimateDuplicatedReadsPercent"));
+			}
 		
 			MongoDBDAO.update(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("code", $analysis.code),  DBUpdate.set("masterReadSetProperties", java.util.Arrays.asList(readSetProperties)));
 		}else{
